@@ -1,4 +1,5 @@
 # PCN Website 💻⚡️
+
 Este es el repositorio del website de PCN. El website está construido con Next.js. Podés contribuir al proyecto a través de pull requests. Revisa la información a continuación para comenzar a programar con nosotros! 🚀
 
 ## 📖 Guía para contribuir
@@ -8,16 +9,16 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 2. Clonar el repositorio.
 
 3. Instalar las dependencias del proyecto.
-    ```bash
-    pnpm i
-    ```
-5. Ejecutar el servidor de desarrollo.
-    ```bash
-    pnpm dev
-    ```
-6. Abrir [http://localhost:3000](http://localhost:3000) en tu navegador web para ver la página.
-7. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
-8. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`.
+   ```bash
+   pnpm i
+   ```
+4. Ejecutar el servidor de desarrollo.
+   ```bash
+   pnpm dev
+   ```
+5. Abrir [http://localhost:3000](http://localhost:3000) en tu navegador web para ver la página.
+6. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
+7. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`.
 
 > [!IMPORTANT]  
 > Todas las contribuciones deben ser realizadas a través de pull requests. No se aceptarán cambios directos en las ramas `main` y `testing`. Las pull requests serán revisadas y aprobadas por los administradores del repositorio, y deben solicitar merge a la rama `testing`, no `main`. Una vez aprobado el testing, se hará merge a `main`.
@@ -25,9 +26,10 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 > [!IMPORTANT]  
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
 
-## 🛠️ Tech stack 
+## 🛠️ Tech stack
 
 Este proyecto está construido con las siguientes tecnologías:
+
 - [Node.js](https://nodejs.org/) (entorno de ejecución de JavaScript)
 - [pnpm](https://pnpm.io/) (gestor de paquetes)
 - [TypeSript](https://www.typescriptlang.org/) (lenguaje de programación)
