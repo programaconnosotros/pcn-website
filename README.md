@@ -23,7 +23,10 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 > [!IMPORTANT]  
 > Todas las contribuciones deben ser realizadas a través de pull requests. No se aceptarán cambios directos en las ramas `main` y `testing`. Las pull requests serán revisadas y aprobadas por los administradores del repositorio, y deben solicitar merge a la rama `testing`, no `main`. Una vez aprobado el testing, se hará merge a `main`.
 
-> [!IMPORTANT]  
+> [!NOTE]
+> Cada vez que quieras crear un commit, los hooks de Husky se asegurarán de que la app compile y el linter pase. Si no pasan, no podrás hacer el commit.
+
+> [!NOTE]  
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
 
 ## 🛠️ Tech stack
