@@ -7,10 +7,10 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - database
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/postgres
-  db:
+  database:
     image: postgres:13
     environment:
       - POSTGRES_USER=postgres
