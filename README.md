@@ -1,4 +1,5 @@
 # <img src="./public/logo.png" alt="Logo" width="30"/> Website de programaConNosotros
+
 Este es el repositorio del website de PCN. El website está construido con Next.js. Podés contribuir al proyecto a través de pull requests. Revisa la información a continuación para comenzar a programar con nosotros! 🚀
 
 ## 📖 Guía para contribuir
