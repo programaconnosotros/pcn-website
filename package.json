@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "docker:up": "docker-compose up",
+    "docker:up:dettached": "docker-compose up -d",
+    "docker:down": "docker-compose down",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
