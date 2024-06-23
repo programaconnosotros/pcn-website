@@ -10,8 +10,7 @@ Este es el repositorio del website de PCN. El website está construido con Next.
    ```bash
    docker-compose up
    ```
-   > [!NOTE]
-   > El código dentro del contenedor de Docker se sincronizará con el de tu computadora automáticamente.
+   > El código dentro del contenedor de Docker se sincronizará con el de tu computadora automáticamente, por lo cual no hace falta ejecutar ningún comando adicional para ver los cambios que hagas en tu código.
 4. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 5. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
 
