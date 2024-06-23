@@ -4,21 +4,14 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 ## 📖 Guía para contribuir
 
-1. Instalar [Node.js](https://nodejs.org/en/download/) y [pnpm](https://pnpm.io/installation) si aún no lo hiciste.
-
+1. Instalar [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/) en tu computadora.
 2. Clonar el repositorio.
-
-3. Instalar las dependencias del proyecto.
+3. Levantar el servidor de desarrollo.
    ```bash
-   pnpm i
+   docker-compose up
    ```
-4. Ejecutar el servidor de desarrollo.
-   ```bash
-   pnpm dev
-   ```
-5. Abrir [http://localhost:3000](http://localhost:3000) en tu navegador web para ver la página.
-6. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
-7. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`.
+4. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
+5. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
 
 > [!IMPORTANT]  
 > Todas las contribuciones deben ser realizadas a través de pull requests. No se aceptarán cambios directos en las ramas `main` y `testing`. Las pull requests serán revisadas y aprobadas por los administradores del repositorio, y deben solicitar merge a la rama `testing`, no `main`. Una vez aprobado el testing, se hará merge a `main`.
