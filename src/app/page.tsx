@@ -10,32 +10,6 @@ export default function Home() {
         <Link href="#" className="flex items-center justify-center" prefetch={false}>
           <img src="/logo.png" width={40} />
         </Link>
-
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="#"
-            className="text-sm font-medium underline-offset-4 hover:underline"
-            prefetch={false}
-          >
-            Sobre nosotros
-          </Link>
-
-          <Link
-            href="#"
-            className="text-sm font-medium underline-offset-4 hover:underline"
-            prefetch={false}
-          >
-            Características
-          </Link>
-
-          <Link
-            href="#"
-            className="text-sm font-medium underline-offset-4 hover:underline"
-            prefetch={false}
-          >
-            Unirme
-          </Link>
-        </nav>
       </header>
 
       <main className="flex-1">
@@ -66,7 +40,7 @@ export default function Home() {
               </div>
 
               <img
-                src="/placeholder.svg"
+                src="/pcn-header.webp"
                 width="550"
                 height="310"
                 alt="Hero"
