@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { Book, Briefcase, Users } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
@@ -28,7 +26,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div>
+                <div className="disabled">
                   <Link
                     href="#"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -116,40 +114,12 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section id="join" className="w-full bg-muted py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <h2 className="mb-4 text-3xl font-bold tracking-tighter sm:text-5xl">
-                Unite a la comunidad
-              </h2>
-
-              <div className="mx-auto w-full max-w-sm space-y-2">
-                <form className="flex flex-col gap-4">
-                  <Input type="text" placeholder="Nombre" className="max-w-lg flex-1" />
-                  <Input type="email" placeholder="Email" className="max-w-lg flex-1" />
-                  <Button type="submit">Unirme</Button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
-      <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
+      <footer className="flex w-full shrink-0 flex-col justify-center items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} programaConNosotros. Todos los derechos reservados.
+          Sitio web desarrollado y mantenido por miembros de programaConNosotros.
         </p>
-
-        <nav className="flex gap-4 sm:ml-auto sm:gap-6">
-          <Link href="#" className="text-xs underline-offset-4 hover:underline" prefetch={false}>
-            Términos de servicio
-          </Link>
-
-          <Link href="#" className="text-xs underline-offset-4 hover:underline" prefetch={false}>
-            Políticas de privacidad
-          </Link>
-        </nav>
       </footer>
     </div>
   );
