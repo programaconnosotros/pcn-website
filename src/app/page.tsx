@@ -116,7 +116,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="flex w-full shrink-0 flex-col justify-center items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
+      <footer className="flex w-full shrink-0 flex-col items-center justify-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-xs text-muted-foreground">
           Sitio web desarrollado y mantenido por miembros de programaConNosotros.
         </p>
