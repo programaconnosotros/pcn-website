@@ -2,7 +2,7 @@ import { GitHubSVG } from '../logos/GitHubSVG';
 import { LinkedInSVG } from '../logos/LinkedInSVG';
 import { XLogoSVG } from '../logos/XLogoSVG';
 
-type People = {
+type Person = {
   name: string;
   role: string | JSX.Element;
   imageUrl: string;
@@ -11,7 +11,7 @@ type People = {
   githubUrl?: string;
 };
 
-const people: People[] = [
+const people: Person[] = [
   {
     name: 'Agus',
     role: (
