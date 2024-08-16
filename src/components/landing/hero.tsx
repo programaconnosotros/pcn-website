@@ -59,6 +59,7 @@ export const Hero = () => {
 
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
           <div className="fixed inset-0 z-50" />
+
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
@@ -160,9 +161,10 @@ export const Hero = () => {
                   </h1>
 
                   <p className="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
-                    Cupidatat minim id magna ipsum sint dolor qui. Sunt sit in quis cupidatat mollit
-                    aute velit. Et labore commodo nulla aliqua proident mollit ullamco exercitation
-                    tempor. Sint aliqua anim nulla sunt mollit id pariatur in voluptate cillum.
+                    Si estás interesado en aprender cosas, compartir conocimiento, conocer
+                    profesionales que ya están donde vos querrías estar, o interactuar con
+                    estudiantes avanzados que te pueden brindar los mejores consejos, sumate a
+                    nuestra comunidad libre y gratuita.
                   </p>
 
                   <div className="mt-10 flex items-center gap-x-6">
