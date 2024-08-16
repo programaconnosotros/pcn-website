@@ -8,109 +8,111 @@ import {
   CarouselPrevious,
 } from '../ui/carousel';
 
-const LightningTalksCarousel = () => {
-  const photos: Array<{
-    src: string;
-    alt: string;
-    description: JSX.Element;
-  }> = [
-    {
-      src: '/lightning-talks/ddd-y-hexagonal.jpg',
-      alt: 'Agus presentando Domain-Driven Design, Hexagonal Architecture & Vertical Slicing',
-      description: (
-        <p>
-          Agus presentando <b>Domain-Driven Design, Hexagonal Architecture & Vertical Slicing</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/java-funcional.jpeg',
-      alt: 'Chelo presentando Java Funcional: Agilizando el Procesamiento de Datos',
-      description: (
-        <p>
-          Chelo presentando <b>Java Funcional: Agilizando el Procesamiento de Datos</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/arquitectura-modular.jpeg',
-      alt: 'Mauri presentando Arquitectura Modular en Aplicaciones Móviles',
-      description: (
-        <p>
-          Mauri presentando <b>Arquitectura Modular en Aplicaciones Móviles</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/database-indexing.jpeg',
-      alt: 'Fini presentando Database Indexing',
-      description: (
-        <p>
-          Fini presentando <b>Database Indexing</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/unit-testing.jpg',
-      alt: 'Tobi presentando Introducción al Unit Testing',
-      description: (
-        <p>
-          Tobi presentando <b>Introducción al Unit Testing</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/chatgpt.jpeg',
-      alt: 'Facu presentando Programación Optimizada con ChatGPT',
-      description: (
-        <p>
-          Facu presentando <b>Programación Optimizada con ChatGPT</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/arquitectura-software.jpeg',
-      alt: 'Agus presentando Introducción a la Arquitectura de Software',
-      description: (
-        <p>
-          Agus presentando <b>Arquitectura de Software: Frontend, Backend, Bases de Datos y más</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/diseno-perfecto.jpeg',
-      alt: 'Mauri presentando Diseño Perfecto',
-      description: (
-        <p>
-          Mauri presentando <b>Diseño Perfecto</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/paradigmas.jpeg',
-      alt: 'Chelo presentando Paradigmas de Programación',
-      description: (
-        <p>
-          Chelo presentando <b>Paradigmas de Programación</b>.
-        </p>
-      ),
-    },
-    {
-      src: '/lightning-talks/debugging.jpeg',
-      alt: 'Tobi presentando Depuración de código con C++ & Python',
-      description: (
-        <p>
-          Tobi presentando <b>Depuración de código con C++ & Python</b>.
-        </p>
-      ),
-    },
-  ];
+type CarouselImage = {
+  src: string;
+  alt: string;
+  description: JSX.Element;
+};
 
+const carouselImages: CarouselImage[] = [
+  {
+    src: '/lightning-talks/ddd-y-hexagonal.jpg',
+    alt: 'Agus presentando Domain-Driven Design, Hexagonal Architecture & Vertical Slicing',
+    description: (
+      <p>
+        Agus presentando <b>Domain-Driven Design, Hexagonal Architecture & Vertical Slicing</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/java-funcional.jpeg',
+    alt: 'Chelo presentando Java Funcional: Agilizando el Procesamiento de Datos',
+    description: (
+      <p>
+        Chelo presentando <b>Java Funcional: Agilizando el Procesamiento de Datos</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/arquitectura-modular.jpeg',
+    alt: 'Mauri presentando Arquitectura Modular en Aplicaciones Móviles',
+    description: (
+      <p>
+        Mauri presentando <b>Arquitectura Modular en Aplicaciones Móviles</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/database-indexing.jpeg',
+    alt: 'Fini presentando Database Indexing',
+    description: (
+      <p>
+        Fini presentando <b>Database Indexing</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/unit-testing.jpg',
+    alt: 'Tobi presentando Introducción al Unit Testing',
+    description: (
+      <p>
+        Tobi presentando <b>Introducción al Unit Testing</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/chatgpt.jpeg',
+    alt: 'Facu presentando Programación Optimizada con ChatGPT',
+    description: (
+      <p>
+        Facu presentando <b>Programación Optimizada con ChatGPT</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/arquitectura-software.jpeg',
+    alt: 'Agus presentando Introducción a la Arquitectura de Software',
+    description: (
+      <p>
+        Agus presentando <b>Arquitectura de Software: Frontend, Backend, Bases de Datos y más</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/diseno-perfecto.jpeg',
+    alt: 'Mauri presentando Diseño Perfecto',
+    description: (
+      <p>
+        Mauri presentando <b>Diseño Perfecto</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/paradigmas.jpeg',
+    alt: 'Chelo presentando Paradigmas de Programación',
+    description: (
+      <p>
+        Chelo presentando <b>Paradigmas de Programación</b>.
+      </p>
+    ),
+  },
+  {
+    src: '/lightning-talks/debugging.jpeg',
+    alt: 'Tobi presentando Depuración de código con C++ & Python',
+    description: (
+      <p>
+        Tobi presentando <b>Depuración de código con C++ & Python</b>.
+      </p>
+    ),
+  },
+];
+
+const LightningTalksCarousel = () => {
   return (
     <div className="flex items-center justify-center">
       <Carousel className="mt-12 w-full max-w-[75%]">
         <CarouselContent className="-ml-4">
-          {photos.map((photo, index) => (
+          {carouselImages.map((photo, index) => (
             <CarouselItem key={index} className="flex flex-col md:basis-1/2 lg:basis-1/3">
               <img src={photo.src} alt={photo.alt} className="h-full w-full object-cover" />
               <span className="mt-2 text-sm">{photo.description}</span>
