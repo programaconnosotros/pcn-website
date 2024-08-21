@@ -46,7 +46,7 @@ const PhotoCarousel = () => {
       alt: 'Programando en Eagerworks',
     },
     {
-      src: '/motivation/balzatar-2.jpeg',
+      src: '/motivation/baltazar-2.jpeg',
       alt: 'Trabajando en Baltazar',
     },
     {

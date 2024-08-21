@@ -17,6 +17,7 @@
     "@heroicons/react": "^2.1.5",
     "@prisma/client": "5.18.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "embla-carousel-autoplay": "^8.1.7",
@@ -25,8 +26,10 @@
     "lucide-react": "^0.396.0",
     "next": "14.2.4",
     "next-auth": "5.0.0-beta.20",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
