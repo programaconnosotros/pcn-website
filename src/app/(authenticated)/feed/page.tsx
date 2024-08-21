@@ -1,9 +1,9 @@
+import Advises from '@/components/advises/advises';
 import { SignOut } from '@/components/auth/sign-out';
 
 const Feed = () => (
   <div>
-    <h1>Feed</h1>
-    <SignOut />
+    <Advises />
   </div>
 );
 
