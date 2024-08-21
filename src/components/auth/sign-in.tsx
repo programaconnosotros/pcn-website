@@ -11,7 +11,7 @@ export const SignIn = () => {
   const handleSubmit = useCallback(async () => {
     setDisabled(true);
 
-    toast.loading('Iniciando sesión...');
+    toast.loading('Ingresando...');
 
     try {
       await signInWithGithub();
@@ -24,7 +24,7 @@ export const SignIn = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Button className="flex gap-2" type="submit" disabled={disabled}>
-        Iniciar sesión con GitHub
+        Ingresar con GitHub
         <LogIn className="mr-2 h-4 w-4" />
       </Button>
     </form>

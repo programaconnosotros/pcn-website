@@ -10,7 +10,7 @@ export const SignOut = () => (
     }}
   >
     <Button className="flex gap-2" type="submit">
-      Cerrar sesión <LogOut className="mr-2 h-4 w-4" />
+      Salir <LogOut className="mr-2 h-4 w-4" />
     </Button>
   </form>
 );
