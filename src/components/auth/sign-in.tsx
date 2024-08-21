@@ -8,17 +8,17 @@ import { LogIn } from 'lucide-react';
 export const SignIn = () => {
   const [disabled, setDisabled] = useState(false);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     setDisabled(true);
 
-    toast.promise(signInWithGithub, {
-      loading: 'Iniciando sesión...',
-      success: 'Sesión iniciada!',
-      error: () => {
-        setDisabled(false);
-        return 'No pudimos iniciar la sesión.';
-      },
-    });
+    toast.loading('Iniciando sesión...');
+
+    try {
+      await signInWithGithub();
+    } catch (error) {
+      setDisabled(false);
+      toast.error('No pudimos iniciar la sesión.');
+    }
   }, []);
 
   return (

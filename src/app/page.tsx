@@ -229,9 +229,14 @@ export const Home = () => (
 
               <p className="mx-auto max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Tenemos canales de texto y voz para que puedas interactuar con los miembros de la
-                comunidad, ya sea que seas un desarrollador súper experimentado o una persona que
-                recién está empezando a explorar el universo de la programación. La comunidad es
-                para todos!
+                comunidad, y un foro súper copado donde podes encontrar o compartir información
+                valiosa!
+              </p>
+
+              <p className="mx-auto max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Ya seas un desarrollador súper experimentado, o una persona que recién está
+                empezando a explorar el universo de la programación, todos son bienvenidos en
+                nuestra comunidad. Animate!
               </p>
 
               <Link href="https://discord.gg/dTQexKw56S" target="_blank">
