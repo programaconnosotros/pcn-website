@@ -21,8 +21,8 @@ import { createAdvise } from '@/actions/create-advise';
 const formSchema = z.object({
   content: z
     .string()
-    .min(2, { message: 'El consejo debe tener entre 2 y 400 caracteres.' })
-    .max(400, { message: 'El consejo debe tener entre 2 y 400 caracteres.' }),
+    .min(10, { message: 'Tenés que escribir al menos 10 caracteres' })
+    .max(400, { message: 'Podés escribir 400 caracteres como máximo' }),
 });
 
 export const AddAdvise = () => {
