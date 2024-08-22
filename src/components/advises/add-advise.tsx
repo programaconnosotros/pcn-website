@@ -40,9 +40,9 @@ export const AddAdvise = () => {
       loading: 'Creando consejo...',
       success: () => {
         form.reset();
-        return 'Consejo creado exitosamente!';
+        return 'Tu consejo fue publicado exitosamente. Gracias por compartir!';
       },
-      error: 'Ocurrió un error al crear el consejo',
+      error: 'Ocurrió un error al publicar el consejo',
     });
 
     setDialogOpen(false);
@@ -53,13 +53,13 @@ export const AddAdvise = () => {
       <DialogTrigger asChild>
         <Button className="mb-4 w-full">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Postear un consejo
+          Publicar un consejo
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Postear un consejo</DialogTitle>
+          <DialogTitle>Publicar un consejo</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
