@@ -14,8 +14,6 @@ const Feed = async () => {
     },
   });
 
-  console.log({ advises });
-
   return (
     <div>
       {/* <SidebarDemo /> */}
