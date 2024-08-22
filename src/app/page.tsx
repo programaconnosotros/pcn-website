@@ -160,6 +160,8 @@ export const Home = () => (
         </div>
       </section>
 
+      {/* TODO: Add section to show dynamic data (number of users, advises, activities, etc). */}
+
       <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl md:px-40">
