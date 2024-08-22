@@ -15,16 +15,14 @@ export const Advises = ({
       name: string;
     };
   }[];
-}) => {
-  return (
-    <>
-      <AddAdvise />
+}) => (
+  <>
+    <AddAdvise />
 
-      <div className="space-y-4">
-        {advises.map((advise) => (
-          <Advise key={advise.id} advise={advise} />
-        ))}
-      </div>
-    </>
-  );
-};
+    <div className="space-y-4">
+      {advises.map((advise) => (
+        <Advise key={advise.id} advise={advise} />
+      ))}
+    </div>
+  </>
+);
