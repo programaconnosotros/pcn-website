@@ -43,31 +43,45 @@ const advises = [
   },
 ];
 
-const Advises = () => (
-  <div className="min-h-screen bg-background">
-    <nav className="border-b">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2">
-        <h1 className="text-lg font-semibold">
-          <code>programaConNosotros</code>
-        </h1>
+const Advises = ({
+  advises,
+}: {
+  advises: {
+    id: string;
+    content: string;
+    createdAt: Date;
+    author: {
+      id: string;
+      name: string;
+    };
+  }[];
+}) => {
+  return (
+    <div className="min-h-screen bg-background">
+      <nav className="border-b">
+        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2">
+          <h1 className="text-lg font-semibold">
+            <code>programaConNosotros</code>
+          </h1>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {/* <SignOut /> */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            {/* <SignOut /> */}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
 
-    <main className="mx-auto max-w-2xl p-4">
-      <AddAdvise />
+      <main className="mx-auto max-w-2xl p-4">
+        <AddAdvise />
 
-      <div className="space-y-4">
-        {advises.map((post) => (
-          <Advise key={post.id} post={post} />
-        ))}
-      </div>
-    </main>
-  </div>
-);
+        <div className="space-y-4">
+          {advises.map((advise) => (
+            <Advise key={advise.id} advise={advise} />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+};
 
 export default Advises;
