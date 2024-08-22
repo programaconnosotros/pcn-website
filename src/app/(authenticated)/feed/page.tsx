@@ -9,6 +9,9 @@ const Feed = async () => {
     include: {
       author: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 
   console.log({ advises });
