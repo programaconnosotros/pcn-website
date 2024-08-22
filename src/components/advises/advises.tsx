@@ -1,8 +1,8 @@
 'use client';
 
 import { ThemeToggle } from '../themes/theme-toggle';
-import AddAdvise from './add-advise';
-import Advise from './advise';
+import { AddAdvise } from './add-advise';
+import { Advise } from './advise';
 
 const advises = [
   {

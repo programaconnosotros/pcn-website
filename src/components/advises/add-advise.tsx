@@ -24,7 +24,7 @@ const formSchema = z.object({
     .max(400, { message: 'El consejo debe tener entre 2 y 400 caracteres.' }),
 });
 
-const AddAdvise = () => {
+export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -79,5 +79,3 @@ const AddAdvise = () => {
     </Dialog>
   );
 };
-
-export default AddAdvise;

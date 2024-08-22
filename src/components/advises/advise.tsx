@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-const Advise = ({
+export const Advise = ({
   post,
 }: {
   post: {
@@ -53,5 +53,3 @@ const Advise = ({
     </CardFooter>
   </Card>
 );
-
-export default Advise;
