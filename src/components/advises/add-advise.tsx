@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { createAdvise } from '@/actions/create-advise';
 
 const formSchema = z.object({
   content: z
@@ -35,8 +36,13 @@ export const AddAdvise = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    toast.promise(createAdvise(values.content), {
+      loading: 'Creando consejo...',
+      success: 'Consejo creado exitosamente!',
+      error: 'Ocurrió un error al crear el consejo',
+    });
+
     form.reset();
-    toast.success('Consejo creado exitosamente!');
     setDialogOpen(false);
   }
 
