@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '../ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const AddAdvise = () => {
   return (
@@ -25,7 +25,7 @@ const AddAdvise = () => {
           <DialogTitle>Postear un consejo</DialogTitle>
         </DialogHeader>
 
-        <Input placeholder="Escribí acá tu consejo..." />
+        <Textarea placeholder="Escribí acá tu consejo..." />
 
         <Button>Postear</Button>
       </DialogContent>
