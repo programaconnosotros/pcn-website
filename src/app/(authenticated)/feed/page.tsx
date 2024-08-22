@@ -5,6 +5,7 @@ import { ThemeToggle } from '@/components/themes/theme-toggle';
 import prisma from '@/lib/prisma';
 
 // TODO: Add infinite scroll to load more advises and improve performance.
+// TODO: Allow users to order advises by number of likes.
 
 const Feed = async () => {
   const advises = await prisma.advise.findMany({
