@@ -3,6 +3,8 @@
 import { AddAdvise } from './add-advise';
 import { Advise } from './advise';
 
+// TODO: Check if there are new advises and if user accepts update the list.
+
 export const Advises = ({
   advises,
 }: {
