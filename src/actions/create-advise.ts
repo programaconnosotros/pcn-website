@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export const createAdvise = async (content: string) => {
   const session = await auth();
@@ -15,4 +16,6 @@ export const createAdvise = async (content: string) => {
       author: { connect: { id: session.user.id } },
     },
   });
+
+  revalidatePath('/feed');
 };
