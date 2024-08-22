@@ -41,7 +41,7 @@ const AddAdvise = () => {
   }
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(true)}>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button className="mb-4 w-full">
           <PlusCircle className="mr-2 h-4 w-4" />
