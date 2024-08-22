@@ -38,11 +38,13 @@ export const AddAdvise = () => {
   function onSubmit({ content }: z.infer<typeof formSchema>) {
     toast.promise(createAdvise(content), {
       loading: 'Creando consejo...',
-      success: 'Consejo creado exitosamente!',
+      success: () => {
+        form.reset();
+        return 'Consejo creado exitosamente!';
+      },
       error: 'Ocurrió un error al crear el consejo',
     });
 
-    form.reset();
     setDialogOpen(false);
   }
 
