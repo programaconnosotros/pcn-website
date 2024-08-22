@@ -4,6 +4,8 @@ import { SidebarDemo } from '@/components/sidebar-demo';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import prisma from '@/lib/prisma';
 
+// TODO: Add infinite scroll to load more advises and improve performance.
+
 const Feed = async () => {
   const advises = await prisma.advise.findMany({
     include: {
