@@ -8,7 +8,19 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    String  @id @default(cuid())
   email String  @unique
   name  String?
+
+  advises Advise[]
+}
+
+model Advise {
+  id        String @id @default(cuid())
+  content   String
+
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+
+  createdAt DateTime @default(now())
 }
