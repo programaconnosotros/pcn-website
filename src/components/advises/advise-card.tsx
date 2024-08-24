@@ -2,22 +2,9 @@ import { ThumbsUp, MessageCircle, Share2 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Advise } from '@prisma/generated/zod';
 
-export const Advise = ({
-  advise,
-}: {
-  advise: {
-    id: number;
-    author: {
-      name: string;
-      subtitle: string;
-      avatar: string;
-    };
-    content: string;
-    likes: number;
-    comments: number;
-  };
-}) => (
+export const AdviseCard = ({ advise }: { advise: Advise }) => (
   <Card key={advise.id} className="w-full">
     <CardHeader className="flex flex-row items-center gap-3 px-4 py-3">
       <Avatar className="h-10 w-10">
