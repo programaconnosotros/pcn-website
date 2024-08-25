@@ -46,7 +46,7 @@ export const SidebarWrapper = ({ user, children }: { user?: User; children: Reac
                 <SidebarLink key={idx} link={link} />
               ))}
 
-              {/* <SignOut /> */}
+              <SignOut />
             </div>
           </div>
 
