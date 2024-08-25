@@ -17,7 +17,10 @@ const Feed = async () => {
 
   return (
     <>
-      <AddAdvise />
+      <div className="mb-4 flex justify-between">
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Feed</h1>
+        <AddAdvise />
+      </div>
 
       <div className="space-y-4">
         {advises.length === 0 && (

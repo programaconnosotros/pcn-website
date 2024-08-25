@@ -51,7 +51,7 @@ export const AddAdvise = () => {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-4 w-full">
+        <Button className="mb-4">
           <PlusCircle className="mr-2 h-4 w-4" />
           Publicar un consejo
         </Button>
