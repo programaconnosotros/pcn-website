@@ -161,6 +161,8 @@ export const SidebarLink = ({
 }) => {
   const { open, animate } = useSidebar();
 
+  // TODO: Hide sidebar when screen is mobile size and an option is selected
+
   return (
     <Link
       href={link.href}
