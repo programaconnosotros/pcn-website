@@ -36,7 +36,7 @@ export const Home = async () => {
               </div>
 
               {session?.user ? (
-                <Link href="/feed">
+                <Link href="/home">
                   <Button>Volver a la plataforma</Button>
                 </Link>
               ) : (

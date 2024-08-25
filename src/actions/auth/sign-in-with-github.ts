@@ -2,4 +2,4 @@
 
 import { signIn } from '@/auth';
 
-export const signInWithGithub = async () => await signIn('github', { redirectTo: '/feed' });
+export const signInWithGithub = async () => await signIn('github', { redirectTo: '/home' });

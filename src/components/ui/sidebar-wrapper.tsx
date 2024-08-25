@@ -7,12 +7,20 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { User } from '@prisma/generated/zod';
+import { ThemeToggle } from '../themes/theme-toggle';
 
 export const SidebarWrapper = ({ user, children }: { user?: User; children: ReactNode }) => {
   const links = [
     {
-      label: 'Feed',
-      href: '/feed',
+      label: 'Inicio',
+      href: '/home',
+      icon: (
+        <IconBrandTabler className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: 'Consejos',
+      href: '/advises',
       icon: (
         <IconBrandTabler className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -47,25 +55,29 @@ export const SidebarWrapper = ({ user, children }: { user?: User; children: Reac
             </div>
           </div>
 
-          {user && (
-            <div>
-              <SidebarLink
-                link={{
-                  label: user.name ?? 'Sin nombre',
-                  href: '/profile',
-                  icon: user.image && (
-                    <Image
-                      src={user.image}
-                      className="h-7 w-7 flex-shrink-0 rounded-full"
-                      width={50}
-                      height={50}
-                      alt="Avatar"
-                    />
-                  ),
-                }}
-              />
-            </div>
-          )}
+          <div>
+            <ThemeToggle />
+
+            {user && (
+              <div>
+                <SidebarLink
+                  link={{
+                    label: user.name ?? 'Sin nombre',
+                    href: '/profile',
+                    icon: user.image && (
+                      <Image
+                        src={user.image}
+                        className="h-7 w-7 flex-shrink-0 rounded-full"
+                        width={50}
+                        height={50}
+                        alt="Avatar"
+                      />
+                    ),
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </SidebarBody>
       </Sidebar>
 
