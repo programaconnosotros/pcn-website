@@ -1,4 +1,5 @@
 'use client';
+
 import { cn } from '@/lib/utils';
 import Link, { LinkProps } from 'next/link';
 import React, { useState, createContext, useContext } from 'react';
@@ -21,9 +22,11 @@ const SidebarContext = createContext<SidebarContextProps | undefined>(undefined)
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
+
   if (!context) {
     throw new Error('useSidebar must be used within a SidebarProvider');
   }
+
   return context;
 };
 
@@ -60,22 +63,18 @@ export const Sidebar = ({
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
-}) => {
-  return (
-    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
-      {children}
-    </SidebarProvider>
-  );
-};
+}) => (
+  <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
+    {children}
+  </SidebarProvider>
+);
 
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
-  return (
-    <>
-      <DesktopSidebar {...props} />
-      <MobileSidebar {...(props as React.ComponentProps<'div'>)} />
-    </>
-  );
-};
+export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => (
+  <>
+    <DesktopSidebar {...props} />
+    <MobileSidebar {...(props as React.ComponentProps<'div'>)} />
+  </>
+);
 
 export const DesktopSidebar = ({
   className,
@@ -83,11 +82,12 @@ export const DesktopSidebar = ({
   ...props
 }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
+
   return (
     <>
       <motion.div
         className={cn(
-          'hidden h-full w-[300px] flex-shrink-0 bg-neutral-100 px-4 py-4 dark:bg-neutral-800 md:flex md:flex-col',
+          'hidden h-full w-[300px] flex-shrink-0 px-4 py-4 md:flex md:flex-col',
           className,
         )}
         animate={{
@@ -105,12 +105,11 @@ export const DesktopSidebar = ({
 
 export const MobileSidebar = ({ className, children, ...props }: React.ComponentProps<'div'>) => {
   const { open, setOpen } = useSidebar();
+
   return (
     <>
       <div
-        className={cn(
-          'flex h-10 w-full flex-row items-center justify-between bg-neutral-100 px-4 py-4 dark:bg-neutral-800 md:hidden',
-        )}
+        className={cn('flex h-10 w-full flex-row items-center justify-between px-4 py-4 md:hidden')}
         {...props}
       >
         <div className="z-20 flex w-full justify-end">
@@ -119,6 +118,7 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
             onClick={() => setOpen(!open)}
           />
         </div>
+
         <AnimatePresence>
           {open && (
             <motion.div
@@ -140,6 +140,7 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
               >
                 <IconX />
               </div>
+
               {children}
             </motion.div>
           )}
@@ -159,6 +160,7 @@ export const SidebarLink = ({
   props?: LinkProps;
 }) => {
   const { open, animate } = useSidebar();
+
   return (
     <Link
       href={link.href}
