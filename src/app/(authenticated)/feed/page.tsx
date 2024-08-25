@@ -1,4 +1,5 @@
-import { Advises } from '@/components/advises/advises';
+import { AddAdvise } from '@/components/advises/add-advise';
+import { AdviseCard } from '@/components/advises/advise-card';
 import prisma from '@/lib/prisma';
 
 // TODO: Add infinite scroll to load more advises and improve performance.
@@ -14,7 +15,17 @@ const Feed = async () => {
     },
   });
 
-  return <Advises advises={advises} />;
+  return (
+    <>
+      <AddAdvise />
+
+      <div className="space-y-4">
+        {advises.map((advise) => (
+          <AdviseCard key={advise.id} advise={advise} />
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default Feed;
