@@ -1,6 +1,6 @@
 'use client';
 import React, { ReactNode, useState } from 'react';
-import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar';
+import { Sidebar, SidebarBody, SidebarLink } from './sidebar';
 import { IconBrandTabler, IconUserBolt } from '@tabler/icons-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
