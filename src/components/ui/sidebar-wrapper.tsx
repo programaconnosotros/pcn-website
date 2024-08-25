@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { SignOut } from '../auth/sign-out';
 import { User } from '@prisma/generated/zod';
 
-export const SidebarDemo = ({ user, children }: { user?: User; children: ReactNode }) => {
+export const SidebarWrapper = ({ user, children }: { user?: User; children: ReactNode }) => {
   const links = [
     {
       label: 'Feed',

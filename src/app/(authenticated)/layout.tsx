@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { SidebarDemo } from '@components/ui/sidebar-demo';
+import { SidebarWrapper } from '@/components/ui/sidebar-wrapper';
 import { SignOut } from '@components/auth/sign-out';
 import { ThemeToggle } from '@components/themes/theme-toggle';
 import { ReactNode } from 'react';
@@ -10,7 +10,7 @@ const Layout = async ({ children }: { children?: ReactNode }) => {
   return (
     <div>
       <div className="min-h-screen bg-background">
-        <SidebarDemo user={session?.user}>{children} </SidebarDemo>
+        <SidebarWrapper user={session?.user}>{children} </SidebarWrapper>
 
         {/* <nav className="border-b">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2">
