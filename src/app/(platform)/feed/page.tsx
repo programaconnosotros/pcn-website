@@ -20,6 +20,10 @@ const Feed = async () => {
       <AddAdvise />
 
       <div className="space-y-4">
+        {advises.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground">No hay consejos para ver aún.</p>
+        )}
+
         {advises.map((advise) => (
           <AdviseCard key={advise.id} advise={advise} />
         ))}
