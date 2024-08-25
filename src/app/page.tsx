@@ -37,7 +37,7 @@ export const Home = async () => {
 
               {session?.user ? (
                 <Link href="/feed">
-                  <Button>Ingresar a la plataforma</Button>
+                  <Button>Volver a la plataforma</Button>
                 </Link>
               ) : (
                 <SignIn />
