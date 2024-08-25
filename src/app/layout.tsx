@@ -9,24 +9,19 @@ export const metadata: Metadata = {
   description: 'Desarrollado y mantenido para y por la comunidad.',
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body className={GeistSans.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster closeButton position="top-center" />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+}>) => (
+  <html lang="en">
+    <body className={GeistSans.className}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        {children}
+        <Toaster closeButton position="top-center" />
+      </ThemeProvider>
+    </body>
+  </html>
+);
+
+export default RootLayout;
