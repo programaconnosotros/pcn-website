@@ -17,5 +17,5 @@ export const createAdvise = async (content: string) => {
     },
   });
 
-  revalidatePath('/feed');
+  revalidatePath('/home');
 };
