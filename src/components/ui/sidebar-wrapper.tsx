@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { SignOut } from '../auth/sign-out';
 import { User } from '@prisma/generated/zod';
 
 export const SidebarWrapper = ({ user, children }: { user?: User; children: ReactNode }) => {
@@ -45,8 +44,6 @@ export const SidebarWrapper = ({ user, children }: { user?: User; children: Reac
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
-
-              <SignOut />
             </div>
           </div>
 
