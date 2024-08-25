@@ -8,7 +8,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
   <Card key={advise.id} className="w-full">
     <CardHeader className="flex flex-row items-center gap-3 px-4 py-3">
       <Avatar className="h-10 w-10">
-        <AvatarImage src={advise.author?.avatar} alt={advise.author.name} />
+        <AvatarImage src={advise.author.image ?? undefined} alt={advise.author.name ?? undefined} />
         <AvatarFallback>{advise.author?.name?.charAt(0)}</AvatarFallback>
       </Avatar>
 
