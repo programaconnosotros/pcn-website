@@ -1,5 +1,5 @@
-import { AddAdvise } from '@/components/advises/add-advise';
-import { AdviseCard } from '@/components/advises/advise-card';
+import { AddAdvise } from '@components/advises/add-advise';
+import { AdviseCard } from '@components/advises/advise-card';
 import prisma from '@/lib/prisma';
 
 // TODO: Add infinite scroll to load more advises and improve performance.
