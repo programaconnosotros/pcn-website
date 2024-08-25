@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { signInWithGithub } from '@/actions/sign-in-with-github';
+import { signInWithGithub } from '@/actions/auth/sign-in-with-github';
 import { LogIn } from 'lucide-react';
 
 export const SignIn = () => {
