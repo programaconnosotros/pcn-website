@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { User } from '@prisma/generated/zod';
 import { ThemeToggle } from '../themes/theme-toggle';
 
-export const SidebarWrapper = ({ user, children }: { user?: User; children: ReactNode }) => {
+export const SidebarContainer = ({ user, children }: { user?: User; children: ReactNode }) => {
   const links = [
     {
       label: 'Inicio',
@@ -81,7 +81,7 @@ export const SidebarWrapper = ({ user, children }: { user?: User; children: Reac
         </SidebarBody>
       </Sidebar>
 
-      <div className="w-full overflow-auto p-8 md:px-48 md:pt-10">{children}</div>
+      <div className="w-full overflow-auto">{children}</div>
     </div>
   );
 };
