@@ -40,9 +40,11 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
+    "shuffle-array": "^1.0.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.0",
     "tailwindcss-animate": "^1.0.7",
+    "typewriter-effect": "^2.21.0",
     "zod": "^3.23.8",
     "zod-prisma-types": "^3.1.8"
   },

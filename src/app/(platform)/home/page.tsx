@@ -5,11 +5,13 @@ import { CommunityGrowthCard } from '@/components/home/community-growth-card';
 import { UpcomingEventsSection } from '@/components/home/upcoming-events-section';
 import { MainSponsorCard } from '@/components/home/main-sponsor-card';
 import { LatestArticles } from '@/components/home/latest-articles';
+import { MotivationalQuotes } from '@/components/home/motivational-quotes';
 
 const Home = () => (
   <div className="md:p-20">
-    <div className="mb-4 flex justify-between">
+    <div className="mb-6 flex flex-col">
       <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">Hola!</h1>
+      <MotivationalQuotes />
     </div>
 
     <section className="w-full">
