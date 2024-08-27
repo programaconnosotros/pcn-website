@@ -13,14 +13,16 @@ const quotes = [
 ];
 
 export const MotivationalQuotes = () => (
-  <div className="mt-3">
-    <Writer
-      options={{
-        strings: shuffleArray(quotes),
-        autoStart: true,
-        loop: true,
-        delay: 40,
-      }}
-    />
+  <div className="mt-3 text-sm">
+    <code>
+      <Writer
+        options={{
+          strings: shuffleArray(quotes),
+          autoStart: true,
+          loop: true,
+          delay: 40,
+        }}
+      />
+    </code>
   </div>
 );
