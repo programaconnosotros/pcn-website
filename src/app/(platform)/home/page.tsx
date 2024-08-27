@@ -8,7 +8,7 @@ import { LatestArticles } from '@/components/home/latest-articles';
 import { MotivationalQuotes } from '@/components/home/motivational-quotes';
 
 const Home = () => (
-  <div className="md:p-20">
+  <div className="mt-4 md:px-20">
     <div className="mb-6 flex flex-col">
       <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">Hola!</h1>
       <MotivationalQuotes />
