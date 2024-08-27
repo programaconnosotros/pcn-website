@@ -6,7 +6,7 @@ const events = [
 ];
 
 export const UpcomingEventsSection = () => (
-  <Card className="col-span-2">
+  <Card>
     <CardHeader>
       <CardTitle>Próximos eventos</CardTitle>
       <CardDescription>No te pierdas los próximos eventos de la comunidad!</CardDescription>
