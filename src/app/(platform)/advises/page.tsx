@@ -1,6 +1,7 @@
 import { AddAdvise } from '@components/advises/add-advise';
 import { AdviseCard } from '@components/advises/advise-card';
 import prisma from '@/lib/prisma';
+import { Heading2 } from '@components/ui/heading-2';
 
 // TODO: Add infinite scroll to load more advises and improve performance.
 // TODO: Allow users to order advises by number of likes.
@@ -16,9 +17,9 @@ const AdvisesPage = async () => {
   });
 
   return (
-    <>
-      <div className="mb-4 flex justify-between">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Consejos</h1>
+    <div className="mt-4 md:px-20">
+      <div className="mb-4 flex justify-between items-center">
+        <Heading2>Consejos</Heading2>
         <AddAdvise />
       </div>
 
@@ -31,7 +32,7 @@ const AdvisesPage = async () => {
           <AdviseCard key={advise.id} advise={advise} />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
