@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { createAdvise } from '@/actions/create-advise';
+import { createAdvise } from '@actions/advises/create-advise';
 
 const formSchema = z.object({
   content: z
