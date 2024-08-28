@@ -18,14 +18,16 @@ const AdvisesPage = async () => {
 
   return (
     <div className="mt-4 md:px-20">
-      <div className="mb-4 flex justify-between items-center">
+      <div className="mb-6 flex items-center justify-between">
         <Heading2>Consejos</Heading2>
         <AddAdvise />
       </div>
 
-      <div className="space-y-4">
+      <div className="col-span-1 mb-10 space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:col-span-2">
         {advises.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground">No hay consejos para ver aún.</p>
+          <p className="col-span-full text-center text-sm text-muted-foreground">
+            No hay consejos para ver aún.
+          </p>
         )}
 
         {advises.map((advise) => (
