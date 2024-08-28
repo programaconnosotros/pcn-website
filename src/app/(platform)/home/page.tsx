@@ -1,16 +1,17 @@
 import { AdvisesCard } from '@components/home/advises-card';
 import { ActiveMembersCard } from '@components/home/active-members-card';
-import { UpcomingEventsCard } from '@/components/home/upcoming-events-card';
-import { CommunityGrowthCard } from '@/components/home/community-growth-card';
-import { UpcomingEventsSection } from '@/components/home/upcoming-events-section';
-import { MainSponsorCard } from '@/components/home/main-sponsor-card';
-import { LatestArticles } from '@/components/home/latest-articles';
-import { MotivationalQuotes } from '@/components/home/motivational-quotes';
+import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
+import { CommunityGrowthCard } from '@components/home/community-growth-card';
+import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
+import { MainSponsorCard } from '@components/home/main-sponsor-card';
+import { LatestArticles } from '@components/home/latest-articles';
+import { MotivationalQuotes } from '@components/home/motivational-quotes';
+import { Heading2 } from '@/components/ui/heading-2';
 
 const Home = () => (
   <div className="mt-4 md:px-20">
     <div className="mb-6 flex flex-col">
-      <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">Hola!</h1>
+      <Heading2>Hola!</Heading2>
       <MotivationalQuotes />
     </div>
 
