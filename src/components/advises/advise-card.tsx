@@ -24,15 +24,43 @@ import {
 } from '@/components/ui/alert-dialog';
 import { deleteAdvise } from '@actions/advises/delete-advise';
 import { toast } from 'sonner';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { editAdvise } from '@/actions/advises/edit-advise';
 
-export const AdviseCard = ({
-  advise,
-  onEdit,
-}: {
-  advise: Advise & { author: User };
-  onEdit: (id: string) => void;
-}) => {
+const formSchema = z.object({
+  content: z
+    .string()
+    .min(10, { message: 'Tenés que escribir al menos 10 caracteres' })
+    .max(400, { message: 'Podés escribir 400 caracteres como máximo' }),
+});
+
+export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: advise.content,
+    },
+  });
+
+  function onSubmit({ content }: z.infer<typeof formSchema>) {
+    toast.promise(editAdvise(advise.id, content), {
+      loading: 'Editando consejo...',
+      success: () => {
+        form.reset({ content });
+        setIsEditDialogOpen(false);
+        return 'Tu consejo fue editado exitosamente.';
+      },
+      error: 'Ocurrió un error al editar el consejo',
+    });
+  }
 
   const handleDelete = () => {
     toast.promise(deleteAdvise(advise.id), {
@@ -70,7 +98,7 @@ export const AdviseCard = ({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(advise.id)}>
+            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
               <Edit className="mr-2 h-4 w-4" />
               <span>Editar</span>
             </DropdownMenuItem>
@@ -91,12 +119,42 @@ export const AdviseCard = ({
               Esta acción no se puede deshacer. El consejo será eliminado permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>Confirmar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar consejo</DialogTitle>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Guardar cambios
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
       <CardContent className="px-4 py-6">
         <p className="text-sm">{advise.content}</p>
