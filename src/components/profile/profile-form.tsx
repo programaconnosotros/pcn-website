@@ -50,7 +50,9 @@ export const ProfileForm = ({ user }: { user: User }) => {
         {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
-      <Button type="submit">Actualizar perfil</Button>
+      <Button className="w-full sm:w-auto" type="submit">
+        Actualizar perfil
+      </Button>
     </form>
   );
 };
