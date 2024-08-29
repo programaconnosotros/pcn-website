@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "prisma:migrate": "prisma migrate dev --name",
+    "prisma:create": "prisma migrate dev --name",
+    "prisma:apply": "prisma migrate dev",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
