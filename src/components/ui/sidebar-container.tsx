@@ -30,7 +30,7 @@ export const SidebarContainer = ({ user, children }: { user?: User; children: Re
   return (
     <div
       className={cn(
-        'mx-auto flex w-full max-w-7xl flex-1 flex-col overflow-hidden rounded-md md:flex-row',
+        'mx-auto flex w-full flex-1 flex-col overflow-hidden rounded-md md:flex-row',
         'h-screen',
       )}
     >
