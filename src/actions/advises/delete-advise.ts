@@ -11,7 +11,7 @@ export const deleteAdvise = async (id: string) => {
   if (!session.user?.id) throw new Error('User id not found in session');
 
   await prisma.advise.delete({
-    where: { id },
+    where: { id, authorId: session.user.id },
   });
 
   revalidatePath('/advises');
