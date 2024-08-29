@@ -25,8 +25,9 @@ Este es el repositorio del website de PCN. El website está construido con Next.
    pnpm prisma:migrate
    ```
 
-> [!IMPORTANT]  
-> Tenes que usar pnpm si o si en este proyecto. Si usas npm o yarn, vas a tener problemas. Por favor, asegurate de usar pnpm para todo lo relacionado a las dependencias del proyecto. 6. Luego, tenes que crear el client de Prisma ejecutando el siguiente comando:
+   > Tenes que usar pnpm si o si en este proyecto. Si usas npm o yarn, vas a tener problemas. Por favor, asegurate de usar pnpm para todo lo relacionado a las dependencias del proyecto.
+
+6. Luego, tenes que crear el client de Prisma ejecutando el siguiente comando:
 
 ```bash
 pnpm prisma:generate
