@@ -40,7 +40,13 @@ export const Home = async () => {
                   <Button>Volver a la plataforma</Button>
                 </Link>
               ) : (
-                <SignIn />
+                <div className="flex flex-row gap-4">
+                  <SignIn />
+
+                  <Link href="/home">
+                    <Button variant="outline">Entrar a la plataforma</Button>
+                  </Link>
+                </div>
               )}
             </div>
           </div>

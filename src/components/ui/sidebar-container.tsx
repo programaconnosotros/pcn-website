@@ -25,13 +25,6 @@ export const SidebarContainer = ({ user, children }: { user?: User; children: Re
         <IconBrandTabler className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
-    {
-      label: 'Mi perfil',
-      href: '/profile',
-      icon: (
-        <IconUserBolt className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
   ];
 
   const [open, setOpen] = useState(false);
@@ -52,6 +45,18 @@ export const SidebarContainer = ({ user, children }: { user?: User; children: Re
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
+
+              {user && (
+                <SidebarLink
+                  link={{
+                    label: 'Mi perfil',
+                    href: '/profile',
+                    icon: (
+                      <IconUserBolt className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+                    ),
+                  }}
+                />
+              )}
             </div>
           </div>
 
