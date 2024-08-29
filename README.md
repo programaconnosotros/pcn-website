@@ -25,24 +25,24 @@ Este es el repositorio del website de PCN. El website está construido con Next.
    pnpm prisma:migrate
    ```
 
-   > Tenes que usar pnpm si o si en este proyecto. Si usas npm o yarn, vas a tener problemas. Por favor, asegurate de usar pnpm para todo lo relacionado a las dependencias del proyecto.
+   > Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
 
 6. Luego, tenes que crear el client de Prisma ejecutando el siguiente comando:
 
-```bash
-pnpm prisma:generate
-```
+   ```bash
+   pnpm prisma:generate
+   ```
 
 7. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 8. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Todas las contribuciones deben ser realizadas a través de pull requests. No se aceptarán cambios directos en las ramas `main` y `testing`. Las pull requests serán revisadas y aprobadas por los administradores del repositorio, y deben solicitar merge a la rama `testing`, no `main`. Una vez aprobado el testing, se hará merge a `main`.
 
 > [!NOTE]
 > Cada vez que quieras crear un commit, automáticamente se formateará el código con Prettier y se verificará que la app compile y el linter no encuentra errores. Si hay errores, no se podrá hacer commit. Esto se hace para mantener la calidad del código, pedimos disculpas por las demoras que esto pueda ocasionar al ejecutar el comando para crear un commit.
 
-> [!NOTE]  
+> [!NOTE]
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
 
 ## 🛠️ Tech stack
@@ -71,3 +71,7 @@ Para aprender más sobre Next.js, puedes revisar los siguientes recursos:
 
 - [Documentación de Next.js](https://nextjs.org/docs) - aprender sobre las características y funcionalidades de Next.js.
 - [Learn Next.js](https://nextjs.org/learn) - un tutorial interactivo de Next.js.
+
+```
+
+```
