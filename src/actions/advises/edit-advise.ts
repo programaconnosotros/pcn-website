@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export const editAdvise = async (id: string, content: string) => {
   const session = await auth();
@@ -13,4 +14,6 @@ export const editAdvise = async (id: string, content: string) => {
     where: { id, authorId: session.user.id },
     data: { content },
   });
+
+  revalidatePath('/advises');
 };
