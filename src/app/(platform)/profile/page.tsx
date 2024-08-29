@@ -18,7 +18,7 @@ const Profile = async () => {
   if (!user) throw new Error('User not found');
 
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 px-6 md:px-20">
       <Heading2>Mi perfil</Heading2>
       <ProfileForm user={user} />
       <SignOut />
