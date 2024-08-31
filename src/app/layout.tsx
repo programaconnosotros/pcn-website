@@ -15,7 +15,7 @@ const RootLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => (
-  <html lang="en">
+  <html lang="es">
     <body className={GeistSans.className}>
       <SessionProvider>
         <ThemeProvider
