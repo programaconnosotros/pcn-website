@@ -84,7 +84,7 @@ export const SidebarContainer = ({ user, children }: { user?: User; children: Re
         </SidebarBody>
       </Sidebar>
 
-      <div className="w-full overflow-auto md:min-w-[100%]">{children}</div>
+      <div className="w-full overflow-auto p-5 md:min-w-[100%]">{children}</div>
     </div>
   );
 };
