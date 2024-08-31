@@ -26,15 +26,23 @@ const AdvisesPage = async () => {
         {session && <AddAdvise />}
       </div>
 
-      <div className="col-span-1 mb-10 space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-3 lg:gap-6">
+      <div className="mb-10 flex flex-col md:-mx-2 md:flex-row">
         {advises.length === 0 && (
-          <p className="col-span-full text-center text-sm text-muted-foreground">
+          <p className="w-full text-center text-sm text-muted-foreground">
             No hay consejos para ver aún.
           </p>
         )}
 
-        {advises.map((advise) => (
-          <AdviseCard key={advise.id} advise={advise} />
+        {[0, 1, 2].map((columnIndex) => (
+          <div key={columnIndex} className="flex-1 md:px-2">
+            {advises
+              .filter((_, index) => index % 3 === columnIndex)
+              .map((advise, index) => (
+                <div key={advise.id} className={`mb-4 md:mb-0 ${index > 0 ? 'mt-4' : ''}`}>
+                  <AdviseCard advise={advise} />
+                </div>
+              ))}
+          </div>
         ))}
       </div>
     </div>
