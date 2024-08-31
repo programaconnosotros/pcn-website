@@ -21,7 +21,9 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { data: session } = useSession();
 
-  const isAuthor = session?.user?.id === advise.author.id;
+  const isAuthor =
+    (session?.user?.id && session.user.id === advise.author.id) ||
+    (session?.user?.email && session.user.email === advise.author.email);
 
   const Author = (
     <div className="flex items-center gap-3">
