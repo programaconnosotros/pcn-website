@@ -15,6 +15,8 @@ import {
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 import { useSession } from 'next-auth/react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -82,6 +84,11 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
 
       <CardContent className="px-4 py-6">
         <p className="text-sm">{advise.content}</p>
+        <p className="mt-4 text-xs text-gray-500">
+          {format(new Date(advise.createdAt), "d 'de' MMMM 'de' yyyy 'a las' HH:mm", {
+            locale: es,
+          })}
+        </p>
       </CardContent>
     </Card>
   );
