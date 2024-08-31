@@ -107,7 +107,7 @@ La estructura de archivos del proyecto sigue las convenciones de Next.js:
 ├── docker-compose.yml   # Configuración de Docker Compose
 ├── next.config.mjs       # Configuración de Next.js
 ├── package.json         # Dependencias y scripts del proyecto
-├── tsconfig.json        # Configuración de TypeScript
+└── tsconfig.json         # Configuración de TypeScript
 ```
 
 ## 📚 Aprender más
@@ -116,7 +116,3 @@ Para aprender más sobre Next.js, puedes revisar los siguientes recursos:
 
 - [Documentación de Next.js](https://nextjs.org/docs) - aprender sobre las características y funcionalidades de Next.js.
 - [Learn Next.js](https://nextjs.org/learn) - un tutorial interactivo de Next.js.
-
-```
-
-```
