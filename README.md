@@ -70,6 +70,8 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
   Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
 
+  <img src="./public/prisma-studio-screenshot.png" alt="Prisma Studio" width="500"/>
+
 ## 🛠️ Tech stack
 
 - [Docker](https://www.docker.com/) (contenedores)
@@ -96,7 +98,3 @@ Para aprender más sobre Next.js, puedes revisar los siguientes recursos:
 
 - [Documentación de Next.js](https://nextjs.org/docs) - aprender sobre las características y funcionalidades de Next.js.
 - [Learn Next.js](https://nextjs.org/learn) - un tutorial interactivo de Next.js.
-
-```
-
-```
