@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "create-migration": "prisma migrate dev --name",
     "apply-migrations": "prisma migrate dev",
-    "prisma-seed": "tsx prisma/seed.ts",
+    "populate-database": "tsx prisma/seed.ts",
     "prisma-studio": "npx prisma studio"
   },
   "dependencies": {
