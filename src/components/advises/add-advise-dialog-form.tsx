@@ -8,13 +8,12 @@ import { toast } from "sonner";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { Dispatch, SetStateAction } from "react";
 
 interface DialogFormProps {
   setDialogOpen(data: boolean): void;
 }
 
-export const AddAdviseDialogForm = (props: DialogFormProps) => {
+export const AddAdviseDialogForm = ({ setDialogOpen }: DialogFormProps) => {
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
     defaultValues: {
@@ -32,7 +31,7 @@ export const AddAdviseDialogForm = (props: DialogFormProps) => {
       error: 'Ocurrió un error al publicar el consejo',
     });
 
-    props.setDialogOpen(false);
+    setDialogOpen(false);
   }
 
   return (
