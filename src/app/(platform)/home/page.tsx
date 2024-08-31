@@ -4,7 +4,6 @@ import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
 import { CommunityGrowthCard } from '@components/home/community-growth-card';
 import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
-import { LatestArticles } from '@components/home/latest-articles';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Heading2 } from '@/components/ui/heading-2';
 import { auth } from '@/auth';
@@ -33,8 +32,6 @@ const Home = async () => {
           <UpcomingEventsSection />
           <MainSponsorCard />
         </div>
-
-        <LatestArticles />
       </section>
     </div>
   );
