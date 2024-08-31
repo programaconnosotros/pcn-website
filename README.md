@@ -54,8 +54,6 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   pnpm populate-database
   ```
 
-````
-
 - Si cambias algún modelo de base de datos, tenes que hacer una migración. Para eso, ejecutá el siguiente comando:
 
   ```bash
@@ -122,4 +120,3 @@ Para aprender más sobre Next.js, puedes revisar los siguientes recursos:
 
 - [Documentación de Next.js](https://nextjs.org/docs) - aprender sobre las características y funcionalidades de Next.js.
 - [Learn Next.js](https://nextjs.org/learn) - un tutorial interactivo de Next.js.
-````
