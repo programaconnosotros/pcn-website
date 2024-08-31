@@ -90,7 +90,25 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 ## 📁 Estructura de archivos
 
-Esta documentación se agregará próximamente.
+La estructura de archivos del proyecto sigue las convenciones de Next.js:
+
+```
+.
+├── src/                 # Directorio principal de la aplicación
+│   ├── app/             # Páginas y rutas de la aplicación
+│   ├── api/             # Rutas de API
+│   ├── components/      # Componentes React reutilizables
+│   ├── lib/             # Funciones y utilidades compartidas
+│   └── [route]/         # Páginas y rutas de la aplicación
+├── prisma/              # Configuración y migraciones de Prisma
+├── public/              # Archivos estáticos accesibles públicamente
+├── .env                 # Variables de entorno (no incluido en el repositorio)
+├── .env.example         # Plantilla para variables de entorno
+├── docker-compose.yml   # Configuración de Docker Compose
+├── next.config.mjs       # Configuración de Next.js
+├── package.json         # Dependencias y scripts del proyecto
+├── tsconfig.json        # Configuración de TypeScript
+```
 
 ## 📚 Aprender más
 
@@ -98,3 +116,7 @@ Para aprender más sobre Next.js, puedes revisar los siguientes recursos:
 
 - [Documentación de Next.js](https://nextjs.org/docs) - aprender sobre las características y funcionalidades de Next.js.
 - [Learn Next.js](https://nextjs.org/learn) - un tutorial interactivo de Next.js.
+
+```
+
+```
