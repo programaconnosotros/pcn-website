@@ -3,6 +3,11 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@comp
 
 const events = [
   { name: 'Lightning Talks', date: 'Sábado 26 de octubre', location: 'Hotel Sheraton Tucumán' },
+  {
+    name: 'Charla de introducción a la programación',
+    date: 'Fecha a definir',
+    location: 'Lugar a definir',
+  },
 ];
 
 export const UpcomingEventsSection = () => (
