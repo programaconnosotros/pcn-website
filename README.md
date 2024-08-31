@@ -70,7 +70,7 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
   Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
 
-  <img src="./public/prisma-studio-screenshot.png" alt="Prisma Studio" width="500"/>
+  <img src="./public/prisma-studio-screenshot.png" alt="Screenshot del Prisma Studio"/>
 
 ## 🛠️ Tech stack
 
