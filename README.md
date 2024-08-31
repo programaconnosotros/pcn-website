@@ -31,6 +31,8 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 7. Pusheá tus cambios a GitHub y crea una pull request hacia la rama `testing`, asegurate de que tenga una buena descripción explicando lo que hiciste, con capturas de pantalla o videos si incluyen cambios de UI.
 
+   El nombre de la pull request debe tener el siguiente formato: `[ID del ticket de Notion] - Título del ticket en Notion`.
+
 8. Si queres instalar dependencias de desarrollo, tenes que usar el siguiente comando:
 
    ```bash
