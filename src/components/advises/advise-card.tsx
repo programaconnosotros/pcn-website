@@ -31,6 +31,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { editAdvise } from '@/actions/advises/edit-advise';
+import { DeleteAdviseDialog } from './delete-advise-dialog';
 
 const formSchema = z.object({
   content: z
@@ -50,7 +51,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
     },
   });
 
-  const onSubmit = ({ content }: z.infer<typeof formSchema>) => {
+  const onSubmitEditAdvise = ({ content }: z.infer<typeof formSchema>) => {
     toast.promise(editAdvise({ id: advise.id, content }), {
       loading: 'Editando consejo...',
       success: () => {
@@ -59,17 +60,6 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
         return 'Tu consejo fue editado exitosamente.';
       },
       error: 'Ocurrió un error al editar el consejo',
-    });
-  };
-
-  const handleDelete = () => {
-    toast.promise(deleteAdvise(advise.id), {
-      loading: 'Eliminando consejo...',
-      success: () => {
-        setIsDeleteDialogOpen(false);
-        return 'Consejo eliminado correctamente';
-      },
-      error: 'Error al eliminar el consejo',
     });
   };
 
@@ -111,21 +101,11 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
         </DropdownMenu>
       </CardHeader>
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro de eliminar este consejo?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer. El consejo será eliminado permanentemente.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Confirmar</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteAdviseDialog
+        adviseId={advise.id}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      />
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
@@ -134,7 +114,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmitEditAdvise)} className="space-y-8">
               <FormField
                 control={form.control}
                 name="content"
