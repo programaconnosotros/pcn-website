@@ -1,36 +1,51 @@
-import { Button } from '@headlessui/react';
-import { ExternalLink } from 'lucide-react';
+'use client';
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/ui/card';
-import Link from 'next/link';
+import { Button } from '@components/ui/button';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@components/ui/dialog';
+import { HandHeart } from 'lucide-react';
 
-export const MainSponsorCard = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Sponsor principal</CardTitle>
-      <CardDescription>Apoyando la comunidad desde 2024</CardDescription>
-    </CardHeader>
+export const MainSponsorCard = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    <CardContent className="flex flex-col items-center">
-      <img
-        alt="TechCorp logo"
-        className="rounded-lg"
-        height="100"
-        src="/placeholder.svg?height=100&width=200"
-        style={{
-          aspectRatio: '200/100',
-          objectFit: 'cover',
-        }}
-        width="200"
-      />
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Sponsors</CardTitle>
 
-      <Link href="https://www.eagerworks.com/">
-        <Button className="mt-4" variant="outline">
-          <div className="flex flex-row items-center gap-2 hover:underline">
-            Visitar sponsor
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </div>
+        <CardDescription>
+          Estamos en búsqueda de sponsors que quieran apoyar a nuestra comunidad. Necesitamos el
+          dinero para mantener la infraestructura de este sitio web y para organizar nuestras
+          actividades. Si te gustaría que tu logo esté aquí y en nuestros eventos, clickeá el botón
+          de acá abajo!
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col">
+        <Button
+          className="mt-4 flex flex-row items-center gap-2"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Quiero ser sponsor
+          <HandHeart className="h-4 w-4" />
         </Button>
-      </Link>
-    </CardContent>
-  </Card>
-);
+      </CardContent>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Gracias por querer ser sponsor!</DialogTitle>
+            <DialogDescription>Dejanos tus datos y nos comunicaremos con vos</DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  );
+};
