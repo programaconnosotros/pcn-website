@@ -51,7 +51,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
   });
 
   const onSubmit = ({ content }: z.infer<typeof formSchema>) => {
-    toast.promise(editAdvise(advise.id, content), {
+    toast.promise(editAdvise({ id: advise.id, content }), {
       loading: 'Editando consejo...',
       success: () => {
         form.reset({ content });
