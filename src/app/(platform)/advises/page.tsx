@@ -23,7 +23,7 @@ const AdvisesPage = async () => {
         <AddAdvise />
       </div>
 
-      <div className="col-span-1 mb-10 space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:col-span-2">
+      <div className="col-span-1 mb-10 space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-3 lg:gap-6">
         {advises.length === 0 && (
           <p className="col-span-full text-center text-sm text-muted-foreground">
             No hay consejos para ver aún.
