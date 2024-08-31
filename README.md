@@ -42,6 +42,34 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 > [!NOTE]
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
 
+## Trabajo con la base de datos
+
+- Para crear registros de prueba en la base de datos, tenes que ejecutar el siguiente comando:
+
+  ```bash
+  pnpm populate-database
+  ```
+
+- Si cambias algún modelo de base de datos, tenes que hacer una migración. Para eso, ejecutá el siguiente comando:
+
+  ```bash
+  pnpm create-migration NOMBRE_DE_LA_MIGRACION
+  ```
+
+- Si pulleaste los cambios de GitHub y hay nuevas migraciones, vas a tener que aplicarlas con el siguiente comando:
+
+  ```bash
+  pnpm apply-migrations
+  ```
+
+- Prisma ofrece un studio que permite visualizar la base de datos. Para acceder al studio, ejecutá el siguiente comando:
+
+  ```bash
+  pnpm prisma-studio
+  ```
+
+  Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
+
 ## 🛠️ Tech stack
 
 - [Docker](https://www.docker.com/) (contenedores)
