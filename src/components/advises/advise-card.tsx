@@ -14,47 +14,55 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
+import { useSession } from 'next-auth/react';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { data: session } = useSession();
+
+  const isAuthor = session?.user?.id === advise.author.id;
+
+  const Author = (
+    <div className="flex items-center gap-3">
+      <Avatar className="h-10 w-10">
+        <AvatarImage src={advise.author.image ?? undefined} alt={advise.author.name ?? undefined} />
+        <AvatarFallback>{advise.author?.name?.charAt(0)}</AvatarFallback>
+      </Avatar>
+
+      <div className="flex flex-col">
+        <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
+      </div>
+    </div>
+  );
+
+  const Options = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <MoreVertical className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+          <Edit className="mr-2 h-4 w-4" />
+          <span>Editar</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+          <Trash className="mr-2 h-4 w-4" />
+          <span>Eliminar</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <Card key={advise.id} className="w-full">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage
-              src={advise.author.image ?? undefined}
-              alt={advise.author.name ?? undefined}
-            />
-            <AvatarFallback>{advise.author?.name?.charAt(0)}</AvatarFallback>
-          </Avatar>
-
-          <div className="flex flex-col">
-            <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
-          </div>
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-              <Edit className="mr-2 h-4 w-4" />
-              <span>Editar</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-              <Trash className="mr-2 h-4 w-4" />
-              <span>Eliminar</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {Author}
+        {isAuthor && Options}
       </CardHeader>
 
       <DeleteAdviseDialog
