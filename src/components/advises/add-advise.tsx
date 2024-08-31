@@ -10,32 +10,25 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { createAdvise } from '@actions/advises/create-advise';
-
-const formSchema = z.object({
-  content: z
-    .string()
-    .min(10, { message: 'Tenés que escribir al menos 10 caracteres' })
-    .max(400, { message: 'Podés escribir 400 caracteres como máximo' }),
-});
+import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
 
 export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AdviseFormData>({
+    resolver: zodResolver(adviseSchema),
     defaultValues: {
       content: '',
     },
   });
 
-  function onSubmit({ content }: z.infer<typeof formSchema>) {
+  function onSubmit({ content }: AdviseFormData) {
     toast.promise(createAdvise(content), {
       loading: 'Creando consejo...',
       success: () => {

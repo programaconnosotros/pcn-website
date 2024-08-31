@@ -1,6 +1,5 @@
 'use client';
 
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,13 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
-
-const formSchema = z.object({
-  content: z
-    .string()
-    .min(10, { message: 'Tenés que escribir al menos 10 caracteres' })
-    .max(400, { message: 'Podés escribir 400 caracteres como máximo' }),
-});
+import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
 
 interface EditAdviseDialogProps {
   adviseId: string;
@@ -30,14 +23,14 @@ export const EditAdviseDialog = ({
   isOpen,
   onOpenChange,
 }: EditAdviseDialogProps) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AdviseFormData>({
+    resolver: zodResolver(adviseSchema),
     defaultValues: {
       content: initialContent,
     },
   });
 
-  const onSubmitEditAdvise = ({ content }: z.infer<typeof formSchema>) => {
+  const onSubmitEditAdvise = ({ content }: AdviseFormData) => {
     toast.promise(editAdvise({ id: adviseId, content }), {
       loading: 'Editando consejo...',
       success: () => {
