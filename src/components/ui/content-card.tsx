@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 
 export const ContentCard = ({
@@ -19,8 +20,10 @@ export const ContentCard = ({
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${image})` }}
-      ></div>
+      />
+
       <div className="absolute inset-0 bg-black/50 transition-colors duration-300 group-hover/card:bg-black/70 dark:bg-black/70 dark:group-hover/card:bg-black/80"></div>
+
       <div className="relative z-10 flex h-full flex-col justify-between p-4">
         <div className="z-10 flex flex-row items-center space-x-4">
           <Image
