@@ -9,8 +9,8 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { auth } from '@/auth';
 import { BackgroundOverlayCard } from '@/components/ui/background-overlay-card';
 import { ContentCard } from '@/components/ui/content-card';
-import { Heading3 } from '@/components/ui/heading-3';
 import { DiscordCard } from '@/components/home/discord-card';
+import { PodcastCard } from '@/components/home/podcast-card';
 
 const Home = async () => {
   const session = await auth();
@@ -55,11 +55,7 @@ const Home = async () => {
 
           <div className="flex flex-col gap-6">
             <DiscordCard />
-
-            <div className="flex h-fit flex-col rounded-md border p-6">
-              <Heading3>PCN Podcast</Heading3>
-              <p className="text-sm text-muted-foreground">Próximamente.</p>
-            </div>
+            <PodcastCard />
           </div>
         </div>
       </section>
