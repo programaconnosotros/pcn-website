@@ -1,26 +1,29 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { updateProfile } from '@actions/update-profile';
 import { User } from '@prisma/generated/zod';
+import { profileSchema, ProfileFormData } from '@/schemas/profile-schema';
 
 export const ProfileForm = ({ user }: { user: User }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user.name ?? '',
       email: user.email ?? '',
     },
   });
 
-  const onSubmit = (data: { name: string; email: string }) => {
+  const onSubmit = (data: ProfileFormData) => {
     toast.promise(updateProfile(data), {
       loading: 'Actualizando perfil...',
       success: 'Perfil actualizado correctamente',
@@ -33,17 +36,13 @@ export const ProfileForm = ({ user }: { user: User }) => {
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Nombre</Label>
-          <Input id="name" {...register('name', { required: 'El nombre es requerido' })} />
+          <Input id="name" {...register('name')} />
           {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="email">Correo electrónico</Label>
-          <Input
-            id="email"
-            type="email"
-            {...register('email', { required: 'El email es requerido' })}
-          />
+          <Input id="email" type="email" {...register('email')} />
           {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
         </div>
       </div>
