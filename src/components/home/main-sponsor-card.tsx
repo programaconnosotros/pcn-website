@@ -2,50 +2,30 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/ui/card';
 import { Button } from '@components/ui/button';
-import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@components/ui/dialog';
 import { HandHeart } from 'lucide-react';
+import Link from 'next/link';
 
-export const MainSponsorCard = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+export const MainSponsorCard = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Sponsors</CardTitle>
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Sponsors</CardTitle>
+      <CardDescription>
+        <p className="mt-3">
+          Estamos en búsqueda de sponsors para este proyecto. Podemos mostrar tu logo aquí y tu
+          sitio web, para que miles de profesionales y estudiantes de la industria del software lo
+          vean y sepan de tu interés en apoyar este tipo de iniciativas.
+        </p>
+      </CardDescription>
+    </CardHeader>
 
-        <CardDescription>
-          Estamos en búsqueda de sponsors que quieran apoyar a nuestra comunidad. Necesitamos el
-          dinero para mantener la infraestructura de este sitio web y para organizar nuestras
-          actividades. Si te gustaría que tu logo esté aquí y en nuestros eventos, clickeá el botón
-          de acá abajo!
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="flex flex-col">
-        <Button
-          className="mt-4 flex flex-row items-center gap-2"
-          onClick={() => setIsDialogOpen(true)}
-        >
+    <CardContent className="flex flex-col">
+      <Link className="block" href="https://wa.me/5493815777562">
+        <Button className="mt-4 flex flex-row items-center gap-2">
           Quiero ser sponsor
-          <HandHeart className="h-4 w-4" />
+          <HandHeart className="h-5 w-5" />
         </Button>
-      </CardContent>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Gracias por querer ser sponsor!</DialogTitle>
-            <DialogDescription>Dejanos tus datos y nos comunicaremos con vos</DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </Card>
-  );
-};
+      </Link>
+    </CardContent>
+  </Card>
+);
