@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
-import { AddAdviseDialogForm } from './add-advise-dialog-form';
+import { AdviseForm } from './advise-form';
 
 export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -27,7 +27,7 @@ export const AddAdvise = () => {
         <DialogHeader>
           <DialogTitle>Publicar un consejo</DialogTitle>
         </DialogHeader>
-        <AddAdviseDialogForm setDialogOpen={setDialogOpen} />
+        <AdviseForm setDialogOpen={setDialogOpen} />
       </DialogContent>
     </Dialog>
   );
