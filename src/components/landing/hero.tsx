@@ -5,14 +5,14 @@ import { SignIn } from '@/components/auth/sign-in';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Session } from 'next-auth';
-import { ArrowRightIcon } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 export const Hero = ({ session }: { session: Session | null }) => {
   return (
     <div className="h-screen w-full overflow-hidden rounded-md">
       <Vortex
         rangeY={800}
-        particleCount={100}
+        particleCount={1000}
         baseHue={120}
         className="flex h-full w-full flex-col items-center justify-center px-2 py-4 md:px-10"
         baseSpeed={0.001}
@@ -40,10 +40,10 @@ export const Hero = ({ session }: { session: Session | null }) => {
               <Link href="/home">
                 <Button
                   variant="outline"
-                  className="flex flex-row items-center justify-between gap-3"
+                  className="flex flex-row items-center justify-between gap-2"
                 >
                   <span>Chusmear sin cuenta</span>
-                  <ArrowRightIcon className="h-4 w-4" />
+                  <Eye className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
