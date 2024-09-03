@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { Hero } from '@/components/landing/hero';
+import { VortexHero } from '@/components/landing/vortex-hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +21,7 @@ export const Home = async () => {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
-        <Hero session={session} />
+        <VortexHero session={session} />
 
         <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
