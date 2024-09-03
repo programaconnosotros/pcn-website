@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { signInWithGithub } from '@/actions/auth/sign-in-with-github';
-import { LogIn } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 export const SignIn = () => {
   const [disabled, setDisabled] = useState(false);
@@ -23,9 +23,9 @@ export const SignIn = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Button className="flex gap-2" type="submit" disabled={disabled}>
+      <Button className="flex items-center justify-between gap-2" type="submit" disabled={disabled}>
         Autenticarme con GitHub
-        <LogIn className="mr-2 h-4 w-4" />
+        <Github className="h-4 w-4" />
       </Button>
     </form>
   );
