@@ -21,6 +21,7 @@ const Home = async () => {
         <Heading2>
           {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
         </Heading2>
+
         <MotivationalQuotes />
       </div>
 
