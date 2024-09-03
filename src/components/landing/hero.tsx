@@ -5,6 +5,7 @@ import { SignIn } from '@/components/auth/sign-in';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Session } from 'next-auth';
+import { ArrowRightIcon } from 'lucide-react';
 
 export const Hero = ({ session }: { session: Session | null }) => {
   return (
@@ -27,14 +28,23 @@ export const Hero = ({ session }: { session: Session | null }) => {
         <div className="mt-6 flex flex-col items-center gap-4 sm:flex-row">
           {session?.user ? (
             <Link href="/home">
-              <Button>Volver a la plataforma</Button>
+              <Button className="flex flex-row items-center justify-between gap-3">
+                <span>Ir a la plataforma</span>
+                <ArrowRightIcon className="h-4 w-4" />
+              </Button>
             </Link>
           ) : (
             <div className="flex flex-row gap-4">
               <SignIn />
 
               <Link href="/home">
-                <Button variant="outline">Entrar a la plataforma</Button>
+                <Button
+                  variant="outline"
+                  className="flex flex-row items-center justify-between gap-3"
+                >
+                  <span>Chusmear sin cuenta</span>
+                  <ArrowRightIcon className="h-4 w-4" />
+                </Button>
               </Link>
             </div>
           )}

@@ -24,7 +24,7 @@ export const SignIn = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Button className="flex gap-2" type="submit" disabled={disabled}>
-        Ingresar con GitHub
+        Autenticarme con GitHub
         <LogIn className="mr-2 h-4 w-4" />
       </Button>
     </form>
