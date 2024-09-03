@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { SignIn } from '@/components/auth/sign-in';
+import { Hero } from '@/components/landing/hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,36 +21,7 @@ export const Home = async () => {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-6 text-center">
-              <div className="space-y-6">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  <code>programaConNosotros</code>
-                </h1>
-
-                <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-                  Conectá, aprende y crece con otros profesionales y estudiantes de varias
-                  disciplinas dentro de la ingeniería de software.
-                </p>
-              </div>
-
-              {session?.user ? (
-                <Link href="/home">
-                  <Button>Volver a la plataforma</Button>
-                </Link>
-              ) : (
-                <div className="flex flex-row gap-4">
-                  <SignIn />
-
-                  <Link href="/home">
-                    <Button variant="outline">Entrar a la plataforma</Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+        <Hero session={session} />
 
         <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
