@@ -118,7 +118,7 @@ export const Home = async () => {
                   alt="Competencias de programación"
                   className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                   height="310"
-                  src="/IMG_2293.jpeg"
+                  src="/pre-lightning-talks.jpeg"
                   width="550"
                 />
 
