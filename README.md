@@ -101,11 +101,11 @@ La estructura de archivos del proyecto sigue las convenciones de Next.js:
 ```
 .
 ├── src/                 # Directorio principal de la aplicación
-│   ├── app/             # Páginas y rutas de la aplicación
+│   ├── app/             # Páginas de la aplicación
+│   ├── actions/         # Server actions de Next.js
 │   ├── api/             # Rutas de API
 │   ├── components/      # Componentes React reutilizables
-│   ├── lib/             # Funciones y utilidades compartidas
-│   └── [route]/         # Páginas y rutas de la aplicación
+│   └── lib/             # Funciones y utilidades compartidas
 ├── prisma/              # Configuración y migraciones de Prisma
 ├── public/              # Archivos estáticos accesibles públicamente
 ├── .env                 # Variables de entorno (no incluido en el repositorio)
