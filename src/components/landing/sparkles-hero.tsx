@@ -7,13 +7,14 @@ import { Button } from '../ui/button';
 import { ArrowRightIcon, Eye } from 'lucide-react';
 import { SignIn } from '../auth/sign-in';
 import { ScrollArrow } from '@/components/landing/scroll-arrow';
+import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 
 export const SparklesHero = ({ session }: { session: Session | null }) => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
         id="tsparticlesfullpage"
-        background="transparent"
+        background="000000"
         minSize={0.6}
         maxSize={1.4}
         particleDensity={100}
@@ -27,9 +28,12 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
         <code>programaConNosotros</code>
       </h2>
 
-      <p className="mt-6 max-w-xl px-6 text-center text-sm text-white md:px-0 md:text-2xl">
-        Conectá, aprende y crece con otros profesionales y estudiantes de ingeniería de software.
-      </p>
+      <TextGenerateEffect
+        className="mt-6 max-w-xl px-6 text-center text-sm text-white md:px-0 md:text-2xl"
+        words={
+          'Conectá, aprendé y crecé con otros profesionales y estudiantes de ingeniería de software.'
+        }
+      />
 
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
         {session?.user ? (
