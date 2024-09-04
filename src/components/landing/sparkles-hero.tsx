@@ -38,7 +38,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
         {session?.user ? (
           <Link href="/home" passHref className="flex w-full justify-center sm:w-auto">
-            <Button className="flex w-full flex-row items-center justify-center gap-3 sm:w-auto">
+            <Button className="flex flex-row items-center justify-center gap-3">
               <span>Ir a la plataforma</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
