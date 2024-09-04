@@ -22,7 +22,6 @@ export const Home = async () => {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
-        {/* <VortexHero session={session} /> */}
         <SparklesHero session={session} />
 
         <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:py-24 lg:py-32">
