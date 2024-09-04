@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import { ArrowRightIcon, Eye } from 'lucide-react';
 import { SignIn } from '../auth/sign-in';
 
-export const SparklesHero = ({ session }: { session: Session }) => (
+export const SparklesHero = ({ session }: { session: Session | null }) => (
   <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-md bg-black">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
