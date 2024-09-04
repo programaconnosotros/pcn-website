@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import { ArrowRightIcon, Eye } from 'lucide-react';
 import { SignIn } from '../auth/sign-in';
+import { ScrollArrow } from '@/components/landing/scroll-arrow';
 
 export const SparklesHero = ({ session }: { session: Session | null }) => (
-  <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-md bg-black">
+  <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
         id="tsparticlesfullpage"
@@ -26,26 +27,25 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
         <code>programaConNosotros</code>
       </h2>
 
-      <p className="mt-6 max-w-xl px-6 text-center text-sm text-white sm:p-0 md:text-2xl">
+      <p className="mt-6 max-w-xl text-center text-sm text-white md:text-2xl">
         Conectá, aprende y crece con otros profesionales y estudiantes de ingeniería de software.
       </p>
 
-      <div className="mt-6 flex flex-col items-center gap-4 sm:flex-row">
+      <div className="mt-6 flex w-full flex-col items-center gap-4">
         {session?.user ? (
-          <Link href="/home" passHref>
-            <Button className="flex flex-row items-center justify-between gap-3">
+          <Link href="/home" passHref className="w-full sm:w-auto">
+            <Button className="mx-auto flex w-full flex-row items-center justify-center gap-3 sm:w-auto">
               <span>Ir a la plataforma</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
           </Link>
         ) : (
-          <div className="flex flex-col items-center gap-4 md:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
             <SignIn />
-
-            <Link href="/home" passHref>
+            <Link href="/home" passHref className="w-full sm:w-auto">
               <Button
                 variant="outline"
-                className="flex flex-row items-center justify-between gap-2"
+                className="flex w-full flex-row items-center justify-center gap-2 sm:w-auto"
               >
                 <span>Chusmear sin cuenta</span>
                 <Eye className="h-4 w-4" />
@@ -55,5 +55,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
         )}
       </div>
     </div>
+
+    <ScrollArrow />
   </div>
 );
