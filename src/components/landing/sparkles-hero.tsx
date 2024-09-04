@@ -27,26 +27,25 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
         <code>programaConNosotros</code>
       </h2>
 
-      <p className="mt-6 max-w-xl text-center text-sm text-white md:text-2xl">
+      <p className="mt-6 max-w-xl px-6 text-center text-sm text-white md:px-0 md:text-2xl">
         Conectá, aprende y crece con otros profesionales y estudiantes de ingeniería de software.
       </p>
 
-      <div className="mt-6 flex w-full flex-col items-center gap-4">
+      <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
         {session?.user ? (
-          <Link href="/home" passHref className="w-full sm:w-auto">
-            <Button className="mx-auto flex w-full flex-row items-center justify-center gap-3 sm:w-auto">
+          <Link href="/home" passHref className="flex w-full justify-center sm:w-auto">
+            <Button className="flex w-full flex-row items-center justify-center gap-3 sm:w-auto">
               <span>Ir a la plataforma</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
           </Link>
         ) : (
-          <div className="flex w-full flex-col items-center gap-4 sm:flex-row">
-            <SignIn />
-            <Link href="/home" passHref className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                className="flex w-full flex-row items-center justify-center gap-2 sm:w-auto"
-              >
+          <div className="flex w-full flex-col items-center justify-center gap-4">
+            <div className="flex w-full justify-center">
+              <SignIn />
+            </div>
+            <Link href="/home" passHref className="flex w-full justify-center">
+              <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
                 <span>Chusmear sin cuenta</span>
                 <Eye className="h-4 w-4" />
               </Button>
