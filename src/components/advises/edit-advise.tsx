@@ -1,30 +1,35 @@
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AdviseForm } from './advise-form';
+import { AdviseForm, AdviseFormProps } from './advise-form';
 
 export interface EditAdviseDialogProps {
   adviseId: string;
   initialContent: string;
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  setDialogOpen: (open: boolean) => void;
 }
 
-export const EditAdviseDialog = ({
+export const EditAdvise = ({
   adviseId,
   initialContent,
   isOpen,
-  onOpenChange,
+  setDialogOpen,
 }: EditAdviseDialogProps) => {
-  const editAdviseOptions = { adviseId, initialContent, isOpen, onOpenChange }
+  const editAdviseOptions = { 
+    mode: "edit",
+    adviseId,
+    initialContent,
+    setDialogOpen 
+  } as AdviseFormProps
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setDialogOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar consejo</DialogTitle>
         </DialogHeader>
-        <AdviseForm editAdviseOptions={editAdviseOptions} />
+        <AdviseForm {...editAdviseOptions} />
       </DialogContent>
     </Dialog>
   );

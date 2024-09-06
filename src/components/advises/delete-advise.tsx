@@ -14,15 +14,15 @@ import {
 interface DeleteAdviseDialogProps {
   adviseId: string;
   isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
+  setDialogOpen: (isOpen: boolean) => void;
 }
 
-export const DeleteAdviseDialog = ({ adviseId, isOpen, onOpenChange }: DeleteAdviseDialogProps) => {
+export const DeleteAdvise = ({ adviseId, isOpen, setDialogOpen }: DeleteAdviseDialogProps) => {
   const handleDelete = () => {
     toast.promise(deleteAdvise(adviseId), {
       loading: 'Eliminando consejo...',
       success: () => {
-        onOpenChange(false);
+        setDialogOpen(false);
         return 'Consejo eliminado correctamente';
       },
       error: 'Error al eliminar el consejo',
@@ -30,7 +30,7 @@ export const DeleteAdviseDialog = ({ adviseId, isOpen, onOpenChange }: DeleteAdv
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={setDialogOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Estás seguro de eliminar este consejo?</AlertDialogTitle>

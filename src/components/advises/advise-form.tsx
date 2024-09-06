@@ -9,54 +9,58 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { editAdvise } from "@/actions/advises/edit-advise";
-import { EditAdviseDialogProps } from "./edit-advise-dialog";
 
-interface AdviceFormProps {
-  setDialogOpen?: (data: boolean) => void;
-  editAdviseOptions?: EditAdviseDialogProps;
+type CreateFormProps = {
+  mode: "create";
 }
 
-export const AdviseForm = ({ setDialogOpen, editAdviseOptions }: AdviceFormProps) => {
+type EditFormProps = {
+  mode: "edit",
+  adviseId: string;
+  isOpen: boolean;
+  initialContent: string;
+}
 
-  const adviseId = editAdviseOptions?.adviseId ?? '';
-  const initialContent = editAdviseOptions?.initialContent ?? '';
-  const onOpenChange = editAdviseOptions ? editAdviseOptions.onOpenChange : () => { };
+export type AdviseFormProps = (EditFormProps | CreateFormProps) & {
+  setDialogOpen: (open: boolean) => void;
+}
+
+export const AdviseForm = (props: AdviseFormProps) => {
 
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
     defaultValues: {
-      content: initialContent,
+      content: props.mode === "edit" ? props.initialContent : '',
     },
   });
 
-  const onSubmitAddAdvise = ({ content }: AdviseFormData) => {
-    toast.promise(createAdvise(content), {
-      loading: 'Creando consejo...',
-      success: () => {
-        form.reset();
-        return 'Tu consejo fue publicado exitosamente. Gracias por compartir!';
-      },
-      error: 'Ocurrió un error al publicar el consejo',
-    });
+  const onSubmit = ({ content }: AdviseFormData) => {
+    if (props.mode === "create") {
+      toast.promise(createAdvise(content), {
+        loading: 'Creando consejo...',
+        success: () => {
+          form.reset();
+          return 'Tu consejo fue publicado exitosamente. Gracias por compartir!';
+        },
+        error: 'Ocurrió un error al publicar el consejo',
+      });
+    } else {
+      toast.promise(editAdvise({ id: props.adviseId, content }), {
+        loading: 'Editando consejo...',
+        success: () => {
+          form.reset({content});
+          return 'Tu consejo fue editado exitosamente.';
+        },
+        error: 'Ocurrió un error al editar el consejo',
+      });
+    }
 
-    if (setDialogOpen) setDialogOpen(false);
+    props.setDialogOpen(false);
   }
-
-  const onSubmitEditAdvise = ({ content }: AdviseFormData) => {
-    toast.promise(editAdvise({ id: adviseId, content }), {
-      loading: 'Editando consejo...',
-      success: () => {
-        form.reset({ content });
-        onOpenChange(false);
-        return 'Tu consejo fue editado exitosamente.';
-      },
-      error: 'Ocurrió un error al editar el consejo',
-    });
-  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(editAdviseOptions ? onSubmitEditAdvise : onSubmitAddAdvise)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="content"
@@ -72,7 +76,7 @@ export const AdviseForm = ({ setDialogOpen, editAdviseOptions }: AdviceFormProps
         />
 
         <Button type="submit" className="w-full">
-          {editAdviseOptions ? "Guardar Cambios" : "Publicar"}
+          {props.mode === "edit" ? "Guardar Cambios" : "Publicar"}
         </Button>
       </form>
     </Form>
