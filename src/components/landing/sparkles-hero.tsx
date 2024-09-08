@@ -30,9 +30,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
 
       <TextGenerateEffect
         className="mt-6 max-w-xl px-6 text-center text-sm text-white md:px-0 md:text-2xl"
-        words={
-          'Conectá, aprendé y crecé con otros profesionales y estudiantes de ingeniería de software.'
-        }
+        words={'¡Somos la comunidad que necesitás para llevar tu carrera al siguiente nivel! 🚀⚡️'}
       />
 
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
