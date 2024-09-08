@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
-import Image from 'next/image';
 
 const lightningTalks = [
   {
@@ -65,38 +64,37 @@ const lightningTalks = [
   },
 ];
 
-export default function LightningTalks() {
-  return (
-    <div className="container mx-auto py-8">
-      <Heading2>Lightning Talks</Heading2>
+const LightningTalks = () => (
+  <div className="container mx-auto py-8">
+    <Heading2>Lightning Talks</Heading2>
 
-      <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {lightningTalks
-          .sort((a, b) => b.date.getTime() - a.date.getTime())
-          .map((talk, index) => (
-            <Card key={index} className="overflow-hidden">
-              <div className="relative aspect-video">
-                <Image
-                  src={talk.speakerPhoto}
-                  alt={`${talk.speakerName}'s photo`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+    <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:mr-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {lightningTalks
+        .sort((a, b) => b.date.getTime() - a.date.getTime())
+        .map((talk, index) => (
+          <Card key={index}>
+            <div className="relative aspect-video">
+              <img
+                src={talk.speakerPhoto}
+                alt={`${talk.speakerName}'s photo`}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
 
-              <CardHeader>
-                <CardTitle className="text-lg">{talk.name}</CardTitle>
-                <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
-              </CardHeader>
+            <CardHeader>
+              <CardTitle className="text-lg">{talk.name}</CardTitle>
+              <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
+            </CardHeader>
 
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(talk.date).toLocaleDateString()}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-      </div>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                {new Date(talk.date).toLocaleDateString()}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
     </div>
-  );
-}
+  </div>
+);
+
+export default LightningTalks;
