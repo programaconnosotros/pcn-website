@@ -9,6 +9,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
+// TODO: Agregar botón para donar al profesor del curso.
+
 const LaTeXCourse = () => (
   <div className="mt-4 md:px-20">
     <Breadcrumb className="mb-4">
