@@ -13,13 +13,16 @@ const Courses = () => (
           <CardTitle>Git & GitHub</CardTitle>
 
           <CardDescription>
-            Aprende a usar Git y GitHub, los sistemas de control de versiones más populares.
+            Git permite que puedas controlar las versiones del código que desarrollas, y GitHub hace
+            posible que puedas trabajar en equipo de una manera más eficiente. Este curso fue
+            diseñado y dictado a los alumnos del primer año de ingeniería en sistemas de
+            información, de la UTN-FRT.
           </CardDescription>
         </CardHeader>
 
         <CardFooter className="flex flex-row justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            Autores: Agustín Sánchez, Marcelo Núñez, Germán Navarro e Iván Taddei.
+            Curso dictado por Agustín Sánchez, Marcelo Núñez, Germán Navarro e Iván Taddei.
           </p>
 
           <Link href="/courses/git-and-github">
@@ -33,12 +36,15 @@ const Courses = () => (
           <CardTitle>Vim</CardTitle>
 
           <CardDescription>
-            Aprende a usar VIM, el editor de texto más poderoso del mundo.
+            Aprendé a usar Vim, el editor de texto más poderoso del mundo. Vim permite editar y
+            navegar código de una manera súper veloz. Podés usar Vim en la consola o instalar un
+            plugin dentro de tu IDE favorito para agilizar tu codificación usando los atajos de
+            teclado de Vim.
           </CardDescription>
         </CardHeader>
 
         <CardFooter className="flex flex-row justify-between gap-4">
-          <p className="text-sm text-muted-foreground">Autor: Esteban Sánchez</p>
+          <p className="text-sm text-muted-foreground">Curso dictado por Esteban Sánchez.</p>
 
           <Link href="/courses/vim">
             <Button>Ver curso</Button>
@@ -52,11 +58,14 @@ const Courses = () => (
 
           <CardDescription>
             Aprende a usar LaTeX, el sistema de composición de textos más utilizado en la academia.
+            LaTeX permite crear documentos que se ven profesionales y que se diferencian de los
+            documentos de texto típicos, además de que podés editarlos utilizando código,
+            permitiendo que uses tu tiempo en lo que importa: escribir tu documento.
           </CardDescription>
         </CardHeader>
 
         <CardFooter className="flex flex-row justify-between gap-4">
-          <p className="text-sm text-muted-foreground">Autor: Esteban Sánchez</p>
+          <p className="text-sm text-muted-foreground">Curso dictado por Esteban Sánchez.</p>
 
           <Link href="/courses/latex">
             <Button>Ver curso</Button>
