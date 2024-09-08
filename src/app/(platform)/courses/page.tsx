@@ -2,13 +2,14 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Send } from 'lucide-react';
 
 const Courses = () => (
   <div className="mt-4 md:px-20">
     <Heading2>Cursos</Heading2>
 
     <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-      <Card>
+      <Card className="flex flex-col justify-between">
         <CardHeader>
           <CardTitle>Git & GitHub</CardTitle>
 
@@ -21,7 +22,7 @@ const Courses = () => (
         </CardHeader>
 
         <CardFooter className="flex flex-row justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Curso dictado por Agustín Sánchez, Marcelo Núñez, Germán Navarro e Iván Taddei.
           </p>
 
@@ -31,7 +32,7 @@ const Courses = () => (
         </CardFooter>
       </Card>
 
-      <Card>
+      <Card className="flex flex-col justify-between">
         <CardHeader>
           <CardTitle>Vim</CardTitle>
 
@@ -52,7 +53,7 @@ const Courses = () => (
         </CardFooter>
       </Card>
 
-      <Card>
+      <Card className="flex flex-col justify-between">
         <CardHeader>
           <CardTitle>LaTeX</CardTitle>
 
@@ -69,6 +70,26 @@ const Courses = () => (
 
           <Link href="/courses/latex">
             <Button>Ver curso</Button>
+          </Link>
+        </CardFooter>
+      </Card>
+
+      <Card className="flex flex-col justify-between">
+        <CardHeader>
+          <CardTitle>¿Quéres sumar tu curso aquí?</CardTitle>
+
+          <CardDescription>
+            Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
+            comunidad, contactanos clickeando el botón de abajo!
+          </CardDescription>
+        </CardHeader>
+
+        <CardFooter className="flex flex-row justify-between gap-4">
+          <Link className="block" href="https://wa.me/5493815777562">
+            <Button className="mt-4 flex flex-row items-center gap-2">
+              Contactar
+              <Send className="h-5 w-5" />
+            </Button>
           </Link>
         </CardFooter>
       </Card>
