@@ -1,10 +1,10 @@
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card } from '@/components/ui/card';
 
-const Playlists = () => (
+const Music = () => (
   <div className="container mx-auto flex flex-col items-center py-8">
     <div className="w-full max-w-2xl">
-      <Heading2 className="mb-6 text-center">Playlists</Heading2>
+      <Heading2 className="mb-6 text-center">Música</Heading2>
 
       <div className="flex flex-col gap-6">
         <Card className="p-4">
@@ -44,4 +44,4 @@ const Playlists = () => (
   </div>
 );
 
-export default Playlists;
+export default Music;
