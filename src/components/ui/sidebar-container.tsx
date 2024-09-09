@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../themes/theme-toggle';
 import { User } from 'next-auth';
+import { TvMinimalPlay } from 'lucide-react';
 
 export const SidebarContainer = ({
   user,
@@ -49,7 +50,9 @@ export const SidebarContainer = ({
     {
       label: 'Cursos',
       href: '/courses',
-      icon: <IconBook className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      icon: (
+        <TvMinimalPlay className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
     },
   ];
 
