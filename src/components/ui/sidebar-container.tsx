@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../themes/theme-toggle';
 import { User } from 'next-auth';
-import { HandHelping, Podcast, TvMinimalPlay } from 'lucide-react';
+import { HandHelping, Images, Podcast, TvMinimalPlay } from 'lucide-react';
 
 export const SidebarContainer = ({
   user,
@@ -46,6 +46,11 @@ export const SidebarContainer = ({
       label: 'Podcast',
       href: '/podcast',
       icon: <Podcast className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: 'Fotos',
+      href: '/photos',
+      icon: <Images className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: 'Música',
