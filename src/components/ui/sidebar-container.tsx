@@ -8,7 +8,16 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../themes/theme-toggle';
 import { User } from 'next-auth';
-import { HandHelping, Images, Podcast, TvMinimalPlay } from 'lucide-react';
+import {
+  Braces,
+  HandHelping,
+  Images,
+  Instagram,
+  Linkedin,
+  Podcast,
+  TvMinimalPlay,
+  Youtube,
+} from 'lucide-react';
 
 export const SidebarContainer = ({
   user,
@@ -43,6 +52,11 @@ export const SidebarContainer = ({
       icon: <IconBolt className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
+      label: 'Code Warfare',
+      href: '/code-warfare',
+      icon: <Braces className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
       label: 'Podcast',
       href: '/podcast',
       icon: <Podcast className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
@@ -56,6 +70,21 @@ export const SidebarContainer = ({
       label: 'Música',
       href: '/music',
       icon: <IconMusic className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/company/programa-con-nosotros',
+      icon: <Linkedin className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: 'YouTube',
+      href: 'https://www.youtube.com/@programaconnosotros2689',
+      icon: <Youtube className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: 'Instagram',
+      href: 'https://www.instagram.com/programa.con.nosotros/',
+      icon: <Instagram className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
   ];
 
@@ -96,23 +125,21 @@ export const SidebarContainer = ({
             <ThemeToggle />
 
             {user && (
-              <div>
-                <SidebarLink
-                  link={{
-                    label: user.name ?? 'Sin nombre',
-                    href: '/profile',
-                    icon: user.image && (
-                      <Image
-                        src={user.image}
-                        className="h-7 w-7 flex-shrink-0 rounded-full"
-                        width={50}
-                        height={50}
-                        alt="Avatar"
-                      />
-                    ),
-                  }}
-                />
-              </div>
+              <SidebarLink
+                link={{
+                  label: user.name ?? 'Sin nombre',
+                  href: '/profile',
+                  icon: user.image && (
+                    <Image
+                      src={user.image}
+                      className="h-7 w-7 flex-shrink-0 rounded-full"
+                      width={50}
+                      height={50}
+                      alt="Avatar"
+                    />
+                  ),
+                }}
+              />
             )}
           </div>
         </SidebarBody>
