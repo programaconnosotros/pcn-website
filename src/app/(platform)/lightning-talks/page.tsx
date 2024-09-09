@@ -1,5 +1,8 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
+import { Podcast } from 'lucide-react';
+import Link from 'next/link';
 
 const lightningTalks = [
   {
@@ -324,10 +327,19 @@ const lightningTalks = [
 ];
 
 const LightningTalks = () => (
-  <div className="container mx-auto py-8">
-    <Heading2>Lightning Talks</Heading2>
+  <div className="mt-4 md:px-20">
+    <div className="flex w-full flex-row items-center justify-between">
+      <Heading2>Lightning Talks</Heading2>
 
-    <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:mr-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <Link className="block" href="https://wa.me/5493815777562">
+        <Button className="mt-4 flex flex-row items-center gap-2">
+          Quiero dar una charla
+          <Podcast className="h-5 w-5" />
+        </Button>
+      </Link>
+    </div>
+
+    <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {lightningTalks
         .sort((a, b) => b.date.getTime() - a.date.getTime())
         .map((talk, index) => (
