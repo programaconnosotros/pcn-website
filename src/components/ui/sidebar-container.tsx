@@ -13,10 +13,16 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { User } from '@prisma/generated/zod';
 import { ThemeToggle } from '../themes/theme-toggle';
+import { User } from 'next-auth';
 
-export const SidebarContainer = ({ user, children }: { user?: User; children: ReactNode }) => {
+export const SidebarContainer = ({
+  user,
+  children,
+}: {
+  user?: User | undefined;
+  children: ReactNode;
+}) => {
   const links = [
     {
       label: 'Inicio',
