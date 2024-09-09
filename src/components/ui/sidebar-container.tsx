@@ -38,6 +38,13 @@ export const SidebarContainer = ({
       ),
     },
     {
+      label: 'Cursos',
+      href: '/courses',
+      icon: (
+        <TvMinimalPlay className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
       label: 'Lightning Talks',
       href: '/lightning-talks',
       icon: <IconBolt className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
@@ -46,13 +53,6 @@ export const SidebarContainer = ({
       label: 'Música',
       href: '/music',
       icon: <IconMusic className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: 'Cursos',
-      href: '/courses',
-      icon: (
-        <TvMinimalPlay className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
     },
   ];
 
