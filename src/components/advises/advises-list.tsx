@@ -14,9 +14,8 @@ export const AdvisesList = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['advises'],
     queryFn: ({ pageParam = 1 }) => fetchAdvises(pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length === ADVISES_PER_PAGE ? allPages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length === ADVISES_PER_PAGE ? allPages.length + 1 : undefined,
     initialPageParam: 1,
   });
 
