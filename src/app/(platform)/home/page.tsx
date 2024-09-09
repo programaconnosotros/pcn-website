@@ -12,6 +12,10 @@ import { ContentCard } from '@/components/ui/content-card';
 import { DiscordCard } from '@/components/home/discord-card';
 import { PodcastCard } from '@/components/home/podcast-card';
 
+// TODO: Add section to show our Instagram profile.
+// TODO: Add section to show our YouTube channel.
+// TODO: Add section to show our LinkedIn profile.
+
 const Home = async () => {
   const session = await auth();
 
