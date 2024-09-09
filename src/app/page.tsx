@@ -16,6 +16,13 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+// TODO: Add testimonials.
+// TODO: Add FAQ.
+// TODO: Add dynamic data (number of users, advises, activities, etc).
+// TODO: Add section to show our Instagram profile.
+// TODO: Add section to show our YouTube channel.
+// TODO: Add section to show our LinkedIn profile.
+
 export const Home = async () => {
   const session = await auth();
 
