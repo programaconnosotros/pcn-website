@@ -6,10 +6,8 @@ const Layout = async ({ children }: { children?: ReactNode }) => {
   const session = await auth();
 
   return (
-    <div>
-      <div className="min-h-screen bg-background">
-        <SidebarContainer user={session?.user}>{children}</SidebarContainer>
-      </div>
+    <div className="min-h-screen bg-background">
+      <SidebarContainer user={session?.user}>{children}</SidebarContainer>
     </div>
   );
 };
