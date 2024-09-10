@@ -15,9 +15,9 @@ export const DiscordCard = () => (
 
     <img alt="Discord" src="/discord-demo.png" className="w-full object-cover" />
 
-    <div className="flex justify-center">
-      <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-        <Button className="flex flex-row gap-2">
+    <div className="flex w-full justify-center">
+      <Link className="w-full" href="https://discord.gg/dTQexKw56S" target="_blank">
+        <Button className="flex w-full flex-row gap-2">
           Ir a Discord <SquareArrowOutUpRight size={16} />
         </Button>
       </Link>
