@@ -12,7 +12,7 @@ type LightningTalk = {
   youtubeUrl?: string;
 };
 
-const lightningTalks: LightningTalk[] = [
+export const lightningTalks: LightningTalk[] = [
   {
     name: 'Arquitectura de software: frontend, backend, bases de datos y más',
     speakerName: 'Agustín Sánchez',
