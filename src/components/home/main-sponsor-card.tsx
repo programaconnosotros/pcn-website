@@ -21,7 +21,7 @@ export const MainSponsorCard = () => (
 
     <CardContent className="flex flex-col">
       <Link className="block" href="https://wa.me/5493815777562">
-        <Button className="mt-4 flex flex-row items-center gap-2">
+        <Button className="mt-4 flex w-full flex-row items-center gap-2">
           Quiero ser sponsor
           <HandHeart className="h-5 w-5" />
         </Button>
