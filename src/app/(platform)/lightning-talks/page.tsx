@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Podcast, Youtube } from 'lucide-react';
+import { Youtube, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 type LightningTalk = {
@@ -175,114 +175,133 @@ const lightningTalks: LightningTalk[] = [
     speakerName: 'Mauricio Sánchez',
     speakerPhoto: '/lightning-talks/mauricio-sanchez.jpeg',
     date: new Date('2020-11-28'),
+    youtubeUrl: 'https://www.youtube.com/live/t41jcBED8y0?si=TRYJWUVIj_XAxaq3&t=214',
   },
   {
     name: '¿Por qué la gente le tiene miedo a Linux?',
     speakerName: 'Agustín Sánchez',
     speakerPhoto: '/lightning-talks/agustin-sanchez.jpeg',
     date: new Date('2020-11-28'),
+    youtubeUrl: 'https://www.youtube.com/live/t41jcBED8y0?si=lEiOYsrQDKkUwkMc&t=559',
   },
   {
     name: '¿Qué es un entorno de escritorio?',
     speakerName: 'Esteban Sánchez',
     speakerPhoto: '/lightning-talks/esteban-sanchez.jpeg',
     date: new Date('2020-11-28'),
+    youtubeUrl: 'https://www.youtube.com/live/t41jcBED8y0?si=s4ml8mAJTKJ413Ph&t=1284',
   },
   {
     name: 'One Line Linux',
     speakerName: 'Marcelo Nuñez',
     speakerPhoto: '/lightning-talks/marcelo-nunez.jpeg',
     date: new Date('2020-11-28'),
+    youtubeUrl: 'https://www.youtube.com/live/t41jcBED8y0?si=yXcElQHdNoBIFRUF&t=1530',
   },
   {
     name: 'Revisión de conceptos básicos de Git',
     speakerName: 'Agustín Sánchez',
     speakerPhoto: '/lightning-talks/agustin-sanchez.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=TvQENg_AF2Wro5f1&t=987',
   },
   {
     name: 'Sitios web para alojar repositorios de Git',
     speakerName: 'Iván Taddei',
     speakerPhoto: '/lightning-talks/ivan-taddei.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=Nset4A1cy_o76QR4&t=2252',
   },
   {
     name: 'Creación de repositorio en GitHub y conexión a repositorio local',
     speakerName: 'Marcelo Núñez',
     speakerPhoto: '/lightning-talks/marcelo-nunez.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=FxBJof6AqcRWVCXf&t=2743',
   },
   {
     name: 'Clonación de repositorio de GitHub',
     speakerName: 'Agustín Lencina',
     speakerPhoto: '/lightning-talks/agustin-lencina.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=Y_Dkqt1I8O1qmmqq&t=3694',
   },
   {
     name: 'Subida de cambios locales a repositorio de GitHub',
     speakerName: 'Esteban Sánchez',
     speakerPhoto: '/lightning-talks/esteban-sanchez.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=M4MUtBD-CW9XhX3z&t=4222',
   },
   {
     name: 'Trabajo en repositorios compartidos de GitHub',
     speakerName: 'Mauricio Sánchez',
     speakerPhoto: '/lightning-talks/mauricio-sanchez.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=JjChJbKXI8nw2VXi&t=4772',
   },
   {
     name: 'Conflictos y su solución trabajando en equipo usando Git y GitHub',
-    speakerName: 'Germán Navarro y Mauricio Sánchez',
+    speakerName: 'Germán Navarro & Mauricio Sánchez',
     speakerPhoto: '/lightning-talks/german-mauricio.jpeg',
     date: new Date('2020-10-24'),
+    youtubeUrl: 'https://www.youtube.com/live/Nb0qN3x3Wfs?si=oIZvZoLA1vWjR7Lb&t=5551',
   },
   {
     name: 'Introducción conceptual a bases de datos',
     speakerName: 'Mauricio Sánchez',
     speakerPhoto: '/lightning-talks/mauricio-sanchez.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=0eP6jjlNw-xfzw_W&t=1057',
   },
   {
     name: 'Introducción a las redes de computadoras',
-    speakerName: 'Agustín Sánchez, Ivan Taddei y Marcelo Nuñez',
+    speakerName: 'Agustín Sánchez, Ivan Taddei & Marcelo Nuñez',
     speakerPhoto: '/lightning-talks/agustin-ivan-marcelo.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=w_Bh1R7asBNfLL09&t=1553',
   },
   {
     name: 'Redes en juegos online',
     speakerName: 'German Navarro',
     speakerPhoto: '/lightning-talks/german-navarro.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=VPc2D5X-sbc_iN8u&t=2316',
   },
   {
     name: 'Sobrecarga vs Polimorfismo',
     speakerName: 'Facundo Gelatti',
     speakerPhoto: '/lightning-talks/facundo-gelatti.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=zXUtSGCEJBnflfIe&t=2808',
   },
   {
     name: '¿Qué son los puertos en redes informáticas?',
     speakerName: 'Agustín Lencina',
     speakerPhoto: '/lightning-talks/agustin-lencina.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=zBEWxgpnEd8NaWM-&t=3620',
   },
   {
     name: 'Sistemas de gestión de bases de datos. Uso de comandos y ejemplos',
     speakerName: 'Franco Tarchini',
     speakerPhoto: '/lightning-talks/franco-tarchini.jpeg',
     date: new Date('2020-09-19'),
+    youtubeUrl: 'https://www.youtube.com/live/o-rHlSQHNEk?si=1kuz4w_m-e27BYHx&t=4140',
   },
   {
     name: 'Búsqueda web y fuentes de información',
     speakerName: 'David Leila',
     speakerPhoto: '/lightning-talks/david-leila.jpeg',
     date: new Date('2020-08-01'),
+    youtubeUrl: 'https://www.youtube.com/live/cZiYoiNyVN0?si=NHQUbJAPLOJdlLba&t=5620s',
   },
   {
     name: 'Programación competitiva',
-    speakerName: 'Esteban Sánchez, Iván Taddei',
+    speakerName: 'Esteban Sánchez & Iván Taddei',
     speakerPhoto: '/lightning-talks/esteban-ivan.jpeg',
     date: new Date('2020-08-01'),
+    youtubeUrl: 'https://www.youtube.com/live/cZiYoiNyVN0?si=8ZMRFwhD3emaK01Y&t=3960',
   },
   {
     name: 'Filosofía del software: Charlando sobre software libre, privativo, código abierto, etc.',
@@ -350,7 +369,7 @@ const LightningTalks = () => (
       <Link className="block" href="https://wa.me/5493815777562">
         <Button className="flex flex-row items-center gap-2">
           Quiero dar una charla
-          <Podcast className="h-5 w-5" />
+          <Zap className="h-5 w-5" />
         </Button>
       </Link>
     </div>
@@ -377,16 +396,18 @@ const LightningTalks = () => (
               <p className="text-sm text-muted-foreground">
                 {new Date(talk.date).toLocaleDateString()}
               </p>
+            </CardContent>
 
+            <CardFooter>
               {talk.youtubeUrl && (
                 <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
-                  <Button className="mt-2 flex items-center gap-2" variant="youtube">
+                  <Button className="mt-2 flex w-full items-center gap-2" variant="youtube">
                     Ver en YouTube
                     <Youtube className="h-4 w-4" />
                   </Button>
                 </Link>
               )}
-            </CardContent>
+            </CardFooter>
           </Card>
         ))}
     </div>
