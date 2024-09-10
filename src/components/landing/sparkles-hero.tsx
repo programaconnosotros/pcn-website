@@ -20,7 +20,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
         maxSize={1.4}
         particleDensity={100}
         className="h-full w-full"
-        particleColor="#FFFFFF"
+        particleColor="#04f4be"
       />
     </div>
 
