@@ -45,6 +45,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
             <div className="flex w-full justify-center">
               <SignIn />
             </div>
+
             <Link href="/home" passHref className="flex w-full justify-center">
               <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
                 <span>Chusmear sin cuenta</span>
