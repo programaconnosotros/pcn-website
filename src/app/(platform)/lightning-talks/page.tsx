@@ -1,10 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Podcast } from 'lucide-react';
+import { Podcast, Youtube } from 'lucide-react';
 import Link from 'next/link';
 
-const lightningTalks = [
+type LightningTalk = {
+  name: string;
+  speakerName: string;
+  speakerPhoto: string;
+  date: Date;
+  youtubeUrl?: string;
+};
+
+const lightningTalks: LightningTalk[] = [
   {
     name: 'Arquitectura de software: frontend, backend, bases de datos y más',
     speakerName: 'Agustín Sánchez',
@@ -277,52 +285,60 @@ const lightningTalks = [
     date: new Date('2020-08-01'),
   },
   {
-    name: 'Charlando sobre software libre, privativo, código abierto, etc.',
-    speakerName: 'Agustín Sánchez, Marcelo Nuñez',
+    name: 'Filosofía del software: Charlando sobre software libre, privativo, código abierto, etc.',
+    speakerName: 'Agustín Sánchez & Marcelo Nuñez',
     speakerPhoto: '/lightning-talks/agustin-marcelo.jpeg',
     date: new Date('2020-08-01'),
+    youtubeUrl: 'https://www.youtube.com/live/cZiYoiNyVN0?si=jHJbsyUeeKjLGWTN&t=1391',
   },
   {
     name: '¿De qué se trata la ingeniería en sistemas de información?',
     speakerName: 'Agustín Sánchez',
     speakerPhoto: '/lightning-talks/agustin-sanchez.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=fkbuYOhExaCzCzmY&t=632',
   },
   {
     name: 'Introducción al desarrollo de videojuegos con Godot Engine',
     speakerName: 'Germán Navarro',
     speakerPhoto: '/lightning-talks/german-navarro.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=-IK0Gp2rTMTi2cxQ&t=2345',
   },
   {
     name: 'Funciones recursivas',
     speakerName: 'Esteban Sánchez',
     speakerPhoto: '/lightning-talks/esteban-sanchez.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=lZtUBr3TNpo-yYG6&t=3491',
   },
   {
     name: 'Aplicación insegura = desastre en el sistema operativo',
     speakerName: 'Marcelo Núñez',
     speakerPhoto: '/lightning-talks/marcelo-nunez.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=NxC6oQu8ZsMtEtDI&t=5255',
   },
   {
     name: 'DevOps, cultura y cambio',
     speakerName: 'Marco Canevaro',
     speakerPhoto: '/lightning-talks/marco-canevaro.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=A4heB1QGNAJm9pJK&t=7045',
   },
   {
     name: 'Deno... y no es sólo un acrónimo de Node',
     speakerName: 'Agustín Lencina',
     speakerPhoto: '/lightning-talks/agustin-lencina.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=lGkJ9ClsGH9NxM5G&t=7890',
   },
   {
     name: 'Patrón de diseño orientado a objetos "Observer"',
     speakerName: 'Mauricio Sánchez',
     speakerPhoto: '/lightning-talks/mauricio-sanchez.jpeg',
     date: new Date('2020-07-04'),
+    youtubeUrl: 'https://www.youtube.com/live/L4RP34KjHns?si=NRFGpSTE7D0VWJvw&t=9400',
   },
 ];
 
@@ -361,6 +377,15 @@ const LightningTalks = () => (
               <p className="text-sm text-muted-foreground">
                 {new Date(talk.date).toLocaleDateString()}
               </p>
+
+              {talk.youtubeUrl && (
+                <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
+                  <Button className="mt-2 flex items-center gap-2" variant="youtube">
+                    Ver en YouTube
+                    <Youtube className="h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
             </CardContent>
           </Card>
         ))}
