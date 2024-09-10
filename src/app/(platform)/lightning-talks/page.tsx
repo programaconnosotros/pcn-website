@@ -328,11 +328,11 @@ const lightningTalks = [
 
 const LightningTalks = () => (
   <div className="mt-4 md:px-20">
-    <div className="flex w-full flex-row items-center justify-between">
+    <div className="mb-8 flex w-full flex-row items-center justify-between">
       <Heading2>Lightning Talks</Heading2>
 
       <Link className="block" href="https://wa.me/5493815777562">
-        <Button className="mt-4 flex flex-row items-center gap-2">
+        <Button className="flex flex-row items-center gap-2">
           Quiero dar una charla
           <Podcast className="h-5 w-5" />
         </Button>
