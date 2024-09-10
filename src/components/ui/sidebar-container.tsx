@@ -10,6 +10,7 @@ import { ThemeToggle } from '../themes/theme-toggle';
 import { User } from 'next-auth';
 import {
   Braces,
+  Calendar,
   HandHelping,
   Images,
   Instagram,
@@ -45,6 +46,11 @@ export const SidebarContainer = ({
       icon: (
         <TvMinimalPlay className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
+    },
+    {
+      label: 'Eventos',
+      href: '/events',
+      icon: <Calendar className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: 'Lightning Talks',
