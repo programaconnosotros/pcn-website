@@ -8,6 +8,7 @@ import { ArrowRightIcon, Eye } from 'lucide-react';
 import { SignIn } from '../auth/sign-in';
 import { ScrollArrow } from '@/components/landing/scroll-arrow';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
+import { GlowingText } from '../ui/glowing-text';
 
 export const SparklesHero = ({ session }: { session: Session | null }) => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
@@ -24,9 +25,7 @@ export const SparklesHero = ({ session }: { session: Session | null }) => (
     </div>
 
     <div className="relative z-10 flex w-full flex-col items-center">
-      <h2 className="text-center font-mono text-2xl font-bold text-white md:text-6xl">
-        <code>programaConNosotros</code>
-      </h2>
+      <GlowingText>programaConNosotros</GlowingText>
 
       <TextGenerateEffect
         className="mt-6 max-w-xl px-6 text-center text-sm text-white md:px-0 md:text-2xl"
