@@ -31,14 +31,14 @@ export const AdvisesList = () => {
 
   return (
     <>
-      <div className="mb-10 flex flex-col md:-mx-2 md:flex-row">
+      <div className="mb-10 flex flex-col md:-mx-2 lg:flex-row">
         {advises.length === 0 && (
           <p className="w-full text-center text-sm text-muted-foreground">
             No hay consejos para ver aún.
           </p>
         )}
 
-        {[0, 1, 2].map((columnIndex) => (
+        {[0, 1].map((columnIndex) => (
           <div key={columnIndex} className="flex-1 md:px-2">
             {advises
               .filter((_, index) => index % 3 === columnIndex)
