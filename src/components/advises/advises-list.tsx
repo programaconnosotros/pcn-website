@@ -7,6 +7,8 @@ import { useEffect, useRef } from 'react';
 import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { ADVISES_PER_PAGE } from '@/lib/constants';
 
+// TODO: Fetch first batch of advises on the server
+
 export const AdvisesList = () => {
   const ref = useRef(null);
   const isInView = useInView(ref);
