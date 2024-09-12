@@ -1,9 +1,11 @@
 import { auth } from '@/auth';
+import { Features } from '@/components/landing/features';
 import { SparklesHero } from '@/components/landing/sparkles-hero';
 import { VortexHero } from '@/components/landing/vortex-hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { GlowingText } from '@/components/ui/glowing-text';
 import {
   Users,
   MessageSquare,
@@ -30,54 +32,7 @@ export const Home = async () => {
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
         <SparklesHero session={session} />
-
-        <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:px-16 md:py-24 lg:px-16 lg:py-32 xl:px-24">
-          <div className="container px-4 md:px-6">
-            <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl">
-              ¿Por qué deberías unirte?
-            </h2>
-
-            <div className="grid gap-6 lg:grid-cols-3 lg:gap-12">
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-4 p-6">
-                  <Users className="h-12 w-12 text-primary" />
-                  <h3 className="text-center text-xl font-bold">
-                    Conectate con gente de todo el mundo
-                  </h3>
-
-                  <p className="text-center text-gray-500 dark:text-gray-400">
-                    Conectá con desarrolladores de todo el mundo, compartí ideas y colaborá en
-                    proyectos.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-4 p-6">
-                  <MessageSquare className="h-12 w-12 text-primary" />
-                  <h3 className="text-center text-xl font-bold">Intercambio de conocimiento</h3>
-
-                  <p className="text-center text-gray-500 dark:text-gray-400">
-                    Aprende de desarrolladores experimentados, participa en conversaciones
-                    interesantes y lleva tus conocimientos al siguiente nivel.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="flex flex-col items-center space-y-4 p-6">
-                  <Rocket className="h-12 w-12 text-primary" />
-                  <h3 className="text-center text-xl font-bold">Oportunidades de carrera</h3>
-
-                  <p className="text-center text-gray-500 dark:text-gray-400">
-                    Descrubrí oportunidades laborales, mostrá tus proyectos y avanzá en tu carrera
-                    en la tecnología.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+        <Features />
 
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">

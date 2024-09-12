@@ -37,6 +37,7 @@
     "@tsparticles/slim": "^3.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cobe": "^0.6.3",
     "date-fns": "^3.6.0",
     "embla-carousel-autoplay": "^8.1.7",
     "embla-carousel-react": "^8.1.7",
