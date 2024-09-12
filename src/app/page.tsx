@@ -31,7 +31,7 @@ export const Home = async () => {
       <main className="flex-1">
         <SparklesHero session={session} />
 
-        <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:py-24 lg:py-32">
+        <section className="w-full bg-gray-100 py-12 dark:bg-neutral-900 md:px-16 md:py-24 lg:px-16 lg:py-32 xl:px-24">
           <div className="container px-4 md:px-6">
             <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl">
               ¿Por qué deberías unirte?
@@ -41,7 +41,9 @@ export const Home = async () => {
               <Card>
                 <CardContent className="flex flex-col items-center space-y-4 p-6">
                   <Users className="h-12 w-12 text-primary" />
-                  <h3 className="text-center text-xl font-bold">Comunidad vibrante!</h3>
+                  <h3 className="text-center text-xl font-bold">
+                    Conectate con gente de todo el mundo
+                  </h3>
 
                   <p className="text-center text-gray-500 dark:text-gray-400">
                     Conectá con desarrolladores de todo el mundo, compartí ideas y colaborá en
@@ -56,8 +58,8 @@ export const Home = async () => {
                   <h3 className="text-center text-xl font-bold">Intercambio de conocimiento</h3>
 
                   <p className="text-center text-gray-500 dark:text-gray-400">
-                    Aprende de desarrolladores experimentados, participá en discusiones y crecé tus
-                    habilidades.
+                    Aprende de desarrolladores experimentados, participa en conversaciones
+                    interesantes y lleva tus conocimientos al siguiente nivel.
                   </p>
                 </CardContent>
               </Card>
