@@ -11,6 +11,7 @@ import { BackgroundOverlayCard } from '@/components/ui/background-overlay-card';
 import { ContentCard } from '@/components/ui/content-card';
 import { DiscordCard } from '@/components/home/discord-card';
 import { PodcastCard } from '@/components/home/podcast-card';
+import Link from 'next/link';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -49,13 +50,15 @@ const Home = async () => {
               description="Avisanos por Discord!"
             />
 
-            <ContentCard
-              author="Agustín Sánchez"
-              description="Te cuento por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
-              image="/pre-lightning-talks.jpeg"
-              timeToRead="Lectura de 5 minutos"
-              title="Historia de programaConNosotros"
-            />
+            <Link href="/posts/pcn-story">
+              <ContentCard
+                author="Agustín Sánchez"
+                description="Te cuento por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
+                image="/pre-lightning-talks.jpeg"
+                timeToRead="Lectura de 5 minutos"
+                title="Historia de programaConNosotros"
+              />
+            </Link>
           </div>
 
           <div className="flex flex-col gap-6">
