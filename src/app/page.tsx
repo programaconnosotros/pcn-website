@@ -3,7 +3,6 @@ import { Activities } from '@/components/landing/activities';
 import { CommunityHighlights } from '@/components/landing/community-highlights';
 import { Discord } from '@/components/landing/discord';
 import { PlatformFeatures } from '@/components/landing/platform-features';
-import { PlatformFeaturesLarge } from '@/components/landing/platform-features-large';
 import { Hero } from '@/components/landing/hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Github } from 'lucide-react';
@@ -25,7 +24,6 @@ export const Home = async () => {
         <Hero session={session} />
         <CommunityHighlights />
         <Activities />
-        <PlatformFeaturesLarge />
         <PlatformFeatures />
         <Discord />
 
