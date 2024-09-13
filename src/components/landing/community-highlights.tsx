@@ -10,7 +10,7 @@ import {
   IconTerminal2,
 } from '@tabler/icons-react';
 
-export const Features = () => {
+export const CommunityHighlights = () => {
   const features = [
     {
       title: 'Para aprender cosas nuevas',

@@ -1,22 +1,11 @@
 import { auth } from '@/auth';
 import { Activities } from '@/components/landing/activities';
-import { Features } from '@/components/landing/features';
+import { CommunityHighlights } from '@/components/landing/community-highlights';
 import { SparklesHero } from '@/components/landing/sparkles-hero';
-import { VortexHero } from '@/components/landing/vortex-hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { GlowingText } from '@/components/ui/glowing-text';
-import {
-  Users,
-  MessageSquare,
-  Rocket,
-  Github,
-  Lightbulb,
-  Share2,
-  UserPlus,
-  Calendar,
-} from 'lucide-react';
+import { Github, Lightbulb, Share2, UserPlus, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 // TODO: Add testimonials.
@@ -33,7 +22,7 @@ export const Home = async () => {
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
         <SparklesHero session={session} />
-        <Features />
+        <CommunityHighlights />
         <Activities />
 
         {/* TODO: Add section to show dynamic data (number of users, advises, activities, etc). */}
