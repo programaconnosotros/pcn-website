@@ -12,6 +12,8 @@ type LightningTalk = {
   youtubeUrl?: string;
 };
 
+// TODO: Add slide URLs.
+
 export const lightningTalks: LightningTalk[] = [
   {
     name: 'Arquitectura de software: frontend, backend, bases de datos y más',

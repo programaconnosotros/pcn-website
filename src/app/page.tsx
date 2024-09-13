@@ -17,7 +17,7 @@ export const Home = async () => {
   const session = await auth();
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    <div className="flex min-h-[100dvh] flex-col bg-white dark:bg-black">
       <main className="flex-1">
         <Hero session={session} />
         <CommunityHighlights />
