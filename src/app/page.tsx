@@ -4,7 +4,7 @@ import { CommunityHighlights } from '@/components/landing/community-highlights';
 import { Discord } from '@/components/landing/discord';
 import { PlatformFeatures } from '@/components/landing/platform-features';
 import { PlatformFeaturesLarge } from '@/components/landing/platform-features-large';
-import { SparklesHero } from '@/components/landing/sparkles-hero';
+import { Hero } from '@/components/landing/hero';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { Github } from 'lucide-react';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ export const Home = async () => {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
-        <SparklesHero session={session} />
+        <Hero session={session} />
         <CommunityHighlights />
         <Activities />
         <PlatformFeaturesLarge />

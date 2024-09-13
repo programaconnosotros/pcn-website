@@ -10,7 +10,7 @@ import { ScrollArrow } from '@/components/landing/scroll-arrow';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { GlowingText } from '../ui/glowing-text';
 
-export const SparklesHero = ({ session }: { session: Session | null }) => (
+export const Hero = ({ session }: { session: Session | null }) => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
