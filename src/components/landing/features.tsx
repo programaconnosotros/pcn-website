@@ -57,7 +57,7 @@ export const Features = () => {
   ];
 
   return (
-    <section className="w-full py-12 dark:bg-black md:px-16 md:py-24 lg:px-16 lg:py-32 xl:px-24">
+    <section className="w-full py-12 dark:bg-black md:py-24 lg:py-32 xl:px-24">
       <div className="container px-4 md:px-6">
         <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl">
           ¿Por qué deberías unirte?
