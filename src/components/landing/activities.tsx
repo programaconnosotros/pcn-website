@@ -1,7 +1,7 @@
 export const Activities = () => (
   <section className="w-full dark:bg-black">
     <div className="container px-4 md:px-6">
-      <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl">
+      <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl md:mb-24">
         Nuestras actividades preferidas
       </h2>
 
@@ -15,11 +15,11 @@ export const Activities = () => (
             width="550"
           />
 
-          <h3 className="text-center text-2xl font-bold">Desarrollo open-source</h3>
+          <h3 className="text-2xl font-bold">Desarrollo open-source</h3>
 
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Participá en el desarrollo de la plataforma que estás viendo en este momento, sirve para
-            intercambiar conocimiento, ganar experiencia y, sobre todo, para divertirnos!
+          <p className="text-gray-500 dark:text-gray-400">
+            Estamos desarrollando la plataforma que estás viendo en este momento! Podés sumarte al
+            team y agregar nuevas funcionalidades o mejorar las existentes.
           </p>
         </div>
 
@@ -32,11 +32,12 @@ export const Activities = () => (
             width="550"
           />
 
-          <h3 className="text-center text-2xl font-bold">Lightning Talks</h3>
+          <h3 className="text-2xl font-bold">Lightning Talks</h3>
 
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Jornada de charlas técnicas de corta duración para intercambiar conocimientos
-            interesantes de una forma entretenida, y aprovechar para conocer mucha gente copada.
+          <p className="text-gray-500 dark:text-gray-400">
+            Organizamos jornadas de charlas técnicas de corta duración para intercambiar
+            conocimientos interesantes de una forma entretenida, y aprovechar para conocer mucha
+            gente interesante.
           </p>
         </div>
 
@@ -49,11 +50,11 @@ export const Activities = () => (
             width="550"
           />
 
-          <h3 className="text-center text-2xl font-bold">Code Warfare</h3>
+          <h3 className="text-2xl font-bold">Code Warfare</h3>
 
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Competencia de programación para que podamos divertirnos y poner a prueba nuestras
-            skills.
+          <p className="text-gray-500 dark:text-gray-400">
+            Es una competencia de programación para que podamos divertirnos y poner a prueba
+            nuestras skills.
           </p>
         </div>
 
@@ -66,11 +67,11 @@ export const Activities = () => (
             width="550"
           />
 
-          <h3 className="text-center text-2xl font-bold">Reuniones presenciales y virtuales</h3>
+          <h3 className="text-2xl font-bold">Networking</h3>
 
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Podés unirte a nuestros encuentros regulares para hacer networking, intercambiar
-            conocimiento y mantenerte actualizado con lo último en tecnología.
+          <p className="text-gray-500 dark:text-gray-400">
+            Podés unirte a nuestras juntadas para hacer networking, intercambiar conocimientos,
+            experiencias y mantenerte actualizado con lo último en tecnología.
           </p>
         </div>
       </div>
