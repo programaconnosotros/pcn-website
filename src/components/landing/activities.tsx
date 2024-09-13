@@ -1,15 +1,15 @@
 export const Activities = () => (
-  <section className="w-full py-12 md:py-24 lg:py-32">
+  <section className="w-full dark:bg-black">
     <div className="container px-4 md:px-6">
       <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl">
-        Actividades destacadas
+        Nuestras actividades preferidas
       </h2>
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 lg:px-24">
         <div className="flex flex-col space-y-4">
           <img
             alt="Desarrollo open-source"
-            className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+            className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
             src="/motivation/eagerworks-1.jpeg"
             width="550"
@@ -26,7 +26,7 @@ export const Activities = () => (
         <div className="flex flex-col space-y-4">
           <img
             alt="Lightning Talks"
-            className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+            className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
             src="/lightning-talks/arquitectura-software.jpeg"
             width="550"
@@ -43,7 +43,7 @@ export const Activities = () => (
         <div className="flex flex-col space-y-4">
           <img
             alt="Competencias de programación"
-            className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+            className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
             src="/pre-lightning-talks.jpeg"
             width="550"
@@ -60,7 +60,7 @@ export const Activities = () => (
         <div className="flex flex-col space-y-4">
           <img
             alt="Reuniones"
-            className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+            className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
             src="/juntada.jpeg"
             width="550"
