@@ -50,7 +50,7 @@ const Course = ({ params: { slug } }: { params: { slug: string[] } }) => {
       <div className="mt-12 pr-20">
         <Carousel>
           <CarouselContent>
-            {course.classes.map((classUrl) => (
+            {course.youtubeUrls.map((classUrl) => (
               <CarouselItem key={classUrl}>
                 <div className="w-full" style={{ aspectRatio: '16/9' }}>
                   <iframe
