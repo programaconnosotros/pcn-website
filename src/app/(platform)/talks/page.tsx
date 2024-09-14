@@ -47,14 +47,15 @@ const Talks = () => (
 
             <CardHeader>
               <CardTitle className="text-lg">{talk.name}</CardTitle>
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
-              </div>
             </CardHeader>
 
             <CardContent>
               <div className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
+              </div>
+
+              <div className="mt-2 flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 <p className="text-sm text-muted-foreground">
                   {new Date(talk.date)
