@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Send, TvMinimalPlay } from 'lucide-react';
 import { Heading3 } from '@/components/ui/heading-3';
+import { communityCourses } from './[...slug]/courses';
 
 const Courses = () => {
   const ViewButton = ({ href }: { href: string }) => (
@@ -22,62 +23,19 @@ const Courses = () => {
       <Heading3 className="mt-4">Realizados por la comunidad</Heading3>
 
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Git & GitHub</CardTitle>
+        {communityCourses.map((course) => (
+          <Card className="flex flex-col justify-between">
+            <CardHeader>
+              <CardTitle>{course.name}</CardTitle>
+              <CardDescription>{course.description}</CardDescription>
+            </CardHeader>
 
-            <CardDescription>
-              Git permite que puedas controlar las versiones del código que desarrollas, y GitHub
-              hace posible que puedas trabajar en equipo de una manera más eficiente. Este curso fue
-              diseñado y dictado a los alumnos del primer año de ingeniería en sistemas de
-              información, de la UTN-FRT.
-            </CardDescription>
-          </CardHeader>
-
-          <CardFooter className="flex flex-row justify-between gap-4">
-            <ViewButton href="/courses/git-and-github" />
-
-            <p className="text-xs text-muted-foreground">
-              Curso dictado por Agustín Sánchez, Marcelo Núñez, Germán Navarro e Iván Taddei.
-            </p>
-          </CardFooter>
-        </Card>
-
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>Vim</CardTitle>
-
-            <CardDescription>
-              Aprendé a usar Vim, el editor de texto más poderoso del mundo. Vim permite editar y
-              navegar código de una manera súper veloz. Podés usar Vim en la consola o instalar un
-              plugin dentro de tu IDE favorito para agilizar tu codificación usando los atajos de
-              teclado de Vim.
-            </CardDescription>
-          </CardHeader>
-
-          <CardFooter className="flex flex-row justify-between gap-4">
-            <ViewButton href="/courses/vim" />
-            <p className="text-sm text-muted-foreground">Curso dictado por Esteban Sánchez.</p>
-          </CardFooter>
-        </Card>
-
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle>LaTeX</CardTitle>
-
-            <CardDescription>
-              Aprende a usar LaTeX, el sistema de composición de textos más utilizado en la
-              academia. LaTeX permite crear documentos que se ven profesionales y que se diferencian
-              de los documentos de texto típicos, además de que podés editarlos utilizando código,
-              permitiendo que uses tu tiempo en lo que importa: escribir tu documento.
-            </CardDescription>
-          </CardHeader>
-
-          <CardFooter className="flex flex-row justify-between gap-4">
-            <ViewButton href="/courses/latex" />
-            <p className="text-sm text-muted-foreground">Curso dictado por Esteban Sánchez.</p>
-          </CardFooter>
-        </Card>
+            <CardFooter className="flex flex-row justify-between gap-4">
+              <ViewButton href={`/courses/${course.slug}`} />
+              <p className="text-sm text-muted-foreground">Curso dictado por {course.teachedBy}.</p>
+            </CardFooter>
+          </Card>
+        ))}
 
         <Card className="flex flex-col justify-between">
           <CardHeader>
