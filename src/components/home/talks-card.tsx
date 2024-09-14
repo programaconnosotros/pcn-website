@@ -1,6 +1,6 @@
 import { MicVocal } from 'lucide-react';
 import { StatCard } from './stat-card';
-import { talks } from '@/app/(platform)/talks/page';
+import { talks } from '@/app/(platform)/talks/talks';
 
 export const TalksCard = () => (
   <StatCard
