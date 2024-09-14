@@ -12,6 +12,7 @@ import { ContentCard } from '@/components/ui/content-card';
 import { DiscordCard } from '@/components/home/discord-card';
 import { PodcastCard } from '@/components/home/podcast-card';
 import Link from 'next/link';
+import { CoursesCard } from '@/components/home/courses-card';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -33,7 +34,7 @@ const Home = async () => {
       <section className="mb-6 w-full">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <AdvisesCard />
-          <ActiveMembersCard />
+          <CoursesCard />
           <UpcomingEventsCard />
           <LightningTalksCard />
         </div>
