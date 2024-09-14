@@ -2,10 +2,10 @@ import { Lightbulb, Share2, UserPlus, Calendar } from 'lucide-react';
 import { Card, CardContent } from '@components/ui/card';
 
 export const PlatformFeatures = () => (
-  <section className="my-12 w-full dark:bg-black">
+  <section className="mt-36 w-full dark:bg-black">
     <div className="container px-4 md:px-32">
       <h2 className="mb-12 text-center text-3xl font-bold tracking-tighter sm:text-5xl md:px-40">
-        Esto es lo que podés hacer en nuestra plataforma
+        Nuestra plataforma
       </h2>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
