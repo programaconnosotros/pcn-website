@@ -1,7 +1,6 @@
 import { AdvisesCard } from '@components/home/advises-card';
-import { ActiveMembersCard } from '@components/home/active-members-card';
 import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
-import { LightningTalksCard } from '@components/home/lightning-talks-card';
+import { TalksCard } from '@components/home/talks-card';
 import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
@@ -36,7 +35,7 @@ const Home = async () => {
           <AdvisesCard />
           <CoursesCard />
           <UpcomingEventsCard />
-          <LightningTalksCard />
+          <TalksCard />
         </div>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">

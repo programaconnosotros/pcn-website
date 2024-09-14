@@ -4,7 +4,7 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Youtube, Zap } from 'lucide-react';
 import Link from 'next/link';
 
-type LightningTalk = {
+type Talk = {
   name: string;
   speakerName: string;
   speakerPhoto: string;
@@ -14,7 +14,7 @@ type LightningTalk = {
 
 // TODO: Add slide URLs.
 
-export const lightningTalks: LightningTalk[] = [
+export const talks: Talk[] = [
   {
     name: 'Arquitectura de software: frontend, backend, bases de datos y más',
     speakerName: 'Agustín Sánchez',
@@ -363,7 +363,7 @@ export const lightningTalks: LightningTalk[] = [
   },
 ];
 
-const LightningTalks = () => (
+const Talks = () => (
   <div className="mt-4 md:px-20">
     <div className="mb-8 flex w-full flex-row items-center justify-between">
       <Heading2>Lightning Talks</Heading2>
@@ -377,7 +377,7 @@ const LightningTalks = () => (
     </div>
 
     <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {lightningTalks
+      {talks
         .sort((a, b) => b.date.getTime() - a.date.getTime())
         .map((talk, index) => (
           <Card key={index}>
@@ -416,4 +416,4 @@ const LightningTalks = () => (
   </div>
 );
 
-export default LightningTalks;
+export default Talks;
