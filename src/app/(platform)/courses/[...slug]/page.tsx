@@ -64,8 +64,12 @@ const Course = ({ params: { slug } }: { params: { slug: string[] } }) => {
             ))}
           </CarouselContent>
 
-          <CarouselPrevious />
-          <CarouselNext />
+          {course.youtubeUrls.length > 1 && (
+            <>
+              <CarouselPrevious />
+              <CarouselNext />
+            </>
+          )}
         </Carousel>
       </div>
     </div>
