@@ -7,6 +7,6 @@ export const UpcomingEventsCard = () => (
     title="Próximos eventos"
     Icon={Calendar}
     value={3}
-    description="Creamos eventos para que puedas aprender y crecer junto a los demás."
+    description="Organizamos eventos para que podamos aprender y crecer juntos."
   />
 );
