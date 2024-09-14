@@ -11,7 +11,7 @@ export const AdvisesCard = async () => {
       title="Consejos"
       Icon={MessageSquare}
       value={numberOfAdvises}
-      description="Estamos almacenando conocimiento muy valioso en nuestro website."
+      description="Estamos creando un repositorio de consejos increíbles!"
     />
   );
 };
