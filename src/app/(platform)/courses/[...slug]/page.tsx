@@ -14,14 +14,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { getCourseBySlug } from './courses';
+import { getCourseBySlug } from '../courses';
 
 const Course = ({ params: { slug } }: { params: { slug: string[] } }) => {
   const course = getCourseBySlug(slug[0]);
 
-  if (!course) {
-    return <div>El curso no existe.</div>;
-  }
+  if (!course) return <div>El curso no existe.</div>;
 
   return (
     <div className="mt-4 md:px-20">
