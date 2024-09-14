@@ -60,7 +60,7 @@ export const externalCourses: Array<Course> = [
     slug: 'html-and-css',
     description:
       'HTML y CSS son los lenguajes que nos permiten crear las páginas web que usamos todos los días. Este curso es una excelente introducción a estos lenguajes, y está recomendado para todos aquellos que quieran aprender a crear sus propias páginas web.',
-    youtubeUrls: ['https://www.youtube.com/embed/WlB2fzl1vO8?si=O3O4Mi-gU65x2eyJ&vq=hd1080'],
+    youtubeUrls: ['https://www.youtube.com/embed/ELSm-G201Ls?si=zKpbZY_bWWkw0xfx'],
     teachedBy: 'Dalto',
     acceptDonations: false,
     isMadeByCommunity: false,
