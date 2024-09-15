@@ -106,7 +106,7 @@ export const externalCourses: Array<Course> = [
     name: 'SQL',
     id: 'sql',
     description:
-      'SQL es un lenguaje de programación utilizado para interactuar con bases de datos.',
+      'SQL es un lenguaje diseñado para administrar y recuperar información de sistemas de gestión de bases de datos relacionales.​',
     youtubeUrls: ['https://www.youtube.com/embed/OuJerKzV5T0?si=P_HyELgWxGfqW6hx'],
     teachedBy: 'Brais Moure',
     acceptDonations: false,
