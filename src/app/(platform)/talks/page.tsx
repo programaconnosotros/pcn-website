@@ -37,13 +37,15 @@ const Talks = () => (
         .sort((a, b) => b.date.getTime() - a.date.getTime())
         .map((talk, index) => (
           <Card key={index}>
-            <div className="relative aspect-video">
-              <img
-                src={talk.speakerPhoto}
-                alt={`${talk.speakerName}'s photo`}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
+            {talk.portrait && (
+              <div className="relative aspect-video">
+                <img
+                  src={talk.portrait}
+                  alt={`${talk.speakerName}'s photo`}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            )}
 
             <CardHeader>
               <CardTitle className="text-lg">{talk.name}</CardTitle>
