@@ -81,30 +81,6 @@ export const externalCourses: Array<Course> = [
     isMadeByCommunity: false,
     date: new Date('2024-01-01'),
   },
-  {
-    name: 'Desarrollo Web con Python y JavaScript',
-    slug: 'web-programming-with-python-and-js',
-    description:
-      'Python es un lenguaje de programación interpretado de alto nivel, que se utiliza para desarrollar aplicaciones web, scripts, software científico, inteligencia artificial y más.',
-    youtubeUrls: [
-      'https://www.youtube.com/embed/EOZDjqwvVG8?si=XiK7kgqIgmhl1tHc',
-      'https://www.youtube.com/embed/1u2qu-EmIRc?si=EJbkFAbSaUCa5aQ2',
-      'https://www.youtube.com/embed/XQs5KcUj-Do?si=Y8wf9nKEQoCTTRIX',
-      'https://www.youtube.com/embed/j5wysXqaIV8?si=bF36BJdeDxmoy1Jq',
-      'https://www.youtube.com/embed/Eda-NmcE5mQ?si=__0xIv2cARYK5Q4V',
-      'https://www.youtube.com/embed/24Kf3v7kZyE?si=aUwVLbn4FVF5p5aw',
-      'https://www.youtube.com/embed/xMs4ER1rcLg?si=IBbTdO9QEfvF5Zeo',
-      'https://www.youtube.com/embed/ZRV7JCXAFTs?si=fICWtDWWWJ0rl_ZL',
-      'https://www.youtube.com/embed/ZjAMRnCu-84?si=sLxZIEEUSTI-_u8q',
-      'https://www.youtube.com/embed/alMRNeRJKUE?si=ZtvDhk1UPeultej4',
-      'https://www.youtube.com/embed/2A7nVdAoqqk?si=phCZIsdMKsak4lxO',
-      'https://www.youtube.com/embed/9dLTFp-1w_A?si=YUy9SKs7RPa0AOKv',
-    ],
-    teachedBy: 'Harvard CS50',
-    acceptDonations: false,
-    isMadeByCommunity: false,
-    date: new Date('2024-01-01'),
-  },
 ];
 
 export const getCourseBySlug = (slug: string) =>
