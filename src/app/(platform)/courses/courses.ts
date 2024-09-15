@@ -102,6 +102,18 @@ export const externalCourses: Array<Course> = [
     date: new Date('2023-01-22'),
     hours: 12,
   },
+  {
+    name: 'SQL',
+    id: 'sql',
+    description:
+      'SQL es un lenguaje de programación utilizado para interactuar con bases de datos.',
+    youtubeUrls: ['https://www.youtube.com/embed/OuJerKzV5T0?si=P_HyELgWxGfqW6hx'],
+    teachedBy: 'Brais Moure',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2024-01-12'),
+    hours: 7,
+  },
 ];
 
 export const getCourseById = (courseId: string) =>
