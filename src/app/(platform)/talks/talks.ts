@@ -38,6 +38,20 @@ export const talks: Talk[] = [
     location: 'UTN (Tucumán, Argentina)',
   },
   {
+    name: 'La Shell',
+    speakerName: 'Marcelo Núnez',
+    date: new Date('2023-09-16'),
+    location: 'UTN (Tucumán, Argentina)',
+    portrait: '/lightning-talks/la-shell.jpeg',
+  },
+  {
+    name: 'Ingeniería en sistemas de información',
+    speakerName: 'Marcelo Núnez',
+    date: new Date('2023-09-16'),
+    location: 'UTN (Tucumán, Argentina)',
+    portrait: '/lightning-talks/ingenieria-en-sistemas.jpeg',
+  },
+  {
     name: 'Programación optimizada con ChatGPT',
     speakerName: 'Facundo Bazán',
     portrait: '/lightning-talks/chatgpt.jpeg',
@@ -68,7 +82,7 @@ export const talks: Talk[] = [
   {
     name: 'Domain-driven design, hexagonal architecture & vertical slicing',
     speakerName: 'Agustín Sánchez',
-    portrait: '/lightning-talks/ddd-y-hexagonal.jpg',
+    portrait: '/lightning-talks/ddd-y-hexagonal-6.jpeg',
     date: new Date('2023-09-16'),
     location: 'UTN (Tucumán, Argentina)',
   },
@@ -84,21 +98,25 @@ export const talks: Talk[] = [
     name: 'Sitios para alojar repositorios de Git',
     speakerName: 'Camila Rodriguez',
     date: new Date('2021-10-09'),
+    youtubeUrl: 'https://www.youtube.com/live/QMyCntZ5rIY?si=24Y1uD9PtsoDVqGo&t=934',
   },
   {
     name: 'Creación de repositorios en GitHub y conexión a repositorio local',
     speakerName: 'Marcelo Núñez',
     date: new Date('2021-10-09'),
+    youtubeUrl: 'https://www.youtube.com/live/QMyCntZ5rIY?si=gd0ubcoGW1iQokM-&t=1281',
   },
   {
     name: 'Subida de cambios locales a repositorio de GitHub',
     speakerName: 'Lucas Pérez',
     date: new Date('2021-10-09'),
+    youtubeUrl: 'https://www.youtube.com/live/QMyCntZ5rIY?si=_6U8-KJkfOUKs1_U&t=1921',
   },
   {
     name: 'Conflictos y soluciones trabajando en equipo usando Git y GitHub',
     speakerName: 'Mauricio Sánchez y Tobías Paz Posse',
     date: new Date('2021-10-09'),
+    youtubeUrl: 'https://www.youtube.com/live/QMyCntZ5rIY?si=qkz-Sg3tmtuWuXnV&t=2631',
   },
   {
     name: 'Repaso de conceptos básicos de computación y desarrollo de software',
