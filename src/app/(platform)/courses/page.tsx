@@ -36,8 +36,6 @@ const Courses = () => {
     <div className="mt-4 md:px-20">
       <Heading2>Cursos</Heading2>
 
-      <Heading3 className="mt-4">Realizados por la comunidad</Heading3>
-
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         {communityCourses.map((course) => (
           <CourseCard key={course.slug} course={course} />
@@ -64,7 +62,7 @@ const Courses = () => {
         </Card>
       </div>
 
-      <Heading3 className="mt-12">Cursos externos sugeridos por la comunidad</Heading3>
+      <Heading3 className="mt-12">Sugerencias externas</Heading3>
 
       <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         {externalCourses.map((course) => (
