@@ -1,18 +1,19 @@
 export type Course = {
+  id: string;
   name: string;
-  slug: string;
   description: string;
   youtubeUrls: Array<string>;
   teachedBy: string;
   acceptDonations: boolean;
   isMadeByCommunity: boolean;
   date: Date;
+  hours: number;
 };
 
 export const communityCourses: Array<Course> = [
   {
     name: 'Git & GitHub',
-    slug: 'git-and-github',
+    id: 'git-and-github',
     description:
       'Git permite que puedas controlar las versiones del código que desarrollas, y GitHub hace posible que puedas trabajar en equipo de una manera más eficiente. Este curso fue diseñado y dictado a los alumnos del primer año de ingeniería en sistemas de información, de la UTN-FRT.',
     youtubeUrls: ['https://www.youtube.com/embed/WlB2fzl1vO8?si=O3O4Mi-gU65x2eyJ&vq=hd1080'],
@@ -20,10 +21,11 @@ export const communityCourses: Array<Course> = [
     acceptDonations: false,
     isMadeByCommunity: true,
     date: new Date('2020-06-27'),
+    hours: 2,
   },
   {
     name: 'Vim',
-    slug: 'vim',
+    id: 'vim',
     description:
       'Aprendé a usar Vim, el editor de texto más poderoso del mundo. Vim permite editar y navegar código de una manera súper veloz. Podés usar Vim en la consola o instalar un plugin dentro de tu IDE favorito para agilizar tu codificación usando los atajos de teclado de Vim.',
     youtubeUrls: [
@@ -36,10 +38,11 @@ export const communityCourses: Array<Course> = [
     acceptDonations: false,
     isMadeByCommunity: true,
     date: new Date('2020-10-12'),
+    hours: 1,
   },
   {
     name: 'LaTeX',
-    slug: 'latex',
+    id: 'latex',
     description:
       'Aprende a usar LaTeX, el sistema de composición de textos más utilizado en la academia. LaTeX permite crear documentos que se ven profesionales y que se diferencian de los documentos de texto típicos, además de que podés editarlos utilizando código, permitiendo que uses tu tiempo en lo que importa: escribir tu documento.',
     youtubeUrls: [
@@ -51,13 +54,14 @@ export const communityCourses: Array<Course> = [
     acceptDonations: false,
     isMadeByCommunity: true,
     date: new Date('2020-12-31'),
+    hours: 1,
   },
 ];
 
 export const externalCourses: Array<Course> = [
   {
     name: 'HTML & CSS',
-    slug: 'html-and-css',
+    id: 'html-and-css',
     description:
       'HTML y CSS son los lenguajes que nos permiten crear las páginas web que usamos todos los días. Este curso es una excelente introducción a estos lenguajes, y está recomendado para todos aquellos que quieran aprender a crear sus propias páginas web.',
     youtubeUrls: ['https://www.youtube.com/embed/ELSm-G201Ls?si=zKpbZY_bWWkw0xfx'],
@@ -65,10 +69,11 @@ export const externalCourses: Array<Course> = [
     acceptDonations: false,
     isMadeByCommunity: false,
     date: new Date('2024-01-01'),
+    hours: 24,
   },
   {
     name: 'JavaScript',
-    slug: 'javascript',
+    id: 'javascript',
     description:
       'JavaScript es el lenguaje de programación que nos permite crear páginas web interactivas. Este curso es una excelente introducción a este lenguaje, y está recomendado para todos aquellos que quieran aprender a programar.',
     youtubeUrls: [
@@ -80,9 +85,25 @@ export const externalCourses: Array<Course> = [
     acceptDonations: false,
     isMadeByCommunity: false,
     date: new Date('2024-01-01'),
+    hours: 27,
+  },
+  {
+    name: 'Python',
+    id: 'python',
+    description:
+      'Python es un lenguaje de programación interpretado de alto nivel, que se utiliza para desarrollar aplicaciones web, scripts, y para la ciencia de datos. Este curso es una excelente introducción a este lenguaje, y está recomendado para todos aquellos que quieran aprender a programar.',
+    youtubeUrls: [
+      'https://www.youtube.com/embed/nKPbfIU442g?si=7qeAOJDvbDOHGJ3o',
+      'https://www.youtube.com/embed/HtKqSJX7VoM?si=Emr_l0n_YORzfdt7',
+    ],
+    teachedBy: 'Dalto',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2023-01-22'),
+    hours: 12,
   },
 ];
 
-export const getCourseBySlug = (slug: string) =>
-  communityCourses.find((course) => course.slug === slug) ||
-  externalCourses.find((course) => course.slug === slug);
+export const getCourseById = (courseId: string) =>
+  communityCourses.find((course) => course.id === courseId) ||
+  externalCourses.find((course) => course.id === courseId);

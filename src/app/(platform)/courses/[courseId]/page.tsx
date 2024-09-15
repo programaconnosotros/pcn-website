@@ -14,10 +14,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { getCourseBySlug } from '../courses';
+import { getCourseById } from '../courses';
 
-const Course = ({ params: { slug } }: { params: { slug: string[] } }) => {
-  const course = getCourseBySlug(slug[0]);
+const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
+  const course = getCourseById(courseId);
 
   if (!course) return <div>El curso no existe.</div>;
 
