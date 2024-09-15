@@ -15,15 +15,17 @@ import { communityCourses, Course, externalCourses } from './courses';
 import { Badge } from '@/components/ui/badge';
 
 const AddCourseCard = () => (
-  <Card className="flex flex-col justify-between">
-    <CardHeader>
-      <CardTitle>¿Quéres sumar tu curso aquí?</CardTitle>
+  <Card className="flex flex-col justify-between bg-neutral-100 dark:bg-neutral-900">
+    <div>
+      <CardHeader>
+        <CardTitle>¿Quéres sumar tu curso?</CardTitle>
+      </CardHeader>
 
-      <CardDescription>
+      <CardContent>
         Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
         comunidad, contactanos clickeando el botón de abajo!
-      </CardDescription>
-    </CardHeader>
+      </CardContent>
+    </div>
 
     <CardFooter className="flex flex-row justify-between gap-4">
       <Link className="block" href="https://wa.me/5493815777562">
