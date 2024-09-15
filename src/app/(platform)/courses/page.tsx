@@ -48,15 +48,17 @@ const CourseCard = ({ course }: { course: Course }) => {
 
   return (
     <Card className="flex flex-col justify-between">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{course.name}</CardTitle>
+      <div>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>{course.name}</CardTitle>
 
-        <Badge variant="outline">
-          {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-        </Badge>
-      </CardHeader>
+          <Badge variant="outline">
+            {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+          </Badge>
+        </CardHeader>
 
-      <CardContent>{course.description}</CardContent>
+        <CardContent>{course.description}</CardContent>
+      </div>
 
       <CardFooter className="flex flex-row justify-between gap-4">
         <ViewButton />
