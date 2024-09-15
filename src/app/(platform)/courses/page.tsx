@@ -49,7 +49,7 @@ const CourseCard = ({ course }: { course: Course }) => {
   );
 
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className="flex flex-col justify-between md:min-h-[320px]">
       <div>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>{course.name}</CardTitle>
@@ -74,7 +74,7 @@ const Courses = () => (
   <div className="mt-4 md:px-20">
     <Heading2>Cursos</Heading2>
 
-    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       {communityCourses.map((course) => (
         <CourseCard key={course.id} course={course} />
       ))}
@@ -84,7 +84,7 @@ const Courses = () => (
 
     <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
 
-    <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       {externalCourses.map((course) => (
         <CourseCard key={course.id} course={course} />
       ))}
