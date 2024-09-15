@@ -14,6 +14,28 @@ import { Heading3 } from '@/components/ui/heading-3';
 import { communityCourses, Course, externalCourses } from './courses';
 import { Badge } from '@/components/ui/badge';
 
+const AddCourseCard = () => (
+  <Card className="flex flex-col justify-between">
+    <CardHeader>
+      <CardTitle>¿Quéres sumar tu curso aquí?</CardTitle>
+
+      <CardDescription>
+        Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
+        comunidad, contactanos clickeando el botón de abajo!
+      </CardDescription>
+    </CardHeader>
+
+    <CardFooter className="flex flex-row justify-between gap-4">
+      <Link className="block" href="https://wa.me/5493815777562">
+        <Button className="mt-4 flex flex-row items-center gap-2">
+          Contactar
+          <Send className="h-5 w-5" />
+        </Button>
+      </Link>
+    </CardFooter>
+  </Card>
+);
+
 const CourseCard = ({ course }: { course: Course }) => {
   const ViewButton = () => (
     <Link href={`/courses/${course.id}`}>
@@ -54,25 +76,7 @@ const Courses = () => (
         <CourseCard key={course.id} course={course} />
       ))}
 
-      <Card className="flex flex-col justify-between">
-        <CardHeader>
-          <CardTitle>¿Quéres sumar tu curso aquí?</CardTitle>
-
-          <CardDescription>
-            Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
-            comunidad, contactanos clickeando el botón de abajo!
-          </CardDescription>
-        </CardHeader>
-
-        <CardFooter className="flex flex-row justify-between gap-4">
-          <Link className="block" href="https://wa.me/5493815777562">
-            <Button className="mt-4 flex flex-row items-center gap-2">
-              Contactar
-              <Send className="h-5 w-5" />
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
+      <AddCourseCard />
     </div>
 
     <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
