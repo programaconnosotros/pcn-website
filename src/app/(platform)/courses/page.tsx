@@ -48,13 +48,12 @@ const CourseCard = ({ course }: { course: Course }) => {
 
   return (
     <Card className="flex flex-col justify-between">
-      <CardHeader>
-        <div className="flex flex-row items-center justify-between">
-          <CardTitle>{course.name}</CardTitle>
-          <Badge variant="outline">
-            {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-          </Badge>
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>{course.name}</CardTitle>
+
+        <Badge variant="outline">
+          {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+        </Badge>
       </CardHeader>
 
       <CardContent>{course.description}</CardContent>
