@@ -15,6 +15,7 @@ import {
   Images,
   Instagram,
   Linkedin,
+  MicVocal,
   Podcast,
   TvMinimalPlay,
   Youtube,
@@ -53,9 +54,9 @@ export const SidebarContainer = ({
       icon: <Calendar className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
-      label: 'Lightning Talks',
-      href: '/lightning-talks',
-      icon: <IconBolt className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      label: 'Charlas',
+      href: '/talks',
+      icon: <MicVocal className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: 'Code Warfare',
