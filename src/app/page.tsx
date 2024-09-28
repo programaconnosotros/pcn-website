@@ -2,7 +2,6 @@ import { auth } from '@/auth';
 import { Activities } from '@/components/landing/activities';
 import { CommunityHighlights } from '@/components/landing/community-highlights';
 import { Discord } from '@/components/landing/discord';
-import { PlatformFeatures } from '@/components/landing/platform-features';
 import { Hero } from '@/components/landing/hero';
 import { Footer } from '@/components/landing/footer';
 
@@ -22,7 +21,6 @@ export const Home = async () => {
         <Hero session={session} />
         <CommunityHighlights />
         <Activities />
-        <PlatformFeatures />
         <Discord />
       </main>
 
