@@ -1,52 +1,44 @@
 import { cn } from '@/lib/utils';
-import {
-  IconAdjustmentsBolt,
-  IconCloud,
-  IconCurrencyDollar,
-  IconEaseInOut,
-  IconHeart,
-  IconHelp,
-  IconRouteAltLeft,
-  IconTerminal2,
-} from '@tabler/icons-react';
+import { IconHeart, IconRouteAltLeft } from '@tabler/icons-react';
+import { Blend, Brain, Gem, Handshake, Speech, Zap } from 'lucide-react';
 
 export const CommunityHighlights = () => {
   const features = [
     {
       title: 'Para aprender cosas nuevas',
       description: 'Todos los días tenemos conversaciones interesantes para aprender más.',
-      icon: <IconEaseInOut />,
+      icon: <Brain />,
     },
     {
       title: 'Para conocer mentores',
       description: 'Conocé a personas que te van a ayudar a crecer como profesional o estudiante.',
-      icon: <IconTerminal2 />,
+      icon: <Speech />,
     },
     {
       title: 'Para encontrar oportunidades laborales',
       description: 'Siempre estamos compartiendo info sobre nuevas ofertas de trabajo y proyectos.',
-      icon: <IconRouteAltLeft />,
+      icon: <Handshake />,
     },
     {
       title: 'Para mantenerte al día',
       description:
         'Facilitamos que puedas mantenerte al día con las últimas tecnologías y tendencias.',
-      icon: <IconCloud />,
+      icon: <Gem />,
     },
     {
       title: 'Para compartir conocimiento',
       description: 'Podés dar charlas, clases o cursos sobre cualquier tema que te apasione.',
-      icon: <IconCurrencyDollar />,
+      icon: <Blend />,
     },
     {
       title: 'Para entretenerte',
       description: 'Si sos un apasionado por la tecnología, la vas a pasar bien con nosotros.',
-      icon: <IconHelp />,
+      icon: <Zap />,
     },
     {
       title: 'Para ver perspectivas diferentes',
       description: 'Escuchar diferentes perspectivas puede cambiarte la vida.',
-      icon: <IconAdjustmentsBolt />,
+      icon: <IconRouteAltLeft />,
     },
     {
       title: 'Para compartir experiencias',
