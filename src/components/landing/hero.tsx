@@ -11,7 +11,7 @@ import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { GlowingText } from '../ui/glowing-text';
 
 export const Hero = ({ session }: { session: Session | null }) => (
-  <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
+  <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
         id="tsparticlesfullpage"
