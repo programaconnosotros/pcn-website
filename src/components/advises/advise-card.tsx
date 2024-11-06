@@ -12,8 +12,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteAdviseDialog } from './delete-advise-dialog';
-import { EditAdviseDialog } from './edit-advise-dialog';
+import { DeleteAdvise } from './delete-advise';
+import { EditAdvise } from './edit-advise';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -69,17 +69,17 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
         {isAuthor && Options}
       </CardHeader>
 
-      <DeleteAdviseDialog
+      <DeleteAdvise
         adviseId={advise.id}
         isOpen={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
+        setDialogOpen={setIsDeleteDialogOpen}
       />
 
-      <EditAdviseDialog
+      <EditAdvise
         adviseId={advise.id}
         initialContent={advise.content}
         isOpen={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
+        setDialogOpen={setIsEditDialogOpen}
       />
 
       <CardContent className="px-4 py-6">
