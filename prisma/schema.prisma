@@ -12,19 +12,19 @@ generator zod {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   advises       Advise[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -37,39 +37,60 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
- 
-model Advise {
-  id        String @id @default(cuid())
-  content   String
 
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
+model Advise {
+  id      String @id @default(cuid())
+  content String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 
   createdAt DateTime @default(now())
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  date        DateTime
+  endDate     DateTime?
+  name        String
+  description String
+  location    String
+  flyerSrc    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  images Image[]
+}
+
+model Image {
+  id      String  @id @default(cuid())
+  imgSrc  String
+  Event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
 }
