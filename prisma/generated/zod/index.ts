@@ -22,6 +22,10 @@ export const VerificationTokenScalarFieldEnumSchema = z.enum(['identifier','toke
 
 export const AdviseScalarFieldEnumSchema = z.enum(['id','content','authorId','createdAt']);
 
+export const EventScalarFieldEnumSchema = z.enum(['id','date','endDate','name','description','location','flyerSrc','createdAt','updatedAt']);
+
+export const ImageScalarFieldEnumSchema = z.enum(['id','imgSrc','eventId']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -107,6 +111,36 @@ export const AdviseSchema = z.object({
 })
 
 export type Advise = z.infer<typeof AdviseSchema>
+
+/////////////////////////////////////////
+// EVENT SCHEMA
+/////////////////////////////////////////
+
+export const EventSchema = z.object({
+  id: z.string().cuid(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Event = z.infer<typeof EventSchema>
+
+/////////////////////////////////////////
+// IMAGE SCHEMA
+/////////////////////////////////////////
+
+export const ImageSchema = z.object({
+  id: z.string().cuid(),
+  imgSrc: z.string(),
+  eventId: z.string().nullable(),
+})
+
+export type Image = z.infer<typeof ImageSchema>
 
 /////////////////////////////////////////
 // SELECT & INCLUDE
@@ -228,6 +262,60 @@ export const AdviseSelectSchema: z.ZodType<Prisma.AdviseSelect> = z.object({
   authorId: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   author: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
+// EVENT
+//------------------------------------------------------
+
+export const EventIncludeSchema: z.ZodType<Prisma.EventInclude> = z.object({
+  images: z.union([z.boolean(),z.lazy(() => ImageFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => EventCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+export const EventArgsSchema: z.ZodType<Prisma.EventDefaultArgs> = z.object({
+  select: z.lazy(() => EventSelectSchema).optional(),
+  include: z.lazy(() => EventIncludeSchema).optional(),
+}).strict();
+
+export const EventCountOutputTypeArgsSchema: z.ZodType<Prisma.EventCountOutputTypeDefaultArgs> = z.object({
+  select: z.lazy(() => EventCountOutputTypeSelectSchema).nullish(),
+}).strict();
+
+export const EventCountOutputTypeSelectSchema: z.ZodType<Prisma.EventCountOutputTypeSelect> = z.object({
+  images: z.boolean().optional(),
+}).strict();
+
+export const EventSelectSchema: z.ZodType<Prisma.EventSelect> = z.object({
+  id: z.boolean().optional(),
+  date: z.boolean().optional(),
+  endDate: z.boolean().optional(),
+  name: z.boolean().optional(),
+  description: z.boolean().optional(),
+  location: z.boolean().optional(),
+  flyerSrc: z.boolean().optional(),
+  createdAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
+  images: z.union([z.boolean(),z.lazy(() => ImageFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => EventCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+// IMAGE
+//------------------------------------------------------
+
+export const ImageIncludeSchema: z.ZodType<Prisma.ImageInclude> = z.object({
+  Event: z.union([z.boolean(),z.lazy(() => EventArgsSchema)]).optional(),
+}).strict()
+
+export const ImageArgsSchema: z.ZodType<Prisma.ImageDefaultArgs> = z.object({
+  select: z.lazy(() => ImageSelectSchema).optional(),
+  include: z.lazy(() => ImageIncludeSchema).optional(),
+}).strict();
+
+export const ImageSelectSchema: z.ZodType<Prisma.ImageSelect> = z.object({
+  id: z.boolean().optional(),
+  imgSrc: z.boolean().optional(),
+  eventId: z.boolean().optional(),
+  Event: z.union([z.boolean(),z.lazy(() => EventArgsSchema)]).optional(),
 }).strict()
 
 
@@ -576,6 +664,132 @@ export const AdviseScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Advise
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const EventWhereInputSchema: z.ZodType<Prisma.EventWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => EventWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  endDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  location: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  flyerSrc: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  images: z.lazy(() => ImageListRelationFilterSchema).optional()
+}).strict();
+
+export const EventOrderByWithRelationInputSchema: z.ZodType<Prisma.EventOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  endDate: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  flyerSrc: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  images: z.lazy(() => ImageOrderByRelationAggregateInputSchema).optional()
+}).strict();
+
+export const EventWhereUniqueInputSchema: z.ZodType<Prisma.EventWhereUniqueInput> = z.object({
+  id: z.string().cuid()
+})
+.and(z.object({
+  id: z.string().cuid().optional(),
+  AND: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => EventWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => EventWhereInputSchema),z.lazy(() => EventWhereInputSchema).array() ]).optional(),
+  date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  endDate: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  location: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  flyerSrc: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  images: z.lazy(() => ImageListRelationFilterSchema).optional()
+}).strict());
+
+export const EventOrderByWithAggregationInputSchema: z.ZodType<Prisma.EventOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  endDate: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  flyerSrc: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => EventCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => EventMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => EventMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const EventScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.EventScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => EventScalarWhereWithAggregatesInputSchema),z.lazy(() => EventScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => EventScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => EventScalarWhereWithAggregatesInputSchema),z.lazy(() => EventScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  date: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  endDate: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  description: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  location: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  flyerSrc: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const ImageWhereInputSchema: z.ZodType<Prisma.ImageWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ImageWhereInputSchema),z.lazy(() => ImageWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ImageWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ImageWhereInputSchema),z.lazy(() => ImageWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  imgSrc: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  eventId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  Event: z.union([ z.lazy(() => EventNullableRelationFilterSchema),z.lazy(() => EventWhereInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const ImageOrderByWithRelationInputSchema: z.ZodType<Prisma.ImageOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  imgSrc: z.lazy(() => SortOrderSchema).optional(),
+  eventId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  Event: z.lazy(() => EventOrderByWithRelationInputSchema).optional()
+}).strict();
+
+export const ImageWhereUniqueInputSchema: z.ZodType<Prisma.ImageWhereUniqueInput> = z.object({
+  id: z.string().cuid()
+})
+.and(z.object({
+  id: z.string().cuid().optional(),
+  AND: z.union([ z.lazy(() => ImageWhereInputSchema),z.lazy(() => ImageWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ImageWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ImageWhereInputSchema),z.lazy(() => ImageWhereInputSchema).array() ]).optional(),
+  imgSrc: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  eventId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  Event: z.union([ z.lazy(() => EventNullableRelationFilterSchema),z.lazy(() => EventWhereInputSchema) ]).optional().nullable(),
+}).strict());
+
+export const ImageOrderByWithAggregationInputSchema: z.ZodType<Prisma.ImageOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  imgSrc: z.lazy(() => SortOrderSchema).optional(),
+  eventId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  _count: z.lazy(() => ImageCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => ImageMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => ImageMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const ImageScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ImageScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => ImageScalarWhereWithAggregatesInputSchema),z.lazy(() => ImageScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ImageScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ImageScalarWhereWithAggregatesInputSchema),z.lazy(() => ImageScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  imgSrc: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  eventId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   id: z.string().cuid().optional(),
   name: z.string().optional().nullable(),
@@ -912,6 +1126,135 @@ export const AdviseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.AdviseUnchec
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   authorId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const EventCreateInputSchema: z.ZodType<Prisma.EventCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().optional().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  images: z.lazy(() => ImageCreateNestedManyWithoutEventInputSchema).optional()
+}).strict();
+
+export const EventUncheckedCreateInputSchema: z.ZodType<Prisma.EventUncheckedCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().optional().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  images: z.lazy(() => ImageUncheckedCreateNestedManyWithoutEventInputSchema).optional()
+}).strict();
+
+export const EventUpdateInputSchema: z.ZodType<Prisma.EventUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  images: z.lazy(() => ImageUpdateManyWithoutEventNestedInputSchema).optional()
+}).strict();
+
+export const EventUncheckedUpdateInputSchema: z.ZodType<Prisma.EventUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  images: z.lazy(() => ImageUncheckedUpdateManyWithoutEventNestedInputSchema).optional()
+}).strict();
+
+export const EventCreateManyInputSchema: z.ZodType<Prisma.EventCreateManyInput> = z.object({
+  id: z.string().cuid().optional(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().optional().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const EventUpdateManyMutationInputSchema: z.ZodType<Prisma.EventUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const EventUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EventUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ImageCreateInputSchema: z.ZodType<Prisma.ImageCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string(),
+  Event: z.lazy(() => EventCreateNestedOneWithoutImagesInputSchema).optional()
+}).strict();
+
+export const ImageUncheckedCreateInputSchema: z.ZodType<Prisma.ImageUncheckedCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string(),
+  eventId: z.string().optional().nullable()
+}).strict();
+
+export const ImageUpdateInputSchema: z.ZodType<Prisma.ImageUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  Event: z.lazy(() => EventUpdateOneWithoutImagesNestedInputSchema).optional()
+}).strict();
+
+export const ImageUncheckedUpdateInputSchema: z.ZodType<Prisma.ImageUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  eventId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const ImageCreateManyInputSchema: z.ZodType<Prisma.ImageCreateManyInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string(),
+  eventId: z.string().optional().nullable()
+}).strict();
+
+export const ImageUpdateManyMutationInputSchema: z.ZodType<Prisma.ImageUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ImageUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ImageUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  eventId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
@@ -1256,6 +1599,75 @@ export const AdviseMinOrderByAggregateInputSchema: z.ZodType<Prisma.AdviseMinOrd
   createdAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const ImageListRelationFilterSchema: z.ZodType<Prisma.ImageListRelationFilter> = z.object({
+  every: z.lazy(() => ImageWhereInputSchema).optional(),
+  some: z.lazy(() => ImageWhereInputSchema).optional(),
+  none: z.lazy(() => ImageWhereInputSchema).optional()
+}).strict();
+
+export const ImageOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ImageOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EventCountOrderByAggregateInputSchema: z.ZodType<Prisma.EventCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  endDate: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  flyerSrc: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EventMaxOrderByAggregateInputSchema: z.ZodType<Prisma.EventMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  endDate: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  flyerSrc: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EventMinOrderByAggregateInputSchema: z.ZodType<Prisma.EventMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  endDate: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
+  description: z.lazy(() => SortOrderSchema).optional(),
+  location: z.lazy(() => SortOrderSchema).optional(),
+  flyerSrc: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EventNullableRelationFilterSchema: z.ZodType<Prisma.EventNullableRelationFilter> = z.object({
+  is: z.lazy(() => EventWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => EventWhereInputSchema).optional().nullable()
+}).strict();
+
+export const ImageCountOrderByAggregateInputSchema: z.ZodType<Prisma.ImageCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  imgSrc: z.lazy(() => SortOrderSchema).optional(),
+  eventId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ImageMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ImageMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  imgSrc: z.lazy(() => SortOrderSchema).optional(),
+  eventId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ImageMinOrderByAggregateInputSchema: z.ZodType<Prisma.ImageMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  imgSrc: z.lazy(() => SortOrderSchema).optional(),
+  eventId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const AccountCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.AccountCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => AccountCreateWithoutUserInputSchema),z.lazy(() => AccountCreateWithoutUserInputSchema).array(),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema),z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -1446,6 +1858,64 @@ export const UserUpdateOneRequiredWithoutAdvisesNestedInputSchema: z.ZodType<Pri
   upsert: z.lazy(() => UserUpsertWithoutAdvisesInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutAdvisesInputSchema),z.lazy(() => UserUpdateWithoutAdvisesInputSchema),z.lazy(() => UserUncheckedUpdateWithoutAdvisesInputSchema) ]).optional(),
+}).strict();
+
+export const ImageCreateNestedManyWithoutEventInputSchema: z.ZodType<Prisma.ImageCreateNestedManyWithoutEventInput> = z.object({
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageCreateWithoutEventInputSchema).array(),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema),z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ImageCreateManyEventInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ImageUncheckedCreateNestedManyWithoutEventInputSchema: z.ZodType<Prisma.ImageUncheckedCreateNestedManyWithoutEventInput> = z.object({
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageCreateWithoutEventInputSchema).array(),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema),z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ImageCreateManyEventInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ImageUpdateManyWithoutEventNestedInputSchema: z.ZodType<Prisma.ImageUpdateManyWithoutEventNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageCreateWithoutEventInputSchema).array(),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema),z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ImageUpsertWithWhereUniqueWithoutEventInputSchema),z.lazy(() => ImageUpsertWithWhereUniqueWithoutEventInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ImageCreateManyEventInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ImageUpdateWithWhereUniqueWithoutEventInputSchema),z.lazy(() => ImageUpdateWithWhereUniqueWithoutEventInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ImageUpdateManyWithWhereWithoutEventInputSchema),z.lazy(() => ImageUpdateManyWithWhereWithoutEventInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ImageScalarWhereInputSchema),z.lazy(() => ImageScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ImageUncheckedUpdateManyWithoutEventNestedInputSchema: z.ZodType<Prisma.ImageUncheckedUpdateManyWithoutEventNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageCreateWithoutEventInputSchema).array(),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema),z.lazy(() => ImageCreateOrConnectWithoutEventInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ImageUpsertWithWhereUniqueWithoutEventInputSchema),z.lazy(() => ImageUpsertWithWhereUniqueWithoutEventInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ImageCreateManyEventInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ImageWhereUniqueInputSchema),z.lazy(() => ImageWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ImageUpdateWithWhereUniqueWithoutEventInputSchema),z.lazy(() => ImageUpdateWithWhereUniqueWithoutEventInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ImageUpdateManyWithWhereWithoutEventInputSchema),z.lazy(() => ImageUpdateManyWithWhereWithoutEventInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ImageScalarWhereInputSchema),z.lazy(() => ImageScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const EventCreateNestedOneWithoutImagesInputSchema: z.ZodType<Prisma.EventCreateNestedOneWithoutImagesInput> = z.object({
+  create: z.union([ z.lazy(() => EventCreateWithoutImagesInputSchema),z.lazy(() => EventUncheckedCreateWithoutImagesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => EventCreateOrConnectWithoutImagesInputSchema).optional(),
+  connect: z.lazy(() => EventWhereUniqueInputSchema).optional()
+}).strict();
+
+export const EventUpdateOneWithoutImagesNestedInputSchema: z.ZodType<Prisma.EventUpdateOneWithoutImagesNestedInput> = z.object({
+  create: z.union([ z.lazy(() => EventCreateWithoutImagesInputSchema),z.lazy(() => EventUncheckedCreateWithoutImagesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => EventCreateOrConnectWithoutImagesInputSchema).optional(),
+  upsert: z.lazy(() => EventUpsertWithoutImagesInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => EventWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => EventWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => EventWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => EventUpdateToOneWithWhereWithoutImagesInputSchema),z.lazy(() => EventUpdateWithoutImagesInputSchema),z.lazy(() => EventUncheckedUpdateWithoutImagesInputSchema) ]).optional(),
 }).strict();
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
@@ -1975,6 +2445,115 @@ export const UserUncheckedUpdateWithoutAdvisesInputSchema: z.ZodType<Prisma.User
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
+export const ImageCreateWithoutEventInputSchema: z.ZodType<Prisma.ImageCreateWithoutEventInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string()
+}).strict();
+
+export const ImageUncheckedCreateWithoutEventInputSchema: z.ZodType<Prisma.ImageUncheckedCreateWithoutEventInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string()
+}).strict();
+
+export const ImageCreateOrConnectWithoutEventInputSchema: z.ZodType<Prisma.ImageCreateOrConnectWithoutEventInput> = z.object({
+  where: z.lazy(() => ImageWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema) ]),
+}).strict();
+
+export const ImageCreateManyEventInputEnvelopeSchema: z.ZodType<Prisma.ImageCreateManyEventInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => ImageCreateManyEventInputSchema),z.lazy(() => ImageCreateManyEventInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
+export const ImageUpsertWithWhereUniqueWithoutEventInputSchema: z.ZodType<Prisma.ImageUpsertWithWhereUniqueWithoutEventInput> = z.object({
+  where: z.lazy(() => ImageWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ImageUpdateWithoutEventInputSchema),z.lazy(() => ImageUncheckedUpdateWithoutEventInputSchema) ]),
+  create: z.union([ z.lazy(() => ImageCreateWithoutEventInputSchema),z.lazy(() => ImageUncheckedCreateWithoutEventInputSchema) ]),
+}).strict();
+
+export const ImageUpdateWithWhereUniqueWithoutEventInputSchema: z.ZodType<Prisma.ImageUpdateWithWhereUniqueWithoutEventInput> = z.object({
+  where: z.lazy(() => ImageWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ImageUpdateWithoutEventInputSchema),z.lazy(() => ImageUncheckedUpdateWithoutEventInputSchema) ]),
+}).strict();
+
+export const ImageUpdateManyWithWhereWithoutEventInputSchema: z.ZodType<Prisma.ImageUpdateManyWithWhereWithoutEventInput> = z.object({
+  where: z.lazy(() => ImageScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ImageUpdateManyMutationInputSchema),z.lazy(() => ImageUncheckedUpdateManyWithoutEventInputSchema) ]),
+}).strict();
+
+export const ImageScalarWhereInputSchema: z.ZodType<Prisma.ImageScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ImageScalarWhereInputSchema),z.lazy(() => ImageScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ImageScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ImageScalarWhereInputSchema),z.lazy(() => ImageScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  imgSrc: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  eventId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const EventCreateWithoutImagesInputSchema: z.ZodType<Prisma.EventCreateWithoutImagesInput> = z.object({
+  id: z.string().cuid().optional(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().optional().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const EventUncheckedCreateWithoutImagesInputSchema: z.ZodType<Prisma.EventUncheckedCreateWithoutImagesInput> = z.object({
+  id: z.string().cuid().optional(),
+  date: z.coerce.date(),
+  endDate: z.coerce.date().optional().nullable(),
+  name: z.string(),
+  description: z.string(),
+  location: z.string(),
+  flyerSrc: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const EventCreateOrConnectWithoutImagesInputSchema: z.ZodType<Prisma.EventCreateOrConnectWithoutImagesInput> = z.object({
+  where: z.lazy(() => EventWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => EventCreateWithoutImagesInputSchema),z.lazy(() => EventUncheckedCreateWithoutImagesInputSchema) ]),
+}).strict();
+
+export const EventUpsertWithoutImagesInputSchema: z.ZodType<Prisma.EventUpsertWithoutImagesInput> = z.object({
+  update: z.union([ z.lazy(() => EventUpdateWithoutImagesInputSchema),z.lazy(() => EventUncheckedUpdateWithoutImagesInputSchema) ]),
+  create: z.union([ z.lazy(() => EventCreateWithoutImagesInputSchema),z.lazy(() => EventUncheckedCreateWithoutImagesInputSchema) ]),
+  where: z.lazy(() => EventWhereInputSchema).optional()
+}).strict();
+
+export const EventUpdateToOneWithWhereWithoutImagesInputSchema: z.ZodType<Prisma.EventUpdateToOneWithWhereWithoutImagesInput> = z.object({
+  where: z.lazy(() => EventWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => EventUpdateWithoutImagesInputSchema),z.lazy(() => EventUncheckedUpdateWithoutImagesInputSchema) ]),
+}).strict();
+
+export const EventUpdateWithoutImagesInputSchema: z.ZodType<Prisma.EventUpdateWithoutImagesInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const EventUncheckedUpdateWithoutImagesInputSchema: z.ZodType<Prisma.EventUncheckedUpdateWithoutImagesInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  endDate: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  location: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  flyerSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const AccountCreateManyUserInputSchema: z.ZodType<Prisma.AccountCreateManyUserInput> = z.object({
   type: z.string(),
   provider: z.string(),
@@ -2085,6 +2664,26 @@ export const AdviseUncheckedUpdateManyWithoutAuthorInputSchema: z.ZodType<Prisma
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   content: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ImageCreateManyEventInputSchema: z.ZodType<Prisma.ImageCreateManyEventInput> = z.object({
+  id: z.string().cuid().optional(),
+  imgSrc: z.string()
+}).strict();
+
+export const ImageUpdateWithoutEventInputSchema: z.ZodType<Prisma.ImageUpdateWithoutEventInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ImageUncheckedUpdateWithoutEventInputSchema: z.ZodType<Prisma.ImageUncheckedUpdateWithoutEventInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ImageUncheckedUpdateManyWithoutEventInputSchema: z.ZodType<Prisma.ImageUncheckedUpdateManyWithoutEventInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  imgSrc: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
@@ -2396,6 +2995,130 @@ export const AdviseFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.AdviseFindUniqu
   where: AdviseWhereUniqueInputSchema,
 }).strict() ;
 
+export const EventFindFirstArgsSchema: z.ZodType<Prisma.EventFindFirstArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereInputSchema.optional(),
+  orderBy: z.union([ EventOrderByWithRelationInputSchema.array(),EventOrderByWithRelationInputSchema ]).optional(),
+  cursor: EventWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ EventScalarFieldEnumSchema,EventScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const EventFindFirstOrThrowArgsSchema: z.ZodType<Prisma.EventFindFirstOrThrowArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereInputSchema.optional(),
+  orderBy: z.union([ EventOrderByWithRelationInputSchema.array(),EventOrderByWithRelationInputSchema ]).optional(),
+  cursor: EventWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ EventScalarFieldEnumSchema,EventScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const EventFindManyArgsSchema: z.ZodType<Prisma.EventFindManyArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereInputSchema.optional(),
+  orderBy: z.union([ EventOrderByWithRelationInputSchema.array(),EventOrderByWithRelationInputSchema ]).optional(),
+  cursor: EventWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ EventScalarFieldEnumSchema,EventScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const EventAggregateArgsSchema: z.ZodType<Prisma.EventAggregateArgs> = z.object({
+  where: EventWhereInputSchema.optional(),
+  orderBy: z.union([ EventOrderByWithRelationInputSchema.array(),EventOrderByWithRelationInputSchema ]).optional(),
+  cursor: EventWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const EventGroupByArgsSchema: z.ZodType<Prisma.EventGroupByArgs> = z.object({
+  where: EventWhereInputSchema.optional(),
+  orderBy: z.union([ EventOrderByWithAggregationInputSchema.array(),EventOrderByWithAggregationInputSchema ]).optional(),
+  by: EventScalarFieldEnumSchema.array(),
+  having: EventScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const EventFindUniqueArgsSchema: z.ZodType<Prisma.EventFindUniqueArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereUniqueInputSchema,
+}).strict() ;
+
+export const EventFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.EventFindUniqueOrThrowArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereUniqueInputSchema,
+}).strict() ;
+
+export const ImageFindFirstArgsSchema: z.ZodType<Prisma.ImageFindFirstArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereInputSchema.optional(),
+  orderBy: z.union([ ImageOrderByWithRelationInputSchema.array(),ImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ImageScalarFieldEnumSchema,ImageScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ImageFindFirstOrThrowArgsSchema: z.ZodType<Prisma.ImageFindFirstOrThrowArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereInputSchema.optional(),
+  orderBy: z.union([ ImageOrderByWithRelationInputSchema.array(),ImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ImageScalarFieldEnumSchema,ImageScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ImageFindManyArgsSchema: z.ZodType<Prisma.ImageFindManyArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereInputSchema.optional(),
+  orderBy: z.union([ ImageOrderByWithRelationInputSchema.array(),ImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ImageScalarFieldEnumSchema,ImageScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const ImageAggregateArgsSchema: z.ZodType<Prisma.ImageAggregateArgs> = z.object({
+  where: ImageWhereInputSchema.optional(),
+  orderBy: z.union([ ImageOrderByWithRelationInputSchema.array(),ImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ImageGroupByArgsSchema: z.ZodType<Prisma.ImageGroupByArgs> = z.object({
+  where: ImageWhereInputSchema.optional(),
+  orderBy: z.union([ ImageOrderByWithAggregationInputSchema.array(),ImageOrderByWithAggregationInputSchema ]).optional(),
+  by: ImageScalarFieldEnumSchema.array(),
+  having: ImageScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const ImageFindUniqueArgsSchema: z.ZodType<Prisma.ImageFindUniqueArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereUniqueInputSchema,
+}).strict() ;
+
+export const ImageFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ImageFindUniqueOrThrowArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereUniqueInputSchema,
+}).strict() ;
+
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -2620,4 +3343,96 @@ export const AdviseUpdateManyArgsSchema: z.ZodType<Prisma.AdviseUpdateManyArgs> 
 
 export const AdviseDeleteManyArgsSchema: z.ZodType<Prisma.AdviseDeleteManyArgs> = z.object({
   where: AdviseWhereInputSchema.optional(),
+}).strict() ;
+
+export const EventCreateArgsSchema: z.ZodType<Prisma.EventCreateArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  data: z.union([ EventCreateInputSchema,EventUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const EventUpsertArgsSchema: z.ZodType<Prisma.EventUpsertArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereUniqueInputSchema,
+  create: z.union([ EventCreateInputSchema,EventUncheckedCreateInputSchema ]),
+  update: z.union([ EventUpdateInputSchema,EventUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const EventCreateManyArgsSchema: z.ZodType<Prisma.EventCreateManyArgs> = z.object({
+  data: z.union([ EventCreateManyInputSchema,EventCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const EventCreateManyAndReturnArgsSchema: z.ZodType<Prisma.EventCreateManyAndReturnArgs> = z.object({
+  data: z.union([ EventCreateManyInputSchema,EventCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const EventDeleteArgsSchema: z.ZodType<Prisma.EventDeleteArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  where: EventWhereUniqueInputSchema,
+}).strict() ;
+
+export const EventUpdateArgsSchema: z.ZodType<Prisma.EventUpdateArgs> = z.object({
+  select: EventSelectSchema.optional(),
+  include: EventIncludeSchema.optional(),
+  data: z.union([ EventUpdateInputSchema,EventUncheckedUpdateInputSchema ]),
+  where: EventWhereUniqueInputSchema,
+}).strict() ;
+
+export const EventUpdateManyArgsSchema: z.ZodType<Prisma.EventUpdateManyArgs> = z.object({
+  data: z.union([ EventUpdateManyMutationInputSchema,EventUncheckedUpdateManyInputSchema ]),
+  where: EventWhereInputSchema.optional(),
+}).strict() ;
+
+export const EventDeleteManyArgsSchema: z.ZodType<Prisma.EventDeleteManyArgs> = z.object({
+  where: EventWhereInputSchema.optional(),
+}).strict() ;
+
+export const ImageCreateArgsSchema: z.ZodType<Prisma.ImageCreateArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  data: z.union([ ImageCreateInputSchema,ImageUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const ImageUpsertArgsSchema: z.ZodType<Prisma.ImageUpsertArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereUniqueInputSchema,
+  create: z.union([ ImageCreateInputSchema,ImageUncheckedCreateInputSchema ]),
+  update: z.union([ ImageUpdateInputSchema,ImageUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const ImageCreateManyArgsSchema: z.ZodType<Prisma.ImageCreateManyArgs> = z.object({
+  data: z.union([ ImageCreateManyInputSchema,ImageCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const ImageCreateManyAndReturnArgsSchema: z.ZodType<Prisma.ImageCreateManyAndReturnArgs> = z.object({
+  data: z.union([ ImageCreateManyInputSchema,ImageCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const ImageDeleteArgsSchema: z.ZodType<Prisma.ImageDeleteArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  where: ImageWhereUniqueInputSchema,
+}).strict() ;
+
+export const ImageUpdateArgsSchema: z.ZodType<Prisma.ImageUpdateArgs> = z.object({
+  select: ImageSelectSchema.optional(),
+  include: ImageIncludeSchema.optional(),
+  data: z.union([ ImageUpdateInputSchema,ImageUncheckedUpdateInputSchema ]),
+  where: ImageWhereUniqueInputSchema,
+}).strict() ;
+
+export const ImageUpdateManyArgsSchema: z.ZodType<Prisma.ImageUpdateManyArgs> = z.object({
+  data: z.union([ ImageUpdateManyMutationInputSchema,ImageUncheckedUpdateManyInputSchema ]),
+  where: ImageWhereInputSchema.optional(),
+}).strict() ;
+
+export const ImageDeleteManyArgsSchema: z.ZodType<Prisma.ImageDeleteManyArgs> = z.object({
+  where: ImageWhereInputSchema.optional(),
 }).strict() ;
