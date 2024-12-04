@@ -21,13 +21,13 @@ export const EventCard = ({ event }: { event: Event }) => {
             <Image src={event.flyerSrc} alt="" width={400} height={200} />
 
             <CardContent className="px-4 py-2">
-                <div className="flex justify-between">
+                <div className="flex justify-between mt-1">
                     <p className="mt-4 text-xs text-gray-500">
                         {format(new Date(event.date), "EEE, d MMM, HH:mm", { locale: es })}
                         {event.endDate && ` - ${format(new Date(event.endDate), "HH:mm", { locale: es })}`}
                     </p>
                     <BreadcrumbLink href={`events/${event.id}`}>
-                        <Button className="rounded-full font-blue">
+                        <Button>
                             Ver evento
                         </Button>
                     </BreadcrumbLink>
@@ -35,8 +35,8 @@ export const EventCard = ({ event }: { event: Event }) => {
 
                 <CardHeader className='px-0 py-2'>{event.name}</CardHeader>
                 <div className="flex">
-                    <MapPin className="mt-4 h-4 w-4 text-gray-500"></MapPin>
-                    <p className="mt-4 text-xs text-gray-500">
+                    <MapPin className="mt-4 h-4 w-4 text-gray-500">   </MapPin>
+                    <p className="mt-4 text-xs text-gray-500 ml-1">
                         {event.location}, AR
                     </p>
                 </div>
