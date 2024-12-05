@@ -27,7 +27,6 @@ export const EventsList = () => {
     }, [isInView, fetchNextPage, hasNextPage]);
 
     const events = data?.pages.flat() ?? [];
-    console.log("events", data);
 
     return (
         <>
