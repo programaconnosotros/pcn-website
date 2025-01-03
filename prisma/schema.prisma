@@ -82,6 +82,8 @@ model Event {
   description String
   location    String
   flyerSrc    String
+  latitude    Float?
+  longitude   Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
