@@ -37,8 +37,7 @@ export const EventsList = () => {
                     </p>
                 )}
 
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {events
                         .map((event, index) => (
                             <div key={event.id} className={`mb-4 md:mb-0 ${index >= 0 ? 'mt-4' : ''}`}>
@@ -46,7 +45,6 @@ export const EventsList = () => {
                             </div>
                         ))}
                 </div>
-
             </div>
 
             {hasNextPage && (
