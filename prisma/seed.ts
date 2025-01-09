@@ -69,6 +69,8 @@ async function main() {
           date: startDate,
           endDate: endDate,
           location: "San Miguel de Tucumán",
+          latitude: -26.844408,
+          longitude: - 65.222640,
           images: {
             connect: imageIds.length > 0 ? imageIds.map(id => ({ id })) : [],
           },
