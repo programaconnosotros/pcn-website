@@ -9,7 +9,7 @@ import { es } from 'date-fns/locale';
 import Image from 'next/image';
 import { BreadcrumbLink } from '../ui/breadcrumb';
 
-export const EventCard = ({ event }: { event: Event }) => {
+export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
     return (
         <Card key={event.id} className="h-full flex flex-col">
