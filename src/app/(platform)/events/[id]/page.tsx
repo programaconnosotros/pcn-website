@@ -19,13 +19,9 @@ type EventWithImages = Event & {
     images: Images[];
 };
 
-// TODO: implement the map using iframe to avoid Google maps pricing?
-// TODO: Should we wait to implement link with talks? Because that section doesn't exist yet 
-// TODO: Add a textual address for the event location, I think I should rename location in
-// eventlist to event city?
-// TODO: Connection with talks => The code related to these is commented by now
+// TODO: Implement integration with talks || Code related is commented by the moment
 
-const EventDetailPage = async ({ params }: { params: { id: string } }) => {
+const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
 
     const id: string = params.id;
 
@@ -68,7 +64,7 @@ const EventDetailPage = async ({ params }: { params: { id: string } }) => {
 
                                 <EventDetails description={event.description} />
 
-                                <EventLocation latitude={event.latitude} longitude={event.longitude} />
+                                <EventLocation latitude={event.latitude} longitude={event.longitude} city={event.city} address={event.address} placeName={event.placeName} />
 
                                 {/* 
                                 <Heading3 className="text-2xl font-semibold mt-4 mb-4">
