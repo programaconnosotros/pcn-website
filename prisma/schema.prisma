@@ -80,9 +80,9 @@ model Event {
   endDate     DateTime?
   name        String
   description String
-  city        String    @default("") // Nombre de la ciudad
-  address     String    @default("") // Dirección específica (calle, número, etc.)
-  placeName   String    @default("") // Nombre del lugar (bar, universidad, etc.)
+  city        String // Nombre de la ciudad
+  address     String // Dirección específica (calle, número, etc.)
+  placeName   String // Nombre del lugar (bar, universidad, etc.)
   flyerSrc    String
   latitude    Float?
   longitude   Float?
