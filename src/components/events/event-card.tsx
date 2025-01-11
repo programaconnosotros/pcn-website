@@ -30,7 +30,7 @@ export const EventCard = ({ event }: { event: Event }) => {
                 <div className="flex">
                     <MapPin className="mt-4 h-4 w-4 text-gray-500" />
                     <p className="mt-4 text-xs text-gray-500 ml-1">
-                        {event.location}, AR
+                        {event.city}, AR
                     </p>
                 </div>
 
