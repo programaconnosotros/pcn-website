@@ -68,7 +68,9 @@ async function main() {
           description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
           date: startDate,
           endDate: endDate,
-          location: "San Miguel de Tucumán",
+          city: "San Miguel de Tucumán",
+          address: "Bernardino Rivadavia 1050",
+          placeName: "UTN-FRT",
           latitude: -26.844408,
           longitude: - 65.222640,
           images: {
