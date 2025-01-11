@@ -8,7 +8,7 @@ const EventDetails: React.FC<{ description: string }> = ({ description }) => {
                 Detalles del evento
             </Heading3>
 
-            <p className="mt-2 text-left text-lg">
+            <p className="mt-2 text-center text-lg">
                 {description}
             </p>
 
