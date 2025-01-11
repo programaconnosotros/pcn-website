@@ -2,13 +2,13 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { EVENTS_PER_PAGE } from '@/lib/constants';
 import { fetchEvents } from '@/actions/events/fetch-events';
 import { EventCard } from './event-card';
 
 
-export const EventsList = () => {
+export const EventsList: React.FC = () => {
     const ref = useRef(null);
     const isInView = useInView(ref);
 
