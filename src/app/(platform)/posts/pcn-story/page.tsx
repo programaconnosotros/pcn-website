@@ -5,6 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import Link from 'next/link';
@@ -14,7 +15,7 @@ const PCN = () => (
 );
 
 const PCNStory = () => (
-  <div className="xl:mr-120 flex flex-col gap-4 md:mr-96">
+  <div className="xl:mr-120 mb-12 flex flex-col gap-4 md:mx-24 lg:mx-48 xl:mx-64">
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
@@ -32,9 +33,9 @@ const PCNStory = () => (
     <Heading2>Historia de programaConNosotros</Heading2>
 
     <p>
-      Hola! Soy Agustín Sánchez, uno de los fundadores de nuestra comunidad, y en este artículo
-      quiero contarte cómo llegamos a crear <PCN />, y casi todos los pasos que dimos para ser lo
-      que somos hoy. Espero que te guste!
+      Hola! Soy <b>Agustín Sánchez</b>, uno de los fundadores de nuestra comunidad, y en este
+      artículo quiero contarte cómo llegamos a crear <PCN />, y casi todos los pasos que dimos para
+      ser lo que somos hoy. Espero que te guste!
     </p>
 
     <Heading3>
@@ -50,55 +51,171 @@ const PCNStory = () => (
     </Heading3>
 
     <p>
-      En el año 2015, empecé a estudiar ingeniería en sistemas de información en la UTN (Universidad
-      Tecnológica Nacional), en la provincia de Tucumán, Argentina. Rápidamente, me di cuenta de que
-      estudiar las cosas que tocaban en la universidad no era suficiente, asi que empecé a estudiar
-      por mi cuenta los temas que más me interesaban e intenté participar en actividades
-      extracurriculares lo más posible.
-    </p>
-
-    <Heading3>Descubrimos la programación competitiva</Heading3>
-
-    <p>
-      En el año 2016, cursando el segundo año de la carrera, me enteré de suerte que había una
-      competencia de programación a nivel nacional de la UTN, y que había un grupo de estudiantes
-      que iban a viajar a competir. Armamos team con <b>Germán Navarro</b> (también co-fundador de{' '}
-      <PCN />) y <b>Nicolás Nisoria</b>.
+      Empecé a estudiar <u>ingeniería en sistemas de información</u> en la UTN (Universidad
+      Tecnológica Nacional), en la provincia de Tucumán, Argentina. Lo que más me gustaba de la
+      carrera era programar y desarrollar software, asi que empecé a moverme extracurricularmente
+      para aprender mucho más sobre eso.
     </p>
 
     <p>
-      En aquel momento, sentíamos que programábamos muy bien, muchísimos escalones por encima de
-      nuestros compañeros de la universidad, y sentíamos que podíamos dar pelea a nivel nacional.
-      Fuimos a Santa Fé a competir y... perdimos. De hecho, no pudimos resolver ningún problema de
-      la competencia. Pero hasta el día de hoy, sigo pensando que fue lo mejor que nos pudo pasar,
-      porque nos dejó una enseñanza muy valiosa:{' '}
-      <b className="font-bold text-green-700 dark:text-pcnGreen">
-        hay demasiadas cosas para aprender y siempre hay gente que sabe mucho más que vos.
-      </b>{' '}
+      En la facultad conocí a <b>Germán Navarro</b>, <b>Chelo Núñez</b> e <b>Iván Taddei</b>,
+      compañeros que fueron muy importantes para mi formación como profesional y como persona.
+      Luego, tuve la fortuna de que mis hermanos menores, <b>Mauricio</b> y <b>Esteban</b>, también
+      empezaron a estudiar la misma carrera. Los 6 formamos un grupo de amigos excelente.
+    </p>
+
+    <Heading3>
+      Fuimos voluntarios en el{' '}
+      <Link
+        href="https://ieee.org/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:underline"
+      >
+        IEEE
+      </Link>
+    </Heading3>
+
+    <p>
+      Con Germán pudimos entrar a formar parte como voluntarios en el IEEE (instituto más
+      prestigioso de ingeniería del mundo). Ahí aprendimos muchas cosas, conocimos personas muy
+      copadas y empezamos a organizar actividades para compartir conocimiento y facilitar el
+      networking.
     </p>
 
     <p>
-      Tenés que moverte para encontrar ese tipo de gente, lo cual no es sencillo. Y cuando los
-      encontrás, tenés que aprender y crecer lo más que puedas. Desde aquel momento, siempre trato
-      de rodearme de gente que sabe más que yo y trato de crecer un poco más cada día. También sé
-      que puedo ser de ayuda a muchas personas para que sigan creciendo, lo cual me gusta hacer y me
-      llena de satisfacción.
-    </p>
-
-    <Heading3>Fuimos voluntarios en el IEEE</Heading3>
-
-    <p>
-      En el año 2017, nos enteramos de que el IEEE (Institute of Electrical and Electronics
-      Engineers) tenía un programa de voluntariado y que en nuestra universidad, había un grupo de
-      alumnos que organizaban actividades muy copadas, como congresos de ingeniería, talleres de
-      programación y demás.
+      Me encantaba organizar cosas y liderar el equipo de voluntarios, llegué a ser presidente
+      primero del <b>Capítulo Estudiantil de IEEE Computer Society de la UNT</b> por 2 años
+      consecutivos, y luego, presidente de la <b>Rama Estudiantil IEEE de la UTN-FRT</b>. Germán fue
+      vicepresidente en ambos grupos.
     </p>
 
     <p>
-      Nos daba vergüenza sumarnos al grupo porque había estudiantes más avanzados que nosotros, pero
-      nos armamos de valor con Germán, fuimos a una reunión informativa y nos sumaron al grupo. Poco
-      a poco, fuimos participando más en las actividades. Viajamos a Catamarca a la Reunión Nacional
-      de Ramas Estudiantiles (RNR), a conocer estudiantes de toda Argentina.
+      Las actividades más piolas que organizamos fueron:
+      <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
+        <li>
+          <b>Tucumán Hack Weekend</b>: fue un congreso de seguridad informática de 2 días. Tuvimos
+          speakers de primer nivel, como <b>Victor Figueredo</b> (líder y fundador de{' '}
+          <b>Tucumán Hacking</b>) y <b>Facundo Gelatti</b> (ingeniero de software en <b>10Pines</b>,
+          docente en la universidad de Quilmes y referente de ingeniería de software a nivel
+          nacional). También me animé a dar mi primera charla, hablé sobre programación competitiva.
+        </li>
+
+        <li>
+          <b>Code Warfare</b>: fue una competencia de programación que organizamos en un laboratorio
+          de computación de la UTN-FRT. Participaron más de 10 equipos, de diferentes universidades
+          de Tucumán y estuvo muy divertido.
+        </li>
+
+        <li>
+          <b>WESCIS</b>: fue un congreso de 3 días sobre diferentes ingenierías. Uno de esos días
+          fue sobre computación, del cual tuve el orgullo de ser el presidente de la organización.
+          Fue realizado en la <b>UNSTA</b> de Yerba Buena, y pudimos traer speakers excelentes, como{' '}
+          <b>Hernán Wilkinson</b> (CEO de <b>10Pines</b> y referente a nivel mundial en ingeniería
+          de software), <b>Alejandro Bianchi</b> (CEO de <b>Liveware</b> y referente de arquitectura
+          de software en latinoamérica) y el crack ya mencionado, <b>Facundo Gelatti</b>.{' '}
+        </li>
+
+        <li>
+          <b>Club de algoritmos</b>: fue un grupo de programación que cree para que muchas personas
+          puedan aprender algoritmos y estructuras de datos. Los viernes, luego de las clases de la
+          carrera, nos quedábamos en un laboratorio de la facultad y daba las clases sobre
+          diferentes temas relacionados a algoritmos, estructuras de datos, patrones y demás.
+        </li>
+      </ul>
+    </p>
+
+    <Heading3>Necesitábamos más</Heading3>
+
+    <p>
+      El IEEE es un instituto que engloba demasiadas disciplinas de ingeniería, pero nosotros
+      necesitamos algo más específico para la ingeniería de software, asi que creamos...
+    </p>
+
+    <Heading3>
+      <PCN />
+    </Heading3>
+
+    <p>
+      Una comunidad para personas apasionadas por la ingeniería de software, que quieren estar
+      constantemente actualizados, mejorando, compartiendo conocimientos y contactos con los demás.
+    </p>
+
+    <p>
+      <PCN /> es un lugar en el que podés encontrar a a un experto en ingeniería de software
+      charlando con una persona que recién está empezando su camino dentro del software. Hay muchos
+      mentores dispuestos a dar los mejores consejos, enseñar cosas difíciles de forma accesible y
+      muchas cosas más, por el simple hecho de que estamos apasionados por el software y creemos que
+      ayudarnos entre todos, podemos llegar más lejos.
+    </p>
+
+    <Heading3>Las Lightning Talks</Heading3>
+
+    <p>
+      En el año 2020, empezamos a organizar una actividad llamada Lightning Talks, que consiste en
+      presentaciones rápidas (5-10 minutos) sobre un tema que te apasiona. Esto permite a los
+      oyentes no aburrirse y a los speakers animarse a dar charlas. Con las Lightning Talks,
+      empezamos a atraer mucha gente. Al principio las hacíamos online por Discord y YouTube, porque
+      estábamos en pandemia y no se podía organizar actividades de forma presencial. Actualmente,
+      organizamos varias ediciones presenciales de la actividad y cada vez se copa más gente.
+    </p>
+
+    <div className="my-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="mb-4 md:mb-0">
+        <img
+          src="/lightning-talks/arquitectura-software.jpeg"
+          alt="Arquitectura de software"
+          className="w-full rounded-lg object-cover md:h-48"
+        />
+
+        <p className="mt-2 text-xs text-gray-500">
+          Yo dando una charla de arquitectura de software.
+        </p>
+      </div>
+
+      <div className="mb-4 md:mb-0">
+        <img
+          src="/lightning-talks/arquitectura-modular.jpeg"
+          alt="Arquitectura modular"
+          className="w-full rounded-lg object-cover md:h-48"
+        />
+
+        <p className="mt-2 text-xs text-gray-500">
+          Mauricio dando una charla de arquitectura modular.
+        </p>
+      </div>
+
+      <div className="mb-4 md:mb-0">
+        <img
+          src="/lightning-talks/paradigmas.jpeg"
+          alt="Paradigmas de programación"
+          className="w-full rounded-lg object-cover md:h-48"
+        />
+
+        <p className="mt-2 text-xs text-gray-500">
+          Chelo dando una charla de paradigmas de programación.
+        </p>
+      </div>
+    </div>
+
+    <Link href="/talks">
+      <Button className="w-full" variant="outline">
+        Ver el historial de charlas dadas en PCN
+      </Button>
+    </Link>
+
+    <Heading3>Empezamos a juntarnos más seguido para networking</Heading3>
+
+    <img src="/juntada.jpeg" alt="Networking" className="w-full rounded-lg object-cover" />
+
+    <Heading3>Empecé a desarrollar este website</Heading3>
+
+    <p>
+      En el año 2024, cree este sitio web para que podamos compartir conocimiento y encontrar
+      información copada acerca de ingeniería de software. Este proyecto es open source y cualquier
+      persona puede contribuir si lo desea, ya sea para mejorar cosas, fixear bugs o agregar
+      features. Uno de los objetivos de este proyecto es facilitar que las personas puedan ganar
+      experiencia en diferentes disciplinas.
     </p>
   </div>
 );

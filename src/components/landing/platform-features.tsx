@@ -12,11 +12,10 @@ export const PlatformFeatures = () => (
         <Card>
           <CardContent className="flex flex-col items-center space-y-4 p-6">
             <Lightbulb className="h-12 w-12 text-primary" />
-            <h3 className="text-center text-xl font-bold">Compartir consejos</h3>
+            <h3 className="text-center text-xl font-bold">Aconsejarnos</h3>
 
             <p className="text-center text-gray-500 dark:text-gray-400">
-              Intercambia consejos valiosos de otros profesionales y estudiantes para mejorar tus
-              habilidades.
+              Intercambia consejos valiosos con otros profesionales y estudiantes.
             </p>
           </CardContent>
         </Card>
@@ -24,11 +23,10 @@ export const PlatformFeatures = () => (
         <Card>
           <CardContent className="flex flex-col items-center space-y-4 p-6">
             <Share2 className="h-12 w-12 text-primary" />
-            <h3 className="text-center text-xl font-bold">Compartir motivación</h3>
+            <h3 className="text-center text-xl font-bold">Motivarnos</h3>
 
             <p className="text-center text-gray-500 dark:text-gray-400">
-              Inspira y motiva a otros miembros de la comunidad compartiendo tus experiencias y
-              logros.
+              Inspira y motiva a otros miembros de la comunidad compartiendo lo que hacés y pensás.
             </p>
           </CardContent>
         </Card>
