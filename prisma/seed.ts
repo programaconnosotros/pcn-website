@@ -35,7 +35,6 @@ async function main() {
     ),
   );
 
-
   // Create at least 10 mocked events
   const events = await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
@@ -52,29 +51,29 @@ async function main() {
           Array.from({ length: 3 }).map(async (_, i) => {
             const image = await prisma.image.create({
               data: {
-                imgSrc: `/events/Lightning talks flyer.jpg`, // 
+                imgSrc: `/events/Lightning talks flyer.jpg`, //
               },
             });
             imageIds.push(image.id);
             return image;
-          })
+          }),
         );
       }
 
       const event = await prisma.event.create({
         data: {
           name: `Titulo del evento numero ${index + 1}`,
-          flyerSrc: "/events/Lightning talks flyer.jpg",
+          flyerSrc: '/events/Lightning talks flyer.jpg',
           description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
           date: startDate,
           endDate: endDate,
-          city: "San Miguel de Tucumán",
-          address: "Bernardino Rivadavia 1050",
-          placeName: "UTN-FRT",
+          city: 'San Miguel de Tucumán',
+          address: 'Bernardino Rivadavia 1050',
+          placeName: 'UTN-FRT',
           latitude: -26.844408,
-          longitude: - 65.222640,
+          longitude: -65.22264,
           images: {
-            connect: imageIds.length > 0 ? imageIds.map(id => ({ id })) : [],
+            connect: imageIds.length > 0 ? imageIds.map((id) => ({ id })) : [],
           },
         },
       });
