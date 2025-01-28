@@ -95,6 +95,6 @@ model Event {
 model Image {
   id      String  @id @default(cuid())
   imgSrc  String
-  Event   Event?  @relation(fields: [eventId], references: [id])
+  event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?
 }

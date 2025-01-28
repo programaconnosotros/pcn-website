@@ -398,7 +398,7 @@ export const EventSelectSchema: z.ZodType<Prisma.EventSelect> = z
 
 export const ImageIncludeSchema: z.ZodType<Prisma.ImageInclude> = z
   .object({
-    Event: z.union([z.boolean(), z.lazy(() => EventArgsSchema)]).optional(),
+    event: z.union([z.boolean(), z.lazy(() => EventArgsSchema)]).optional(),
   })
   .strict();
 
@@ -414,7 +414,7 @@ export const ImageSelectSchema: z.ZodType<Prisma.ImageSelect> = z
     id: z.boolean().optional(),
     imgSrc: z.boolean().optional(),
     eventId: z.boolean().optional(),
-    Event: z.union([z.boolean(), z.lazy(() => EventArgsSchema)]).optional(),
+    event: z.union([z.boolean(), z.lazy(() => EventArgsSchema)]).optional(),
   })
   .strict();
 
@@ -1376,7 +1376,7 @@ export const ImageWhereInputSchema: z.ZodType<Prisma.ImageWhereInput> = z
       .union([z.lazy(() => StringNullableFilterSchema), z.string()])
       .optional()
       .nullable(),
-    Event: z
+    event: z
       .union([z.lazy(() => EventNullableRelationFilterSchema), z.lazy(() => EventWhereInputSchema)])
       .optional()
       .nullable(),
@@ -1391,7 +1391,7 @@ export const ImageOrderByWithRelationInputSchema: z.ZodType<Prisma.ImageOrderByW
       eventId: z
         .union([z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema)])
         .optional(),
-      Event: z.lazy(() => EventOrderByWithRelationInputSchema).optional(),
+      event: z.lazy(() => EventOrderByWithRelationInputSchema).optional(),
     })
     .strict();
 
@@ -1418,7 +1418,7 @@ export const ImageWhereUniqueInputSchema: z.ZodType<Prisma.ImageWhereUniqueInput
           .union([z.lazy(() => StringNullableFilterSchema), z.string()])
           .optional()
           .nullable(),
-        Event: z
+        event: z
           .union([
             z.lazy(() => EventNullableRelationFilterSchema),
             z.lazy(() => EventWhereInputSchema),
@@ -2371,7 +2371,7 @@ export const ImageCreateInputSchema: z.ZodType<Prisma.ImageCreateInput> = z
   .object({
     id: z.string().cuid().optional(),
     imgSrc: z.string(),
-    Event: z.lazy(() => EventCreateNestedOneWithoutImagesInputSchema).optional(),
+    event: z.lazy(() => EventCreateNestedOneWithoutImagesInputSchema).optional(),
   })
   .strict();
 
@@ -2389,7 +2389,7 @@ export const ImageUpdateInputSchema: z.ZodType<Prisma.ImageUpdateInput> = z
       .union([z.string().cuid(), z.lazy(() => StringFieldUpdateOperationsInputSchema)])
       .optional(),
     imgSrc: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputSchema)]).optional(),
-    Event: z.lazy(() => EventUpdateOneWithoutImagesNestedInputSchema).optional(),
+    event: z.lazy(() => EventUpdateOneWithoutImagesNestedInputSchema).optional(),
   })
   .strict();
 
