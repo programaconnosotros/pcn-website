@@ -37,7 +37,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     <>
       <Breadcrumb className="mt-4 md:px-20">
         <BreadcrumbList>
-
           <BreadcrumbItem>
             <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
           </BreadcrumbItem>
@@ -53,13 +52,11 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
           <BreadcrumbItem>
             <BreadcrumbPage>{event.name}</BreadcrumbPage>
           </BreadcrumbItem>
-
         </BreadcrumbList>
       </Breadcrumb>
 
       <div className="mx-auto max-w-screen-xl px-4 py-8">
         <div className="mt-4 text-center">
-
           <EventFlyer
             name={event.name}
             flyerSrc={event.flyerSrc}
@@ -78,7 +75,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
           />
 
           <EventPhotos images={event.images}></EventPhotos>
-
         </div>
       </div>
     </>
