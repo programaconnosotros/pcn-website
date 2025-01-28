@@ -19,7 +19,7 @@ type EventWithImages = Event & {
   images: Images[];
 };
 
-// TODO: Implement integration with talks || Code related is commented by the moment
+// TODO: Implement integration with talks
 
 const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
   const id: string = params.id;
@@ -35,57 +35,52 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
   return (
     <>
-      {event && (
-        <>
-          <Breadcrumb className="mt-4 md:px-20">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
+      <Breadcrumb className="mt-4 md:px-20">
+        <BreadcrumbList>
 
-              <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+          </BreadcrumbItem>
 
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/events">Eventos</BreadcrumbLink>
-              </BreadcrumbItem>
+          <BreadcrumbSeparator />
 
-              <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/events">Eventos</BreadcrumbLink>
+          </BreadcrumbItem>
 
-              <BreadcrumbItem>
-                <BreadcrumbPage>{event.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <BreadcrumbSeparator />
 
-          <div className="mx-auto max-w-screen-xl px-4 py-8">
-            <div className="mt-4 text-center">
-              <EventFlyer
-                name={event.name}
-                flyerSrc={event.flyerSrc}
-                date={event.date}
-                endDate={event.endDate}
-              />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{event.name}</BreadcrumbPage>
+          </BreadcrumbItem>
 
-              <EventDetails description={event.description} />
+        </BreadcrumbList>
+      </Breadcrumb>
 
-              <EventLocation
-                latitude={event.latitude}
-                longitude={event.longitude}
-                city={event.city}
-                address={event.address}
-                placeName={event.placeName}
-              />
+      <div className="mx-auto max-w-screen-xl px-4 py-8">
+        <div className="mt-4 text-center">
 
-              {/* 
-                                <Heading3 className="text-2xl font-semibold mt-4 mb-4">
-                                    Charlas del evento
-                                </Heading3> */}
+          <EventFlyer
+            name={event.name}
+            flyerSrc={event.flyerSrc}
+            date={event.date}
+            endDate={event.endDate}
+          />
 
-              <EventPhotos images={event.images}></EventPhotos>
-            </div>
-          </div>
-        </>
-      )}
+          <EventDetails description={event.description} />
+
+          <EventLocation
+            latitude={event.latitude}
+            longitude={event.longitude}
+            city={event.city}
+            address={event.address}
+            placeName={event.placeName}
+          />
+
+          <EventPhotos images={event.images}></EventPhotos>
+
+        </div>
+      </div>
     </>
   );
 };
