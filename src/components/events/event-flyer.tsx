@@ -20,51 +20,53 @@ type EventFlyerProps = {
   endDate?: Event['endDate'];
 };
 
-const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }) => {
-  return (
-    <>
-      <Heading1>{name}</Heading1>
-      {flyerSrc && (
-        <Dialog>
-          <DialogTrigger>
-            <div className="mt-4 flex-col justify-center">
-              <Image
-                src={flyerSrc}
-                alt={`Flyer del evento ${name}`}
-                width={600}
-                height={600}
-                className="rounded-lg object-cover shadow-lg"
-              />
-            </div>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl px-6 py-4">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold">{`Flyer del evento ${name}`}</DialogTitle>
-            </DialogHeader>
-            <Carousel>
-              <CarouselContent>
-                <CarouselItem className="flex items-center justify-center">
-                  <Image
-                    src={flyerSrc}
-                    alt={`Flyer del evento ${name}`}
-                    width={600}
-                    height={600}
-                    className="h-full w-auto rounded-lg object-cover shadow-lg"
-                  />
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </DialogContent>
-        </Dialog>
-      )}
-      <p>
-        {' '}
-        Horario del evento: &nbsp;
-        {format(new Date(date), 'EEE, d MMM, HH:mm', { locale: es })}
-        {endDate && ` - ${format(new Date(endDate), 'HH:mm', { locale: es })}`}
-      </p>
-    </>
-  );
-};
+const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }) => (
+  <>
+    <Heading1>{name}</Heading1>
+
+    {flyerSrc && (
+      <Dialog>
+        <DialogTrigger>
+          <div className="mt-4 flex-col justify-center">
+            <Image
+              src={flyerSrc}
+              alt={`Flyer del evento ${name}`}
+              width={600}
+              height={600}
+              className="rounded-lg object-cover shadow-lg"
+            />
+          </div>
+        </DialogTrigger>
+
+        <DialogContent className="max-w-4xl px-6 py-4">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">{`Flyer del evento ${name}`}</DialogTitle>
+          </DialogHeader>
+
+          <Carousel>
+            <CarouselContent>
+              <CarouselItem className="flex items-center justify-center">
+                <Image
+                  src={flyerSrc}
+                  alt={`Flyer del evento ${name}`}
+                  width={600}
+                  height={600}
+                  className="h-full w-auto rounded-lg object-cover shadow-lg"
+                />
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
+        </DialogContent>
+      </Dialog>
+    )}
+
+    <p>
+      {' '}
+      Horario del evento: &nbsp;
+      {format(new Date(date), 'EEE, d MMM, HH:mm', { locale: es })}
+      {endDate && ` - ${format(new Date(endDate), 'HH:mm', { locale: es })}`}
+    </p>
+  </>
+);
 
 export default EventFlyer;
