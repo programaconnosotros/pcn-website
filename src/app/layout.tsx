@@ -26,8 +26,12 @@ const RootLayout = ({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-center" />
+          <ReactQueryProvider>
+              <main>
+                {children}
+              </main>
+            <Toaster closeButton position="top-center" />
+          </ReactQueryProvider>
         </ThemeProvider>
       </SessionProvider>
     </body>
@@ -35,3 +39,4 @@ const RootLayout = ({
 );
 
 export default RootLayout;
+
