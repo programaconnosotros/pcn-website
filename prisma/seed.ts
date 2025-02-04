@@ -36,7 +36,7 @@ async function main() {
   );
 
   // Create at least 10 mocked events
-  const events = await Promise.all(
+  await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
       try {
         const startDate = new Date();
@@ -49,7 +49,7 @@ async function main() {
 
         if (includeImages) {
           try {
-            const images = await Promise.all(
+            await Promise.all(
               Array.from({ length: 3 }).map(async (_, i) => {
                 const image = await prisma.image.create({
                   data: {
@@ -64,7 +64,7 @@ async function main() {
             console.error(`Failed to create images for event ${index + 1}:`, error);
           }
         }
-        const event = await prisma.event.create({
+        await prisma.event.create({
           data: {
             name: `Titulo del evento numero ${index + 1}`,
             flyerSrc: '/events/Lightning talks flyer.jpg',
