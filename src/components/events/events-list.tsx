@@ -48,7 +48,9 @@ export const EventsList: React.FC = () => {
           {isFetchingNextPage ? (
             <p>Cargando más eventos...</p>
           ) : (
-            <button onClick={() => fetchNextPage()}>Cargar más</button>
+            <button onClick={() => fetchNextPage()} aria-label="Cargar más eventos">
+              Cargar más
+            </button>
           )}
         </div>
       )}
