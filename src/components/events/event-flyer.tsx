@@ -62,9 +62,8 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
       </Dialog>
     )}
 
-    <p>
-      {' '}
-      Horario del evento: &nbsp;
+    <p className='mt-2'>
+      Horario del evento:{' '}
       {format(new Date(date), 'EEE, d MMM, HH:mm', { locale: es })}
       {endDate && ` - ${format(new Date(endDate), 'HH:mm', { locale: es })}`}
     </p>
