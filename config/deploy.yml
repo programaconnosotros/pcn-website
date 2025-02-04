@@ -1,0 +1,97 @@
+# Name of your application. Used to uniquely configure containers.
+service: pcn-website
+
+servers:
+  web:
+    - 3.18.43.150
+
+image: pcn-website
+
+# Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
+# If using something like Cloudflare, it is recommended to set encryption mode
+# in Cloudflare's SSL/TLS setting to "Full" to enable end-to-end encryption.
+proxy:
+  host: programa-con-nosotros.com
+  ssl: true
+  app_port: 3000
+
+# Credentials for your image host.
+registry:
+  server: 934012604814.dkr.ecr.us-east-2.amazonaws.com
+  username: AWS
+  # Assumes default profile
+  password: <%= %x(aws ecr get-login-password) %>
+
+# Configure builder setup.
+builder:
+  arch: amd64
+  context: .
+  dockerfile: Dockerfile.prod
+  cache:
+    type: gha
+
+env:
+  secret:
+    - POSTGRES_USER
+    - POSTGRES_PASSWORD
+    - POSTGRES_DB
+    - DATABASE_URL
+    - AUTH_TOKEN
+    - AUTH_SECRET
+    - AUTH_GITHUB_ID
+    - AUTH_GITHUB_SECRET
+    - AUTH_TRUST_HOST
+
+# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
+# "bin/kamal logs -r job" will tail logs from the first server in the job section.
+#
+# aliases:
+#   shell: app exec --interactive --reuse "bash"
+
+# Use a different ssh user than root
+#
+ssh:
+  user: ubuntu
+# Use a persistent storage volume.
+#
+# volumes:
+#   - "app_storage:/app/storage"
+
+# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
+# hitting 404 on in-flight requests. Combines all files from new and old
+# version inside the asset_path.
+#
+# asset_path: /app/public/assets
+
+# Configure rolling deploys by setting a wait time between batches of restarts.
+#
+# boot:
+#   limit: 10 # Can also specify as a percentage of total hosts, such as "25%"
+#   wait: 2
+
+# Use accessory services (secrets come from .kamal/secrets).
+#
+# accessories:
+#   db:
+#     image: mysql:8.0
+#     host: 192.168.0.2
+#     port: 3306
+#     env:
+#       clear:
+#         MYSQL_ROOT_HOST: '%'
+#       secret:
+#         - MYSQL_ROOT_PASSWORD
+#     files:
+#       - config/mysql/production.cnf:/etc/mysql/my.cnf
+#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
+#     directories:
+#       - data:/var/lib/mysql
+#   redis:
+#     image: redis:7.0
+#     host: 192.168.0.2
+#     port: 6379
+#     directories:
+#       - data:/data
+
+# Require a destination specfied when deploying
+# require_destination: true
