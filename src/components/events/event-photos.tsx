@@ -56,7 +56,11 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                 <DialogHeader>
                   <DialogTitle>Galería de Imágenes</DialogTitle>
                 </DialogHeader>
-                <Carousel opts={{ startIndex: currentImageIndex }}>
+                <Carousel
+                  opts={{
+                    startIndex: currentImageIndex,
+                  }}
+                >
                   <CarouselContent>
                     {images.map((img, i) => (
                       <CarouselItem key={i} className="flex items-center justify-center">
@@ -70,8 +74,8 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
+                  <CarouselPrevious aria-label="Ver imagen anterior" />
+                  <CarouselNext aria-label="Ver siguiente imagen" />
                 </Carousel>
               </DialogContent>
             </Dialog>
