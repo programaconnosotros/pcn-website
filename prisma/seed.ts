@@ -50,7 +50,7 @@ async function main() {
         if (includeImages) {
           try {
             await Promise.all(
-              Array.from({ length: 3 }).map(async (_, i) => {
+              Array.from({ length: 3 }).map(async () => {
                 const image = await prisma.image.create({
                   data: {
                     imgSrc: `/events/Lightning talks flyer.jpg`,
