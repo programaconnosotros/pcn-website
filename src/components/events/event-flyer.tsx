@@ -53,6 +53,8 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
                   alt={`Flyer del evento ${name}`}
                   width={600}
                   height={600}
+                  priority
+                  quality={85}
                   className="h-full w-auto rounded-lg object-cover shadow-lg"
                 />
               </CarouselItem>
