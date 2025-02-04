@@ -64,7 +64,7 @@ async function main() {
             console.error(`Failed to create images for event ${index + 1}:`, error);
           }
         }
-        await prisma.event.create({
+        const event = await prisma.event.create({
           data: {
             name: `Titulo del evento numero ${index + 1}`,
             flyerSrc: '/events/Lightning talks flyer.jpg',
@@ -81,11 +81,11 @@ async function main() {
             },
           },
         });
+        return event;
       } catch (error) {
         console.error(`Failed to create event ${index + 1}`, error);
         return null;
       }
-      return null;
     }),
   );
 
