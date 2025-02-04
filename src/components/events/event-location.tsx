@@ -37,7 +37,7 @@ const EventLocation: React.FC<EventLocationProps> = ({
       <>
         <div className="mt-4" style={{ width: '100%', height: '400px' }}>
           <iframe
-            src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
+            src={`https://www.google.com/maps?q=${Number(latitude).toFixed(6)},${Number(longitude).toFixed(6)}&z=15&output=embed`}
             width="100%"
             height="100%"
             style={{ border: 0 }}
