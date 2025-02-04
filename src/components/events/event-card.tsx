@@ -11,7 +11,7 @@ import { BreadcrumbLink } from '../ui/breadcrumb';
 
 export const EventCard: React.FC<{ event: Event }> = ({ event }) => (
   <Card key={event.id} className="flex h-full flex-col">
-    <Image src={event.flyerSrc} alt="" width={400} height={200} />
+    <Image src={event.flyerSrc} alt={`Flyer for ${event.name}`} width={400} height={200} />
 
     <CardContent className="px-4 py-2">
       <div className="mt-1 flex justify-between">
