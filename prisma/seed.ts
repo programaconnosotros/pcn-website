@@ -85,7 +85,7 @@ async function main() {
         console.error(`Failed to create event ${index + 1}`, error);
         return null;
       }
-      return event;
+      return null;
     }),
   );
 
