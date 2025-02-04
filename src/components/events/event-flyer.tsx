@@ -1,3 +1,4 @@
+import React from 'react';
 import { Heading1 } from '../ui/heading-1';
 import {
   Dialog,
@@ -6,12 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Event } from '@prisma/client';
-import React from 'react';
 
 type EventFlyerProps = {
   name: string;
@@ -42,24 +41,20 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
 
         <DialogContent className="max-w-4xl px-6 py-4">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">{`Flyer del evento ${name}`}</DialogTitle>
+            <DialogTitle className="text-center text-xl font-semibold">{`Flyer del evento ${name}`}</DialogTitle>
           </DialogHeader>
 
-          <Carousel>
-            <CarouselContent>
-              <CarouselItem className="flex items-center justify-center">
-                <Image
-                  src={flyerSrc}
-                  alt={`Flyer del evento ${name}`}
-                  width={600}
-                  height={600}
-                  priority
-                  quality={85}
-                  className="h-full w-auto rounded-lg object-cover shadow-lg"
-                />
-              </CarouselItem>
-            </CarouselContent>
-          </Carousel>
+          <div className="flex items-center justify-center">
+            <Image
+              src={flyerSrc}
+              alt={`Flyer del evento ${name}`}
+              width={600}
+              height={600}
+              priority
+              quality={85}
+              className="h-full w-auto rounded-lg object-cover shadow-lg"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     )}
