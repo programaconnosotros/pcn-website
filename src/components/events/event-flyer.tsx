@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+
 import { Heading1 } from '../ui/heading-1';
 import {
   Dialog,
@@ -7,9 +9,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Image from 'next/image';
+
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+
 import { Event } from '@prisma/client';
 
 type EventFlyerProps = {
@@ -26,7 +29,7 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
     {flyerSrc && (
       <Dialog>
         <DialogTrigger>
-          <div className="mt-4 flex-col justify-center">
+          <div className="mt-4">
             <Image
               src={flyerSrc}
               alt={`Flyer del evento ${name}`}
