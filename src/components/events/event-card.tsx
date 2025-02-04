@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Event } from '@prisma/generated/zod';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
