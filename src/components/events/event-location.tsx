@@ -43,6 +43,9 @@ const EventLocation: React.FC<EventLocationProps> = ({
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Event Location Map"
+            sandbox="allow-scripts allow-same-origin"
           ></iframe>
         </div>
       </>
