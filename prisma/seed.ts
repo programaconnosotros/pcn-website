@@ -47,19 +47,22 @@ async function main() {
       const imageIds: string[] = [];
 
       if (includeImages) {
-        const images = await Promise.all(
-          Array.from({ length: 3 }).map(async (_, i) => {
-            const image = await prisma.image.create({
-              data: {
-                imgSrc: `/events/Lightning talks flyer.jpg`, //
-              },
-            });
-            imageIds.push(image.id);
-            return image;
-          }),
-        );
+        try {
+          const images = await Promise.all(
+            Array.from({ length: 3 }).map(async (_, i) => {
+              const image = await prisma.image.create({
+                data: {
+                  imgSrc: `/events/Lightning talks flyer.jpg`,
+                },
+              });
+              imageIds.push(image.id);
+              return image;
+            }),
+          );
+        } catch (error) {
+          console.error(`Failed to create images for event ${index + 1}:`, error);
+        }
       }
-
       const event = await prisma.event.create({
         data: {
           name: `Titulo del evento numero ${index + 1}`,
