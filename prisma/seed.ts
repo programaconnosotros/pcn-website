@@ -38,49 +38,53 @@ async function main() {
   // Create at least 10 mocked events
   const events = await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
-      const startDate = new Date();
-      const endDate = new Date(startDate);
-      endDate.setHours(startDate.getHours() + 4);
+      try {
+        const startDate = new Date();
+        const endDate = new Date(startDate);
+        endDate.setHours(startDate.getHours() + 4);
 
-      // Generate only for even events
-      const includeImages = index % 2 === 0;
-      const imageIds: string[] = [];
+        // Generate only for even events
+        const includeImages = index % 2 === 0;
+        const imageIds: string[] = [];
 
-      if (includeImages) {
-        try {
-          const images = await Promise.all(
-            Array.from({ length: 3 }).map(async (_, i) => {
-              const image = await prisma.image.create({
-                data: {
-                  imgSrc: `/events/Lightning talks flyer.jpg`,
-                },
-              });
-              imageIds.push(image.id);
-              return image;
-            }),
-          );
-        } catch (error) {
-          console.error(`Failed to create images for event ${index + 1}:`, error);
+        if (includeImages) {
+          try {
+            const images = await Promise.all(
+              Array.from({ length: 3 }).map(async (_, i) => {
+                const image = await prisma.image.create({
+                  data: {
+                    imgSrc: `/events/Lightning talks flyer.jpg`,
+                  },
+                });
+                imageIds.push(image.id);
+                return image;
+              }),
+            );
+          } catch (error) {
+            console.error(`Failed to create images for event ${index + 1}:`, error);
+          }
         }
-      }
-      const event = await prisma.event.create({
-        data: {
-          name: `Titulo del evento numero ${index + 1}`,
-          flyerSrc: '/events/Lightning talks flyer.jpg',
-          description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
-          date: startDate,
-          endDate: endDate,
-          city: 'San Miguel de Tucumán',
-          address: 'Bernardino Rivadavia 1050',
-          placeName: 'UTN-FRT',
-          latitude: -26.844408,
-          longitude: -65.22264,
-          images: {
-            connect: imageIds.length > 0 ? imageIds.map((id) => ({ id })) : [],
+        const event = await prisma.event.create({
+          data: {
+            name: `Titulo del evento numero ${index + 1}`,
+            flyerSrc: '/events/Lightning talks flyer.jpg',
+            description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
+            date: startDate,
+            endDate: endDate,
+            city: 'San Miguel de Tucumán',
+            address: 'Bernardino Rivadavia 1050',
+            placeName: 'UTN-FRT',
+            latitude: -26.844408,
+            longitude: -65.22264,
+            images: {
+              connect: imageIds.length > 0 ? imageIds.map((id) => ({ id })) : [],
+            },
           },
-        },
-      });
-
+        });
+      } catch (error) {
+        console.error(`Failed to create event ${index + 1}`, error);
+        return null;
+      }
       return event;
     }),
   );
