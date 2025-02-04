@@ -45,6 +45,11 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                   <Image
                     src={image.imgSrc}
                     alt={`Imagen ${index + 1}`}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = '/placeholder-image.jpg';
+                      e.currentTarget.alt = 'Error al cargar la imagen';
+                    }}
                     width={300}
                     height={300}
                     className="h-full w-full transform rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
