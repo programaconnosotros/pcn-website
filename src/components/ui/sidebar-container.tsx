@@ -1,7 +1,7 @@
 'use client';
 import React, { ReactNode, useState } from 'react';
 import { Sidebar, SidebarBody, SidebarLink } from './sidebar';
-import { IconUser, IconHome, IconBolt, IconMusic } from '@tabler/icons-react';
+import { IconUser, IconHome, IconMusic } from '@tabler/icons-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
