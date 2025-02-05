@@ -10,12 +10,10 @@ export const MainSponsorCard = () => (
     <CardHeader>
       <CardTitle>Sponsors</CardTitle>
 
-      <CardDescription>
-        <p className="mt-3">
-          Estamos en búsqueda de sponsors para este proyecto. Podemos mostrar tu logo aquí y tu
-          sitio web, para que miles de profesionales y estudiantes de la industria del software lo
-          vean y sepan de tu interés en apoyar este tipo de iniciativas.
-        </p>
+      <CardDescription className="mt-3">
+        Estamos en búsqueda de sponsors para este proyecto. Podemos mostrar tu logo aquí y tu
+        sitio web, para que miles de profesionales y estudiantes de la industria del software lo
+        vean y sepan de tu interés en apoyar este tipo de iniciativas.
       </CardDescription>
     </CardHeader>
 
