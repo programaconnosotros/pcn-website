@@ -12,7 +12,7 @@ import { Footer } from '@/components/landing/footer';
 // TODO: Add section to show our YouTube channel.
 // TODO: Add section to show our LinkedIn profile.
 
-export const Home = async () => {
+const Home = async () => {
   const session = await auth();
 
   return (
