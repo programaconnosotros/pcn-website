@@ -13,6 +13,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
     "create-migration": "prisma migrate dev --name",
     "apply-migrations": "prisma migrate dev",
     "populate-database": "tsx prisma/seed.ts",
