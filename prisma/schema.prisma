@@ -12,34 +12,26 @@ generator zod {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  sessions      Session[]
-  advises       Advise[]
+  id       String    @id @default(cuid())
+  name     String?
+  email    String    @unique
+  password String
+  image    String?
+  sessions Session[]
+  advises  Advise[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id      String   @id @default(cuid())
+  userId  String
+  expires DateTime
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
 }
 
 model Advise {
@@ -50,4 +42,5 @@ model Advise {
   authorId String
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

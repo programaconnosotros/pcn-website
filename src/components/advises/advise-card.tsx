@@ -14,14 +14,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
-import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const { data: session } = useSession();
+
+  // TODO: Get session from database or cookie.
+  const session = {
+    user: {
+      id: '123',
+      email: 'john.doe@example.com',
+    },
+  };
 
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||

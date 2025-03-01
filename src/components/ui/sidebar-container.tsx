@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../themes/theme-toggle';
-import { User } from 'next-auth';
 import {
   Braces,
   Calendar,
@@ -20,6 +19,7 @@ import {
   TvMinimalPlay,
   Youtube,
 } from 'lucide-react';
+import { User } from '@prisma/client';
 
 export const SidebarContainer = ({
   user,

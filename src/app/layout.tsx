@@ -3,7 +3,6 @@ import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/themes/theme-provider';
-import { SessionProvider } from 'next-auth/react';
 import { ReactQueryProvider } from '@/components/react-query-provider';
 
 export const metadata: Metadata = {
@@ -19,17 +18,10 @@ const RootLayout = ({
 }>) => (
   <html lang="es">
     <body className={GeistSans.className}>
-      <SessionProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-center" />
-        </ThemeProvider>
-      </SessionProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Toaster closeButton position="top-center" />
+      </ThemeProvider>
     </body>
   </html>
 );
