@@ -1,12 +1,19 @@
 'use server';
 
-import prisma from '@/lib/prisma';
 import { ADVISES_PER_PAGE } from '@/lib/constants';
+import prisma from '@/lib/prisma';
 
-export const fetchAdvises = (page: number) =>
+export const fetchAdvises = async (page: number) =>
   prisma.advise.findMany({
     include: {
-      author: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',

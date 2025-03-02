@@ -1,23 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Advise, User } from '@prisma/generated/zod';
-import { MoreVertical, Edit, Trash } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDate } from '@/lib/utils';
+import { Edit, MoreVertical, Trash } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 
-export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
+type AdviseToDisplay = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  author: {
+    id: string;
+    email: string;
+    name: string | null;
+    image: string | null;
+  };
+};
+
+export const AdviseCard = ({ advise }: { advise: AdviseToDisplay }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -41,7 +52,9 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
       </Avatar>
 
       <div className="flex flex-col">
-        <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
+        <Link href={`/profile/${advise.author.id}`} className="hover:underline">
+          <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
+        </Link>
       </div>
     </div>
   );
@@ -90,11 +103,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
 
       <CardContent className="px-4 py-6">
         <p className="text-sm">{advise.content}</p>
-        <p className="mt-4 text-xs text-gray-500">
-          {format(new Date(advise.createdAt), "d 'de' MMMM 'de' yyyy 'a las' HH:mm", {
-            locale: es,
-          })}
-        </p>
+        <p className="mt-4 text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
       </CardContent>
     </Card>
   );
