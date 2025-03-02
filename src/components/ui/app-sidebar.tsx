@@ -51,7 +51,7 @@ const items = [
   },
 ];
 
-export function AppSidebar({ user }: { user?: User }) {
+export function AppSidebar({ user }: { user: User | null }) {
   return (
     <Sidebar>
       <SidebarContent className="mt-5">
