@@ -1,108 +1,193 @@
 'use client';
 
-import { Calendar, Home, Inbox, Search, Settings, ChevronUp, BookOpen } from 'lucide-react';
-import Image from 'next/image';
+import * as React from 'react';
+import {
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  Instagram,
+  LifeBuoy,
+  Linkedin,
+  Map,
+  PieChart,
+  Send,
+  Settings2,
+  SquareTerminal,
+  X,
+  Youtube,
+} from 'lucide-react';
 
+import { NavMain } from '@/components/ui/nav-main';
+import { NavProjects } from '@/components/ui/nav-projects';
+import { NavSecondary } from '@/components/ui/nav-secondary';
+import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
+  SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
 } from '@/components/ui/sidebar';
-
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
 import { User } from '@prisma/client';
 
-// Menu items.
-const items = [
-  {
-    title: 'Inicio',
-    url: '/home',
-    icon: Home,
+const data = {
+  user: {
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
   },
-  {
-    title: 'Consejos',
-    url: '/advises',
-    icon: BookOpen,
-  },
-  {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
-  },
-  {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
-  },
-];
+  navMain: [
+    {
+      title: 'Playground',
+      url: '#',
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: 'History',
+          url: '#',
+        },
+        {
+          title: 'Starred',
+          url: '#',
+        },
+        {
+          title: 'Settings',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Models',
+      url: '#',
+      icon: Bot,
+      items: [
+        {
+          title: 'Genesis',
+          url: '#',
+        },
+        {
+          title: 'Explorer',
+          url: '#',
+        },
+        {
+          title: 'Quantum',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Documentation',
+      url: '#',
+      icon: BookOpen,
+      items: [
+        {
+          title: 'Introduction',
+          url: '#',
+        },
+        {
+          title: 'Get Started',
+          url: '#',
+        },
+        {
+          title: 'Tutorials',
+          url: '#',
+        },
+        {
+          title: 'Changelog',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Settings',
+      url: '#',
+      icon: Settings2,
+      items: [
+        {
+          title: 'General',
+          url: '#',
+        },
+        {
+          title: 'Team',
+          url: '#',
+        },
+        {
+          title: 'Billing',
+          url: '#',
+        },
+        {
+          title: 'Limits',
+          url: '#',
+        },
+      ],
+    },
+  ],
+  navSecondary: [
+    {
+      title: 'Support',
+      url: '#',
+      icon: LifeBuoy,
+    },
+    {
+      title: 'Feedback',
+      url: '#',
+      icon: Send,
+    },
+  ],
+  socialNetworks: [
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/programa.con.nosotros/',
+      icon: Instagram,
+    },
+    // {
+    //   name: 'X',
+    //   url: 'https://x.com/programaconnos',
+    //   icon: X,
+    // },
+    {
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@programaconnosotros',
+      icon: Youtube,
+    },
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/company/programaconnosotros/',
+      icon: Linkedin,
+    },
+  ],
+};
 
-export function AppSidebar({ user }: { user: User | null }) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar>
-      <SidebarContent className="mt-5">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="#">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">programaConNosotros</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+        <NavProjects socialNetworks={data.socialNetworks} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {user && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton className="w-full">
-                {user.image && (
-                  <Image
-                    src={user.image}
-                    alt={user.name ?? 'User'}
-                    width={24}
-                    height={24}
-                    className="mr-2 rounded-full"
-                  />
-                )}
-                <span className="flex-grow text-left">{user.name ?? 'User'}</span>
-                <ChevronUp className="ml-auto" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="end" sideOffset={8} className="w-56">
-              <DropdownMenuItem>
-                <span>Perfil</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Configuración</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Cerrar sesión</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
   );
