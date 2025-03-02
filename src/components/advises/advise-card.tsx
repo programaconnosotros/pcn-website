@@ -10,14 +10,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
-import { Advise, User } from '@prisma/generated/zod';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 
-export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
+type AdviseToDisplay = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  author: {
+    id: string;
+    email: string;
+    name: string | null;
+    image: string | null;
+  };
+};
+
+export const AdviseCard = ({ advise }: { advise: AdviseToDisplay }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 

@@ -1,7 +1,7 @@
+import { AdviseCard } from '@/components/advises/advise-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
-import { formatDate } from '@/lib/utils';
 import { Linkedin, Twitter } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
@@ -12,34 +12,41 @@ interface ProfilePageProps {
 }
 
 async function getUser(id: string) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      favoriteProgrammingLanguage: true,
-      countryOfOrigin: true,
-      xAccountUrl: true,
-      linkedinUrl: true,
-      advises: {
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        favoriteProgrammingLanguage: true,
+        countryOfOrigin: true,
+        xAccountUrl: true,
+        linkedinUrl: true,
+        advises: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            updatedAt: true,
+            authorId: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!user) {
-    notFound();
+    if (!user) {
+      notFound();
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw new Error('Failed to fetch user profile');
   }
-
-  return user;
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
@@ -106,12 +113,18 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         ) : (
           <div className="space-y-4">
             {user.advises.map((advise) => (
-              <Card key={advise.id}>
-                <CardContent className="pt-6">
-                  <p className="mb-2">{advise.content}</p>
-                  <p className="text-sm text-gray-500">{formatDate(advise.createdAt)}</p>
-                </CardContent>
-              </Card>
+              <AdviseCard
+                key={advise.id}
+                advise={{
+                  ...advise,
+                  author: {
+                    id: user.id,
+                    name: user.name,
+                    email: '',
+                    image: user.image,
+                  },
+                }}
+              />
             ))}
           </div>
         )}
