@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
+import { formatDate } from '@/lib/utils';
 import { Linkedin, Twitter } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
@@ -64,6 +65,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-blue-500 hover:underline"
+                aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
               >
                 <Twitter className="h-5 w-5" />
               </a>
@@ -75,6 +77,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-blue-500 hover:underline"
+                aria-label={`Perfil de LinkedIn de ${user.name}`}
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -106,13 +109,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <Card key={advise.id}>
                 <CardContent className="pt-6">
                   <p className="mb-2">{advise.content}</p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(advise.createdAt).toLocaleDateString('es-ES', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
+                  <p className="text-sm text-gray-500">{formatDate(advise.createdAt)}</p>
                 </CardContent>
               </Card>
             ))}

@@ -9,9 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDate } from '@/lib/utils';
 import { Advise, User } from '@prisma/generated/zod';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -93,11 +92,7 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
 
       <CardContent className="px-4 py-6">
         <p className="text-sm">{advise.content}</p>
-        <p className="mt-4 text-xs text-gray-500">
-          {format(new Date(advise.createdAt), "d 'de' MMMM 'de' yyyy 'a las' HH:mm", {
-            locale: es,
-          })}
-        </p>
+        <p className="mt-4 text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
       </CardContent>
     </Card>
   );
