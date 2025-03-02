@@ -18,7 +18,8 @@
     "create-migration": "prisma migrate dev --name",
     "apply-migrations": "prisma migrate dev",
     "populate-database": "tsx prisma/seed.ts",
-    "prisma-studio": "npx prisma studio"
+    "prisma-studio": "npx prisma studio",
+    "reset-database": "prisma migrate reset"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
