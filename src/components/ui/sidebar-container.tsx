@@ -25,7 +25,7 @@ export const SidebarContainer = ({
   user,
   children,
 }: {
-  user?: User | undefined;
+  user?: User | null;
   children: ReactNode;
 }) => {
   const links = [
