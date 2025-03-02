@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Home, Inbox, Search, Settings, ChevronUp } from 'lucide-react';
+import { Calendar, Home, Inbox, Search, Settings, ChevronUp, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 
 import {
@@ -20,18 +20,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { User } from '@prisma/client';
 
 // Menu items.
 const items = [
   {
-    title: 'Home',
-    url: '#',
+    title: 'Inicio',
+    url: '/home',
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
+    title: 'Consejos',
+    url: '/advises',
+    icon: BookOpen,
   },
   {
     title: 'Calendar',
@@ -49,13 +50,6 @@ const items = [
     icon: Settings,
   },
 ];
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  image?: string | null;
-}
 
 export function AppSidebar({ user }: { user?: User }) {
   return (
@@ -98,13 +92,13 @@ export function AppSidebar({ user }: { user?: User }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align="end" sideOffset={8} className="w-56">
               <DropdownMenuItem>
-                <span>Account</span>
+                <span>Perfil</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <span>Billing</span>
+                <span>Configuración</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <span>Sign out</span>
+                <span>Cerrar sesión</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

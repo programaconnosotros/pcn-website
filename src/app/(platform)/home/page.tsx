@@ -11,7 +11,6 @@ import { DiscordCard } from '@/components/home/discord-card';
 import { PodcastCard } from '@/components/home/podcast-card';
 import Link from 'next/link';
 import { CoursesCard } from '@/components/home/courses-card';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { Session, User } from '@prisma/client';
@@ -40,7 +39,6 @@ const Home = async () => {
     <div className="mt-4 md:px-20">
       <div className="mb-6 flex flex-col">
         <Heading2>
-          <SidebarTrigger className="mr-6" />
           {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
         </Heading2>
 
