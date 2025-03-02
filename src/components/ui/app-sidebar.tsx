@@ -3,19 +3,16 @@
 import * as React from 'react';
 import {
   BookOpen,
-  Bot,
   Command,
-  Frame,
+  Home,
   Instagram,
+  Laptop,
   LifeBuoy,
   Linkedin,
-  Map,
-  PieChart,
   Send,
-  Settings2,
   SquareTerminal,
-  X,
   Youtube,
+  Calendar,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -36,94 +33,53 @@ import { User } from '@prisma/client';
 const data = {
   navMain: [
     {
-      title: 'Playground',
-      url: '#',
+      title: 'Inicio',
+      url: '/home',
+      icon: Home,
+    },
+    {
+      title: 'Actividades',
+      url: '/events',
+      icon: Calendar,
+    },
+    {
+      title: 'Consejos',
+      url: '/advises',
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
     },
     {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
+      title: 'Charlas',
+      url: '/talks',
       icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
     },
     {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
+      title: 'Cursos',
+      url: '/courses',
+      icon: Laptop,
       items: [
         {
-          title: 'General',
-          url: '#',
+          title: 'Vim',
+          url: '/courses/vim',
         },
         {
-          title: 'Team',
-          url: '#',
+          title: 'LaTeX',
+          url: '/courses/latex',
         },
         {
-          title: 'Billing',
-          url: '#',
+          title: 'Git & GitHub',
+          url: '/courses/git-and-github',
         },
         {
-          title: 'Limits',
-          url: '#',
+          title: 'Ver todos',
+          url: '/courses',
         },
       ],
     },
   ],
   navSecondary: [
     {
-      title: 'Support',
+      title: 'Soporte',
       url: '#',
       icon: LifeBuoy,
     },
