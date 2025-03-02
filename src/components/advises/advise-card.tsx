@@ -1,21 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Advise, User } from '@prisma/generated/zod';
-import { MoreVertical, Edit, Trash } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteAdviseDialog } from './delete-advise-dialog';
-import { EditAdviseDialog } from './edit-advise-dialog';
+import { Advise, User } from '@prisma/generated/zod';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Edit, MoreVertical, Trash } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import { DeleteAdviseDialog } from './delete-advise-dialog';
+import { EditAdviseDialog } from './edit-advise-dialog';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -41,7 +42,9 @@ export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) =>
       </Avatar>
 
       <div className="flex flex-col">
-        <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
+        <Link href={`/profile/${advise.author.id}`} className="hover:underline">
+          <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
+        </Link>
       </div>
     </div>
   );
