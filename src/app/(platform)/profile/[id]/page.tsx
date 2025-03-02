@@ -1,0 +1,124 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import prisma from '@/lib/prisma';
+import { Linkedin, Twitter } from 'lucide-react';
+import { notFound } from 'next/navigation';
+
+interface ProfilePageProps {
+  params: {
+    id: string;
+  };
+}
+
+async function getUser(id: string) {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      favoriteProgrammingLanguage: true,
+      countryOfOrigin: true,
+      xAccountUrl: true,
+      linkedinUrl: true,
+      advises: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    notFound();
+  }
+
+  return user;
+}
+
+export default async function ProfilePage({ params }: ProfilePageProps) {
+  const user = await getUser(params.id);
+
+  return (
+    <div className="mt-4 md:px-20">
+      <Card>
+        <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+              <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-bold">{user.name}</h1>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {user.xAccountUrl && (
+              <a
+                href={user.xAccountUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-blue-500 hover:underline"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+            )}
+
+            {user.linkedinUrl && (
+              <a
+                href={user.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-blue-500 hover:underline"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h2 className="font-semibold">Lenguaje de programación favorito</h2>
+              <p>{user.favoriteProgrammingLanguage || '-'}</p>
+            </div>
+
+            <div>
+              <h2 className="font-semibold">País de origen</h2>
+              <p>{user.countryOfOrigin || '-'}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
+        {user.advises.length === 0 ? (
+          <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
+        ) : (
+          <div className="space-y-4">
+            {user.advises.map((advise) => (
+              <Card key={advise.id}>
+                <CardContent className="pt-6">
+                  <p className="mb-2">{advise.content}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(advise.createdAt).toLocaleDateString('es-ES', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

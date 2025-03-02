@@ -13,13 +13,17 @@ generator zod {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  name     String?
-  email    String    @unique
-  password String
-  image    String?
-  sessions Session[]
-  advises  Advise[]
+  id                          String    @id @default(cuid())
+  name                        String?
+  email                       String    @unique
+  password                    String
+  image                       String?
+  favoriteProgrammingLanguage String?
+  countryOfOrigin             String?
+  xAccountUrl                 String?
+  linkedinUrl                 String?
+  sessions                    Session[]
+  advises                     Advise[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

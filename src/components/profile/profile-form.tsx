@@ -1,14 +1,14 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from '@prisma/generated/zod';
-import { profileSchema, ProfileFormData } from '@/schemas/profile-schema';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 export const ProfileForm = ({ user }: { user: User }) => {
   const {
@@ -20,6 +20,10 @@ export const ProfileForm = ({ user }: { user: User }) => {
     defaultValues: {
       name: user.name ?? '',
       email: user.email ?? '',
+      favoriteProgrammingLanguage: user.favoriteProgrammingLanguage ?? '',
+      countryOfOrigin: user.countryOfOrigin ?? '',
+      xAccountUrl: user.xAccountUrl ?? '',
+      linkedinUrl: user.linkedinUrl ?? '',
     },
   });
 
@@ -44,6 +48,38 @@ export const ProfileForm = ({ user }: { user: User }) => {
           <Label htmlFor="email">Correo electrónico</Label>
           <Input id="email" type="email" {...register('email')} />
           {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="favoriteProgrammingLanguage">Lenguaje de programación favorito</Label>
+          <Input id="favoriteProgrammingLanguage" {...register('favoriteProgrammingLanguage')} />
+          {errors.favoriteProgrammingLanguage && (
+            <p className="text-sm text-red-500">{errors.favoriteProgrammingLanguage.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="countryOfOrigin">País de origen</Label>
+          <Input id="countryOfOrigin" {...register('countryOfOrigin')} />
+          {errors.countryOfOrigin && (
+            <p className="text-sm text-red-500">{errors.countryOfOrigin.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="xAccountUrl">URL de cuenta de X</Label>
+          <Input id="xAccountUrl" type="url" {...register('xAccountUrl')} />
+          {errors.xAccountUrl && (
+            <p className="text-sm text-red-500">{errors.xAccountUrl.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="linkedinUrl">URL de cuenta de LinkedIn</Label>
+          <Input id="linkedinUrl" type="url" {...register('linkedinUrl')} />
+          {errors.linkedinUrl && (
+            <p className="text-sm text-red-500">{errors.linkedinUrl.message}</p>
+          )}
         </div>
       </div>
 
