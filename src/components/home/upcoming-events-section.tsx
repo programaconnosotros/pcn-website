@@ -1,5 +1,5 @@
 import { Calendar } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card';
 
 const events = [
   { name: 'Lightning Talks', date: 'Fecha a definir', location: 'Lugar a definir' },

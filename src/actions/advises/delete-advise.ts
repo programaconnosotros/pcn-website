@@ -1,17 +1,22 @@
 'use server';
 
-import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export const deleteAdvise = async (id: string) => {
-  const session = await auth();
+  const sessionId = await cookies().get('sessionId');
 
-  if (!session) throw new Error('User not authenticated');
-  if (!session.user?.id) throw new Error('User id not found in session');
+  if (!sessionId) throw new Error('User not authenticated');
+
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId.value },
+  });
+
+  if (!session) throw new Error('Session not found');
 
   await prisma.advise.delete({
-    where: { id, authorId: session.user.id },
+    where: { id, authorId: session.userId },
   });
 
   revalidatePath('/advises');

@@ -5,7 +5,6 @@ import { UpcomingEventsSection } from '@components/home/upcoming-events-section'
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Heading2 } from '@/components/ui/heading-2';
-import { auth } from '@/auth';
 import { BackgroundOverlayCard } from '@/components/ui/background-overlay-card';
 import { ContentCard } from '@/components/ui/content-card';
 import { DiscordCard } from '@/components/home/discord-card';
@@ -13,19 +12,35 @@ import { PodcastCard } from '@/components/home/podcast-card';
 import Link from 'next/link';
 import { CoursesCard } from '@/components/home/courses-card';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import prisma from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { Session, User } from '@prisma/client';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
 // TODO: Add section to show our LinkedIn profile.
 
 const Home = async () => {
-  const session = await auth();
+  const sessionId = cookies().get('sessionId')?.value;
+
+  let session: (Session & { user: User }) | null = null;
+
+  if (sessionId) {
+    session = await prisma.session.findUnique({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
 
   return (
     <div className="mt-4 md:px-20">
       <div className="mb-6 flex flex-col">
         <Heading2>
-          <SidebarTrigger className='mr-6'/>
+          <SidebarTrigger className="mr-6" />
           {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
         </Heading2>
 
