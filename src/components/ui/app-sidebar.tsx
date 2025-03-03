@@ -114,7 +114,7 @@ const data = {
 };
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User;
+  user: User | null;
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {

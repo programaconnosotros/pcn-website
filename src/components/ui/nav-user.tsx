@@ -26,11 +26,29 @@ import { useRouter } from 'next/navigation';
 import { signOut } from '@/actions/auth/sign-out';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
+import { Button } from './button';
+import Link from 'next/link';
 
-export function NavUser({ user }: { user: User }) {
+export function NavUser({ user }: { user: User | null }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const { setTheme } = useTheme();
+
+  if (!user)
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <Link href="/auth/sign-in">
+            <Button>Iniciar sesión</Button>
+          </Link>
+
+          <Link href="/auth/sign-up">
+            <Button>Registrarse</Button>
+          </Link>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
