@@ -1,3 +1,4 @@
+import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -51,6 +52,7 @@ async function getUser(id: string) {
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const user = await getUser(params.id);
+  const session = await getCurrentSession();
 
   return (
     <div className="mt-4 md:px-20">
@@ -115,6 +117,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             {user.advises.map((advise) => (
               <AdviseCard
                 key={advise.id}
+                session={session}
                 advise={{
                   ...advise,
                   author: {
