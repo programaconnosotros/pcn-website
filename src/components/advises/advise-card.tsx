@@ -16,8 +16,6 @@ import { EditAdviseDialog } from './edit-advise-dialog';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { User, Advise, Session } from '@prisma/client';
-import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 
 export const AdviseCard = async ({
   advise,
