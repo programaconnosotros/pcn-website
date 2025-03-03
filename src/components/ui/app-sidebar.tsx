@@ -86,16 +86,26 @@ const data = {
   navSecondary: [
     {
       title: 'Soporte',
-      url: '#',
+      url: 'https://wa.me/5493815777562',
       icon: LifeBuoy,
     },
     {
       title: 'Feedback',
-      url: '#',
+      url: 'https://wa.me/5493815777562',
       icon: Send,
     },
   ],
   socialNetworks: [
+    {
+      name: 'WhatsApp',
+      url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
+      icon: Send,
+    },
+    {
+      name: 'Discord',
+      url: 'https://discord.gg/dTQexKw56S',
+      icon: Send,
+    },
     {
       name: 'Instagram',
       url: 'https://www.instagram.com/programa.con.nosotros/',
