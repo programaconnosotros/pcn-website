@@ -54,7 +54,7 @@ const RootLayout = async ({
                 <span className="text-sm font-semibold">programaConNosotros</span>
               </div>
 
-              <main className="p-4 pt-16 md:pt-1">{children}</main>
+              <main className="pt-16 md:pt-1">{children}</main>
             </SidebarProvider>
           </ReactQueryProvider>
           <Toaster closeButton position="top-center" />
