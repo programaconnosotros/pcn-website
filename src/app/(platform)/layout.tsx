@@ -38,13 +38,12 @@ const Layout = async ({ children }: { children?: ReactNode }) => {
       <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar user={user} />
 
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-            <SidebarTrigger className="ml-2" />
-          </header>
+        <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
+          <SidebarTrigger />
+          <span className="text-sm font-semibold">programaConNosotros</span>
+        </div>
 
-          <main className="p-4">{children}</main>
-        </SidebarInset>
+        <main className="p-4 pt-16 md:pt-4">{children}</main>
       </SidebarProvider>
     </div>
   );
