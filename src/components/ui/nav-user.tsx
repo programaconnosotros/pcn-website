@@ -19,6 +19,10 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { signOut } from '@/actions/auth/sign-out';
+import { toast } from 'sonner';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
@@ -80,9 +84,13 @@ export function NavUser({ user }: { user: User }) {
 
             <DropdownMenuItem
               className="flex cursor-pointer flex-row gap-2"
-              onClick={() => {
-                // TODO: Log out
-              }}
+              onClick={() =>
+                toast.promise(signOut(), {
+                  loading: 'Cerrando sesión...',
+                  success: 'Sesión cerrada correctamente',
+                  error: 'Error al cerrar sesión',
+                })
+              }
             >
               <LogOut size={16} />
               Cerrar sesión
