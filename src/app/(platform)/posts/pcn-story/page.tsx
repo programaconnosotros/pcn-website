@@ -15,7 +15,7 @@ const PCN = () => (
 );
 
 const PCNStory = () => (
-  <div className="xl:mr-120 mb-12 flex flex-col gap-4 md:mx-24 lg:mx-48 xl:mx-64">
+  <div className="xl:mr-120 mb-12 mt-6 flex flex-col gap-4 md:mx-24 lg:mx-48 xl:mx-64">
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
