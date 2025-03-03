@@ -8,10 +8,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-}
-
 model User {
   id       String    @id @default(cuid())
   name     String
