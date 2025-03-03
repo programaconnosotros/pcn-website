@@ -7,10 +7,9 @@ interface StatCardProps {
   title: string;
   Icon: LucideIcon;
   value: number | string;
-  description: string;
 }
 
-export const StatCard = ({ href, title, Icon, value, description }: StatCardProps) => (
+export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
   <Link href={href} className="block">
     <Card className="cursor-pointer transition-shadow hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -20,7 +19,6 @@ export const StatCard = ({ href, title, Icon, value, description }: StatCardProp
 
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
-        <p className="mt-3 text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
   </Link>
