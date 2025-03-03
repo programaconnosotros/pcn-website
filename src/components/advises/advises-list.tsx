@@ -7,10 +7,10 @@ import { useEffect, useRef } from 'react';
 import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { ADVISES_PER_PAGE } from '@/lib/constants';
 import { AddAdvise } from './add-advise';
-import { Session } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
 
-export const AdvisesList = ({ session }: { session: Session | null }) => {
+export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
   const ref = useRef(null);
   const isInView = useInView(ref);
 
