@@ -1,6 +1,15 @@
 'use client';
 
-import { BadgeCheck, ChevronsUpDown, LogOut, Moon, Sun, Monitor } from 'lucide-react';
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  LogOut,
+  Moon,
+  Sun,
+  Monitor,
+  UserPlus,
+  LogIn,
+} from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -37,13 +46,19 @@ export function NavUser({ user }: { user: User | null }) {
   if (!user)
     return (
       <SidebarMenu>
-        <SidebarMenuItem>
+        <SidebarMenuItem className="w-full">
           <Link href="/auth/sign-in">
-            <Button>Iniciar sesión</Button>
+            <Button className="w-full">
+              Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+            </Button>
           </Link>
-
+        </SidebarMenuItem>
+        <SidebarMenuItem className="w-full">
           <Link href="/auth/sign-up">
-            <Button>Registrarse</Button>
+            <Button className="w-full" variant="outline">
+              Crear cuenta
+              <UserPlus className="ml-2 h-4 w-4" />
+            </Button>
           </Link>
         </SidebarMenuItem>
       </SidebarMenu>
