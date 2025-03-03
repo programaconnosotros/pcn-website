@@ -2,17 +2,7 @@ import { Calendar } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card';
 
 const events = [
-  { name: 'Lightning Talks', date: 'Fecha a definir', location: 'Lugar a definir' },
-  {
-    name: 'Charla de introducción a la programación',
-    date: 'Fecha a definir',
-    location: 'Lugar a definir',
-  },
-  {
-    name: 'Code Warfare (competencia de programación)',
-    date: 'Fecha a definir',
-    location: 'Lugar a definir',
-  },
+  { name: 'PCN Checkpoint', date: 'Jueves 13 de marzo a las 19.00', location: 'Discord de PCN' },
 ];
 
 export const UpcomingEventsSection = () => (
@@ -28,7 +18,7 @@ export const UpcomingEventsSection = () => (
             <Calendar className="h-4 w-4 text-muted-foreground" />
 
             <div>
-              <p className="text-sm font-medium leading-none">{event.name}</p>
+              <p className="mb-1 text-sm font-medium leading-none">{event.name}</p>
 
               <p className="text-sm text-muted-foreground">
                 {event.date} • {event.location}
