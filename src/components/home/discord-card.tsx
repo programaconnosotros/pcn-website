@@ -8,7 +8,7 @@ export const DiscordCard = () => (
     <Heading3>No te pierdas de nada</Heading3>
 
     <p className="mb-4 mt-2 text-sm text-muted-foreground">
-      En Discord tenemos más de 500 miembros con los que podés interactuar por chat, por llamadas de
+      En Discord tenemos más de 600 miembros con los que podés interactuar por chat, por llamadas de
       voz y video, compartir pantalla, chusmear sesiones de pair-programming y mucho más. Sumate y
       lleva tu carrera al siguiente nivel!
     </p>
@@ -17,7 +17,7 @@ export const DiscordCard = () => (
 
     <div className="flex w-full justify-center">
       <Link className="w-full" href="https://discord.gg/dTQexKw56S" target="_blank">
-        <Button className="flex w-full flex-row gap-2">
+        <Button className="flex w-full flex-row gap-2" variant="outline">
           Ir a Discord <SquareArrowOutUpRight size={16} />
         </Button>
       </Link>

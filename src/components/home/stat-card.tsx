@@ -1,16 +1,16 @@
 import { LucideIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card';
 import Link from 'next/link';
+import { NumberTicker } from '@components/magicui/number-ticker';
 
 interface StatCardProps {
   href: string;
   title: string;
   Icon: LucideIcon;
-  value: number | string;
-  description: string;
+  value: number;
 }
 
-export const StatCard = ({ href, title, Icon, value, description }: StatCardProps) => (
+export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
   <Link href={href} className="block">
     <Card className="cursor-pointer transition-shadow hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -19,8 +19,10 @@ export const StatCard = ({ href, title, Icon, value, description }: StatCardProp
       </CardHeader>
 
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        <p className="mt-3 text-xs text-muted-foreground">{description}</p>
+        <NumberTicker
+          value={value}
+          className="whitespace-pre-wrap text-2xl font-medium tracking-tighter text-black dark:text-white"
+        />
       </CardContent>
     </Card>
   </Link>

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
+import { Session, User } from '@prisma/client';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -23,22 +24,20 @@ type AdviseToDisplay = {
   author: {
     id: string;
     email: string;
-    name: string | null;
+    name: string;
     image: string | null;
   };
 };
 
-export const AdviseCard = ({ advise }: { advise: AdviseToDisplay }) => {
+export const AdviseCard = ({
+  advise,
+  session,
+}: {
+  advise: AdviseToDisplay;
+  session: (Session & { user: User }) | null;
+}) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-  // TODO: Get session from database or cookie.
-  const session = {
-    user: {
-      id: '123',
-      email: 'john.doe@example.com',
-    },
-  };
 
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||

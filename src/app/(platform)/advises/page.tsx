@@ -1,23 +1,26 @@
 import { AdvisesList } from '@/components/advises/advises-list';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 
 const AdvisesPage = async () => {
-  const sessionId = await cookies().get('sessionId')?.value;
-  let session: Session | null = null;
+  const sessionId = cookies().get('sessionId')?.value;
+  let session: (Session & { user: User }) | null = null;
 
   if (sessionId) {
     session = await prisma.session.findUnique({
       where: {
         id: sessionId,
       },
+      include: {
+        user: true,
+      },
     });
   }
 
   return (
     <div className="mt-4 md:px-20">
-      <AdvisesList showAddAdviseButton={!!session} />
+      <AdvisesList session={session} />
     </div>
   );
 };
