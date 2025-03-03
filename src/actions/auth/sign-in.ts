@@ -47,5 +47,5 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365, // 1 año
   });
 
-  redirect('/home');
+  redirect('/');
 };
