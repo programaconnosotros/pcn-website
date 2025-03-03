@@ -13,6 +13,7 @@ import {
   SquareTerminal,
   Youtube,
   Calendar,
+  Image,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -47,6 +48,11 @@ const data = {
       url: '/advises',
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: 'Fotos',
+      url: '/photos',
+      icon: Image,
     },
     {
       title: 'Charlas',
