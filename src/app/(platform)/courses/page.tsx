@@ -21,7 +21,7 @@ const AddCourseCard = () => (
         <CardTitle>¿Quéres sumar tu curso?</CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="text-sm">
         Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
         comunidad, contactanos clickeando el botón de abajo!
       </CardContent>
@@ -40,8 +40,8 @@ const AddCourseCard = () => (
 
 const CourseCard = ({ course }: { course: Course }) => {
   const ViewButton = () => (
-    <Link href={`/courses/${course.id}`}>
-      <Button className="flex flex-row items-center gap-2">
+    <Link href={`/courses/${course.id}`} className="w-full">
+      <Button className="flex w-full flex-row items-center gap-2">
         Ver curso
         <TvMinimalPlay className="h-5 w-5" />
       </Button>
@@ -59,12 +59,12 @@ const CourseCard = ({ course }: { course: Course }) => {
           </Badge>
         </CardHeader>
 
-        <CardContent>{course.description}</CardContent>
+        <CardContent className="text-sm">{course.description}</CardContent>
       </div>
 
-      <CardFooter className="flex flex-row justify-between gap-4">
+      <CardFooter className="flex flex-col items-center gap-4">
         <ViewButton />
-        <p className="text-sm text-muted-foreground">Curso dictado por {course.teachedBy}.</p>
+        <p className="text-xs text-muted-foreground">Curso dictado por {course.teachedBy}.</p>
       </CardFooter>
     </Card>
   );
