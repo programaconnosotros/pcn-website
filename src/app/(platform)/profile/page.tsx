@@ -1,5 +1,4 @@
 import { Heading2 } from '@components/ui/heading-2';
-import { SignOut } from '@components/auth/sign-out';
 import { ProfileForm } from '@components/profile/profile-form';
 import prisma from '@/lib/prisma';
 import Image from 'next/image';
@@ -53,7 +52,6 @@ const Profile = async () => {
       </div>
 
       <ProfileForm user={user} />
-      <SignOut />
     </div>
   );
 };

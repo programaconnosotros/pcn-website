@@ -19,14 +19,13 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signOut } from '@/actions/auth/sign-out';
 import { toast } from 'sonner';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
-
+  const router = useRouter();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -37,7 +36,7 @@ export function NavUser({ user }: { user: User }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.image} alt={user.name} />
+                <AvatarImage src={user.image ?? undefined} alt={user.name} />
                 <AvatarFallback className="rounded-lg">{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -71,9 +70,7 @@ export function NavUser({ user }: { user: User }) {
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="flex cursor-pointer flex-row gap-2"
-                onClick={() => {
-                  // TODO: Go to account page
-                }}
+                onClick={() => router.push('/profile')}
               >
                 <BadgeCheck size={16} />
                 Mi cuenta
