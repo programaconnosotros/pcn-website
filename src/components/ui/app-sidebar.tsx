@@ -3,8 +3,6 @@
 import * as React from 'react';
 import {
   BookOpen,
-  Command,
-  Home,
   Instagram,
   Laptop,
   LifeBuoy,
@@ -36,7 +34,7 @@ const data = {
   navMain: [
     {
       title: 'Inicio',
-      url: '/home',
+      url: '/',
       icon: Home,
     },
     {
