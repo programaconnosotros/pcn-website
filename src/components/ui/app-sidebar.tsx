@@ -3,8 +3,6 @@
 import * as React from 'react';
 import {
   BookOpen,
-  Command,
-  Home,
   Instagram,
   Laptop,
   LifeBuoy,
@@ -14,6 +12,7 @@ import {
   Youtube,
   Calendar,
   Image,
+  Home,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -35,7 +34,7 @@ const data = {
   navMain: [
     {
       title: 'Inicio',
-      url: '/home',
+      url: '/',
       icon: Home,
     },
     {
