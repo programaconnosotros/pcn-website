@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User } from '@prisma/generated/zod';
+import { User } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
