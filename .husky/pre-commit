@@ -1,1 +1,2 @@
-pnpm build
+pnpm format
+pnpm lint
