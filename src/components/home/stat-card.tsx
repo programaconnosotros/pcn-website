@@ -1,12 +1,13 @@
 import { LucideIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card';
 import Link from 'next/link';
+import { NumberTicker } from '@components/magicui/number-ticker';
 
 interface StatCardProps {
   href: string;
   title: string;
   Icon: LucideIcon;
-  value: number | string;
+  value: number;
 }
 
 export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
@@ -18,7 +19,10 @@ export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
       </CardHeader>
 
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <NumberTicker
+          value={value}
+          className="whitespace-pre-wrap text-2xl font-medium tracking-tighter text-black dark:text-white"
+        />
       </CardContent>
     </Card>
   </Link>
