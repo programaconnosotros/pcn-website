@@ -39,7 +39,7 @@ const Home = async () => {
     <div className="mt-4 md:px-20">
       <div className="mb-6 flex flex-col">
         <Heading2>
-          {session && session.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
+          {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
         </Heading2>
 
         <MotivationalQuotes />

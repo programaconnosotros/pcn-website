@@ -8,6 +8,7 @@ import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { ADVISES_PER_PAGE } from '@/lib/constants';
 import { AddAdvise } from './add-advise';
 import { Session } from '@prisma/client';
+import { Heading2 } from '../ui/heading-2';
 
 export const AdvisesList = ({ showAddAdviseButton }: { showAddAdviseButton: boolean }) => {
   const ref = useRef(null);
@@ -33,7 +34,7 @@ export const AdvisesList = ({ showAddAdviseButton }: { showAddAdviseButton: bool
     <div className="flex flex-col gap-6">
       <div className="sticky top-0 z-10 bg-background/95 pb-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Consejos</h1>
+          <Heading2>Consejos</Heading2>
 
           {showAddAdviseButton && <AddAdvise refetch={refetch} />}
         </div>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Advise, User } from '@prisma/generated/zod';
 import { MoreVertical, Edit, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +15,7 @@ import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { User, Advise } from '@prisma/client';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
