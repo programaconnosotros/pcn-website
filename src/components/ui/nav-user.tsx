@@ -46,16 +46,17 @@ export function NavUser({ user }: { user: User | null }) {
   if (!user)
     return (
       <SidebarMenu>
-        <SidebarMenuItem className="w-full">
+        <SidebarMenuItem className="mb-2 w-full">
           <Link href="/auth/sign-in">
             <Button className="w-full">
               Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </SidebarMenuItem>
+
         <SidebarMenuItem className="w-full">
           <Link href="/auth/sign-up">
-            <Button className="w-full" variant="outline">
+            <Button className="w-full" variant="secondary">
               Crear cuenta
               <UserPlus className="ml-2 h-4 w-4" />
             </Button>
