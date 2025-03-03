@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { updateProfile } from '@actions/update-profile';
-import { User } from '@prisma/generated/zod';
 import { profileSchema, ProfileFormData } from '@/schemas/profile-schema';
+import { User } from '@prisma/client';
 
 export const ProfileForm = ({ user }: { user: User }) => {
   const {
