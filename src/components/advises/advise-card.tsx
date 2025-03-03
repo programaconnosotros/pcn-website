@@ -15,19 +15,19 @@ import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Advise } from '@prisma/client';
+import { User, Advise, Session } from '@prisma/client';
+import { cookies } from 'next/headers';
+import prisma from '@/lib/prisma';
 
-export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
+export const AdviseCard = async ({
+  advise,
+  session,
+}: {
+  advise: Advise & { author: User };
+  session: (Session & { user: User }) | null;
+}) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-  // TODO: Get session from database or cookie.
-  const session = {
-    user: {
-      id: '123',
-      email: 'john.doe@example.com',
-    },
-  };
 
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||
