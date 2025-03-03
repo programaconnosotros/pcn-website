@@ -84,12 +84,12 @@ export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
-export const UserArgsSchema: z.ZodType<Prisma.UserDefaultArgs> = z.object({
+export const UserArgsSchema: z.object({
   select: z.lazy(() => UserSelectSchema).optional(),
   include: z.lazy(() => UserIncludeSchema).optional(),
 }).strict();
 
-export const UserCountOutputTypeArgsSchema: z.ZodType<Prisma.UserCountOutputTypeDefaultArgs> = z.object({
+export const UserCountOutputTypeArgsSchema: z.object({
   select: z.lazy(() => UserCountOutputTypeSelectSchema).nullish(),
 }).strict();
 
@@ -118,7 +118,7 @@ export const SessionIncludeSchema: z.ZodType<Prisma.SessionInclude> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const SessionArgsSchema: z.ZodType<Prisma.SessionDefaultArgs> = z.object({
+export const SessionArgsSchema: z.object({
   select: z.lazy(() => SessionSelectSchema).optional(),
   include: z.lazy(() => SessionIncludeSchema).optional(),
 }).strict();
@@ -139,7 +139,7 @@ export const AdviseIncludeSchema: z.ZodType<Prisma.AdviseInclude> = z.object({
   author: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const AdviseArgsSchema: z.ZodType<Prisma.AdviseDefaultArgs> = z.object({
+export const AdviseArgsSchema: z.object({
   select: z.lazy(() => AdviseSelectSchema).optional(),
   include: z.lazy(() => AdviseIncludeSchema).optional(),
 }).strict();
