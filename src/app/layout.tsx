@@ -45,18 +45,7 @@ const RootLayout = async ({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>
-            <SidebarProvider defaultOpen={defaultOpen}>
-              <AppSidebar user={user} />
-
-              <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-semibold">programaConNosotros</span>
-              </div>
-
-              <main className="pt-16 md:pt-1">{children}</main>
-            </SidebarProvider>
-          </ReactQueryProvider>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
           <Toaster closeButton position="top-center" />
         </ThemeProvider>
       </body>
