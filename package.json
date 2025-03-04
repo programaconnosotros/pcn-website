@@ -19,7 +19,8 @@
     "apply-migrations": "prisma migrate dev",
     "populate-database": "tsx prisma/seed.ts",
     "prisma-studio": "npx prisma studio",
-    "reset-database": "prisma migrate reset"
+    "reset-database": "prisma migrate reset",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
