@@ -145,7 +145,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
                   <img src="/logo.png" alt="programaConNosotros" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
