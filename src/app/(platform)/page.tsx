@@ -42,7 +42,9 @@ const Home = async () => {
           {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
         </Heading2>
 
-        <MotivationalQuotes />
+        <div className="hidden md:block">
+          <MotivationalQuotes />
+        </div>
       </div>
 
       <section className="mb-6 w-full">
