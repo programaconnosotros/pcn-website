@@ -57,6 +57,8 @@ const Home = async () => {
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-6">
+            <UpcomingEventsSection />
+
             <Link href="/posts/pcn-story">
               <ContentCard
                 author="Agustín Sánchez"
@@ -71,8 +73,6 @@ const Home = async () => {
               title="¿Sabías que podés sumarte al team de desarrollo de este website?"
               description="¡Comunicate con nosotros!"
             />
-
-            <UpcomingEventsSection />
           </div>
 
           <div className="flex flex-col gap-6">
