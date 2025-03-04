@@ -25,8 +25,6 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
 
   const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
 
-  // TODO: Pedir que el usuario ingrese dos veces la contraseña para evitar errores de tipeo.
-
   const user = await prisma.user.create({
     data: { ...cleanedData, password: hashedPassword },
   });
@@ -46,7 +44,5 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365,
   });
 
-  redirect('/home');
-
-  // TODO: Validación del correo electrónico.
+  redirect('/');
 };
