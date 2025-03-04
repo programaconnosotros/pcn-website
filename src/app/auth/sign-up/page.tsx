@@ -47,6 +47,11 @@ export default function SignUpPage() {
       success: () => toast.success('Usuario creado exitosamente! 🥳'),
       error: (error) => {
         console.error('Error al crear el usuario', error);
+
+        if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
+          return toast.error('Ya hay un usuario con ese correo electrónico.');
+        }
+
         return toast.error(error.message);
       },
     });

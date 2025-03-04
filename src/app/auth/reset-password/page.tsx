@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { LogIn, UserPlus, SquareAsterisk, ArrowLeft } from 'lucide-react';
+import { resetPassword } from '@/actions/auth/reset-password';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -29,7 +30,7 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) =>
-    toast.promise(Promise.resolve(), {
+    toast.promise(resetPassword(values.email), {
       loading: 'Generando nueva contraseña...',
       success: 'Si el usuario existe, vas a recibir una nueva contraseña.',
       error: 'No se pudo procesar la solicitud.',

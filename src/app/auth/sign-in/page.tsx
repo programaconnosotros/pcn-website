@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -23,11 +24,15 @@ const formSchema = z.object({
 });
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const emailParam = searchParams.get('email') || '';
+  const passwordParam = searchParams.get('password') || '';
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: emailParam,
+      password: passwordParam,
     },
   });
 
