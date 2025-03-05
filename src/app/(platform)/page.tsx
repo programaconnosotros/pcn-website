@@ -36,7 +36,7 @@ const Home = async () => {
   }
 
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 md:max-w-screen-xl md:px-20">
       <div className="mb-6 flex flex-col">
         <Heading2>
           {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
