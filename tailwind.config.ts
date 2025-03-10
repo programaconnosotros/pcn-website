@@ -54,17 +54,27 @@ const config = {
           foreground: 'hsl(var(--card-foreground))',
         },
         pcnGreen: {
+          '50': '#04f4be0a',
+          '100': '#04f4be1a',
+          '200': '#04f4be33',
+          '300': '#04f4be4d',
+          '400': '#04f4be66',
+          '500': '#04f4be80',
+          '600': '#04f4be99',
+          '700': '#04f4beb3',
+          '800': '#04f4becc',
+          '900': '#04f4bee6',
           DEFAULT: '#04f4be',
-          50: '#04f4be0a',
-          100: '#04f4be1a',
-          200: '#04f4be33',
-          300: '#04f4be4d',
-          400: '#04f4be66',
-          500: '#04f4be80',
-          600: '#04f4be99',
-          700: '#04f4beb3',
-          800: '#04f4becc',
-          900: '#04f4bee6',
+        },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
         },
       },
       borderRadius: {
@@ -74,16 +84,28 @@ const config = {
       },
       keyframes: {
         'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
+          from: {
+            height: '0',
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)',
+          },
         },
         'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
+          from: {
+            height: 'var(--radix-accordion-content-height)',
+          },
+          to: {
+            height: '0',
+          },
         },
         move: {
-          '0%': { transform: 'translateX(-200px)' },
-          '100%': { transform: 'translateX(200px)' },
+          '0%': {
+            transform: 'translateX(-200px)',
+          },
+          '100%': {
+            transform: 'translateX(200px)',
+          },
         },
       },
       animation: {

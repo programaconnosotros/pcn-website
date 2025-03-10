@@ -10,16 +10,7 @@ async function main() {
       email: 'js.agustin.sz@gmail.com',
       name: 'Agustín Sánchez',
       image: 'https://avatars.githubusercontent.com/u/12345678?v=4',
-      accounts: {
-        create: {
-          type: 'oauth',
-          provider: 'github',
-          providerAccountId: '12345678', // Replace with actual GitHub user ID
-          access_token: 'github_access_token_placeholder',
-          token_type: 'bearer',
-          scope: 'user,repo',
-        },
-      },
+      password: '1234',
     },
   });
 

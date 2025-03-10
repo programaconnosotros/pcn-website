@@ -1,6 +1,7 @@
 services:
   database:
     image: postgres:13
+    container_name: database
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -10,6 +11,8 @@ services:
       - '5432:5432'
   web:
     build: .
+    container_name: web
+    restart: always
     ports:
       - '3000:3000'
     volumes:
@@ -19,7 +22,4 @@ services:
       - database
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
-      - AUTH_TOKEN=${AUTH_TOKEN}
-      - AUTH_GITHUB_ID=${AUTH_GITHUB_ID}
-      - AUTH_GITHUB_SECRET=${AUTH_GITHUB_SECRET}
-    command: pnpm next dev
+      - DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}

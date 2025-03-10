@@ -1,5 +1,9 @@
 'use server';
 
-import { signOut as _signOut } from '@/auth';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export const signOut = async () => await _signOut({ redirectTo: '/' });
+export const signOut = async () => {
+  await cookies().delete('sessionId');
+  redirect('/auth/sign-in');
+};

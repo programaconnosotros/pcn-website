@@ -1,16 +1,14 @@
 'use client';
 import React from 'react';
 import { SparklesCore } from '../ui/sparkles';
-import { Session } from 'next-auth';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { ArrowRightIcon, Eye } from 'lucide-react';
-import { SignIn } from '../auth/sign-in';
+import { Eye, UserPlus, LogIn, User } from 'lucide-react';
 import { ScrollArrow } from '@/components/landing/scroll-arrow';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { GlowingText } from '../ui/glowing-text';
 
-export const Hero = ({ session }: { session: Session | null }) => (
+export const Hero = () => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
     <div className="absolute inset-0 h-screen w-full">
       <SparklesCore
@@ -36,27 +34,30 @@ export const Hero = ({ session }: { session: Session | null }) => (
       />
 
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
-        {session?.user ? (
-          <Link href="/home" passHref className="flex w-full justify-center sm:w-auto">
-            <Button className="flex flex-row items-center justify-center gap-3">
-              <span>Ir a la plataforma</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </Link>
-        ) : (
-          <div className="flex w-full flex-col items-center justify-center gap-4">
-            <div className="flex w-full justify-center">
-              <SignIn />
-            </div>
+        <div className="flex w-full flex-col items-center justify-center gap-4">
+          <div className="flex w-full flex-row justify-center gap-4">
+            <Link href="/auth/sign-in" passHref>
+              <Button className="flex flex-row items-center justify-center gap-2">
+                <span>Ingresar</span>
+                <LogIn className="h-4 w-4" />
+              </Button>
+            </Link>
 
-            <Link href="/home" passHref className="flex w-full justify-center">
+            <Link href="/auth/sign-up" passHref>
               <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
-                <span>Chusmear sin cuenta</span>
-                <Eye className="h-4 w-4" />
+                <span>Crear cuenta</span>
+                <UserPlus className="h-4 w-4" />
               </Button>
             </Link>
           </div>
-        )}
+
+          <Link href="/home" passHref className="flex w-full justify-center">
+            <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
+              <span>Chusmear sin cuenta</span>
+              <Eye className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
 

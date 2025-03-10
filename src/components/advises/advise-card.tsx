@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Advise, User } from '@prisma/generated/zod';
 import { MoreVertical, Edit, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,14 +13,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
-import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { User, Advise } from '@prisma/client';
 
 export const AdviseCard = ({ advise }: { advise: Advise & { author: User } }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const { data: session } = useSession();
+
+  // TODO: Get session from database or cookie.
+  const session = {
+    user: {
+      id: '123',
+      email: 'john.doe@example.com',
+    },
+  };
 
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||

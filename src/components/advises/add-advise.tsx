@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { createAdvise } from '@actions/advises/create-advise';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
 
-export const AddAdvise = () => {
+export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<AdviseFormData>({
@@ -30,10 +30,11 @@ export const AddAdvise = () => {
 
   function onSubmit({ content }: AdviseFormData) {
     toast.promise(createAdvise(content), {
-      loading: 'Creando consejo...',
+      loading: 'Publicando consejo...',
       success: () => {
         form.reset();
-        return 'Tu consejo fue publicado exitosamente. Gracias por compartir!';
+        refetch();
+        return 'Consejo publicado! 👏';
       },
       error: 'Ocurrió un error al publicar el consejo',
     });
