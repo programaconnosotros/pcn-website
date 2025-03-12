@@ -39,11 +39,6 @@ const data = {
       icon: Home,
     },
     {
-      title: 'Actividades',
-      url: '/events',
-      icon: Calendar,
-    },
-    {
       title: 'Consejos',
       url: '/advises',
       icon: SquareTerminal,
@@ -58,11 +53,6 @@ const data = {
       title: 'Charlas',
       url: '/talks',
       icon: BookOpen,
-    },
-    {
-      title: 'Eventos',
-      url: '/events',
-      icon: CalendarDays,
     },
     {
       title: 'Eventos',
