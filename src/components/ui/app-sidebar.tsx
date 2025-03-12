@@ -12,7 +12,8 @@ import {
   Youtube,
   Calendar,
   Image,
-  CalendarDays
+  Home,
+  CalendarDays,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -57,6 +58,11 @@ const data = {
       title: 'Charlas',
       url: '/talks',
       icon: BookOpen,
+    },
+    {
+      title: 'Eventos',
+      url: '/events',
+      icon: CalendarDays,
     },
     {
       title: 'Eventos',
