@@ -55,8 +55,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="mx-auto max-w-screen-xl px-4 py-8">
-        <div className="mt-4 text-center">
+      <div className="mx-auto flex items-center justify-center px-6 py-8 md:px-2">
+        <div className="mt-4 w-[90vw] text-center md:w-[85vw]">
           <EventFlyer
             name={event.name}
             flyerSrc={event.flyerSrc}
