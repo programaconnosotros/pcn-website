@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Event } from '@prisma/generated/zod';
+import { Event } from '@prisma/client';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
