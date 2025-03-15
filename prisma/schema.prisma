@@ -13,13 +13,13 @@ model User {
   name                        String
   email                       String    @unique
   password                    String
-  image                       String?
-  favoriteProgrammingLanguage String?
+  image                       String?  
   countryOfOrigin             String?
   xAccountUrl                 String?
   linkedinUrl                 String?
   sessions                    Session[]
   advises                     Advise[]
+  languages                   UserLanguage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,4 +44,17 @@ model Advise {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserLanguage {
+  id        String @id @default(cuid())
+  userId    String
+  language  String
+  proficiency Int
+
+  user      User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

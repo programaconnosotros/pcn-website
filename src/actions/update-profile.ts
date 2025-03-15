@@ -11,7 +11,7 @@ export const updateProfile = async (data: ProfileFormData) => {
 
   if (!sessionId) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
   const session = await prisma.session.findUnique({
@@ -22,15 +22,32 @@ export const updateProfile = async (data: ProfileFormData) => {
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
-  const validatedData = profileSchema.parse(data);
-
+  const { programmingLanguages, ...userData } = data;
+  
+  // Actualizamos primero los datos del usuario
   await prisma.user.update({
     where: { id: session.userId },
-    data: validatedData,
+    data: userData,
   });
+
+  // Eliminamos los lenguajes existentes
+  await prisma.userLanguage.deleteMany({
+    where: { userId: session.userId }
+  });
+
+  // Creamos los nuevos lenguajes
+  if (programmingLanguages && programmingLanguages.length > 0) {
+    await prisma.userLanguage.createMany({
+      data: programmingLanguages.map(lang => ({
+        userId: session.userId,
+        language: lang.languageId,
+        proficiency: lang.experienceLevel
+      }))
+    });
+  }
 
   revalidatePath('/profile');
 };
