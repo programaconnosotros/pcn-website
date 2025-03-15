@@ -221,7 +221,7 @@ export const Vortex = (props: VortexProps) => {
       const ctx = canvas.getContext('2d');
       setup();
       resize(canvas, ctx || undefined);
-      
+
       const handleResize = () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
