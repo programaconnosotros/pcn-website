@@ -20,7 +20,6 @@ async function getUser(id: string) {
         id: true,
         name: true,
         image: true,
-        favoriteProgrammingLanguage: true,
         countryOfOrigin: true,
         xAccountUrl: true,
         linkedinUrl: true,
@@ -94,12 +93,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h2 className="font-semibold">Lenguaje de programación favorito</h2>
-              <p>{user.favoriteProgrammingLanguage || '-'}</p>
-            </div>
-
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <h2 className="font-semibold">País de origen</h2>
               <p>{user.countryOfOrigin || '-'}</p>
