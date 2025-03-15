@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
+import { ProfileFormData } from '@/schemas/profile-schema';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
