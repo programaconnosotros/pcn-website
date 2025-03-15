@@ -26,7 +26,7 @@ export const updateProfile = async (data: ProfileFormData) => {
   }
 
   const { programmingLanguages, ...userData } = data;
-  
+
   // Actualizamos primero los datos del usuario
   await prisma.user.update({
     where: { id: session.userId },
@@ -35,17 +35,17 @@ export const updateProfile = async (data: ProfileFormData) => {
 
   // Eliminamos los lenguajes existentes
   await prisma.userLanguage.deleteMany({
-    where: { userId: session.userId }
+    where: { userId: session.userId },
   });
 
   // Creamos los nuevos lenguajes
   if (programmingLanguages && programmingLanguages.length > 0) {
     await prisma.userLanguage.createMany({
-      data: programmingLanguages.map(lang => ({
+      data: programmingLanguages.map((lang) => ({
         userId: session.userId,
         language: lang.languageId,
-        proficiency: lang.experienceLevel
-      }))
+        proficiency: lang.experienceLevel,
+      })),
     });
   }
 
