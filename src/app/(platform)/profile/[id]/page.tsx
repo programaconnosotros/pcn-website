@@ -55,7 +55,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const session = await getCurrentSession();
 
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 md:max-w-screen-xl md:px-20">
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
           <div className="flex items-center gap-4">

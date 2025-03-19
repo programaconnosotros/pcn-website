@@ -1,5 +1,6 @@
 'use client';
 
+import { Advise } from '@/actions/advises/get-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -17,23 +18,11 @@ import { useState } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 
-type AdviseToDisplay = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  author: {
-    id: string;
-    email: string;
-    name: string;
-    image: string | null;
-  };
-};
-
 export const AdviseCard = ({
   advise,
   session,
 }: {
-  advise: AdviseToDisplay;
+  advise: Advise;
   session: (Session & { user: User }) | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -100,10 +89,12 @@ export const AdviseCard = ({
         onOpenChange={setIsEditDialogOpen}
       />
 
-      <CardContent className="px-4 py-6">
-        <p className="text-sm">{advise.content}</p>
-        <p className="mt-4 text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
-      </CardContent>
+      <Link href={`/advises/${advise.id}`} className="block">
+        <CardContent className="px-4 py-6">
+          <p className="text-sm">{advise.content}</p>
+          <p className="mt-4 text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
+        </CardContent>
+      </Link>
     </Card>
   );
 };
