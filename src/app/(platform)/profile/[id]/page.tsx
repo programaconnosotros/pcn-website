@@ -63,11 +63,13 @@ async function getUser(id: string) {
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const user = await getUser(params.id);
   const session = await getCurrentSession();
-  const userLanguages = user.languages ? user.languages.map((language) => ({
-    languageId: language.language,
-    color: language.color,
-    logo: language.logo,
-  })) : [];
+  const userLanguages = user.languages
+    ? user.languages.map((language) => ({
+        languageId: language.language,
+        color: language.color,
+        logo: language.logo,
+      }))
+    : [];
 
   return (
     <div className="mt-4 md:px-20">
@@ -121,18 +123,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {session?.user?.id === user.id && (
         <div className="mt-8">
           <h2 className="mb-4 text-2xl font-bold">Editar Perfil</h2>
-          <ProfileForm user={{
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            password: '',
-            image: user.image,
-            countryOfOrigin: user.countryOfOrigin,
-            xAccountUrl: user.xAccountUrl,
-            linkedinUrl: user.linkedinUrl,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }} languages={userLanguages} />
+          <ProfileForm
+            user={{
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              password: '',
+              image: user.image,
+              countryOfOrigin: user.countryOfOrigin,
+              xAccountUrl: user.xAccountUrl,
+              linkedinUrl: user.linkedinUrl,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }}
+            languages={userLanguages}
+          />
         </div>
       )}
 

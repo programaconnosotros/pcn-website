@@ -30,7 +30,7 @@ const Profile = async () => {
     },
     include: {
       languages: true,
-    }
+    },
   });
 
   if (!user) {
@@ -38,11 +38,13 @@ const Profile = async () => {
     redirect('/home');
   }
 
-  const userLanguages = user.languages ? user.languages.map((language) => ({
-    languageId: language.language,
-    color: language.color,
-    logo: language.logo,
-  })) : [];
+  const userLanguages = user.languages
+    ? user.languages.map((language) => ({
+        languageId: language.language,
+        color: language.color,
+        logo: language.logo,
+      }))
+    : [];
 
   return (
     <div className="mt-4 px-6 md:px-20">
