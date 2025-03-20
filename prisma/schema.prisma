@@ -49,8 +49,9 @@ model Advise {
 model UserLanguage {
   id        String @id @default(cuid())
   userId    String
-  language  String
-  proficiency Int
+  language  String  
+  color     String
+  logo      String
 
   user      User   @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
