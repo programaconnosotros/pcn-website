@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserProgrammingLanguage } from '@/types/programming-language';
 
 export const profileSchema = z.object({
   name: z.string().min(3, { message: 'El nombre debe tener al menos 3 caracteres' }),
@@ -13,8 +14,10 @@ export const profileSchema = z.object({
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),
-      experienceLevel: z.number(),
-    }),
+      color: z.string(),
+      logo: z.string(),
+      experienceLevel: z.number().optional(),
+    }) as z.ZodType<UserProgrammingLanguage>,
   ),
 });
 

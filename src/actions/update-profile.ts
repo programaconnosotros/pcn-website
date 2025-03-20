@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { ProfileFormData } from '@/schemas/profile-schema';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { UserProgrammingLanguage } from '@/types/programming-language';
 
 export const updateProfile = async (data: ProfileFormData) => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -44,7 +45,8 @@ export const updateProfile = async (data: ProfileFormData) => {
       data: programmingLanguages.map((lang) => ({
         userId: session.userId,
         language: lang.languageId,
-        proficiency: lang.experienceLevel,
+        color: lang.color,
+        logo: lang.logo,
       })),
     });
   }
