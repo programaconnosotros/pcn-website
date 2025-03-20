@@ -28,12 +28,21 @@ const Profile = async () => {
     where: {
       id: session.userId,
     },
+    include: {
+      languages: true,
+    }
   });
 
   if (!user) {
     console.error('Usuario no encontrado, redireccionando a /home');
     redirect('/home');
   }
+
+  const userLanguages = user.languages ? user.languages.map((language) => ({
+    languageId: language.language,
+    color: language.color,
+    logo: language.logo,
+  })) : [];
 
   return (
     <div className="mt-4 px-6 md:px-20">
@@ -51,7 +60,7 @@ const Profile = async () => {
         <Heading2>Mi perfil</Heading2>
       </div>
 
-      <ProfileForm user={user} />
+      <ProfileForm user={user} languages={userLanguages} />
     </div>
   );
 };
