@@ -37,7 +37,11 @@ type LanguageDialogProps = {
   addLanguage: () => void;
 };
 
-const LanguageDialog = ({ currentLanguage, setCurrentLanguage, addLanguage }: LanguageDialogProps) => (
+const LanguageDialog = ({
+  currentLanguage,
+  setCurrentLanguage,
+  addLanguage,
+}: LanguageDialogProps) => (
   <Dialog>
     <DialogTrigger asChild>
       <Button variant="outline" size="sm">
@@ -91,7 +95,13 @@ const FormError = ({ error }: FormErrorProps) => {
   return <p className="text-sm text-red-500">{error.message}</p>;
 };
 
-export const ProfileForm = ({ user, languages }: { user: User; languages: UserProgrammingLanguage[] }) => {
+export const ProfileForm = ({
+  user,
+  languages,
+}: {
+  user: User;
+  languages: UserProgrammingLanguage[];
+}) => {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -114,27 +124,26 @@ export const ProfileForm = ({ user, languages }: { user: User; languages: UserPr
     }
   }, [languages, form]);
 
-  const addLanguage = () => {    
+  const addLanguage = () => {
     if (!currentLanguage) return;
 
     const exists = userLanguages.some((lang) => lang.languageId === currentLanguage);
-    if (exists)  return;
+    if (exists) return;
 
+    const selectedLanguage = programmingLanguages.find((lang) => lang.id === currentLanguage);
+    if (!selectedLanguage) return;
 
-    const selectedLanguage = programmingLanguages.find(lang => lang.id === currentLanguage);
-    if (!selectedLanguage) return;    
-
-    const newLanguage: UserProgrammingLanguage = { 
-      languageId: currentLanguage, 
-      color: selectedLanguage.color, 
-      logo: selectedLanguage.logo, 
-      experienceLevel: 0 
+    const newLanguage: UserProgrammingLanguage = {
+      languageId: currentLanguage,
+      color: selectedLanguage.color,
+      logo: selectedLanguage.logo,
+      experienceLevel: 0,
     };
-    
+
     const updatedLanguages = [...userLanguages, newLanguage];
-    
+
     setUserLanguages(updatedLanguages);
-    form.setValue('programmingLanguages', updatedLanguages);    
+    form.setValue('programmingLanguages', updatedLanguages);
     setCurrentLanguage('');
   };
 
@@ -160,17 +169,15 @@ export const ProfileForm = ({ user, languages }: { user: User; languages: UserPr
     }
   };
 
-  const onSubmit = async (data: ProfileFormData) => {    
-
+  const onSubmit = async (data: ProfileFormData) => {
     try {
       await toast.promise(updateProfile(data), {
         loading: 'Actualizando perfil...',
         success: 'Perfil actualizado correctamente',
         error: 'Error al actualizar el perfil',
       });
-    } catch (error) {      
-    }
-  }; 
+    } catch (error) {}
+  };
 
   return (
     <Form {...form}>
@@ -211,7 +218,7 @@ export const ProfileForm = ({ user, languages }: { user: User; languages: UserPr
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-6">
             <Label>Lenguajes de programación</Label>
-            <LanguageDialog 
+            <LanguageDialog
               currentLanguage={currentLanguage}
               setCurrentLanguage={setCurrentLanguage}
               addLanguage={addLanguage}
@@ -242,9 +249,7 @@ export const ProfileForm = ({ user, languages }: { user: User; languages: UserPr
                         className="object-contain"
                       />
                     </div>
-                    <span>
-                      {language?.name}
-                    </span>
+                    <span>{language?.name}</span>
                     <button
                       onClick={() => removeLanguage(userLang.languageId)}
                       className="ml-1 rounded-full p-1 hover:bg-black/20"
