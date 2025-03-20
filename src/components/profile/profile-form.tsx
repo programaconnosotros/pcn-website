@@ -31,13 +31,67 @@ import { UserProgrammingLanguage, programmingLanguages } from '@/types/programmi
 
 export const dynamic = 'force-dynamic';
 
-export const ProfileForm = ({
-  user,
-  languages,
-}: {
-  user: User;
-  languages: UserProgrammingLanguage[];
-}) => {
+type LanguageDialogProps = {
+  currentLanguage: string;
+  setCurrentLanguage: (value: string) => void;
+  addLanguage: () => void;
+};
+
+const LanguageDialog = ({ currentLanguage, setCurrentLanguage, addLanguage }: LanguageDialogProps) => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button variant="outline" size="sm">
+        Agregar lenguaje
+      </Button>
+    </DialogTrigger>
+    <DialogContent className="border-gray-700 bg-gray-900 text-white">
+      <DialogHeader>
+        <DialogTitle>Agregar lenguaje de programación</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4 py-4">
+        <div className="space-y-2">
+          <Label htmlFor="language">Selecciona un lenguaje</Label>
+          <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
+            <SelectTrigger className="border-gray-700 bg-gray-800">
+              <SelectValue placeholder="Seleccionar lenguaje" />
+            </SelectTrigger>
+            <SelectContent className="border-gray-700 bg-gray-800">
+              {programmingLanguages.map((lang) => (
+                <SelectItem key={lang.id} value={lang.id}>
+                  <div className="flex items-center gap-2">
+                    <div className="relative h-5 w-5">
+                      <Image
+                        src={lang.logo || '/placeholder.svg'}
+                        alt={lang.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <span>{lang.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Button onClick={addLanguage} className="w-full">
+          Agregar
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+type FormErrorProps = {
+  error?: { message?: string };
+};
+
+const FormError = ({ error }: FormErrorProps) => {
+  if (!error || !error.message) return null;
+  return <p className="text-sm text-red-500">{error.message}</p>;
+};
+
+export const ProfileForm = ({ user, languages }: { user: User; languages: UserProgrammingLanguage[] }) => {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -51,6 +105,7 @@ export const ProfileForm = ({
   });
 
   const [userLanguages, setUserLanguages] = useState<UserProgrammingLanguage[]>(languages || []);
+  const [currentLanguage, setCurrentLanguage] = useState('');
 
   useEffect(() => {
     if (languages) {
@@ -59,34 +114,27 @@ export const ProfileForm = ({
     }
   }, [languages, form]);
 
-  //state for language experience level added actualy
-  const [currentLanguage, setCurrentLanguage] = useState('');
-
-  //function for adding language and experience level
-  const addLanguage = () => {
+  const addLanguage = () => {    
     if (!currentLanguage) return;
 
     const exists = userLanguages.some((lang) => lang.languageId === currentLanguage);
-    if (exists) {
-      return;
-    }
+    if (exists)  return;
 
-    const selectedLanguage = programmingLanguages.find((lang) => lang.id === currentLanguage);
-    if (!selectedLanguage) {
-      return;
-    }
 
-    const newLanguage: UserProgrammingLanguage = {
-      languageId: currentLanguage,
-      color: selectedLanguage.color,
-      logo: selectedLanguage.logo,
-      experienceLevel: 0,
+    const selectedLanguage = programmingLanguages.find(lang => lang.id === currentLanguage);
+    if (!selectedLanguage) return;    
+
+    const newLanguage: UserProgrammingLanguage = { 
+      languageId: currentLanguage, 
+      color: selectedLanguage.color, 
+      logo: selectedLanguage.logo, 
+      experienceLevel: 0 
     };
-
+    
     const updatedLanguages = [...userLanguages, newLanguage];
-
+    
     setUserLanguages(updatedLanguages);
-    form.setValue('programmingLanguages', updatedLanguages);
+    form.setValue('programmingLanguages', updatedLanguages);    
     setCurrentLanguage('');
   };
 
@@ -112,15 +160,17 @@ export const ProfileForm = ({
     }
   };
 
-  const onSubmit = async (data: ProfileFormData) => {
+  const onSubmit = async (data: ProfileFormData) => {    
+
     try {
       await toast.promise(updateProfile(data), {
         loading: 'Actualizando perfil...',
         success: 'Perfil actualizado correctamente',
         error: 'Error al actualizar el perfil',
       });
-    } catch (error) {}
-  };
+    } catch (error) {      
+    }
+  }; 
 
   return (
     <Form {...form}>
@@ -129,43 +179,31 @@ export const ProfileForm = ({
           <div className="space-y-2">
             <Label htmlFor="name">Nombre</Label>
             <Input id="name" {...form.register('name')} />
-            {form.formState.errors.name && (
-              <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
-            )}
+            <FormError error={form.formState.errors.name} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Correo electrónico</Label>
             <Input id="email" type="email" {...form.register('email')} />
-            {form.formState.errors.email && (
-              <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
-            )}
+            <FormError error={form.formState.errors.email} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="countryOfOrigin">País de origen</Label>
             <Input id="countryOfOrigin" {...form.register('countryOfOrigin')} />
-            {form.formState.errors.countryOfOrigin && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.countryOfOrigin.message}
-              </p>
-            )}
+            <FormError error={form.formState.errors.countryOfOrigin} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="xAccountUrl">URL de cuenta de X</Label>
             <Input id="xAccountUrl" type="url" {...form.register('xAccountUrl')} />
-            {form.formState.errors.xAccountUrl && (
-              <p className="text-sm text-red-500">{form.formState.errors.xAccountUrl.message}</p>
-            )}
+            <FormError error={form.formState.errors.xAccountUrl} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="linkedinUrl">URL de cuenta de LinkedIn</Label>
             <Input id="linkedinUrl" type="url" {...form.register('linkedinUrl')} />
-            {form.formState.errors.linkedinUrl && (
-              <p className="text-sm text-red-500">{form.formState.errors.linkedinUrl.message}</p>
-            )}
+            <FormError error={form.formState.errors.linkedinUrl} />
           </div>
         </div>
 
@@ -173,48 +211,11 @@ export const ProfileForm = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-6">
             <Label>Lenguajes de programación</Label>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Agregar lenguaje
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="border-gray-700 bg-gray-900 text-white">
-                <DialogHeader>
-                  <DialogTitle>Agregar lenguaje de programación</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="language">Selecciona un lenguaje</Label>
-                    <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-                      <SelectTrigger className="border-gray-700 bg-gray-800">
-                        <SelectValue placeholder="Seleccionar lenguaje" />
-                      </SelectTrigger>
-                      <SelectContent className="border-gray-700 bg-gray-800">
-                        {programmingLanguages.map((lang) => (
-                          <SelectItem key={lang.id} value={lang.id}>
-                            <div className="flex items-center gap-2">
-                              <div className="relative h-5 w-5">
-                                <Image
-                                  src={lang.logo || '/placeholder.svg'}
-                                  alt={lang.name}
-                                  fill
-                                  className="object-contain"
-                                />
-                              </div>
-                              <span>{lang.name}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button onClick={addLanguage} className="w-full">
-                    Agregar
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <LanguageDialog 
+              currentLanguage={currentLanguage}
+              setCurrentLanguage={setCurrentLanguage}
+              addLanguage={addLanguage}
+            />
           </div>
 
           {/* View of added languages */}
@@ -241,7 +242,9 @@ export const ProfileForm = ({
                         className="object-contain"
                       />
                     </div>
-                    <span>{language?.name}</span>
+                    <span>
+                      {language?.name}
+                    </span>
                     <button
                       onClick={() => removeLanguage(userLang.languageId)}
                       className="ml-1 rounded-full p-1 hover:bg-black/20"
@@ -267,7 +270,7 @@ export const ProfileForm = ({
   );
 };
 
-function getBestTextColor(bgColor: string): string {
+function getBestTextColor(bgColor: string): 'black' | 'white' {
   const hex = bgColor.replace('#', '');
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
