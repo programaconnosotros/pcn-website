@@ -27,6 +27,7 @@ import { updateProfile } from '@actions/update-profile';
 import { User } from '@prisma/client';
 import { Form } from '@/components/ui/form';
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
+import { LanguageCoinsContainer } from './language-coins-container';
 
 export const dynamic = 'force-dynamic';
 
@@ -223,49 +224,16 @@ export const ProfileForm = ({
             />
           </div>
 
-          {/* View of added languages */}
-          {userLanguages.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {userLanguages.map((userLang) => {
-                const language = programmingLanguages.find(
-                  (lang) => lang.id === userLang.languageId,
-                );
-                return (
-                  <Badge
-                    key={userLang.languageId}
-                    className="flex items-center gap-2 px-3 py-2"
-                    style={{
-                      backgroundColor: language?.color || '#000000',
-                      color: getBestTextColor(language?.color || '#000000'),
-                    }}
-                  >
-                    <div className="relative h-4 w-4">
-                      <img
-                        src={language?.logo || '/placeholder.svg'}
-                        alt={language?.name || userLang.languageId}
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                    <span>{language?.name}</span>
-                    <button
-                      onClick={() => removeLanguage(userLang.languageId)}
-                      className="ml-1 rounded-full p-1 hover:bg-black/20"
-                    >
-                      ×
-                    </button>
-                  </Badge>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="rounded-md border border-dashed border-gray-700 p-6 text-center text-gray-500">
-              No has agregado ningún lenguaje de programación todavía
-            </div>
-          )}
+          {/* View of added languages using the LanguageCoinsContainer */}
+          <LanguageCoinsContainer
+            languages={userLanguages}
+            editable={true}
+            onRemoveLanguage={removeLanguage}
+          />
         </div>
 
-        <Button className="w-full sm:w-auto" type="submit">
-          Actualizar perfil
+        <Button type="submit" variant="default">
+          Guardar cambios
         </Button>
       </form>
     </Form>
