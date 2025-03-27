@@ -1,11 +1,11 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
 import { Linkedin, Twitter } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 
 export const revalidate = 0;
 
@@ -111,19 +111,35 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <h2 className="font-semibold">País de origen</h2>
               <p>{user.countryOfOrigin || '-'}</p>
             </div>
-
-            <div>
-              <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
-              <LanguageCoinsContainer languages={userLanguages} />
-            </div>
           </div>
         </CardContent>
       </Card>
+
+      {session?.user?.id === user.id && (
+        <div className="mt-8">
+          <h2 className="mb-4 text-2xl font-bold">Editar Perfil</h2>
+          <ProfileForm
+            user={{
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              password: '',
+              image: user.image,
+              countryOfOrigin: user.countryOfOrigin,
+              xAccountUrl: user.xAccountUrl,
+              linkedinUrl: user.linkedinUrl,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }}
+            languages={userLanguages}
+          />
+        </div>
+      )}
 
       <div className="mt-8">
         <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
