@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -64,11 +63,10 @@ const LanguageDialog = ({
                 <SelectItem key={lang.id} value={lang.id}>
                   <div className="flex items-center gap-2">
                     <div className="relative h-5 w-5">
-                      <Image
+                      <img
                         src={lang.logo || '/placeholder.svg'}
                         alt={lang.name}
-                        fill
-                        className="object-contain"
+                        className="h-full w-full object-contain"
                       />
                     </div>
                     <span>{lang.name}</span>
@@ -242,11 +240,10 @@ export const ProfileForm = ({
                     }}
                   >
                     <div className="relative h-4 w-4">
-                      <Image
+                      <img
                         src={language?.logo || '/placeholder.svg'}
                         alt={language?.name || userLang.languageId}
-                        fill
-                        className="object-contain"
+                        className="h-full w-full object-contain"
                       />
                     </div>
                     <span>{language?.name}</span>
