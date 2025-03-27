@@ -2,16 +2,17 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
+import { ProfileFormData } from '@/schemas/profile-schema';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { UserProgrammingLanguage } from '@/types/programming-language';
 
 export const updateProfile = async (data: ProfileFormData) => {
   const sessionId = cookies().get('sessionId')?.value;
 
   if (!sessionId) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
   const session = await prisma.session.findUnique({
@@ -22,15 +23,33 @@ export const updateProfile = async (data: ProfileFormData) => {
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
-  const validatedData = profileSchema.parse(data);
+  const { programmingLanguages, ...userData } = data;
 
+  // Actualizamos primero los datos del usuario
   await prisma.user.update({
     where: { id: session.userId },
-    data: validatedData,
+    data: userData,
   });
+
+  // Eliminamos los lenguajes existentes
+  await prisma.userLanguage.deleteMany({
+    where: { userId: session.userId },
+  });
+
+  // Creamos los nuevos lenguajes
+  if (programmingLanguages && programmingLanguages.length > 0) {
+    await prisma.userLanguage.createMany({
+      data: programmingLanguages.map((lang) => ({
+        userId: session.userId,
+        language: lang.languageId,
+        color: lang.color,
+        logo: lang.logo,
+      })),
+    });
+  }
 
   revalidatePath('/profile');
 };
