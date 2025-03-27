@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
 import { Linkedin, Twitter } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
+
+export const revalidate = 0;
 
 export const revalidate = 0;
 
@@ -111,10 +114,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-6">
             <div>
               <h2 className="font-semibold">País de origen</h2>
               <p>{user.countryOfOrigin || '-'}</p>
+            </div>
+
+            <div>
+              <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
+              <LanguageCoinsContainer languages={userLanguages} />
             </div>
           </div>
         </CardContent>
