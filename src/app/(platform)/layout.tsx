@@ -34,7 +34,7 @@ const PlatformLayout = async ({
         <span className="text-sm font-semibold">programaConNosotros</span>
       </div>
 
-      <main className="p-4 pt-16 md:p-0 md:pt-1 w-full">{children}</main>
+      <main className="p-4 pt-16 md:p-0 md:pt-1 md:max-w-7xl w-full">{children}</main>
     </SidebarProvider>
   );
 };
