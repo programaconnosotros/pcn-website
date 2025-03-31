@@ -10,7 +10,6 @@ import {
   Send,
   SquareTerminal,
   Youtube,
-  Calendar,
   Image,
   Home,
   CalendarDays,
@@ -18,7 +17,6 @@ import {
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
-import { NavSecondary } from '@/components/ui/nav-secondary';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
