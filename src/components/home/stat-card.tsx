@@ -17,7 +17,6 @@ export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
-
       <CardContent>
         <NumberTicker
           value={value}
