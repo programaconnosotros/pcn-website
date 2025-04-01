@@ -10,8 +10,6 @@ import { LanguageCoinsContainer } from '@/components/profile/language-coins-cont
 
 export const revalidate = 0;
 
-export const revalidate = 0;
-
 interface ProfilePageProps {
   params: {
     id: string;
