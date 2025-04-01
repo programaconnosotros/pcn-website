@@ -17,6 +17,7 @@ import {
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
+import { NavSecondary } from '@/components/ui/nav-secondary';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -58,6 +59,7 @@ const data = {
       icon: CalendarDays,
     },
     {
+
       title: 'Cursos',
       url: '/courses',
       icon: Laptop,
