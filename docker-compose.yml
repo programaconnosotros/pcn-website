@@ -1,7 +1,7 @@
 services:
-  database:
+  db:
     image: postgres:13
-    container_name: database
+    container_name: db
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -19,8 +19,8 @@ services:
       - .:/app
       - /app/node_modules
     depends_on:
-      - database
+      - db
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
-      - DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - RESEND_API_KEY=${RESEND_API_KEY}
