@@ -14,6 +14,7 @@ import { CoursesCard } from '@/components/home/courses-card';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { Session, User } from '@prisma/client';
+import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -80,6 +81,10 @@ const Home = async () => {
             <MainSponsorCard />
             <PodcastCard />
           </div>
+        </div>
+
+        <div className='mt-6 flex'> 
+          <InviteDevsToWork />
         </div>
       </section>
     </div>
