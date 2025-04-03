@@ -19,8 +19,8 @@ export const Gallery = () => {
 
   return (
     <section className="grid max-w-[1248px] auto-rows-[10px] grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))]">
-      {images.map((photo) => (
-        <ImgContainer photo={photo} />
+      {images.map((photo,key) => (
+        <ImgContainer photo={photo} key={key} />
       ))}
     </section>
   );
