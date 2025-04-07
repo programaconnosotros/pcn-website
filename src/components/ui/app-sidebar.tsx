@@ -10,9 +10,9 @@ import {
   Send,
   SquareTerminal,
   Youtube,
-  Calendar,
   Image,
   Home,
+  CalendarDays,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -38,11 +38,6 @@ const data = {
       icon: Home,
     },
     {
-      title: 'Actividades',
-      url: '/events',
-      icon: Calendar,
-    },
-    {
       title: 'Consejos',
       url: '/advises',
       icon: SquareTerminal,
@@ -59,6 +54,12 @@ const data = {
       icon: BookOpen,
     },
     {
+      title: 'Eventos',
+      url: '/events',
+      icon: CalendarDays,
+    },
+    {
+
       title: 'Cursos',
       url: '/courses',
       icon: Laptop,
