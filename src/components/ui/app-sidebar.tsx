@@ -59,7 +59,6 @@ const data = {
       icon: CalendarDays,
     },
     {
-
       title: 'Cursos',
       url: '/courses',
       icon: Laptop,
