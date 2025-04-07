@@ -61,10 +61,8 @@ const Home = async () => {
 
             <Link href="/posts/pcn-story">
               <ContentCard
-                author="Agustín Sánchez"
-                description="Te cuento por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
+                description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
                 image="/pre-lightning-talks.jpeg"
-                timeToRead="Lectura de 5 minutos"
                 title="Nuestra historia"
               />
             </Link>

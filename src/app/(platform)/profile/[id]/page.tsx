@@ -1,10 +1,14 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
 import { Linkedin, Twitter } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
+
+export const revalidate = 0;
 
 interface ProfilePageProps {
   params: {
@@ -19,8 +23,8 @@ async function getUser(id: string) {
       select: {
         id: true,
         name: true,
+        email: true,
         image: true,
-        favoriteProgrammingLanguage: true,
         countryOfOrigin: true,
         xAccountUrl: true,
         linkedinUrl: true,
@@ -34,6 +38,13 @@ async function getUser(id: string) {
             createdAt: true,
             updatedAt: true,
             authorId: true,
+          },
+        },
+        languages: {
+          select: {
+            language: true,
+            color: true,
+            logo: true,
           },
         },
       },
@@ -53,6 +64,13 @@ async function getUser(id: string) {
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const user = await getUser(params.id);
   const session = await getCurrentSession();
+  const userLanguages = user.languages
+    ? user.languages.map((language) => ({
+        languageId: language.language,
+        color: language.color,
+        logo: language.logo,
+      }))
+    : [];
 
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
@@ -94,19 +112,40 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h2 className="font-semibold">Lenguaje de programación favorito</h2>
-              <p>{user.favoriteProgrammingLanguage || '-'}</p>
-            </div>
-
+          <div className="grid grid-cols-1 gap-6">
             <div>
               <h2 className="font-semibold">País de origen</h2>
               <p>{user.countryOfOrigin || '-'}</p>
             </div>
+
+            <div>
+              <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
+              <LanguageCoinsContainer languages={userLanguages} />
+            </div>
           </div>
         </CardContent>
       </Card>
+
+      {session?.user?.id === user.id && (
+        <div className="mt-8">
+          <h2 className="mb-4 text-2xl font-bold">Editar Perfil</h2>
+          <ProfileForm
+            user={{
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              password: '',
+              image: user.image,
+              countryOfOrigin: user.countryOfOrigin,
+              xAccountUrl: user.xAccountUrl,
+              linkedinUrl: user.linkedinUrl,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }}
+            languages={userLanguages}
+          />
+        </div>
+      )}
 
       <div className="mt-8">
         <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
@@ -122,7 +161,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   ...advise,
                   author: {
                     id: user.id,
-                    name: user.name,
+                    name: user.name || '',
                     email: '',
                     image: user.image,
                   },

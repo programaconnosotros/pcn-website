@@ -9,9 +9,9 @@ datasource db {
 }
 
 model User {
-  id                          String    @id @default(cuid())
+  id                          String         @id @default(cuid())
   name                        String
-  email                       String    @unique
+  email                       String         @unique
   password                    String
   image                       String?
   favoriteProgrammingLanguage String?
@@ -20,6 +20,7 @@ model User {
   linkedinUrl                 String?
   sessions                    Session[]
   advises                     Advise[]
+  languages                   UserLanguage[]
   comments                    Comment[]
 
   createdAt DateTime @default(now())
@@ -65,4 +66,43 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserLanguage {
+  id       String @id @default(cuid())
+  userId   String
+  language String
+  color    String
+  logo     String
+
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  date        DateTime
+  endDate     DateTime?
+  name        String
+  description String
+  city        String // Nombre de la ciudad
+  address     String // Dirección específica (calle, número, etc.)
+  placeName   String // Nombre del lugar (bar, universidad, etc.)
+  flyerSrc    String
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  images Image[]
+}
+
+model Image {
+  id      String  @id @default(cuid())
+  imgSrc  String
+  event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
 }
