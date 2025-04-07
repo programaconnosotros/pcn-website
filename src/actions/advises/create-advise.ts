@@ -4,7 +4,6 @@ import { adviseSchema } from '@/schemas/advise-schema';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { RefreshCcw } from 'lucide-react';
 
 export const createAdvise = async (content: string) => {
   const validatedData = adviseSchema.parse({ content });

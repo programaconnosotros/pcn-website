@@ -216,14 +216,23 @@ export const Vortex = (props: VortexProps) => {
   };
 
   useEffect(() => {
-    setup();
-    window.addEventListener('resize', () => {
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext('2d');
-      if (canvas && ctx) {
-        resize(canvas, ctx);
-      }
-    });
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      setup();
+      resize(canvas, ctx || undefined);
+
+      const handleResize = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
+        if (canvas) {
+          resize(canvas, ctx || undefined);
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, []);
 
   return (
