@@ -9,19 +9,18 @@ datasource db {
 }
 
 model User {
-  id                          String         @id @default(cuid())
-  name                        String
-  email                       String         @unique
-  password                    String
-  image                       String?
-  favoriteProgrammingLanguage String?
-  countryOfOrigin             String?
-  xAccountUrl                 String?
-  linkedinUrl                 String?
-  sessions                    Session[]
-  advises                     Advise[]
-  languages                   UserLanguage[]
-  comments                    Comment[]
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  password        String
+  image           String?
+  countryOfOrigin String?
+  xAccountUrl     String?
+  linkedinUrl     String?
+  sessions        Session[]
+  advises         Advise[]
+  languages       UserLanguage[]
+  comments        Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
