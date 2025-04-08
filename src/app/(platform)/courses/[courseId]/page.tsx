@@ -22,7 +22,7 @@ const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
   if (!course) return <div>El curso no existe.</div>;
 
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 md:mb-8 md:px-20">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
