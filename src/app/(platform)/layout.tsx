@@ -39,6 +39,7 @@ const PlatformLayout = async ({
         />
         {children}
       </main>
+      
     </SidebarProvider>
   );
 };

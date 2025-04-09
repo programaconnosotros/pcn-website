@@ -10,8 +10,6 @@ import { LanguageCoinsContainer } from '@/components/profile/language-coins-cont
 
 export const revalidate = 0;
 
-export const revalidate = 0;
-
 interface ProfilePageProps {
   params: {
     id: string;
@@ -75,7 +73,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     : [];
 
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 md:max-w-screen-xl md:px-20">
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
           <div className="flex items-center gap-4">
@@ -127,27 +125,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardContent>
       </Card>
-
-      {session?.user?.id === user.id && (
-        <div className="mt-8">
-          <h2 className="mb-4 text-2xl font-bold">Editar Perfil</h2>
-          <ProfileForm
-            user={{
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              password: '',
-              image: user.image,
-              countryOfOrigin: user.countryOfOrigin,
-              xAccountUrl: user.xAccountUrl,
-              linkedinUrl: user.linkedinUrl,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }}
-            languages={userLanguages}
-          />
-        </div>
-      )}
 
       <div className="mt-8">
         <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>

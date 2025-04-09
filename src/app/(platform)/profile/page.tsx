@@ -1,8 +1,8 @@
-import { Heading2 } from '@components/ui/heading-2';
-import { ProfileForm } from '@components/profile/profile-form';
 import prisma from '@/lib/prisma';
-import Image from 'next/image';
+import { ProfileForm } from '@components/profile/profile-form';
+import { Heading2 } from '@components/ui/heading-2';
 import { cookies } from 'next/headers';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 const Profile = async () => {
@@ -34,7 +34,7 @@ const Profile = async () => {
   });
 
   if (!user) {
-    console.error('Usuario no encontrado, redireccionando a /home');
+    console.error('Usuario no encontrawdo, redireccionando a /home');
     redirect('/home');
   }
 
