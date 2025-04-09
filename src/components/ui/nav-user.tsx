@@ -39,7 +39,7 @@ import { Button } from './button';
 import Link from 'next/link';
 
 export function NavUser({ user }: { user: User | null }) {
-  const { isMobile, isCollapsed } = useSidebar(); // Asegúrate de que `useSidebar` exponga `isMobile` y `isCollapsed`
+  const { isMobile, isCollapsed } = useSidebar();
   const router = useRouter();
   const { setTheme } = useTheme();
 
