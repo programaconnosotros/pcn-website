@@ -3,9 +3,11 @@ import { AdviseCard } from '@/components/advises/advise-card';
 import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
-import { Linkedin, Twitter } from 'lucide-react';
+import { Linkedin, Twitter, Pencil } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 
 export const revalidate = 0;
@@ -72,6 +74,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       }))
     : [];
 
+  const isOwnProfile = session?.user?.id === params.id;
+
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
       <Card>
@@ -83,6 +87,17 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </Avatar>
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
+              {isOwnProfile && (
+                <Link href="/profile">
+                  <Button
+                    variant="link"
+                    className="text-gray-400 hover:text-white p-0 h-auto text-sm flex items-center gap-1 mt-1"
+                  >
+                    <Pencil className="h-3 w-3" />
+                    <span>Editar perfil</span>
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
           <div className="space-y-2">
