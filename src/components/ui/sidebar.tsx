@@ -28,6 +28,7 @@ type SidebarContext = {
   openMobile: boolean;
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
+  isCollapsed: boolean;
   toggleSidebar: () => void;
 };
 
@@ -102,6 +103,9 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener('keydown', handleKeyDown);
     }, [toggleSidebar]);
 
+    // Determine if the sidebar is collapsed.
+    const isCollapsed = !open;
+
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? 'expanded' : 'collapsed';
@@ -114,9 +118,10 @@ const SidebarProvider = React.forwardRef<
         isMobile,
         openMobile,
         setOpenMobile,
+        isCollapsed,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+      [state, open, setOpen, isMobile, openMobile, setOpenMobile, isCollapsed, toggleSidebar],
     );
 
     return (
@@ -595,7 +600,7 @@ const SidebarMenuAction = React.forwardRef<
         'peer-data-[size=lg]/menu-button:top-2.5',
         'group-data-[collapsible=icon]:hidden',
         showOnHover &&
-          'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0',
+        'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0',
         className,
       )}
       {...props}
@@ -620,7 +625,7 @@ const SidebarMenuBadge = React.forwardRef<HTMLDivElement, React.ComponentProps<'
       )}
       {...props}
     />
-  ),
+  )
 );
 SidebarMenuBadge.displayName = 'SidebarMenuBadge';
 
