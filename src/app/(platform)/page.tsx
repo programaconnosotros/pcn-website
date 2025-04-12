@@ -81,7 +81,7 @@ const Home = async () => {
           </div>
         </div>
 
-        <div className='mt-6 flex'> 
+        <div className="mt-6 flex">
           <InviteDevsToWork />
         </div>
       </section>
