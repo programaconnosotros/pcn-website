@@ -1,6 +1,5 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -85,13 +84,14 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
               <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
             </Avatar>
+
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               {isOwnProfile && (
                 <Link href="/profile">
                   <Button
                     variant="link"
-                    className="text-gray-400 hover:text-white p-0 h-auto text-sm flex items-center gap-1 mt-1"
+                    className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
                   >
                     <Pencil className="h-3 w-3" />
                     <span>Editar perfil</span>
@@ -100,6 +100,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               )}
             </div>
           </div>
+
           <div className="space-y-2">
             {user.xAccountUrl && (
               <a
@@ -126,6 +127,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             )}
           </div>
         </CardHeader>
+
         <CardContent>
           <div className="grid grid-cols-1 gap-6">
             <div>
