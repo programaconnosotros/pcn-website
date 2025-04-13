@@ -91,7 +91,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <Link href="/profile">
                   <Button
                     variant="link"
-                    className="text-gray-400 hover:text-white p-0 h-auto text-sm flex items-center gap-1 mt-1"
+                    className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
                   >
                     <Pencil className="h-3 w-3" />
                     <span>Editar perfil</span>
