@@ -1,41 +1,29 @@
 'use client';
 
 import { AdviseCard } from '@components/advises/advise-card';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchAdvises } from '@/actions/advises/fetch-advises';
-import { ADVISES_PER_PAGE } from '@/lib/constants';
 import { AddAdvise } from './add-advise';
 import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
 
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref);
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useInfiniteQuery({
+  const {
+    data: advises = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['advises'],
-    queryFn: ({ pageParam = 1 }) => fetchAdvises(pageParam),
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.length === ADVISES_PER_PAGE ? allPages.length + 1 : undefined,
-    initialPageParam: 1,
+    queryFn: () => fetchAdvises(1),
   });
 
-  useEffect(() => {
-    if (isInView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [isInView, fetchNextPage, hasNextPage, refetch]);
-
-  const advises = data?.pages.flat() ?? [];
+  if (isLoading) return <div>Cargando...</div>;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="sticky top-0 z-10 bg-background/95 pb-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex items-center justify-between">
           <Heading2>Consejos</Heading2>
-
           {session && <AddAdvise refetch={refetch} />}
         </div>
       </div>
@@ -53,16 +41,6 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
               <AdviseCard key={advise.id} advise={advise} session={session} />
             ))}
           </div>
-
-          {hasNextPage && (
-            <div ref={ref} className="flex justify-center py-4">
-              {isFetchingNextPage ? (
-                <p>Cargando más consejos...</p>
-              ) : (
-                <button onClick={() => fetchNextPage()}>Cargar más</button>
-              )}
-            </div>
-          )}
         </div>
 
         <div className="hidden md:block">
