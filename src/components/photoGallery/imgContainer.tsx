@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 interface ImgContainerProps {
@@ -40,15 +39,15 @@ export const ImgContainer = ({ photo }: ImgContainerProps) => {
       style={{ gridRow: `span ${photoSpans}` }}
     >
       <div className="group relative overflow-hidden rounded-lg">
-        <Image
+        <img
           src={photo.src}
           alt={`Imagen ${photo.id}`}
           width={350}
           height={300}
-          layout="intrinsic"
-          onLoadingComplete={(img) =>
-            setDimensions({ width: img.naturalWidth, height: img.naturalHeight })
-          }
+          onLoad={(e) => {
+            const img = e.target as HTMLImageElement;
+            setDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+          }}
           className="h-auto w-full object-cover group-hover:opacity-75"
         />
       </div>
