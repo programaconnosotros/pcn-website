@@ -1,5 +1,3 @@
-import { ImgContainer } from '@components/photoGallery/imgContainer';
-
 export const Gallery = () => {
   const images = [
     { id: '1', src: '/gallery-photos/agus-chelo-talk.webp' },
@@ -18,9 +16,17 @@ export const Gallery = () => {
   ];
 
   return (
-    <section className="grid max-w-[1248px] auto-rows-[10px] grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))]">
+    <section className="flex max-w-[1248px] flex-wrap">
       {images.map((photo, key) => (
-        <ImgContainer photo={photo} key={key} />
+        <div key={key} className="w-full p-0 md:w-1/2 lg:w-1/3">
+          <img
+            src={photo.src}
+            alt={`Imagen ${photo.id}`}
+            width={350}
+            height={300}
+            className="h-auto w-full object-cover group-hover:opacity-75"
+          />
+        </div>
       ))}
     </section>
   );
