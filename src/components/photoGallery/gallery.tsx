@@ -22,8 +22,8 @@ export const Gallery = () => {
 
   return (
     <section className="flex max-w-[1248px] gap-0">
-      {/* Columna móvil */}
-      <div className="flex w-full flex-col gap-0 md:hidden">
+      {/* Columna móvil (< sm) */}
+      <div className="flex w-full flex-col gap-0 sm:hidden">
         {images.map((photo, key) => (
           <img
             key={key}
@@ -34,8 +34,8 @@ export const Gallery = () => {
         ))}
       </div>
 
-      {/* Columnas tablet (2 columnas) */}
-      <div className="hidden w-full gap-0 md:flex lg:hidden">
+      {/* Columnas tablet (sm - md) */}
+      <div className="hidden w-full gap-0 sm:flex md:hidden">
         <div className="flex w-1/2 flex-col gap-0">
           {getColumnImages(0, 2).map((photo, key) => (
             <img
@@ -58,8 +58,8 @@ export const Gallery = () => {
         </div>
       </div>
 
-      {/* Columnas desktop (3 columnas) */}
-      <div className="hidden w-full gap-0 lg:flex">
+      {/* Columnas desktop (md+) */}
+      <div className="hidden w-full gap-0 md:flex">
         <div className="flex w-1/3 flex-col gap-0">
           {getColumnImages(0, 3).map((photo, key) => (
             <img
