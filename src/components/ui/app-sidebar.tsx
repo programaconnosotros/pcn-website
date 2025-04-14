@@ -13,6 +13,7 @@ import {
   Image,
   Home,
   CalendarDays,
+  Users,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -42,6 +43,11 @@ const data = {
       url: '/advises',
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
     },
     {
       title: 'Fotos',
