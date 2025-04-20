@@ -16,7 +16,7 @@ type CarouselImage = {
 
 const carouselImages: CarouselImage[] = [
   {
-    src: '/lightning-talks/ddd-y-hexagonal.jpg',
+    src: '/lightning-talks/ddd-y-hexagonal.webp',
     alt: 'Agus presentando Domain-Driven Design, Hexagonal Architecture & Vertical Slicing',
     description: (
       <p>
@@ -25,7 +25,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/java-funcional.jpeg',
+    src: '/lightning-talks/java-funcional.webp',
     alt: 'Chelo presentando Java Funcional: Agilizando el Procesamiento de Datos',
     description: (
       <p>
@@ -34,7 +34,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/arquitectura-modular.jpeg',
+    src: '/lightning-talks/arquitectura-modular.webp',
     alt: 'Mauri presentando Arquitectura Modular en Aplicaciones Móviles',
     description: (
       <p>
@@ -43,7 +43,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/database-indexing.jpeg',
+    src: '/lightning-talks/database-indexing.webp',
     alt: 'Fini presentando Database Indexing',
     description: (
       <p>
@@ -52,7 +52,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/unit-testing.jpg',
+    src: '/lightning-talks/unit-testing.webp',
     alt: 'Tobi presentando Introducción al Unit Testing',
     description: (
       <p>
@@ -61,7 +61,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/chatgpt.jpeg',
+    src: '/lightning-talks/chatgpt.webp',
     alt: 'Facu presentando Programación Optimizada con ChatGPT',
     description: (
       <p>
@@ -70,7 +70,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/arquitectura-software.jpeg',
+    src: '/lightning-talks/arquitectura-software.webp',
     alt: 'Agus presentando Introducción a la Arquitectura de Software',
     description: (
       <p>
@@ -79,7 +79,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/diseno-perfecto.jpeg',
+    src: '/lightning-talks/diseno-perfecto.webp',
     alt: 'Mauri presentando Diseño Perfecto',
     description: (
       <p>
@@ -88,7 +88,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/paradigmas.jpeg',
+    src: '/lightning-talks/paradigmas.webp',
     alt: 'Chelo presentando Paradigmas de Programación',
     description: (
       <p>
@@ -97,7 +97,7 @@ const carouselImages: CarouselImage[] = [
     ),
   },
   {
-    src: '/lightning-talks/debugging.jpeg',
+    src: '/lightning-talks/debugging.webp',
     alt: 'Tobi presentando Depuración de código con C++ & Python',
     description: (
       <p>

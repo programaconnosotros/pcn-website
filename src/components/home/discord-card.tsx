@@ -13,7 +13,7 @@ export const DiscordCard = () => (
       lleva tu carrera al siguiente nivel!
     </p>
 
-    <img alt="Discord" src="/discord-demo.png" className="w-full object-cover" />
+    <img alt="Discord" src="/discord-demo.webp" className="w-full object-cover" />
 
     <div className="flex w-full justify-center">
       <Link className="w-full" href="https://discord.gg/dTQexKw56S" target="_blank">

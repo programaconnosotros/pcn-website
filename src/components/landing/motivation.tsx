@@ -14,51 +14,51 @@ const PhotoCarousel = () => {
     alt: string;
   }> = [
     {
-      src: '/motivation/aeroparque-2.jpeg',
+      src: '/motivation/aeroparque-2.webp',
       alt: 'Code review en Aeroparque',
     },
     {
-      src: '/motivation/eagerworks-1.jpeg',
+      src: '/motivation/eagerworks-1.webp',
       alt: 'Programando en Eagerworks',
     },
     {
-      src: '/motivation/bariloche.jpeg',
+      src: '/motivation/bariloche.webp',
       alt: 'Programando en Bariloche',
     },
     {
-      src: '/motivation/edison.jpeg',
+      src: '/motivation/edison.webp',
       alt: 'Estudiando en Edison',
     },
     {
-      src: '/motivation/baltazar-1.jpeg',
+      src: '/motivation/baltazar-1.webp',
       alt: 'Code review en Baltazar',
     },
     {
-      src: '/motivation/hubavet.jpeg',
+      src: '/motivation/hubavet.webp',
       alt: 'Programando con React Native',
     },
     {
-      src: '/motivation/startbucks-1.jpeg',
+      src: '/motivation/startbucks-1.webp',
       alt: 'Programando en Startbucks',
     },
     {
-      src: '/motivation/eagerworks-2.jpeg',
+      src: '/motivation/eagerworks-2.webp',
       alt: 'Programando en Eagerworks',
     },
     {
-      src: '/motivation/baltazar-2.jpeg',
+      src: '/motivation/baltazar-2.webp',
       alt: 'Trabajando en Baltazar',
     },
     {
-      src: '/motivation/aeropuerto-montevideo.jpeg',
+      src: '/motivation/aeropuerto-montevideo.webp',
       alt: 'Programando en el aeropuerto de Montevideo',
     },
     {
-      src: '/motivation/aeroparque-1.jpeg',
+      src: '/motivation/aeroparque-1.webp',
       alt: 'Programando en el aeropuerto de Montevideo',
     },
     {
-      src: '/motivation/baltazar-3.jpeg',
+      src: '/motivation/baltazar-3.webp',
       alt: 'Trabajando en Baltazar',
     },
   ];

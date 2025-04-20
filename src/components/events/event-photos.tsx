@@ -47,7 +47,7 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                     alt={`Imagen ${index + 1}`}
                     loading="lazy"
                     onError={(e) => {
-                      e.currentTarget.src = '/placeholder-image.jpg';
+                      e.currentTarget.src = '/placeholder-image.webp';
                       e.currentTarget.alt = 'Error al cargar la imagen';
                     }}
                     width={300}

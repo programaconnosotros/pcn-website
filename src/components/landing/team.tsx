@@ -20,7 +20,7 @@ const people: Person[] = [
         <span className="underline">Eagerworks</span>
       </p>
     ),
-    imageUrl: '/agus.jpeg',
+    imageUrl: '/agus.webp',
     linkedinUrl: 'https://www.linkedin.com/in/agustinsanc/',
     githubUrl: 'https://github.com/agustin-sanc',
   },
@@ -31,7 +31,7 @@ const people: Person[] = [
         Sr. Frontend Engineer (iOS) en <span className="underline">PedidosYa</span>
       </p>
     ),
-    imageUrl: '/mauri2.jpeg',
+    imageUrl: '/mauri2.webp',
     linkedinUrl: 'https://www.linkedin.com/in/mauriciosnchz/',
     githubUrl: 'https://github.com/mausnchz',
   },
@@ -42,7 +42,7 @@ const people: Person[] = [
         Sr. Frontend Engineer (iOS) en <span className="underline">Compass</span>
       </p>
     ),
-    imageUrl: '/esteban.jpeg',
+    imageUrl: '/esteban.webp',
     linkedinUrl: 'https://www.linkedin.com/in/esteban-nicolas-sanchez-79b428172/',
   },
   {
@@ -52,7 +52,7 @@ const people: Person[] = [
         Sr. Backend Engineer (Python & Java) en <span className="underline">Bowery</span>
       </p>
     ),
-    imageUrl: '/chelo.jpeg',
+    imageUrl: '/chelo.webp',
     linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
     githubUrl: 'https://github.com/Chelo154',
   },
@@ -64,7 +64,7 @@ const people: Person[] = [
         <span className="underline">Vortex</span>
       </p>
     ),
-    imageUrl: '/german.jpeg',
+    imageUrl: '/german.webp',
     linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
     githubUrl: 'https://github.com/gmanavarro',
   },
@@ -75,7 +75,7 @@ const people: Person[] = [
         CTO & Sr. Frontend Engineer (JS/TS) en <span className="underline">NotNini</span>
       </p>
     ),
-    imageUrl: '/chino.jpeg',
+    imageUrl: '/chino.webp',
     linkedinUrl: 'https://www.linkedin.com/in/ivantaddei/',
     githubUrl: 'https://github.com/ivantaddei',
   },
