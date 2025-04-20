@@ -1,13 +1,39 @@
 'use client';
 
 import React from 'react';
-import { Influencer } from '@/types/influencer';
 import { Youtube, Instagram, Twitter, Linkedin, Github, ExternalLink, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+
+interface Platform {
+  youtube?: string;
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  github?: string;
+  page?: string;
+}
+
+interface Followers {
+  youtube?: string;
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  github?: string;
+}
+
+interface Influencer {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  platforms: Platform;
+  specialties: string[];
+  followers: Followers;
+}
 
 const PlatformIcon: Record<string, React.ComponentType<any>> = {
   youtube: Youtube,
@@ -25,7 +51,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
     : `/influencers/${influencer.image}`;
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-gray-50 dark:bg-transparent">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
@@ -36,7 +62,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold leading-tight">{influencer.name}</h3>
             <div className="mt-1 flex flex-wrap gap-1">
-              {influencer.specialties.map((specialty, index) => (
+              {influencer.specialties.map((specialty: string, index: number) => (
                 <Badge key={index} variant="secondary" className="text-xs">
                   {specialty}
                 </Badge>
