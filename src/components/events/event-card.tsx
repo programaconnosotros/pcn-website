@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Event } from '@prisma/client';
