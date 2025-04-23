@@ -14,6 +14,7 @@ import { CoursesCard } from '@/components/home/courses-card';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { Session, User } from '@prisma/client';
+import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -61,10 +62,8 @@ const Home = async () => {
 
             <Link href="/posts/pcn-story">
               <ContentCard
-                author="Agustín Sánchez"
-                description="Te cuento por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
+                description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
                 image="/pre-lightning-talks.jpeg"
-                timeToRead="Lectura de 5 minutos"
                 title="Nuestra historia"
               />
             </Link>
@@ -80,6 +79,10 @@ const Home = async () => {
             <MainSponsorCard />
             <PodcastCard />
           </div>
+        </div>
+
+        <div className="mt-6 flex">
+          <InviteDevsToWork />
         </div>
       </section>
     </div>

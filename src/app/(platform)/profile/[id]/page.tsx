@@ -1,14 +1,13 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
-import { Linkedin, Twitter } from 'lucide-react';
+import { Linkedin, Twitter, Pencil } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
-
-export const revalidate = 0;
 
 export const revalidate = 0;
 
@@ -74,8 +73,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       }))
     : [];
 
+  const isOwnProfile = session?.user?.id === params.id;
+
   return (
-    <div className="mt-4 md:px-20">
+    <div className="mt-4 md:max-w-screen-xl md:px-20">
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
           <div className="flex items-center gap-4">
@@ -83,10 +84,23 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
               <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
             </Avatar>
+
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
+              {isOwnProfile && (
+                <Link href="/profile">
+                  <Button
+                    variant="link"
+                    className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
+                  >
+                    <Pencil className="h-3 w-3" />
+                    <span>Editar perfil</span>
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
+
           <div className="space-y-2">
             {user.xAccountUrl && (
               <a
@@ -113,6 +127,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             )}
           </div>
         </CardHeader>
+
         <CardContent>
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -127,27 +142,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </CardContent>
       </Card>
-
-      {session?.user?.id === user.id && (
-        <div className="mt-8">
-          <h2 className="mb-4 text-2xl font-bold">Editar Perfil</h2>
-          <ProfileForm
-            user={{
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              password: '',
-              image: user.image,
-              countryOfOrigin: user.countryOfOrigin,
-              xAccountUrl: user.xAccountUrl,
-              linkedinUrl: user.linkedinUrl,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }}
-            languages={userLanguages}
-          />
-        </div>
-      )}
 
       <div className="mt-8">
         <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>

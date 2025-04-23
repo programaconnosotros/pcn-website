@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id                          String    @id @default(cuid())
-  name                        String
-  email                       String    @unique
-  password                    String
-  image                       String?  
-  countryOfOrigin             String?
-  xAccountUrl                 String?
-  linkedinUrl                 String?
-  sessions                    Session[]
-  advises                     Advise[]
-  languages                   UserLanguage[]
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  password        String
+  image           String?
+  countryOfOrigin String?
+  xAccountUrl     String?
+  linkedinUrl     String?
+  sessions        Session[]
+  advises         Advise[]
+  languages       UserLanguage[]
+  comments        Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,20 +43,65 @@ model Advise {
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  advise   Advise @relation(fields: [adviseId], references: [id], onDelete: Cascade)
+  adviseId String
+
+  parentComment   Comment?  @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  replies         Comment[] @relation("CommentToComment")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model UserLanguage {
-  id        String @id @default(cuid())
-  userId    String
-  language  String  
-  color     String
-  logo      String
+  id       String @id @default(cuid())
+  userId   String
+  language String
+  color    String
+  logo     String
 
-  user      User   @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  date        DateTime
+  endDate     DateTime?
+  name        String
+  description String
+  city        String // Nombre de la ciudad
+  address     String // Dirección específica (calle, número, etc.)
+  placeName   String // Nombre del lugar (bar, universidad, etc.)
+  flyerSrc    String
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  images Image[]
+}
+
+model Image {
+  id      String  @id @default(cuid())
+  imgSrc  String
+  event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String?
 }

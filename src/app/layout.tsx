@@ -1,14 +1,12 @@
-import type { Metadata } from 'next';
-import { GeistSans } from 'geist/font/sans';
-import './globals.css';
-import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '@/components/themes/theme-provider';
 import { ReactQueryProvider } from '@/components/react-query-provider';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/ui/app-sidebar';
-import { User } from '@prisma/client';
+import { ThemeProvider } from '@/components/themes/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import prisma from '@/lib/prisma';
+import { User } from '@prisma/client';
+import { GeistSans } from 'geist/font/sans';
+import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import './globals.css';
 export const metadata: Metadata = {
   title: 'programaConNosotros',
   description: 'Desarrollado y mantenido para y por la comunidad.',

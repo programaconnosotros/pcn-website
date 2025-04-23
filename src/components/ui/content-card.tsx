@@ -8,12 +8,14 @@ export const ContentCard = ({
   image,
   author,
   timeToRead,
+  authorImage,
 }: {
   title: string;
   description: string;
   image: string;
-  author: string;
-  timeToRead: string;
+  author?: string;
+  timeToRead?: string;
+  authorImage?: string;
 }) => (
   <div className="group/card w-full cursor-default hover:cursor-pointer">
     <div className="relative mx-auto h-96 overflow-hidden rounded-md shadow-xl">
@@ -26,17 +28,20 @@ export const ContentCard = ({
 
       <div className="relative z-10 flex h-full flex-col justify-between p-4">
         <div className="z-10 flex flex-row items-center space-x-4">
-          <Image
-            height="100"
-            width="100"
-            alt="Avatar"
-            src="/agus.jpeg"
-            className="h-10 w-10 rounded-full border-2 object-cover"
-          />
+          {authorImage && (
+            <Image
+              height="100"
+              width="100"
+              alt={`Avatar de ${author}`}
+              src={authorImage}
+              className="h-10 w-10 rounded-full border-2 object-cover"
+            />
+          )}
 
           <div className="flex flex-col">
-            <p className="text-base font-normal text-white">{author}</p>
-            <p className="text-sm text-gray-300">{timeToRead}</p>
+            {author && <p className="text-base font-normal text-white">{author}</p>}
+
+            {timeToRead && <p className="text-sm text-gray-300">{timeToRead}</p>}
           </div>
         </div>
 
