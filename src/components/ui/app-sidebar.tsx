@@ -17,7 +17,7 @@ import {
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
-import { NavSecondary } from '@/components/ui/nav-secondary';
+// import { NavSecondary } from '@/components/ui/nav-secondary'; Estaba declarado pero no se usaba, lo dejo comentado por las dudas.
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
