@@ -35,8 +35,8 @@ import { useRouter } from 'next/navigation';
 import { signOut } from '@/actions/auth/sign-out';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
-import { Button } from './button';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile, isCollapsed } = useSidebar();
@@ -47,25 +47,42 @@ export function NavUser({ user }: { user: User | null }) {
     return (
       <SidebarMenu>
         <div
-          className={`transition-all duration-300 ease-in-out ${
-            isCollapsed && !isMobile
-              ? 'pointer-events-none translate-x-[-50%] opacity-0'
-              : 'translate-x-0 opacity-100'
-          }`}
+          className={`transition-all duration-300 ease-in-out ${isCollapsed && !isMobile
+              ? 'flex flex-col items-center gap-2'
+              : 'opacity-100 translate-x-0'
+            }`}
         >
           <SidebarMenuItem className="mb-2 w-full">
             <Link href="/auth/sign-in">
-              <Button className="w-full">
-                Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+              <Button
+                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''
+                  }`}
+              >
+                {isCollapsed && !isMobile ? (
+                  <LogIn className="h-5 w-5" />
+                ) : (
+                  <>
+                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </Link>
           </SidebarMenuItem>
 
           <SidebarMenuItem className="w-full">
             <Link href="/auth/sign-up">
-              <Button className="w-full" variant="secondary">
-                Crear cuenta
-                <UserPlus className="ml-2 h-4 w-4" />
+              <Button
+                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''
+                  }`}
+                variant="secondary"
+              >
+                {isCollapsed && !isMobile ? (
+                  <UserPlus className="h-5 w-5" />
+                ) : (
+                  <>
+                    Crear cuenta <UserPlus className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </Link>
           </SidebarMenuItem>
@@ -80,9 +97,8 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`transition-all duration-300 ease-in-out data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground ${
-                isCollapsed && !isMobile ? 'justify-center p-2' : ''
-              }`}
+              className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground transition-all duration-300 ease-in-out ${isCollapsed && !isMobile ? 'justify-center p-2' : ''
+                }`}
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />
