@@ -147,7 +147,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
-                  <img src="/logo.png" alt="programaConNosotros" />
+                  <img src="/logo.webp" alt="programaConNosotros" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">programaConNosotros</span>

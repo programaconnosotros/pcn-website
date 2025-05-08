@@ -13,10 +13,10 @@ export const BackgroundOverlayCard = ({
     <div
       className={cn(
         'card group relative flex h-96 w-full cursor-pointer flex-col justify-end overflow-hidden rounded-md border border-transparent p-4 shadow-xl dark:border-neutral-800',
-        'bg-opacity-50 bg-[url(http://localhost:3000/starbucks.jpeg)] bg-cover',
+        'bg-opacity-50 bg-[url(http://localhost:3000/starbucks.webp)] bg-cover',
         // Preload hover image by setting it in a pseudo-element
-        'before:fixed before:inset-0 before:z-[-1] before:bg-[url(http://localhost:3000/starbucks.jpeg)] before:opacity-0',
-        'hover:bg-[url(http://localhost:3000/starbucks.jpeg)]',
+        'before:fixed before:inset-0 before:z-[-1] before:bg-[url(http://localhost:3000/starbucks.webp)] before:opacity-0',
+        'hover:bg-[url(http://localhost:3000/starbucks.webp)]',
         "after:absolute after:inset-0 after:bg-black after:opacity-50 after:content-['']",
         'transition-all duration-500',
       )}
