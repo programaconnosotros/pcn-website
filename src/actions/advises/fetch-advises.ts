@@ -2,9 +2,10 @@
 
 import { ADVISES_PER_PAGE } from '@/lib/constants';
 import prisma from '@/lib/prisma';
+import { Advise } from './get-advise';
 
-export const fetchAdvises = async (page: number) =>
-  prisma.advise.findMany({
+export const fetchAdvises = async (page: number): Promise<Advise[]> => {
+  const advises = await prisma.advise.findMany({
     include: {
       author: {
         select: {
@@ -14,6 +15,11 @@ export const fetchAdvises = async (page: number) =>
           image: true,
         },
       },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -21,3 +27,12 @@ export const fetchAdvises = async (page: number) =>
     take: ADVISES_PER_PAGE,
     skip: (page - 1) * ADVISES_PER_PAGE,
   });
+
+  return advises.map((advise) => ({
+    id: advise.id,
+    content: advise.content,
+    createdAt: advise.createdAt,
+    author: advise.author,
+    likes: advise.likes,
+  }));
+};
