@@ -162,7 +162,7 @@
 //     href="/"
 //     className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
 //   >
-//     <img src="/logo.png" alt="Programa Con Nosotros" className="h-5 w-6" />
+//     <img src="/logo.webp" alt="Programa Con Nosotros" className="h-5 w-6" />
 
 //     <motion.span
 //       initial={{ opacity: 0 }}
@@ -179,6 +179,6 @@
 //     href="#"
 //     className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
 //   >
-//     <img src="/logo.png" alt="Programa Con Nosotros" className="h-5 w-6" />
+//     <img src="/logo.webp" alt="Programa Con Nosotros" className="h-5 w-6" />
 //   </Link>
 // );

@@ -1,5 +1,3 @@
-import { ImgContainer } from '@components/photoGallery/imgContainer';
-
 export const Gallery = () => {
   const images = [
     { id: '1', src: '/gallery-photos/agus-chelo-talk.webp' },
@@ -17,11 +15,82 @@ export const Gallery = () => {
     { id: '13', src: '/gallery-photos/tobias-watch-pc.webp' },
   ];
 
+  // Dividir las imágenes en columnas
+  const getColumnImages = (columnIndex: number, totalColumns: number) => {
+    return images.filter((_, index) => index % totalColumns === columnIndex);
+  };
+
   return (
-    <section className="grid max-w-[1248px] auto-rows-[10px] grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))]">
-      {images.map((photo, key) => (
-        <ImgContainer photo={photo} key={key} />
-      ))}
+    <section className="flex max-w-[1248px] gap-0">
+      {/* Columna móvil (< sm) */}
+      <div className="flex w-full flex-col gap-0 sm:hidden">
+        {images.map((photo, key) => (
+          <img
+            key={key}
+            src={photo.src}
+            alt={`Imagen ${photo.id}`}
+            className="h-auto w-full object-cover"
+          />
+        ))}
+      </div>
+
+      {/* Columnas tablet (sm - md) */}
+      <div className="hidden w-full gap-0 sm:flex md:hidden">
+        <div className="flex w-1/2 flex-col gap-0">
+          {getColumnImages(0, 2).map((photo, key) => (
+            <img
+              key={key}
+              src={photo.src}
+              alt={`Imagen ${photo.id}`}
+              className="h-auto w-full object-cover"
+            />
+          ))}
+        </div>
+        <div className="flex w-1/2 flex-col gap-0">
+          {getColumnImages(1, 2).map((photo, key) => (
+            <img
+              key={key}
+              src={photo.src}
+              alt={`Imagen ${photo.id}`}
+              className="h-auto w-full object-cover"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Columnas desktop (md+) */}
+      <div className="hidden w-full gap-0 md:flex">
+        <div className="flex w-1/3 flex-col gap-0">
+          {getColumnImages(0, 3).map((photo, key) => (
+            <img
+              key={key}
+              src={photo.src}
+              alt={`Imagen ${photo.id}`}
+              className="h-auto w-full object-cover"
+            />
+          ))}
+        </div>
+        <div className="flex w-1/3 flex-col gap-0">
+          {getColumnImages(1, 3).map((photo, key) => (
+            <img
+              key={key}
+              src={photo.src}
+              alt={`Imagen ${photo.id}`}
+              className="h-auto w-full object-cover"
+            />
+          ))}
+        </div>
+        <div className="flex w-1/3 flex-col gap-0">
+          {getColumnImages(2, 3).map((photo, key) => (
+            <img
+              key={key}
+              src={photo.src}
+              alt={`Imagen ${photo.id}`}
+              className="h-auto w-full object-cover"
+            />
+          ))}
+        </div>
+      </div>
     </section>
   );
 };

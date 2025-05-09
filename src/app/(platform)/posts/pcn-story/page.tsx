@@ -163,7 +163,7 @@ const PCNStory = () => (
     <div className="my-6 grid grid-cols-1 gap-4 md:grid-cols-3">
       <div className="mb-4 md:mb-0">
         <img
-          src="/lightning-talks/arquitectura-software.jpeg"
+          src="/lightning-talks/arquitectura-software.webp"
           alt="Arquitectura de software"
           className="w-full rounded-lg object-cover md:h-48"
         />
@@ -175,7 +175,7 @@ const PCNStory = () => (
 
       <div className="mb-4 md:mb-0">
         <img
-          src="/lightning-talks/arquitectura-modular.jpeg"
+          src="/lightning-talks/arquitectura-modular.webp"
           alt="Arquitectura modular"
           className="w-full rounded-lg object-cover md:h-48"
         />
@@ -187,7 +187,7 @@ const PCNStory = () => (
 
       <div className="mb-4 md:mb-0">
         <img
-          src="/lightning-talks/paradigmas.jpeg"
+          src="/lightning-talks/paradigmas.webp"
           alt="Paradigmas de programación"
           className="w-full rounded-lg object-cover md:h-48"
         />
@@ -206,7 +206,7 @@ const PCNStory = () => (
 
     <Heading3>Empezamos a juntarnos más seguido para networking</Heading3>
 
-    <img src="/juntada.jpeg" alt="Networking" className="w-full rounded-lg object-cover" />
+    <img src="/juntada.webp" alt="Networking" className="w-full rounded-lg object-cover" />
 
     <Heading3>Empecé a desarrollar este website</Heading3>
 

@@ -119,7 +119,7 @@ async function main() {
               Array.from({ length: 3 }).map(async () => {
                 const image = await prisma.image.create({
                   data: {
-                    imgSrc: `/events/Lightning talks flyer.jpg`,
+                    imgSrc: `/events/Lightning talks flyer.webp`,
                   },
                 });
                 imageIds.push(image.id);
@@ -133,7 +133,7 @@ async function main() {
         const event = await prisma.event.create({
           data: {
             name: `Titulo del evento numero ${index + 1}`,
-            flyerSrc: '/events/Lightning talks flyer.jpg',
+            flyerSrc: '/events/Lightning talks flyer.webp',
             description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
             date: startDate,
             endDate: endDate,

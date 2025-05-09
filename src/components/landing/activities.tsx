@@ -11,7 +11,7 @@ export const Activities = () => (
             alt="Desarrollo open-source"
             className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
-            src="/motivation/eagerworks-1.jpeg"
+            src="/motivation/eagerworks-1.webp"
             width="550"
           />
 
@@ -28,7 +28,7 @@ export const Activities = () => (
             alt="Lightning Talks"
             className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
-            src="/lightning-talks/arquitectura-software.jpeg"
+            src="/lightning-talks/arquitectura-software.webp"
             width="550"
           />
 
@@ -46,7 +46,7 @@ export const Activities = () => (
             alt="Competencias de programación"
             className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
-            src="/pre-lightning-talks.jpeg"
+            src="/pre-lightning-talks.webp"
             width="550"
           />
 
@@ -63,7 +63,7 @@ export const Activities = () => (
             alt="Reuniones"
             className="aspect-video overflow-hidden rounded object-cover object-center"
             height="310"
-            src="/juntada.jpeg"
+            src="/juntada.webp"
             width="550"
           />
 

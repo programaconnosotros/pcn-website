@@ -63,7 +63,7 @@ const Home = async () => {
             <Link href="/posts/pcn-story">
               <ContentCard
                 description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
-                image="/pre-lightning-talks.jpeg"
+                image="/pre-lightning-talks.webp"
                 title="Nuestra historia"
               />
             </Link>

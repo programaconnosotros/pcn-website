@@ -1,4 +1,4 @@
-# <img src="./public/logo.png" alt="Logo" width="30"/> Website de programaConNosotros
+# <img src="./public/logo.webp" alt="Logo" width="30"/> Website de programaConNosotros
 
 Este es el repositorio del website de PCN. El website está construido con Next.js. Podés contribuir al proyecto a través de pull requests. Revisa la información a continuación para comenzar a programar con nosotros! 🚀
 
@@ -81,7 +81,7 @@ Setear esto como callback URL:http://localhost:3000/api/auth/callback/github
 
   Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
 
-  <img src="./public/prisma-studio-screenshot.png" alt="Screenshot del Prisma Studio"/>
+  <img src="./public/prisma-studio-screenshot.webp" alt="Screenshot del Prisma Studio"/>
 
 ## 🛠️ Tech stack
 

@@ -35,8 +35,8 @@ import { useRouter } from 'next/navigation';
 import { signOut } from '@/actions/auth/sign-out';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
-import { Button } from './button';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile, isCollapsed } = useSidebar();
@@ -49,23 +49,37 @@ export function NavUser({ user }: { user: User | null }) {
         <div
           className={`transition-all duration-300 ease-in-out ${
             isCollapsed && !isMobile
-              ? 'pointer-events-none translate-x-[-50%] opacity-0'
+              ? 'flex flex-col items-center gap-2'
               : 'translate-x-0 opacity-100'
           }`}
         >
           <SidebarMenuItem className="mb-2 w-full">
             <Link href="/auth/sign-in">
-              <Button className="w-full">
-                Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+              <Button className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}>
+                {isCollapsed && !isMobile ? (
+                  <LogIn className="h-5 w-5" />
+                ) : (
+                  <>
+                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </Link>
           </SidebarMenuItem>
 
           <SidebarMenuItem className="w-full">
             <Link href="/auth/sign-up">
-              <Button className="w-full" variant="secondary">
-                Crear cuenta
-                <UserPlus className="ml-2 h-4 w-4" />
+              <Button
+                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}
+                variant="secondary"
+              >
+                {isCollapsed && !isMobile ? (
+                  <UserPlus className="h-5 w-5" />
+                ) : (
+                  <>
+                    Crear cuenta <UserPlus className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </Link>
           </SidebarMenuItem>

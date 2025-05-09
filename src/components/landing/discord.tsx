@@ -7,7 +7,7 @@ export const Discord = () => (
       <div className="flex flex-col items-center space-y-4 text-center">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Sumate en Discord!</h2>
 
-        <img alt="Discord" height="310" src="/discord-demo.png" />
+        <img alt="Discord" height="310" src="/discord-demo.webp" />
 
         <p className="mx-auto max-w-[800px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
           Tenemos canales de texto y voz para que puedas interactuar con los miembros de la
