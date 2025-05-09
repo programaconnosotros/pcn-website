@@ -2,5 +2,5 @@ import { Calendar } from 'lucide-react';
 import { StatCard } from './stat-card';
 
 export const UpcomingEventsCard = () => (
-  <StatCard href="/events" title="Próximos eventos" Icon={Calendar} value={1} />
+  <StatCard href="/events" title="Próximos eventos" Icon={Calendar} value={0} />
 );
