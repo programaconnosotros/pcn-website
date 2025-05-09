@@ -73,14 +73,19 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
                 Este es un espacio para que puedas compartir tus consejos y experiencias con los
                 miembros de la comunidad.
               </p>
+
+              <p className="mt-2 text-sm text-muted-foreground">
+                Animate y compartí tus conocimientos, por más pequeños que creas que sean, siempre
+                creas que sean, siempre vas a ayudar a alguien.
+              </p>
             </div>
 
             <div className="rounded-lg border bg-card p-6">
               <h3 className="mb-2 font-semibold">PCN Checkpoints</h3>
 
               <p className="text-sm text-muted-foreground">
-                Cada 2 semanas nos juntamos en Discord a las 19.00 para charlar sobre ingeniería de
-                software, sumate!
+                Cada tanto nos juntamos presencialmente o en Discord para charlar sobre ingeniería
+                de software, sumate!
               </p>
             </div>
           </div>
