@@ -146,7 +146,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
   );
 
   return (
-    <div className="mt-4 space-y-6">
+    <div className="mb-8 mt-4 space-y-6">
       <h2 className="text-lg font-semibold">Comentarios</h2>
 
       {session ? (
