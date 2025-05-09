@@ -43,6 +43,7 @@ type CommentSectionProps = {
 export const CommentSection = ({ adviseId, comments, session }: CommentSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -65,8 +66,10 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
         adviseId,
         parentCommentId: replyingTo,
       });
+
       reset();
       setReplyingTo(null);
+
       toast.success('Comentario creado');
     } catch (error) {
       toast.error('Error al crear el comentario');
@@ -126,6 +129,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Enviando...' : 'Enviar respuesta'}
               </Button>
+
               <Button
                 type="button"
                 variant="ghost"
@@ -152,6 +156,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
             placeholder="Escribe tu comentario..."
             className="min-h-[100px] resize-none"
           />
+
           {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
           <Button type="submit" disabled={isSubmitting}>
