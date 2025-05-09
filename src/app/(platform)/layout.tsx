@@ -34,9 +34,7 @@ const PlatformLayout = async ({
       </div>
 
       <main className="relative p-4 pt-16 md:p-0 md:pt-1">
-        <SidebarTrigger
-          className="absolute md:top-6 md:left-6"
-        />
+        <SidebarTrigger className="absolute md:left-6 md:top-6" />
         {children}
       </main>
     </SidebarProvider>

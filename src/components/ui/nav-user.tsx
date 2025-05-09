@@ -47,17 +47,15 @@ export function NavUser({ user }: { user: User | null }) {
     return (
       <SidebarMenu>
         <div
-          className={`transition-all duration-300 ease-in-out ${isCollapsed && !isMobile
+          className={`transition-all duration-300 ease-in-out ${
+            isCollapsed && !isMobile
               ? 'flex flex-col items-center gap-2'
-              : 'opacity-100 translate-x-0'
-            }`}
+              : 'translate-x-0 opacity-100'
+          }`}
         >
           <SidebarMenuItem className="mb-2 w-full">
             <Link href="/auth/sign-in">
-              <Button
-                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''
-                  }`}
-              >
+              <Button className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}>
                 {isCollapsed && !isMobile ? (
                   <LogIn className="h-5 w-5" />
                 ) : (
@@ -72,8 +70,7 @@ export function NavUser({ user }: { user: User | null }) {
           <SidebarMenuItem className="w-full">
             <Link href="/auth/sign-up">
               <Button
-                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''
-                  }`}
+                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}
                 variant="secondary"
               >
                 {isCollapsed && !isMobile ? (
@@ -97,8 +94,9 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground transition-all duration-300 ease-in-out ${isCollapsed && !isMobile ? 'justify-center p-2' : ''
-                }`}
+              className={`transition-all duration-300 ease-in-out data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground ${
+                isCollapsed && !isMobile ? 'justify-center p-2' : ''
+              }`}
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />

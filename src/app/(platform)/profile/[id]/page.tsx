@@ -39,6 +39,11 @@ async function getUser(id: string) {
             createdAt: true,
             updatedAt: true,
             authorId: true,
+            likes: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
         languages: {
@@ -161,6 +166,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     email: '',
                     image: user.image,
                   },
+                  likes: advise.likes,
                 }}
               />
             ))}

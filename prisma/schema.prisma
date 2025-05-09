@@ -21,6 +21,7 @@ model User {
   advises         Advise[]
   languages       UserLanguage[]
   comments        Comment[]
+  likes           Like[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,6 +45,7 @@ model Advise {
   authorId String
 
   comments Comment[]
+  likes    Like[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,4 +106,18 @@ model Image {
   imgSrc  String
   event   Event?  @relation(fields: [eventId], references: [id])
   eventId String?
+}
+
+model Like {
+  id       String @id @default(cuid())
+  userId   String
+  adviseId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  advise Advise @relation(fields: [adviseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, adviseId])
 }
