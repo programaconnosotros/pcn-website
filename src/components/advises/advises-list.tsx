@@ -6,6 +6,7 @@ import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { AddAdvise } from './add-advise';
 import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
+import { MainSponsorCard } from '../home/main-sponsor-card';
 
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
   const {
@@ -28,8 +29,8 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div className="max-h-[calc(100vh-150px)] overflow-y-auto md:col-span-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
+        <div className="overflow-y-auto md:col-span-3">
           <div className="flex flex-col gap-4">
             {advises.length === 0 && (
               <p className="w-full text-center text-sm text-muted-foreground">
@@ -43,18 +44,15 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
           </div>
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:col-span-2 md:block">
           <div className="sticky top-24 space-y-6">
             <div className="rounded-lg border bg-card p-6">
-              <h3 className="mb-2 font-semibold">¿Qué es esto?</h3>
               <p className="text-sm text-muted-foreground">
-                Este es un espacio para que puedas compartir tus consejos y experiencias con los
-                miembros de la comunidad.
+                Este es un espacio para compartir consejos y experiencias 🚀
               </p>
 
               <p className="mt-2 text-sm text-muted-foreground">
-                Animate y compartí tus conocimientos, por más pequeños que creas que sean, siempre
-                creas que sean, siempre vas a ayudar a alguien.
+                Animate y compartí tus conocimientos, entre todos vamos a llegar más lejos 💪
               </p>
             </div>
 
@@ -63,7 +61,7 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
 
               <p className="text-sm text-muted-foreground">
                 Cada tanto nos juntamos presencialmente o en Discord para charlar sobre ingeniería
-                de software, sumate!
+                de software, sumate! 🙌
               </p>
             </div>
           </div>
