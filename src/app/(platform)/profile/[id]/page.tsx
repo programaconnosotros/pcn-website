@@ -1,6 +1,5 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { ProfileForm } from '@/components/profile/profile-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,6 +39,11 @@ async function getUser(id: string) {
             createdAt: true,
             updatedAt: true,
             authorId: true,
+            likes: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
         languages: {
@@ -85,6 +89,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
               <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
             </Avatar>
+
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               {isOwnProfile && (
@@ -100,6 +105,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               )}
             </div>
           </div>
+
           <div className="space-y-2">
             {user.xAccountUrl && (
               <a
@@ -126,6 +132,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             )}
           </div>
         </CardHeader>
+
         <CardContent>
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -159,6 +166,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     email: '',
                     image: user.image,
                   },
+                  likes: advise.likes,
                 }}
               />
             ))}

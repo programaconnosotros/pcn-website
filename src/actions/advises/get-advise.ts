@@ -18,6 +18,9 @@ type Comment = Content & {
 
 export type Advise = Content & {
   comments?: Comment[];
+  likes: {
+    userId: string;
+  }[];
 };
 
 export type GetAdviseOptions = {
@@ -72,13 +75,26 @@ export const getAdviseById = async (
           image: true,
         },
       },
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
     },
   });
 
   if (!advise) return null;
 
+  const adviseWithLikes = {
+    id: advise.id,
+    content: advise.content,
+    createdAt: advise.createdAt,
+    author: advise.author,
+    likes: advise.likes,
+  };
+
   if (!options.includeComments) {
-    return advise;
+    return adviseWithLikes;
   }
 
   const comments = await prisma.comment.findMany({
@@ -112,7 +128,7 @@ export const getAdviseById = async (
   );
 
   return {
-    ...advise,
+    ...adviseWithLikes,
     comments: commentsWithReplies,
   };
 };

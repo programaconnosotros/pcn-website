@@ -13,11 +13,12 @@ import {
   Image,
   Home,
   CalendarDays,
+  Users,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
-import { NavSecondary } from '@/components/ui/nav-secondary';
+// import { NavSecondary } from '@/components/ui/nav-secondary'; Estaba declarado pero no se usaba, lo dejo comentado por las dudas.
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -42,6 +43,11 @@ const data = {
       url: '/advises',
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
     },
     {
       title: 'Fotos',
@@ -141,7 +147,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
-                  <img src="/logo.png" alt="programaConNosotros" />
+                  <img src="/logo.webp" alt="programaConNosotros" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">programaConNosotros</span>
