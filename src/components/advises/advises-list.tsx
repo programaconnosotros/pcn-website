@@ -2,7 +2,7 @@
 
 import { AdviseCard } from '@components/advises/advise-card';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'framer-motion';
+import { useInView } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { ADVISES_PER_PAGE } from '@/lib/constants';
