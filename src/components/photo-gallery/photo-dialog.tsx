@@ -94,7 +94,7 @@ export function PhotoDialog({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
-          className="w-[90vw] max-w-4xl overflow-hidden border-none bg-black/90 p-0"
+          className="w-[90vw] max-w-4xl overflow-hidden border-none p-0"
           onKeyDown={handleKeyDown}
           tabIndex={0}
         >
