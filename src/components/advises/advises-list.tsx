@@ -1,9 +1,7 @@
 'use client';
 
 import { AdviseCard } from '@components/advises/advise-card';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { AddAdvise } from './add-advise';
 import { Session, User } from '@prisma/client';

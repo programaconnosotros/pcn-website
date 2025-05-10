@@ -1,10 +1,8 @@
 'use server';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'motion/react';
-import React, { useEffect, useRef } from 'react';
-import { EVENTS_PER_PAGE } from '@/lib/constants';
+import React from 'react';
 import { fetchEvents } from '@/actions/events/fetch-events';
+import { EventCard } from './event-card';
 
 export const EventsList: React.FC = async () => {
   const events = await fetchEvents();
