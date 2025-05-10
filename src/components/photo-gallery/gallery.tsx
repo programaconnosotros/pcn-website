@@ -161,7 +161,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
   const handleCloseDialog = () => {
     // Remove photo ID from URL
-    router.push('/', { scroll: false });
+    router.push('/photos', { scroll: false });
     setSelectedPhotoIndex(-1);
   };
 
