@@ -34,7 +34,7 @@ export default function PhotoGallery() {
   }, [photoId]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <header className="py-6">
         <div className="container mx-auto">
           <Heading2 className="text-center">Galería de fotos</Heading2>
