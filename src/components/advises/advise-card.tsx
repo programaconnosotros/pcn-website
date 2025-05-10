@@ -140,7 +140,7 @@ export const AdviseCard = ({
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
 
             <p className="text-xs text-gray-500">
-              {localLikes.length} {localLikes.length === 1 ? 'me gusta' : 'me gustan'}
+              {localLikes.length} {localLikes.length === 1 ? 'like' : 'likes'}
             </p>
           </div>
         </CardContent>
