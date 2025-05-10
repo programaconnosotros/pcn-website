@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { PhotoCard } from '@/components/photo-gallery/photo-card';
-import { useIsMobile } from '@/hooks/use-is-mobile';
 
 // Sample data for the community photos
 const communityPhotos = [
