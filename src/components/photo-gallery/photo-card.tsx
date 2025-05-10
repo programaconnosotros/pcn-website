@@ -3,7 +3,6 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Maximize2, Share2, Download } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -58,13 +57,12 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
     <>
       <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg">
         <div className="group relative aspect-[4/3]">
-          <Image
+          <img
             src={photo.image || '/placeholder.svg'}
             alt={photo.title}
-            fill
-            className="object-cover transition-opacity duration-200 group-hover:opacity-80"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-200 group-hover:opacity-80"
           />
+
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             <div className="flex gap-2">
               <Button
