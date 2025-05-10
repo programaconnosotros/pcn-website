@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import type React from 'react';
-import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X, Share2, Download } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -175,13 +174,11 @@ export function PhotoDialog({
             </div>
 
             <div className="relative flex h-full w-full items-center justify-center">
-              <Image
+              <img
                 src={currentPhoto.image || '/placeholder.svg'}
                 alt={currentPhoto.title}
-                fill
-                className="object-contain"
-                sizes="90vw"
-                priority
+                className="max-h-full max-w-full object-contain"
+                loading="eager"
               />
             </div>
           </div>
