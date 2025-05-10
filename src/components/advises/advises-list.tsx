@@ -6,7 +6,6 @@ import { fetchAdvises } from '@/actions/advises/fetch-advises';
 import { AddAdvise } from './add-advise';
 import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
-import { MainSponsorCard } from '../home/main-sponsor-card';
 
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
   const {
@@ -21,17 +20,17 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
   if (isLoading) return <div>Cargando...</div>;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative">
       <div className="sticky top-0 z-10 bg-background/95 pb-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-4">
           <Heading2>Consejos</Heading2>
           {session && <AddAdvise refetch={refetch} />}
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
-        <div className="overflow-y-auto md:col-span-3">
-          <div className="flex flex-col gap-4">
+        <div className="md:col-span-3">
+          <div className="mt-4 flex flex-col gap-4">
             {advises.length === 0 && (
               <p className="w-full text-center text-sm text-muted-foreground">
                 No hay consejos para ver aún.
