@@ -195,7 +195,9 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
       {sortedPhotos.length === 0 ? (
         <div className="py-12 text-center">
-          <p className="text-gray-500">No se encontraron fotos que coincidan con "{searchQuery}"</p>
+          <p className="text-gray-500">
+            No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
