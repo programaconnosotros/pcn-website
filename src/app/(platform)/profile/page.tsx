@@ -2,7 +2,6 @@ import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { Heading2 } from '@components/ui/heading-2';
 import { cookies } from 'next/headers';
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 const Profile = async () => {
@@ -50,11 +49,10 @@ const Profile = async () => {
     <div className="mt-4 px-6 md:px-20">
       <div className="mb-4 flex items-center gap-4">
         {user.image && (
-          <Image
+          <img
             src={user.image}
             alt="Profile picture"
-            width={40}
-            height={40}
+            style={{ width: '40px', height: '40px' }}
             className="rounded-full"
           />
         )}
