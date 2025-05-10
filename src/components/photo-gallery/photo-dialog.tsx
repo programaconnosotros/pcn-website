@@ -186,7 +186,7 @@ export function PhotoDialog({
             </div>
           </div>
 
-          <div className="bg-white p-4 text-center">
+          <div className="p-4 text-center">
             <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
             {currentPhoto.date && (
               <p className="mt-1 text-sm text-gray-500">{formatDate(currentPhoto.date)}</p>
