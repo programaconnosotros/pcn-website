@@ -33,7 +33,7 @@ const PlatformLayout = async ({
         <span className="text-sm font-semibold">programaConNosotros</span>
       </div>
 
-      <main className="relative p-4 pt-16 md:p-0 md:pt-1">
+      <main className="relative w-full p-4 pt-16 md:p-0 md:pt-1">
         <SidebarTrigger className="absolute md:left-6 md:top-6" />
         {children}
       </main>
