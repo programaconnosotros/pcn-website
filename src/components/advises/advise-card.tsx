@@ -43,10 +43,12 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
+
     // Optimistically update the UI
     const newLikes = isLiked
       ? localLikes.filter((like) => like.userId !== session.user.id)
       : [...localLikes, { userId: session.user.id }];
+
     setLocalLikes(newLikes);
 
     try {
@@ -101,6 +103,7 @@ export const AdviseCard = ({
     <Card key={advise.id} className="w-full">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}
+
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -111,6 +114,7 @@ export const AdviseCard = ({
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
           </Button>
+
           {isAuthor && Options}
         </div>
       </CardHeader>
@@ -131,8 +135,10 @@ export const AdviseCard = ({
       <Link href={`/advises/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
           <p className="text-sm">{advise.content}</p>
+
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
+
             <p className="text-xs text-gray-500">
               {localLikes.length} {localLikes.length === 1 ? 'me gusta' : 'me gustan'}
             </p>
