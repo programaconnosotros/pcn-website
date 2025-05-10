@@ -30,7 +30,7 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
         <div className="md:col-span-3">
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {advises.length === 0 && (
               <p className="w-full text-center text-sm text-muted-foreground">
                 No hay consejos para ver aún.
