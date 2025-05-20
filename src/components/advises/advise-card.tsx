@@ -30,16 +30,14 @@ export const AdviseCard = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  
+
   // Initialize optimistic state with the current likes
   const [optimisticLikes, addOptimisticLike] = useOptimistic(
     advise.likes,
     (state, userId: string) => {
       const isLiked = state.some((like) => like.userId === userId);
-      return isLiked
-        ? state.filter((like) => like.userId !== userId)
-        : [...state, { userId }];
-    }
+      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+    },
   );
 
   const isAuthor =

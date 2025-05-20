@@ -26,4 +26,4 @@ const AppLayout: React.FC<AppLayoutProps> = ({ defaultOpen, user, children }) =>
   );
 };
 
-export default AppLayout; 
+export default AppLayout;
