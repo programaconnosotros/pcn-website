@@ -14,7 +14,7 @@ import { formatDate } from '@/lib/utils';
 import { Session, User } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useOptimistic } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
 import { toggleLike } from '@/actions/advises/like-advise';
@@ -28,34 +28,35 @@ export const AdviseCard = ({
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [localLikes, setLocalLikes] = useState(advise.likes);
   const [isLiking, setIsLiking] = useState(false);
+
+  // Initialize optimistic state with the current likes
+  const [optimisticLikes, addOptimisticLike] = useOptimistic(
+    advise.likes,
+    (state, userId: string) => {
+      const isLiked = state.some((like) => like.userId === userId);
+      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+    },
+  );
 
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||
     (session?.user?.email && session.user.email === advise.author.email);
 
   const isLiked = session?.user?.id
-    ? localLikes.some((like) => like.userId === session.user.id)
+    ? optimisticLikes.some((like) => like.userId === session.user.id)
     : false;
 
   const handleLike = async () => {
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-
     // Optimistically update the UI
-    const newLikes = isLiked
-      ? localLikes.filter((like) => like.userId !== session.user.id)
-      : [...localLikes, { userId: session.user.id }];
-
-    setLocalLikes(newLikes);
+    addOptimisticLike(session.user.id);
 
     try {
       await toggleLike(advise.id);
     } catch (error) {
-      // Revert the optimistic update if there's an error
-      setLocalLikes(advise.likes);
       console.error('Error toggling like:', error);
     } finally {
       setIsLiking(false);
@@ -103,7 +104,6 @@ export const AdviseCard = ({
     <Card key={advise.id} className="w-full">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}
-
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -114,7 +114,6 @@ export const AdviseCard = ({
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
           </Button>
-
           {isAuthor && Options}
         </div>
       </CardHeader>
@@ -135,12 +134,10 @@ export const AdviseCard = ({
       <Link href={`/advises/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
           <p className="text-sm">{advise.content}</p>
-
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
-
             <p className="text-xs text-gray-500">
-              {localLikes.length} {localLikes.length === 1 ? 'like' : 'likes'}
+              {optimisticLikes.length} {optimisticLikes.length === 1 ? 'me gusta' : 'me gustan'}
             </p>
           </div>
         </CardContent>
