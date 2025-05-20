@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  // Hash password once since all users will have the same password
+  const hashedPassword = await bcrypt.hash('1234', 10);
+
   // Create multiple users
   const users = await Promise.all([
     prisma.user.upsert({
@@ -12,7 +16,7 @@ async function main() {
         email: 'js.agustin.sz@gmail.com',
         name: 'Agustín Sánchez',
         image: 'https://avatars.githubusercontent.com/u/12345678?v=4',
-        password: '1234',
+        password: hashedPassword,
       },
     }),
     prisma.user.upsert({
@@ -22,7 +26,7 @@ async function main() {
         email: 'maria.garcia@example.com',
         name: 'María García',
         image: 'https://avatars.githubusercontent.com/u/23456789?v=4',
-        password: '1234',
+        password: hashedPassword,
       },
     }),
     prisma.user.upsert({
@@ -32,7 +36,7 @@ async function main() {
         email: 'juan.perez@example.com',
         name: 'Juan Pérez',
         image: 'https://avatars.githubusercontent.com/u/34567890?v=4',
-        password: '1234',
+        password: hashedPassword,
       },
     }),
     prisma.user.upsert({
@@ -42,7 +46,7 @@ async function main() {
         email: 'ana.lopez@example.com',
         name: 'Ana López',
         image: 'https://avatars.githubusercontent.com/u/45678901?v=4',
-        password: '1234',
+        password: hashedPassword,
       },
     }),
   ]);
