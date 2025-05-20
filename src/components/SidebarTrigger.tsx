@@ -12,14 +12,9 @@ export function SidebarTrigger({ className }: SidebarTriggerProps) {
   const { isOpen, setIsOpen } = useSidebar();
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className={className}
-      onClick={() => setIsOpen(!isOpen)}
-    >
+    <Button variant="ghost" size="icon" className={className} onClick={() => setIsOpen(!isOpen)}>
       <Menu className="h-4 w-4" />
       <span className="sr-only">Toggle sidebar</span>
     </Button>
   );
-} 
+}

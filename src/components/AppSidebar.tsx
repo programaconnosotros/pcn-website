@@ -80,4 +80,4 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </div>
     </div>
   );
-} 
+}
