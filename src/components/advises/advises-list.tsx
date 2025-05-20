@@ -10,14 +10,11 @@ import { Heading2 } from '../ui/heading-2';
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
   const {
     data: advises = [],
-    isLoading,
     refetch,
   } = useQuery({
     queryKey: ['advises'],
     queryFn: () => fetchAdvises(1),
   });
-
-  if (isLoading) return <div>Cargando...</div>;
 
   return (
     <div className="relative">
