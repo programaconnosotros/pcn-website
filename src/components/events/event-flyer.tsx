@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 
 import { Heading1 } from '../ui/heading-1';
 import {
@@ -30,14 +29,10 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
       <Dialog>
         <DialogTrigger>
           <div className="mt-4">
-            <Image
+            <img
               src={flyerSrc}
               alt={`Flyer del evento ${name}`}
-              width={600}
-              height={600}
-              priority
-              quality={85}
-              className="rounded-lg object-cover shadow-lg"
+              className="h-[600px] w-[600px] rounded-lg object-cover shadow-lg"
             />
           </div>
         </DialogTrigger>
@@ -48,13 +43,9 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
           </DialogHeader>
 
           <div className="flex items-center justify-center">
-            <Image
+            <img
               src={flyerSrc}
               alt={`Flyer del evento ${name}`}
-              width={600}
-              height={600}
-              priority
-              quality={85}
               className="h-full w-auto rounded-lg object-cover shadow-lg"
             />
           </div>

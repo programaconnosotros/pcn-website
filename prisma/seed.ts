@@ -12,7 +12,8 @@ async function main() {
         email: 'js.agustin.sz@gmail.com',
         name: 'Agustín Sánchez',
         image: 'https://avatars.githubusercontent.com/u/12345678?v=4',
-        password: '1234',
+        // 1234
+        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
       },
     }),
     prisma.user.upsert({
@@ -22,7 +23,7 @@ async function main() {
         email: 'maria.garcia@example.com',
         name: 'María García',
         image: 'https://avatars.githubusercontent.com/u/23456789?v=4',
-        password: '1234',
+        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
       },
     }),
     prisma.user.upsert({
@@ -32,7 +33,7 @@ async function main() {
         email: 'juan.perez@example.com',
         name: 'Juan Pérez',
         image: 'https://avatars.githubusercontent.com/u/34567890?v=4',
-        password: '1234',
+        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
       },
     }),
     prisma.user.upsert({
@@ -42,7 +43,7 @@ async function main() {
         email: 'ana.lopez@example.com',
         name: 'Ana López',
         image: 'https://avatars.githubusercontent.com/u/45678901?v=4',
-        password: '1234',
+        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
       },
     }),
   ]);

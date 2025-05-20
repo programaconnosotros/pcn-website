@@ -1,7 +1,6 @@
 'use client';
 
 import { UserProgrammingLanguage } from '@/types/programming-language';
-import Image from 'next/image';
 import { programmingLanguages } from '@/types/programming-language';
 
 interface LanguageCoinProps {
@@ -20,12 +19,10 @@ export function LanguageCoin({ language, editable = false, onRemove }: LanguageC
           className="relative flex h-12 w-12 items-center justify-center p-2"
           style={{ backgroundColor: language.color || languageInfo?.color || '#333' }}
         >
-          <Image
+          <img
             src={language.logo || languageInfo?.logo || '/placeholder.svg'}
             alt={languageInfo?.name || language.languageId}
-            width={32}
-            height={32}
-            className="object-contain p-1"
+            className="h-8 w-8 object-contain p-1"
           />
         </div>
       </div>

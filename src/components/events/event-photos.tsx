@@ -17,7 +17,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import Image from 'next/image';
 
 type EventPhotosProps = {
   images: Images[];
@@ -42,7 +41,7 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
             <Dialog key={index}>
               <DialogTrigger asChild>
                 <div className="group relative cursor-pointer">
-                  <Image
+                  <img
                     src={image.imgSrc}
                     alt={`Imagen ${index + 1}`}
                     loading="lazy"
@@ -50,8 +49,6 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                       e.currentTarget.src = '/placeholder-image.webp';
                       e.currentTarget.alt = 'Error al cargar la imagen';
                     }}
-                    width={300}
-                    height={300}
                     className="h-full w-full transform rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
                     onClick={() => setCurrentImageIndex(index)}
                   />
@@ -69,11 +66,9 @@ const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
                   <CarouselContent>
                     {images.map((img, i) => (
                       <CarouselItem key={i} className="flex items-center justify-center">
-                        <Image
+                        <img
                           src={img.imgSrc}
                           alt={`Imagen ${i + 1}`}
-                          width={600}
-                          height={600}
                           className="w-full rounded-lg shadow-lg"
                         />
                       </CarouselItem>

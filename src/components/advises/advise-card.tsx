@@ -53,12 +53,27 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
+<<<<<<< HEAD
     // Optimistically update the UI
     addOptimisticLike(session.user.id);
+=======
+
+    // Optimistically update the UI
+    const newLikes = isLiked
+      ? localLikes.filter((like) => like.userId !== session.user.id)
+      : [...localLikes, { userId: session.user.id }];
+
+    setLocalLikes(newLikes);
+>>>>>>> testing
 
     try {
       await toggleLike(advise.id);
     } catch (error) {
+<<<<<<< HEAD
+=======
+      // Revert the optimistic update if there's an error
+      setLocalLikes(advise.likes);
+>>>>>>> testing
       console.error('Error toggling like:', error);
     } finally {
       setIsLiking(false);
@@ -106,6 +121,10 @@ export const AdviseCard = ({
     <Card key={advise.id} className="w-full">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}
+<<<<<<< HEAD
+=======
+
+>>>>>>> testing
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -116,6 +135,10 @@ export const AdviseCard = ({
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
           </Button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> testing
           {isAuthor && Options}
         </div>
       </CardHeader>
@@ -136,10 +159,19 @@ export const AdviseCard = ({
       <Link href={`/advises/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
           <p className="text-sm">{advise.content}</p>
+<<<<<<< HEAD
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
             <p className="text-xs text-gray-500">
               {optimisticLikes.length} {optimisticLikes.length === 1 ? 'me gusta' : 'me gustan'}
+=======
+
+          <div className="mt-4 flex items-center justify-between">
+            <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
+
+            <p className="text-xs text-gray-500">
+              {localLikes.length} {localLikes.length === 1 ? 'like' : 'likes'}
+>>>>>>> testing
             </p>
           </div>
         </CardContent>

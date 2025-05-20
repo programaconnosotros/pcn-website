@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Event } from '@prisma/client';
@@ -6,12 +6,15 @@ import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import Image from 'next/image';
 import { BreadcrumbLink } from '../ui/breadcrumb';
 
 export const EventCard: React.FC<{ event: Event }> = ({ event }) => (
   <Card key={event.id} className="flex h-full flex-col">
-    <Image src={event.flyerSrc} alt={`Flyer for ${event.name}`} width={400} height={200} />
+    <img
+      src={event.flyerSrc}
+      alt={`Flyer for ${event.name}`}
+      className="h-[200px] w-full object-cover"
+    />
 
     <CardContent className="px-4 py-2">
       <div className="mt-1 flex justify-between">
