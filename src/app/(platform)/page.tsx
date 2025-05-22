@@ -5,7 +5,6 @@ import { UpcomingEventsSection } from '@components/home/upcoming-events-section'
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Heading2 } from '@/components/ui/heading-2';
-import { BackgroundOverlayCard } from '@/components/ui/background-overlay-card';
 import { ContentCard } from '@/components/ui/content-card';
 import { DiscordCard } from '@/components/home/discord-card';
 import { PodcastCard } from '@/components/home/podcast-card';
@@ -68,9 +67,10 @@ const Home = async () => {
               />
             </Link>
 
-            <BackgroundOverlayCard
+            <ContentCard
               title="¿Sabías que podés sumarte al team de desarrollo de este website?"
               description="¡Comunicate con nosotros!"
+              image="/starbucks.webp"
             />
           </div>
 
