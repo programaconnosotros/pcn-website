@@ -179,7 +179,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
   const getShareUrl = (photoId: number) => {
     // Create absolute URL for sharing
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}?photo=${photoId}`;
+    return `${baseUrl}/photos?photo=${photoId}`;
   };
 
   return (
