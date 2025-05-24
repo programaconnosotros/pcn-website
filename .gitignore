@@ -42,3 +42,12 @@ next-env.d.ts
 # environment
 .env
 .env.development
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+dist
