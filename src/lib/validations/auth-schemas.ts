@@ -12,7 +12,10 @@ export const signUpSchema = z
         'El nombre solo puede contener letras (a-z, A-Z) y espacios. No se permiten números ni caracteres especiales',
       ),
     email: z.string().email('Correo electrónico inválido'),
-    password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    password: z
+      .string()
+      .min(1, 'Campo obligatorio')
+      .min(8, 'La contraseña debe tener al menos 8 caracteres'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
