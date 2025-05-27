@@ -1,7 +1,13 @@
 import { Calendar } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card';
 
-const events: { name: string; date: string; location: string }[] = [];
+const events: { name: string; date: string; location: string }[] = [
+  {
+    name: 'Semana de la Ingenería en Sistemas de Información',
+    date: '2025-06-02',
+    location: 'Universidad Tecnológica Tucumán (UTN-FRT)',
+  },
+];
 
 export const UpcomingEventsSection = () => (
   <Card>
