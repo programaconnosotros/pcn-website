@@ -36,6 +36,7 @@ export const resetPassword = async (email: string) => {
   });
 
   if (error) {
+    console.error('Failed to send reset password email:', error.message || 'Unknown error');
     throw new Error('Error sending email');
   }
 };
