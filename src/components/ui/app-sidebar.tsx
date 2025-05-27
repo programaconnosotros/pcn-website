@@ -14,6 +14,7 @@ import {
   Home,
   CalendarDays,
   Users,
+  Briefcase,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/ui/nav-main';
@@ -86,6 +87,11 @@ const data = {
           url: '/courses',
         },
       ],
+    },
+    {
+      title: 'Trabajos',
+      url: '/jobs',
+      icon: Briefcase,
     },
   ],
   navSecondary: [
