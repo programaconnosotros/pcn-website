@@ -135,7 +135,7 @@ function JobCard({ job }: { job: Job }) {
             <img
               src={job.logo || '/placeholder.svg'}
               alt={`Logo of ${job.company}`}
-              className="h-12 w-12 rounded-full object-cover bg-white border"
+              className="h-12 w-12 rounded-full border bg-white object-cover"
             />
           </div>
           <div className="flex flex-col">
@@ -158,7 +158,7 @@ function JobCard({ job }: { job: Job }) {
       </CardHeader>
       <CardContent className="px-4 py-3">
         <p className="mb-4 text-sm">{job.description}</p>
-        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mb-2">
+        <div className="mb-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <MapPin className="h-4 w-4" />
             <span>{job.location}</span>
