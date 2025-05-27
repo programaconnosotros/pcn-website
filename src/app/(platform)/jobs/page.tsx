@@ -71,7 +71,7 @@ export default function JobBoardPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col space-y-6">
         {/* Header */}
-        <div>
+        <div className="mt-6">
           <h1 className="text-3xl font-bold tracking-tight">{TEXTS.pageTitle}</h1>
           <p className="mt-2 text-muted-foreground">
             {TEXTS.pageDescription.replace('{count}', jobsData.length.toString())}
@@ -128,66 +128,52 @@ export default function JobBoardPage() {
 // Job card component
 function JobCard({ job }: { job: Job }) {
   return (
-    <Card
-      className={`relative flex h-full flex-col overflow-hidden transition-all hover:shadow-md ${!job.available ? 'opacity-75' : ''}`}
-    >
-      {!job.available && (
-        <div className="absolute right-0 top-0 z-10 m-2">
+    <Card className="w-full bg-gray-50 dark:bg-transparent">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 flex-shrink-0">
+            <img
+              src={job.logo || '/placeholder.svg'}
+              alt={`Logo of ${job.company}`}
+              className="h-12 w-12 rounded-full object-cover bg-white border"
+            />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-lg font-semibold leading-tight">{job.title}</h3>
+            <div className="mt-1 flex flex-wrap gap-1">
+              {job.tags.map((tag: string, index: number) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+        {!job.available && (
           <Badge variant="destructive" className="flex items-center gap-1">
             <XCircle className="h-3.5 w-3.5" />
             {TEXTS.notAvailable}
           </Badge>
-        </div>
-      )}
-
-      <CardHeader className="pb-2">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md">
-            <img
-              src={job.logo || '/placeholder.svg'}
-              alt={`Logo of ${job.company}`}
-              className={`h-full w-full object-cover ${!job.available ? 'grayscale' : ''}`}
-            />
-          </div>
-          <div>
-            <CardTitle className="text-lg">{job.title}</CardTitle>
-            <div className="text-sm text-muted-foreground">{job.company}</div>
-          </div>
-        </div>
+        )}
       </CardHeader>
-      <CardContent className="flex-grow pb-2">
-        <div className="space-y-3">
-          <div className="line-clamp-2 text-sm text-muted-foreground">{job.description}</div>
-          <div className="flex flex-wrap gap-1">
-            {job.tags.map((tag: string) => (
-              <Badge key={tag} variant="secondary" className="font-normal">
-                {tag}
-              </Badge>
-            ))}
+      <CardContent className="px-4 py-3">
+        <p className="mb-4 text-sm">{job.description}</p>
+        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mb-2">
+          <div className="flex items-center gap-1">
+            <MapPin className="h-4 w-4" />
+            <span>{job.location}</span>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5" />
-              <span>{job.location}</span>
-            </div>
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{job.posted}</span>
-            </div>
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{job.posted}</span>
           </div>
         </div>
-      </CardContent>
-      <CardFooter className="mt-auto pt-2">
-        {job.available ? (
-          <Button className="w-full transition-all duration-300 hover:scale-[1.02] hover:bg-primary/90 hover:shadow-md">
-            {TEXTS.applyNow}
-          </Button>
-        ) : (
+        <div>
           <Button className="w-full" variant="outline" disabled>
             {TEXTS.positionFilled}
           </Button>
-        )}
-      </CardFooter>
+        </div>
+      </CardContent>
     </Card>
   );
 }
