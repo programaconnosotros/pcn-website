@@ -5,31 +5,12 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { signUpSchema } from '@/lib/validations/auth-schemas';
 
-// TODO: Improvement: Use same schema for client and server.
-
-const formSchema = z
-  .object({
-    name: z
-      .string()
-      .trim()
-      .min(2, 'El nombre debe tener al menos 2 caracteres')
-      .max(100, 'El nombre no puede tener más de 100 caracteres')
-      .regex(
-        /^[a-zA-ZÀ-ÿ\s]+$/,
-        'El nombre solo puede contener letras (a-z, A-Z) y espacios. No se permiten números ni caracteres especiales',
-      ),
-    email: z.string().email('Correo electrónico inválido'),
-    password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Las contraseñas no coinciden',
-    path: ['confirmPassword'],
-  });
+const formSchema = signUpSchema;
 
 export const signUp = async (data: z.infer<typeof formSchema>) => {
-  const cleanedData = formSchema.parse(data);
+  const { confirmPassword, ...cleanedData } = formSchema.parse(data);
 
   const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
 
