@@ -9,14 +9,6 @@ interface Platform {
   page?: string;
 }
 
-interface Followers {
-  youtube?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-  github?: string;
-}
-
 interface Influencer {
   id: string;
   name: string;
@@ -24,7 +16,6 @@ interface Influencer {
   description: string;
   platforms: Platform;
   specialties: string[];
-  followers: Followers;
 }
 
 interface InfluencersData {
@@ -51,11 +42,6 @@ const influencersData: InfluencersData = {
         linkedin: 'https://www.linkedin.com/in/midudev/',
       },
       specialties: ['React', 'Node.js', 'Full Stack'],
-      followers: {
-        youtube: '360K',
-        instagram: '550K',
-        twitter: '286K',
-      },
     },
     {
       id: '2',
@@ -70,10 +56,6 @@ const influencersData: InfluencersData = {
         twitter: 'https://x.com/Fernando_Her85',
       },
       specialties: ['javascript', 'typescript', 'react', 'nodejs', 'python', 'sql', 'aws'],
-      followers: {
-        youtube: '150K',
-        twitter: '125k',
-      },
     },
     {
       id: '3',
@@ -88,11 +70,6 @@ const influencersData: InfluencersData = {
         github: 'https://github.com/mouredev',
       },
       specialties: ['javascript', 'typescript', 'react', 'nodejs', 'python', 'sql', 'aws'],
-      followers: {
-        youtube: '640k',
-        twitter: '245k',
-        github: 'K',
-      },
     },
   ],
 };
