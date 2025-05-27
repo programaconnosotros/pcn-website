@@ -6,11 +6,11 @@ async function main() {
   // Create multiple users
   const users = await Promise.all([
     prisma.user.upsert({
-      where: { email: 'js.agustin.sz@gmail.com' },
+      where: { email: 'user@example.com' },
       update: {},
       create: {
-        email: 'js.agustin.sz@gmail.com',
-        name: 'Agustín Sánchez',
+        email: 'user@example.com',
+        name: 'John Doe',
         image: 'https://avatars.githubusercontent.com/u/12345678?v=4',
         // 1234
         password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
