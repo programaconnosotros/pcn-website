@@ -8,7 +8,7 @@ export const ContentCard = ({
   timeToRead,
   authorImage,
 }: {
-  title: string;
+  title?: string;
   description: string;
   image: string;
   author?: string;
@@ -42,7 +42,7 @@ export const ContentCard = ({
         </div>
 
         <div className="text content">
-          <h1 className="text-xl font-bold text-white md:text-2xl">{title}</h1>
+          {title && <h1 className="text-xl font-bold text-white md:text-2xl">{title}</h1>}
           <p className="my-4 text-sm font-normal text-gray-100">{description}</p>
         </div>
       </div>
