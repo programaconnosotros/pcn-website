@@ -1,6 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -10,13 +17,6 @@ import {
 import { Heading2 } from '@/components/ui/heading-2';
 import { Calendar, FileText, MapPin, MicVocal, User, Youtube } from 'lucide-react';
 import Link from 'next/link';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import { talks } from './talks';
 
 const Talks = () => (
@@ -36,7 +36,7 @@ const Talks = () => (
       {talks
         .sort((a, b) => b.date.getTime() - a.date.getTime())
         .map((talk, index) => (
-          <Card key={index}>
+          <Card key={index} className="flex flex-col">
             {talk.portrait && (
               <div className="relative aspect-video">
                 <img
@@ -51,7 +51,7 @@ const Talks = () => (
               <CardTitle className="text-lg">{talk.name}</CardTitle>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="flex-1">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
                 <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
@@ -78,7 +78,7 @@ const Talks = () => (
               )}
             </CardContent>
 
-            <CardFooter>
+            <CardFooter className="mt-auto justify-start ">
               {talk.youtubeUrl && (
                 <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
                   <Button className="mt-2 flex w-full items-center gap-2" variant="youtube">
