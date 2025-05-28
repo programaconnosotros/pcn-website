@@ -32,5 +32,5 @@ export const createAdvise = async (content: string) => {
   });
 
   revalidatePath('/consejos');
-  revalidatePath('/home');
+  revalidatePath('/');
 };

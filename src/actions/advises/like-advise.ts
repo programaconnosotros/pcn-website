@@ -43,7 +43,7 @@ export const toggleLike = async (adviseId: string) => {
     // Revalidar todas las rutas relevantes
     revalidatePath('/consejos');
     revalidatePath(`/consejos/${adviseId}`);
-    revalidatePath('/home');
+    revalidatePath('/');
     
     return { success: true };
   } catch (error) {

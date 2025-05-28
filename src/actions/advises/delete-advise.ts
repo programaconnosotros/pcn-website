@@ -20,5 +20,5 @@ export const deleteAdvise = async (id: string) => {
   });
 
   revalidatePath('/consejos');
-  revalidatePath('/home');
+  revalidatePath('/');
 };
