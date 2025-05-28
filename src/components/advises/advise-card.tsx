@@ -6,10 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
 import { Session, User } from '@prisma/client';
@@ -51,13 +51,16 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-    // Optimistically update the UI
-    addOptimisticLike(session.user.id);
-
+    const previousLikes = [...optimisticLikes];
+    
     try {
+      // Optimistically update the UI
+      addOptimisticLike(session.user.id);
       await toggleLike(advise.id);
     } catch (error) {
       console.error('Error toggling like:', error);
+      // Revert optimistic update on error
+      addOptimisticLike(session.user.id);
     } finally {
       setIsLiking(false);
     }
@@ -109,7 +112,11 @@ export const AdviseCard = ({
             variant="ghost"
             size="icon"
             className={isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}
-            onClick={handleLike}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleLike();
+            }}
           >
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
