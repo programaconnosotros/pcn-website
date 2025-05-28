@@ -78,7 +78,7 @@ export default async function InfluencersPage() {
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Influencers de la Comunidad</h1>
+        <h1 className="text-3xl font-bold">Influencers recomendados por la comunidad</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           Conoce a los creadores de contenido que comparten sus conocimientos y experiencias con la
           comunidad.
