@@ -1,18 +1,17 @@
-import { Heading2 } from '@/components/ui/heading-2';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
   CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
 } from '@/components/ui/card';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Send, TvMinimalPlay } from 'lucide-react';
+import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
+import { Send, TvMinimalPlay } from 'lucide-react';
+import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
-import { Badge } from '@/components/ui/badge';
 
 const AddCourseCard = () => (
   <Card className="flex flex-col justify-between bg-neutral-100 dark:bg-neutral-900">
@@ -40,7 +39,7 @@ const AddCourseCard = () => (
 
 const CourseCard = ({ course }: { course: Course }) => {
   const ViewButton = () => (
-    <Link href={`/courses/${course.id}`} className="w-full">
+    <Link href={`/cursos/${course.id}`} className="w-full">
       <Button className="flex w-full flex-row items-center gap-2">
         Ver curso
         <TvMinimalPlay className="h-5 w-5" />

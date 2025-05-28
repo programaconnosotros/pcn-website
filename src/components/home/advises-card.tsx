@@ -1,9 +1,9 @@
+import prisma from '@/lib/prisma';
 import { MessageSquare } from 'lucide-react';
 import { StatCard } from './stat-card';
-import prisma from '@/lib/prisma';
 
 export const AdvisesCard = async () => {
   const numberOfAdvises = await prisma.advise.count({});
 
-  return <StatCard href="/advises" title="Consejos" Icon={MessageSquare} value={numberOfAdvises} />;
+  return <StatCard href="/consejos" title="Consejos" Icon={MessageSquare} value={numberOfAdvises} />;
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import { Advise } from '@/actions/advises/get-advise';
+import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -14,10 +15,9 @@ import { formatDate } from '@/lib/utils';
 import { Session, User } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useOptimistic } from 'react';
+import { useOptimistic, useState } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
-import { toggleLike } from '@/actions/advises/like-advise';
 
 export const AdviseCard = ({
   advise,
@@ -131,7 +131,7 @@ export const AdviseCard = ({
         onOpenChange={setIsEditDialogOpen}
       />
 
-      <Link href={`/advises/${advise.id}`} className="block">
+      <Link href={`/consejos/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
           <p className="text-sm">{advise.content}</p>
           <div className="mt-4 flex items-center justify-between">

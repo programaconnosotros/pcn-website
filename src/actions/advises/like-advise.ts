@@ -39,6 +39,6 @@ export const toggleLike = async (adviseId: string) => {
     });
   }
 
-  revalidatePath('/advises');
-  revalidatePath(`/advises/${adviseId}`);
+  revalidatePath('/consejos');
+  revalidatePath(`/consejos/${adviseId}`);
 };

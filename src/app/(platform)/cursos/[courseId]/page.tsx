@@ -1,4 +1,3 @@
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import { Heading2 } from '@/components/ui/heading-2';
 import { getCourseById } from '../courses';
 
 const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
@@ -26,13 +26,13 @@ const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+            <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
           </BreadcrumbItem>
 
           <BreadcrumbSeparator />
 
           <BreadcrumbItem>
-            <BreadcrumbLink href="/courses">Cursos</BreadcrumbLink>
+            <BreadcrumbLink href="/cursos">Cursos</BreadcrumbLink>
           </BreadcrumbItem>
 
           <BreadcrumbSeparator />

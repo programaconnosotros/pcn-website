@@ -1,19 +1,19 @@
+import { CoursesCard } from '@/components/home/courses-card';
+import { DiscordCard } from '@/components/home/discord-card';
+import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
+import { PodcastCard } from '@/components/home/podcast-card';
+import { ContentCard } from '@/components/ui/content-card';
+import { Heading2 } from '@/components/ui/heading-2';
+import prisma from '@/lib/prisma';
 import { AdvisesCard } from '@components/home/advises-card';
-import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
-import { TalksCard } from '@components/home/talks-card';
-import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ContentCard } from '@/components/ui/content-card';
-import { DiscordCard } from '@/components/home/discord-card';
-import { PodcastCard } from '@/components/home/podcast-card';
-import Link from 'next/link';
-import { CoursesCard } from '@/components/home/courses-card';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { TalksCard } from '@components/home/talks-card';
+import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
+import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
 import { Session, User } from '@prisma/client';
-import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
+import { cookies } from 'next/headers';
+import Link from 'next/link';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -59,7 +59,7 @@ const Home = async () => {
           <div className="flex flex-col gap-6">
             <UpcomingEventsSection />
 
-            <Link href="/posts/pcn-story">
+            <Link href="/posts/historia-pcn">
               <ContentCard
                 description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
                 image="/pre-lightning-talks.webp"

@@ -19,6 +19,6 @@ export const deleteAdvise = async (id: string) => {
     where: { id, authorId: session.userId },
   });
 
-  revalidatePath('/advises');
+  revalidatePath('/consejos');
   revalidatePath('/home');
 };

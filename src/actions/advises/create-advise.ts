@@ -1,7 +1,7 @@
 'use server';
 
-import { adviseSchema } from '@/schemas/advise-schema';
 import prisma from '@/lib/prisma';
+import { adviseSchema } from '@/schemas/advise-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
@@ -31,6 +31,6 @@ export const createAdvise = async (content: string) => {
     },
   });
 
-  revalidatePath('/advises');
+  revalidatePath('/consejos');
   revalidatePath('/home');
 };
