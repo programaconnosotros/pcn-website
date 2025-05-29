@@ -9,7 +9,7 @@ const Profile = async () => {
 
   if (!sessionId) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
   const session = await prisma.session.findUnique({
@@ -20,7 +20,7 @@ const Profile = async () => {
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
   const user = await prisma.user.findUnique({
@@ -34,7 +34,7 @@ const Profile = async () => {
 
   if (!user) {
     console.error('Usuario no encontrawdo, redireccionando a /home');
-    redirect('/home');
+    redirect('/');
   }
 
   const userLanguages = user.languages

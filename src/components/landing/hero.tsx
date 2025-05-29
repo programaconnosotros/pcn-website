@@ -1,12 +1,11 @@
 'use client';
-import React from 'react';
-import { SparklesCore } from '../ui/sparkles';
-import Link from 'next/link';
-import { Button } from '../ui/button';
-import { Eye, UserPlus, LogIn, User } from 'lucide-react';
 import { ScrollArrow } from '@/components/landing/scroll-arrow';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
+import { Eye, LogIn, UserPlus } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 import { GlowingText } from '../ui/glowing-text';
+import { SparklesCore } from '../ui/sparkles';
 
 export const Hero = () => (
   <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
@@ -36,14 +35,14 @@ export const Hero = () => (
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
         <div className="flex w-full flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-row justify-center gap-4">
-            <Link href="/auth/sign-in" passHref>
+            <Link href="/autenticacion/iniciar-sesion" passHref>
               <Button className="flex flex-row items-center justify-center gap-2">
                 <span>Ingresar</span>
                 <LogIn className="h-4 w-4" />
               </Button>
             </Link>
 
-            <Link href="/auth/sign-up" passHref>
+            <Link href="/autenticacion/registro" passHref>
               <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
                 <span>Crear cuenta</span>
                 <UserPlus className="h-4 w-4" />

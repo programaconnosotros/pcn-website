@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { dateContainsString } from '@/lib/date-formatter';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
 import { PhotoDialog } from './photo-dialog';
 import { SearchBar } from './search-bar';
 import { SortSelector, type SortOrder } from './sort-selector';
-import { dateContainsString } from '@/lib/date-formatter';
 
 // Sample gallery photos with Date objects and Spanish titles
 const photos = [
@@ -155,20 +155,20 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
   const handlePhotoClick = (index: number) => {
     const photo = sortedPhotos[index];
     // Update URL with photo ID
-    router.push(`?photo=${photo.id}`, { scroll: false });
+    router.push(`?foto=${photo.id}`, { scroll: false });
     setSelectedPhotoIndex(index);
   };
 
   const handleCloseDialog = () => {
     // Remove photo ID from URL
-    router.push('/photos', { scroll: false });
+    router.push('/galeria', { scroll: false });
     setSelectedPhotoIndex(-1);
   };
 
   const handleNavigate = (index: number) => {
     const photo = sortedPhotos[index];
     // Update URL with new photo ID
-    router.push(`?photo=${photo.id}`, { scroll: false });
+    router.push(`?foto=${photo.id}`, { scroll: false });
     setSelectedPhotoIndex(index);
   };
 
@@ -179,7 +179,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
   const getShareUrl = (photoId: number) => {
     // Create absolute URL for sharing
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/photos?photo=${photoId}`;
+    return `${baseUrl}/galeria?foto=${photoId}`;
   };
 
   return (

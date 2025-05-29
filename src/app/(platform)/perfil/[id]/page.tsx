@@ -1,13 +1,13 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import prisma from '@/lib/prisma';
-import { Linkedin, Twitter, Pencil } from 'lucide-react';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import prisma from '@/lib/prisma';
+import { Linkedin, Pencil, Twitter } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 0;
 
@@ -93,7 +93,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               {isOwnProfile && (
-                <Link href="/profile">
+                <Link href="/perfil">
                   <Button
                     variant="link"
                     className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"

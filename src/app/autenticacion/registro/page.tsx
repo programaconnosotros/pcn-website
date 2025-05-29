@@ -10,13 +10,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { signUpSchema } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { LogIn, UserPlus, SquareAsterisk, ArrowLeft } from 'lucide-react';
-import { signUpSchema } from '@/lib/validations/auth-schemas';
 
 const formSchema = signUpSchema;
 
@@ -148,14 +148,14 @@ export default function SignUpPage() {
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href="/auth/sign-in" className="w-full">
+          <Link href="/autenticacion/iniciar-sesion" className="w-full">
             <Button variant="outline" className="w-full">
               Iniciar sesión
               <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </Link>
 
-          <Link href="/auth/reset-password" className="w-full">
+          <Link href="/autenticacion/recuperar-clave" className="w-full">
             <Button variant="outline" className="w-full">
               Me olvidé la contraseña
               <SquareAsterisk className="ml-2 h-4 w-4" />
