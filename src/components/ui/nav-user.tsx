@@ -3,15 +3,17 @@
 import {
   BadgeCheck,
   ChevronsUpDown,
+  LogIn,
   LogOut,
+  Monitor,
   Moon,
   Sun,
-  Monitor,
   UserPlus,
-  LogIn,
 } from 'lucide-react';
 
+import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,10 +21,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
@@ -31,12 +33,10 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { signOut } from '@/actions/auth/sign-out';
-import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile, isCollapsed } = useSidebar();
@@ -54,7 +54,7 @@ export function NavUser({ user }: { user: User | null }) {
           }`}
         >
           <SidebarMenuItem className="mb-2 w-full">
-            <Link href="/auth/sign-in">
+            <Link href="/autenticacion/iniciar-sesion">
               <Button className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}>
                 {isCollapsed && !isMobile ? (
                   <LogIn className="h-5 w-5" />
@@ -68,7 +68,7 @@ export function NavUser({ user }: { user: User | null }) {
           </SidebarMenuItem>
 
           <SidebarMenuItem className="w-full">
-            <Link href="/auth/sign-up">
+            <Link href="/autenticacion/registro">
               <Button
                 className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}
                 variant="secondary"
@@ -136,7 +136,7 @@ export function NavUser({ user }: { user: User | null }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   className="flex cursor-pointer flex-row gap-2"
-                  onClick={() => router.push('/profile')}
+                  onClick={() => router.push('/perfil')}
                 >
                   <BadgeCheck size={16} />
                   Mi cuenta

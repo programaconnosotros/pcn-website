@@ -78,7 +78,7 @@ const Talks = () => (
               )}
             </CardContent>
 
-            <CardFooter className="mt-auto justify-start ">
+            <CardFooter className="mt-auto justify-start">
               {talk.youtubeUrl && (
                 <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
                   <Button className="mt-2 flex w-full items-center gap-2" variant="youtube">

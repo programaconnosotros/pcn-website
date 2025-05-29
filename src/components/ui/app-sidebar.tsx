@@ -1,14 +1,17 @@
 'use client';
 
-import * as React from 'react';
 import {
   BookOpen,
+  CalendarDays,
+  Home,
+  Image,
   Instagram,
   Laptop,
   LifeBuoy,
   Linkedin,
   Send,
   SquareTerminal,
+  Users,
   Youtube,
   Image,
   Home,
@@ -16,6 +19,7 @@ import {
   Users,
   Briefcase,
 } from 'lucide-react';
+import * as React from 'react';
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -41,7 +45,7 @@ const data = {
     },
     {
       title: 'Consejos',
-      url: '/advises',
+      url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
     },
@@ -52,39 +56,39 @@ const data = {
     },
     {
       title: 'Fotos',
-      url: '/photos',
+      url: '/galeria',
       icon: Image,
     },
     {
       title: 'Charlas',
-      url: '/talks',
+      url: '/charlas',
       icon: BookOpen,
     },
     {
       title: 'Eventos',
-      url: '/events',
+      url: '/eventos',
       icon: CalendarDays,
     },
     {
       title: 'Cursos',
-      url: '/courses',
+      url: '/cursos',
       icon: Laptop,
       items: [
         {
           title: 'Vim',
-          url: '/courses/vim',
+          url: '/cursos/vim',
         },
         {
           title: 'LaTeX',
-          url: '/courses/latex',
+          url: '/cursos/latex',
         },
         {
           title: 'Git & GitHub',
-          url: '/courses/git-and-github',
+          url: '/cursos/git-and-github',
         },
         {
           title: 'Ver todos',
-          url: '/courses',
+          url: '/cursos',
         },
       ],
     },

@@ -1,4 +1,5 @@
 'use client';
+import { signIn } from '@/actions/auth/sign-in';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -10,31 +11,42 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { LogIn, UserPlus, SquareAsterisk, ArrowLeft } from 'lucide-react';
-import { resetPassword } from '@/actions/auth/reset-password';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
+  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
 });
 
-export default function ResetPasswordPage() {
+export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const emailParam = searchParams.get('email') || '';
+  const passwordParam = searchParams.get('password') || '';
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: emailParam,
+      password: passwordParam,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) =>
-    toast.promise(resetPassword(values.email), {
-      loading: 'Generando nueva contraseña...',
-      success: 'Si el usuario existe, vas a recibir una nueva contraseña.',
-      error: 'No se pudo procesar la solicitud.',
-    });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await toast.promise(signIn(values), {
+        loading: 'Ingresando...',
+        success: 'Bienvenido! 👋',
+        error: 'No pudimos iniciar la sesión.',
+      });
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+    }
+  };
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
@@ -43,7 +55,7 @@ export default function ResetPasswordPage() {
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
           <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Restablecer contraseña</h1>
+            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Iniciar sesión</h1>
           </div>
         </div>
 
@@ -65,25 +77,40 @@ export default function ResetPasswordPage() {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contraseña</FormLabel>
+
+                  <FormControl>
+                    <Input type="password" placeholder="••••••" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit" className="w-full">
-              Generar nueva contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
+              Ingresar <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </form>
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href="/auth/sign-in" className="w-full">
-            <Button variant="outline" className="w-full">
-              Iniciar sesión
-              <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-
-          <Link href="/auth/sign-up" className="w-full">
+          <Link href="/autenticacion/registro" className="w-full">
             <Button variant="outline" className="w-full">
               Crear cuenta
               <UserPlus className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+
+          <Link href="/autenticacion/recuperar-clave" className="w-full">
+            <Button variant="outline" className="w-full">
+              Cambiar contraseña
+              <SquareAsterisk className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>

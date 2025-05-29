@@ -1,13 +1,13 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Gallery } from '@/components/photo-gallery/gallery';
 import { Heading2 } from '@/components/ui/heading-2';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function PhotoGallery() {
   const searchParams = useSearchParams();
-  const photoId = searchParams.get('photo');
+  const photoId = searchParams.get('foto');
   const [initialPhotoId, setInitialPhotoId] = useState<number | null>(null);
 
   useEffect(() => {

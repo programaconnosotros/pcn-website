@@ -50,7 +50,7 @@ export const createComment = async ({
     },
   });
 
-  revalidatePath(`/advises/${adviseId}`);
+  revalidatePath(`/consejos/${adviseId}`);
 
   return comment;
 };
