@@ -8,10 +8,7 @@ import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
 
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
-  const {
-    data: advises = [],
-    refetch,
-  } = useQuery({
+  const { data: advises = [], refetch } = useQuery({
     queryKey: ['advises'],
     queryFn: () => fetchAdvises(1),
   });
