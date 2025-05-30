@@ -20,7 +20,7 @@ export const getBestAdvises = async () => {
         _count: 'desc',
       },
     },
-    take: 2,
+    take: 3,
   });
 
   return bestAdvises;
