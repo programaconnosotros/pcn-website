@@ -16,6 +16,8 @@ import { Session, User } from '@prisma/client';
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { BestAdvises } from '@/components/home/best-advises';
 import { ImageCarousel } from '@/components/ui/image-carousel';
+import fs from 'fs';
+import path from 'path';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -36,6 +38,13 @@ const Home = async () => {
       },
     });
   }
+
+  // Leer las imágenes de la carpeta gallery-photos
+  const galleryPath = path.join(process.cwd(), 'public', 'gallery-photos');
+  const files = fs.readdirSync(galleryPath);
+  const images = files
+    .filter((file) => /\.(webp|jpg|jpeg|png|gif)$/i.test(file))
+    .map((file) => `/gallery-photos/${file}`);
 
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
@@ -63,13 +72,7 @@ const Home = async () => {
           </div>
 
           <div className="flex w-2/5 flex-col gap-6">
-            <ImageCarousel
-              images={[
-                '/gallery-photos/agus-chelo-talk.webp',
-                '/gallery-photos/agus-init.webp',
-                '/gallery-photos/agus-pc.webp',
-              ]}
-            />
+            <ImageCarousel images={images} />
           </div>
         </div>
 
