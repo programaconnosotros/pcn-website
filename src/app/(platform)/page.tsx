@@ -14,6 +14,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { Session, User } from '@prisma/client';
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
+import { BestAdvises } from '@/components/home/best-advises';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -48,17 +49,22 @@ const Home = async () => {
       </div>
 
       <section className="mb-6 w-full">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <AdvisesCard />
-          <CoursesCard />
-          <UpcomingEventsCard />
-          <TalksCard />
+        <div className="flex w-full flex-row gap-6">
+          <div className="flex w-1/4 flex-col gap-6">
+            <AdvisesCard />
+            <CoursesCard />
+            <UpcomingEventsCard />
+            <TalksCard />
+          </div>
+
+          <div className="flex w-3/4 flex-col gap-6 rounded-lg border border-white/10 p-6">
+            <BestAdvises />
+          </div>
         </div>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-6">
             <UpcomingEventsSection />
-
             <Link href="/posts/pcn-story">
               <ContentCard
                 description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
@@ -66,12 +72,6 @@ const Home = async () => {
                 title="Nuestra historia"
               />
             </Link>
-
-            <ContentCard
-              title="¿Sabías que podés sumarte al team de desarrollo de este website?"
-              description="¡Comunicate con nosotros!"
-              image="/starbucks.webp"
-            />
           </div>
 
           <div className="flex flex-col gap-6">
