@@ -13,14 +13,29 @@ export function ImageCarousel({ images, className }: ImageCarouselProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || images.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length, isHovered]);
+  }, [isHovered, images.length]);
+
+  if (images.length === 0) {
+    return (
+      <div
+        className={cn(
+          'relative aspect-video w-full overflow-hidden rounded-lg bg-gray-100',
+          className,
+        )}
+      >
+        <div className="flex h-full items-center justify-center">
+          <span className="text-gray-500">No hay imágenes disponibles</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
