@@ -15,6 +15,7 @@ import { cookies } from 'next/headers';
 import { Session, User } from '@prisma/client';
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { BestAdvises } from '@/components/home/best-advises';
+import { ImageCarousel } from '@/components/ui/image-carousel';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -50,15 +51,25 @@ const Home = async () => {
 
       <section className="mb-6 w-full">
         <div className="flex w-full flex-row gap-6">
-          <div className="flex w-1/4 flex-col gap-6">
+          <div className="flex w-1/5 flex-col gap-6">
             <AdvisesCard />
             <CoursesCard />
             <UpcomingEventsCard />
             <TalksCard />
           </div>
 
-          <div className="flex w-3/4 flex-col gap-6 rounded-lg border border-white/10 p-6">
+          <div className="flex w-2/5 flex-col gap-6 rounded-lg border border-white/10 p-6">
             <BestAdvises />
+          </div>
+
+          <div className="flex w-2/5 flex-col gap-6">
+            <ImageCarousel
+              images={[
+                '/gallery-photos/agus-chelo-talk.webp',
+                '/gallery-photos/agus-init.webp',
+                '/gallery-photos/agus-pc.webp',
+              ]}
+            />
           </div>
         </div>
 
