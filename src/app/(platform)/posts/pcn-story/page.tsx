@@ -19,7 +19,7 @@ const PCNStory = () => (
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+          <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbSeparator />
