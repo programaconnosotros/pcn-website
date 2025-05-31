@@ -11,6 +11,7 @@ import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { TalksCard } from '@components/home/talks-card';
 import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
 import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
+import { Team } from '@components/landing/team';
 import { Session, User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -85,6 +86,8 @@ const Home = async () => {
           <InviteDevsToWork />
         </div>
       </section>
+
+      <Team />
     </div>
   );
 };
