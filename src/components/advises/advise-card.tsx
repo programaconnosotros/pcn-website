@@ -6,10 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
 import { Session, User } from '@prisma/client';
@@ -52,7 +52,7 @@ export const AdviseCard = ({
 
     setIsLiking(true);
     const previousLikes = [...optimisticLikes];
-    
+
     try {
       // Optimistically update the UI
       addOptimisticLike(session.user.id);
