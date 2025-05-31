@@ -1,7 +1,7 @@
 'use client';
 
 import { dateContainsString } from '@/lib/date-formatter';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
 import { PhotoDialog } from './photo-dialog';
@@ -96,7 +96,6 @@ interface GalleryProps {
 
 export function Gallery({ initialPhotoId }: GalleryProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('default');
