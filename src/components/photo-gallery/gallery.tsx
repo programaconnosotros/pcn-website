@@ -189,7 +189,11 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
           setSearchQuery={setSearchQuery}
           placeholder="Buscar por título o fecha..."
         />
-        <SortSelector sortOrder={sortOrder} onSortChange={handleSortChange} />
+        <SortSelector
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+          className="w-full max-w-md sm:w-auto"
+        />
       </div>
 
       {sortedPhotos.length === 0 ? (
