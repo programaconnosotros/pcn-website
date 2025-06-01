@@ -143,7 +143,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-            <SidebarMenuItem className="mt-1.5 -ml-2 group-data-[collapsible=icon]:mt-3.5  group-data-[collapsible=icon]:ml-0">
+            <SidebarMenuItem className="mt-1.5 -ml-2 group-data-[collapsible=icon]:mt-3.5 group-data-[collapsible=icon]:ml-0">
             <SidebarMenuButton size="lg" asChild>
               <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
