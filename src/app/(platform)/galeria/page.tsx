@@ -25,7 +25,7 @@ export default function PhotoGallery() {
           <Heading2 className="text-center">Galería</Heading2>
         </div>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto">
         <Gallery initialPhotoId={initialPhotoId} />
       </main>
     </div>
