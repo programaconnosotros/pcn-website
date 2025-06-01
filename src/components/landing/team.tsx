@@ -20,7 +20,7 @@ const people: Person[] = [
         <span className="underline">Eagerworks</span>
       </p>
     ),
-    imageUrl: '/agus.webp',
+    imageUrl: '/colaborators/agus.webp',
     linkedinUrl: 'https://www.linkedin.com/in/agustinsanc/',
     githubUrl: 'https://github.com/agustin-sanc',
   },
@@ -31,7 +31,7 @@ const people: Person[] = [
         Sr. Frontend Engineer (iOS) en <span className="underline">PedidosYa</span>
       </p>
     ),
-    imageUrl: '/mauri2.webp',
+    imageUrl: '/colaborators/mauris.webp',
     linkedinUrl: 'https://www.linkedin.com/in/mauriciosnchz/',
     githubUrl: 'https://github.com/mausnchz',
   },
@@ -42,7 +42,7 @@ const people: Person[] = [
         Sr. Frontend Engineer (iOS) en <span className="underline">Compass</span>
       </p>
     ),
-    imageUrl: '/esteban.webp',
+    imageUrl: '/colaborators/esteban.webp',
     linkedinUrl: 'https://www.linkedin.com/in/esteban-nicolas-sanchez-79b428172/',
   },
   {
@@ -52,7 +52,7 @@ const people: Person[] = [
         Sr. Backend Engineer (Python & Java) en <span className="underline">Bowery</span>
       </p>
     ),
-    imageUrl: '/chelo.webp',
+    imageUrl: '/colaborators/chelo.webp',
     linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
     githubUrl: 'https://github.com/Chelo154',
   },
@@ -63,7 +63,7 @@ const people: Person[] = [
         Sr. Backend Engineer (JS/TS) en <span className="underline">Entropy</span>
       </p>
     ),
-    imageUrl: '/german.webp',
+    imageUrl: '/colaborators/german.webp',
     linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
     githubUrl: 'https://github.com/gmanavarro',
   },
@@ -74,10 +74,108 @@ const people: Person[] = [
         CTO & Sr. Frontend Engineer (JS/TS) en <span className="underline">NotNini</span>
       </p>
     ),
-    imageUrl: '/chino.webp',
+    imageUrl: '/colaborators/chino.webp',
     linkedinUrl: 'https://www.linkedin.com/in/ivantaddei/',
     githubUrl: 'https://github.com/ivantaddei',
   },
+  {
+    name: 'Carlos',
+    role: (
+      <p>
+        Sr. Frontend Engineer (JS/TS) en <span className="underline">WebExport</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/carlos.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/carlos-spagnolo-andres/',
+    githubUrl: 'https://github.com/SpagnoloCarlos',
+  },
+  {
+    name: 'Benja',
+    role: (
+      <p>
+        Sr. Backend Engineer (Python) en <span className="underline">Microsoft</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/benja.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
+    githubUrl: 'https://github.com/cortesjpb',
+  },
+  {
+    name: 'Alejo',
+    role: (
+      <p>
+        Sr. Full-Stack Engineer (TS/Python) en <span className="underline">Pendo.io</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/alejo.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/alejoboga/',
+    githubUrl: 'https://github.com/Alejoboga20',
+  },
+  {
+    name: 'Facu',
+    role: (
+      <p>
+        Ssr. Backend Engineer (JS/TS) en <span className="underline">C&S Informática</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/facu.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/juanfacundobazanalvarez/',
+    githubUrl: 'https://github.com/FacuBzn',
+  },
+  {
+    name: 'Lemi',
+    role: (
+      <p>
+        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/lemi.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/emiliano-grillo-905895296/',
+  },
+  {
+    name: 'Vicky',
+    role: (
+      <p>
+        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/vicky.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/maria-victoria-grillo/',
+  },
+  {
+    name: 'Mati',
+    role: (
+      <p>
+        Sr. Backend Engineer (Python) en <span className="underline">ASZ Software</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/mati.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/matias-daniel-gutierrez/',
+    githubUrl: 'https://github.com/MatiasDG539',
+  },
+  {
+    name: 'Mauri',
+    role: (
+      <p>
+        Ssr. Full-Stack Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/mauric.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/mauriciojavierchaile/',
+    githubUrl: 'https://github.com/mauricio-rodriguez',
+  },
+  {
+    name: 'Nico',
+    role: (
+      <p>
+        Ssr. Frontend Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+      </p>
+    ),
+    imageUrl: '/colaborators/nico.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/nicolas-fuentes-garcia-7997a1236/',
+    githubUrl: 'https://github.com/nicofuentesg',
+  },
+ 
 ];
 
 export const Team = () => (
@@ -99,7 +197,11 @@ export const Team = () => (
       >
         {people.map((person) => (
           <li key={person.name}>
-            <img alt="" src={person.imageUrl} className="mx-auto h-24 w-24 rounded-full" />
+            <img 
+              alt="" 
+              src={person.imageUrl} 
+              className="mx-auto h-24 w-24 rounded-full grayscale hover:grayscale-0 transition-all duration-300" 
+            />
 
             <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">
               {person.name}
