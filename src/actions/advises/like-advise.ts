@@ -44,7 +44,7 @@ export const toggleLike = async (adviseId: string) => {
     revalidatePath('/consejos');
     revalidatePath(`/consejos/${adviseId}`);
     revalidatePath('/');
-    
+
     return { success: true };
   } catch (error) {
     console.error('Error in toggleLike:', error);
