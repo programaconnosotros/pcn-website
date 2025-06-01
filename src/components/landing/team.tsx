@@ -162,7 +162,7 @@ const people: Person[] = [
     ),
     imageUrl: '/colaborators/mauric.webp',
     linkedinUrl: 'https://www.linkedin.com/in/mauriciojavierchaile/',
-    githubUrl: 'https://github.com/mauricio-rodriguez',
+    githubUrl: 'https://github.com/MauriJC',
   },
   {
     name: 'Nico',
@@ -175,19 +175,18 @@ const people: Person[] = [
     linkedinUrl: 'https://www.linkedin.com/in/nicolas-fuentes-garcia-7997a1236/',
     githubUrl: 'https://github.com/nicofuentesg',
   },
- 
 ];
 
 export const Team = () => (
   <div className="py-24 sm:py-32">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl lg:mx-0">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Nuestros colaboradores
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Nuestros colaboradores</h2>
 
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Conocé a las personas que hacen posible esta comunidad. Desde profesionales experimentados hasta estudiantes apasionados, todos contribuyen a crear un espacio de aprendizaje y crecimiento.
+          Conocé a las personas que hacen posible esta comunidad. Desde profesionales experimentados
+          hasta estudiantes apasionados, todos contribuyen a crear un espacio de aprendizaje y
+          crecimiento.
         </p>
       </div>
 
@@ -197,15 +196,13 @@ export const Team = () => (
       >
         {people.map((person) => (
           <li key={person.name}>
-            <img 
-              alt="" 
-              src={person.imageUrl} 
-              className="mx-auto h-24 w-24 rounded-full grayscale hover:grayscale-0 transition-all duration-300" 
+            <img
+              alt=""
+              src={person.imageUrl}
+              className="mx-auto h-24 w-24 rounded-full grayscale transition-all duration-300 hover:grayscale-0"
             />
 
-            <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">
-              {person.name}
-            </h3>
+            <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">{person.name}</h3>
 
             <p className="text-sm leading-6 text-muted-foreground">{person.role}</p>
 
@@ -221,7 +218,10 @@ export const Team = () => (
 
               {person.linkedinUrl && (
                 <li>
-                  <a href={person.linkedinUrl} className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href={person.linkedinUrl}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     <span className="sr-only">LinkedIn</span>
                     <LinkedInSVG />
                   </a>
@@ -230,7 +230,10 @@ export const Team = () => (
 
               {person.githubUrl && (
                 <li>
-                  <a href={person.githubUrl} className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href={person.githubUrl}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     <span className="sr-only">GitHub</span>
                     <GitHubSVG />
                   </a>
