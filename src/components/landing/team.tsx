@@ -93,7 +93,7 @@ const people: Person[] = [
     name: 'Benja',
     role: (
       <p>
-        Sr. Backend Engineer (Python) en <span className="underline">Microsoft</span>
+        Sr. Full-Stack Engineer
       </p>
     ),
     imageUrl: '/colaborators/benja.webp',
