@@ -11,6 +11,7 @@ import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { TalksCard } from '@components/home/talks-card';
 import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
 import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
+import { Team } from '@components/landing/team';
 import { Session, User } from '@prisma/client';
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { BestAdvises } from '@/components/home/best-advises';
