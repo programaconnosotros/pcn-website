@@ -89,8 +89,8 @@ const data = {
       ],
     },
     {
-      title: 'Recomendaciones',
-      url: '/recomendaciones',
+      title: 'Software recomendado',
+      url: '/software-recomendado',
       icon: Star,
     },
   ],
