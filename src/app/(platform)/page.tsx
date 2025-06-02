@@ -18,6 +18,12 @@ import { BestAdvises } from '@/components/home/best-advises';
 import { ImageCarousel } from '@/components/ui/image-carousel';
 import fs from 'fs';
 import path from 'path';
+import { Button } from '@/components/ui/button';
+import { Heading3 } from '@/components/ui/heading-3';
+import { Paragraph } from '@/components/ui/paragraph';
+import { BookOpen, Images, LogIn, ScrollText, UserPlus } from 'lucide-react';
+import { GlowingText } from '@/components/ui/glowing-text';
+import { Heading1 } from '@/components/ui/heading-1';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -48,57 +54,149 @@ const Home = async () => {
 
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
-      <div className="mb-6 flex flex-col">
-        <Heading2>
-          {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
-        </Heading2>
+      <div className="mb-6 border">
+        <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-6">
+          {session ? (
+            <>
+              <Heading2 variant="gradient">
+                {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
+              </Heading2>
 
-        <div className="hidden md:block">
-          <MotivationalQuotes />
+              <div className="hidden md:block">
+                <MotivationalQuotes />
+              </div>
+            </>
+          ) : (
+            <>
+              <Heading1 variant="gradient" className="mb-4 font-mono text-pcnGreen">
+                programaConNosotros
+              </Heading1>
+
+              <p className="text-lg text-white/50">
+                La comunidad que necesitas para llevar tu carrera en la industria del software al
+                siguiente nivel!
+              </p>
+
+              <div className="mt-3 flex flex-row gap-2">
+                <Button variant="outline">
+                  Registrarme <UserPlus className="ml-2 h-4 w-4" />
+                </Button>
+                <Button>
+                  Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
+
+        <div className="grid grid-cols-2 border-b">
+          <div className="flex flex-col items-center justify-center border-b p-6">
+            <Heading3 variant="gradient">Contactos</Heading3>
+
+            <Paragraph className="text-center">
+              Podés conocer personas apasionadas por el software de todo el mundo, de todas las
+              áreas y de todos los niveles.
+            </Paragraph>
+          </div>
+
+          <div className="flex flex-col items-center justify-center border-b border-l p-6">
+            <Heading3 variant="gradient">Mentores</Heading3>
+
+            <Paragraph className="text-center">
+              Podés encontrar mentores de primer nivel y también convertirte en uno y ayudar a
+              muchas personas.
+            </Paragraph>
+          </div>
+
+          <div className="flex flex-col items-center justify-center border-b p-6">
+            <Heading3 variant="gradient">Oportunidades</Heading3>
+
+            <Paragraph className="text-center">Podés encontrar oportunidades soñadas.</Paragraph>
+          </div>
+
+          <div className="flex flex-col items-center justify-center border-b border-l p-6">
+            <Heading3 variant="gradient">Eventos</Heading3>
+
+            <Paragraph className="text-center">
+              Podés participar y organizar muchos eventos.
+            </Paragraph>
+          </div>
+
+          <div className="flex flex-col items-center justify-center p-6">
+            <Heading3 variant="gradient">Consejos</Heading3>
+
+            <Paragraph className="text-center">
+              Podés encontrar y compartir consejos con la comunidad.
+            </Paragraph>
+          </div>
+
+          <div className="flex flex-col items-center justify-center border-l p-6">
+            <Heading3 variant="gradient">Conocimiento</Heading3>
+
+            <Paragraph className="text-center">
+              Nos encanta dar charlas, cursos y compartir conocimiento con la comunidad.
+            </Paragraph>
+          </div>
+        </div>
+
+        <div className="border-b p-6 text-center">
+          <Heading3 variant="gradient">Conocé la historia de nuestra comunidad</Heading3>
+
+          <Paragraph className="text-center">
+            Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
+            llegar a donde estamos hoy.
+          </Paragraph>
+
+          <Link href="/posts/pcn-story">
+            <Button>
+              Leer la historia <ScrollText className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="border-b p-6 text-center">
+          <Heading3 variant="gradient">Fotos de la comunidad</Heading3>
+
+          <Paragraph className="text-center">
+            Visita nuestra galería de fotos para conocer más a la comunidad o revisar algunos
+            recuerdos.
+          </Paragraph>
+
+          <Link href="/gallery">
+            <Button>
+              Ver galería <Images className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex flex-row border-b">
+          <div className="border-r p-6 text-center">
+            <Heading3 variant="gradient">Sumate al WhatsApp de PCN</Heading3>
+
+            <Paragraph className="text-center">
+              Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
+              de compartir oportunidades, consejos y mucho más.
+            </Paragraph>
+
+            <Button>Entrar a la comunidad en WhatsApp</Button>
+          </div>
+
+          <div className="p-6 text-center">
+            <Heading3 variant="gradient">Sumate al Discord de PCN</Heading3>
+
+            <Paragraph className="text-center">
+              Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
+              de compartir oportunidades, consejos y mucho más.
+            </Paragraph>
+
+            <Button>Entrar al server en Discord</Button>
+          </div>
+        </div>
+
+        <MainSponsorCard />
+
+        <InviteDevsToWork />
       </div>
-
-      <section className="mb-6 w-full">
-        <div className="flex w-full flex-row gap-6">
-          <div className="flex w-1/5 flex-col gap-6">
-            <AdvisesCard />
-            <CoursesCard />
-            <UpcomingEventsCard />
-            <TalksCard />
-          </div>
-
-          <div className="flex w-2/5 flex-col gap-6 rounded-lg border border-white/10 p-6">
-            <BestAdvises />
-          </div>
-
-          <div className="flex w-2/5 flex-col gap-6">
-            <ImageCarousel images={images} />
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <UpcomingEventsSection />
-            <Link href="/posts/pcn-story">
-              <ContentCard
-                description="Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para llegar a donde estamos hoy."
-                image="/pre-lightning-talks.webp"
-                title="Nuestra historia"
-              />
-            </Link>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <DiscordCard />
-            <MainSponsorCard />
-            <PodcastCard />
-          </div>
-        </div>
-
-        <div className="mt-6 flex">
-          <InviteDevsToWork />
-        </div>
-      </section>
     </div>
   );
 };
