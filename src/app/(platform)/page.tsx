@@ -43,7 +43,7 @@ const Home = async () => {
     .map((file) => `/gallery-photos/${file}`);
 
   return (
-    <div className="mt-4 md:max-w-screen-xl md:px-20">
+    <div className="mt-6 md:max-w-screen-xl md:px-20">
       <div className="mb-6 border">
         <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-6">
           {session ? (
