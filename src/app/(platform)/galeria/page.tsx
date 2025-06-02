@@ -21,9 +21,9 @@ export default function PhotoGallery() {
 
   return (
     <div className="mt-4 md:px-20">
-        <div className="mb-8 flex w-full flex-row items-center justify-between">
-          <Heading2 className="text-center">Galería</Heading2>
-        </div>
+      <div className="mb-8 flex w-full flex-row items-center justify-between">
+        <Heading2 className="text-center">Galería</Heading2>
+      </div>
 
       <main className="mx-auto">
         <Gallery initialPhotoId={initialPhotoId} />
