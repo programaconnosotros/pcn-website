@@ -91,11 +91,7 @@ const people: Person[] = [
   },
   {
     name: 'Benja',
-    role: (
-      <p>
-        Sr. Full-Stack Engineer
-      </p>
-    ),
+    role: <p>Sr. Full-Stack Engineer</p>,
     imageUrl: '/colaborators/benja.webp',
     linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
     githubUrl: 'https://github.com/cortesjpb',
@@ -178,7 +174,7 @@ const people: Person[] = [
 ];
 
 export const Team = () => (
-  <div className="py-24 sm:py-32">
+  <div className="py-8">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl lg:mx-0">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Nuestros colaboradores</h2>
