@@ -72,9 +72,9 @@ const Home = async () => {
                 programaConNosotros
               </Heading1>
 
-              <p className="text-lg text-white/50">
-                La comunidad que necesitas para llevar tu carrera en la industria del software al
-                siguiente nivel!
+              <p className="text-center text-lg text-white/50">
+                La comunidad que necesitas para llevar tu carrera
+                <br /> en la industria del software al siguiente nivel!
               </p>
 
               <div className="mt-3 flex flex-row gap-2">
@@ -148,7 +148,7 @@ const Home = async () => {
           </Paragraph>
 
           <Link href="/posts/pcn-story">
-            <Button>
+            <Button variant="outline">
               Leer la historia <ScrollText className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -163,7 +163,7 @@ const Home = async () => {
           </Paragraph>
 
           <Link href="/gallery">
-            <Button>
+            <Button variant="outline">
               Ver galería <Images className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -178,7 +178,7 @@ const Home = async () => {
               de compartir oportunidades, consejos y mucho más.
             </Paragraph>
 
-            <Button>Entrar a la comunidad en WhatsApp</Button>
+            <Button variant="outline">Entrar a la comunidad en WhatsApp</Button>
           </div>
 
           <div className="p-6 text-center">
@@ -189,7 +189,7 @@ const Home = async () => {
               de compartir oportunidades, consejos y mucho más.
             </Paragraph>
 
-            <Button>Entrar al server en Discord</Button>
+            <Button variant="outline">Entrar al server en Discord</Button>
           </div>
         </div>
 
