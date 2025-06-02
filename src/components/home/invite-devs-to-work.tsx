@@ -9,7 +9,7 @@ import { Heading3 } from '../ui/heading-3';
 
 export const InviteDevsToWork = () => {
   return (
-    <section className="rounded-md border px-10 py-8">
+    <section className="rounded-md border-t px-10 py-8">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
           <div className="flex-1 text-white">
