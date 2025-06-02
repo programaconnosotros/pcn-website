@@ -6,10 +6,11 @@ import { TailwindSVG } from '../logos/TailwindSVG';
 import { TypescriptSVG } from '../logos/TypescriptSVG';
 import GlassCard from './glass-card';
 import { Heading3 } from '../ui/heading-3';
+import { Button } from '../ui/button';
 
 export const InviteDevsToWork = () => {
   return (
-    <section className="rounded-md border-t px-10 py-8">
+    <section className="rounded-md border-b border-t px-10 py-8">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
           <div className="flex-1 text-white">
@@ -156,6 +157,15 @@ export const InviteDevsToWork = () => {
                 <GitHubSVG />
                 Ver repositorio en GitHub
               </a>
+              <Link
+                href="https://github.com/programaconnosotros/pcn-website"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline">
+                  Ver repositorio en GitHub <GitHubSVG className="ml-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
