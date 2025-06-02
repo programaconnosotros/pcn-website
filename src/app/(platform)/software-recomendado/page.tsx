@@ -42,7 +42,6 @@ function SoftwareRecommendationCard({
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-500/10 to-blue-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500/20"></div>
 
       <div className="relative z-10">
-
         <div className="mb-4 flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -110,9 +109,7 @@ function SoftwareRecommendationCard({
             <span>Visitar sitio</span>
           </Button>
         </div>
-
       </div>
-
     </div>
   );
 }
@@ -141,7 +138,7 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
       <div className="mb-8 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
         <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-          
+
           <Input
             placeholder="Buscar software, categoría o tecnología..."
             className="pl-10 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -157,7 +154,6 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
               <X className="h-4 w-4" />
             </button>
           )}
-
         </div>
       </div>
 
@@ -169,7 +165,11 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
           ))}
         </div>
       ) : (
-        <EmptyState title="No se encontró software recomendado" description="No pudimos encontrar ningún software que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos." onRefresh={() => setSearchTerm('')} />
+        <EmptyState
+          title="No se encontró software recomendado"
+          description="No pudimos encontrar ningún software que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
+          onRefresh={() => setSearchTerm('')}
+        />
       )}
     </>
   );
@@ -261,7 +261,7 @@ export default function SoftwareRecommendationsPage() {
             Recomendaciones de Software
           </h1>
         </div>
-        
+
         <p className="text-gray-600">
           Descubre las mejores herramientas recomendadas por nuestra comunidad de desarrolladores
         </p>

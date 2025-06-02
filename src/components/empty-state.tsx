@@ -10,12 +10,7 @@ interface EmptyStateProps {
   onRefresh?: () => void;
 }
 
-export function EmptyState({
-  title,
-  description,
-  showRefresh = true,
-  onRefresh,
-}: EmptyStateProps) {
+export function EmptyState({ title, description, showRefresh = true, onRefresh }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center px-4 py-16">
       <div className="relative mb-6">
