@@ -157,15 +157,6 @@ export const InviteDevsToWork = () => {
                 <GitHubSVG />
                 Ver repositorio en GitHub
               </a>
-              <Link
-                href="https://github.com/programaconnosotros/pcn-website"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline">
-                  Ver repositorio en GitHub <GitHubSVG className="ml-4" />
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
