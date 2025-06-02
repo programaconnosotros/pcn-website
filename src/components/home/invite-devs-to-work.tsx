@@ -6,7 +6,6 @@ import { TailwindSVG } from '../logos/TailwindSVG';
 import { TypescriptSVG } from '../logos/TypescriptSVG';
 import GlassCard from './glass-card';
 import { Heading3 } from '../ui/heading-3';
-import { Button } from '../ui/button';
 
 export const InviteDevsToWork = () => {
   return (
