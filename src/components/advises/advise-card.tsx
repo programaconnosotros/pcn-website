@@ -1,6 +1,7 @@
 'use client';
 
 import { Advise } from '@/actions/advises/get-advise';
+import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -14,10 +15,9 @@ import { formatDate } from '@/lib/utils';
 import { Session, User } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useOptimistic } from 'react';
+import { useOptimistic, useState } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
-import { toggleLike } from '@/actions/advises/like-advise';
 
 export const AdviseCard = ({
   advise,
@@ -51,13 +51,16 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-    // Optimistically update the UI
-    addOptimisticLike(session.user.id);
+    const previousLikes = [...optimisticLikes];
 
     try {
+      // Optimistically update the UI
+      addOptimisticLike(session.user.id);
       await toggleLike(advise.id);
     } catch (error) {
       console.error('Error toggling like:', error);
+      // Revert optimistic update on error
+      addOptimisticLike(session.user.id);
     } finally {
       setIsLiking(false);
     }
@@ -109,7 +112,11 @@ export const AdviseCard = ({
             variant="ghost"
             size="icon"
             className={isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}
-            onClick={handleLike}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleLike();
+            }}
           >
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
@@ -131,7 +138,7 @@ export const AdviseCard = ({
         onOpenChange={setIsEditDialogOpen}
       />
 
-      <Link href={`/advises/${advise.id}`} className="block">
+      <Link href={`/consejos/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
           <p className="text-sm">{advise.content}</p>
           <div className="mt-4 flex items-center justify-between">

@@ -5,5 +5,5 @@ import { redirect } from 'next/navigation';
 
 export const signOut = async () => {
   await cookies().delete('sessionId');
-  redirect('/auth/sign-in');
+  redirect('/autenticacion/iniciar-sesion');
 };

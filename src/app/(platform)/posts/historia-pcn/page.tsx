@@ -25,7 +25,7 @@ const PCNStory = () => (
         <BreadcrumbSeparator />
 
         <BreadcrumbItem>
-          <BreadcrumbLink href="/posts/pcn-story">Historia de PCN</BreadcrumbLink>
+          <BreadcrumbLink href="/posts/historia-pcn">Historia de PCN</BreadcrumbLink>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

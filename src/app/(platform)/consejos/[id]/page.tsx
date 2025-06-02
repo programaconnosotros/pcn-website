@@ -26,7 +26,7 @@ export default async function AdvisePage({ params }: { params: { id: string } })
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
       <div className="mb-4">
-        <Link href="/advises">
+        <Link href="/consejos">
           <Button variant="outline">
             <ArrowLeftIcon className="mr-2 h-4 w-4" /> Volver a todos los consejos
           </Button>

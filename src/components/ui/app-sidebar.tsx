@@ -1,20 +1,20 @@
 'use client';
 
-import * as React from 'react';
 import {
   BookOpen,
+  CalendarDays,
+  Home,
+  Image,
   Instagram,
   Laptop,
   LifeBuoy,
   Linkedin,
   Send,
   SquareTerminal,
-  Youtube,
-  Image,
-  Home,
-  CalendarDays,
   Users,
+  Youtube,
 } from 'lucide-react';
+import * as React from 'react';
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -40,7 +40,7 @@ const data = {
     },
     {
       title: 'Consejos',
-      url: '/advises',
+      url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
     },
@@ -51,39 +51,39 @@ const data = {
     },
     {
       title: 'Fotos',
-      url: '/photos',
+      url: '/galeria',
       icon: Image,
     },
     {
       title: 'Charlas',
-      url: '/talks',
+      url: '/charlas',
       icon: BookOpen,
     },
     {
       title: 'Eventos',
-      url: '/events',
+      url: '/eventos',
       icon: CalendarDays,
     },
     {
       title: 'Cursos',
-      url: '/courses',
+      url: '/cursos',
       icon: Laptop,
       items: [
         {
           title: 'Vim',
-          url: '/courses/vim',
+          url: '/cursos/vim',
         },
         {
           title: 'LaTeX',
-          url: '/courses/latex',
+          url: '/cursos/latex',
         },
         {
           title: 'Git & GitHub',
-          url: '/courses/git-and-github',
+          url: '/cursos/git-and-github',
         },
         {
           title: 'Ver todos',
-          url: '/courses',
+          url: '/cursos',
         },
       ],
     },
@@ -143,9 +143,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="mt-3.5">
+            <SidebarMenuItem className="mt-1.5 -ml-2 group-data-[collapsible=icon]:mt-3.5 group-data-[collapsible=icon]:ml-0">
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
                   <img src="/logo.webp" alt="programaConNosotros" />
                 </div>

@@ -1,29 +1,19 @@
-import { AdvisesCard } from '@components/home/advises-card';
-import { UpcomingEventsCard } from '@components/home/upcoming-events-card';
-import { TalksCard } from '@components/home/talks-card';
-import { UpcomingEventsSection } from '@components/home/upcoming-events-section';
+import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
+import { Heading2 } from '@/components/ui/heading-2';
+import prisma from '@/lib/prisma';
 import { MainSponsorCard } from '@components/home/main-sponsor-card';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ContentCard } from '@/components/ui/content-card';
-import { DiscordCard } from '@/components/home/discord-card';
-import { PodcastCard } from '@/components/home/podcast-card';
-import Link from 'next/link';
-import { CoursesCard } from '@/components/home/courses-card';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { Team } from '@components/landing/team';
 import { Session, User } from '@prisma/client';
-import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
-import { BestAdvises } from '@/components/home/best-advises';
-import { ImageCarousel } from '@/components/ui/image-carousel';
 import fs from 'fs';
 import path from 'path';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { BookOpen, Images, LogIn, ScrollText, UserPlus } from 'lucide-react';
-import { GlowingText } from '@/components/ui/glowing-text';
+import { Images, LogIn, ScrollText, UserPlus } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
+import Link from 'next/link';
+import { cookies } from 'next/headers';
 
 // TODO: Add section to show our Instagram profile.
 // TODO: Add section to show our YouTube channel.
@@ -196,6 +186,7 @@ const Home = async () => {
         <MainSponsorCard />
 
         <InviteDevsToWork />
+        <Team />
       </div>
     </div>
   );
