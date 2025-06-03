@@ -82,7 +82,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
-              áreas y de todos los niveles.
+              áreas y de todos los niveles 🌎
             </Paragraph>
           </div>
 
@@ -94,7 +94,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Podés encontrar mentores de primer nivel y también convertirte en uno y ayudar a
-              muchas personas.
+              muchas personas 🫡
             </Paragraph>
           </div>
 
@@ -105,7 +105,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Podés encontrar oportunidades soñadas.
+              Muy seguido estamos compartiendo oportunidades soñadas para crecer en la industria del
+              software 🚀
             </Paragraph>
           </div>
 
@@ -116,7 +117,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Podés participar y organizar muchos eventos.
+              Podés participar y organizar muchos eventos técnicos en los que podes aprender mucho,
+              compartir tu conocimiento y conocer personas increíbles 🙌
             </Paragraph>
           </div>
 
@@ -127,7 +129,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Podés encontrar y compartir consejos con la comunidad.
+              Podés encontrar y compartir consejos con la comunidad. Queremos armar uno de los
+              mejores repositorios de consejos sobre ingeniería de software en internet 💡
             </Paragraph>
           </div>
 
@@ -138,7 +141,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Nos encanta dar charlas, cursos y compartir conocimiento con la comunidad.
+              Nos encanta dar charlas, cursos y compartir conocimiento con los demás. Tenemos muy
+              claro que juntos llegamos más lejos 🤝
             </Paragraph>
           </div>
         </div>
