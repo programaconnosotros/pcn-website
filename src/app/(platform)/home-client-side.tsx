@@ -52,7 +52,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 squareSize={4}
                 gridGap={6}
                 color="#6B7280"
-                maxOpacity={0.3}
+                maxOpacity={0.2}
                 flickerChance={0.1}
                 height={800}
                 width={1200}
@@ -61,7 +61,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <div className="relative z-10 flex h-full flex-col items-center justify-center py-6">
                 <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
 
-                <Heading1 variant="gradient" className="mb-6 mt-8 font-mono text-pcnGreen">
+                <Heading1 className="mb-6 mt-8 font-mono dark:text-pcnGreen">
                   programaConNosotros
                 </Heading1>
 
@@ -181,9 +181,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/IMG_8959.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
-              <Heading2 className="relative z-10">Conocé la historia de PCN</Heading2>
+              <Heading2 className="relative z-10 text-white">Conocé la historia de PCN</Heading2>
 
-              <Paragraph className="relative z-10 text-center">
+              <Paragraph className="relative z-10 text-center text-white">
                 Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
                 llegar a donde estamos hoy.
               </Paragraph>
@@ -202,9 +202,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/gallery-photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
-              <Heading2 className="relative z-10">Visita la galería de PCN</Heading2>
+              <Heading2 className="relative z-10 text-white">Visita la galería de PCN</Heading2>
 
-              <Paragraph className="relative z-10 text-center">
+              <Paragraph className="relative z-10 text-center text-white">
                 Conocé la comunidad o revisa algunos recuerdos en nuestra galería.
               </Paragraph>
 
