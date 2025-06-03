@@ -9,15 +9,11 @@ import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { Images, LogIn, ScrollText, UserPlus } from 'lucide-react';
+import { Images, Linkedin, LogIn, ScrollText, UserPlus } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
-
-// TODO: Add section to show our Instagram profile.
-// TODO: Add section to show our YouTube channel.
-// TODO: Add section to show our LinkedIn profile.
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -254,6 +250,31 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Button variant="outline" className="relative z-10">
               Suscribirse a nuestro canal
             </Button>
+          </div>
+        </div>
+
+        <div className="border-b text-center">
+          <div className="group relative">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="p-6">
+              <Heading3 variant="gradient" className="relative z-10">
+                Seguinos en LinkedIn!
+              </Heading3>
+
+              <Paragraph className="relative z-10 text-center">
+                En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu
+                carrera laboral como justificación de tu gran pasión por el software 💪
+              </Paragraph>
+
+              <Link
+                href="https://www.linkedin.com/company/programaconnosotros"
+                className="relative z-10"
+              >
+                <Button variant="outline">
+                  Seguir en LinkedIn <Linkedin className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
