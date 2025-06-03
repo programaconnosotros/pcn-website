@@ -250,8 +250,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">Discord</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
-              de compartir oportunidades, consejos y mucho más.
+              En nuestro server hay canales de voz en los que podes charlar con otros miembros y
+              también múltiples canales de texto y un foro con mucha data. Los eventos virtual los
+              hacemos ahí.
             </Paragraph>
 
             <Button variant="outline" className="relative z-10">
@@ -266,7 +267,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">Instagram</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              En Instagram subimos fotos de recuerdo y contenido motivacional 💪
+              En Instagram subimos fotos de recuerdos y mucho contenido motivacional 💪
             </Paragraph>
 
             <Button variant="outline" className="relative z-10">
