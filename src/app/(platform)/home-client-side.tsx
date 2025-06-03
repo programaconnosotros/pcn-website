@@ -101,7 +101,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         {/* TODO: Agregar sección de Lightning Talks */}
 
-        <div className="border-b border-t">
+        <div className="border-b">
           <div className="flex items-center justify-center p-6">
             <Heading2 className="relative z-10">El núcleo de la comunidad 💪</Heading2>
           </div>
