@@ -68,17 +68,19 @@ const Home = async () => {
               </div>
             </>
           ) : (
-            <>
-              <Heading1 variant="gradient" className="mb-4 font-mono text-pcnGreen">
+            <div className="flex flex-col items-center justify-center py-6">
+              <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
+
+              <Heading1 variant="gradient" className="mb-6 mt-8 font-mono text-pcnGreen">
                 programaConNosotros
               </Heading1>
 
-              <p className="text-center text-lg text-white/50">
+              <p className="text-center text-lg">
                 La comunidad que necesitas para llevar tu carrera
-                <br /> en la industria del software al siguiente nivel!
+                <br /> en la industria del software al siguiente nivel! 🚀
               </p>
 
-              <div className="mt-3 flex flex-row gap-2">
+              <div className="mt-3 flex flex-row gap-2 py-6">
                 <Button variant="outline">
                   Registrarme <UserPlus className="ml-2 h-4 w-4" />
                 </Button>
@@ -86,7 +88,7 @@ const Home = async () => {
                   Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </div>
 
