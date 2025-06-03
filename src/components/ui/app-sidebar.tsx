@@ -9,6 +9,7 @@ import {
   Laptop,
   LifeBuoy,
   Linkedin,
+  ScrollText,
   Send,
   SquareTerminal,
   Users,
@@ -58,6 +59,11 @@ const data = {
       title: 'Charlas',
       url: '/charlas',
       icon: BookOpen,
+    },
+    {
+      title: 'Historia',
+      url: '/historia',
+      icon: ScrollText,
     },
     {
       title: 'Eventos',
