@@ -9,7 +9,7 @@ import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { Images, Linkedin, LogIn, ScrollText, UserPlus } from 'lucide-react';
+import { BookOpen, Images, Linkedin, LogIn, ScrollText, UserPlus } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
@@ -73,6 +73,49 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center justify-center border-b p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
+              Consejos
+            </Heading3>
+
+            <Paragraph className="relative z-10 text-center">
+              Podés encontrar y compartir consejos con la comunidad. Queremos armar uno de los
+              mejores repositorios de consejos sobre ingeniería de software en internet 💡
+            </Paragraph>
+
+            <Link href="/consejos" className="relative z-10">
+              <Button variant="outline">
+                Ver consejos <ScrollText className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Conocimiento
+            </Heading3>
+
+            <Paragraph className="relative z-10 text-center">
+              Nos encanta dar charlas, cursos y compartir conocimiento con los demás. Tenemos muy
+              claro que juntos llegamos más lejos 🤝
+            </Paragraph>
+
+            <div className="flex flex-row gap-2">
+              <Link href="/charlas" className="relative z-10">
+                <Button variant="outline">
+                  Ver charlas <ScrollText className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Link href="/cursos" className="relative z-10">
+                <Button variant="outline">
+                  Ver cursos <BookOpen className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
               Contactos
             </Heading3>
 
@@ -94,7 +137,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+          <div className="group relative flex flex-col items-center justify-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Oportunidades
@@ -106,7 +149,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+          <div className="group relative flex flex-col items-center justify-center border-l p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Eventos
@@ -115,30 +158,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Paragraph className="relative z-10 text-center">
               Podés participar y organizar muchos eventos técnicos en los que podes aprender mucho,
               compartir tu conocimiento y conocer personas increíbles 🙌
-            </Paragraph>
-          </div>
-
-          <div className="group relative flex flex-col items-center justify-center p-6">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <Heading3 variant="gradient" className="relative z-10">
-              Consejos
-            </Heading3>
-
-            <Paragraph className="relative z-10 text-center">
-              Podés encontrar y compartir consejos con la comunidad. Queremos armar uno de los
-              mejores repositorios de consejos sobre ingeniería de software en internet 💡
-            </Paragraph>
-          </div>
-
-          <div className="group relative flex flex-col items-center justify-center border-l p-6">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <Heading3 variant="gradient" className="relative z-10">
-              Conocimiento
-            </Heading3>
-
-            <Paragraph className="relative z-10 text-center">
-              Nos encanta dar charlas, cursos y compartir conocimiento con los demás. Tenemos muy
-              claro que juntos llegamos más lejos 🤝
             </Paragraph>
           </div>
         </div>
