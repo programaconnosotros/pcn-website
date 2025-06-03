@@ -16,6 +16,8 @@ import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Testimonials } from './testimonials';
+import { Marquee } from '@/components/magicui/marquee';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -93,6 +95,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </div>
             </div>
           )}
+        </div>
+
+        <Testimonials />
+
+        <div className="border-b border-t">
+          <div className="flex items-center justify-center p-6">
+            <Heading2 className="relative z-10">El núcleo de la comunidad 💪</Heading2>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 border-b">
