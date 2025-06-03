@@ -54,6 +54,7 @@ const Home = async () => {
 
   return (
     <div className="mt-6 md:max-w-screen-xl md:px-20">
+      <GlassCardHover />
       <div className="mb-6 border">
         <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-6">
           {session ? (
@@ -90,50 +91,70 @@ const Home = async () => {
         </div>
 
         <div className="grid grid-cols-2 border-b">
-          <div className="flex flex-col items-center justify-center border-b p-6">
-            <Heading3 variant="gradient">Contactos</Heading3>
+          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Contactos
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
               áreas y de todos los niveles.
             </Paragraph>
           </div>
 
-          <div className="flex flex-col items-center justify-center border-b border-l p-6">
-            <Heading3 variant="gradient">Mentores</Heading3>
+          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Mentores
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Podés encontrar mentores de primer nivel y también convertirte en uno y ayudar a
               muchas personas.
             </Paragraph>
           </div>
 
-          <div className="flex flex-col items-center justify-center border-b p-6">
-            <Heading3 variant="gradient">Oportunidades</Heading3>
+          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Oportunidades
+            </Heading3>
 
-            <Paragraph className="text-center">Podés encontrar oportunidades soñadas.</Paragraph>
+            <Paragraph className="relative z-10 text-center">
+              Podés encontrar oportunidades soñadas.
+            </Paragraph>
           </div>
 
-          <div className="flex flex-col items-center justify-center border-b border-l p-6">
-            <Heading3 variant="gradient">Eventos</Heading3>
+          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Eventos
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Podés participar y organizar muchos eventos.
             </Paragraph>
           </div>
 
-          <div className="flex flex-col items-center justify-center p-6">
-            <Heading3 variant="gradient">Consejos</Heading3>
+          <div className="group relative flex flex-col items-center justify-center p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Consejos
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Podés encontrar y compartir consejos con la comunidad.
             </Paragraph>
           </div>
 
-          <div className="flex flex-col items-center justify-center border-l p-6">
-            <Heading3 variant="gradient">Conocimiento</Heading3>
+          <div className="group relative flex flex-col items-center justify-center border-l p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Conocimiento
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Nos encanta dar charlas, cursos y compartir conocimiento con la comunidad.
             </Paragraph>
           </div>
