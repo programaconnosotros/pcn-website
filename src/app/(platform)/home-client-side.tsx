@@ -97,7 +97,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           )}
         </div>
 
-        <Testimonials />
+        {/* <Testimonials /> */}
 
         {/* TODO: Agregar sección de Lightning Talks */}
 
