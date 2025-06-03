@@ -218,6 +218,38 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
+        <div className="flex flex-row border-b">
+          <div className="group relative border-r p-6 text-center">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Seguinos en Instagram!
+            </Heading3>
+
+            <Paragraph className="relative z-10 text-center">
+              En Instagram subimos fotos de recuerdo y contenido motivacional 💪
+            </Paragraph>
+
+            <Button variant="outline" className="relative z-10">
+              Seguir en Instagram
+            </Button>
+          </div>
+
+          <div className="group relative p-6 text-center">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Suscribite a nuestro canal de YouTube!
+            </Heading3>
+
+            <Paragraph className="relative z-10 text-center">
+              Subimos videos de charlas, cursos y mucho más!
+            </Paragraph>
+
+            <Button variant="outline" className="relative z-10">
+              Suscribirse a nuestro canal
+            </Button>
+          </div>
+        </div>
+
         <MainSponsorCard />
 
         <InviteDevsToWork />
