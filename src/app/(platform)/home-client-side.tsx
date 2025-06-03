@@ -14,6 +14,7 @@ import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
+import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -33,7 +34,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         }}
         className="mb-6 border"
       >
-        <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-6">
+        <div className="flex w-full flex-col items-center justify-center gap-2 border-b">
           {session ? (
             <>
               <Heading2 variant="gradient">
@@ -45,25 +46,38 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center py-6">
-              <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
+            <div className="relative h-[500px] w-full overflow-hidden bg-background">
+              <FlickeringGrid
+                className="absolute inset-0 z-0 size-full"
+                squareSize={4}
+                gridGap={6}
+                color="#6B7280"
+                maxOpacity={0.3}
+                flickerChance={0.1}
+                height={800}
+                width={1200}
+              />
 
-              <Heading1 variant="gradient" className="mb-6 mt-8 font-mono text-pcnGreen">
-                programaConNosotros
-              </Heading1>
+              <div className="relative z-10 flex h-full flex-col items-center justify-center py-6">
+                <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
 
-              <p className="text-center text-lg">
-                La comunidad que necesitas para llevar tu carrera
-                <br /> en la industria del software al siguiente nivel! 🚀
-              </p>
+                <Heading1 variant="gradient" className="mb-6 mt-8 font-mono text-pcnGreen">
+                  programaConNosotros
+                </Heading1>
 
-              <div className="mt-3 flex flex-row gap-2 py-6">
-                <Button variant="outline">
-                  Registrarme <UserPlus className="ml-2 h-4 w-4" />
-                </Button>
-                <Button>
-                  Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
-                </Button>
+                <p className="text-center text-lg">
+                  La comunidad que necesitas para llevar tu carrera
+                  <br /> en la industria del software al siguiente nivel! 🚀
+                </p>
+
+                <div className="mt-3 flex flex-row gap-2 py-6">
+                  <Button variant="outline">
+                    Registrarme <UserPlus className="ml-2 h-4 w-4" />
+                  </Button>
+                  <Button>
+                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
           )}
