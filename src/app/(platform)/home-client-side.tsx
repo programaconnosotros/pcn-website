@@ -70,7 +70,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <div className="grid grid-cols-2 border-b">
-          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+          <div className="group relative flex flex-col items-center border-b p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Consejos
@@ -88,7 +88,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+          <div className="group relative flex flex-col items-center border-b border-l p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Conocimiento
@@ -113,7 +113,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Link>
             </div>
           </div>
-          <div className="group relative flex flex-col items-center justify-center border-b p-6">
+          <div className="group relative flex flex-col items-center border-b p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Contactos
@@ -125,7 +125,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center border-b border-l p-6">
+          <div className="group relative flex flex-col items-center border-b border-l p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Mentores
@@ -137,7 +137,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center p-6">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Oportunidades
@@ -149,7 +149,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center justify-center border-l p-6">
+          <div className="group relative flex flex-col items-center border-l p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
               Eventos
@@ -175,7 +175,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 llegar a donde estamos hoy.
               </Paragraph>
 
-              <Link href="/posts/pcn-story" className="relative z-10">
+              <Link href="/historia" className="relative z-10">
                 <Button variant="outline">
                   Leer la historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
@@ -197,7 +197,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 recuerdos.
               </Paragraph>
 
-              <Link href="/gallery" className="relative z-10">
+              <Link href="/galeria" className="relative z-10">
                 <Button variant="outline">
                   Ver galería <Images className="ml-2 h-4 w-4" />
                 </Button>
