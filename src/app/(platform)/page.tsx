@@ -151,57 +151,81 @@ const Home = async () => {
           </div>
         </div>
 
-        <div className="border-b p-6 text-center">
-          <Heading3 variant="gradient">Conocé la historia de nuestra comunidad</Heading3>
+        <div className="border-b text-center">
+          <div className="group relative">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="p-6">
+              <Heading3 variant="gradient" className="relative z-10">
+                Conocé la historia de nuestra comunidad
+              </Heading3>
 
-          <Paragraph className="text-center">
-            Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
-            llegar a donde estamos hoy.
-          </Paragraph>
+              <Paragraph className="relative z-10 text-center">
+                Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
+                llegar a donde estamos hoy.
+              </Paragraph>
 
-          <Link href="/posts/pcn-story">
-            <Button variant="outline">
-              Leer la historia <ScrollText className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+              <Link href="/posts/pcn-story" className="relative z-10">
+                <Button variant="outline">
+                  Leer la historia <ScrollText className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="border-b p-6 text-center">
-          <Heading3 variant="gradient">Fotos de la comunidad</Heading3>
+        <div className="border-b text-center">
+          <div className="group relative">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="p-6">
+              <Heading3 variant="gradient" className="relative z-10">
+                Fotos de la comunidad
+              </Heading3>
 
-          <Paragraph className="text-center">
-            Visita nuestra galería de fotos para conocer más a la comunidad o revisar algunos
-            recuerdos.
-          </Paragraph>
+              <Paragraph className="relative z-10 text-center">
+                Visita nuestra galería de fotos para conocer más a la comunidad o revisar algunos
+                recuerdos.
+              </Paragraph>
 
-          <Link href="/gallery">
-            <Button variant="outline">
-              Ver galería <Images className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+              <Link href="/gallery" className="relative z-10">
+                <Button variant="outline">
+                  Ver galería <Images className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-row border-b">
-          <div className="border-r p-6 text-center">
-            <Heading3 variant="gradient">Sumate al WhatsApp de PCN</Heading3>
+          <div className="group relative border-r p-6 text-center">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Sumate al WhatsApp de PCN
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
               de compartir oportunidades, consejos y mucho más.
             </Paragraph>
 
-            <Button variant="outline">Entrar a la comunidad en WhatsApp</Button>
+            <Button variant="outline" className="relative z-10">
+              Entrar a la comunidad en WhatsApp
+            </Button>
           </div>
 
-          <div className="p-6 text-center">
-            <Heading3 variant="gradient">Sumate al Discord de PCN</Heading3>
+          <div className="group relative p-6 text-center">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <Heading3 variant="gradient" className="relative z-10">
+              Sumate al Discord de PCN
+            </Heading3>
 
-            <Paragraph className="text-center">
+            <Paragraph className="relative z-10 text-center">
               Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
               de compartir oportunidades, consejos y mucho más.
             </Paragraph>
 
-            <Button variant="outline">Entrar al server en Discord</Button>
+            <Button variant="outline" className="relative z-10">
+              Entrar al server en Discord
+            </Button>
           </div>
         </div>
 
