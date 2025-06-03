@@ -5,37 +5,31 @@ import { Marquee } from '@/components/magicui/marquee';
 const reviews = [
   {
     name: 'Emi',
-    username: '@jack',
     body: 'PCN es una comunidad llena de potencial, con gente que le gusta aprender, compartir y enseñar lo aprendido, donde te podes sentir libre de preguntar sin sentir presiones o miedos. Es un entorno nutritivo repleto de gente nutritiva que aporta conocimientos, aprendizajes, experiencias, oportunidades y consejos que van de avanzados a novatos y de novatos a avanzados, lo que demuestra que siempre se aprende algo nuevo y que todos tenemos algo para enseñar.',
     img: 'https://avatar.vercel.sh/jack',
   },
   {
     name: 'Jill',
-    username: '@jill',
     body: "I don't know what to say. I'm speechless. This is amazing.",
     img: 'https://avatar.vercel.sh/jill',
   },
   {
     name: 'John',
-    username: '@john',
     body: "I'm at a loss for words. This is amazing. I love it.",
     img: 'https://avatar.vercel.sh/john',
   },
   {
     name: 'Jane',
-    username: '@jane',
     body: "I'm at a loss for words. This is amazing. I love it.",
     img: 'https://avatar.vercel.sh/jane',
   },
   {
     name: 'Jenny',
-    username: '@jenny',
     body: "I'm at a loss for words. This is amazing. I love it.",
     img: 'https://avatar.vercel.sh/jenny',
   },
   {
     name: 'James',
-    username: '@james',
     body: "I'm at a loss for words. This is amazing. I love it.",
     img: 'https://avatar.vercel.sh/james',
   },
@@ -44,17 +38,7 @@ const reviews = [
 const firstRow = reviews.slice(0, reviews.length / 2);
 const secondRow = reviews.slice(reviews.length / 2);
 
-const ReviewCard = ({
-  img,
-  name,
-  username,
-  body,
-}: {
-  img: string;
-  name: string;
-  username: string;
-  body: string;
-}) => {
+const ReviewCard = ({ img, name, body }: { img: string; name: string; body: string }) => {
   return (
     <figure
       className={cn(
@@ -69,7 +53,6 @@ const ReviewCard = ({
         <img className="rounded-full" width="32" height="32" alt="" src={img} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>
-          <p className="text-xs font-medium dark:text-white/40">{username}</p>
         </div>
       </div>
       <blockquote className="mt-2 text-sm">{body}</blockquote>
@@ -82,12 +65,12 @@ export function Testimonials() {
     <div className="relative my-8 flex w-full flex-col items-center justify-center overflow-hidden">
       <Marquee pauseOnHover className="[--duration:20s]">
         {firstRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+          <ReviewCard key={review.name} {...review} />
         ))}
       </Marquee>
       <Marquee reverse pauseOnHover className="[--duration:20s]">
         {secondRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+          <ReviewCard key={review.name} {...review} />
         ))}
       </Marquee>
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
