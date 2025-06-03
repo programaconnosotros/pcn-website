@@ -4,9 +4,9 @@ import { Marquee } from '@/components/magicui/marquee';
 
 const reviews = [
   {
-    name: 'Jack',
+    name: 'Emi',
     username: '@jack',
-    body: "I've never seen anything like this before. It's amazing. I love it.",
+    body: 'PCN es una comunidad llena de potencial, con gente que le gusta aprender, compartir y enseñar lo aprendido, donde te podes sentir libre de preguntar sin sentir presiones o miedos. Es un entorno nutritivo repleto de gente nutritiva que aporta conocimientos, aprendizajes, experiencias, oportunidades y consejos que van de avanzados a novatos y de novatos a avanzados, lo que demuestra que siempre se aprende algo nuevo y que todos tenemos algo para enseñar.',
     img: 'https://avatar.vercel.sh/jack',
   },
   {
@@ -58,7 +58,7 @@ const ReviewCard = ({
   return (
     <figure
       className={cn(
-        'relative h-full w-64 cursor-pointer overflow-hidden rounded-xl border p-4',
+        'relative h-full w-96 cursor-pointer overflow-hidden rounded-xl border p-4',
         // light styles
         'border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]',
         // dark styles
