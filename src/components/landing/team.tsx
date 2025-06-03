@@ -200,7 +200,7 @@ export const Team = () => (
 
             <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">{person.name}</h3>
 
-            <p className="text-sm leading-6 text-muted-foreground">{person.role}</p>
+            <div className="text-sm leading-6 text-muted-foreground">{person.role}</div>
 
             <ul role="list" className="mt-6 flex justify-center gap-x-6">
               {person.xUrl && (
