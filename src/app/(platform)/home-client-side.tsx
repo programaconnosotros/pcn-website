@@ -187,10 +187,11 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="border-b text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <div className="p-6">
-              <Heading3 variant="gradient" className="relative z-10">
+            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/gallery-photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
+              <div className="absolute inset-0 bg-black/70"></div>
+              <Heading2 variant="gradient" className="relative z-10">
                 Fotos de la comunidad
-              </Heading3>
+              </Heading2>
 
               <Paragraph className="relative z-10 text-center">
                 Visita nuestra galería de fotos para conocer más a la comunidad o revisar algunos
@@ -206,11 +207,24 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="grid grid-cols-2 border-b">
+        <MainSponsorCard />
+
+        <InviteDevsToWork />
+        <Team />
+
+        <div className="border-t">
+          <div className="flex items-center justify-center p-6">
+            <Heading2 variant="gradient" className="relative z-10">
+              Redes
+            </Heading2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 border-b border-t">
           <div className="group relative border-r p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
-              Sumate al WhatsApp de PCN
+              WhatsApp
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -226,7 +240,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
-              Sumate al Discord de PCN
+              Discord
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -244,7 +258,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative border-r p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
-              Seguinos en Instagram!
+              Instagram
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -259,7 +273,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 variant="gradient" className="relative z-10">
-              Suscribite a nuestro canal de YouTube!
+              YouTube
             </Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -277,7 +291,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="p-6">
               <Heading3 variant="gradient" className="relative z-10">
-                Seguinos en LinkedIn!
+                LinkedIn
               </Heading3>
 
               <Paragraph className="relative z-10 text-center">
@@ -296,11 +310,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
         </div>
-
-        <MainSponsorCard />
-
-        <InviteDevsToWork />
-        <Team />
       </motion.div>
     </motion.div>
   );
