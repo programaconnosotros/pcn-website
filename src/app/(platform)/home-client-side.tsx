@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -58,8 +59,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 width={1200}
               />
 
+              <div className="absolute right-4 top-4 z-20">
+                <ThemeToggle />
+              </div>
+
               <div className="relative z-10 flex h-full flex-col items-center justify-center py-6">
-                <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
+                <div className="flex flex-col items-center">
+                  <img src="/logo.webp" alt="programaConNosotros" width={100} height={100} />
+                </div>
 
                 <Heading1 className="mb-6 mt-8 font-mono dark:text-pcnGreen">
                   programaConNosotros
@@ -71,12 +78,17 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 </p>
 
                 <div className="mt-3 flex flex-row gap-2 py-6">
-                  <Button variant="outline">
-                    Registrarme <UserPlus className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button>
-                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
-                  </Button>
+                  <Link href="/autenticacion/registro">
+                    <Button variant="outline">
+                      Registrarme <UserPlus className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+
+                  <Link href="/autenticacion/iniciar-sesion">
+                    <Button>
+                      Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
