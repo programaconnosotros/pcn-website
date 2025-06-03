@@ -22,16 +22,19 @@ import { motion } from 'motion/react';
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="mt-6 md:max-w-screen-xl md:px-20"
     >
       <GlassCardHover />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
+        transition={{
+          duration: 0.8,
+          staggerChildren: 0.1,
+        }}
         className="mb-6 border"
       >
         <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-6">
