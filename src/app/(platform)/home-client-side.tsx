@@ -164,11 +164,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="border-b text-center">
           <div className="group relative">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <div className="p-6">
-              <Heading3 variant="gradient" className="relative z-10">
-                Conocé la historia de nuestra comunidad
-              </Heading3>
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/IMG_8959.webp')] bg-cover bg-center bg-no-repeat p-6">
+              <div className="absolute inset-0 bg-black/70"></div>
+              <Heading2 className="relative z-10">Conocé la historia de PCN</Heading2>
 
               <Paragraph className="relative z-10 text-center">
                 Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
@@ -177,7 +176,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
               <Link href="/historia" className="relative z-10">
                 <Button variant="outline">
-                  Leer la historia <ScrollText className="ml-2 h-4 w-4" />
+                  Leer historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -189,13 +188,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/gallery-photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
-              <Heading2 variant="gradient" className="relative z-10">
-                Fotos de la comunidad
-              </Heading2>
+              <Heading2 className="relative z-10">Visita la galería de PCN</Heading2>
 
               <Paragraph className="relative z-10 text-center">
-                Visita nuestra galería de fotos para conocer más a la comunidad o revisar algunos
-                recuerdos.
+                Conocé la comunidad o revisa algunos recuerdos en nuestra galería.
               </Paragraph>
 
               <Link href="/galeria" className="relative z-10">
