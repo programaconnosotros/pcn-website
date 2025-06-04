@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 
 const SetupsPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
-let session: (Session & { user: User }) | null = null;
+  let session: (Session & { user: User }) | null = null;
 
   if (sessionId) {
     session = await prisma.session.findUnique({
@@ -20,7 +20,7 @@ let session: (Session & { user: User }) | null = null;
 
   return (
     <div className="mt-4 md:px-20">
-      <SetupsList sessionId={session?.user.id || null} />
+      <SetupsList session={session} />
     </div>
   );
 };

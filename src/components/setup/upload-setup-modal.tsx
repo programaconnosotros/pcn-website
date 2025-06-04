@@ -10,6 +10,7 @@ import { createBrowserClient } from "@supabase/ssr"
 import { AlertCircle, Check, Upload, X } from "lucide-react"
 import Image from "next/image"
 import { useCallback, useRef, useState, useTransition } from "react"
+import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 
@@ -17,6 +18,7 @@ interface UploadSetupModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (setupData: any) => void
+  refetch: () => void
   isAuthenticated: boolean
   onAuthRequired: () => void
   userId: string
@@ -37,7 +39,8 @@ export default function UploadSetupModal({
   onSubmit,
   isAuthenticated,
   userId,
-  onAuthRequired 
+  onAuthRequired,
+  refetch
 }: UploadSetupModalProps) {
   const [isPending, startTransition] = useTransition()
   const [dragActive, setDragActive] = useState(false)
@@ -146,6 +149,8 @@ export default function UploadSetupModal({
 
         resetForm()
         onOpenChange(false)
+        refetch()
+        toast.success('Setup subido exitosamente! 🎉')
       })
     } catch (error) {
       setError('Error al subir la imagen')

@@ -1,106 +1,72 @@
 'use client';
-
+import { deleteSetup } from '@/actions/setup/delete-setup';
 import { fetchSetups } from '@/actions/setup/fetch-setup';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Session, User } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Heart, Plus, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { SetupCard } from './setup-card';
 import UploadSetupModal from './upload-setup-modal';
-
-interface Setup {
-  id: string;
-  user: {
-    name: string;
-    username: string;
-    avatar: string;
-  };
-  title: string;
-  description: string;
-  image: string;
-  likes: number;
-  comments: number;
-  date: string;
-  isLiked: boolean;
-}
-
-
-const mockSetups: Setup[] = [
-  {
-    id: "1",
-    user: {
-      name: "Carlos Rodriguez",
-      username: "carlosdev",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    title: "Mi setup de desarrollo 2025",
-    description: "Setup minimalista para programar. MacBook Pro M3, monitor 4K, teclado mecánico y mouse inalámbrico.",
-    image: "/placeholder.svg?height=300&width=400",
-    likes: 24,
-    comments: 8,
-    date: "2 de junio de 2025 a las 14:30",
-    isLiked: false,
-  },
-  {
-    id: "2",
-    user: {
-      name: "Ana Martinez",
-      username: "anagamer",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    title: "Gaming setup RGB",
-    description:
-      "Setup gaming completo con iluminación RGB. PC custom, monitor curvo 144Hz, silla gamer y periféricos RGB.",
-    image: "/placeholder.svg?height=300&width=400",
-    likes: 45,
-    comments: 12,
-    date: "1 de junio de 2025 a las 20:15",
-    isLiked: true,
-  },
-  {
-    id: "3",
-    user: {
-      name: "Miguel Torres",
-      username: "miketech",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    title: "Workstation profesional",
-    description: "Setup para diseño gráfico y video editing. Dual monitor, tableta gráfica, iluminación profesional.",
-    image: "/placeholder.svg?height=300&width=400",
-    likes: 18,
-    comments: 5,
-    date: "31 de mayo de 2025 a las 16:45",
-    isLiked: false,
-  },
-];
-
-export function SetupsList({ sessionId }: { sessionId: string | null }) {
-  
+export function SetupsList({ session }: { session: (Session & { user: User }) | null }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [modalAction, setModalAction] = useState<'delete' | null>(null);
+  const [selectedSetup, setSelectedSetup] = useState<any>(null);
 
-  const { data: setups, isLoading,refetch } = useQuery({
+  const { data: setups, isLoading, refetch } = useQuery({
     queryKey: ['setups'],
     queryFn: () => fetchSetups(1),
   });
 
   const handleLike = (setupId: string) => {
-    if (!sessionId) {
+    if (!session) {
       setShowAuthModal(true);
       return;
     }
   };
 
   const handlePublishSetup = () => {
-    if (!sessionId) {
+    if (!session) {
       setShowAuthModal(true);
       return;
     }
     setShowUploadModal(true);
   };
 
+  const handleDeleteSetup = (setup: any) => {
+    if (!session) {
+      setModalAction('delete');
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedSetup(setup);
+    setModalAction('delete');
+    setShowAuthModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedSetup) return;
+    
+    try {
+      console.log("Eliminando setup:", selectedSetup);
+      setShowAuthModal(false);
+      await deleteSetup(selectedSetup.id);
+      toast.success('Setup eliminado exitosamente');
+      refetch();
+    } catch (error) {
+      toast.error('Error al eliminar el setup');
+    } finally {
+      setShowAuthModal(false);
+      setSelectedSetup(null);
+      setModalAction(null);
+    }
+  };
+
   const handleComment = (setupId: string) => {
-    if (!sessionId) {
+    if (!session) {
       setShowAuthModal(true);
       return;
     }
@@ -154,29 +120,110 @@ export function SetupsList({ sessionId }: { sessionId: string | null }) {
           ) : (
             setups?.map((setup) => (
               <SetupCard
-                sessionId={sessionId}
+                session={session}
                 key={setup.id}
                 setup={setup}
-                onLike={handleLike}
-                onComment={handleComment}
+                onDelete={() => handleDeleteSetup(setup)}
               />
             ))
           )}
         </div>
+        <ModalSetup 
+          showAuthModal={showAuthModal} 
+          setShowAuthModal={setShowAuthModal}
+          title={modalAction === 'delete' ? "¿Estás seguro de eliminar este setup?" : "Indica que te gusta un setup para demostrar tu interés."}
+          description={modalAction === 'delete' ? "Esta acción no se puede deshacer." : "Únete a programaConNosotros y hazle saber a los creadores que te gusta su setup."}
+          icon={modalAction === 'delete' ? <X className="w-8 h-8 text-red-500" /> : <Heart className="w-8 h-8 text-pink-500" />}
+          onConfirm={modalAction === 'delete' ? handleConfirmDelete : undefined}
+        />
 
         {/* Upload Setup Modal */}
         <UploadSetupModal
-          userId={sessionId!}
+          userId={session?.user.id!}
           open={showUploadModal}
           onOpenChange={setShowUploadModal}
           onSubmit={(setupData) => {
             console.log("Nuevo setup:", setupData);
             setShowUploadModal(false);
           }}
-          isAuthenticated={!!sessionId}
+          isAuthenticated={!!session?.user.id}
           onAuthRequired={() => setShowAuthModal(true)}
+          refetch={refetch}
         />
       </div>
     </div>
   );
-} 
+}
+
+interface ModalSetupProps {
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
+  onLogin?: () => void;
+  onRegister?: () => void;
+  title?: string;
+  description?: string;
+  icon?: React.ReactNode;
+  onConfirm?: () => void;
+}
+
+export const ModalSetup = ({
+  showAuthModal,
+  setShowAuthModal,
+  onLogin,
+  onRegister,
+  title = "Indica que te gusta un setup para demostrar tu interés.",
+  description = "Únete a programaConNosotros y hazle saber a los creadores que te gusta su setup.",
+  icon = <Heart className="w-8 h-8 text-pink-500" />,
+  onConfirm
+}: ModalSetupProps) => {
+  return (
+    <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="text-center pb-4">
+          <DialogTitle className="text-xl font-bold text-gray-900">
+            {title}
+          </DialogTitle>
+          <p className="text-gray-600 mt-2">
+            {description}
+          </p>
+        </DialogHeader>
+
+        <div className="space-y-3">
+          {onConfirm ? (
+            <Button
+              variant="destructive"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-red-500/20"
+              onClick={onConfirm}
+            >
+              Confirmar
+            </Button>
+          ) : (
+            <>
+              <Button
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/20"
+                onClick={() => {
+                  onLogin?.();
+                  setShowAuthModal(false);
+                }}
+              >
+                Iniciar sesión
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full border-gray-300 text-blue-500 py-3 rounded-full font-medium hover:bg-gray-50 transition-all duration-200 hover:scale-[1.02] hover:border-blue-300 hover:shadow-md"
+                onClick={() => {
+                  onRegister?.();
+                  setShowAuthModal(false);
+                }}
+              >
+                Regístrate
+              </Button>
+            </>
+          )}
+        </div>
+
+      </DialogContent>
+    </Dialog>
+  );
+};
