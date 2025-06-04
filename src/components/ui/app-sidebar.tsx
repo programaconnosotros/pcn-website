@@ -46,11 +46,6 @@ const data = {
       isActive: true,
     },
     {
-      title: 'Influencers',
-      url: '/influencers',
-      icon: Users,
-    },
-    {
       title: 'Fotos',
       url: '/galeria',
       icon: Image,
@@ -92,6 +87,11 @@ const data = {
           url: '/cursos',
         },
       ],
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
     },
   ],
   navSecondary: [
