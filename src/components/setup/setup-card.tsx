@@ -16,7 +16,6 @@ import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Heart, MoreVertical, Share2, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useOptimistic, useState } from 'react';
-import { toast } from 'sonner';
 
 interface SetupCardProps {
   setup: Setup;
@@ -70,7 +69,6 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
       return { previousSetups };
     },
     onError: (err, variables, context: any) => {
-      toast.error('Error al dar like');
       if (context?.previousSetups) {
         queryClient.setQueryData(['setups'] as const, context.previousSetups);
       }

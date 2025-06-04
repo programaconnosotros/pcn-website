@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Session, User } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { Heart, Plus, X } from 'lucide-react';
+import { Heart, LogIn, Plus, UserPlus, X } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { SetupCard } from './setup-card';
 import UploadSetupModal from './upload-setup-modal';
+
 export function SetupsList({ session }: { session: (Session & { user: User }) | null }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -56,14 +58,6 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
       setSelectedSetup(null);
       setModalAction(null);
     }
-  };
-
-  const handleComment = (setupId: string) => {
-    if (!session) {
-      setShowAuthModal(true);
-      return;
-    }
-    console.log("Comentar en setup:", setupId);
   };
 
   return (
@@ -117,6 +111,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
                 key={setup.id}
                 setup={setup}
                 onDelete={() => handleDeleteSetup(setup)}
+                onRequireAuth={() => setShowAuthModal(true)}
               />
             ))
           )}
@@ -124,8 +119,8 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
         <ModalSetup 
           showAuthModal={showAuthModal} 
           setShowAuthModal={setShowAuthModal}
-          title={modalAction === 'delete' ? "¿Estás seguro de eliminar este setup?" : "Indica que te gusta un setup para demostrar tu interés."}
-          description={modalAction === 'delete' ? "Esta acción no se puede deshacer." : "Únete a programaConNosotros y hazle saber a los creadores que te gusta su setup."}
+          title={modalAction === 'delete' ? "¿Estás seguro de eliminar este setup?" : "Se parte de la comunidad para continuar"}
+          description={modalAction === 'delete' ? "Esta acción no se puede deshacer." : "Necesitas una cuenta para realizar acciones en el sitio. Regístrate gratis o inicia sesión para descubrir más funcionalidades."}
           icon={modalAction === 'delete' ? <X className="w-8 h-8 text-red-500" /> : <Heart className="w-8 h-8 text-pink-500" />}
           onConfirm={modalAction === 'delete' ? handleConfirmDelete : undefined}
         />
@@ -164,9 +159,8 @@ export const ModalSetup = ({
   setShowAuthModal,
   onLogin,
   onRegister,
-  title = "Indica que te gusta un setup para demostrar tu interés.",
-  description = "Únete a programaConNosotros y hazle saber a los creadores que te gusta su setup.",
-  icon = <Heart className="w-8 h-8 text-pink-500" />,
+  title,
+  description,
   onConfirm
 }: ModalSetupProps) => {
   return (
@@ -192,26 +186,19 @@ export const ModalSetup = ({
             </Button>
           ) : (
             <>
-              <Button
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/20"
-                onClick={() => {
-                  onLogin?.();
-                  setShowAuthModal(false);
-                }}
-              >
-                Iniciar sesión
-              </Button>
+              <Link href="/autenticacion/iniciar-sesion" className="w-full">
+                <Button variant="outline" className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-black hover:text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg  hover:shadow-white-500/20 mb-2">
+                  Iniciar sesión
+                  <LogIn className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
 
-              <Button
-                variant="outline"
-                className="w-full border-gray-300 text-blue-500 py-3 rounded-full font-medium hover:bg-gray-50 transition-all duration-200 hover:scale-[1.02] hover:border-blue-300 hover:shadow-md"
-                onClick={() => {
-                  onRegister?.();
-                  setShowAuthModal(false);
-                }}
-              >
-                Regístrate
-              </Button>
+              <Link href="/autenticacion/registro" className="w-full">
+                <Button variant="outline" className="w-full  text-black py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black-500/20">
+                  Crear cuenta
+                  <UserPlus className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </>
           )}
         </div>
