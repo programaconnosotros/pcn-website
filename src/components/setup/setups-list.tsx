@@ -21,13 +21,6 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
     queryFn: () => fetchSetups(1),
   });
 
-  const handleLike = (setupId: string) => {
-    if (!session) {
-      setShowAuthModal(true);
-      return;
-    }
-  };
-
   const handlePublishSetup = () => {
     if (!session) {
       setShowAuthModal(true);

@@ -1,6 +1,7 @@
 'use client';
 
 import { Setup } from '@/actions/setup/get-setup';
+import { toggleLikeSetup } from '@/actions/setup/like-setup';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -11,33 +12,85 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Session, User } from '@prisma/client';
+import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Heart, MoreVertical, Share2, Trash } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useOptimistic, useState } from 'react';
+import { toast } from 'sonner';
 
 interface SetupCardProps {
   setup: Setup;
   session: (Session & { user: User }) | null;
   onDelete: () => void;
+  onRequireAuth?: () => void;
 }
 
-export function SetupCard({ setup, session, onDelete }: SetupCardProps) {
+export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCardProps) {
   const [imgError, setImgError] = useState(false);
-  const [modalAction, setModalAction] = useState<'edit' | 'delete' | null>(null);
+  const [isLiking, setIsLiking] = useState(false);
+  const [optimisticLikes,] = useOptimistic(
+    setup.likes,
+    (state, userId: string) => {
+      const isLiked = state.some((like) => like.userId === userId);
+      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+    },
+  );
+  const queryClient = useQueryClient();
+
   const isAuthor =
     (session?.user?.id && session.user.id === setup.author.id) ||
     (session?.user?.email && session.user.email === setup.author.email);
 
+  const isLiked = session?.user?.id
+    ? optimisticLikes.some((like) => like.userId === session.user.id)
+    : false;
+
+  const mutation = useMutation({
+    mutationFn: () => toggleLikeSetup(setup.id),
+    onMutate: async () => {
+      if (!session?.user?.id) {
+        onRequireAuth?.();
+        throw new Error('No user');
+      }
+      setIsLiking(true);
+      await queryClient.cancelQueries({ queryKey: ['setups']});
+      const previousSetups = queryClient.getQueryData(['setups'] as QueryKey) as any[];      
+      queryClient.setQueryData(['setups'] as const, (old: any[] = []) => {
+        return old.map((s: any) =>
+          s.id === setup.id
+            ? {
+                ...s,
+                likes: isLiked
+                  ? s.likes.filter((like: any) => like.userId !== session.user.id)
+                  : [...s.likes, { userId: session.user.id }]
+              }
+            : s
+        );
+      });
+      return { previousSetups };
+    },
+    onError: (err, variables, context: any) => {
+      toast.error('Error al dar like');
+      if (context?.previousSetups) {
+        queryClient.setQueryData(['setups'] as const, context.previousSetups);
+      }
+    },
+    onSettled: () => {
+      setIsLiking(false);
+      // Refetch global solo en eventos importantes, no aquí
+    },
+  });
+
   const handleEdit = () => {
-    if (!session) {
-      setModalAction('edit');
-      return;
-    }
     // Aquí iría la lógica para editar
   };
 
   const handleDelete = () => {
     onDelete();
+  };
+
+  const handleLike = () => {
+    mutation.mutate();
   };
 
   const Options = (
@@ -62,22 +115,6 @@ export function SetupCard({ setup, session, onDelete }: SetupCardProps) {
     </DropdownMenu>
   );
 
-  const getModalContent = () => {
-    if (modalAction === 'edit') {
-      return {
-        title: "Estás editando un setup",
-        description: "Únete a programaConNosotros para poder editar tu setup.",
-        icon: <Edit className="w-8 h-8 text-blue-500" />
-      };
-    }
-    return {
-      title: "Estás eliminando un setup",
-      description: "Únete a programaConNosotros para poder eliminar tu setup.",
-      icon: <Trash className="w-8 h-8 text-red-500" />
-    };
-  };
-
-
   console.log(isAuthor);
   return (
     <>
@@ -94,9 +131,6 @@ export function SetupCard({ setup, session, onDelete }: SetupCardProps) {
                 <h3 className="font-semibold text-gray-900 transition-colors duration-200 group-hover:text-black">
                   {setup.author.name}
                 </h3>
-                <p className="text-sm text-gray-500 transition-colors duration-200 group-hover:text-gray-600">
-                  @{setup.author.email}
-                </p>
               </div>
             </div>
 
@@ -143,15 +177,17 @@ export function SetupCard({ setup, session, onDelete }: SetupCardProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={()=> console.log(setup.id)}
+                onClick={handleLike}
+                disabled={isLiking || mutation.status === 'pending'}
                 className={`flex items-center space-x-2 transition-all duration-200 hover:scale-105 ${
-                  setup.likes.some((like) => like.userId === session?.user.id) ? "text-red-500" : "text-gray-500"
+                  isLiked ? "text-red-500" : "text-gray-500"
                 } hover:text-red-500`}
               >
                 <Heart
-                  className={`w-4 h-4 transition-all duration-200 ${setup.likes.some((like) => like.userId ===  session?.user.id) ? "fill-current scale-110" : ""}`}
+                  className={`w-4 h-4 transition-all duration-200 ${isLiked ? "fill-current scale-110" : ""}`}
+                  fill={isLiked ? 'currentColor' : 'none'}
                 />
-                <span className="transition-all duration-200">{setup.likes.length} me gusta</span>
+                <span className="transition-all duration-200">{optimisticLikes.length} me gusta</span>
               </Button>
             </div>
 
