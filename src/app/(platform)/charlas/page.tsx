@@ -21,15 +21,17 @@ import { talks } from './talks';
 
 const Talks = () => (
   <div className="mt-4 md:px-20">
-    <div className="mb-8 flex w-full flex-row items-center justify-between">
-      <Heading2>Charlas</Heading2>
+    <div className="sticky top-0 z-10 bg-background/95 pb-3 pt-1 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex w-full flex-row items-center justify-between">
+        <Heading2 className="m-0">Charlas</Heading2>
 
-      <Link className="block" href="https://wa.me/5493815777562">
-        <Button className="flex flex-row items-center gap-2">
-          Quiero dar una charla
-          <MicVocal className="h-5 w-5" />
-        </Button>
-      </Link>
+        <Link className="block" href="https://wa.me/5493815777562">
+          <Button className="flex flex-row items-center gap-2">
+            Quiero dar una charla
+            <MicVocal className="h-5 w-5" />
+          </Button>
+        </Link>
+      </div>
     </div>
 
     <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
