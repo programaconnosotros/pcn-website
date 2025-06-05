@@ -142,7 +142,7 @@ const people: Person[] = [
     name: 'Mati',
     role: (
       <p>
-        Sr. Backend Engineer (Python) en <span className="underline">ASZ Software</span>
+        Jr. Frontend Engineer (JS/TS) en <span className="underline">ASZ Software</span>
       </p>
     ),
     imageUrl: '/colaborators/mati.webp',
