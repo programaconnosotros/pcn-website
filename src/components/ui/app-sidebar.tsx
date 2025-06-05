@@ -11,6 +11,7 @@ import {
   Linkedin,
   Send,
   SquareTerminal,
+  Star,
   Users,
   Youtube,
 } from 'lucide-react';
@@ -86,6 +87,11 @@ const data = {
           url: '/cursos',
         },
       ],
+    },
+    {
+      title: 'Software recomendado',
+      url: '/software-recomendado',
+      icon: Star,
     },
   ],
   navSecondary: [
