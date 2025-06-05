@@ -12,6 +12,7 @@ import {
   ScrollText,
   Send,
   SquareTerminal,
+  Star,
   Users,
   Youtube,
   Image,
@@ -97,6 +98,11 @@ const data = {
       title: 'Trabajos',
       url: '/jobs',
       icon: Briefcase,
+    },
+    {
+      title: 'Software recomendado',
+      url: '/software-recomendado',
+      icon: Star,
     },
   ],
   navSecondary: [
