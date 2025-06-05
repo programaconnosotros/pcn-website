@@ -74,7 +74,7 @@ export const AdviseCard = ({
       </Avatar>
 
       <div className="flex flex-col">
-        <Link href={`/profile/${advise.author.id}`} className="hover:underline">
+        <Link href={`/perfil/${advise.author.id}`} className="hover:underline">
           <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
         </Link>
       </div>
