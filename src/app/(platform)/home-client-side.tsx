@@ -72,9 +72,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                   <img
                     src="/logo.webp"
                     alt="programaConNosotros"
-                    width={80}
-                    height={80}
-                    className="md:h-[100px] md:w-[100px]"
+                    className="w-[50px] md:w-[100px]"
                   />
                 </div>
 
@@ -89,15 +87,15 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                   en la industria del software al siguiente nivel! 🚀
                 </p>
 
-                <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:gap-2 md:px-0 md:py-6">
+                <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:justify-center md:gap-2 md:px-0 md:py-6">
                   <Link href="/autenticacion/registro" className="w-full md:w-auto">
-                    <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
+                    <Button className="w-full text-sm md:w-auto md:text-base">
                       Registrarme <UserPlus className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
 
                   <Link href="/autenticacion/iniciar-sesion" className="w-full md:w-auto">
-                    <Button className="w-full text-sm md:w-auto md:text-base">
+                    <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
                       Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -189,7 +187,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 md:border-l">
+          <div className="group relative flex flex-col items-center border-t p-6 md:border-l md:border-t-0">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
@@ -248,14 +246,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="border-t">
           <div className="flex items-center justify-center p-6">
-            <Heading2 className="relative z-10">
+            <Heading2 className="relative z-10 text-center">
               Sumate en todas las redes para aprovechar aún más! 🚀
             </Heading2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 border-b border-t md:grid-cols-2">
-          <div className="group relative p-6 text-center md:border-r">
+          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
 
@@ -264,13 +262,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               de compartir oportunidades, consejos y mucho más.
             </Paragraph>
 
-            <Button
-              variant="outline"
-              className="relative z-10 h-8 px-3 text-xs md:h-10 md:px-4 md:text-sm"
-            >
-              <span className="md:hidden">Unirse a WhatsApp</span>
-              <span className="hidden md:inline">Entrar a la comunidad en WhatsApp</span>
-            </Button>
+            <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
+              <Button variant="outline">Entrar a la comunidad en WhatsApp</Button>
+            </Link>
           </div>
 
           <div className="group relative p-6 text-center">
@@ -283,18 +277,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               hacemos ahí.
             </Paragraph>
 
-            <Button
-              variant="outline"
-              className="relative z-10 h-8 px-3 text-xs md:h-10 md:px-4 md:text-sm"
-            >
-              <span className="md:hidden">Unirse a Discord</span>
-              <span className="hidden md:inline">Entrar al server en Discord</span>
-            </Button>
+            <Link href="https://discord.gg/dTQexKw56S" target="_blank">
+              <Button variant="outline">Ir al server en Discord</Button>
+            </Link>
           </div>
         </div>
 
         <div className="grid grid-cols-1 border-b md:grid-cols-2">
-          <div className="group relative p-6 text-center md:border-r">
+          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Instagram</Heading3>
 
@@ -302,13 +292,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               En Instagram subimos fotos de recuerdos y mucho contenido motivacional 💪
             </Paragraph>
 
-            <Button
-              variant="outline"
-              className="relative z-10 h-8 px-3 text-xs md:h-10 md:px-4 md:text-sm"
-            >
-              <span className="md:hidden">Seguir</span>
-              <span className="hidden md:inline">Seguir en Instagram</span>
-            </Button>
+            <Link href="https://www.instagram.com/programa.con.nosotros/" target="_blank">
+              <Button variant="outline">Visita nuestro Instagram</Button>
+            </Link>
           </div>
 
           <div className="group relative p-6 text-center">
@@ -319,13 +305,13 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Subimos videos de charlas, cursos y mucho más!
             </Paragraph>
 
-            <Button
-              variant="outline"
-              className="relative z-10 h-8 px-3 text-xs md:h-10 md:px-4 md:text-sm"
+            <Link
+              href="https://www.youtube.com/@programaconnosotros2689/videos"
+              target="_blank"
+              className="relative z-10"
             >
-              <span className="md:hidden">Suscribirse</span>
-              <span className="hidden md:inline">Suscribirse a nuestro canal</span>
-            </Button>
+              <Button variant="outline">Visita nuestro canal</Button>
+            </Link>
           </div>
         </div>
 
@@ -342,6 +328,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
               <Link
                 href="https://www.linkedin.com/company/programaconnosotros"
+                target="_blank"
                 className="relative z-10"
               >
                 <Button variant="outline">
