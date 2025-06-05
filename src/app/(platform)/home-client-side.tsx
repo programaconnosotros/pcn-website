@@ -305,11 +305,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Subimos videos de charlas, cursos y mucho más!
             </Paragraph>
 
-            <Link
-              href="https://www.youtube.com/@programaconnosotros2689/videos"
-              target="_blank"
-              className="relative z-10"
-            >
+            <Link href="https://www.youtube.com/@programaconnosotros2689/videos" target="_blank">
               <Button variant="outline">Visita nuestro canal</Button>
             </Link>
           </div>
