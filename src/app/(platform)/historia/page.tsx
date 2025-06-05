@@ -194,9 +194,10 @@ const PCNStory = () => (
 
     <p>
       El proyecto es open-source y cualquier persona de la comunidad puede participar en el
-      desarrollo y testing de la plataforma. Los miembros de la comunidad que más aportaron en el
-      inicio de la implementación de este proyecto fueron Germán Navarro, Mauricio Chaile, Matías
-      Gutierrez, Vicky Grillo y Emiliano Grillo. El equipo fue y es actualmente liderado por Agus.
+      desarrollo y testing de la plataforma. Los miembros de la comunidad que colaboraron en el
+      desarrollo de la primera versión del website fueron Germán Navarro, Mauricio Chaile, Matías
+      Gutierrez, Nicolas Fuentes, Facundo Bazán, Vicky Grillo, Emiliano Grillo, Carlos Spagnolo,
+      Alejo Boga y Benjamin Cortes. El equipo fue liderado por Agustín Sánchez.
     </p>
   </div>
 );
