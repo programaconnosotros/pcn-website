@@ -33,13 +33,13 @@ const PCNStory = () => (
     <p>
       Hola! Gracias por visitar la historia de la comunidad, esperamos te sirva para entender el
       contexto y los valores de lo que creamos, y también motivarte a colaborar en la comunidad y
-      compartir la carrera para ayudarnos!
+      ayudarnos a seguir creciendo entre todos!
     </p>
 
     <p>
-      programaConNosotros es una comunidad de profesionales y estudiantes de ingeniería de software,
-      fundada en el año 2020 en Tucumán (Argentina), en plena cuarentena por la pandemia del
-      COVID-19. Los co-fundadores son los hermanos Sánchez (Agustín, Mauricio y Esteban) junto a
+      <b>programaConNosotros</b> es una comunidad de profesionales y estudiantes de ingeniería de
+      software, fundada en el año 2020 en Tucumán (Argentina), en plena cuarentena por la pandemia
+      del COVID-19. Los co-fundadores son los hermanos Sánchez (Agustín, Mauricio y Esteban) junto a
       Germán Navarro, Marcelo Núñez e Iván Taddei.
     </p>
 
@@ -62,25 +62,24 @@ const PCNStory = () => (
 
     <p>
       En el año 2017, Agus y Germán se sumaron al IEEE para participar del programa de voluntariado,
-      que tiene como objetivo hacer networking (hacer contactos, conocer gente, etc) y organizar
-      eventos técnicos.
+      que tiene como objetivo hacer networking, organizar y participar de eventos técnicos.
     </p>
 
     <p>
-      Viajaron a un evento en Catamarca llamado Reunión Nacional de Ramas (RNR), y se hicieron
-      amigos de Facu Gelatti y Franco Mirada. Facu y Franco ya estaban terminando de cursar la
-      carrera y fueron mentores muy importantes. Fue difícil para Agus y Germán romper el hielo y
-      animarse a conversar con personas más experimentadas en la industria del software, y es algo
-      por lo que la mayoría de las personas de la industria transitan. No conocer gente, no poder
-      recibir consejos, ayuda, guía, etc. PCN es una comunidad que permite conseguirlo muy
-      fácilmente.
+      Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>, y se
+      hicieron amigos de Facu Gelatti y Franco Mirada. Facu y Franco ya estaban terminando de cursar
+      la carrera y fueron mentores muy importantes para Agus y Germán. Compartieron muchos eventos
+      técnicos, destacandose los congresos de Smalltalks, por la gran pasión que tenían por la
+      programación orientada a objetos.
     </p>
 
+    {/* // TODO: Agregar fotos de los congresos de Smalltalks. */}
+
     <p>
-      Agus y Germán empezaron a ayudar en la organización de algunas actividades técnicas dentro del
-      IEEE. Facu y Franco ya venían ayudando desde hacía algunos años. Facu daba algunos talleres y
-      charlas. Agus y Germán por su lado dieron su primera charla en septiembre del 2017:
-      Introducción a la Programación Competitiva.
+      Los 4 ayudaban en la organización de algunas actividades técnicas dentro del IEEE. Facu estaba
+      dando sus primeras charlas, en aquel momento sobre Java, Git y refactorización de código. Agus
+      y Germán por su lado dieron su primera charla en septiembre del 2017: Introducción a la
+      Programación Competitiva.
     </p>
 
     {/* // TODO: Agregar flyer de la charla */}
