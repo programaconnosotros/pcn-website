@@ -10,8 +10,10 @@ import {
   Laptop,
   LifeBuoy,
   Linkedin,
+  ScrollText,
   Send,
   SquareTerminal,
+  Star,
   Users,
   Youtube
 } from 'lucide-react';
@@ -46,11 +48,6 @@ const data = {
       isActive: true,
     },
     {
-      title: 'Influencers',
-      url: '/influencers',
-      icon: Users,
-    },
-    {
       title: 'Fotos',
       url: '/galeria',
       icon: Image,
@@ -59,6 +56,11 @@ const data = {
       title: 'Charlas',
       url: '/charlas',
       icon: BookOpen,
+    },
+    {
+      title: 'Historia',
+      url: '/historia',
+      icon: ScrollText,
     },
     {
       title: 'Eventos',
@@ -92,6 +94,16 @@ const data = {
       title: 'Setups',
       url: '/setups',
       icon: Laptop,
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
+    },
+    {
+      title: 'Software recomendado',
+      url: '/software-recomendado',
+      icon: Star,
     },
   ],
   navSecondary: [
@@ -146,10 +158,10 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-            <SidebarMenuItem className="mt-1.5 -ml-2 group-data-[collapsible=icon]:mt-3.5 group-data-[collapsible=icon]:ml-0">
+          <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
             <SidebarMenuButton size="lg" asChild>
               <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">

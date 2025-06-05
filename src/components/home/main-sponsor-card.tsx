@@ -8,7 +8,7 @@ export const MainSponsorCard = () => (
     href="https://asz.software"
     target="_blank"
     rel="noopener noreferrer"
-    className="w-full rounded-md border"
+    className="w-full rounded-md"
   >
     <ASZSoftwareLogo />
   </Link>

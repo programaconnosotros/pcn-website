@@ -91,11 +91,7 @@ const people: Person[] = [
   },
   {
     name: 'Benja',
-    role: (
-      <p>
-        Sr. Full-Stack Engineer
-      </p>
-    ),
+    role: <p>Sr. Full-Stack Engineer</p>,
     imageUrl: '/colaborators/benja.webp',
     linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
     githubUrl: 'https://github.com/cortesjpb',
@@ -178,7 +174,7 @@ const people: Person[] = [
 ];
 
 export const Team = () => (
-  <div className="py-24 sm:py-32">
+  <div className="py-8">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl lg:mx-0">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Nuestros colaboradores</h2>
@@ -204,7 +200,7 @@ export const Team = () => (
 
             <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">{person.name}</h3>
 
-            <p className="text-sm leading-6 text-muted-foreground">{person.role}</p>
+            <div className="text-sm leading-6 text-muted-foreground">{person.role}</div>
 
             <ul role="list" className="mt-6 flex justify-center gap-x-6">
               {person.xUrl && (
