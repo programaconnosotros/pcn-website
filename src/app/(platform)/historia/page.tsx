@@ -198,7 +198,7 @@ const PCNStory = () => (
       </div>
     </div>
 
-    <Link href="/talks">
+    <Link href="/charlas">
       <Button className="w-full" variant="outline">
         Ver el historial de charlas dadas en PCN
       </Button>
