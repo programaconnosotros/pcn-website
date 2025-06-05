@@ -14,7 +14,6 @@ import {
 import { Session, User } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
-import Image from 'next/image';
 import { useOptimistic, useState } from 'react';
 
 interface SetupCardProps {
@@ -155,15 +154,12 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
             {setup.content}
           </p>
 
-          <div className="relative rounded-lg overflow-hidden aspect-[16/7]">
-            <Image
+          <div className="relative overflow-hidden aspect-square">
+            <img
               src={imgError || !setup.imageUrl 
                 ? "/white.png" 
                 : `${setup.imageUrl}?t=${setup?.updatedAt}`}
               alt={setup.title}
-              blurDataURL='/elementor-placeholder-image.webp'
-              placeholder='blur'
-              fill
               className="object-cover object-center w-full h-full transition-transform duration-300 group-hover:scale-105"
               onError={() => setImgError(true)}
             />

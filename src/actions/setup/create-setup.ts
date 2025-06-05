@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { setupSchema } from "@/schemas/setup-schema";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const createSetup = async (formData: FormData, imageUrl: string) => {
@@ -35,6 +36,7 @@ export const createSetup = async (formData: FormData, imageUrl: string) => {
             author: { connect: { id: user.id } },
         },
     });
-    
+    revalidatePath('/setups');
+    revalidatePath('/');
     return setup.id;
 }

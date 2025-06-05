@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { createBrowserClient } from "@supabase/ssr"
 import { AlertCircle, Check, Upload, X } from "lucide-react"
-import Image from "next/image"
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { toast } from "sonner"
 import { Input } from "../ui/input"
@@ -274,11 +273,9 @@ export default function UploadSetupModal({
             >
               {preview ? (
                 <div className="relative group">
-                  <Image
+                  <img
                     src={preview}
                     alt="Preview"
-                    width={400}
-                    height={200}
                     className="mx-auto rounded-lg max-h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <Button

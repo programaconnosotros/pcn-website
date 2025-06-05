@@ -19,6 +19,6 @@ export const deleteSetup = async (id: string) => {
     where: { id, authorId: session.userId },
   });
 
-  revalidatePath('/setup');
+  revalidatePath('/setups');
   revalidatePath('/');
 };

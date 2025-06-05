@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Book,
   BookOpen,
   CalendarDays,
   Home,
@@ -11,9 +12,8 @@ import {
   Linkedin,
   Send,
   SquareTerminal,
-  Upload,
   Users,
-  Youtube,
+  Youtube
 } from 'lucide-react';
 import * as React from 'react';
 
@@ -68,7 +68,7 @@ const data = {
     {
       title: 'Cursos',
       url: '/cursos',
-      icon: Laptop,
+      icon: Book,
       items: [
         {
           title: 'Vim',
@@ -89,9 +89,9 @@ const data = {
       ],
     },
     {
-      title: 'Setup',
-      url: '/setup',
-      icon: Upload,
+      title: 'Setups',
+      url: '/setups',
+      icon: Laptop,
     },
   ],
   navSecondary: [

@@ -9,5 +9,6 @@ export const updateSetupImage = async (setupId: string, imageUrl: string) => {
         data: { imageUrl }
     });
 
-    revalidatePath('/setup');
+    revalidatePath('/setups');
+    revalidatePath('/');
 }; 
