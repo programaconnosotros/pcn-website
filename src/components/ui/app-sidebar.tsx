@@ -140,7 +140,7 @@ const data = {
     // },
     {
       name: 'YouTube',
-      url: 'https://www.youtube.com/@programaconnosotros',
+      url: 'https://www.youtube.com/@programaconnosotros2689/videos',
       icon: Youtube,
     },
     {
