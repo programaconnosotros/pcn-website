@@ -17,10 +17,13 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [modalAction, setModalAction] = useState<'delete' | null>(null);
   const [selectedSetup, setSelectedSetup] = useState<any>(null);
+  const [setupToEdit, setSetupToEdit] = useState<any>(null);
 
   const { data: setups, isLoading, refetch } = useQuery({
     queryKey: ['setups'],
     queryFn: () => fetchSetups(1),
+    staleTime: 0,
+    gcTime: 0,
   });
 
   const handlePublishSetup = () => {
@@ -28,6 +31,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
       setShowAuthModal(true);
       return;
     }
+    setSetupToEdit(null);
     setShowUploadModal(true);
   };
 
@@ -40,6 +44,21 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
     setSelectedSetup(setup);
     setModalAction('delete');
     setShowAuthModal(true);
+  };
+
+  const handleEditSetup = (setup: any) => {
+    if (!session) {
+      setShowAuthModal(true);
+      return;
+    }
+    console.log("Editando setup:", setup);
+    setSetupToEdit({
+      id: setup.id,
+      title: setup.title,
+      description: setup.content,
+      imageUrl: setup.imageUrl
+    });
+    setShowUploadModal(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -61,27 +80,27 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+    <div className=" bg-white dark:bg-black">
+      <div className="p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 w-full gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Setups</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Setups</h1>
+            <p className="text-gray-600 mt-2 dark:text-white">
               {"Comparte tu espacio de trabajo y descubre configuraciones increíbles 🖥️"}
             </p>
           </div>
           <Button
             onClick={handlePublishSetup}
-            className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-black/20"
+            className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105
+             hover:shadow-lg hover:shadow-black/20 dark:text-black w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:rotate-90" />
-            Publicar tu setup
+            Publica tu setup
           </Button>
         </div>
 
         {/* Setups Grid */}
-        <div className="grid gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {setups?.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="rounded-full bg-gray-100 p-3">
@@ -111,6 +130,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
                 key={setup.id}
                 setup={setup}
                 onDelete={() => handleDeleteSetup(setup)}
+                onEdit={() => handleEditSetup(setup)}
                 onRequireAuth={() => setShowAuthModal(true)}
               />
             ))
@@ -129,14 +149,19 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
         <UploadSetupModal
           userId={session?.user.id!}
           open={showUploadModal}
-          onOpenChange={setShowUploadModal}
+          onOpenChange={(open) => {
+            setShowUploadModal(open);
+            if (!open) setSetupToEdit(null);
+          }}
           onSubmit={(setupData) => {
             console.log("Nuevo setup:", setupData);
             setShowUploadModal(false);
+            setSetupToEdit(null);
           }}
           isAuthenticated={!!session?.user.id}
           onAuthRequired={() => setShowAuthModal(true)}
           refetch={refetch}
+          setupToEdit={setupToEdit}
         />
       </div>
     </div>
@@ -167,10 +192,10 @@ export const ModalSetup = ({
     <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center pb-4">
-          <DialogTitle className="text-xl font-bold text-gray-900">
+          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
             {title}
           </DialogTitle>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             {description}
           </p>
         </DialogHeader>
@@ -187,14 +212,15 @@ export const ModalSetup = ({
           ) : (
             <>
               <Link href="/autenticacion/iniciar-sesion" className="w-full">
-                <Button variant="outline" className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-black hover:text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg  hover:shadow-white-500/20 mb-2">
+                <Button variant="outline" className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-black hover:text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg  hover:shadow-white-500/20 mb-2
+                dark:bg-pcnGreen dark:text-black">
                   Iniciar sesión
                   <LogIn className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
 
               <Link href="/autenticacion/registro" className="w-full">
-                <Button variant="outline" className="w-full  text-black py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black-500/20">
+                <Button variant="outline" className="w-full  text-black py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black-500/20 dark:text-white">
                   Crear cuenta
                   <UserPlus className="ml-2 h-4 w-4" />
                 </Button>

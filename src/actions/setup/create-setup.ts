@@ -27,8 +27,6 @@ export const createSetup = async (formData: FormData, imageUrl: string) => {
 
     if (!user) throw new Error('User not found');
 
-    console.log({validatedData, user});
-
     const setup = await prisma.setup.create({
         data: {
             title: validatedData.title,

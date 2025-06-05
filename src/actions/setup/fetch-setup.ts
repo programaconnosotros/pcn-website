@@ -34,6 +34,7 @@ export const fetchSetups = async (page: number): Promise<Setup[]> => {
     content: setup.content,
     imageUrl: setup.imageUrl,
     createdAt: setup.createdAt,
+    updatedAt: setup.updatedAt,
     author: setup.author,
     likes: setup.likes,
   }));

@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Session, User } from '@prisma/client';
-import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit, Heart, MoreVertical, Share2, Trash } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useOptimistic, useState } from 'react';
 
@@ -21,10 +21,11 @@ interface SetupCardProps {
   setup: Setup;
   session: (Session & { user: User }) | null;
   onDelete: () => void;
+  onEdit: () => void;
   onRequireAuth?: () => void;
 }
 
-export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCardProps) {
+export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: SetupCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [optimisticLikes,] = useOptimistic(
@@ -52,9 +53,15 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
         throw new Error('No user');
       }
       setIsLiking(true);
-      await queryClient.cancelQueries({ queryKey: ['setups']});
-      const previousSetups = queryClient.getQueryData(['setups'] as QueryKey) as any[];      
-      queryClient.setQueryData(['setups'] as const, (old: any[] = []) => {
+      
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['setups'] });
+      
+      // Snapshot the previous value
+      const previousSetups = queryClient.getQueryData(['setups']);
+      
+      // Optimistically update to the new value
+      queryClient.setQueryData(['setups'], (old: any[] = []) => {
         return old.map((s: any) =>
           s.id === setup.id
             ? {
@@ -66,21 +73,24 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
             : s
         );
       });
+
       return { previousSetups };
     },
     onError: (err, variables, context: any) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousSetups) {
-        queryClient.setQueryData(['setups'] as const, context.previousSetups);
+        queryClient.setQueryData(['setups'], context.previousSetups);
       }
     },
     onSettled: () => {
       setIsLiking(false);
-      // Refetch global solo en eventos importantes, no aquí
+      // Invalidate and refetch to ensure data consistency
+      queryClient.invalidateQueries({ queryKey: ['setups'] });
     },
   });
 
   const handleEdit = () => {
-    // Aquí iría la lógica para editar
+    onEdit();
   };
 
   const handleDelete = () => {
@@ -113,20 +123,19 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
     </DropdownMenu>
   );
 
-  console.log(isAuthor);
   return (
-    <>
-      <Card className="bg-white border border-gray-200 hover:shadow-lg hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1 group">
+    <div className="bg-white dark:bg-black">
+      <Card className="bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700  hover:dark:border-gray-300 transition-all duration-300  group">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Avatar className="w-10 h-10 transition-transform duration-200 group-hover:scale-105">
+              <Avatar className="w-10 h-10  rounded-lg transition-transform duration-200 group-hover:scale-105">
                 <AvatarImage src={setup.author.image ?? undefined} alt={setup.author.name} />
-                <AvatarFallback className="rounded-lg">{setup.author.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-lg ">{setup.author.name.charAt(0)}</AvatarFallback>
               </Avatar>
 
               <div>
-                <h3 className="font-semibold text-gray-900 transition-colors duration-200 group-hover:text-black">
+                <h3 className="font-semibold text-gray-700  transition-colors duration-200 group-hover:text-black group-hover:dark:text-white dark:text-white group-hover:scale-105">
                   {setup.author.name}
                 </h3>
               </div>
@@ -134,30 +143,23 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
 
             <div className="flex items-center gap-2">
               {isAuthor && Options}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={()=>
-                  console.log(setup.id)
-                }
-              >
-                <Share2 className="w-4 h-4" />
-              </Button>
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="pb-3">
-          <h2 className="text-xl font-bold text-gray-900 mb-2 transition-colors duration-200 group-hover:text-black">
+          <h2 className="text-xl font-bold text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-200 group-hover:text-black group-hover:dark:text-white dark:text-white">
             {setup.title}
           </h2>
-          <p className="text-gray-600 mb-4 transition-colors duration-200 group-hover:text-gray-700">
+          <p className="text-gray-600 dark:text-gray-300 mb-4 transition-colors duration-200 group-hover:dark:text-gray-200 ">
             {setup.content}
           </p>
 
           <div className="relative rounded-lg overflow-hidden aspect-[16/7]">
             <Image
-              src={imgError || !setup.imageUrl ? "/white.png" : setup.imageUrl}
+              src={imgError || !setup.imageUrl 
+                ? "/white.png" 
+                : `${setup.imageUrl}?t=${setup?.updatedAt}`}
               alt={setup.title}
               blurDataURL='/elementor-placeholder-image.webp'
               placeholder='blur'
@@ -169,7 +171,7 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
           </div>
         </CardContent>
 
-        <CardFooter className="pt-3 border-t border-gray-100">
+        <CardFooter className="pt-3 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-4">
               <Button
@@ -178,7 +180,7 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
                 onClick={handleLike}
                 disabled={isLiking || mutation.status === 'pending'}
                 className={`flex items-center space-x-2 transition-all duration-200 hover:scale-105 ${
-                  isLiked ? "text-red-500" : "text-gray-500"
+                  isLiked ? "text-red-500" : "text-gray-700 dark:text-gray-300"
                 } hover:text-red-500`}
               >
                 <Heart
@@ -189,12 +191,12 @@ export function SetupCard({ setup, session, onDelete, onRequireAuth }: SetupCard
               </Button>
             </div>
 
-            <span className="text-sm text-gray-500 transition-colors duration-200 group-hover:text-gray-600 font-medium">
+            <span className="text-sm text-gray-700 transition-colors duration-200 dark:text-gray-300 font-medium">
               {setup.createdAt.toLocaleDateString()}
             </span>
           </div>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 } 

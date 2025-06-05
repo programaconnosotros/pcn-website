@@ -3,13 +3,14 @@
 import type React from "react"
 
 import { createSetup } from "@/actions/setup/create-setup"
+import { editSetup } from "@/actions/setup/edit-setup"
 import { updateSetupImage } from "@/actions/setup/update-setup-image"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { createBrowserClient } from "@supabase/ssr"
 import { AlertCircle, Check, Upload, X } from "lucide-react"
 import Image from "next/image"
-import { useCallback, useRef, useState, useTransition } from "react"
+import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
@@ -22,6 +23,12 @@ interface UploadSetupModalProps {
   isAuthenticated: boolean
   onAuthRequired: () => void
   userId: string
+  setupToEdit?: {
+    id: string
+    title: string
+    description: string
+    imageUrl: string
+  }
 }
 
 const ACCEPTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
@@ -36,15 +43,13 @@ const createClient = () =>
 export default function UploadSetupModal({ 
   open, 
   onOpenChange, 
-  onSubmit,
-  isAuthenticated,
   userId,
-  onAuthRequired,
-  refetch
+  refetch,
+  setupToEdit
 }: UploadSetupModalProps) {
   const [isPending, startTransition] = useTransition()
   const [dragActive, setDragActive] = useState(false)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(setupToEdit?.imageUrl || null)
   const [error, setError] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -53,6 +58,19 @@ export default function UploadSetupModal({
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
+
+  // Efecto para actualizar los estados cuando setupToEdit cambia
+  useEffect(() => {
+    if (setupToEdit) {
+      setTitleLength(setupToEdit.title.length)
+      setDescriptionLength(setupToEdit.description.length)
+      setPreview(setupToEdit.imageUrl)
+    } else {
+      setTitleLength(0)
+      setDescriptionLength(0)
+      setPreview(null)
+    }
+  }, [setupToEdit])
 
   const validateFile = (file: File): string | null => {
     if (!ACCEPTED_FORMATS.includes(file.type)) {
@@ -124,33 +142,52 @@ export default function UploadSetupModal({
     setIsUploading(true)
     try {
       startTransition(async () => {
-        // Primero creamos el setup con una URL temporal
-        const setupId = await createSetup(formData, "https://placehold.co/600x400/png")
-        
-        const supabase = createClient()
-        // Subimos la imagen a supabase storage usando el ID del setup
-        const { data, error } = await supabase.storage.from('setups').upload(`${setupId}`, selectedFile!,{
-          upsert: true,
-          contentType: selectedFile!.type,
-        })
-        if (error) {
-          console.log({error});
-          return
-        } 
+        if (setupToEdit) {
+          let imageUrl = setupToEdit.imageUrl;
+          
+          if (selectedFile) {
+            const supabase = createClient();
+            const { data, error } = await supabase.storage
+              .from('setups')
+              .upload(`${setupToEdit.id}`, selectedFile, {
+                upsert: true,
+                contentType: selectedFile.type,
+              });
 
-        // Obtenemos la URL pública de la imagen
-        const { data: publicUrlData } = supabase
-          .storage
-          .from('setups')
-          .getPublicUrl(data.path)
-        
-        // Actualizamos el setup con la URL real de la imagen
-        await updateSetupImage(setupId, publicUrlData.publicUrl)
+            // Añadimos el timestamp a la URL
+            const timestamp = new Date().getTime();
+            imageUrl = `${setupToEdit.imageUrl}?t=${timestamp}`;
+          }
+          await editSetup({ id: setupToEdit.id, formData, imageUrl })
+        } else {
+          // Primero creamos el setup con una URL temporal
+          const setupId = await createSetup(formData, "https://placehold.co/600x400/png")
+          
+          const supabase = createClient()
+          // Subimos la imagen a supabase storage usando el ID del setup
+          const { data, error } = await supabase.storage.from('setups').upload(`${setupId}`, selectedFile!,{
+            upsert: true,
+            contentType: selectedFile!.type,
+          })
+          if (error) {
+            console.log({error});
+            return
+          } 
+
+          // Obtenemos la URL pública de la imagen
+          const { data: publicUrlData } = supabase
+            .storage
+            .from('setups')
+            .getPublicUrl(data.path)
+          
+          // Actualizamos el setup con la URL real de la imagen
+          await updateSetupImage(setupId, publicUrlData.publicUrl)
+        }
 
         resetForm()
         onOpenChange(false)
         refetch()
-        toast.success('Setup subido exitosamente! 🎉')
+        toast.success(setupToEdit ? 'Setup actualizado exitosamente! 🎉' : 'Setup subido exitosamente! 🎉')
       })
     } catch (error) {
       setError('Error al subir la imagen')
@@ -158,8 +195,6 @@ export default function UploadSetupModal({
       setIsUploading(false)
     }
   }
-
-  console.log({isPending, isUploading})
 
   const resetForm = () => {
     setPreview(null)
@@ -181,7 +216,9 @@ export default function UploadSetupModal({
     >
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Comparte tu setup</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            {setupToEdit ? 'Editar setup' : 'Comparte tu setup'}
+          </DialogTitle>
         </DialogHeader>
 
         <form 
@@ -197,6 +234,7 @@ export default function UploadSetupModal({
                 className="text-lg font-medium transition-all duration-200 focus:scale-[1.01]"
                 maxLength={45}
                 required
+                defaultValue={setupToEdit?.title}
                 onChange={(e) => setTitleLength(e.target.value.length)}
               />
               <p className="text-xs text-gray-500 mt-3">
@@ -210,6 +248,7 @@ export default function UploadSetupModal({
                 placeholder="Describe tu setup, componentes, inspiración..."
                 className="min-h-[100px] transition-all duration-200 focus:scale-[1.01]"
                 maxLength={250}
+                defaultValue={setupToEdit?.description}
                 onChange={(e) => setDescriptionLength(e.target.value.length)}
               />
               <p className="text-xs text-gray-500 mt-3">
@@ -225,8 +264,8 @@ export default function UploadSetupModal({
                 dragActive
                   ? "border-blue-500 bg-blue-50 scale-105"
                   : preview
-                    ? "border-green-500 bg-green-50"
-                    : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                    ? "border-green-500"
+                    : "border-gray-300 hover:border-gray-400"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -272,9 +311,9 @@ export default function UploadSetupModal({
                     />
                   </div>
                   <div>
-                    <p className="text-lg font-medium text-gray-900">Sube una imagen de tu setup</p>
-                    <p className="text-sm text-gray-500">o haz clic para explorar (5 MB máx.)</p>
-                    <p className="text-xs text-gray-400 mt-1">Formatos: JPG, PNG, WebP</p>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">Sube una imagen de tu setup</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">o haz clic para explorar (5 MB máx.)</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-300 mt-1">Formatos: JPG, PNG, WebP</p>
                   </div>
                 </div>
               )}
@@ -285,7 +324,7 @@ export default function UploadSetupModal({
                 accept=".jpg,.jpeg,.png,.webp"
                 onChange={handleFileInput}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                required
+                required={!setupToEdit}
               />
             </div>
 

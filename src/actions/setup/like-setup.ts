@@ -26,14 +26,12 @@ export const toggleLikeSetup = async (setupId: string) => {
     });
 
     if (existingLike) {
-      console.log('existingLike', existingLike);
       await prisma.like.delete({
         where: {
           id: existingLike.id,
         },
       });
     } else {
-      console.log('no existingLike');
       await prisma.like.create({
         data: {
           userId: session.userId,
