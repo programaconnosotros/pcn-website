@@ -49,7 +49,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </div>
             </>
           ) : (
-
             // Componente usuario no logueado
 
             <div className="relative min-h-[400px] w-full overflow-hidden bg-background md:h-[500px]">
