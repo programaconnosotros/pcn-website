@@ -19,6 +19,7 @@ model User {
   linkedinUrl     String?
   sessions        Session[]
   advises         Advise[]
+  setups          Setup[]
   languages       UserLanguage[]
   comments        Comment[]
   likes           Like[]
@@ -45,6 +46,21 @@ model Advise {
   authorId String
 
   comments Comment[]
+  likes    Like[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setup {
+  id        String @id @default(cuid())
+  title     String
+  content   String
+  imageUrl  String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
   likes    Like[]
 
   createdAt DateTime @default(now())
@@ -111,13 +127,17 @@ model Image {
 model Like {
   id       String @id @default(cuid())
   userId   String
-  adviseId String
+  adviseId String?
+  setupId  String?
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  advise Advise @relation(fields: [adviseId], references: [id], onDelete: Cascade)
+  advise Advise? @relation(fields: [adviseId], references: [id], onDelete: Cascade)
+  setup  Setup? @relation(fields: [setupId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, adviseId])
+  @@unique([userId, setupId])
 }
+
