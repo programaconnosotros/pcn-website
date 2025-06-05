@@ -12,6 +12,7 @@ import {
   ScrollText,
   Send,
   SquareTerminal,
+  Star,
   Users,
   Youtube,
 } from 'lucide-react';
@@ -92,6 +93,11 @@ const data = {
       title: 'Influencers',
       url: '/influencers',
       icon: Users,
+    },
+    {
+      title: 'Software recomendado',
+      url: '/software-recomendado',
+      icon: Star,
     },
   ],
   navSecondary: [
