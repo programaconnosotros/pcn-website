@@ -7,10 +7,14 @@ import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import './globals.css';
+
 export const metadata: Metadata = {
   title: 'programaConNosotros',
-  description: 'Desarrollado y mantenido para y por la comunidad.',
+  description: 'Comunidad de profesionales y estudiantes de ingeniería de software.',
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  openGraph: {
+    images: ['/logo.webp'],
+  },
 };
 
 const RootLayout = async ({
