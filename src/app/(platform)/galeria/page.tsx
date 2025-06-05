@@ -21,7 +21,7 @@ export default function PhotoGallery() {
 
   return (
     <div className="mt-4 md:px-20">
-      <div className="sticky top-0 z-10 bg-background/95 pb-3 pt-1 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="z-10 bg-background/95 pb-3 pt-1 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex w-full flex-row justify-between">
           <Heading2 className="m-0">Galería</Heading2>
         </div>
