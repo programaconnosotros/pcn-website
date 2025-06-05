@@ -1,0 +1,17 @@
+name: Notificar en Discord cuando se haga merge a testing
+
+on:
+  push:
+    branches:
+      - testing
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar merge en branch testing en Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"✅ Se hizo *merge* a la rama \`testing\` por ${{ github.actor }} 🚀\"}" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}

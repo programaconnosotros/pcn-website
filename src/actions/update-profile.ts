@@ -1,11 +1,10 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { ProfileFormData } from '@/schemas/profile-schema';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { UserProgrammingLanguage } from '@/types/programming-language';
 
 export const updateProfile = async (data: ProfileFormData) => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -51,5 +50,5 @@ export const updateProfile = async (data: ProfileFormData) => {
     });
   }
 
-  revalidatePath('/profile');
+  revalidatePath('/perfil');
 };

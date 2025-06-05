@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
+import Link from 'next/link';
 
 const commentSchema = z.object({
   content: z
@@ -164,7 +165,13 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
           </Button>
         </form>
       ) : (
-        <p className="text-sm text-muted-foreground">Debes iniciar sesión para poder comentar.</p>
+        <p className="text-sm text-muted-foreground">
+          Debes{' '}
+          <Link href="/autenticacion/iniciar-sesion" className="underline hover:text-foreground">
+            iniciar sesión
+          </Link>{' '}
+          para poder comentar.
+        </p>
       )}
 
       <div className="space-y-6">

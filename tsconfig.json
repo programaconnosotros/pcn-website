@@ -13,6 +13,7 @@
     "jsx": "preserve",
     "incremental": true,
     "strictNullChecks": true,
+    "rootDir": "./", // Carpeta raíz
     "plugins": [
       {
         "name": "next"

@@ -9,14 +9,6 @@ interface Platform {
   page?: string;
 }
 
-interface Followers {
-  youtube?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-  github?: string;
-}
-
 interface Influencer {
   id: string;
   name: string;
@@ -24,7 +16,6 @@ interface Influencer {
   description: string;
   platforms: Platform;
   specialties: string[];
-  followers: Followers;
 }
 
 interface InfluencersData {
@@ -33,7 +24,7 @@ interface InfluencersData {
 
 export const metadata = {
   title: 'Influencers - PCN',
-  description: 'Conoce a los influencers que forman parte de nuestra comunidad.',
+  description: 'Influencers recomendados por la comunidad.',
 };
 
 const influencersData: InfluencersData = {
@@ -51,11 +42,6 @@ const influencersData: InfluencersData = {
         linkedin: 'https://www.linkedin.com/in/midudev/',
       },
       specialties: ['React', 'Node.js', 'Full Stack'],
-      followers: {
-        youtube: '360K',
-        instagram: '550K',
-        twitter: '286K',
-      },
     },
     {
       id: '2',
@@ -70,10 +56,6 @@ const influencersData: InfluencersData = {
         twitter: 'https://x.com/Fernando_Her85',
       },
       specialties: ['javascript', 'typescript', 'react', 'nodejs', 'python', 'sql', 'aws'],
-      followers: {
-        youtube: '150K',
-        twitter: '125k',
-      },
     },
     {
       id: '3',
@@ -88,11 +70,6 @@ const influencersData: InfluencersData = {
         github: 'https://github.com/mouredev',
       },
       specialties: ['javascript', 'typescript', 'react', 'nodejs', 'python', 'sql', 'aws'],
-      followers: {
-        youtube: '640k',
-        twitter: '245k',
-        github: 'K',
-      },
     },
   ],
 };
@@ -101,10 +78,15 @@ export default async function InfluencersPage() {
   return (
     <div className="mt-4 md:max-w-screen-xl md:px-20">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Influencers de la Comunidad</h1>
+        <h1 className="text-3xl font-bold">Influencers</h1>
+
         <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Conoce a los creadores de contenido que comparten sus conocimientos y experiencias con la
-          comunidad.
+          Te presentamos algunas personas o grupos que consideramos referentes en el mundo del
+          software.
+        </p>
+
+        <p className="mt-2 text-gray-600 dark:text-gray-400">
+          Si queres sumar a alguien, avisa por WhatsApp o Discord!
         </p>
       </div>
 

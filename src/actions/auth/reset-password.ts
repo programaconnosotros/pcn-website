@@ -3,9 +3,16 @@
 import { ResetPasswordEmail } from '@/components/auth/reset-password-email';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
+import { render } from '@react-email/render';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 export const resetPassword = async (email: string) => {
   const user = await prisma.user.findUnique({
@@ -28,14 +35,19 @@ export const resetPassword = async (email: string) => {
     data: { password: hashedPassword },
   });
 
-  const { error } = await resend.emails.send({
-    from: 'Agus de PCN <agus@asz.software>',
-    to: [user.email],
-    subject: 'Contraseña restablecida',
-    react: ResetPasswordEmail({ user, newPassword }),
-  });
+  const emailHtml = await render(ResetPasswordEmail({ user, newPassword }));
 
-  if (error) {
+  try {
+    await transporter.sendMail({
+      to: user.email,
+      subject: 'Contraseña restablecida',
+      html: emailHtml,
+    });
+  } catch (error) {
+    console.error(
+      'Failed to send reset password email:',
+      error instanceof Error ? error.message : 'Unknown error',
+    );
     throw new Error('Error sending email');
   }
 };

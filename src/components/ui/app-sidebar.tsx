@@ -1,20 +1,22 @@
 'use client';
 
-import * as React from 'react';
 import {
   BookOpen,
+  CalendarDays,
+  Home,
+  Image,
   Instagram,
   Laptop,
   LifeBuoy,
   Linkedin,
+  ScrollText,
   Send,
   SquareTerminal,
-  Youtube,
-  Image,
-  Home,
-  CalendarDays,
+  Star,
   Users,
+  Youtube,
 } from 'lucide-react';
+import * as React from 'react';
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -40,9 +42,52 @@ const data = {
     },
     {
       title: 'Consejos',
-      url: '/advises',
+      url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: 'Fotos',
+      url: '/galeria',
+      icon: Image,
+    },
+    {
+      title: 'Charlas',
+      url: '/charlas',
+      icon: BookOpen,
+    },
+    {
+      title: 'Historia',
+      url: '/historia',
+      icon: ScrollText,
+    },
+    {
+      title: 'Eventos',
+      url: '/eventos',
+      icon: CalendarDays,
+    },
+    {
+      title: 'Cursos',
+      url: '/cursos',
+      icon: Laptop,
+      items: [
+        {
+          title: 'Vim',
+          url: '/cursos/vim',
+        },
+        {
+          title: 'LaTeX',
+          url: '/cursos/latex',
+        },
+        {
+          title: 'Git & GitHub',
+          url: '/cursos/git-and-github',
+        },
+        {
+          title: 'Ver todos',
+          url: '/cursos',
+        },
+      ],
     },
     {
       title: 'Influencers',
@@ -50,42 +95,9 @@ const data = {
       icon: Users,
     },
     {
-      title: 'Fotos',
-      url: '/photos',
-      icon: Image,
-    },
-    {
-      title: 'Charlas',
-      url: '/talks',
-      icon: BookOpen,
-    },
-    {
-      title: 'Eventos',
-      url: '/events',
-      icon: CalendarDays,
-    },
-    {
-      title: 'Cursos',
-      url: '/courses',
-      icon: Laptop,
-      items: [
-        {
-          title: 'Vim',
-          url: '/courses/vim',
-        },
-        {
-          title: 'LaTeX',
-          url: '/courses/latex',
-        },
-        {
-          title: 'Git & GitHub',
-          url: '/courses/git-and-github',
-        },
-        {
-          title: 'Ver todos',
-          url: '/courses',
-        },
-      ],
+      title: 'Software recomendado',
+      url: '/software-recomendado',
+      icon: Star,
     },
   ],
   navSecondary: [
@@ -123,7 +135,7 @@ const data = {
     // },
     {
       name: 'YouTube',
-      url: 'https://www.youtube.com/@programaconnosotros',
+      url: 'https://www.youtube.com/@programaconnosotros2689/videos',
       icon: Youtube,
     },
     {
@@ -140,12 +152,12 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="mt-3.5">
+          <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
                   <img src="/logo.webp" alt="programaConNosotros" />
                 </div>

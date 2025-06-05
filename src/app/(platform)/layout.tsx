@@ -30,12 +30,13 @@ const PlatformLayout = async ({
       <AppSidebar user={user} />
 
       <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
+        <SidebarTrigger />
         <span className="text-sm font-semibold">programaConNosotros</span>
       </div>
 
       <main className="relative w-full p-4 pt-16 md:p-0 md:pt-1">
-        <SidebarTrigger className="absolute md:left-6 md:top-6" />
-        {children}
+        <SidebarTrigger className="absolute hidden md:left-6 md:top-6 md:block" />
+        <div className="mx-auto max-w-7xl">{children}</div>
       </main>
     </SidebarProvider>
   );

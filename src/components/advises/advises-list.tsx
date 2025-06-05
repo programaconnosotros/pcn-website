@@ -8,22 +8,16 @@ import { Session, User } from '@prisma/client';
 import { Heading2 } from '../ui/heading-2';
 
 export const AdvisesList = ({ session }: { session: (Session & { user: User }) | null }) => {
-  const {
-    data: advises = [],
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: advises = [], refetch } = useQuery({
     queryKey: ['advises'],
     queryFn: () => fetchAdvises(1),
   });
 
-  if (isLoading) return <div>Cargando...</div>;
-
   return (
     <div className="relative">
-      <div className="sticky top-0 z-10 bg-background/95 pb-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between pt-4">
-          <Heading2>Consejos</Heading2>
+      <div className="bg-background/95 pb-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex w-full flex-row items-center justify-between">
+          <Heading2 className="m-0">Consejos</Heading2>
           {session && <AddAdvise refetch={refetch} />}
         </div>
       </div>
