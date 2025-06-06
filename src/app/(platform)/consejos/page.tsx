@@ -57,7 +57,7 @@ const AdvicePage = async () => {
       </div>
 
       <div className="hidden xl:block">
-        <div className="gap-4 space-y-4" style={{ columnCount: 2, columnGap: '1rem' }}>
+        <div className="mb-4 gap-4 space-y-4" style={{ columnCount: 2, columnGap: '1rem' }}>
           {advises.length === 0 && (
             <p className="w-full text-center text-sm text-muted-foreground">
               No hay consejos para ver aún.
