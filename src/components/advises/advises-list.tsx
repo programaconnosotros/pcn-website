@@ -22,7 +22,7 @@ export const AdvisesList = ({ session }: { session: (Session & { user: User }) |
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 md:flex-row">
+      <div className="mt-2 flex flex-col gap-6 md:flex-row">
         <div className="flex-1">
           <div className="flex flex-col gap-4 lg:flex-row lg:flex-wrap">
             {advises.length === 0 && (
