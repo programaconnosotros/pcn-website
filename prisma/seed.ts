@@ -48,12 +48,27 @@ async function main() {
     }),
   ]);
 
+  // Array de consejos variados
+  const adviceExamples = [
+    'No te rindas si no sale a la primera, vas a terminar aprendiendo más si fallas, luego revisas por qué falló y luego construyes sobre esas nuevas bases. ¡Éxitos!',
+    'No hay nada más fructífero que ver tus propios avances día a día, cosechando el conocimiento que fuiste cultivando con el tiempo.',
+    'Para llegar lejos en la industria del software se necesita pasión. Te tiene que encantar sentarte a estudiar cosas, conversar con colegas, analizar cómo hacer mejor las cosas.',
+    'Es esencial desarrollar un buen dominio del inglés. Este idioma es la base de la mayoría de los lenguajes de programación y de la documentación técnica.',
+    'La pasión es la clave, ¿la tenés?',
+    'El crecimiento no solo fue del proyecto, también fue mío. Me empujó a mejorar en todos los aspectos y a seguir formándome como programador.',
+    'Hay momentos que son bastante complicados también, y si te metiste en la industria del software solo por dinero y sin pasión, probablemente te estanques.',
+    'Al mejorar tus habilidades en inglés, ampliarás tus oportunidades laborales y estarás mejor preparado para colaborar en equipos internacionales.',
+    'Aprender de los errores es fundamental para crecer en cualquier área, especialmente en tecnología.',
+    'Rodéate de personas que te inspiren y te reten a ser mejor cada día.',
+    // Puedes agregar más frases aquí...
+  ];
+
   // Create 300 advises distributed among users
   const advises = await Promise.all(
     Array.from({ length: 300 }).map((_, i) =>
       prisma.advise.create({
         data: {
-          content: `Este es el contenido del consejo ${i + 1}.`,
+          content: adviceExamples[i % adviceExamples.length], // Usar consejo variado
           authorId: users[i % users.length].id, // Distribute advises among users
         },
       }),
