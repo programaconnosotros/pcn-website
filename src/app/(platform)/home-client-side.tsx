@@ -263,7 +263,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-              <Button variant="outline">Entrar a la comunidad en WhatsApp</Button>
+              <Button className="relative z-10 w-full md:w-auto">
+                Entrar a la comunidad en WhatsApp
+              </Button>
             </Link>
           </div>
 
@@ -278,7 +280,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-              <Button variant="outline">Ir al server en Discord</Button>
+              <Button variant="outline" className="relative z-10 w-full md:w-auto">
+                Ir al server en Discord
+              </Button>
             </Link>
           </div>
         </div>
@@ -293,7 +297,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.instagram.com/programa.con.nosotros/" target="_blank">
-              <Button variant="outline">Visita nuestro Instagram</Button>
+              <Button variant="outline" className="relative z-10 w-full md:w-auto">
+                Visita nuestro Instagram
+              </Button>
             </Link>
           </div>
 
@@ -306,7 +312,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.youtube.com/@programaconnosotros2689/videos" target="_blank">
-              <Button variant="outline">Visita nuestro canal</Button>
+              <Button variant="outline" className="relative z-10 w-full md:w-auto">
+                Visita nuestro canal
+              </Button>
             </Link>
           </div>
         </div>
@@ -327,7 +335,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 target="_blank"
                 className="relative z-10"
               >
-                <Button variant="outline">
+                <Button variant="outline" className="relative z-10 w-full md:w-auto">
                   Seguir en LinkedIn <Linkedin className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
