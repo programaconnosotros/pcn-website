@@ -27,7 +27,7 @@ export default function PhotoGallery() {
         </div>
       </div>
 
-      <main className="mx-auto mt-4">
+      <main className="mx-auto my-4">
         <Gallery initialPhotoId={initialPhotoId} />
       </main>
     </div>
