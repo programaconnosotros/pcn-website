@@ -13,7 +13,7 @@ const quotes = [
 ];
 
 export const MotivationalQuotes = () => (
-  <div className="mt-3 text-sm">
+  <div className="text-sm">
     <code>
       <Writer
         options={{
