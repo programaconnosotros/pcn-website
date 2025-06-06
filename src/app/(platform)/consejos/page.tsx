@@ -1,7 +1,9 @@
-import { AdvisesList } from '@/components/advises/advises-list';
+import { AdviseCard } from '@/components/advises/advise-card';
+import { AddAdvise } from '@/components/advises/add-advise';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session, User } from '@prisma/client';
+import { Session, User, Advise } from '@prisma/client';
+import { Heading2 } from '@/components/ui/heading-2';
 
 const AdvisesPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -18,9 +20,42 @@ const AdvisesPage = async () => {
     });
   }
 
+  const advises = await prisma.advise.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      author: true,
+      likes: true,
+    },
+  });
+
   return (
     <div className="mt-4 md:px-20">
-      <AdvisesList session={session} />
+      <div className="bg-background/95 pb-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex w-full flex-row items-center justify-between">
+          <Heading2 className="m-0">Consejos</Heading2>
+          {session && <AddAdvise />}
+        </div>
+      </div>
+
+      <div className="mt-2 flex flex-col gap-6 md:flex-row">
+        <div className="flex-1">
+          <div className="flex flex-col gap-4 lg:flex-row lg:flex-wrap">
+            {advises.length === 0 && (
+              <p className="w-full text-center text-sm text-muted-foreground">
+                No hay consejos para ver aún.
+              </p>
+            )}
+
+            {advises.map((advise) => (
+              <div key={advise.id} className="w-full lg:w-[calc(50%-8px)]">
+                <AdviseCard advise={advise} session={session} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

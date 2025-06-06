@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { createAdvise } from '@actions/advises/create-advise';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
 
-export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
+export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<AdviseFormData>({
@@ -33,7 +33,6 @@ export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
       loading: 'Publicando consejo...',
       success: () => {
         form.reset();
-        refetch();
         return 'Consejo publicado! 👏';
       },
       error: 'Ocurrió un error al publicar el consejo',

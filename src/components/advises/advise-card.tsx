@@ -1,6 +1,5 @@
 'use client';
 
-import { Advise } from '@/actions/advises/get-advise';
 import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
-import { Session, User } from '@prisma/client';
+import { Advise, Session, User } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useState } from 'react';
@@ -23,7 +22,10 @@ export const AdviseCard = ({
   advise,
   session,
 }: {
-  advise: Advise;
+  advise: Advise & {
+    author: User;
+    likes: Like[];
+  };
   session: (Session & { user: User }) | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
