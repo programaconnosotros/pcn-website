@@ -203,17 +203,31 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className="cursor-pointer">
-              <PhotoCard
-                photo={photo}
-                getShareUrl={getShareUrl}
-                onCardClick={() => handlePhotoClick(index)}
-              />
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="xl:hidden">
+            {sortedPhotos.map((photo, index) => (
+              <div key={photo.id} className="mb-3 cursor-pointer">
+                <PhotoCard
+                  photo={photo}
+                  getShareUrl={getShareUrl}
+                  onCardClick={() => handlePhotoClick(index)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden gap-3 xl:block" style={{ columnCount: 4, columnGap: '0.75rem' }}>
+            {sortedPhotos.map((photo, index) => (
+              <div key={photo.id} className="mb-3 cursor-pointer" style={{ breakInside: 'avoid' }}>
+                <PhotoCard
+                  photo={photo}
+                  getShareUrl={getShareUrl}
+                  onCardClick={() => handlePhotoClick(index)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {isDialogOpen && (
