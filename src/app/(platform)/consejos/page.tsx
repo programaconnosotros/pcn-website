@@ -33,7 +33,7 @@ const AdvicePage = async () => {
 
   return (
     <div className="mt-4 md:px-20">
-      <div className="bg-background/95 pb-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex w-full flex-row items-center justify-between">
           <Heading2 className="m-0">Consejos</Heading2>
           {session && <AddAdvise />}
