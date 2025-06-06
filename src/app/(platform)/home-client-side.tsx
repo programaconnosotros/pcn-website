@@ -40,7 +40,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-4 md:p-2">
           {session ? (
             <>
-              <Heading2 variant="gradient">
+              <Heading2>
                 {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
               </Heading2>
 
