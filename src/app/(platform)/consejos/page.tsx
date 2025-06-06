@@ -40,23 +40,37 @@ const AdvicePage = async () => {
         </div>
       </div>
 
-      <div className="mt-2 flex flex-col gap-6 md:flex-row">
-        <div className="flex-1">
-          <div className="flex flex-col gap-4 lg:flex-row lg:flex-wrap">
-            {advises.length === 0 && (
-              <p className="w-full text-center text-sm text-muted-foreground">
-                No hay consejos para ver aún.
-              </p>
-            )}
+      <div className="xl:hidden">
+        {advises.length === 0 && (
+          <p className="w-full text-center text-sm text-muted-foreground">
+            No hay consejos para ver aún.
+          </p>
+        )}
 
-            <Suspense fallback={<div>Cargando consejos...</div>}>
-              {advises.map((advise) => (
-                <div key={advise.id} className="w-full lg:w-[calc(50%-8px)]">
-                  <AdviseCard advise={advise} session={session} />
-                </div>
-              ))}
-            </Suspense>
-          </div>
+        <Suspense fallback={<div>Cargando consejos...</div>}>
+          {advises.map((advise) => (
+            <div key={advise.id} className="mb-4">
+              <AdviseCard advise={advise} session={session} />
+            </div>
+          ))}
+        </Suspense>
+      </div>
+
+      <div className="hidden xl:block">
+        <div className="gap-4 space-y-4" style={{ columnCount: 2, columnGap: '1rem' }}>
+          {advises.length === 0 && (
+            <p className="w-full text-center text-sm text-muted-foreground">
+              No hay consejos para ver aún.
+            </p>
+          )}
+
+          <Suspense fallback={<div>Cargando consejos...</div>}>
+            {advises.map((advise) => (
+              <div key={advise.id} className="mb-4" style={{ breakInside: 'avoid' }}>
+                <AdviseCard advise={advise} session={session} />
+              </div>
+            ))}
+          </Suspense>
         </div>
       </div>
     </div>
