@@ -140,7 +140,7 @@ export const AdviseCard = ({
 
       <Link href={`/consejos/${advise.id}`} className="block">
         <CardContent className="px-4 py-6">
-          <p className="text-sm">{advise.content}</p>
+          <p>{advise.content}</p>
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
             <p className="text-xs text-gray-500">
