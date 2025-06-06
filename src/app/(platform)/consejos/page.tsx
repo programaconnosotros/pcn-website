@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 import { Session, User, Advise } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
 
-const AdvisesPage = async () => {
+const AdvicePage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
   let session: (Session & { user: User }) | null = null;
 
@@ -60,4 +60,4 @@ const AdvisesPage = async () => {
   );
 };
 
-export default AdvisesPage;
+export default AdvicePage;
