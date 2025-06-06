@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
-import { Advise, Session, User } from '@prisma/client';
+import { Advise, Session, User, Like } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useState } from 'react';
@@ -35,9 +35,15 @@ export const AdviseCard = ({
   // Initialize optimistic state with the current likes
   const [optimisticLikes, addOptimisticLike] = useOptimistic(
     advise.likes,
-    (state, userId: string) => {
+    (state: Like[], userId: string) => {
       const isLiked = state.some((like) => like.userId === userId);
-      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+
+      return isLiked
+        ? state.filter((like) => like.userId !== userId)
+        : [
+            ...state,
+            { userId, id: '', createdAt: new Date(), updatedAt: new Date(), adviseId: '' },
+          ];
     },
   );
 
