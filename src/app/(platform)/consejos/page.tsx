@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { Session, User, Advise } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
+import { Suspense } from 'react';
 
 const AdvicePage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -48,11 +49,13 @@ const AdvicePage = async () => {
               </p>
             )}
 
-            {advises.map((advise) => (
-              <div key={advise.id} className="w-full lg:w-[calc(50%-8px)]">
-                <AdviseCard advise={advise} session={session} />
-              </div>
-            ))}
+            <Suspense fallback={<div>Cargando consejos...</div>}>
+              {advises.map((advise) => (
+                <div key={advise.id} className="w-full lg:w-[calc(50%-8px)]">
+                  <AdviseCard advise={advise} session={session} />
+                </div>
+              ))}
+            </Suspense>
           </div>
         </div>
       </div>
