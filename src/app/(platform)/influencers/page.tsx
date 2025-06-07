@@ -90,7 +90,7 @@ export default async function InfluencersPage() {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="mb-4 space-y-6">
         {influencersData.influencers.map((influencer: Influencer) => (
           <InfluencerCard key={influencer.id} influencer={influencer} />
         ))}
