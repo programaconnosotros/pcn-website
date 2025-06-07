@@ -135,7 +135,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button variant="outline">
+              <Button>
                 Ver consejos <Handshake className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -152,7 +152,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button variant="outline">
+                <Button>
                   Ver charlas <MicVocal className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
