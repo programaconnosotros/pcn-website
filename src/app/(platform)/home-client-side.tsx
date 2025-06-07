@@ -280,9 +280,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-              <Button variant="outline" className="relative z-10 w-full md:w-auto">
-                Ir al server en Discord
-              </Button>
+              <Button className="relative z-10 w-full md:w-auto">Ir al server en Discord</Button>
             </Link>
           </div>
         </div>
@@ -297,9 +295,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.instagram.com/programa.con.nosotros/" target="_blank">
-              <Button variant="outline" className="relative z-10 w-full md:w-auto">
-                Visita nuestro Instagram
-              </Button>
+              <Button className="relative z-10 w-full md:w-auto">Visita nuestro Instagram</Button>
             </Link>
           </div>
 
@@ -312,9 +308,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.youtube.com/@programaconnosotros2689/videos" target="_blank">
-              <Button variant="outline" className="relative z-10 w-full md:w-auto">
-                Visita nuestro canal
-              </Button>
+              <Button className="relative z-10 w-full md:w-auto">Visita nuestro canal</Button>
             </Link>
           </div>
         </div>
@@ -335,7 +329,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 target="_blank"
                 className="relative z-10"
               >
-                <Button variant="outline" className="relative z-10 w-full md:w-auto">
+                <Button className="relative z-10 w-full md:w-auto">
                   Seguir en LinkedIn <Linkedin className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
