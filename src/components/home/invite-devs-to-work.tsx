@@ -15,7 +15,7 @@ export const InviteDevsToWork = () => {
           <div className="flex-1 text-white">
             <h2 className="mb-6 text-4xl font-bold">
               <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                Colabora en este proyecto!
+                Colabora en el proyecto!
               </span>
             </h2>
 
