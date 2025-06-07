@@ -257,13 +257,12 @@ export default function SoftwareRecommendationsPage() {
     <div className="mt-4 md:px-20">
       <div className="mb-8">
         <div className="mb-2 flex items-center space-x-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Recomendaciones de Software
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Software recomendado</h1>
         </div>
 
         <p className="text-gray-600">
-          Descubre las mejores herramientas recomendadas por nuestra comunidad de desarrolladores
+          Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si queres
+          sumar alguno, avisá!
         </p>
       </div>
 
