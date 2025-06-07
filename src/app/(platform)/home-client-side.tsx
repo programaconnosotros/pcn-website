@@ -143,23 +143,17 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="group relative flex flex-col items-center border-b p-6 md:border-b md:border-l">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <Heading3 className="relative z-10">Conocimiento</Heading3>
+            <Heading3 className="relative z-10">Charlas</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Nos encanta dar charlas, cursos y compartir conocimiento con los demás. Tenemos muy
-              claro que juntos llegamos más lejos 🤝
+              Nos encanta dar charlas para compartir conocimiento 🤝. Tenemos una página para
+              guardar el historial, las diapositivas y algunas charlas que quedaron grabadas.
             </Paragraph>
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
                 <Button variant="outline">
                   Ver charlas <MicVocal className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-
-              <Link href="/cursos" className="relative z-10">
-                <Button variant="outline">
-                  Ver cursos <MonitorPlay className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
