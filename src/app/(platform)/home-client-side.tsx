@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
 import {
-  BookOpen,
   Handshake,
   Images,
   Linkedin,
@@ -26,8 +25,6 @@ import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Testimonials } from './testimonials';
-import { Marquee } from '@/components/magicui/marquee';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -167,6 +164,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Link>
             </div>
           </div>
+
           <div className="group relative flex flex-col items-center border-b p-6 md:border-b">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Contactos</Heading3>
@@ -211,6 +209,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="text-center dark:border-b">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/IMG_8959.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
               <Heading2 className="relative z-10 text-white">Conocé la historia de PCN</Heading2>
@@ -232,6 +231,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="text-center dark:border-b">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
               <Heading2 className="relative z-10 text-white">Visita la galería de PCN</Heading2>
@@ -250,7 +250,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <MainSponsorCard />
-
         <InviteDevsToWork />
         <Team />
 
