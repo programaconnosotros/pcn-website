@@ -9,7 +9,17 @@ import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { BookOpen, Images, Linkedin, LogIn, ScrollText, UserPlus } from 'lucide-react';
+import {
+  BookOpen,
+  Handshake,
+  Images,
+  Linkedin,
+  LogIn,
+  MicVocal,
+  MonitorPlay,
+  ScrollText,
+  UserPlus,
+} from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
@@ -129,7 +139,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/consejos" className="relative z-10">
               <Button variant="outline">
-                Ver consejos <ScrollText className="ml-2 h-4 w-4" />
+                Ver consejos <Handshake className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -146,13 +156,13 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
                 <Button variant="outline">
-                  Ver charlas <ScrollText className="ml-2 h-4 w-4" />
+                  Ver charlas <MicVocal className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
 
               <Link href="/cursos" className="relative z-10">
                 <Button variant="outline">
-                  Ver cursos <BookOpen className="ml-2 h-4 w-4" />
+                  Ver cursos <MonitorPlay className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -222,7 +232,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="text-center dark:border-b">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/gallery-photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
+            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
               <Heading2 className="relative z-10 text-white">Visita la galería de PCN</Heading2>
 
