@@ -42,9 +42,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           duration: 0.8,
           staggerChildren: 0.1,
         }}
-        className="mb-6 lg:border"
+        className="mb-6"
       >
-        <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-4 md:p-2">
+        <div className="flex w-full flex-col items-center justify-center gap-2 p-4 md:p-2">
           {session ? (
             <>
               <Heading2>
@@ -116,16 +116,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         {/* TODO: Agregar sección de Lightning Talks */}
 
-        <div className="border-b">
-          <div className="flex items-center justify-center p-6">
-            <Heading2 className="relative z-10 text-center md:text-left">
-              El núcleo de la comunidad 💪
-            </Heading2>
-          </div>
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center md:text-left">
+            El núcleo de la comunidad 💪
+          </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 border-b md:grid-cols-2">
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
@@ -141,7 +139,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b md:border-l">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Charlas</Heading3>
 
@@ -159,7 +157,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
@@ -169,7 +167,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b md:border-l">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
@@ -189,7 +187,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center border-t p-6 md:border-l md:border-t-0">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
@@ -200,7 +198,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="text-center dark:border-b">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
 
@@ -222,7 +220,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="text-center dark:border-b">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
 
@@ -247,16 +245,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <InviteDevsToWork />
         <Team />
 
-        <div className="border-t">
-          <div className="flex items-center justify-center p-6">
-            <Heading2 className="relative z-10 text-center">
-              Sumate en todas las redes para aprovechar aún más! 🚀
-            </Heading2>
-          </div>
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center">
+            Sumate en todas las redes para aprovechar aún más! 🚀
+          </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 border-b border-t md:grid-cols-2">
-          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
 
@@ -286,8 +282,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="grid grid-cols-1 border-b md:grid-cols-2">
-          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Instagram</Heading3>
 
@@ -314,7 +310,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="border-b text-center">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="p-6">
