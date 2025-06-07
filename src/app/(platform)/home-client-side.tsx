@@ -42,7 +42,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           duration: 0.8,
           staggerChildren: 0.1,
         }}
-        className="mb-6 border"
+        className="mb-6 lg:border"
       >
         <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-4 md:p-2">
           {session ? (
