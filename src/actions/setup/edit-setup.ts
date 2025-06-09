@@ -5,13 +5,21 @@ import { setupSchema } from '@/schemas/setup-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export const editSetup = async ({ id, formData, imageUrl }: { id: string; formData: FormData, imageUrl: string }) => {
+export const editSetup = async ({
+  id,
+  formData,
+  imageUrl,
+}: {
+  id: string;
+  formData: FormData;
+  imageUrl: string;
+}) => {
   console.log('Starting editSetup function with data:', { id, formData, imageUrl });
   const validatedData = setupSchema.parse({
     title: formData.get('title'),
     description: formData.get('description'),
     imageUrl: imageUrl,
-});
+  });
 
   console.log('Data validated successfully:', validatedData);
 
@@ -30,10 +38,10 @@ export const editSetup = async ({ id, formData, imageUrl }: { id: string; formDa
   console.log('Attempting to update setup with ID:', id);
   await prisma.setup.update({
     where: { id, authorId: session.userId },
-    data: { 
+    data: {
       title: validatedData.title,
       content: validatedData.description!,
-      imageUrl: validatedData.imageUrl 
+      imageUrl: validatedData.imageUrl,
     },
   });
   console.log('Setup updated successfully');

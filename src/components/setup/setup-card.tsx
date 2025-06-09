@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import { Session, User } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
@@ -27,13 +27,10 @@ interface SetupCardProps {
 export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: SetupCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const [optimisticLikes,] = useOptimistic(
-    setup.likes,
-    (state, userId: string) => {
-      const isLiked = state.some((like) => like.userId === userId);
-      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
-    },
-  );
+  const [optimisticLikes] = useOptimistic(setup.likes, (state, userId: string) => {
+    const isLiked = state.some((like) => like.userId === userId);
+    return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+  });
   const queryClient = useQueryClient();
 
   const isAuthor =
@@ -52,13 +49,13 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
         throw new Error('No user');
       }
       setIsLiking(true);
-      
+
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['setups'] });
-      
+
       // Snapshot the previous value
       const previousSetups = queryClient.getQueryData(['setups']);
-      
+
       // Optimistically update to the new value
       queryClient.setQueryData(['setups'], (old: any[] = []) => {
         return old.map((s: any) =>
@@ -67,9 +64,9 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
                 ...s,
                 likes: isLiked
                   ? s.likes.filter((like: any) => like.userId !== session.user.id)
-                  : [...s.likes, { userId: session.user.id }]
+                  : [...s.likes, { userId: session.user.id }],
               }
-            : s
+            : s,
         );
       });
 
@@ -124,51 +121,53 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
 
   return (
     <div className="bg-white dark:bg-black">
-      <Card className="bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700  hover:dark:border-gray-300 transition-all duration-300  group">
+      <Card className="group border-2 border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-black hover:dark:border-gray-300">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Avatar className="w-10 h-10  rounded-lg transition-transform duration-200 group-hover:scale-105">
+              <Avatar className="h-10 w-10 rounded-lg transition-transform duration-200 group-hover:scale-105">
                 <AvatarImage src={setup.author.image ?? undefined} alt={setup.author.name} />
-                <AvatarFallback className="rounded-lg ">{setup.author.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {setup.author.name.charAt(0)}
+                </AvatarFallback>
               </Avatar>
 
               <div>
-                <h3 className="font-semibold text-gray-700  transition-colors duration-200 group-hover:text-black group-hover:dark:text-white dark:text-white group-hover:scale-105">
+                <h3 className="font-semibold text-gray-700 transition-colors duration-200 group-hover:scale-105 group-hover:text-black dark:text-white group-hover:dark:text-white">
                   {setup.author.name}
                 </h3>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              {isAuthor && Options}
-            </div>
+            <div className="flex items-center gap-2">{isAuthor && Options}</div>
           </div>
         </CardHeader>
 
         <CardContent className="pb-3">
-          <h2 className="text-xl font-bold text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-200 group-hover:text-black group-hover:dark:text-white dark:text-white">
+          <h2 className="mb-2 text-xl font-bold text-gray-600 transition-colors duration-200 group-hover:text-black dark:text-gray-300 dark:text-white group-hover:dark:text-white">
             {setup.title}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 transition-colors duration-200 group-hover:dark:text-gray-200 ">
+          <p className="mb-4 text-gray-600 transition-colors duration-200 dark:text-gray-300 group-hover:dark:text-gray-200">
             {setup.content}
           </p>
 
-          <div className="relative overflow-hidden aspect-square">
+          <div className="relative aspect-square overflow-hidden">
             <img
-              src={imgError || !setup.imageUrl 
-                ? "/white.png" 
-                : `${setup.imageUrl}?t=${setup?.updatedAt}`}
+              src={
+                imgError || !setup.imageUrl
+                  ? '/white.png'
+                  : `${setup.imageUrl}?t=${setup?.updatedAt}`
+              }
               alt={setup.title}
-              className="object-cover object-center w-full h-full transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
               onError={() => setImgError(true)}
             />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
           </div>
         </CardContent>
 
-        <CardFooter className="pt-3 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between w-full">
+        <CardFooter className="border-t border-gray-200 pt-3 dark:border-gray-700">
+          <div className="flex w-full items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -176,18 +175,20 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
                 onClick={handleLike}
                 disabled={isLiking || mutation.status === 'pending'}
                 className={`flex items-center space-x-2 transition-all duration-200 hover:scale-105 ${
-                  isLiked ? "text-red-500" : "text-gray-700 dark:text-gray-300"
+                  isLiked ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'
                 } hover:text-red-500`}
               >
                 <Heart
-                  className={`w-4 h-4 transition-all duration-200 ${isLiked ? "fill-current scale-110" : ""}`}
+                  className={`h-4 w-4 transition-all duration-200 ${isLiked ? 'scale-110 fill-current' : ''}`}
                   fill={isLiked ? 'currentColor' : 'none'}
                 />
-                <span className="transition-all duration-200">{optimisticLikes.length} me gusta</span>
+                <span className="transition-all duration-200">
+                  {optimisticLikes.length} me gusta
+                </span>
               </Button>
             </div>
 
-            <span className="text-sm text-gray-700 transition-colors duration-200 dark:text-gray-300 font-medium">
+            <span className="text-sm font-medium text-gray-700 transition-colors duration-200 dark:text-gray-300">
               {setup.createdAt.toLocaleDateString()}
             </span>
           </div>
@@ -195,4 +196,4 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
       </Card>
     </div>
   );
-} 
+}

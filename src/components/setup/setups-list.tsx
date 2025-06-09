@@ -19,7 +19,11 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
   const [selectedSetup, setSelectedSetup] = useState<any>(null);
   const [setupToEdit, setSetupToEdit] = useState<any>(null);
 
-  const { data: setups, isLoading, refetch } = useQuery({
+  const {
+    data: setups,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['setups'],
     queryFn: () => fetchSetups(1),
     staleTime: 0,
@@ -51,21 +55,21 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
       setShowAuthModal(true);
       return;
     }
-    console.log("Editando setup:", setup);
+    console.log('Editando setup:', setup);
     setSetupToEdit({
       id: setup.id,
       title: setup.title,
       description: setup.content,
-      imageUrl: setup.imageUrl
+      imageUrl: setup.imageUrl,
     });
     setShowUploadModal(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!selectedSetup) return;
-    
+
     try {
-      console.log("Eliminando setup:", selectedSetup);
+      console.log('Eliminando setup:', selectedSetup);
       setShowAuthModal(false);
       await deleteSetup(selectedSetup.id);
       toast.success('Setup eliminado exitosamente');
@@ -80,27 +84,26 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
   };
 
   return (
-    <div className=" bg-white dark:bg-black">
+    <div className="bg-white dark:bg-black">
       <div className="p-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 w-full gap-4">
+        <div className="mb-8 flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Setups</h1>
-            <p className="text-gray-600 mt-2 dark:text-white">
-              {"Comparte tu espacio de trabajo y descubre configuraciones increíbles 🖥️"}
+            <p className="mt-2 text-gray-600 dark:text-white">
+              {'Comparte tu espacio de trabajo y descubre configuraciones increíbles 🖥️'}
             </p>
           </div>
           <Button
             onClick={handlePublishSetup}
-            className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105
-             hover:shadow-lg hover:shadow-black/20 dark:text-black w-full sm:w-auto"
+            className="w-full rounded-lg bg-black px-6 py-2 font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/20 dark:text-black sm:w-auto"
           >
-            <Plus className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:rotate-90" />
+            <Plus className="mr-2 h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
             Publica tu setup
           </Button>
         </div>
 
         {/* Setups Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {setups?.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="rounded-full bg-gray-100 p-3">
@@ -136,12 +139,26 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
             ))
           )}
         </div>
-        <ModalSetup 
-          showAuthModal={showAuthModal} 
+        <ModalSetup
+          showAuthModal={showAuthModal}
           setShowAuthModal={setShowAuthModal}
-          title={modalAction === 'delete' ? "¿Estás seguro de eliminar este setup?" : "Se parte de la comunidad para continuar"}
-          description={modalAction === 'delete' ? "Esta acción no se puede deshacer." : "Necesitas una cuenta para realizar acciones en el sitio. Regístrate gratis o inicia sesión para descubrir más funcionalidades."}
-          icon={modalAction === 'delete' ? <X className="w-8 h-8 text-red-500" /> : <Heart className="w-8 h-8 text-pink-500" />}
+          title={
+            modalAction === 'delete'
+              ? '¿Estás seguro de eliminar este setup?'
+              : 'Se parte de la comunidad para continuar'
+          }
+          description={
+            modalAction === 'delete'
+              ? 'Esta acción no se puede deshacer.'
+              : 'Necesitas una cuenta para realizar acciones en el sitio. Regístrate gratis o inicia sesión para descubrir más funcionalidades.'
+          }
+          icon={
+            modalAction === 'delete' ? (
+              <X className="h-8 w-8 text-red-500" />
+            ) : (
+              <Heart className="h-8 w-8 text-pink-500" />
+            )
+          }
           onConfirm={modalAction === 'delete' ? handleConfirmDelete : undefined}
         />
 
@@ -154,7 +171,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
             if (!open) setSetupToEdit(null);
           }}
           onSubmit={(setupData) => {
-            console.log("Nuevo setup:", setupData);
+            console.log('Nuevo setup:', setupData);
             setShowUploadModal(false);
             setSetupToEdit(null);
           }}
@@ -186,25 +203,23 @@ export const ModalSetup = ({
   onRegister,
   title,
   description,
-  onConfirm
+  onConfirm,
 }: ModalSetupProps) => {
   return (
     <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-center pb-4">
+        <DialogHeader className="pb-4 text-center">
           <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
             {title}
           </DialogTitle>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            {description}
-          </p>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">{description}</p>
         </DialogHeader>
 
         <div className="space-y-3">
           {onConfirm ? (
             <Button
               variant="destructive"
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-red-500/20"
+              className="w-full rounded-lg bg-red-500 py-3 font-medium text-white transition-all duration-200 hover:scale-[1.02] hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/20"
               onClick={onConfirm}
             >
               Confirmar
@@ -212,15 +227,20 @@ export const ModalSetup = ({
           ) : (
             <>
               <Link href="/autenticacion/iniciar-sesion" className="w-full">
-                <Button variant="outline" className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-black hover:text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg  hover:shadow-white-500/20 mb-2
-                dark:bg-pcnGreen dark:text-black">
+                <Button
+                  variant="outline"
+                  className="hover:shadow-white-500/20 mb-2 w-full rounded-lg bg-black py-3 font-medium text-white transition-all duration-200 hover:scale-[1.02] hover:bg-black hover:text-white hover:shadow-lg dark:bg-pcnGreen dark:text-black"
+                >
                   Iniciar sesión
                   <LogIn className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
 
               <Link href="/autenticacion/registro" className="w-full">
-                <Button variant="outline" className="w-full  text-black py-3 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black-500/20 dark:text-white">
+                <Button
+                  variant="outline"
+                  className="hover:shadow-black-500/20 w-full rounded-lg py-3 font-medium text-black transition-all duration-200 hover:scale-[1.02] hover:shadow-lg dark:text-white"
+                >
                   Crear cuenta
                   <UserPlus className="ml-2 h-4 w-4" />
                 </Button>
@@ -228,7 +248,6 @@ export const ModalSetup = ({
             </>
           )}
         </div>
-
       </DialogContent>
     </Dialog>
   );

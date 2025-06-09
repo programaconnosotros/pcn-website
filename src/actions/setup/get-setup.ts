@@ -9,7 +9,7 @@ type Content = {
 };
 
 export type Setup = Content & {
-    likes: {
-      userId: string;
-    }[];
-  };
+  likes: {
+    userId: string;
+  }[];
+};
