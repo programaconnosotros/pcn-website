@@ -1,10 +1,9 @@
 'use client';
 import { deleteSetup } from '@/actions/setup/delete-setup';
-import { fetchSetups } from '@/actions/setup/fetch-setup';
+import { fetchSetups } from '@/actions/setup/fetch-setups';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Session, User } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
+import { Session, Setup, User } from '@prisma/client';
 import { Heart, LogIn, Plus, UserPlus, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -12,23 +11,31 @@ import { toast } from 'sonner';
 import { SetupCard } from './setup-card';
 import UploadSetupModal from './upload-setup-modal';
 
-export function SetupsList({ session }: { session: (Session & { user: User }) | null }) {
+export function SetupsList({ 
+  session, 
+  initialSetups 
+}: { 
+  session: (Session & { user: User }) | null;
+  initialSetups: (Setup & {
+    author: Pick<User, 'id' | 'name' | 'email' | 'image'>;
+    likes: { userId: string }[];
+  })[];
+}) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [modalAction, setModalAction] = useState<'delete' | null>(null);
   const [selectedSetup, setSelectedSetup] = useState<any>(null);
   const [setupToEdit, setSetupToEdit] = useState<any>(null);
+  const [setups, setSetups] = useState(initialSetups);
 
-  const {
-    data: setups,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ['setups'],
-    queryFn: () => fetchSetups(1),
-    staleTime: 0,
-    gcTime: 0,
-  });
+  const fetchSetupsData = async () => {
+    try {
+      const data = await fetchSetups(1);
+      setSetups(data);
+    } catch (error) {
+      toast.error('Error al cargar los setups');
+    }
+  };
 
   const handlePublishSetup = () => {
     if (!session) {
@@ -71,7 +78,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
       setShowAuthModal(false);
       await deleteSetup(selectedSetup.id);
       toast.success('Setup eliminado exitosamente');
-      refetch();
+      fetchSetupsData();
     } catch (error) {
       toast.error('Error al eliminar el setup');
     } finally {
@@ -171,10 +178,11 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
           onSubmit={() => {
             setShowUploadModal(false);
             setSetupToEdit(null);
+            fetchSetupsData();
           }}
           isAuthenticated={!!session?.user.id}
           onAuthRequired={() => setShowAuthModal(true)}
-          refetch={refetch}
+          refetch={fetchSetupsData}
           setupToEdit={setupToEdit}
         />
       </div>
@@ -185,8 +193,6 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
 interface ModalSetupProps {
   showAuthModal: boolean;
   setShowAuthModal: (show: boolean) => void;
-  onLogin?: () => void;
-  onRegister?: () => void;
   title?: string;
   description?: string;
   icon?: React.ReactNode;
@@ -196,8 +202,6 @@ interface ModalSetupProps {
 export const ModalSetup = ({
   showAuthModal,
   setShowAuthModal,
-  onLogin,
-  onRegister,
   title,
   description,
   onConfirm,

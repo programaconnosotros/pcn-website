@@ -1,3 +1,4 @@
+import { fetchSetups } from '@/actions/setup/fetch-setups';
 import { SetupsList } from '@/components/setup/setups-list';
 import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
@@ -18,9 +19,11 @@ const SetupsPage = async () => {
     });
   }
 
+  const setups = await fetchSetups(1);
+
   return (
     <div className="mt-4 md:px-20">
-      <SetupsList session={session} />
+      <SetupsList session={session} initialSetups={setups} />
     </div>
   );
 };

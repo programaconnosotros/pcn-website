@@ -17,7 +17,7 @@ export const editSetup = async ({
   const validatedData = setupSchema.parse({
     title: formData.get('title'),
     description: formData.get('description'),
-    imageUrl: imageUrl,
+    imageUrl
   });
 
   const sessionId = await cookies().get('sessionId');

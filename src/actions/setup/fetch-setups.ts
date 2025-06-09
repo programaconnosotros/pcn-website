@@ -2,10 +2,13 @@
 
 import { ADVISES_PER_PAGE } from '@/lib/constants';
 import prisma from '@/lib/prisma';
-import { Setup } from './get-setup';
+import { Setup, User } from '@prisma/client';
 
-export const fetchSetups = async (page: number): Promise<Setup[]> => {
-  const setups = await prisma.setup.findMany({
+export const fetchSetups = async (page: number): Promise<(Setup & {
+  author: Pick<User, 'id' | 'name' | 'email' | 'image'>;
+  likes: { userId: string }[];
+})[]> => 
+  prisma.setup.findMany({
     include: {
       author: {
         select: {
@@ -27,15 +30,3 @@ export const fetchSetups = async (page: number): Promise<Setup[]> => {
     take: ADVISES_PER_PAGE,
     skip: (page - 1) * ADVISES_PER_PAGE,
   });
-
-  return setups.map((setup) => ({
-    id: setup.id,
-    title: setup.title,
-    content: setup.content,
-    imageUrl: setup.imageUrl,
-    createdAt: setup.createdAt,
-    updatedAt: setup.updatedAt,
-    author: setup.author,
-    likes: setup.likes,
-  }));
-};

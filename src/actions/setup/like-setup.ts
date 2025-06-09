@@ -43,8 +43,6 @@ export const toggleLikeSetup = async (setupId: string) => {
     // Revalidar todas las rutas relevantes
     revalidatePath('/setups');
     revalidatePath('/');
-
-    return { success: true };
   } catch (error) {
     console.error('Error in toggleLike:', error);
     throw error;

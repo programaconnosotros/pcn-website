@@ -1,6 +1,5 @@
 'use client';
 
-import { Setup } from '@/actions/setup/get-setup';
 import { toggleLikeSetup } from '@/actions/setup/like-setup';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,13 +10,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Session, User } from '@prisma/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Session, Setup, User } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
-import { useOptimistic, useState } from 'react';
+import { useOptimistic, useState, useTransition } from 'react';
 
 interface SetupCardProps {
-  setup: Setup;
+  setup: Setup & {
+    author: Pick<User, 'id' | 'name' | 'email' | 'image'>;
+    likes: { userId: string }[];
+  };
   session: (Session & { user: User }) | null;
   onDelete: () => void;
   onEdit: () => void;
@@ -26,12 +27,16 @@ interface SetupCardProps {
 
 export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: SetupCardProps) {
   const [imgError, setImgError] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
-  const [optimisticLikes] = useOptimistic(setup.likes, (state, userId: string) => {
-    const isLiked = state.some((like) => like.userId === userId);
-    return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
-  });
-  const queryClient = useQueryClient();
+  const [isPending, startTransition] = useTransition();
+  const [localLikes, setLocalLikes] = useState(setup.likes);
+
+  const [optimisticLikes, addOptimisticLike] = useOptimistic(
+    localLikes,
+    (state, userId: string) => {
+      const isLiked = state.some((like) => like.userId === userId);
+      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+    }
+  );
 
   const isAuthor =
     (session?.user?.id && session.user.id === setup.author.id) ||
@@ -41,60 +46,30 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
     ? optimisticLikes.some((like) => like.userId === session.user.id)
     : false;
 
-  const mutation = useMutation({
-    mutationFn: () => toggleLikeSetup(setup.id),
-    onMutate: async () => {
-      if (!session?.user?.id) {
-        onRequireAuth?.();
-        throw new Error('No user');
-      }
-      setIsLiking(true);
-
-      // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['setups'] });
-
-      // Snapshot the previous value
-      const previousSetups = queryClient.getQueryData(['setups']);
-
-      // Optimistically update to the new value
-      queryClient.setQueryData(['setups'], (old: any[] = []) => {
-        return old.map((s: any) =>
-          s.id === setup.id
-            ? {
-                ...s,
-                likes: isLiked
-                  ? s.likes.filter((like: any) => like.userId !== session.user.id)
-                  : [...s.likes, { userId: session.user.id }],
-              }
-            : s,
-        );
-      });
-
-      return { previousSetups };
-    },
-    onError: (err, variables, context: any) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
-      if (context?.previousSetups) {
-        queryClient.setQueryData(['setups'], context.previousSetups);
-      }
-    },
-    onSettled: () => {
-      setIsLiking(false);
-      // Invalidate and refetch to ensure data consistency
-      queryClient.invalidateQueries({ queryKey: ['setups'] });
-    },
-  });
-
-  const handleEdit = () => {
-    onEdit();
-  };
-
-  const handleDelete = () => {
-    onDelete();
-  };
-
   const handleLike = () => {
-    mutation.mutate();
+    if (!session?.user?.id) {
+      onRequireAuth?.();
+      return;
+    }
+
+    // Actualizar el estado local primero
+    const newLikes = isLiked
+      ? localLikes.filter((like) => like.userId !== session.user.id)
+      : [...localLikes, { userId: session.user.id }];
+    setLocalLikes(newLikes);
+
+    // Luego actualizar optimistamente
+    addOptimisticLike(session.user.id);
+
+    startTransition(async () => {
+      try {
+        await toggleLikeSetup(setup.id);
+      } catch (error) {
+        console.error('Error toggling like:', error);
+        // Revertir el estado local si hay error
+        setLocalLikes(setup.likes);
+      }
+    });
   };
 
   const Options = (
@@ -106,12 +81,12 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit}>
+        <DropdownMenuItem onClick={onEdit}>
           <Edit className="mr-2 h-4 w-4" />
           <span>Editar</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={handleDelete}>
+        <DropdownMenuItem onClick={onDelete}>
           <Trash className="mr-2 h-4 w-4" />
           <span>Eliminar</span>
         </DropdownMenuItem>
@@ -173,7 +148,7 @@ export function SetupCard({ setup, session, onDelete, onEdit, onRequireAuth }: S
                 variant="ghost"
                 size="sm"
                 onClick={handleLike}
-                disabled={isLiking || mutation.status === 'pending'}
+                disabled={isPending}
                 className={`flex items-center space-x-2 transition-all duration-200 hover:scale-105 ${
                   isLiked ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'
                 } hover:text-red-500`}
