@@ -55,7 +55,6 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
       setShowAuthModal(true);
       return;
     }
-    console.log('Editando setup:', setup);
     setSetupToEdit({
       id: setup.id,
       title: setup.title,
@@ -69,7 +68,6 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
     if (!selectedSetup) return;
 
     try {
-      console.log('Eliminando setup:', selectedSetup);
       setShowAuthModal(false);
       await deleteSetup(selectedSetup.id);
       toast.success('Setup eliminado exitosamente');
@@ -170,8 +168,7 @@ export function SetupsList({ session }: { session: (Session & { user: User }) | 
             setShowUploadModal(open);
             if (!open) setSetupToEdit(null);
           }}
-          onSubmit={(setupData) => {
-            console.log('Nuevo setup:', setupData);
+          onSubmit={() => {
             setShowUploadModal(false);
             setSetupToEdit(null);
           }}
