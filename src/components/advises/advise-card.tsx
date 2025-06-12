@@ -1,6 +1,5 @@
 'use client';
 
-import { Advise } from '@/actions/advises/get-advise';
 import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
-import { Session, User } from '@prisma/client';
+import { Advise, Session, User, Like } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useState } from 'react';
@@ -23,7 +22,10 @@ export const AdviseCard = ({
   advise,
   session,
 }: {
-  advise: Advise;
+  advise: Advise & {
+    author: User;
+    likes: Like[];
+  };
   session: (Session & { user: User }) | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -33,9 +35,15 @@ export const AdviseCard = ({
   // Initialize optimistic state with the current likes
   const [optimisticLikes, addOptimisticLike] = useOptimistic(
     advise.likes,
-    (state, userId: string) => {
+    (state: Like[], userId: string) => {
       const isLiked = state.some((like) => like.userId === userId);
-      return isLiked ? state.filter((like) => like.userId !== userId) : [...state, { userId }];
+
+      return isLiked
+        ? state.filter((like) => like.userId !== userId)
+        : [
+            ...state,
+            { userId, id: '', createdAt: new Date(), updatedAt: new Date(), adviseId: '' },
+          ];
     },
   );
 
@@ -139,12 +147,12 @@ export const AdviseCard = ({
       />
 
       <Link href={`/consejos/${advise.id}`} className="block">
-        <CardContent className="px-4 py-6">
-          <p className="text-sm">{advise.content}</p>
+        <CardContent className="px-4 pb-6 pt-2">
+          <p>{advise.content}</p>
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
             <p className="text-xs text-gray-500">
-              {optimisticLikes.length} {optimisticLikes.length === 1 ? 'me gusta' : 'me gustan'}
+              {optimisticLikes.length} {optimisticLikes.length === 1 ? 'like' : 'likes'}
             </p>
           </div>
         </CardContent>

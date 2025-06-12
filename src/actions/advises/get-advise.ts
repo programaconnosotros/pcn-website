@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { Like } from '@prisma/client';
 
 type Content = {
   id: string;
@@ -18,9 +19,7 @@ type Comment = Content & {
 
 export type Advise = Content & {
   comments?: Comment[];
-  likes: {
-    userId: string;
-  }[];
+  likes: Like[];
 };
 
 export type GetAdviseOptions = {
@@ -67,19 +66,8 @@ export const getAdviseById = async (
   const advise = await prisma.advise.findUnique({
     where: { id },
     include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          image: true,
-        },
-      },
-      likes: {
-        select: {
-          userId: true,
-        },
-      },
+      author: true,
+      likes: true,
     },
   });
 

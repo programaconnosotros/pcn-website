@@ -108,6 +108,14 @@ const PCNStory = () => (
       IEEE Computer Society en la Universidad Nacional de Tucumán.
     </p>
 
+    <Heading3>Club de Algoritmos</Heading3>
+
+    <p>
+      Agus creó un club de algoritmos que se juntaban todos los viernes desde las 18.00 hasta las
+      23.00 en un laboratorio del departamento de ingeniería en sistemas de información de la
+      UTN-FRT.
+    </p>
+
     <Heading3>Actividades con Tucumán Hacking</Heading3>
 
     <p>
@@ -197,7 +205,8 @@ const PCNStory = () => (
       desarrollo y testing de la plataforma. Los miembros de la comunidad que colaboraron en el
       desarrollo de la primera versión del website fueron Germán Navarro, Mauricio Chaile, Matías
       Gutierrez, Nicolas Fuentes, Facundo Bazán, Vicky Grillo, Emiliano Grillo, Carlos Spagnolo,
-      Alejo Boga y Benjamin Cortes. El equipo fue liderado por Agustín Sánchez.
+      Alejo Boga, Tobías Paz Posse, Marcelo Núñez y Benjamin Cortes. El equipo fue liderado por
+      Agustín Sánchez.
     </p>
   </div>
 );

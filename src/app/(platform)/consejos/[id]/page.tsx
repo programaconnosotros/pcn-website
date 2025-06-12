@@ -1,4 +1,3 @@
-import { getAdviseById } from '@/actions/advises/get-advise';
 import { AdviseCard } from '@/components/advises/advise-card';
 import { CommentSection } from '@/components/advises/comment-section';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,27 @@ export default async function AdvisePage({ params }: { params: { id: string } })
       })
     : null;
 
-  const advise = await getAdviseById(params.id);
+  const advise = await prisma.advise.findUnique({
+    where: { id: params.id },
+    include: {
+      author: true,
+      likes: true,
+      comments: {
+        where: {
+          parentCommentId: null,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          author: true,
+          replies: {
+            include: { author: true },
+          },
+        },
+      },
+    },
+  });
 
   if (!advise) {
     return <div>Consejo no encontrado</div>;
@@ -34,7 +53,7 @@ export default async function AdvisePage({ params }: { params: { id: string } })
       </div>
 
       <AdviseCard advise={advise} session={session} />
-      <CommentSection adviseId={advise.id} comments={advise.comments ?? []} session={session} />
+      <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
     </div>
   );
 }

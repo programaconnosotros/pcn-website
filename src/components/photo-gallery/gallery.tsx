@@ -8,84 +8,83 @@ import { PhotoDialog } from './photo-dialog';
 import { SearchBar } from './search-bar';
 import { SortSelector, type SortOrder } from './sort-selector';
 
-// Sample gallery photos with Date objects and Spanish titles
 const photos = [
   {
     id: 1,
     title: 'Agustín y Chelo dando una charla de ingeniería de softwareen Tafí Viejo',
-    image: '/gallery-photos/agus-chelo-talk.webp',
+    image: '/photos/agus-chelo-talk.webp',
     date: new Date(2023, 11, 24),
   },
   {
     id: 2,
     title: 'Agustín, Chelo y Tobías resolviendo problemas con Docker en la web de PCN',
-    image: '/gallery-photos/agus-chelo-tobias-watch-pc.webp',
+    image: '/photos/agus-chelo-tobias-watch-pc.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 3,
     title: 'Agustín luego de dar una lightning talk virtual en la pandemia',
-    image: '/gallery-photos/agus-init.webp',
+    image: '/photos/agus-init.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 4,
     title: 'Agustín desarrollando la web de PCN',
-    image: '/gallery-photos/agus-pc.webp',
+    image: '/photos/agus-pc.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 5,
     title: 'Agustín dando una charla de DDD y arquitectura hexagonal en la UTN-FRT',
-    image: '/gallery-photos/agus-talk.webp',
+    image: '/photos/agus-talk.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 6,
     title: 'Cena de founders de PCN',
-    image: '/gallery-photos/boys-having-a-snack.webp',
+    image: '/photos/boys-having-a-snack.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 7,
     title: 'Chelo dando una charla de paradigmas de programación en la UTN-FRT',
-    image: '/gallery-photos/chelo-watch-pc.webp',
+    image: '/photos/chelo-watch-pc.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 8,
     title: 'Noche de hamburguesas en la casa de Tobi',
-    image: '/gallery-photos/leno-time.webp',
+    image: '/photos/leno-time.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 9,
     title: 'Mauricio dando una charla sobre diseño en la UTN-FRT',
-    image: '/gallery-photos/mauricio-talk.webp',
+    image: '/photos/mauricio-talk.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 10,
     title: 'Agustín, Facundo y Chelo luego de una charla en Tafí Viejo',
-    image: '/gallery-photos/photo-casual.webp',
+    image: '/photos/photo-casual.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 11,
     title: 'Esteban enseñando algoritmos de ordenamiento en la UTN-FRT',
-    image: '/gallery-photos/talk-class.webp',
+    image: '/photos/talk-class.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 12,
     title: 'Tobías dando una charla sobre unit testing en la UTN-FRT',
-    image: '/gallery-photos/tobias-talk.webp',
+    image: '/photos/tobias-talk.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 13,
     title: 'Tobías dando una charla sobre depuración de código en la UTN-FRT',
-    image: '/gallery-photos/tobias-watch-pc.webp',
+    image: '/photos/tobias-watch-pc.webp',
     date: new Date(2024, 2, 15),
   },
 ];
@@ -203,17 +202,31 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className="cursor-pointer">
-              <PhotoCard
-                photo={photo}
-                getShareUrl={getShareUrl}
-                onCardClick={() => handlePhotoClick(index)}
-              />
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="xl:hidden">
+            {sortedPhotos.map((photo, index) => (
+              <div key={photo.id} className="mb-3 cursor-pointer">
+                <PhotoCard
+                  photo={photo}
+                  getShareUrl={getShareUrl}
+                  onCardClick={() => handlePhotoClick(index)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden gap-3 xl:block" style={{ columnCount: 4, columnGap: '0.75rem' }}>
+            {sortedPhotos.map((photo, index) => (
+              <div key={photo.id} className="mb-3 cursor-pointer" style={{ breakInside: 'avoid' }}>
+                <PhotoCard
+                  photo={photo}
+                  getShareUrl={getShareUrl}
+                  onCardClick={() => handlePhotoClick(index)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {isDialogOpen && (

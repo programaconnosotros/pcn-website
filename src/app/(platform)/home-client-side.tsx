@@ -9,15 +9,22 @@ import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { BookOpen, Images, Linkedin, LogIn, ScrollText, UserPlus } from 'lucide-react';
+import {
+  Handshake,
+  Images,
+  Linkedin,
+  LogIn,
+  MicVocal,
+  MonitorPlay,
+  ScrollText,
+  UserPlus,
+} from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Testimonials } from './testimonials';
-import { Marquee } from '@/components/magicui/marquee';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -35,12 +42,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           duration: 0.8,
           staggerChildren: 0.1,
         }}
-        className="mb-6 border"
+        className="mb-6"
       >
-        <div className="flex w-full flex-col items-center justify-center gap-2 border-b p-4 md:p-2">
+        <div className="flex w-full flex-col items-center justify-center gap-2 p-4 md:p-2">
           {session ? (
             <>
-              <Heading2 variant="gradient">
+              <Heading2>
                 {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
               </Heading2>
 
@@ -109,16 +116,14 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         {/* TODO: Agregar sección de Lightning Talks */}
 
-        <div className="border-b">
-          <div className="flex items-center justify-center p-6">
-            <Heading2 className="relative z-10 text-center md:text-left">
-              El núcleo de la comunidad 💪
-            </Heading2>
-          </div>
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center md:text-left">
+            El núcleo de la comunidad 💪
+          </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 border-b md:grid-cols-2">
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
@@ -128,36 +133,31 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button variant="outline">
-                Ver consejos <ScrollText className="ml-2 h-4 w-4" />
+              <Button>
+                Ver consejos <Handshake className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b md:border-l">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <Heading3 className="relative z-10">Conocimiento</Heading3>
+            <Heading3 className="relative z-10">Charlas</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Nos encanta dar charlas, cursos y compartir conocimiento con los demás. Tenemos muy
-              claro que juntos llegamos más lejos 🤝
+              Nos encanta dar charlas para compartir conocimiento 🤝. Tenemos una página para
+              guardar el historial, las diapositivas y algunas charlas que quedaron grabadas.
             </Paragraph>
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button variant="outline">
-                  Ver charlas <ScrollText className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-
-              <Link href="/cursos" className="relative z-10">
-                <Button variant="outline">
-                  Ver cursos <BookOpen className="ml-2 h-4 w-4" />
+                <Button>
+                  Ver charlas <MicVocal className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b">
+
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
@@ -167,7 +167,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center border-b p-6 md:border-b md:border-l">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
@@ -187,7 +187,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
           </div>
 
-          <div className="group relative flex flex-col items-center border-t p-6 md:border-l md:border-t-0">
+          <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
@@ -198,9 +198,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="text-center dark:border-b">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/IMG_8959.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
               <Heading2 className="relative z-10 text-white">Conocé la historia de PCN</Heading2>
@@ -219,10 +220,11 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="text-center dark:border-b">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
-            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/gallery-photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
+
+            <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
               <Heading2 className="relative z-10 text-white">Visita la galería de PCN</Heading2>
 
@@ -240,20 +242,17 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <MainSponsorCard />
-
         <InviteDevsToWork />
         <Team />
 
-        <div className="border-t">
-          <div className="flex items-center justify-center p-6">
-            <Heading2 className="relative z-10 text-center">
-              Sumate en todas las redes para aprovechar aún más! 🚀
-            </Heading2>
-          </div>
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center">
+            Sumate en todas las redes para aprovechar aún más! 🚀
+          </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 border-b border-t md:grid-cols-2">
-          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
 
@@ -263,7 +262,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-              <Button variant="outline">Entrar a la comunidad en WhatsApp</Button>
+              <Button className="relative z-10 w-full md:w-auto">Abrir WhatsApp</Button>
             </Link>
           </div>
 
@@ -278,13 +277,13 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-              <Button variant="outline">Ir al server en Discord</Button>
+              <Button className="relative z-10 w-full md:w-auto">Abrir Discord</Button>
             </Link>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 border-b md:grid-cols-2">
-          <div className="group relative border-b p-6 text-center md:border-b-0 md:border-r">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Instagram</Heading3>
 
@@ -293,7 +292,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.instagram.com/programa.con.nosotros/" target="_blank">
-              <Button variant="outline">Visita nuestro Instagram</Button>
+              <Button className="relative z-10 w-full md:w-auto">Abrir Instagram</Button>
             </Link>
           </div>
 
@@ -306,12 +305,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="https://www.youtube.com/@programaconnosotros2689/videos" target="_blank">
-              <Button variant="outline">Visita nuestro canal</Button>
+              <Button className="relative z-10 w-full md:w-auto">Abrir YouTube</Button>
             </Link>
           </div>
         </div>
 
-        <div className="border-b text-center">
+        <div className="text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <div className="p-6">
@@ -327,8 +326,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 target="_blank"
                 className="relative z-10"
               >
-                <Button variant="outline">
-                  Seguir en LinkedIn <Linkedin className="ml-2 h-4 w-4" />
+                <Button className="relative z-10 w-full md:w-auto">
+                  Abrir LinkedIn <Linkedin className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>

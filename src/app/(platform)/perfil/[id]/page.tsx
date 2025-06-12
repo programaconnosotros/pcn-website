@@ -33,17 +33,9 @@ async function getUser(id: string) {
           orderBy: {
             createdAt: 'desc',
           },
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            updatedAt: true,
-            authorId: true,
-            likes: {
-              select: {
-                userId: true,
-              },
-            },
+          include: {
+            author: true,
+            likes: true,
           },
         },
         languages: {
@@ -70,6 +62,7 @@ async function getUser(id: string) {
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const user = await getUser(params.id);
   const session = await getCurrentSession();
+
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
         languageId: language.language,
@@ -155,20 +148,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         ) : (
           <div className="space-y-4">
             {user.advises.map((advise) => (
-              <AdviseCard
-                key={advise.id}
-                session={session}
-                advise={{
-                  ...advise,
-                  author: {
-                    id: user.id,
-                    name: user.name || '',
-                    email: '',
-                    image: user.image,
-                  },
-                  likes: advise.likes,
-                }}
-              />
+              <AdviseCard key={advise.id} session={session} advise={advise} />
             ))}
           </div>
         )}

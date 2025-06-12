@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import Link from 'next/link';
+import { Comment } from '@prisma/client';
 
 const commentSchema = z.object({
   content: z
@@ -22,22 +23,9 @@ const commentSchema = z.object({
 
 type CommentFormData = z.infer<typeof commentSchema>;
 
-type CommentToDisplay = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  author: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null;
-  };
-  replies: CommentToDisplay[];
-};
-
 type CommentSectionProps = {
   adviseId: string;
-  comments: CommentToDisplay[];
+  comments: (Comment & { author: User; replies: (Comment & { author: User })[] })[];
   session: (Session & { user: User }) | null;
 };
 
@@ -79,7 +67,11 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
     }
   };
 
-  const Comment = ({ comment }: { comment: CommentToDisplay }) => (
+  const Comment = ({
+    comment,
+  }: {
+    comment: Comment & { author: User; replies?: (Comment & { author: User; replies?: any[] })[] };
+  }) => (
     <div className="space-y-4">
       <div className="flex items-start gap-4">
         <Avatar className="h-8 w-8">
@@ -108,13 +100,9 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
         </div>
       </div>
 
-      {comment.replies.length > 0 && (
-        <div className="ml-8 space-y-4 border-l pl-4">
-          {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} />
-          ))}
-        </div>
-      )}
+      {comment.replies?.map((reply) => (
+        <Comment key={reply.id} comment={{ ...reply, replies: [] }} />
+      ))}
 
       {replyingTo === comment.id && (
         <div className="ml-8">
