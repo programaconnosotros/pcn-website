@@ -1,27 +1,13 @@
-/* import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
-import { Session, User } from '@prisma/client';*/
 'use client';
 
 import { Heading2 } from '@/components/ui/heading-2';
 
 import { useState, useMemo, useEffect } from 'react';
-import {
-  Search,
-  MapPin,
-  Briefcase,
-  GraduationCap,
-  Code,
-  Users,
-  Filter,
-  SquareArrowOutUpRight,
-  Handshake,
-} from 'lucide-react';
+import { Search, Users, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Select,
   SelectContent,
@@ -38,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getUsers } from '@/actions/users/get-users';
+import UserCard from '@/components/comunity/user-card';
 
 type UserWithoutPassword = {
   id: string;
@@ -150,28 +137,27 @@ const CommunityPage = () => {
             {/* Main content */}
             <div className="relative z-10">
               {/* Logo/Icon section */}
-              <div className="mb-6">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="/logo.webp"
-                    alt="programaConNosotros"
-                    className="w-[50px] md:w-[100px]"
-                  />
-                </div>
+
+              <div className="flex flex-col items-center">
+                <img
+                  src="/logo.webp"
+                  alt="programaConNosotros"
+                  className="w-[100px] md:w-[140px]"
+                />
               </div>
 
               {/* Title with gradient */}
-              <h1 className="mb-4 bg-gradient-to-r bg-clip-text text-5xl font-bold text-transparent text-white md:text-6xl">
+              <h1 className="mb-4 bg-gradient-to-r bg-clip-text text-5xl font-bold dark:text-white md:text-6xl">
                 Miembros de PCN
               </h1>
 
               {/* Subtitle */}
               <div className="mb-6">
-                <p className="mb-2 text-xl font-medium text-gray-700 md:text-2xl">
+                <p className="mb-2 text-xl font-medium dark:text-gray-300 md:text-2xl">
                   Programa con Nosotros
                 </p>
-                <p className="mx-auto max-w-2xl text-lg text-gray-600">
-                  Conoce a nuestro increíble equipo de profesionales apasionados por la tecnología
+                <p className="mx-auto max-w-2xl text-lg dark:text-gray-300">
+                  Conoce a nuestra increíble comunidad de apasionados por la tecnología
                 </p>
               </div>
 
@@ -278,98 +264,7 @@ const CommunityPage = () => {
           {/* Grid de miembros */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredUsers.map((user) => (
-              <Card key={user.id} className="transition-shadow duration-300 hover:shadow-lg">
-                <CardHeader className="text-center">
-                  <Avatar className="mx-auto mb-4 h-20 w-20">
-                    <AvatarImage src={user.image || undefined} alt={user.name} />
-                    <AvatarFallback className="text-lg">
-                      {user.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-xl font-semibold">{user.name}</h3>
-                  <p className="font-medium text-blue-600">{user.jobTitle}</p>
-                  {user.slogan && <p className="text-sm">{user.slogan}</p>}
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Información básica */}
-                  <div className="space-y-2">
-                    {user.countryOfOrigin && (
-                      <div className="flex items-center gap-2 text-sm text-gray-300">
-                        <MapPin className="h-4 w-4" />
-                        <span>{user.countryOfOrigin}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/*Universidad o lugar de estudios*/}
-                  {user.university && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
-                      <GraduationCap className="h-4 w-4" />
-                      <span>{user.university}</span>
-                    </div>
-                  )}
-
-                  {/*Empresa*/}
-                  {user.enterprise && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
-                      <Briefcase className="h-4 w-4" />
-                      <span>{user.enterprise}</span>
-                    </div>
-                  )}
-
-                  {/* Lenguajes */}
-                  {user.languages.length > 0 && (
-                    <div>
-                      <div className="mb-2 flex items-center gap-2">
-                        <Code className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-300">Lenguajes</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {user.languages.map((lang) => (
-                          <Badge
-                            key={lang.language}
-                            variant="outline"
-                            className="border border-gray-600 text-xs"
-                          >
-                            {lang.language}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/*Miembro desde*/}
-                  {
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
-                      <Handshake className="h-4 w-4" />
-                      <span>Miembro desde {calcMembershipTime(user.createdAt)}</span>
-                    </div>
-                  }
-
-                  {/* Enlaces */}
-                  <div className="flex gap-2 pt-2">
-                    {user.linkedinUrl && (
-                      <Button size="sm" variant="outline" asChild>
-                        <a href={user.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                          LinkedIn
-                          <SquareArrowOutUpRight className="ml-1" size={15} />
-                        </a>
-                      </Button>
-                    )}
-                    {user.xAccountUrl && (
-                      <Button size="sm" variant="outline" asChild>
-                        <a href={user.xAccountUrl} target="_blank" rel="noopener noreferrer">
-                          Twitter
-                          <SquareArrowOutUpRight className="ml-1" size={15} />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <UserCard key={user.id} user={user} calcMembershipTime={calcMembershipTime} />
             ))}
           </div>
 
