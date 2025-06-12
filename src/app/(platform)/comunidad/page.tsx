@@ -264,7 +264,11 @@ const CommunityPage = () => {
           {/* Grid de miembros */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredUsers.map((user) => (
-              <UserCard key={user.id} user={user} calcMembershipTime={calcMembershipTime} />
+              <UserCard
+                key={user.id}
+                user={user}
+                calcMembershipTime={calcMembershipTime(user.createdAt)}
+              />
             ))}
           </div>
 
