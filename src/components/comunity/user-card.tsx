@@ -107,7 +107,7 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
         {/* Miembro desde */}
         <div className="flex items-center gap-2 text-sm dark:text-gray-300">
           <Handshake className="h-4 w-4" />
-          <span>Miembro desde {calcMembershipTime(user.createdAt)}</span>
+          <span>Miembro desde {calcMembershipTime}</span>
         </div>
 
         {/* Enlaces */}
