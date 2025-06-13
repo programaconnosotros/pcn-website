@@ -154,7 +154,7 @@ const CommunityPage = () => {
               {/* Subtitle */}
               <div className="mb-6">
                 <p className="mb-2 text-xl font-medium dark:text-gray-300 md:text-2xl">
-                  Programa con Nosotros
+                  programaConNosotros
                 </p>
                 <p className="mx-auto max-w-2xl text-lg dark:text-gray-300">
                   Conoce a nuestra increíble comunidad de apasionados por la tecnología
