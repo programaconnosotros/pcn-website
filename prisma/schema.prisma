@@ -17,6 +17,11 @@ model User {
   countryOfOrigin String?
   xAccountUrl     String?
   linkedinUrl     String?
+  slogan          String?
+  jobTitle        String?
+  enterprise      String?
+  university      String?
+  career          String?
   sessions        Session[]
   advises         Advise[]
   languages       UserLanguage[]
