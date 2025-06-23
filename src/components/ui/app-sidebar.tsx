@@ -104,6 +104,11 @@ const data = {
       url: '/software-recomendado',
       icon: Star,
     },
+    {
+      title: 'Comunidad',
+      url: '/comunidad',
+      icon: Users,
+    },
   ],
   navSecondary: [
     {
