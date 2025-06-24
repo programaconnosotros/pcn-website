@@ -14,6 +14,14 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
         protocol: 'https',
       },
+      {
+        hostname: 'storage.aceternity.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'sltoipimgzzeegsdygra.supabase.co',
+        protocol: 'https',
+      },
     ],
   },
 };

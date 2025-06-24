@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Book,
   BookOpen,
   CalendarDays,
   Home,
@@ -69,7 +70,7 @@ const data = {
     {
       title: 'Cursos',
       url: '/cursos',
-      icon: Laptop,
+      icon: Book,
       items: [
         {
           title: 'Vim',
@@ -88,6 +89,11 @@ const data = {
           url: '/cursos',
         },
       ],
+    },
+    {
+      title: 'Setups',
+      url: '/setups',
+      icon: Laptop,
     },
     {
       title: 'Influencers',
