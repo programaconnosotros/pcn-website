@@ -2,6 +2,7 @@
 
 import {
   BookOpen,
+  Briefcase,
   CalendarDays,
   Home,
   Image,
