@@ -2,7 +2,6 @@
 
 import {
   BookOpen,
-  Briefcase,
   CalendarDays,
   Home,
   Image,
@@ -16,16 +15,13 @@ import {
   Star,
   Users,
   Youtube,
-  Image,
-  Home,
-  CalendarDays,
-  Users,
-  Briefcase,
 } from 'lucide-react';
+import * as React from 'react';
 import * as React from 'react';
 
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
+import { NavSecondary } from '@/components/ui/nav-secondary';
 import { NavSecondary } from '@/components/ui/nav-secondary';
 import { NavUser } from '@/components/ui/nav-user';
 import {
@@ -96,9 +92,9 @@ const data = {
       ],
     },
     {
-      title: 'Trabajos',
-      url: '/jobs',
-      icon: Briefcase,
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
     },
     {
       title: 'Software recomendado',
