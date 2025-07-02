@@ -2,6 +2,7 @@
 
 import {
   BookOpen,
+  Briefcase,
   CalendarDays,
   Home,
   Image,
@@ -16,13 +17,8 @@ import {
   Users,
   Youtube,
 } from 'lucide-react';
-import * as React from 'react';
-import * as React from 'react';
-
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
-import { NavSecondary } from '@/components/ui/nav-secondary';
-import { NavSecondary } from '@/components/ui/nav-secondary';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -34,6 +30,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
+import { NavSecondary } from './nav-secondary';
 
 const data = {
   navMain: [
@@ -105,6 +102,11 @@ const data = {
       title: 'Comunidad',
       url: '/comunidad',
       icon: Users,
+    },
+    {
+      title: 'Trabajos',
+      url: '/trabajos',
+      icon: Briefcase,
     },
   ],
   navSecondary: [
