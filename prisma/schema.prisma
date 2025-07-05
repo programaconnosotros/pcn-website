@@ -126,3 +126,20 @@ model Like {
 
   @@unique([userId, adviseId])
 }
+
+model JobOffers {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  enterprise   String
+  available    Boolean
+  logoPath     String
+  tags         String[]
+  location     String
+  type         String
+  salaryAmount Int?
+  currency     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
