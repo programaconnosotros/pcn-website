@@ -7,8 +7,3 @@ apply-migrations:
 		docker exec -i $(WEB_CONTAINER) /bin/sh -c "pnpm apply-migrations"
 
 
-
-
-
-
-
