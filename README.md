@@ -30,8 +30,8 @@ Este es el repositorio del website de PCN. El website está construido con Next.
     docker exec -i pcn-web /bin/sh -c "pnpm apply-migrations"
     ``````
     
-    > [!IMPORTANT]
-    > Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
+> [!IMPORTANT]
+> Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
 
 7. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 
