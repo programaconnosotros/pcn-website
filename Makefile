@@ -1,4 +1,5 @@
-.PHONY= apply-migrations 
+.PHONY: apply-migrations
+
 WEB_CONTAINER := pcn-web
 
 
