@@ -10,27 +10,28 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 3. Crear archivo de variables de entorno con el nombre `.env` utilizando `.env.template` como base. Si no tenés acceso a las variables de entorno, podés usar las variables de entorno de desarrollo que están en el archivo `.env.development`.
 
-4. Configurar la app de GitHub para poder autenticarse usando OAuth.
-
-Setear esto como callback URL:http://localhost:3000/api/auth/callback/github
-
-5. Levantar el servidor de desarrollo con Docker Compose. Utilizamos Docker para que no tengas que instalar Node.js ni ninguna otra dependencia en tu computadora. Para levantar el servidor, ejecutá el siguiente comando en la raíz del proyecto.
+4. Levantar el servidor de desarrollo con Docker Compose. Utilizamos Docker para que no tengas que instalar Node.js ni ninguna otra dependencia en tu computadora. Para levantar el servidor, ejecutá el siguiente comando en la raíz del proyecto.
 
    ```bash
-   docker-compose up
+   docker-compose up -d
    ```
 
    > El código dentro del contenedor de Docker se sincronizará con el de tu computadora automáticamente, por lo cual no hace falta ejecutar ningún comando adicional para ver los cambios que hagas en tu código.
 
    > Si usas Visual Studio Code para desarrollar, hay una configuración para poder desarrollar usando los Dev Containers de Visual Studio Code, los cuales te permiten posicionar tu editor dentro del contenedor, y poder tener una experiencia de desarrollo similar a la que tendrías si estuvieras desarrollando el proyecto localmente en tu computadora sin utilizar Docker. Cuando abras el proyecto en Visual Studio Code, debería avisarte que podés desarrollar dentro del container, si aceptás, se configurará todo automáticamente para que puedas hacerlo.
 
-6. Una vez dentro del container, tenes que ejecutar las migraciones de la base de datos con el siguiente comando:
-
-   ```bash
-   pnpm apply-migrations
-   ```
-
-   > Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
+6. Una vez levantados los contenedores de base de datos y web, tenés que ejecutar las migraciones:
+    - Si posees MacOS o Linux simplemente ejecuta el siguiente comando:
+    ```bash
+    make apply-migrations
+    ```
+    - Si posees Windows y no podes usar el comando `make`, tendrías que ejecutar lo siguiente:
+    ```bash
+    docker exec -i pcn-web /bin/sh -c "pnpm apply-migrations"
+    ```
+    
+> [!IMPORTANT]
+> Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
 
 7. Crea una nueva rama en Git para ir guardando tus cambios (la página se va refrescando automáticamente en tu browser, no hace falta que refresques manualmente).
 
