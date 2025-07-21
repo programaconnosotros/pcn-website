@@ -17,6 +17,7 @@ import {
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
+import { renderMarkdown } from '@/lib/render-markdown';
 
 // Función personalizada para formatear tiempo de manera mas exacta
 
@@ -151,8 +152,8 @@ const ThreadDetailPage = async ({ params }: { params: { id: string } }) => {
                 </span>
               </div>
 
-              <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap">{post.content}</div>
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                {renderMarkdown(post.content)}
               </div>
 
               <div className="mt-6 flex items-center gap-4 border-t pt-4">
@@ -207,8 +208,8 @@ const ThreadDetailPage = async ({ params }: { params: { id: string } }) => {
                     </span>
                   </div>
 
-                  <div className="prose prose-sm mb-4 max-w-none">
-                    <div className="whitespace-pre-wrap">{comment.content}</div>
+                  <div className="prose prose-sm dark:prose-invert mb-4 max-w-none">
+                    {renderMarkdown(comment.content)}
                   </div>
 
                   <div className="flex items-center gap-4 border-t pt-2">
