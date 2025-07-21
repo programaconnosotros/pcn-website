@@ -317,6 +317,194 @@ async function main() {
     }),
   );
 
+  // Create forum categories
+  const categories = await Promise.all([
+    prisma.postCategory.upsert({
+      where: { slug: 'desarrollo-web' },
+      update: {},
+      create: {
+        name: 'Desarrollo Web',
+        description: 'Frontend, Backend, Full Stack',
+        color: 'bg-blue-500',
+        icon: '💻',
+        slug: 'desarrollo-web',
+      },
+    }),
+    prisma.postCategory.upsert({
+      where: { slug: 'moviles' },
+      update: {},
+      create: {
+        name: 'Mobile',
+        description: 'React Native, Flutter, Swift, Kotlin',
+        color: 'bg-green-500',
+        icon: '📱',
+        slug: 'moviles',
+      },
+    }),
+    prisma.postCategory.upsert({
+      where: { slug: 'devops' },
+      update: {},
+      create: {
+        name: 'DevOps',
+        description: 'Docker, Kubernetes, CI/CD',
+        color: 'bg-purple-500',
+        icon: '⚙️',
+        slug: 'devops',
+      },
+    }),
+    prisma.postCategory.upsert({
+      where: { slug: 'bases-de-datos' },
+      update: {},
+      create: {
+        name: 'Bases de Datos',
+        description: 'SQL, NoSQL, ORMs',
+        color: 'bg-orange-500',
+        icon: '🗄️',
+        slug: 'bases-de-datos',
+      },
+    }),
+    prisma.postCategory.upsert({
+      where: { slug: 'consejos-carrera' },
+      update: {},
+      create: {
+        name: 'Consejos de Carrera',
+        description: 'Entrevistas, CV, primeros trabajos',
+        color: 'bg-pink-500',
+        icon: '🚀',
+        slug: 'consejos-carrera',
+      },
+    }),
+  ]);
+
+  // Create forum posts
+  const forumPosts = [
+    {
+      title: '¿Cuál es la mejor forma de aprender React en 2025?',
+      content: `Hola comunidad! 
+
+Soy nuevo en el desarrollo frontend y me gustaría aprender React de la manera más efectiva. He visto muchos recursos online pero no sé por dónde empezar.
+
+¿Qué recomiendan? ¿Cursos, documentación oficial, proyectos prácticos?
+
+¡Gracias por sus consejos!`,
+      authorEmail: 'user@example.com',
+      categorySlug: 'desarrollo-web',
+      isPinned: true,
+    },
+    {
+      title: 'Mi experiencia trabajando remotamente como dev junior',
+      content: `Quería compartir mi experiencia trabajando remotamente como desarrollador junior durante estos últimos 6 meses.
+
+**Lo bueno:**
+- Flexibilidad de horarios
+- Ahorro en transporte y comida
+- Mejor balance vida-trabajo
+
+**Los desafíos:**
+- Comunicación con el equipo
+- Distracciones en casa
+- Feeling de aislamiento a veces
+
+¿Qué tal han sido sus experiencias? ¿Algún consejo para mejorar la productividad en casa?`,
+      authorEmail: 'maria.garcia@example.com',
+      categorySlug: 'consejos-carrera',
+      isPinned: false,
+    },
+    {
+      title: 'Docker compose para desarrollo local - Tips y trucos',
+      content: `Después de meses trabajando con Docker en desarrollo, quería compartir algunos tips que me han ahorrado mucho tiempo:
+
+## 1. Volúmenes para desarrollo
+\`\`\`yaml
+volumes:
+  - .:/app
+  - /app/node_modules
+\`\`\`
+
+## 2. Variables de entorno
+Usar archivos \`.env\` para diferentes ambientes.
+
+## 3. Hot reload
+Configurar correctamente el hot reload para no tener que rebuilder constantemente.
+
+¿Qué otros tips agregarían?`,
+      authorEmail: 'juan.perez@example.com',
+      categorySlug: 'devops',
+      isPinned: false,
+    },
+    {
+      title: '¿PostgreSQL vs MongoDB para un proyecto nuevo?',
+      content: `Estoy empezando un nuevo proyecto y tengo que decidir entre PostgreSQL y MongoDB.
+
+**Contexto del proyecto:**
+- Aplicación web con usuarios
+- Manejo de posts y comentarios
+- Necesito búsquedas complejas
+- Equipo pequeño (2-3 devs)
+
+¿Qué recomiendan y por qué? ¿Hay algún factor decisivo que debería considerar?`,
+      authorEmail: 'ana.lopez@example.com',
+      categorySlug: 'bases-de-datos',
+      isPinned: false,
+    },
+  ];
+
+  const createdPosts = await Promise.all(
+    forumPosts.map(async (postData) => {
+      const author = users.find((u) => u.email === postData.authorEmail)!;
+      const category = categories.find((c) => c.slug === postData.categorySlug)!;
+
+      return prisma.post.create({
+        data: {
+          title: postData.title,
+          content: postData.content,
+          isPinned: postData.isPinned,
+          authorId: author.id,
+          categoryId: category.id,
+        },
+      });
+    }),
+  );
+
+  // Add some comments to posts
+  await Promise.all(
+    createdPosts.map(async (post) => {
+      // Add 2-5 comments per post
+      const numComments = Math.floor(Math.random() * 4) + 2;
+
+      for (let i = 0; i < numComments; i++) {
+        const randomAuthor = users[Math.floor(Math.random() * users.length)];
+
+        await prisma.postComment.create({
+          data: {
+            content: `Excelente post! Muy útil la información que compartiste. ${i === 0 ? 'Gracias por tomarte el tiempo de escribir esto.' : `Comentario ${i + 1} sobre este tema.`}`,
+            authorId: randomAuthor.id,
+            postId: post.id,
+          },
+        });
+      }
+    }),
+  );
+
+  // Add some likes to posts
+  await Promise.all(
+    createdPosts.map(async (post) => {
+      for (const user of users) {
+        // Skip if the user is the author of the post
+        if (user.id === post.authorId) continue;
+        // 50% chance to like each post
+        if (Math.random() < 0.5) {
+          await prisma.postLike.create({
+            data: {
+              userId: user.id,
+              postId: post.id,
+            },
+          });
+        }
+      }
+    }),
+  );
+
   console.log(`Seed data created successfully!`);
 }
 
