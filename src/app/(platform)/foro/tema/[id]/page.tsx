@@ -9,7 +9,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { renderMarkdown } from '@/lib/render-markdown';
-import { DeletePostButton } from './delete-post-button';
+import { PostActionsButton } from './delete-post-button';
 import { cookies } from 'next/headers';
 
 // Función personalizada para formatear tiempo de manera mas exacta
@@ -137,7 +137,7 @@ const ThreadDetailPage = async ({ params }: { params: { id: string } }) => {
                 <Share2 className="mr-2 h-4 w-4" />
                 Compartir
               </Button>
-              <DeletePostButton
+              <PostActionsButton
                 postId={post.id}
                 authorId={post.authorId}
                 currentUserId={currentUserId}

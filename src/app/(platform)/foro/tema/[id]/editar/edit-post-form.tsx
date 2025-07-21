@@ -22,13 +22,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { ChevronLeft, FileText } from 'lucide-react';
+import { ChevronLeft, Save } from 'lucide-react';
 import { renderMarkdown } from '@/lib/render-markdown';
 import { Heading1 } from '@/components/ui/typography';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getPostCategories } from '@/actions/forum_posts/get-categories';
-import { createPost } from '@/actions/forum_posts/create';
+import { updatePost } from '@/actions/forum_posts/update';
 import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
@@ -46,7 +46,23 @@ type PostCategory = {
   slug: string;
 };
 
-export function CreatePostForm() {
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+  categoryId: string;
+  authorId: string;
+  category: {
+    name: string;
+    slug: string;
+  };
+};
+
+interface EditPostFormProps {
+  post: Post;
+}
+
+export function EditPostForm({ post }: EditPostFormProps) {
   const [categories, setCategories] = useState<PostCategory[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,9 +71,9 @@ export function CreatePostForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      content: '',
-      categoryId: '',
+      title: post.title,
+      content: post.content,
+      categoryId: post.categoryId,
     },
   });
 
@@ -81,15 +97,15 @@ export function CreatePostForm() {
     try {
       setIsSubmitting(true);
 
-      const result = await createPost(data);
+      const result = await updatePost(post.id, data);
 
       if (result.success) {
-        toast.success('¡Post creado exitosamente! 🎉');
-        router.push(`/foro/tema/${result.post.id}`);
+        toast.success('¡Post actualizado exitosamente! 🎉');
+        router.push(`/foro/tema/${post.id}`);
       }
     } catch (error) {
-      console.error('Error creating post:', error);
-      toast.error(error instanceof Error ? error.message : 'Error al crear el post');
+      console.error('Error updating post:', error);
+      toast.error(error instanceof Error ? error.message : 'Error al actualizar el post');
     } finally {
       setIsSubmitting(false);
     }
@@ -97,14 +113,15 @@ export function CreatePostForm() {
 
   return (
     <div className="flex h-[calc(100vh-2rem)] w-full overflow-hidden md:h-[calc(100vh-1.5rem)]">
-      {/* Panel Izquierdo - Form */}
-
       <div className="flex w-1/2 flex-col border-r">
         <div className="flex items-center gap-3 p-4">
-          <Link href="/foro" className="text-gray-400 transition-colors hover:text-gray-200">
+          <Link
+            href={`/foro/tema/${post.id}`}
+            className="text-gray-400 transition-colors hover:text-gray-200"
+          >
             <ChevronLeft className="h-5 w-5" />
           </Link>
-          <Heading1 className="m-0 text-xl font-semibold">Crear Post</Heading1>
+          <Heading1 className="m-0 text-xl font-semibold">Editar Post</Heading1>
         </div>
 
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -131,7 +148,7 @@ export function CreatePostForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Categoría</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Selecciona una categoría" />
@@ -184,16 +201,14 @@ export function CreatePostForm() {
 
               <div className="p-4">
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  {isSubmitting ? 'Creando...' : 'Crear Post'}
+                  <Save className="mr-2 h-4 w-4" />
+                  {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
                 </Button>
               </div>
             </form>
           </Form>
         </div>
       </div>
-
-      {/* Panel Derecho - Preview */}
 
       <div className="flex w-1/2 flex-col">
         <div className="p-4">

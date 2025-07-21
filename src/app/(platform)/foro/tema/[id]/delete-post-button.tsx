@@ -17,19 +17,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { MoreVertical, Trash2 } from 'lucide-react';
-import { deletePost } from '@/actions/posts/delete';
+import { MoreVertical, Trash2, Edit } from 'lucide-react';
+import { deletePost } from '@/actions/forum_posts/delete';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
-interface DeletePostButtonProps {
+interface PostActionsButtonProps {
   postId: string;
   authorId: string;
   currentUserId: string | null;
 }
 
-export function DeletePostButton({ postId, authorId, currentUserId }: DeletePostButtonProps) {
+export function PostActionsButton({ postId, authorId, currentUserId }: PostActionsButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const router = useRouter();
@@ -75,6 +76,12 @@ export function DeletePostButton({ postId, authorId, currentUserId }: DeletePost
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href={`/foro/tema/${postId}/editar`} className="flex w-full items-center">
+              <Edit className="mr-2 h-4 w-4" />
+              Editar post
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteClick}
             className="text-red-600 focus:text-red-600"
