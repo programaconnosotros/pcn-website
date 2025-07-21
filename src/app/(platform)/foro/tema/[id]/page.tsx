@@ -4,20 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Heading2 } from '@/components/ui/heading-2';
-import {
-  ArrowLeft,
-  Heart,
-  MessageCircle,
-  Share2,
-  Bookmark,
-  Flag,
-  MoreVertical,
-  Quote,
-} from 'lucide-react';
+import { ArrowLeft, Heart, MessageCircle, Share2, Bookmark, Flag, Quote } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { renderMarkdown } from '@/lib/render-markdown';
+import { DeletePostButton } from './delete-post-button';
+import { cookies } from 'next/headers';
 
 // Función personalizada para formatear tiempo de manera mas exacta
 
@@ -54,6 +47,19 @@ const formatTimeAgo = (date: Date) => {
 };
 
 const ThreadDetailPage = async ({ params }: { params: { id: string } }) => {
+  // Obtener usuario actual
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get('sessionId')?.value;
+  let currentUserId: string | null = null;
+
+  if (sessionId) {
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { userId: true },
+    });
+    currentUserId = session?.userId || null;
+  }
+
   const post = await prisma.post.findUnique({
     where: { id: params.id },
     include: {
@@ -131,9 +137,11 @@ const ThreadDetailPage = async ({ params }: { params: { id: string } }) => {
                 <Share2 className="mr-2 h-4 w-4" />
                 Compartir
               </Button>
-              <Button variant="outline" size="sm">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
+              <DeletePostButton
+                postId={post.id}
+                authorId={post.authorId}
+                currentUserId={currentUserId}
+              />
             </div>
           </div>
         </CardHeader>
