@@ -32,7 +32,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-6 md:max-w-screen-xl md:px-20"
+      className="md:max-w-screen-xl md:px-20"
     >
       <GlassCardHover />
       <motion.div
@@ -56,7 +56,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         ) : (
           // Componente usuario no logueado
-          <div className="relative -mx-4 -mt-12 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)]">
+          <div className="relative -mx-4 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background pt-12 md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)] md:pt-0">
             <div
               className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
               style={{
