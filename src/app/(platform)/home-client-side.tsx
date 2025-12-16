@@ -44,73 +44,67 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         }}
         className="mb-6"
       >
-        <div className="flex w-full flex-col items-center justify-center gap-2 p-4 md:p-2">
-          {session ? (
-            <>
-              <Heading2>
-                {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
-              </Heading2>
+        {session ? (
+          <div className="flex w-full flex-col items-center justify-center gap-2 p-4 md:p-2">
+            <Heading2>
+              {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
+            </Heading2>
 
-              <div className="hidden md:block">
-                <MotivationalQuotes />
+            <div className="hidden md:block">
+              <MotivationalQuotes />
+            </div>
+          </div>
+        ) : (
+          // Componente usuario no logueado
+          <div className="relative -mx-4 -mt-12 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)]">
+            <div
+              className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: "url('/pcn-header.webp')",
+              }}
+            />
+            <div className="absolute inset-0 z-0 bg-black/40 dark:bg-black/60" />
+
+            <div className="absolute right-4 top-4 z-20">
+              <ThemeToggle />
+            </div>
+
+            <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
+              <div className="flex flex-col items-center">
+                <img
+                  src="/logo.webp"
+                  alt="programaConNosotros"
+                  className="w-[50px] md:w-[100px]"
+                />
               </div>
-            </>
-          ) : (
-            // Componente usuario no logueado
 
-            <div className="relative min-h-[400px] w-full overflow-hidden bg-background md:h-[500px]">
-              <FlickeringGrid
-                className="absolute inset-0 z-0 size-full"
-                squareSize={4}
-                gridGap={6}
-                color="#6B7280"
-                maxOpacity={0.2}
-                flickerChance={0.1}
-                height={800}
-                width={1200}
-              />
+              <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl text-white dark:text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
+                programaConNosotros
+              </Heading1>
 
-              <div className="absolute right-4 top-4 z-20">
-                <ThemeToggle />
-              </div>
+              <p className="px-4 text-center text-base leading-relaxed text-white md:text-lg">
+                La comunidad que necesitas para llevar tu carrera
+                <br className="hidden md:block" />
+                <span className="md:hidden"> </span>
+                en la industria del software al siguiente nivel! 🚀
+              </p>
 
-              <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 py-6">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="/logo.webp"
-                    alt="programaConNosotros"
-                    className="w-[50px] md:w-[100px]"
-                  />
-                </div>
+              <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:justify-center md:gap-2 md:px-0 md:py-6">
+                <Link href="/autenticacion/registro" className="w-full md:w-auto">
+                  <Button className="w-full text-sm md:w-auto md:text-base">
+                    Registrarme <UserPlus className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
 
-                <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl dark:text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
-                  programaConNosotros
-                </Heading1>
-
-                <p className="px-4 text-center text-base leading-relaxed md:text-lg">
-                  La comunidad que necesitas para llevar tu carrera
-                  <br className="hidden md:block" />
-                  <span className="md:hidden"> </span>
-                  en la industria del software al siguiente nivel! 🚀
-                </p>
-
-                <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:justify-center md:gap-2 md:px-0 md:py-6">
-                  <Link href="/autenticacion/registro" className="w-full md:w-auto">
-                    <Button className="w-full text-sm md:w-auto md:text-base">
-                      Registrarme <UserPlus className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-
-                  <Link href="/autenticacion/iniciar-sesion" className="w-full md:w-auto">
-                    <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
-                      Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
+                <Link href="/autenticacion/iniciar-sesion" className="w-full md:w-auto">
+                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
+                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* <Testimonials /> */}
 
@@ -243,7 +237,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <MainSponsorCard />
         <InviteDevsToWork />
-        <Team />
+        {/* <Team /> */}
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">
@@ -291,7 +285,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               En Instagram subimos fotos de recuerdos y mucho contenido motivacional 💪
             </Paragraph>
 
-            <Link href="https://www.instagram.com/programa.con.nosotros/" target="_blank">
+            <Link href="https://www.instagram.com/programaconnosotros/" target="_blank">
               <Button className="relative z-10 w-full md:w-auto">Abrir Instagram</Button>
             </Link>
           </div>
