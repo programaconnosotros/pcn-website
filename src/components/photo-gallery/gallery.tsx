@@ -11,7 +11,7 @@ import { SortSelector, type SortOrder } from './sort-selector';
 const photos = [
   {
     id: 1,
-    title: 'Agustín y Chelo dando una charla de ingeniería de softwareen Tafí Viejo',
+    title: 'Agustín y Chelo dando una charla de ingeniería de software en Tafí Viejo',
     image: '/photos/agus-chelo-talk.webp',
     date: new Date(2023, 11, 24),
   },
