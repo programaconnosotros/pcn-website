@@ -63,7 +63,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 backgroundImage: "url('/pcn-header.webp')",
               }}
             />
-            <div className="absolute inset-0 z-0 bg-black/40 dark:bg-black/60" />
+            <div className="absolute inset-0 z-0 bg-black/60" />
 
             <div className="absolute right-4 top-4 z-20">
               <ThemeToggle />
@@ -78,7 +78,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 />
               </div>
 
-              <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl text-white dark:text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
+              <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
                 programaConNosotros
               </Heading1>
 
