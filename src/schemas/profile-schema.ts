@@ -11,6 +11,7 @@ export const profileSchema = z.object({
     .url({ message: 'La URL de LinkedIn debe ser válida' })
     .optional()
     .nullable(),
+  gitHubUrl: z.string().url({ message: 'La URL de GitHub debe ser válida' }).optional().nullable(),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),
