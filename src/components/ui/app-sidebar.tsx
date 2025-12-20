@@ -10,6 +10,7 @@ import {
   Laptop,
   LifeBuoy,
   Linkedin,
+  MessageSquare,
   ScrollText,
   Send,
   SquareTerminal,
@@ -44,6 +45,11 @@ const data = {
       url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: 'Foro',
+      url: '/foro',
+      icon: MessageSquare,
     },
     {
       title: 'Fotos',

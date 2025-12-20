@@ -28,6 +28,10 @@ model User {
   languages       UserLanguage[]
   comments        Comment[]
   likes           Like[]
+  posts           Post[]
+  postComments    PostComment[]
+  postLikes       PostLike[]
+  postCommentLikes PostCommentLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -143,4 +147,93 @@ model JobOffers {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id       String @id @default(cuid())
+  title    String
+  content  String
+  isPinned Boolean @default(false)
+  isLocked Boolean @default(false)
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  category   PostCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  comments   PostComment[]
+  likes      PostLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([createdAt])
+  @@index([isPinned])
+}
+
+model PostCategory {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  color       String // Color para el badge (ej: "bg-blue-500")
+  icon        String // Emoji o icono
+  slug        String @unique
+  
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostComment {
+  id      String @id @default(cuid())
+  content String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  parentComment   PostComment?  @relation("PostCommentToPostComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  replies         PostComment[] @relation("PostCommentToPostComment")
+
+  likes PostCommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model PostLike {
+  id     String @id @default(cuid())
+  userId String
+  postId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model PostCommentLike {
+  id        String @id @default(cuid())
+  userId    String
+  commentId String
+
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment PostComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
+  @@index([commentId])
 }
