@@ -14,6 +14,7 @@ type UserWithoutPassword = {
   }[];
   linkedinUrl: string | null;
   xAccountUrl: string | null;
+  gitHubUrl: string | null;
   countryOfOrigin: string | null;
   slogan: string | null;
   jobTitle: string | null;
@@ -37,8 +38,9 @@ export const getUsers = async (): Promise<UserWithoutPassword[]> => {
           logo: true,
         },
       },
-      linkedinUrl: true,
       xAccountUrl: true,
+      linkedinUrl: true,
+      gitHubUrl: true,
       countryOfOrigin: true,
       slogan: true,
       jobTitle: true,

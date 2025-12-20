@@ -111,6 +111,7 @@ export const ProfileForm = ({
       countryOfOrigin: user.countryOfOrigin ?? '',
       xAccountUrl: user.xAccountUrl ?? '',
       linkedinUrl: user.linkedinUrl ?? '',
+      gitHubUrl: user.linkedinUrl ?? '',
       programmingLanguages: languages || [],
     },
   });
@@ -212,6 +213,12 @@ export const ProfileForm = ({
             <Label htmlFor="linkedinUrl">URL de cuenta de LinkedIn</Label>
             <Input id="linkedinUrl" type="url" {...form.register('linkedinUrl')} />
             <FormError error={form.formState.errors.linkedinUrl} />
+          </div>
+
+        <div className="space-y-2">
+            <Label htmlFor="gitHubUrl">URL de cuenta de GitHub</Label>
+            <Input id="gitHubUrl" type="url" {...form.register('gitHubUrl')} />
+            <FormError error={form.formState.errors.gitHubUrl} />
           </div>
         </div>
 

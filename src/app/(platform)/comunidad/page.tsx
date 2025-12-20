@@ -39,6 +39,7 @@ type UserWithoutPassword = {
   }[];
   linkedinUrl: string | null;
   xAccountUrl: string | null;
+  gitHubUrl: string | null;
   countryOfOrigin: string | null;
   slogan: string | null;
   jobTitle: string | null;

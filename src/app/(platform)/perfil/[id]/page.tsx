@@ -1,11 +1,12 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { GitHubSVG } from '@/components/logos/GitHubSVG';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
-import { Linkedin, Pencil, Twitter } from 'lucide-react';
+import { Github, Linkedin, Pencil, Twitter } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -29,6 +30,7 @@ async function getUser(id: string) {
         countryOfOrigin: true,
         xAccountUrl: true,
         linkedinUrl: true,
+        gitHubUrl: true,
         advises: {
           orderBy: {
             createdAt: 'desc',
@@ -121,6 +123,17 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 aria-label={`Perfil de LinkedIn de ${user.name}`}
               >
                 <Linkedin className="h-5 w-5" />
+              </a>
+            )}
+            {user.gitHubUrl && (
+              <a
+                href={user.gitHubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-blue-500 hover:underline"
+                aria-label={`Perfil de GitHub de ${user.name}`}
+              >
+                <Github className="h-5 w-5" />
               </a>
             )}
           </div>
