@@ -11,6 +11,7 @@ import {
   Laptop,
   LifeBuoy,
   Linkedin,
+  MicVocal,
   ScrollText,
   Send,
   SquareTerminal,
@@ -55,6 +56,11 @@ const data = {
       title: 'Charlas',
       url: '/charlas',
       icon: BookOpen,
+    },
+    {
+      title: 'Podcast',
+      url: '/podcast',
+      icon: MicVocal,
     },
     {
       title: 'Historia',
