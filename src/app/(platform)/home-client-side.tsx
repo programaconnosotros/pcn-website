@@ -173,7 +173,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 preserveAspectRatio="none"
               >
                 <path
-                  d="M 0,8 L 12,1 L 24,7 L 36,0 L 48,6 L 60,1 L 72,8 L 84,2 L 96,7 L 100,5"
+                  d="M 0,7 L 6,2 L 11,5 L 16,1 L 22,4 L 28,2 L 34,6 L 40,1 L 46,5 L 52,2 L 58,6 L 64,1 L 70,5 L 76,2 L 82,6 L 88,1 L 94,5 L 100,4"
                   stroke="#04f4be"
                   strokeWidth="2"
                   fill="none"
