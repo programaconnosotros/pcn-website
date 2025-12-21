@@ -65,6 +65,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 z-0 bg-black/70" />
 
+            <div className="relative z-10 mb-4 flex justify-center">
+              <img src="/logo.webp" alt="programaConNosotros" className="w-[50px] md:w-[80px]" />
+            </div>
+
             <Heading2 className="relative z-10 text-center text-white">
               {session?.user?.name ? (
                 <>
