@@ -193,7 +193,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Handshake className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -210,7 +210,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -229,7 +229,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Users className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -246,7 +246,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Brain className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -263,7 +263,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Globe className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -286,7 +286,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Calendar className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -303,7 +303,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Book className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -320,7 +320,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -337,7 +337,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Laptop className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -354,7 +354,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Star className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -371,7 +371,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <MessageSquare className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -388,7 +388,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Monitor className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
@@ -473,7 +473,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               body: 'PCN es mucho más que una comunidad de desarrollo. Es un espacio donde se comparte conocimiento, se hacen amigos, se organizan charlas y eventos.',
             },
           ].map((testimonio, index) => (
-            <Card key={index} className="flex flex-col">
+            <Card key={index} className="flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
@@ -505,7 +505,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
               <span className="text-2xl">💬</span>
@@ -521,7 +521,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
               <span className="text-2xl">💬</span>
@@ -537,7 +537,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
               <span className="text-2xl">📷</span>
@@ -553,7 +553,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
               <span className="text-2xl">▶️</span>
@@ -569,7 +569,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
               <Linkedin className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
