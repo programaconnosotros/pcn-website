@@ -127,7 +127,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Podés encontrar y compartir consejos con la comunidad. Queremos armar uno de los
-              mejores repositorios de consejos sobre ingeniería de software en internet 💡
+              mejores repositorios de consejos sobre ingeniería de software en internet.
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
@@ -145,7 +145,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">Charlas</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Nos encanta dar charlas para compartir conocimiento 🤝. Tenemos una página para
+              Nos encanta dar charlas para compartir conocimiento. Tenemos una página para
               guardar el historial, las diapositivas y algunas charlas que quedaron grabadas.
             </Paragraph>
 
@@ -167,7 +167,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
-              áreas y de todos los niveles 🌎
+              áreas y de todos los niveles.
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
@@ -185,8 +185,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">Mentores</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              Podés encontrar mentores de primer nivel y también convertirte en uno y ayudar a
-              muchas personas 🫡
+              Podés encontrar mentores de primer nivel y también convertirte en uno para ayudar a
+              muchas personas en su crecimiento profesional.
             </Paragraph>
 
             <Link href="/mentores" className="relative z-10">
@@ -205,7 +205,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Muy seguido estamos compartiendo oportunidades soñadas para crecer en la industria del
-              software 🚀
+              software y avanzar en tu carrera profesional.
             </Paragraph>
 
             <div className="flex flex-col gap-2 md:flex-row">
@@ -228,7 +228,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Paragraph className="relative z-10 text-center">
               Podés participar y organizar muchos eventos técnicos en los que podes aprender mucho,
-              compartir tu conocimiento y conocer personas increíbles 🙌
+              compartir tu conocimiento y conocer personas increíbles.
             </Paragraph>
 
             <Link href="/eventos" className="relative z-10">
