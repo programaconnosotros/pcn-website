@@ -74,10 +74,11 @@ const books: Book[] = [
   },
   {
     id: '5',
-    title: 'You Don\'t Know JS',
+    title: "You Don't Know JS",
     author: 'Kyle Simpson',
     category: 'Programación',
-    description: 'Serie de libros que profundiza en los mecanismos internos del lenguaje JavaScript.',
+    description:
+      'Serie de libros que profundiza en los mecanismos internos del lenguaje JavaScript.',
   },
   {
     id: '6',
@@ -108,7 +109,10 @@ const books: Book[] = [
   },
 ];
 
-const categories = ['Todas las categorías', ...Array.from(new Set(books.map((book) => book.category)))];
+const categories = [
+  'Todas las categorías',
+  ...Array.from(new Set(books.map((book) => book.category))),
+];
 
 const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,7 +125,8 @@ const ReadingPage = () => {
         book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
         book.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesCategory = selectedCategory === 'Todas las categorías' || book.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === 'Todas las categorías' || book.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
@@ -151,7 +156,7 @@ const ReadingPage = () => {
             <Heading2 className="m-0">Lectura</Heading2>
           </div>
 
-          <div className="mb-6 rounded-lg border bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 p-6">
+          <div className="mb-6 rounded-lg border bg-gradient-to-r from-neutral-100 to-neutral-50 p-6 dark:from-neutral-800 dark:to-neutral-900">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
                 <BookOpen className="h-8 w-8 text-primary" />
@@ -160,8 +165,8 @@ const ReadingPage = () => {
                 <h3 className="mb-2 text-xl font-semibold">Club de Lectura PCN</h3>
                 <p className="mb-4 text-muted-foreground">
                   En PCN tenemos un club de lectura donde compartimos y discutimos libros sobre
-                  programación, tecnología y desarrollo profesional. ¡Sumate al grupo de WhatsApp
-                  y participá de nuestras lecturas!
+                  programación, tecnología y desarrollo profesional. ¡Sumate al grupo de WhatsApp y
+                  participá de nuestras lecturas!
                 </p>
                 <div>
                   <Link
@@ -258,4 +263,3 @@ const ReadingPage = () => {
 };
 
 export default ReadingPage;
-

@@ -61,18 +61,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 unoptimized
               />
             </div>
-            
+
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 z-0 bg-black/70" />
-            
+
             <Heading2 className="relative z-10 text-center text-white">
-              {session?.user?.name
-                ? (
-                    <>
-                      Hola <span className="text-pcnGreen">{session.user.name.split(' ')[0]}</span>! Gracias por ser parte de la comunidad.
-                    </>
-                  )
-                : 'Hola!'}
+              {session?.user?.name ? (
+                <>
+                  Hola <span className="text-pcnGreen">{session.user.name.split(' ')[0]}</span>!
+                  Gracias por ser parte de la comunidad.
+                </>
+              ) : (
+                'Hola!'
+              )}
             </Heading2>
 
             {/* <div className="hidden md:block">
@@ -151,9 +152,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button>
-                Ver consejos
-              </Button>
+              <Button>Ver consejos</Button>
             </Link>
           </div>
 
@@ -165,15 +164,13 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">Charlas</Heading3>
 
             <Paragraph className="relative z-10 text-center text-muted-foreground">
-              Nos encanta dar charlas para compartir conocimiento. Tenemos una página para
-              guardar el historial, las diapositivas y algunas charlas que quedaron grabadas.
+              Nos encanta dar charlas para compartir conocimiento. Tenemos una página para guardar
+              el historial, las diapositivas y algunas charlas que quedaron grabadas.
             </Paragraph>
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button>
-                  Ver charlas
-                </Button>
+                <Button>Ver charlas</Button>
               </Link>
             </div>
           </div>
@@ -191,9 +188,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button>
-                Conocer a la comunidad
-              </Button>
+              <Button>Conocer a la comunidad</Button>
             </Link>
           </div>
 
@@ -210,9 +205,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/mentores" className="relative z-10">
-              <Button>
-                Conocer mentores
-              </Button>
+              <Button>Conocer mentores</Button>
             </Link>
           </div>
 
@@ -252,14 +245,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/eventos" className="relative z-10">
-              <Button>
-                Ver eventos
-              </Button>
+              <Button>Ver eventos</Button>
             </Link>
           </div>
         </div>
 
-        <div className="text-center -mx-6 w-[calc(100%+3rem)]">
+        <div className="-mx-6 w-[calc(100%+3rem)] text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
 
@@ -281,7 +272,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="text-center -mx-6 w-[calc(100%+3rem)]">
+        <div className="-mx-6 w-[calc(100%+3rem)] text-center">
           <div className="group relative">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
 
@@ -311,7 +302,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
@@ -372,8 +363,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading3 className="relative z-10">LinkedIn</Heading3>
 
             <Paragraph className="relative z-10 text-center">
-              En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu
-              carrera laboral como justificación de tu gran pasión por el software 💪
+              En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu carrera
+              laboral como justificación de tu gran pasión por el software 💪
             </Paragraph>
 
             <Link
@@ -387,7 +378,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Link>
           </div>
         </div>
-        
+
         <SponsorsSection />
       </motion.div>
     </motion.div>

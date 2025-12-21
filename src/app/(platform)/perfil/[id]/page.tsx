@@ -105,70 +105,70 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-              <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
-            </Avatar>
+            <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                  <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
+                </Avatar>
 
-            <div>
-              <h1 className="text-2xl font-bold">{user.name}</h1>
-              {isOwnProfile && (
-                <Link href="/perfil">
-                  <Button
-                    variant="link"
-                    className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
+                <div>
+                  <h1 className="text-2xl font-bold">{user.name}</h1>
+                  {isOwnProfile && (
+                    <Link href="/perfil">
+                      <Button
+                        variant="link"
+                        className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
+                      >
+                        <Pencil className="h-3 w-3" />
+                        <span>Editar perfil</span>
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {user.xAccountUrl && (
+                  <a
+                    href={user.xAccountUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-blue-500 hover:underline"
+                    aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
                   >
-                    <Pencil className="h-3 w-3" />
-                    <span>Editar perfil</span>
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </div>
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                )}
 
-          <div className="space-y-2">
-            {user.xAccountUrl && (
-              <a
-                href={user.xAccountUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
-                aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-            )}
+                {user.linkedinUrl && (
+                  <a
+                    href={user.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-blue-500 hover:underline"
+                    aria-label={`Perfil de LinkedIn de ${user.name}`}
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </a>
+                )}
+              </div>
+            </CardHeader>
 
-            {user.linkedinUrl && (
-              <a
-                href={user.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
-                aria-label={`Perfil de LinkedIn de ${user.name}`}
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-            )}
-          </div>
-        </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <h2 className="font-semibold">País de origen</h2>
+                  <p>{user.countryOfOrigin || '-'}</p>
+                </div>
 
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <h2 className="font-semibold">País de origen</h2>
-              <p>{user.countryOfOrigin || '-'}</p>
-            </div>
-
-            <div>
-              <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
-              <LanguageCoinsContainer languages={userLanguages} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                <div>
+                  <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
+                  <LanguageCoinsContainer languages={userLanguages} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="mt-8">
             <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>

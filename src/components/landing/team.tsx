@@ -1,4 +1,4 @@
-import { Heading3 } from "../ui/heading-3";
+import { Heading3 } from '../ui/heading-3';
 
 type Person = {
   name: string;
@@ -174,7 +174,7 @@ const people: Person[] = [
 export const Team = () => (
   <div className="py-8">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <Heading3>Team de desarrollo del website</Heading3>
+      <Heading3>Team de desarrollo del website</Heading3>
 
       <ul
         role="list"
@@ -189,28 +189,28 @@ export const Team = () => (
                 rel="noopener noreferrer"
                 className="block cursor-pointer"
               >
-                <div className="relative overflow-hidden aspect-square">
+                <div className="relative aspect-square overflow-hidden">
                   <img
                     alt={person.name}
                     src={person.imageUrl}
                     className="h-full w-full object-cover transition-all duration-300"
                   />
-                  <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-4">
-                    <h3 className="text-white text-lg font-bold mb-1">{person.name}</h3>
-                    <div className="text-white text-sm">{person.role}</div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <h3 className="mb-1 text-lg font-bold text-white">{person.name}</h3>
+                    <div className="text-sm text-white">{person.role}</div>
                   </div>
                 </div>
               </a>
             ) : (
-              <div className="relative overflow-hidden aspect-square">
+              <div className="relative aspect-square overflow-hidden">
                 <img
                   alt={person.name}
                   src={person.imageUrl}
                   className="h-full w-full object-cover transition-all duration-300"
                 />
-                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-4">
-                  <h3 className="text-white text-lg font-bold mb-1">{person.name}</h3>
-                  <div className="text-white text-sm">{person.role}</div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <h3 className="mb-1 text-lg font-bold text-white">{person.name}</h3>
+                  <div className="text-sm text-white">{person.role}</div>
                 </div>
               </div>
             )}

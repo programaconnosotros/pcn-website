@@ -5,7 +5,7 @@ import ASZSoftwareLogo from './asz-software-logo';
 import BoweryLogo from './bowery-logo';
 
 export const MainSponsorCard = () => (
-  <div className="-mx-6 flex flex-col gap-4 w-[calc(100%+3rem)]">
+  <div className="-mx-6 flex w-[calc(100%+3rem)] flex-col gap-4">
     <Link
       href="https://asz.software"
       target="_blank"
@@ -15,7 +15,7 @@ export const MainSponsorCard = () => (
     >
       <ASZSoftwareLogo />
     </Link>
-    
+
     <Link
       href="https://bowerystudio.co/en/"
       target="_blank"

@@ -82,10 +82,10 @@ const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
 
           {!course.isMadeByCommunity && (
             <p className="mt-4 text-sm text-muted-foreground">
-              Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente en
-              YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos el curso
-              aquí para que las ganancias y estadísticas de ver el video, sean para el autor original
-              del curso.
+              Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
+              en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
+              el curso aquí para que las ganancias y estadísticas de ver el video, sean para el
+              autor original del curso.
             </p>
           )}
         </div>

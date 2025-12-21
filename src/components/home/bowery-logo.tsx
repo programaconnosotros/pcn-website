@@ -1,7 +1,10 @@
 import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const BoweryLogo = () => (
-  <div className="flex w-full flex-col items-center bg-black py-10 !border-0" style={{ border: 'none' }}>
+  <div
+    className="flex w-full flex-col items-center !border-0 bg-black py-10"
+    style={{ border: 'none' }}
+  >
     <div className="mb-4 mt-4 flex flex-row items-center">
       <img src="/bowery-logo.webp" alt="Bowery" className="h-12" />
 
@@ -18,4 +21,3 @@ const BoweryLogo = () => (
 );
 
 export default BoweryLogo;
-

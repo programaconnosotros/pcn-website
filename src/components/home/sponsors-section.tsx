@@ -8,12 +8,10 @@ export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
       <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 text-center">
-          Organizaciones que nos apoyan 
-        </Heading2>
+        <Heading2 className="relative z-10 text-center">Organizaciones que nos apoyan</Heading2>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-6">
+
+      <div className="grid grid-cols-1 gap-8 px-6 md:grid-cols-2">
         {/* ASZ Software */}
         <Link
           href="https://asz.software"
@@ -73,7 +71,7 @@ export const SponsorsSection = () => {
           className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
         >
           <div className="mb-4 flex flex-col items-center">
-            <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-xl font-bold text-transparent md:text-2xl text-center">
+            <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-xl font-bold text-transparent md:text-2xl">
               IEEE Computer Society
             </h1>
           </div>
@@ -86,4 +84,3 @@ export const SponsorsSection = () => {
     </div>
   );
 };
-

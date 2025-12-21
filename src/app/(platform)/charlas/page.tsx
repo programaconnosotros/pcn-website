@@ -63,101 +63,101 @@ const Talks = () => (
           </div>
         </div>
 
-    <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
-      {talks
-        .sort((a, b) => b.date.getTime() - a.date.getTime())
-        .map((talk, index) => (
-          <Card key={index} className="flex flex-col overflow-hidden md:flex-row">
-            {talk.portrait && (
-              <div className="relative h-48 w-full shrink-0 md:h-auto md:w-64">
-                <img
-                  src={talk.portrait}
-                  alt={`${talk.speakerName}'s photo`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            )}
-
-            <div className="flex flex-1 flex-col">
-              <CardHeader>
-                <CardTitle className="text-lg">{talk.name}</CardTitle>
-              </CardHeader>
-
-              <CardContent className="flex-1">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
-                </div>
-
-                <div className="mt-2 flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(talk.date)
-                      .toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })
-                      .replace(/\//g, '/')}
-                  </p>
-                </div>
-
-                {talk.location && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <p className="text-sm text-muted-foreground">{talk.location}</p>
+        <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
+          {talks
+            .sort((a, b) => b.date.getTime() - a.date.getTime())
+            .map((talk, index) => (
+              <Card key={index} className="flex flex-col overflow-hidden md:flex-row">
+                {talk.portrait && (
+                  <div className="relative h-48 w-full shrink-0 md:h-auto md:w-64">
+                    <img
+                      src={talk.portrait}
+                      alt={`${talk.speakerName}'s photo`}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 )}
-              </CardContent>
 
-              <CardFooter className="mt-auto flex flex-col items-start gap-2">
-                {talk.youtubeUrl && (
-                  <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
-                    <Button className="flex items-center gap-2" variant="youtube">
-                      Ver en YouTube
-                      <Youtube className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                )}
+                <div className="flex flex-1 flex-col">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{talk.name}</CardTitle>
+                  </CardHeader>
 
-                {talk.slides && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="flex items-center gap-2" variant="outline">
-                        Ver slides
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                    </DialogTrigger>
+                  <CardContent className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
+                    </div>
 
-                    <DialogContent className="max-w-4xl px-16">
-                      <DialogHeader>
-                        <DialogTitle>{talk.name}</DialogTitle>
-                      </DialogHeader>
+                    <div className="mt-2 flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(talk.date)
+                          .toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })
+                          .replace(/\//g, '/')}
+                      </p>
+                    </div>
 
-                      <Carousel>
-                        <CarouselContent>
-                          {talk.slides.map((slide, index) => (
-                            <CarouselItem key={index}>
-                              <img
-                                key={index}
-                                src={slide}
-                                alt={`Slide ${index + 1}`}
-                                className="h-auto w-full"
-                              />
-                            </CarouselItem>
-                          ))}
-                        </CarouselContent>
+                    {talk.location && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <p className="text-sm text-muted-foreground">{talk.location}</p>
+                      </div>
+                    )}
+                  </CardContent>
 
-                        <CarouselPrevious />
-                        <CarouselNext />
-                      </Carousel>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              </CardFooter>
-            </div>
-          </Card>
-        ))}
+                  <CardFooter className="mt-auto flex flex-col items-start gap-2">
+                    {talk.youtubeUrl && (
+                      <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
+                        <Button className="flex items-center gap-2" variant="youtube">
+                          Ver en YouTube
+                          <Youtube className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    )}
+
+                    {talk.slides && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button className="flex items-center gap-2" variant="outline">
+                            Ver slides
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+
+                        <DialogContent className="max-w-4xl px-16">
+                          <DialogHeader>
+                            <DialogTitle>{talk.name}</DialogTitle>
+                          </DialogHeader>
+
+                          <Carousel>
+                            <CarouselContent>
+                              {talk.slides.map((slide, index) => (
+                                <CarouselItem key={index}>
+                                  <img
+                                    key={index}
+                                    src={slide}
+                                    alt={`Slide ${index + 1}`}
+                                    className="h-auto w-full"
+                                  />
+                                </CarouselItem>
+                              ))}
+                            </CarouselContent>
+
+                            <CarouselPrevious />
+                            <CarouselNext />
+                          </Carousel>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </CardFooter>
+                </div>
+              </Card>
+            ))}
         </div>
       </div>
     </div>
