@@ -12,6 +12,9 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, SquareTerminal, UserPlus, Calendar, CalendarCheck } from 'lucide-react';
+import { formatDate } from '@/lib/utils';
 
 const DashboardPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -27,6 +30,106 @@ const DashboardPage = async () => {
       },
     });
   }
+
+  // Obtener estadísticas
+  const now = new Date();
+  const oneMonthAgo = new Date(now);
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+  const [
+    totalUsers,
+    totalAdvises,
+    newUsersLastMonth,
+    newAdvisesLastMonth,
+    pastEvents,
+    upcomingEvents,
+    usersList,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.advise.count(),
+    prisma.user.count({
+      where: {
+        createdAt: {
+          gte: oneMonthAgo,
+        },
+      },
+    }),
+    prisma.advise.count({
+      where: {
+        createdAt: {
+          gte: oneMonthAgo,
+        },
+      },
+    }),
+    prisma.event.count({
+      where: {
+        date: {
+          lt: now,
+        },
+      },
+    }),
+    prisma.event.count({
+      where: {
+        date: {
+          gte: now,
+        },
+      },
+    }),
+    prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        jobTitle: true,
+        enterprise: true,
+        countryOfOrigin: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 50, // Limitar a 50 usuarios para no sobrecargar
+    }),
+  ]);
+
+  const stats = [
+    {
+      title: 'Total de Usuarios',
+      value: totalUsers,
+      icon: Users,
+      description: 'Usuarios registrados',
+    },
+    {
+      title: 'Total de Consejos',
+      value: totalAdvises,
+      icon: SquareTerminal,
+      description: 'Consejos compartidos',
+    },
+    {
+      title: 'Usuarios Nuevos',
+      value: newUsersLastMonth,
+      icon: UserPlus,
+      description: 'Último mes',
+    },
+    {
+      title: 'Consejos Nuevos',
+      value: newAdvisesLastMonth,
+      icon: SquareTerminal,
+      description: 'Último mes',
+    },
+    {
+      title: 'Eventos Pasados',
+      value: pastEvents,
+      icon: Calendar,
+      description: 'Eventos realizados',
+    },
+    {
+      title: 'Eventos Próximos',
+      value: upcomingEvents,
+      icon: CalendarCheck,
+      description: 'Eventos por venir',
+    },
+  ];
 
   return (
     <>
@@ -55,8 +158,72 @@ const DashboardPage = async () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center py-12">
-            <p className="text-center text-lg text-muted-foreground">Proximamente</p>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={stat.title}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="mt-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Usuarios</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Nombre
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Email
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Trabajo
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          País
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Fecha de Registro
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {usersList.map((user) => (
+                        <tr key={user.id} className="border-b hover:bg-muted/50">
+                          <td className="px-4 py-3 text-sm">{user.name || '-'}</td>
+                          <td className="px-4 py-3 text-sm">{user.email}</td>
+                          <td className="px-4 py-3 text-sm">
+                            {user.jobTitle && user.enterprise
+                              ? `${user.jobTitle} en ${user.enterprise}`
+                              : user.jobTitle || user.enterprise || '-'}
+                          </td>
+                          <td className="px-4 py-3 text-sm">{user.countryOfOrigin || '-'}</td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
+                            {formatDate(user.createdAt)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
