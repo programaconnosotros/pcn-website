@@ -125,7 +125,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Podés encontrar y compartir consejos con la comunidad. Queremos armar uno de los
               mejores repositorios de consejos sobre ingeniería de software en internet.
             </Paragraph>
@@ -144,7 +144,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Charlas</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Nos encanta dar charlas para compartir conocimiento. Tenemos una página para
               guardar el historial, las diapositivas y algunas charlas que quedaron grabadas.
             </Paragraph>
@@ -165,7 +165,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
               áreas y de todos los niveles.
             </Paragraph>
@@ -184,7 +184,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Podés encontrar mentores de primer nivel y también convertirte en uno para ayudar a
               muchas personas en su crecimiento profesional.
             </Paragraph>
@@ -203,7 +203,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Oportunidades</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Muy seguido estamos compartiendo oportunidades soñadas para crecer en la industria del
               software y avanzar en tu carrera profesional.
             </Paragraph>
@@ -226,7 +226,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
-            <Paragraph className="relative z-10 text-center">
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
               Podés participar y organizar muchos eventos técnicos en los que podes aprender mucho,
               compartir tu conocimiento y conocer personas increíbles.
             </Paragraph>
