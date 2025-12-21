@@ -9,7 +9,7 @@ const sponsors = [
     name: 'ASZ Software',
     url: 'https://asz.software',
     logo: '/asz-software-logo-2.webp',
-    description: 'Estudio de ingeniería de software de alta calidad.',
+    description: 'Estudio de software.',
     location: 'Tucumán, Argentina',
     hasLogo: true,
   },
@@ -17,7 +17,7 @@ const sponsors = [
     name: 'Bowery',
     url: 'https://bowerystudio.co/en/',
     logo: '/bowery-logo.webp',
-    description: 'Escuadrones de élite para innovación disruptiva.',
+    description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
     location: 'Buenos Aires, Argentina',
     hasLogo: true,
     showName: false,
@@ -26,7 +26,7 @@ const sponsors = [
     name: 'Eagerworks',
     url: 'https://eagerworks.com/',
     logo: '/eagerworks-white-logo.svg',
-    description: 'Construyendo soluciones de software excepcionales.',
+    description: 'Agencia de diseño y desarrollo de software.',
     location: 'Montevideo, Uruguay',
     hasLogo: true,
     showName: false,
@@ -70,7 +70,7 @@ export const SponsorsSection = () => {
             rel="noopener noreferrer"
             className="group block"
           >
-            <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
+            <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-neutral-950 dark:border-neutral-900">
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div className={`mb-4 flex h-16 w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' ? 'rounded-lg bg-black p-2' : ''}`}>
