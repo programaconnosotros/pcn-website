@@ -3,6 +3,17 @@ import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Heading2 } from '@/components/ui/heading-2';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { ExternalLink, Search, X } from 'lucide-react';
 import Image from 'next/image';
@@ -254,19 +265,40 @@ const softwareRecommendations = [
 
 export default function SoftwareRecommendationsPage() {
   return (
-    <div className="mt-4 md:px-20">
-      <div className="mb-8">
-        <div className="mb-2 flex items-center space-x-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Software recomendado</h1>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Software recomendado</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <Heading2 className="m-0">Software recomendado</Heading2>
+          </div>
 
-        <p className="text-gray-600">
-          Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si queres
-          sumar alguno, avisá!
-        </p>
+          <div className="mb-6">
+            <p className="text-muted-foreground">
+              Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si queres
+              sumar alguno, avisá!
+            </p>
+          </div>
+
+          <RecommendationsList recommendations={softwareRecommendations} />
+        </div>
       </div>
-
-      <RecommendationsList recommendations={softwareRecommendations} />
-    </div>
+    </>
   );
 }
