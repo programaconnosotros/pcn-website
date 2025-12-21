@@ -196,8 +196,7 @@ export const Team = () => (
                     className="h-full w-full object-cover transition-all duration-300 grayscale group-hover:grayscale-0"
                   />
                   <div 
-                    className="absolute inset-0 mix-blend-color transition-opacity duration-300 group-hover:opacity-0"
-                    style={{ backgroundColor: '#04f4be', opacity: 0.4 }}
+                    className="absolute inset-0 mix-blend-color bg-pcnPurple/40 transition-opacity duration-300 group-hover:opacity-0 dark:bg-pcnGreen/40"
                   />
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <h3 className="text-lg font-bold text-white">{person.name}</h3>
