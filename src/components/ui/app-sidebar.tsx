@@ -46,7 +46,7 @@ const data = {
       isActive: true,
     },
     {
-      title: 'Fotos',
+      title: 'Galería',
       url: '/galeria',
       icon: Image,
     },
