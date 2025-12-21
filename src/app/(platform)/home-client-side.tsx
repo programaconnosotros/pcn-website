@@ -2,7 +2,7 @@
 
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { Heading2 } from '@/components/ui/heading-2';
-import { MainSponsorCard } from '@components/home/main-sponsor-card';
+import { SponsorsSection } from '@components/home/sponsors-section';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Team } from '@components/landing/team';
 import { Session, User } from '@prisma/client';
@@ -388,7 +388,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
         
-        <MainSponsorCard />
+        <SponsorsSection />
       </motion.div>
     </motion.div>
   );
