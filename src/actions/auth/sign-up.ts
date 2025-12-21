@@ -33,5 +33,5 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365,
   });
 
-  redirect('/');
+  redirect('/home');
 };
