@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
@@ -29,15 +29,7 @@ const PlatformLayout = async ({
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar user={user} />
 
-      <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
-        <SidebarTrigger />
-        <span className="text-sm font-semibold">programaConNosotros</span>
-      </div>
-
-      <main className="relative w-full">
-        <SidebarTrigger className="absolute z-50 hidden md:left-6 md:top-6 md:block" />
-        <div className="mx-auto max-w-7xl">{children}</div>
-      </main>
+      <SidebarInset className="px-6">{children}</SidebarInset>
     </SidebarProvider>
   );
 };
