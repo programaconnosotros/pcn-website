@@ -35,6 +35,8 @@ import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Quote } from 'lucide-react';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -449,6 +451,49 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <InviteDevsToWork />
         <Team />
+
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center">
+            Lo que dicen nuestros miembros
+          </Heading2>
+        </div>
+
+        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {[
+            {
+              name: 'Emiliano Grillo',
+              body: 'PCN es una comunidad llena de potencial, con gente que le gusta aprender, compartir y enseñar lo aprendido, donde te podes sentir libre de preguntar sin sentir presiones o miedos.',
+            },
+            {
+              name: 'Mateo Herrera',
+              body: 'PCN es un espacio donde las personas comparten generosamente sus conocimientos, se apoyan mutuamente y crecen juntas en el mundo de la programación.',
+            },
+            {
+              name: 'Vicky Grillo',
+              body: 'PCN es mucho más que una comunidad de desarrollo. Es un espacio donde se comparte conocimiento, se hacen amigos, se organizan charlas y eventos.',
+            },
+          ].map((testimonio, index) => (
+            <Card key={index} className="flex flex-col">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Quote className="h-5 w-5 text-pcnGreen" />
+                  <h3 className="text-lg font-semibold">{testimonio.name}</h3>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{testimonio.body}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mb-6 flex justify-center">
+          <Link href="/testimonios">
+            <Button variant="outline">
+              Ver todos los testimonios
+            </Button>
+          </Link>
+        </div>
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">
