@@ -59,7 +59,7 @@ export const SponsorsSection = () => {
             <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
-                  <div className="mb-4 flex h-16 w-full items-center justify-center">
+                  <div className={`mb-4 flex h-16 w-full items-center justify-center ${sponsor.name === 'Eagerworks' ? 'rounded-lg bg-black p-2' : ''}`}>
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
