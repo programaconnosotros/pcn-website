@@ -4,6 +4,16 @@ import { LanguageCoinsContainer } from '@/components/profile/language-coins-cont
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import prisma from '@/lib/prisma';
 import { Linkedin, Pencil, Twitter } from 'lucide-react';
 import Link from 'next/link';
@@ -74,8 +84,27 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const isOwnProfile = session?.user?.id === params.id;
 
   return (
-    <div className="mt-4 md:max-w-screen-xl md:px-20">
-      <Card>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{user.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
@@ -141,18 +170,20 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </CardContent>
       </Card>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
-        {user.advises.length === 0 ? (
-          <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
-        ) : (
-          <div className="space-y-4">
-            {user.advises.map((advise) => (
-              <AdviseCard key={advise.id} session={session} advise={advise} />
-            ))}
+          <div className="mt-8">
+            <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
+            {user.advises.length === 0 ? (
+              <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
+            ) : (
+              <div className="space-y-4">
+                {user.advises.map((advise) => (
+                  <AdviseCard key={advise.id} session={session} advise={advise} />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
