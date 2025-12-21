@@ -67,7 +67,11 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             
             <Heading2 className="relative z-10 text-center text-white">
               {session?.user?.name
-                ? `Hola ${session.user.name.split(' ')[0]}! Gracias por ser parte de la comunidad.`
+                ? (
+                    <>
+                      Hola <span className="text-pcnGreen">{session.user.name.split(' ')[0]}</span>! Gracias por ser parte de la comunidad.
+                    </>
+                  )
                 : 'Hola!'}
             </Heading2>
 
