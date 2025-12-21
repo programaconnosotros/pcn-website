@@ -135,16 +135,17 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="flex justify-center -mt-12 z-10 mb-6">
             <div 
-              className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-gradient-to-r from-[#c8f4eb] to-[#d9f9f2] p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]"
+              className="group relative w-full max-w-4xl rounded-lg bg-gradient-to-r from-[#c8f4eb] to-[#d9f9f2] p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]"
             >
             <div 
-              className="absolute inset-0 opacity-10 dark:opacity-5"
+              className="absolute inset-0 opacity-10 dark:opacity-5 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:group-hover:opacity-8"
               style={{
                 backgroundImage: "url('/logo.webp')",
                 backgroundSize: 'contain',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 filter: 'grayscale(100%)',
+                transform: 'scale(1)',
               }}
             />
             <div className="relative z-10 flex flex-col items-center">
