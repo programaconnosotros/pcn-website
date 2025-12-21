@@ -24,6 +24,21 @@ export function TableOfContents() {
   const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
+    // Check for hash in URL on mount
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.slice(1);
+      if (hash && sections.some((s) => s.id === hash)) {
+        setActiveSection(hash);
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+          const element = document.getElementById(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    }
+
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
 
@@ -57,6 +72,7 @@ export function TableOfContents() {
             href={`#${section.id}`}
             onClick={(e) => {
               e.preventDefault();
+              setActiveSection(section.id);
               const element = document.getElementById(section.id);
               if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
