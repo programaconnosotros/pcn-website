@@ -9,33 +9,47 @@ const sponsors = [
     name: 'ASZ Software',
     url: 'https://asz.software',
     logo: '/asz-software-logo-2.webp',
-    description: 'Top-quality software engineering studio.',
+    description: 'Estudio de ingeniería de software de alta calidad.',
+    location: 'Tucumán, Argentina',
     hasLogo: true,
   },
   {
     name: 'Bowery',
     url: 'https://bowerystudio.co/en/',
     logo: '/bowery-logo.webp',
-    description: 'Elite squads for disruptive innovation.',
+    description: 'Escuadrones de élite para innovación disruptiva.',
+    location: 'Buenos Aires, Argentina',
     hasLogo: true,
+    showName: false,
   },
   {
     name: 'Eagerworks',
     url: 'https://eagerworks.com/',
     logo: '/eagerworks-white-logo.svg',
-    description: 'Building exceptional software solutions.',
+    description: 'Construyendo soluciones de software excepcionales.',
+    location: 'Montevideo, Uruguay',
     hasLogo: true,
+    showName: false,
   },
   {
     name: 'IEEE Computer Society',
     url: 'https://www.computer.org/',
-    description: 'Advancing computing as a science and profession.',
+    description: 'Avanzando en la computación como ciencia y profesión.',
+    location: 'Buenos Aires, Argentina',
     hasLogo: false,
   },
   {
     name: 'Endpoint Consulting',
     url: 'https://www.instagram.com/endpointconsulting/',
     description: 'Expertos en seguridad informática y consultoría tecnológica.',
+    location: 'Tucumán, Argentina',
+    hasLogo: false,
+  },
+  {
+    name: 'UTN-FRT',
+    url: 'https://www.frt.utn.edu.ar/',
+    description: 'Universidad de ingeniería',
+    location: 'Tucumán, Argentina',
     hasLogo: false,
   },
 ];
@@ -73,7 +87,7 @@ export const SponsorsSection = () => {
                     </h3>
                   </div>
                 )}
-                {sponsor.hasLogo && (
+                {sponsor.hasLogo && sponsor.showName !== false && (
                   <h3 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white md:text-xl">
                     {sponsor.name}
                   </h3>
@@ -81,6 +95,11 @@ export const SponsorsSection = () => {
                 <p className="text-sm text-muted-foreground dark:text-neutral-400 md:text-base">
                   {sponsor.description}
                 </p>
+                {sponsor.location && (
+                  <p className="mt-2 text-xs text-muted-foreground dark:text-neutral-500">
+                    {sponsor.location}
+                  </p>
+                )}
               </CardContent>
             </Card>
           </Link>
