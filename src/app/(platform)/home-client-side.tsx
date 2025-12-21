@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
 import {
+  Brain,
+  Calendar,
   Handshake,
   Images,
   Linkedin,
@@ -18,6 +20,7 @@ import {
   MonitorPlay,
   ScrollText,
   UserPlus,
+  Users,
 } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
 import Link from 'next/link';
@@ -32,7 +35,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="md:max-w-screen-xl md:px-20"
     >
       <GlassCardHover />
       <motion.div
@@ -45,14 +47,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         className="mb-6"
       >
         {session ? (
-          <div className="flex w-full flex-col items-center justify-center gap-2 p-4 md:p-2">
-            <Heading2>
-              {session?.user?.name ? `Hola ${session.user.name.split(' ')[0]}!` : 'Hola!'}
+          <div className="mb-6 flex w-full flex-col items-center justify-center gap-2 rounded-sm bg-neutral-100 p-4 dark:bg-neutral-900 md:p-12">
+            <Heading2 className="text-center">
+              {session?.user?.name
+                ? `Hola ${session.user.name.split(' ')[0]}! Gracias por ser parte de la comunidad 💪`
+                : 'Hola!'}
             </Heading2>
 
-            <div className="hidden md:block">
+            {/* <div className="hidden md:block">
               <MotivationalQuotes />
-            </div>
+            </div> */}
           </div>
         ) : (
           // Componente usuario no logueado
@@ -71,11 +75,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
-                <img
-                  src="/logo.webp"
-                  alt="programaConNosotros"
-                  className="w-[50px] md:w-[100px]"
-                />
+                <img src="/logo.webp" alt="programaConNosotros" className="w-[50px] md:w-[100px]" />
               </div>
 
               <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
@@ -111,8 +111,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         {/* TODO: Agregar sección de Lightning Talks */}
 
         <div className="flex items-center justify-center p-6">
-          <Heading2 className="relative z-10 text-center md:text-left">
-            El núcleo de la comunidad 💪
+          <Heading2 className="relative z-10 mb-6 text-center md:text-left">
+            Impulsá tu carrera con estos recursos 🚀
           </Heading2>
         </div>
 
@@ -159,6 +159,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
               áreas y de todos los niveles 🌎
             </Paragraph>
+
+            <Link href="/consejos" className="relative z-10">
+              <Button>
+                Conocer a la comunidad <Users className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
@@ -169,6 +175,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Podés encontrar mentores de primer nivel y también convertirte en uno y ayudar a
               muchas personas 🫡
             </Paragraph>
+
+            <Link href="/mentores" className="relative z-10">
+              <Button>
+                Conocer mentores <Brain className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
@@ -179,6 +191,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Muy seguido estamos compartiendo oportunidades soñadas para crecer en la industria del
               software 🚀
             </Paragraph>
+
+            <div className="flex flex-col gap-2 md:flex-row">
+              <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
+                <Button className="relative z-10 w-full md:w-auto">PCN en WhatsApp</Button>
+              </Link>
+
+              <Link href="https://discord.gg/dTQexKw56S" target="_blank">
+                <Button className="relative z-10 w-full md:w-auto">PCN en Discord</Button>
+              </Link>
+            </div>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
@@ -189,6 +211,12 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               Podés participar y organizar muchos eventos técnicos en los que podes aprender mucho,
               compartir tu conocimiento y conocer personas increíbles 🙌
             </Paragraph>
+
+            <Link href="/eventos" className="relative z-10">
+              <Button>
+                Ver eventos <Calendar className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
 
