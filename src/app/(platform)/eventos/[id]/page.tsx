@@ -8,6 +8,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import EventLocation from '@/components/events/event-location';
 import EventFlyer from '@/components/events/event-flyer';
 import EventDetails from '@/components/events/event-details';
@@ -35,46 +37,51 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
   return (
     <>
-      <Breadcrumb className="mt-4 md:px-20">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
-          </BreadcrumbItem>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{event.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mx-auto flex items-center justify-center">
+            <div className="w-full text-center">
+              <EventFlyer
+                name={event.name}
+                flyerSrc={event.flyerSrc}
+                date={event.date}
+                endDate={event.endDate}
+              />
 
-          <BreadcrumbSeparator />
+              <EventDetails description={event.description} />
 
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/events">Eventos</BreadcrumbLink>
-          </BreadcrumbItem>
+              <EventLocation
+                latitude={event.latitude}
+                longitude={event.longitude}
+                city={event.city}
+                address={event.address}
+                placeName={event.placeName}
+              />
 
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbPage>{event.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="mx-auto flex items-center justify-center px-6 py-8 md:px-2">
-        <div className="mt-4 w-[90vw] text-center md:w-[85vw]">
-          <EventFlyer
-            name={event.name}
-            flyerSrc={event.flyerSrc}
-            date={event.date}
-            endDate={event.endDate}
-          />
-
-          <EventDetails description={event.description} />
-
-          <EventLocation
-            latitude={event.latitude}
-            longitude={event.longitude}
-            city={event.city}
-            address={event.address}
-            placeName={event.placeName}
-          />
-
-          <EventPhotos images={event.images}></EventPhotos>
+              <EventPhotos images={event.images}></EventPhotos>
+            </div>
+          </div>
         </div>
       </div>
     </>
