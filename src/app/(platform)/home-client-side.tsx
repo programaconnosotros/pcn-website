@@ -67,7 +67,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             
             <Heading2 className="relative z-10 text-center text-white">
               {session?.user?.name
-                ? `Hola ${session.user.name.split(' ')[0]}! Gracias por ser parte de la comunidad 💪`
+                ? `Hola ${session.user.name.split(' ')[0]}! Gracias por ser parte de la comunidad.`
                 : 'Hola!'}
             </Heading2>
 
@@ -103,7 +103,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 La comunidad que necesitas para llevar tu carrera
                 <br className="hidden md:block" />
                 <span className="md:hidden"> </span>
-                en la industria del software al siguiente nivel! 🚀
+                en la industria del software al siguiente nivel!
               </p>
 
               <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:justify-center md:gap-2 md:px-0 md:py-6">
@@ -129,7 +129,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            Impulsá tu carrera con estos recursos 🚀
+            Impulsá tu carrera con estos recursos
           </Heading2>
         </div>
 
@@ -299,7 +299,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <InviteDevsToWork />
-        {/* <Team /> */}
+        <Team />
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">
