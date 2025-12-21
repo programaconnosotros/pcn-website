@@ -82,7 +82,7 @@ export const SponsorsSection = () => {
                   </div>
                 ) : (
                   <div className="mb-4 flex h-16 w-full items-center justify-center">
-                    <h3 className="text-2xl font-bold text-black dark:text-white md:text-3xl">
+                    <h3 className="text-xl font-bold text-black dark:text-white md:text-2xl">
                       {sponsor.name}
                     </h3>
                   </div>
