@@ -1,8 +1,44 @@
 'use client';
 
 import Link from 'next/link';
-import { TextGenerateEffect } from '../ui/text-generate-effect';
 import { Heading2 } from '../ui/heading-2';
+import { Card, CardContent } from '../ui/card';
+
+const sponsors = [
+  {
+    name: 'ASZ Software',
+    url: 'https://asz.software',
+    logo: '/asz-software-logo-2.webp',
+    description: 'Top-quality software engineering studio.',
+    hasLogo: true,
+  },
+  {
+    name: 'Bowery',
+    url: 'https://bowerystudio.co/en/',
+    logo: '/bowery-logo.webp',
+    description: 'Elite squads for disruptive innovation.',
+    hasLogo: true,
+  },
+  {
+    name: 'Eagerworks',
+    url: 'https://eagerworks.com/',
+    logo: '/eagerworks-white-logo.svg',
+    description: 'Building exceptional software solutions.',
+    hasLogo: true,
+  },
+  {
+    name: 'IEEE Computer Society',
+    url: 'https://www.computer.org/',
+    description: 'Advancing computing as a science and profession.',
+    hasLogo: false,
+  },
+  {
+    name: 'Endpoint Consulting',
+    url: 'https://www.instagram.com/endpointconsulting/',
+    description: 'Expertos en seguridad informática y consultoría tecnológica.',
+    hasLogo: false,
+  },
+];
 
 export const SponsorsSection = () => {
   return (
@@ -11,93 +47,44 @@ export const SponsorsSection = () => {
         <Heading2 className="relative z-10 text-center">Organizaciones que nos apoyan</Heading2>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 px-6 md:grid-cols-2">
-        {/* ASZ Software */}
-        <Link
-          href="https://asz.software"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
-        >
-          <div className="mb-4 flex flex-row items-center">
-            <img src="/asz-software-logo-2.webp" alt="ASZ Studio" className="h-12" />
-            <h1 className="ml-4 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-2xl font-bold text-transparent md:text-3xl">
-              ASZ Software
-            </h1>
-          </div>
-          <TextGenerateEffect
-            className="max-w-xl px-6 text-center text-base md:text-lg"
-            words={'Top-quality software engineering studio.'}
-          />
-        </Link>
-
-        {/* Bowery */}
-        <Link
-          href="https://bowerystudio.co/en/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
-        >
-          <div className="mb-4 flex flex-row items-center">
-            <img src="/bowery-logo.webp" alt="Bowery" className="h-12" />
-          </div>
-          <TextGenerateEffect
-            className="max-w-xl px-6 text-center text-base md:text-lg"
-            words={'Elite squads for disruptive innovation.'}
-          />
-        </Link>
-
-        {/* Eagerworks */}
-        <Link
-          href="https://eagerworks.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
-        >
-          <div className="mb-4 flex flex-row items-center">
-            <img src="/eagerworks-white-logo.svg" alt="Eagerworks" className="h-12" />
-          </div>
-          <TextGenerateEffect
-            className="max-w-xl px-6 text-center text-base md:text-lg"
-            words={'Building exceptional software solutions.'}
-          />
-        </Link>
-
-        {/* IEEE Computer Society */}
-        <Link
-          href="https://www.computer.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
-        >
-          <div className="mb-4 flex flex-col items-center">
-            <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-xl font-bold text-transparent md:text-2xl">
-              IEEE Computer Society
-            </h1>
-          </div>
-          <TextGenerateEffect
-            className="max-w-xl px-6 text-center text-base md:text-lg"
-            words={'Advancing computing as a science and profession.'}
-          />
-        </Link>
-
-        {/* Endpoint Consulting */}
-        <Link
-          href="https://www.instagram.com/endpointconsulting/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex flex-col items-center justify-center rounded-lg bg-neutral-900 p-6 transition-all hover:bg-neutral-800 hover:shadow-lg"
-        >
-          <div className="mb-4 flex flex-col items-center">
-            <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-xl font-bold text-transparent md:text-2xl">
-              Endpoint Consulting
-            </h1>
-          </div>
-          <TextGenerateEffect
-            className="max-w-xl px-6 text-center text-base md:text-lg"
-            words={'Expertos en seguridad informática y consultoría tecnológica.'}
-          />
-        </Link>
+      <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
+        {sponsors.map((sponsor, index) => (
+          <Link
+            key={index}
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block"
+          >
+            <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
+              <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+                {sponsor.hasLogo ? (
+                  <div className="mb-4 flex h-16 w-full items-center justify-center">
+                    <img
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      className="max-h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                ) : (
+                  <div className="mb-4 flex h-16 w-full items-center justify-center">
+                    <h3 className="bg-gradient-to-br from-pcnPurple to-pcnBlue bg-clip-text text-2xl font-bold text-transparent dark:from-pcnGreen dark:to-pcnGreen/80 md:text-3xl">
+                      {sponsor.name}
+                    </h3>
+                  </div>
+                )}
+                {sponsor.hasLogo && (
+                  <h3 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white md:text-xl">
+                    {sponsor.name}
+                  </h3>
+                )}
+                <p className="text-sm text-muted-foreground dark:text-neutral-400 md:text-base">
+                  {sponsor.description}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     </div>
   );

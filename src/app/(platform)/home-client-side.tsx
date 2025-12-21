@@ -476,7 +476,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Card key={index} className="flex flex-col">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Quote className="h-5 w-5 text-pcnGreen" />
+                  <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
                   <h3 className="text-lg font-semibold">{testimonio.name}</h3>
                 </div>
               </CardHeader>
@@ -505,7 +505,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#25D366] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
               <span className="text-2xl">💬</span>
@@ -521,7 +521,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#5865F2] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
               <span className="text-2xl">💬</span>
@@ -537,7 +537,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#E4405F] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
               <span className="text-2xl">📷</span>
@@ -553,7 +553,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#FF0000] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
               <span className="text-2xl">▶️</span>
@@ -569,7 +569,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#0077B5] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
               <Linkedin className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
