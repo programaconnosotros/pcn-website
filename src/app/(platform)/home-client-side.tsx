@@ -116,7 +116,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Consejos</Heading3>
@@ -273,7 +273,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
@@ -304,7 +304,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
             <Heading3 className="relative z-10">Instagram</Heading3>
