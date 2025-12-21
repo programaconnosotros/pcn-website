@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Book,
   BookOpen,
   Briefcase,
   CalendarDays,
@@ -59,6 +60,11 @@ const data = {
       title: 'Historia',
       url: '/historia',
       icon: ScrollText,
+    },
+    {
+      title: 'Lectura',
+      url: '/lectura',
+      icon: Book,
     },
     {
       title: 'Eventos',
