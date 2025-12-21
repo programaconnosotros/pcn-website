@@ -9,6 +9,7 @@ import {
   Image,
   Instagram,
   Laptop,
+  LayoutDashboard,
   LifeBuoy,
   Linkedin,
   MicVocal,
@@ -119,6 +120,11 @@ const data = {
       title: 'Trabajos',
       url: '/trabajos',
       icon: Briefcase,
+    },
+    {
+      title: 'Dashboard',
+      url: '/dashboard',
+      icon: LayoutDashboard,
     },
   ],
   navSecondary: [
