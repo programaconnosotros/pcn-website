@@ -13,7 +13,18 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, SquareTerminal, UserPlus, Calendar, CalendarCheck } from 'lucide-react';
+import {
+  Users,
+  SquareTerminal,
+  UserPlus,
+  Calendar,
+  CalendarCheck,
+  Heart,
+  MessageCircle,
+  Briefcase,
+  Code,
+  TrendingUp,
+} from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 const DashboardPage = async () => {
@@ -43,6 +54,19 @@ const DashboardPage = async () => {
     newAdvisesLastMonth,
     pastEvents,
     upcomingEvents,
+    totalLikes,
+    newLikesLastMonth,
+    totalComments,
+    newCommentsLastMonth,
+    totalJobOffers,
+    availableJobOffers,
+    newJobOffersLastMonth,
+    activeUsers,
+    nextEvent,
+    topLanguages,
+    mostLikedAdvise,
+    avgLikesPerAdvise,
+    avgCommentsPerAdvise,
     usersList,
   ] = await Promise.all([
     prisma.user.count(),
@@ -75,6 +99,87 @@ const DashboardPage = async () => {
         },
       },
     }),
+    prisma.like.count(),
+    prisma.like.count({
+      where: {
+        createdAt: {
+          gte: oneMonthAgo,
+        },
+      },
+    }),
+    prisma.comment.count(),
+    prisma.comment.count({
+      where: {
+        createdAt: {
+          gte: oneMonthAgo,
+        },
+      },
+    }),
+    prisma.jobOffers.count(),
+    prisma.jobOffers.count({
+      where: {
+        available: true,
+      },
+    }),
+    prisma.jobOffers.count({
+      where: {
+        createdAt: {
+          gte: oneMonthAgo,
+        },
+      },
+    }),
+    prisma.user.count({
+      where: {
+        sessions: {
+          some: {
+            expires: {
+              gt: now,
+            },
+          },
+        },
+      },
+    }),
+    prisma.event.findFirst({
+      where: {
+        date: {
+          gte: now,
+        },
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    }),
+    prisma.userLanguage.groupBy({
+      by: ['language'],
+      _count: {
+        language: true,
+      },
+      orderBy: {
+        _count: {
+          language: 'desc',
+        },
+      },
+      take: 5,
+    }),
+    prisma.advise.findMany({
+      include: {
+        likes: true,
+      },
+    }).then((advises) => {
+      if (advises.length === 0) return null;
+      const sorted = advises.sort((a, b) => b.likes.length - a.likes.length);
+      return sorted[0];
+    }),
+    prisma.like.count().then((likes) => {
+      return prisma.advise.count().then((advises) => {
+        return advises > 0 ? Math.round((likes / advises) * 10) / 10 : 0;
+      });
+    }),
+    prisma.comment.count().then((comments) => {
+      return prisma.advise.count().then((advises) => {
+        return advises > 0 ? Math.round((comments / advises) * 10) / 10 : 0;
+      });
+    }),
     prisma.user.findMany({
       select: {
         id: true,
@@ -100,10 +205,10 @@ const DashboardPage = async () => {
       description: 'Usuarios registrados',
     },
     {
-      title: 'Total de Consejos',
-      value: totalAdvises,
-      icon: SquareTerminal,
-      description: 'Consejos compartidos',
+      title: 'Usuarios Activos',
+      value: activeUsers,
+      icon: UserPlus,
+      description: 'Con sesión activa',
     },
     {
       title: 'Usuarios Nuevos',
@@ -112,9 +217,69 @@ const DashboardPage = async () => {
       description: 'Último mes',
     },
     {
+      title: 'Total de Consejos',
+      value: totalAdvises,
+      icon: SquareTerminal,
+      description: 'Consejos compartidos',
+    },
+    {
       title: 'Consejos Nuevos',
       value: newAdvisesLastMonth,
       icon: SquareTerminal,
+      description: 'Último mes',
+    },
+    {
+      title: 'Total de Likes',
+      value: totalLikes,
+      icon: Heart,
+      description: 'Likes totales',
+    },
+    {
+      title: 'Likes Nuevos',
+      value: newLikesLastMonth,
+      icon: Heart,
+      description: 'Último mes',
+    },
+    {
+      title: 'Total de Comentarios',
+      value: totalComments,
+      icon: MessageCircle,
+      description: 'Comentarios totales',
+    },
+    {
+      title: 'Comentarios Nuevos',
+      value: newCommentsLastMonth,
+      icon: MessageCircle,
+      description: 'Último mes',
+    },
+    {
+      title: 'Promedio Likes/Consejo',
+      value: avgLikesPerAdvise,
+      icon: TrendingUp,
+      description: 'Engagement promedio',
+    },
+    {
+      title: 'Promedio Comentarios/Consejo',
+      value: avgCommentsPerAdvise,
+      icon: TrendingUp,
+      description: 'Interacción promedio',
+    },
+    {
+      title: 'Total de Ofertas',
+      value: totalJobOffers,
+      icon: Briefcase,
+      description: 'Ofertas de trabajo',
+    },
+    {
+      title: 'Ofertas Disponibles',
+      value: availableJobOffers,
+      icon: Briefcase,
+      description: 'Ofertas activas',
+    },
+    {
+      title: 'Ofertas Nuevas',
+      value: newJobOffersLastMonth,
+      icon: Briefcase,
       description: 'Último mes',
     },
     {
@@ -175,6 +340,74 @@ const DashboardPage = async () => {
               );
             })}
           </div>
+
+          {mostLikedAdvise && (
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    Consejo Más Popular
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p className="text-sm">{mostLikedAdvise.content}</p>
+                    <p className="text-sm font-semibold text-muted-foreground">
+                      {mostLikedAdvise.likes.length} likes
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {(nextEvent || topLanguages.length > 0) && (
+            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {nextEvent && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CalendarCheck className="h-5 w-5" />
+                      Próximo Evento
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <p className="font-semibold">{nextEvent.name}</p>
+                      <p className="text-sm text-muted-foreground">{nextEvent.city}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(nextEvent.date)}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {topLanguages.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Code className="h-5 w-5" />
+                      Lenguajes Más Populares
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {topLanguages.map((lang, index) => (
+                        <div key={lang.language} className="flex items-center justify-between">
+                          <span className="text-sm">{lang.language}</span>
+                          <span className="text-sm font-semibold text-muted-foreground">
+                            {lang._count.language} usuarios
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
 
           <div className="mt-8">
             <Card>
