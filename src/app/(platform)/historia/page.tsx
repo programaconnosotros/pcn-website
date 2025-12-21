@@ -44,7 +44,7 @@ const PCNStory = () => (
           </div>
         </div>
         <div className="flex flex-col items-center gap-4 text-center">
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle className="text-center">Introducción</CardTitle>
             </CardHeader>
@@ -68,7 +68,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Comienzos en la UTN-FRT</CardTitle>
             </CardHeader>
@@ -83,7 +83,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Voluntariado en el IEEE</CardTitle>
             </CardHeader>
@@ -118,7 +118,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Code Warfare</CardTitle>
             </CardHeader>
@@ -131,7 +131,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>IEEE Computer Society</CardTitle>
             </CardHeader>
@@ -143,7 +143,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Club de Algoritmos</CardTitle>
             </CardHeader>
@@ -156,7 +156,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Actividades con Tucumán Hacking</CardTitle>
             </CardHeader>
@@ -176,7 +176,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Nibble</CardTitle>
             </CardHeader>
@@ -193,7 +193,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>El nacimiento de programaConNosotros</CardTitle>
             </CardHeader>
@@ -219,7 +219,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Cursos de Git & GitHub con la cátedra de AED</CardTitle>
             </CardHeader>
@@ -234,7 +234,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Lightning Talks</CardTitle>
             </CardHeader>
@@ -248,7 +248,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>PCN & Global Learning</CardTitle>
             </CardHeader>
@@ -260,7 +260,7 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl">
+          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
             <CardHeader>
               <CardTitle>Empezamos a desarrollar el website</CardTitle>
             </CardHeader>
