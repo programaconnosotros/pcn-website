@@ -161,7 +161,26 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            Impulsá tu carrera con estos recursos
+            <span className="text-pcnGreen">Impulsá tu carrera</span>{' '}
+            con estos{' '}
+            <span className="relative inline-block">
+              recursos
+              <svg
+                className="absolute -bottom-1 left-0 w-full"
+                height="10"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M 0,8 L 12,1 L 24,7 L 36,0 L 48,6 L 60,1 L 72,8 L 84,2 L 96,7 L 100,5"
+                  stroke="#04f4be"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </Heading2>
         </div>
 
