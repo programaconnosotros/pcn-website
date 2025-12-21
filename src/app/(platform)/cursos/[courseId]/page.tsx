@@ -52,7 +52,7 @@ const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
             <Heading2 className="m-0">{course.name}</Heading2>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 px-12">
             <Carousel>
               <CarouselContent>
                 {course.youtubeUrls.map((classUrl) => (
