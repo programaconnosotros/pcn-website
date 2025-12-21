@@ -174,13 +174,7 @@ const people: Person[] = [
 export const Team = () => (
   <div className="py-8">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl lg:mx-0">
-        <Heading3 className="text-3xl font-bold tracking-tight sm:text-4xl">Contribuyentes</Heading3>
-
-        <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Estos son los miembros que hicieron posible este sitio web de la comunidad.
-        </p>
-      </div>
+        <Heading3>Team de desarrollo del website</Heading3>
 
       <ul
         role="list"
