@@ -30,6 +30,7 @@ import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
 
 const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
   return (
@@ -433,6 +434,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <SponsorsSection />
       </motion.div>
+      <ScrollToTop />
     </motion.div>
   );
 };
