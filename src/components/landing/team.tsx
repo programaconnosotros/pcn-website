@@ -201,8 +201,7 @@ export const Team = () => (
                     style={{ backgroundColor: '#04f4be', opacity: 0.4 }}
                   />
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <h3 className="mb-1 text-lg font-bold text-white">{person.name}</h3>
-                    <div className="text-sm text-white">{person.role}</div>
+                    <h3 className="text-lg font-bold text-white">{person.name}</h3>
                   </div>
                 </div>
               </a>
@@ -219,8 +218,7 @@ export const Team = () => (
                   style={{ backgroundColor: '#04f4be', opacity: 0.4 }}
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <h3 className="mb-1 text-lg font-bold text-white">{person.name}</h3>
-                  <div className="text-sm text-white">{person.role}</div>
+                  <h3 className="text-lg font-bold text-white">{person.name}</h3>
                 </div>
               </div>
             )}
