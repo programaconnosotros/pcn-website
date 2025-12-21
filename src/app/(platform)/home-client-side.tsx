@@ -80,6 +80,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <MotivationalQuotes />
             </div> */}
           </div>
+
         ) : (
           // Componente usuario no logueado
           <div className="relative -mx-4 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background pt-12 md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)] md:pt-0">
@@ -127,6 +128,29 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
         )}
+
+          <div 
+            className="relative mb-6 overflow-hidden rounded-lg p-6"
+            style={{
+              background: 'linear-gradient(to right, #012e24, #014a3a)',
+            }}
+          >
+            <div 
+              className="absolute inset-0 opacity-10 dark:opacity-5"
+              style={{
+                backgroundImage: "url('/logo.webp')",
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                filter: 'grayscale(100%)',
+              }}
+            />
+            <div className="relative z-10 flex flex-col items-center">
+              <p className="text-center text-white">
+                Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad es altamente inspirador y motivador para poder expandir nuestras capacidades, e intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen superarse todos los días.
+              </p>
+            </div>
+          </div>
 
         {/* <Testimonials /> */}
 
