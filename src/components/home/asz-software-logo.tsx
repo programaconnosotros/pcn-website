@@ -2,7 +2,7 @@ import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const ASZSoftwareLogo = () => (
   //   <div className="relative z-10 flex w-full flex-col items-center">
-  <div className="flex w-full flex-col items-center bg-black py-10">
+  <div className="flex w-full flex-col items-center bg-black py-10 !border-0" style={{ border: 'none' }}>
     <div className="mb-4 mt-4 flex flex-row items-center">
       <img src="/asz-software-logo-2.webp" alt="ASZ Studio" className="-ml-8 h-12" />
 
