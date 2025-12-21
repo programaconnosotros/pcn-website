@@ -51,7 +51,7 @@ const Home = async () => {
           <Link href="/autenticacion/iniciar-sesion">
             <Button
               variant="outline"
-              className="border-pcnGreen text-pcnGreen hover:bg-pcnGreen hover:text-black"
+              className="border-pcnGreen bg-black text-pcnGreen hover:bg-pcnGreen hover:text-black"
             >
               Iniciar sesión
             </Button>
