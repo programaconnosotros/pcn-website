@@ -56,7 +56,7 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
   return (
     <>
       <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg">
-        <div className="group relative aspect-[4/3]">
+        <div className="group relative aspect-square">
           <img
             src={photo.image || '/placeholder.svg'}
             alt={photo.title}
