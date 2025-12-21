@@ -329,81 +329,86 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="group relative p-6 text-center">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <Heading3 className="relative z-10">WhatsApp</Heading3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
+            target="_blank"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#25D366]"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
+              <span className="text-2xl">💬</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-neutral-900 dark:text-white">WhatsApp</h3>
+              <p className="text-sm text-muted-foreground">
+                Grupo activo con conversaciones y oportunidades
+              </p>
+            </div>
+          </Link>
 
-            <Paragraph className="relative z-10 text-center">
-              Tenemos un grupo muy activo en el que tenemos conversaciones muy interesantes, además
-              de compartir oportunidades, consejos y mucho más.
-            </Paragraph>
+          <Link
+            href="https://discord.gg/dTQexKw56S"
+            target="_blank"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#5865F2]"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
+              <span className="text-2xl">💬</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-neutral-900 dark:text-white">Discord</h3>
+              <p className="text-sm text-muted-foreground">
+                Canales de voz, texto y eventos virtuales
+              </p>
+            </div>
+          </Link>
 
-            <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-              <Button className="relative z-10 w-full md:w-auto">Abrir WhatsApp</Button>
-            </Link>
-          </div>
+          <Link
+            href="https://www.instagram.com/programaconnosotros/"
+            target="_blank"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#E4405F]"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
+              <span className="text-2xl">📷</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-neutral-900 dark:text-white">Instagram</h3>
+              <p className="text-sm text-muted-foreground">
+                Fotos de recuerdos y contenido motivacional
+              </p>
+            </div>
+          </Link>
 
-          <div className="group relative p-6 text-center">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <Heading3 className="relative z-10">Discord</Heading3>
+          <Link
+            href="https://www.youtube.com/@programaconnosotros2689/videos"
+            target="_blank"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#FF0000]"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
+              <span className="text-2xl">▶️</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-neutral-900 dark:text-white">YouTube</h3>
+              <p className="text-sm text-muted-foreground">
+                Videos de charlas, cursos y más contenido
+              </p>
+            </div>
+          </Link>
 
-            <Paragraph className="relative z-10 text-center">
-              En nuestro server hay canales de voz en los que podes charlar con otros miembros y
-              también múltiples canales de texto y un foro con mucha data. Los eventos virtual los
-              hacemos ahí.
-            </Paragraph>
-
-            <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-              <Button className="relative z-10 w-full md:w-auto">Abrir Discord</Button>
-            </Link>
-          </div>
-
-          <div className="group relative p-6 text-center">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <Heading3 className="relative z-10">Instagram</Heading3>
-
-            <Paragraph className="relative z-10 text-center">
-              En Instagram subimos fotos de recuerdos y mucho contenido motivacional 💪
-            </Paragraph>
-
-            <Link href="https://www.instagram.com/programaconnosotros/" target="_blank">
-              <Button className="relative z-10 w-full md:w-auto">Abrir Instagram</Button>
-            </Link>
-          </div>
-
-          <div className="group relative p-6 text-center">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <Heading3 className="relative z-10">YouTube</Heading3>
-
-            <Paragraph className="relative z-10 text-center">
-              Subimos videos de charlas, cursos y mucho más!
-            </Paragraph>
-
-            <Link href="https://www.youtube.com/@programaconnosotros2689/videos" target="_blank">
-              <Button className="relative z-10 w-full md:w-auto">Abrir YouTube</Button>
-            </Link>
-          </div>
-
-          <div className="group relative p-6 text-center">
-            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <Heading3 className="relative z-10">LinkedIn</Heading3>
-
-            <Paragraph className="relative z-10 text-center">
-              En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu carrera
-              laboral como justificación de tu gran pasión por el software 💪
-            </Paragraph>
-
-            <Link
-              href="https://www.linkedin.com/company/programaconnosotros"
-              target="_blank"
-              className="relative z-10"
-            >
-              <Button className="relative z-10 w-full md:w-auto">
-                Abrir LinkedIn <Linkedin className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <Link
+            href="https://www.linkedin.com/company/programaconnosotros"
+            target="_blank"
+            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 transition-all hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#0077B5]"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
+              <Linkedin className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-neutral-900 dark:text-white">LinkedIn</h3>
+              <p className="text-sm text-muted-foreground">
+                Visibilidad profesional y crecimiento de carrera
+              </p>
+            </div>
+          </Link>
         </div>
 
         <SponsorsSection />
