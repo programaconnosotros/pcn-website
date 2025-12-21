@@ -13,21 +13,7 @@ const PCN = () => (
 );
 
 const PCNStory = () => (
-  <div className="xl:mr-120 mb-12 mt-6 flex flex-col gap-4 md:mx-24 lg:mx-48 xl:mx-64">
-    <Breadcrumb className="mb-4">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-        </BreadcrumbItem>
-
-        <BreadcrumbSeparator />
-
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/posts/historia-pcn">Historia de PCN</BreadcrumbLink>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-
+  <div className="xl:mr-120 mb-12 mt-6 flex flex-col items-center gap-4 text-center md:mx-24 lg:mx-48 xl:mx-64">
     <Heading2>Historia de programaConNosotros</Heading2>
 
     <p>
