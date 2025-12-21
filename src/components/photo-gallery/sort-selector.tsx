@@ -25,19 +25,19 @@ export function SortSelector({ sortOrder, onSortChange, className = '' }: SortSe
           {sortOrder === 'default' && (
             <>
               <ArrowDownUp className="h-4 w-4" />
-              <span>Orden Predeterminado</span>
+              <span>Orden predeterminado</span>
             </>
           )}
           {sortOrder === 'date-asc' && (
             <>
               <ArrowUpAZ className="h-4 w-4" />
-              <span>Más Antiguas Primero</span>
+              <span>Más antiguas primero</span>
             </>
           )}
           {sortOrder === 'date-desc' && (
             <>
               <ArrowDownAZ className="h-4 w-4" />
-              <span>Más Recientes Primero</span>
+              <span>Más recientes primero</span>
             </>
           )}
         </Button>
@@ -45,15 +45,15 @@ export function SortSelector({ sortOrder, onSortChange, className = '' }: SortSe
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => onSortChange('default')}>
           <ArrowDownUp className="mr-2 h-4 w-4" />
-          <span>Orden Predeterminado</span>
+          <span>Orden predeterminado</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onSortChange('date-asc')}>
           <ArrowUpAZ className="mr-2 h-4 w-4" />
-          <span>Más Antiguas Primero</span>
+          <span>Más antiguas primero</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onSortChange('date-desc')}>
           <ArrowDownAZ className="mr-2 h-4 w-4" />
-          <span>Más Recientes Primero</span>
+          <span>Más recientes primero</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
