@@ -37,7 +37,10 @@ const PCNStory = () => (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="mt-4">
         <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <Heading2 className="m-0 text-center">Historia de programaConNosotros</Heading2>
+          <div className="flex flex-col items-center gap-4">
+            <img src="/logo.webp" alt="programaConNosotros" className="mb-4 w-16 md:w-24" />
+            <Heading2 className="m-0 text-center">Historia de programaConNosotros</Heading2>
+          </div>
         </div>
         <div className="flex flex-col items-center gap-4 text-center">
 
