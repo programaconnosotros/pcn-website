@@ -11,6 +11,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TableOfContents } from '@/components/historia/table-of-contents';
 
 const PCN = () => (
   <code className="font-bold text-green-700 dark:text-pcnGreen">programaConNosotros</code>
@@ -43,11 +44,13 @@ const PCNStory = () => (
             <Heading2 className="m-0 text-center">Historia de programaConNosotros</Heading2>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-4 text-center">
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle className="text-center">Introducción</CardTitle>
-            </CardHeader>
+        <div className="flex gap-8">
+          <TableOfContents />
+          <div className="flex flex-1 flex-col items-center gap-4 text-center">
+            <Card id="introduccion" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle className="text-center">Introducción</CardTitle>
+              </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 Hola! Gracias por visitar la historia de la comunidad, esperamos te sirva para entender
@@ -68,10 +71,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Comienzos en la UTN-FRT</CardTitle>
-            </CardHeader>
+            <Card id="comienzos-utn" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Comienzos en la UTN-FRT</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 En el año 2015, en la Universidad Tecnológica de Tucumán (Argentina), se conocieron
@@ -83,10 +86,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Voluntariado en el IEEE</CardTitle>
-            </CardHeader>
+            <Card id="voluntariado-ieee" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Voluntariado en el IEEE</CardTitle>
+              </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 En el año 2017, Agus y Germán se sumaron al IEEE para participar del programa de
@@ -118,10 +121,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Code Warfare</CardTitle>
-            </CardHeader>
+            <Card id="code-warfare" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Code Warfare</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 A finales de 2017, organizaron un torneo de programación en la UTN de Tucumán, lo
@@ -131,10 +134,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>IEEE Computer Society</CardTitle>
-            </CardHeader>
+            <Card id="ieee-computer-society" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>IEEE Computer Society</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 En el año 2018, Agus y Germán dieron un paso importante presidiendo el Capítulo
@@ -143,10 +146,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Club de Algoritmos</CardTitle>
-            </CardHeader>
+            <Card id="club-algoritmos" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Club de Algoritmos</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 Agus creó un club de algoritmos que se juntaban todos los viernes desde las 18.00 hasta
@@ -156,10 +159,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Actividades con Tucumán Hacking</CardTitle>
-            </CardHeader>
+            <Card id="tucuman-hacking" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Actividades con Tucumán Hacking</CardTitle>
+              </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 En abril del 2018, organizaron el Tucumán Hack Weekend, un congreso internacional de
@@ -176,10 +179,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Nibble</CardTitle>
-            </CardHeader>
+            <Card id="nibble" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Nibble</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 En el año 2019, Agus y Germán conocieron 2 personas en la UTN-FRT que se convirtieron en
@@ -193,10 +196,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>El nacimiento de programaConNosotros</CardTitle>
-            </CardHeader>
+            <Card id="nacimiento-pcn" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>El nacimiento de programaConNosotros</CardTitle>
+              </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 En el año 2020, en la Rama Estudiantil IEEE de la UTN-FRT se renovaron las autoridades.
@@ -219,10 +222,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Cursos de Git & GitHub con la cátedra de AED</CardTitle>
-            </CardHeader>
+            <Card id="cursos-git" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Cursos de Git & GitHub con la cátedra de AED</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 La cátedra de Algoritmos y Estructuras de Datos (AED) de la UTN-FRT le dio lugar a la
@@ -234,10 +237,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Lightning Talks</CardTitle>
-            </CardHeader>
+            <Card id="lightning-talks" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Lightning Talks</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 Organizamos varias jornadas de Lightning Talks, donde muchos miembros de la comunidad
@@ -248,10 +251,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>PCN & Global Learning</CardTitle>
-            </CardHeader>
+            <Card id="pcn-global-learning" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>PCN & Global Learning</CardTitle>
+              </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
                 En 2023, colaboramos con Global Learning dando charlas sobre arquitectura de software e
@@ -260,10 +263,10 @@ const PCNStory = () => (
             </CardContent>
           </Card>
 
-          <Card className="w-full max-w-4xl transition-colors hover:border-pcnGreen">
-            <CardHeader>
-              <CardTitle>Empezamos a desarrollar el website</CardTitle>
-            </CardHeader>
+            <Card id="desarrollo-website" className="w-full max-w-4xl transition-colors hover:border-pcnGreen scroll-mt-24">
+              <CardHeader>
+                <CardTitle>Empezamos a desarrollar el website</CardTitle>
+              </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 En 2024, Agus empezó el proyecto del website de PCN. Al principio iba a ser solo un
@@ -279,7 +282,8 @@ const PCNStory = () => (
                 liderado por Agustín Sánchez.
               </p>
             </CardContent>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
