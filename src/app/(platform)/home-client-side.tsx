@@ -169,7 +169,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            <span className="text-pcnGreen">Impulsá tu carrera</span>{' '}
+            <span className="text-pcnPurple dark:text-pcnGreen">Impulsá tu carrera</span>{' '}
             con estos{' '}
             <span className="relative inline-block">
               recursos
@@ -181,7 +181,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               >
                 <path
                   d="M 0,7 L 6,2 L 11,5 L 16,1 L 22,4 L 28,2 L 34,6 L 40,1 L 46,5 L 52,2 L 58,6 L 64,1 L 70,5 L 76,2 L 82,6 L 88,1 L 94,5 L 100,4"
-                  stroke="#04f4be"
+                  className="stroke-pcnPurple dark:stroke-pcnGreen"
                   strokeWidth="2"
                   fill="none"
                   strokeLinecap="round"
