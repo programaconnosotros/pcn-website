@@ -36,7 +36,7 @@ const data = {
   navMain: [
     {
       title: 'Inicio',
-      url: '/',
+      url: '/home',
       icon: Home,
     },
     {
@@ -161,7 +161,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
@@ -172,6 +172,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">programaConNosotros</span>
+                  <span className="text-xs text-muted-foreground">Impulsando desde 2020.</span>
                 </div>
               </a>
             </SidebarMenuButton>
