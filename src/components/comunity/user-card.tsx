@@ -24,6 +24,7 @@ type UserWithoutPassword = {
   }[];
   linkedinUrl: string | null;
   xAccountUrl: string | null;
+  gitHubUrl: string | null;
   countryOfOrigin: string | null;
   slogan: string | null;
   jobTitle: string | null;
@@ -124,6 +125,14 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
             <Button size="sm" variant="outline" asChild>
               <a href={user.xAccountUrl} target="_blank" rel="noopener noreferrer">
                 Twitter
+                <SquareArrowOutUpRight className="ml-1" size={15} />
+              </a>
+            </Button>
+          )}
+          {user.gitHubUrl && (
+            <Button size="sm" variant="outline" asChild>
+              <a href={user.gitHubUrl} target="_blank" rel="noopener noreferrer">
+                GitHub
                 <SquareArrowOutUpRight className="ml-1" size={15} />
               </a>
             </Button>

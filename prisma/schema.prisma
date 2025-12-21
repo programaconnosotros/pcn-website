@@ -17,6 +17,7 @@ model User {
   countryOfOrigin String?
   xAccountUrl     String?
   linkedinUrl     String?
+  gitHubUrl       String?
   slogan          String?
   jobTitle        String?
   enterprise      String?
