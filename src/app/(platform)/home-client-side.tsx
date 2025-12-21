@@ -311,7 +311,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Heading2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <Heading3 className="relative z-10">WhatsApp</Heading3>
@@ -340,9 +340,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <Button className="relative z-10 w-full md:w-auto">Abrir Discord</Button>
             </Link>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <Heading3 className="relative z-10">Instagram</Heading3>
@@ -368,29 +366,25 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <Button className="relative z-10 w-full md:w-auto">Abrir YouTube</Button>
             </Link>
           </div>
-        </div>
 
-        <div className="text-center">
-          <div className="group relative">
+          <div className="group relative p-6 text-center">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
-            <div className="p-6">
-              <Heading3 className="relative z-10">LinkedIn</Heading3>
+            <Heading3 className="relative z-10">LinkedIn</Heading3>
 
-              <Paragraph className="relative z-10 text-center">
-                En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu
-                carrera laboral como justificación de tu gran pasión por el software 💪
-              </Paragraph>
+            <Paragraph className="relative z-10 text-center">
+              En LinkedIn le damos visibilidad a todo lo que hacemos para que te sirva en tu
+              carrera laboral como justificación de tu gran pasión por el software 💪
+            </Paragraph>
 
-              <Link
-                href="https://www.linkedin.com/company/programaconnosotros"
-                target="_blank"
-                className="relative z-10"
-              >
-                <Button className="relative z-10 w-full md:w-auto">
-                  Abrir LinkedIn <Linkedin className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
+            <Link
+              href="https://www.linkedin.com/company/programaconnosotros"
+              target="_blank"
+              className="relative z-10"
+            >
+              <Button className="relative z-10 w-full md:w-auto">
+                Abrir LinkedIn <Linkedin className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
         
