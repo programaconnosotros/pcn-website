@@ -32,21 +32,19 @@ async function getUser(id: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        countryOfOrigin: true,
-        xAccountUrl: true,
-        linkedinUrl: true,
-        gitHubUrl: true,
+      include: {
         advises: {
           orderBy: {
             createdAt: 'desc',
           },
           include: {
-            author: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
             likes: true,
           },
         },
@@ -64,10 +62,27 @@ async function getUser(id: string) {
       notFound();
     }
 
-    return user;
+    // Seleccionar solo los campos necesarios del usuario
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      countryOfOrigin: user.countryOfOrigin,
+      xAccountUrl: user.xAccountUrl,
+      linkedinUrl: user.linkedinUrl,
+      gitHubUrl: user.gitHubUrl,
+      advises: user.advises,
+      languages: user.languages,
+    };
   } catch (error) {
     console.error('Error fetching user:', error);
-    throw new Error('Failed to fetch user profile');
+    // Si el error es porque el usuario no existe, usar notFound
+    if (error instanceof Error && error.message.includes('Record to find does not exist')) {
+      notFound();
+    }
+    // Re-lanzar el error original para debugging
+    throw error;
   }
 }
 
