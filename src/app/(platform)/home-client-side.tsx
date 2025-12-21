@@ -196,7 +196,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Handshake className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Handshake className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
@@ -213,7 +213,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MicVocal className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Charlas</Heading3>
 
@@ -232,7 +232,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Users className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Users className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
@@ -249,7 +249,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Brain className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Brain className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
@@ -266,7 +266,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Globe className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Globe className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Oportunidades</Heading3>
 
@@ -289,7 +289,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Calendar className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Calendar className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
@@ -306,7 +306,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Book className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Book className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Lectura</Heading3>
 
@@ -323,7 +323,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MicVocal className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Podcast</Heading3>
 
@@ -340,7 +340,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Laptop className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Laptop className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Cursos</Heading3>
 
@@ -357,7 +357,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Star className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Star className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Software recomendado</Heading3>
 
@@ -374,7 +374,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MessageSquare className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <MessageSquare className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Foro</Heading3>
 
@@ -391,7 +391,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Monitor className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+              <Monitor className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
             </div>
             <Heading3 className="relative z-10">Setups</Heading3>
 
