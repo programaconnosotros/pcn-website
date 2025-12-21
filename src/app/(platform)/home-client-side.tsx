@@ -24,6 +24,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
+import Image from 'next/image';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
@@ -48,8 +49,23 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         className="mb-6"
       >
         {session ? (
-          <div className="mb-6 flex w-full flex-col items-center justify-center gap-2 rounded-sm bg-neutral-100 p-4 dark:bg-neutral-900 md:p-12">
-            <Heading2 className="text-center">
+          <div className="relative -mx-6 mb-6 flex min-h-[400px] w-[calc(100%+3rem)] flex-col items-center justify-center gap-2 overflow-hidden p-4 md:p-12">
+            {/* Background GIF */}
+            <div className="absolute inset-0 z-0">
+              <Image
+                src="/home.GIF"
+                alt="Background"
+                fill
+                className="object-cover"
+                priority
+                unoptimized
+              />
+            </div>
+            
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 z-0 bg-black/70" />
+            
+            <Heading2 className="relative z-10 text-center text-white">
               {session?.user?.name
                 ? `Hola ${session.user.name.split(' ')[0]}! Gracias por ser parte de la comunidad 💪`
                 : 'Hola!'}
