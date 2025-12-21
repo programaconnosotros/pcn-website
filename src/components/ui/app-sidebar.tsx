@@ -13,6 +13,7 @@ import {
   LifeBuoy,
   Linkedin,
   MicVocal,
+  Music,
   ScrollText,
   Send,
   SquareTerminal,
@@ -62,6 +63,11 @@ const data = {
       title: 'Podcast',
       url: '/podcast',
       icon: MicVocal,
+    },
+    {
+      title: 'Música',
+      url: '/music',
+      icon: Music,
     },
     {
       title: 'Historia',
