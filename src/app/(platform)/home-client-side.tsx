@@ -16,11 +16,13 @@ import {
   Globe,
   Handshake,
   Images,
+  Laptop,
   Linkedin,
   LogIn,
   MicVocal,
   MonitorPlay,
   ScrollText,
+  Star,
   UserPlus,
   Users,
 } from 'lucide-react';
@@ -328,6 +330,40 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/podcast" className="relative z-10">
               <Button>Ver podcast</Button>
+            </Link>
+          </div>
+
+          <div className="group relative flex flex-col items-center p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Laptop className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+            </div>
+            <Heading3 className="relative z-10">Cursos</Heading3>
+
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
+              Aprendé nuevas habilidades con nuestros cursos sobre herramientas y tecnologías
+              esenciales para desarrolladores.
+            </Paragraph>
+
+            <Link href="/cursos" className="relative z-10">
+              <Button>Ver cursos</Button>
+            </Link>
+          </div>
+
+          <div className="group relative flex flex-col items-center p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Star className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+            </div>
+            <Heading3 className="relative z-10">Software recomendado</Heading3>
+
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
+              Descubrí herramientas y software recomendados por la comunidad para mejorar tu
+              productividad y flujo de trabajo como desarrollador.
+            </Paragraph>
+
+            <Link href="/software-recomendado" className="relative z-10">
+              <Button>Ver software</Button>
             </Link>
           </div>
         </div>
