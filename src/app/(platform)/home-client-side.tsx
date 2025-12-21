@@ -298,7 +298,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <MainSponsorCard />
         <InviteDevsToWork />
         {/* <Team /> */}
 
@@ -390,6 +389,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
         </div>
+        
+        <MainSponsorCard />
       </motion.div>
     </motion.div>
   );
