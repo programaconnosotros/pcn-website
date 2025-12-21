@@ -206,7 +206,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button>Ver consejos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver consejos</Button>
             </Link>
           </div>
 
@@ -224,7 +224,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button>Ver charlas</Button>
+                <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver charlas</Button>
               </Link>
             </div>
           </div>
@@ -242,7 +242,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button>Conocer a la comunidad</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Conocer a la comunidad</Button>
             </Link>
           </div>
 
@@ -259,7 +259,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/mentores" className="relative z-10">
-              <Button>Conocer mentores</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Conocer mentores</Button>
             </Link>
           </div>
 
@@ -277,11 +277,11 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-                <Button className="relative z-10 w-full md:w-auto">PCN en WhatsApp</Button>
+                <Button className="relative z-10 w-full md:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">PCN en WhatsApp</Button>
               </Link>
 
               <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-                <Button className="relative z-10 w-full md:w-auto">PCN en Discord</Button>
+                <Button className="relative z-10 w-full md:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">PCN en Discord</Button>
               </Link>
             </div>
           </div>
@@ -299,7 +299,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/eventos" className="relative z-10">
-              <Button>Ver eventos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver eventos</Button>
             </Link>
           </div>
 
@@ -316,7 +316,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/lectura" className="relative z-10">
-              <Button>Ver libros</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver libros</Button>
             </Link>
           </div>
 
@@ -333,7 +333,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/podcast" className="relative z-10">
-              <Button>Ver podcast</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver podcast</Button>
             </Link>
           </div>
 
@@ -350,7 +350,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/cursos" className="relative z-10">
-              <Button>Ver cursos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver cursos</Button>
             </Link>
           </div>
 
@@ -367,7 +367,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/software-recomendado" className="relative z-10">
-              <Button>Ver software</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver software</Button>
             </Link>
           </div>
 
@@ -384,7 +384,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/foro" className="relative z-10">
-              <Button>Ver foro</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver foro</Button>
             </Link>
           </div>
 
@@ -401,7 +401,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/setups" className="relative z-10">
-              <Button>Ver setups</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver setups</Button>
             </Link>
           </div>
         </div>
@@ -420,7 +420,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Paragraph>
 
               <Link href="/historia" className="relative z-10">
-                <Button variant="outline">
+                <Button variant="outline" className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:border-pcnPurple dark:group-hover:bg-pcnGreen dark:group-hover:text-black dark:group-hover:border-pcnGreen group-hover:shadow-lg">
                   Leer historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -441,7 +441,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Paragraph>
 
               <Link href="/galeria" className="relative z-10">
-                <Button variant="outline">
+                <Button variant="outline" className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:border-pcnPurple dark:group-hover:bg-pcnGreen dark:group-hover:text-black dark:group-hover:border-pcnGreen group-hover:shadow-lg">
                   Ver galería <Images className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
