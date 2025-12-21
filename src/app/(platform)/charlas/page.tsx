@@ -110,10 +110,10 @@ const Talks = () => (
                 )}
               </CardContent>
 
-              <CardFooter className="mt-auto flex flex-col gap-2">
+              <CardFooter className="mt-auto flex flex-col items-start gap-2">
                 {talk.youtubeUrl && (
                   <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
-                    <Button className="flex w-full items-center gap-2" variant="youtube">
+                    <Button className="flex items-center gap-2" variant="youtube">
                       Ver en YouTube
                       <Youtube className="h-4 w-4" />
                     </Button>
@@ -123,7 +123,7 @@ const Talks = () => (
                 {talk.slides && (
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button className="flex w-full items-center gap-2" variant="outline">
+                      <Button className="flex items-center gap-2" variant="outline">
                         Ver slides
                         <FileText className="h-4 w-4" />
                       </Button>
