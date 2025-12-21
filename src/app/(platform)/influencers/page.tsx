@@ -1,4 +1,15 @@
 import { InfluencerCard } from '@/components/influencers/influencer-card';
+import { Heading2 } from '@/components/ui/heading-2';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 interface Platform {
   youtube?: string;
@@ -76,25 +87,48 @@ const influencersData: InfluencersData = {
 
 export default async function InfluencersPage() {
   return (
-    <div className="mt-4 md:max-w-screen-xl md:px-20">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Influencers</h1>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Influencers</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <Heading2 className="m-0">Influencers</Heading2>
+          </div>
 
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Te presentamos algunas personas o grupos que consideramos referentes en el mundo del
-          software.
-        </p>
+          <div className="mb-6">
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
+              Te presentamos algunas personas o grupos que consideramos referentes en el mundo del
+              software.
+            </p>
 
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Si queres sumar a alguien, avisa por WhatsApp o Discord!
-        </p>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
+              Si queres sumar a alguien, avisa por WhatsApp o Discord!
+            </p>
+          </div>
+
+          <div className="mb-4 space-y-6">
+            {influencersData.influencers.map((influencer: Influencer) => (
+              <InfluencerCard key={influencer.id} influencer={influencer} />
+            ))}
+          </div>
+        </div>
       </div>
-
-      <div className="mb-4 space-y-6">
-        {influencersData.influencers.map((influencer: Influencer) => (
-          <InfluencerCard key={influencer.id} influencer={influencer} />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
