@@ -135,10 +135,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="flex justify-center -mt-12 z-10 mb-6">
             <div 
-              className="relative w-full max-w-4xl overflow-hidden rounded-lg p-6"
-              style={{
-                background: 'linear-gradient(to right, #012e24, #014a3a)',
-              }}
+              className="relative w-full max-w-4xl overflow-hidden rounded-lg bg-gradient-to-r from-[#c8f4eb] to-[#d9f9f2] p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]"
             >
             <div 
               className="absolute inset-0 opacity-10 dark:opacity-5"
@@ -151,7 +148,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               }}
             />
             <div className="relative z-10 flex flex-col items-center">
-              <p className="text-center text-white">
+              <p className="text-center text-black dark:text-white">
                 Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad es altamente inspirador y motivador para poder expandir nuestras capacidades, e intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen superarse todos los días.
               </p>
             </div>
