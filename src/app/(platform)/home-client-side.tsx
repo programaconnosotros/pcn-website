@@ -12,6 +12,7 @@ import { Paragraph } from '@/components/ui/paragraph';
 import {
   Brain,
   Calendar,
+  Globe,
   Handshake,
   Images,
   Linkedin,
@@ -119,6 +120,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Handshake className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -128,13 +132,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/consejos" className="relative z-10">
               <Button>
-                Ver consejos <Handshake className="ml-2 h-4 w-4" />
+                Ver consejos
               </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <MicVocal className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Charlas</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -145,7 +152,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
                 <Button>
-                  Ver charlas <MicVocal className="ml-2 h-4 w-4" />
+                  Ver charlas
                 </Button>
               </Link>
             </div>
@@ -153,6 +160,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Users className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -162,13 +172,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/consejos" className="relative z-10">
               <Button>
-                Conocer a la comunidad <Users className="ml-2 h-4 w-4" />
+                Conocer a la comunidad
               </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Brain className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -178,13 +191,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/mentores" className="relative z-10">
               <Button>
-                Conocer mentores <Brain className="ml-2 h-4 w-4" />
+                Conocer mentores
               </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Globe className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Oportunidades</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -205,6 +221,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="group relative flex flex-col items-center p-6">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Calendar className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
             <Paragraph className="relative z-10 text-center">
@@ -214,7 +233,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/eventos" className="relative z-10">
               <Button>
-                Ver eventos <Calendar className="ml-2 h-4 w-4" />
+                Ver eventos
               </Button>
             </Link>
           </div>
