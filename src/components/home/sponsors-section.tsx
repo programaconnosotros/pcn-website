@@ -82,7 +82,7 @@ export const SponsorsSection = () => {
                   </div>
                 ) : (
                   <div className="mb-4 flex h-16 w-full items-center justify-center">
-                    <h3 className="bg-gradient-to-br from-pcnPurple to-pcnBlue bg-clip-text text-2xl font-bold text-transparent dark:from-pcnGreen dark:to-pcnGreen/80 md:text-3xl">
+                    <h3 className="text-2xl font-bold text-black dark:text-white md:text-3xl">
                       {sponsor.name}
                     </h3>
                   </div>
