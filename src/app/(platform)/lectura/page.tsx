@@ -151,7 +151,7 @@ const ReadingPage = () => {
             <Heading2 className="m-0">Lectura</Heading2>
           </div>
 
-          <div className="mb-6 rounded-lg border bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+          <div className="mb-6 rounded-lg border bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-900 p-6">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
                 <BookOpen className="h-8 w-8 text-primary" />
@@ -169,7 +169,7 @@ const ReadingPage = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700">
+                    <Button className="flex items-center gap-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600">
                       <MessageCircle className="h-4 w-4" />
                       Unirme al grupo
                     </Button>
