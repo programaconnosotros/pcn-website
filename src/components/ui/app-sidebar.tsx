@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   Linkedin,
+  Megaphone,
   MicVocal,
   Music,
   ScrollText,
@@ -131,6 +132,11 @@ const data = {
       title: 'Dashboard',
       url: '/dashboard',
       icon: LayoutDashboard,
+    },
+    {
+      title: 'Anuncios',
+      url: '/anuncios',
+      icon: Megaphone,
     },
   ],
   navSecondary: [
