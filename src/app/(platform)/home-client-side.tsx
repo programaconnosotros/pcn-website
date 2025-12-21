@@ -19,7 +19,9 @@ import {
   Laptop,
   Linkedin,
   LogIn,
+  MessageSquare,
   MicVocal,
+  Monitor,
   MonitorPlay,
   ScrollText,
   Star,
@@ -364,6 +366,40 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <Link href="/software-recomendado" className="relative z-10">
               <Button>Ver software</Button>
+            </Link>
+          </div>
+
+          <div className="group relative flex flex-col items-center p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <MessageSquare className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+            </div>
+            <Heading3 className="relative z-10">Foro</Heading3>
+
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
+              Participá en discusiones, hacé preguntas y compartí conocimiento con otros miembros
+              de la comunidad en nuestro foro.
+            </Paragraph>
+
+            <Link href="/foro" className="relative z-10">
+              <Button>Ver foro</Button>
+            </Link>
+          </div>
+
+          <div className="group relative flex flex-col items-center p-6">
+            <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
+            <div className="relative z-10 mb-4 flex justify-center">
+              <Monitor className="h-10 w-10 md:h-12 md:w-12 dark:text-pcnGreen" strokeWidth={1.0} />
+            </div>
+            <Heading3 className="relative z-10">Setups</Heading3>
+
+            <Paragraph className="relative z-10 text-center text-muted-foreground">
+              Inspirate con los setups de trabajo de otros miembros de la comunidad. Compartí fotos
+              de tu espacio de trabajo y descubrí nuevas ideas.
+            </Paragraph>
+
+            <Link href="/setups" className="relative z-10">
+              <Button>Ver setups</Button>
             </Link>
           </div>
         </div>
