@@ -11,31 +11,31 @@ import { SortSelector, type SortOrder } from './sort-selector';
 const photos = [
   {
     id: 1,
-    title: 'Agustín y Chelo dando una charla de ingeniería de software en Tafí Viejo',
+    title: 'Agus y Chelo dando una charla de ingeniería de software en Tafí Viejo',
     image: '/photos/agus-chelo-talk.webp',
     date: new Date(2023, 11, 24),
   },
   {
     id: 2,
-    title: 'Agustín, Chelo y Tobías resolviendo problemas con Docker en la web de PCN',
+    title: 'Agus, Chelo y Tobi resolviendo problemas con Docker en la web de PCN',
     image: '/photos/agus-chelo-tobias-watch-pc.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 3,
-    title: 'Agustín luego de dar una lightning talk virtual en la pandemia',
+    title: 'Agus luego de dar una lightning talk virtual en la pandemia',
     image: '/photos/agus-init.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 4,
-    title: 'Agustín desarrollando la web de PCN',
+    title: 'Agus desarrollando la web de PCN',
     image: '/photos/agus-pc.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 5,
-    title: 'Agustín dando una charla de DDD y arquitectura hexagonal en la UTN-FRT',
+    title: 'Agus dando una charla de DDD y arquitectura hexagonal en la UTN-FRT',
     image: '/photos/agus-talk.webp',
     date: new Date(2024, 2, 15),
   },
@@ -59,13 +59,13 @@ const photos = [
   },
   {
     id: 9,
-    title: 'Mauricio dando una charla sobre diseño en la UTN-FRT',
+    title: 'Mauri dando una charla sobre diseño en la UTN-FRT',
     image: '/photos/mauricio-talk.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 10,
-    title: 'Agustín, Facundo y Chelo luego de una charla en Tafí Viejo',
+    title: 'Agus, Facu y Chelo luego de una charla en Tafí Viejo',
     image: '/photos/photo-casual.webp',
     date: new Date(2024, 2, 15),
   },
@@ -77,13 +77,13 @@ const photos = [
   },
   {
     id: 12,
-    title: 'Tobías dando una charla sobre unit testing en la UTN-FRT',
+    title: 'Tobi dando una charla sobre unit testing en la UTN-FRT',
     image: '/photos/tobias-talk.webp',
     date: new Date(2024, 2, 15),
   },
   {
     id: 13,
-    title: 'Tobías dando una charla sobre depuración de código en la UTN-FRT',
+    title: 'Tobi dando una charla sobre depuración de código en la UTN-FRT',
     image: '/photos/tobias-watch-pc.webp',
     date: new Date(2024, 2, 15),
   },
