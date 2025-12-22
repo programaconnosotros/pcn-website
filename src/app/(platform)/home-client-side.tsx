@@ -644,7 +644,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">
-            Juntos somos más fuertes
+            Todos pueden crear y aportar en la comunidad
           </Heading2>
         </div>
 
