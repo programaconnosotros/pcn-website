@@ -43,6 +43,7 @@ async function getUser(id: string) {
                 id: true,
                 name: true,
                 image: true,
+                email: true,
               },
             },
             likes: true,

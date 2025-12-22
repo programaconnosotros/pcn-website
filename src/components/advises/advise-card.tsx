@@ -23,7 +23,7 @@ export const AdviseCard = ({
   session,
 }: {
   advise: Advise & {
-    author: User;
+    author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
     likes: Like[];
   };
   session: (Session & { user: User }) | null;
