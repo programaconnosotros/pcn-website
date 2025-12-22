@@ -73,7 +73,7 @@ export function TableOfContents() {
     const handleScroll = () => {
       setIsScrolling(true);
       clearTimeout(scrollTimeout);
-      
+
       // Clear scrolling flag after scroll ends
       scrollTimeout = setTimeout(() => {
         setIsScrolling(false);
@@ -91,16 +91,16 @@ export function TableOfContents() {
           const sectionTop = rect.top;
           const sectionBottom = rect.bottom;
           const sectionHeight = rect.height;
-          
+
           // Calculate how much of the section is above the reference point
           const visibleAbove = Math.max(0, referencePoint - sectionTop);
           const visibleBelow = Math.max(0, sectionBottom - referencePoint);
           const totalVisible = Math.min(visibleAbove + visibleBelow, sectionHeight);
-          
+
           // Score based on visibility and position
           // Higher score for sections that are well-positioned at the reference point
           let score = 0;
-          
+
           if (sectionTop <= referencePoint && sectionBottom >= referencePoint) {
             // Section spans the reference point - this is ideal
             const distanceFromTop = referencePoint - sectionTop;
@@ -112,10 +112,10 @@ export function TableOfContents() {
             // Section is just above reference point
             score = 300 - (referencePoint - sectionBottom);
           }
-          
+
           // Bonus for sections that are more visible
           score += totalVisible * 0.1;
-          
+
           if (score > bestScore) {
             bestScore = score;
             bestSection = section.id;
@@ -175,4 +175,3 @@ export function TableOfContents() {
     </div>
   );
 }
-
