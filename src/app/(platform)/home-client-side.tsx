@@ -18,8 +18,10 @@ import {
   Globe,
   GraduationCap,
   Handshake,
+  HelpCircle,
   Images,
   Laptop,
+  Lightbulb,
   Linkedin,
   LogIn,
   MapPin,
@@ -636,6 +638,64 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                   Contactanos
                 </Button>
               </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 text-center">
+            Juntos somos más fuertes
+          </Heading2>
+        </div>
+
+        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
+          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <Lightbulb className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Rocket className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Users className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              </div>
+              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+                ¿Querés organizar algo o proponer una iniciativa?
+              </Heading2>
+              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
+                Si tenés una idea que sea buena para la comunidad, querés organizar algo o proponer cualquier iniciativa,
+                contactanos y vemos la forma de llevarlo a cabo.
+              </Paragraph>
+              <Link href="https://wa.me/5493815777562" target="_blank">
+                <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Contactanos
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
+          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <HelpCircle className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+                ¿Tenés dudas?
+              </Heading2>
+              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
+                Revisá nuestra página de preguntas frecuentes, y si no encontrás lo que buscás, contactanos.
+              </Paragraph>
+              <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                <Link href="/preguntas-frecuentes">
+                  <Button variant="outline" className="border-pcnPurple text-pcnPurple hover:bg-pcnPurple hover:text-white dark:border-pcnGreen dark:text-pcnGreen dark:hover:bg-pcnGreen dark:hover:text-black">
+                    Ver preguntas frecuentes
+                  </Button>
+                </Link>
+                <Link href="https://wa.me/5493815777562" target="_blank">
+                  <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Contactanos
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
