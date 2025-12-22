@@ -22,10 +22,12 @@ const sections = [
   { id: 'project-management', title: 'Project Management' },
   { id: 'tech-lead', title: 'Tech Lead' },
   { id: 'engineering-management', title: 'Engineering Management' },
+  { id: 'software-architect', title: 'Software Architect' },
 ];
 
 export function TableOfContents() {
   const [activeSection, setActiveSection] = useState<string>('');
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     // Check for hash in URL on mount
@@ -43,25 +45,73 @@ export function TableOfContents() {
       }
     }
 
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+    let scrollTimeout: NodeJS.Timeout;
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i].id);
-        if (section) {
-          const offsetTop = section.offsetTop;
-          if (scrollPosition >= offsetTop) {
-            setActiveSection(sections[i].id);
-            break;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      
+      // Clear scrolling flag after scroll ends
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+
+      // Reference point: 150px from top of viewport (accounts for header)
+      const referencePoint = 150;
+      let bestSection = '';
+      let bestScore = -Infinity;
+
+      sections.forEach((section) => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const sectionTop = rect.top;
+          const sectionBottom = rect.bottom;
+          const sectionHeight = rect.height;
+          
+          // Calculate how much of the section is above the reference point
+          const visibleAbove = Math.max(0, referencePoint - sectionTop);
+          const visibleBelow = Math.max(0, sectionBottom - referencePoint);
+          const totalVisible = Math.min(visibleAbove + visibleBelow, sectionHeight);
+          
+          // Score based on visibility and position
+          // Higher score for sections that are well-positioned at the reference point
+          let score = 0;
+          
+          if (sectionTop <= referencePoint && sectionBottom >= referencePoint) {
+            // Section spans the reference point - this is ideal
+            const distanceFromTop = referencePoint - sectionTop;
+            score = 1000 + (sectionHeight - distanceFromTop);
+          } else if (sectionTop > referencePoint && sectionTop < referencePoint + 100) {
+            // Section is just below reference point
+            score = 500 - (sectionTop - referencePoint);
+          } else if (sectionBottom < referencePoint && sectionBottom > referencePoint - 100) {
+            // Section is just above reference point
+            score = 300 - (referencePoint - sectionBottom);
+          }
+          
+          // Bonus for sections that are more visible
+          score += totalVisible * 0.1;
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestSection = section.id;
           }
         }
+      });
+
+      if (bestSection) {
+        setActiveSection(bestSection);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check on mount
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -79,7 +129,12 @@ export function TableOfContents() {
               setActiveSection(section.id);
               const element = document.getElementById(section.id);
               if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update URL hash
+                window.history.pushState(null, '', `#${section.id}`);
+                // Scroll to element with proper offset
+                const yOffset = -150; // Account for header
+                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
               }
             }}
             className={cn(
