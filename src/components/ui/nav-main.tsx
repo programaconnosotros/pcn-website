@@ -46,7 +46,7 @@ export function NavMain({
                 asChild 
                 tooltip={item.title} 
                 data-active={isActive}
-                className={isActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}
+                className={`transition-transform duration-200 hover:scale-105 ${isActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}`}
               >
                 <a href={item.url}>
                   <item.icon />
@@ -70,7 +70,7 @@ export function NavMain({
                           <SidebarMenuSubButton 
                             asChild 
                             isActive={isSubItemActive}
-                            className={isSubItemActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}
+                            className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}`}
                           >
                             <a href={subItem.url}>
                               <span>{subItem.title}</span>
