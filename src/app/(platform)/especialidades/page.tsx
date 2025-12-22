@@ -18,6 +18,7 @@ import {
   Layers,
   Smartphone,
   Smartphone as AndroidIcon,
+  Tablet,
   Cloud,
   BarChart3,
   Brain,
@@ -241,6 +242,66 @@ const SpecialtiesPage = () => (
                 <p className="text-muted-foreground">
                   Para desarrolladores interesados en crear aplicaciones para la plataforma Android más
                   utilizada del mundo, con gran flexibilidad y personalización.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="mobile-development"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Tablet className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                Mobile Development (Cross-Platform)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                El desarrollo móvil cross-platform permite crear aplicaciones que funcionan en múltiples
+                plataformas (iOS y Android) usando un solo código base, reduciendo tiempo y costos de
+                desarrollo.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Frameworks principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>
+                    <strong>React Native:</strong> Framework basado en React, permite desarrollo con
+                    JavaScript/TypeScript
+                  </li>
+                  <li>
+                    <strong>Expo:</strong> Plataforma y herramientas para React Native que simplifica el
+                    desarrollo
+                  </li>
+                  <li>
+                    <strong>Flutter:</strong> Framework de Google usando Dart, con excelente rendimiento
+                    y UI nativa
+                  </li>
+                  <li>
+                    <strong>Ionic:</strong> Framework basado en web technologies (HTML, CSS, JS)
+                  </li>
+                  <li>
+                    <strong>Xamarin:</strong> Framework de Microsoft usando C# y .NET
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">Ventajas del desarrollo cross-platform:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Un solo código base para múltiples plataformas</li>
+                  <li>Desarrollo más rápido y económico</li>
+                  <li>Mantenimiento simplificado</li>
+                  <li>Acceso a APIs nativas cuando es necesario</li>
+                  <li>Hot reload para desarrollo ágil</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para desarrolladores que quieren crear aplicaciones móviles para múltiples plataformas
+                  de manera eficiente, aprovechando frameworks modernos que permiten compartir código
+                  entre iOS y Android.
                 </p>
               </div>
             </CardContent>
