@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
 import { PhotoDialog } from './photo-dialog';
 import { SearchBar } from './search-bar';
-import { SortSelector, type SortOrder } from './sort-selector';
 
 const photos = [
   {
@@ -97,7 +96,6 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
   const router = useRouter();
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('default');
   const isDialogOpen = selectedPhotoIndex !== -1;
 
   // Filter photos based on search query
@@ -112,33 +110,8 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
     );
   }, [searchQuery]);
 
-  // Sort photos based on sort order
-  const sortedPhotos = useMemo(() => {
-    const photosToSort = [...filteredPhotos];
-
-    switch (sortOrder) {
-      case 'date-asc':
-        return photosToSort.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-          return a.date.getTime() - b.date.getTime();
-        });
-      case 'date-desc':
-        return photosToSort.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-          return b.date.getTime() - a.date.getTime();
-        });
-      default:
-        // For default order, we need to restore the original order
-        // We can do this by sorting based on the index in the original array
-        return photosToSort.sort((a, b) => {
-          const indexA = photos.findIndex((p) => p.id === a.id);
-          const indexB = photos.findIndex((p) => p.id === b.id);
-          return indexA - indexB;
-        });
-    }
-  }, [filteredPhotos, sortOrder]);
+  // Use filtered photos
+  const sortedPhotos = filteredPhotos;
 
   // Open photo dialog when initialPhotoId is provided
   useEffect(() => {
@@ -170,10 +143,6 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
     setSelectedPhotoIndex(index);
   };
 
-  const handleSortChange = (order: SortOrder) => {
-    setSortOrder(order);
-  };
-
   const getShareUrl = (photoId: number) => {
     // Create absolute URL for sharing
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
@@ -182,16 +151,11 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
   return (
     <>
-      <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div className="mb-6 flex justify-center">
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           placeholder="Buscar por título o fecha..."
-        />
-        <SortSelector
-          sortOrder={sortOrder}
-          onSortChange={handleSortChange}
-          className="w-full max-w-md sm:w-auto"
         />
       </div>
 
@@ -202,31 +166,17 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
           </p>
         </div>
       ) : (
-        <>
-          <div className="xl:hidden">
-            {sortedPhotos.map((photo, index) => (
-              <div key={photo.id} className="mb-3 cursor-pointer">
-                <PhotoCard
-                  photo={photo}
-                  getShareUrl={getShareUrl}
-                  onCardClick={() => handlePhotoClick(index)}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="hidden gap-3 xl:block" style={{ columnCount: 4, columnGap: '0.75rem' }}>
-            {sortedPhotos.map((photo, index) => (
-              <div key={photo.id} className="mb-3 cursor-pointer" style={{ breakInside: 'avoid' }}>
-                <PhotoCard
-                  photo={photo}
-                  getShareUrl={getShareUrl}
-                  onCardClick={() => handlePhotoClick(index)}
-                />
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-0">
+          {sortedPhotos.map((photo, index) => (
+            <div key={photo.id} className="cursor-pointer">
+              <PhotoCard
+                photo={photo}
+                getShareUrl={getShareUrl}
+                onCardClick={() => handlePhotoClick(index)}
+              />
+            </div>
+          ))}
+        </div>
       )}
 
       {isDialogOpen && (
