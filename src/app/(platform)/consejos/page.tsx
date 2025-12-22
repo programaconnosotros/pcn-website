@@ -2,7 +2,7 @@ import { AdviseCard } from '@/components/advises/advise-card';
 import { AddAdvise } from '@/components/advises/add-advise';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session, User, Advise } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Suspense } from 'react';
 import {
