@@ -58,7 +58,7 @@ export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
       <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 text-center">Organizaciones que nos apoyan</Heading2>
+        <Heading2 className="relative z-10 text-center">Nos acompañan</Heading2>
       </div>
 
       <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
