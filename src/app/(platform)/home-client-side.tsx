@@ -82,8 +82,11 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             <Heading2 className="relative z-10 text-center text-white">
               {session?.user?.name ? (
                 <>
-                  Hola <span className="text-[#8B7FD9] dark:text-pcnGreen">{session.user.name.split(' ')[0]}</span>!
-                  Gracias por ser parte de la comunidad.
+                  Hola{' '}
+                  <span className="text-[#8B7FD9] dark:text-pcnGreen">
+                    {session.user.name.split(' ')[0]}
+                  </span>
+                  ! Gracias por ser parte de la comunidad.
                 </>
               ) : (
                 'Hola!'
@@ -94,7 +97,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <MotivationalQuotes />
             </div> */}
           </div>
-
         ) : (
           // Componente usuario no logueado
           <div className="relative -mx-4 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background pt-12 md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)] md:pt-0">
@@ -143,12 +145,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         )}
 
-          <div className="flex justify-center -mt-12 z-10 mb-6">
-            <div 
-              className="group relative w-full max-w-4xl rounded-lg bg-[#e8e4f5] border-2 border-pcnPurple p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)] dark:border-pcnGreen/20"
-            >
-            <div 
-              className="absolute inset-0 opacity-10 dark:opacity-5 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:group-hover:opacity-8"
+        <div className="z-10 -mt-12 mb-6 flex justify-center">
+          <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
+            <div
+              className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:opacity-5"
               style={{
                 backgroundImage: "url('/logo.webp')",
                 backgroundSize: 'contain',
@@ -160,11 +160,16 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             />
             <div className="relative z-10 flex flex-col items-center">
               <p className="text-center text-black dark:text-white">
-                Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad es altamente inspirador y motivador para poder expandir nuestras capacidades, e intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen superarse todos los días.
+                Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí
+                para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad
+                es altamente inspirador y motivador para poder expandir nuestras capacidades, e
+                intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el
+                nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen
+                superarse todos los días.
               </p>
             </div>
-            </div>
           </div>
+        </div>
 
         {/* <Testimonials /> */}
 
@@ -172,8 +177,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            <span className="text-pcnPurple dark:text-pcnGreen">Impulsá tu carrera</span>{' '}
-            con estos{' '}
+            <span className="text-pcnPurple dark:text-pcnGreen">Impulsá tu carrera</span> con estos{' '}
             <span className="relative inline-block">
               recursos
               <svg
@@ -199,7 +203,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Handshake className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Handshake
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Consejos</Heading3>
 
@@ -209,14 +216,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver consejos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver consejos
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <MicVocal
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Charlas</Heading3>
 
@@ -227,7 +239,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver charlas</Button>
+                <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                  Ver charlas
+                </Button>
               </Link>
             </div>
           </div>
@@ -235,7 +249,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Users className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Users
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Contactos</Heading3>
 
@@ -245,14 +262,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Conocer a la comunidad</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Conocer a la comunidad
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Brain className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Brain
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Mentores</Heading3>
 
@@ -262,14 +284,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/mentores" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Conocer mentores</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Conocer mentores
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Globe className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Globe
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Oportunidades</Heading3>
 
@@ -280,11 +307,15 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-                <Button className="relative z-10 w-full md:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">PCN en WhatsApp</Button>
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black md:w-auto">
+                  PCN en WhatsApp
+                </Button>
               </Link>
 
               <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-                <Button className="relative z-10 w-full md:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">PCN en Discord</Button>
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black md:w-auto">
+                  PCN en Discord
+                </Button>
               </Link>
             </div>
           </div>
@@ -292,7 +323,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Calendar className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Calendar
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Eventos</Heading3>
 
@@ -302,14 +336,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/eventos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver eventos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver eventos
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Book className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Book
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Lectura</Heading3>
 
@@ -319,14 +358,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/lectura" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver libros</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver libros
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MicVocal className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <MicVocal
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Podcast</Heading3>
 
@@ -336,14 +380,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/podcast" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver podcast</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver podcast
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Laptop className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Laptop
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Cursos</Heading3>
 
@@ -353,14 +402,19 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/cursos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver cursos</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver cursos
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Star className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Star
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Software recomendado</Heading3>
 
@@ -370,31 +424,41 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/software-recomendado" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver software</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver software
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MessageSquare className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <MessageSquare
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Foro</Heading3>
 
             <Paragraph className="relative z-10 text-center text-muted-foreground">
-              Participá en discusiones, hacé preguntas y compartí conocimiento con otros miembros
-              de la comunidad en nuestro foro.
+              Participá en discusiones, hacé preguntas y compartí conocimiento con otros miembros de
+              la comunidad en nuestro foro.
             </Paragraph>
 
             <Link href="/foro" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver foro</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver foro
+              </Button>
             </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-105">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <Monitor className="h-10 w-10 md:h-12 md:w-12 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.0} />
+              <Monitor
+                className="h-10 w-10 text-pcnPurple dark:text-pcnGreen md:h-12 md:w-12"
+                strokeWidth={1.0}
+              />
             </div>
             <Heading3 className="relative z-10">Setups</Heading3>
 
@@ -404,7 +468,9 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <Link href="/setups" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white dark:group-hover:bg-pcnGreen dark:group-hover:text-black group-hover:shadow-lg">Ver setups</Button>
+              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Ver setups
+              </Button>
             </Link>
           </div>
         </div>
@@ -423,7 +489,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Paragraph>
 
               <Link href="/historia" className="relative z-10">
-                <Button variant="outline" className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:border-pcnPurple dark:group-hover:bg-pcnGreen dark:group-hover:text-black dark:group-hover:border-pcnGreen group-hover:shadow-lg">
+                <Button
+                  variant="outline"
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:text-black"
+                >
                   Leer historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -444,7 +513,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               </Paragraph>
 
               <Link href="/galeria" className="relative z-10">
-                <Button variant="outline" className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:border-pcnPurple dark:group-hover:bg-pcnGreen dark:group-hover:text-black dark:group-hover:border-pcnGreen group-hover:shadow-lg">
+                <Button
+                  variant="outline"
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:text-black"
+                >
                   Ver galería <Images className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -453,9 +525,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <div className="flex items-center justify-center p-6">
-          <Heading2 className="relative z-10 text-center">
-            Lo que dicen nuestros miembros
-          </Heading2>
+          <Heading2 className="relative z-10 text-center">Lo que dicen nuestros miembros</Heading2>
         </div>
 
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -473,7 +543,10 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               body: 'PCN es mucho más que una comunidad de desarrollo. Es un espacio donde se comparte conocimiento, se hacen amigos, se organizan charlas y eventos.',
             },
           ].map((testimonio, index) => (
-            <Card key={index} className="flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
+            <Card
+              key={index}
+              className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-105 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+            >
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
@@ -489,9 +562,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
         <div className="mb-6 flex justify-center">
           <Link href="/testimonios">
-            <Button variant="outline">
-              Ver todos los testimonios
-            </Button>
+            <Button variant="outline">Ver todos los testimonios</Button>
           </Link>
         </div>
 
@@ -505,7 +576,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
               <span className="text-2xl">💬</span>
@@ -521,7 +592,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
               <span className="text-2xl">💬</span>
@@ -537,7 +608,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
               <span className="text-2xl">📷</span>
@@ -553,7 +624,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
               <span className="text-2xl">▶️</span>
@@ -569,7 +640,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] flex-[1_1_100%] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
               <Linkedin className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
@@ -584,22 +655,26 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex items-center justify-center gap-4 mb-2">
-                <GraduationCap className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              <div className="mb-2 flex items-center justify-center gap-4">
+                <GraduationCap
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
                 <MapPin className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
                 <Rocket className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
               </div>
-              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
                 ¿Querés ser referente de PCN en tu ciudad o universidad?
               </Heading2>
-              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
-                Si compartís los valores de PCN y en tu universidad o ciudad aún no hay muchos miembros,
-                podemos armar un plan para que la comunidad crezca ahí y que seas un referente.
+              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
+                Si compartís los valores de PCN y en tu universidad o ciudad aún no hay muchos
+                miembros, podemos armar un plan para que la comunidad crezca ahí y que seas un
+                referente.
               </Paragraph>
               <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
                   <MessageSquare className="h-4 w-4" />
                   Contactanos
                 </Button>
@@ -618,22 +693,25 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         </div>
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex items-center justify-center gap-4 mb-2">
-                <Lightbulb className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              <div className="mb-2 flex items-center justify-center gap-4">
+                <Lightbulb
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
                 <Rocket className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
                 <Users className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
               </div>
-              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
                 ¿Querés organizar algo o proponer una iniciativa?
               </Heading2>
-              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
-                Si tenés una idea que sea buena para la comunidad, querés organizar algo o proponer cualquier iniciativa,
-                contactanos y vemos la forma de llevarlo a cabo.
+              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
+                Si tenés una idea que sea buena para la comunidad, querés organizar algo o proponer
+                cualquier iniciativa, contactanos y vemos la forma de llevarlo a cabo.
               </Paragraph>
               <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
                   <MessageSquare className="h-4 w-4" />
                   Contactanos
                 </Button>
@@ -645,22 +723,32 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
         <SponsorsSection />
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex items-center justify-center gap-4 mb-2">
-                <Building2 className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-                <Handshake className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-                <Briefcase className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              <div className="mb-2 flex items-center justify-center gap-4">
+                <Building2
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
+                <Handshake
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
+                <Briefcase
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
               </div>
-              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
                 ¿Sos una empresa y querés organizar algo en conjunto?
               </Heading2>
-              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
+              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
                 Si tu empresa comparte los valores de PCN y querés colaborar con la comunidad,
-                organizar eventos, charlas o cualquier iniciativa, contactanos y armemos algo juntos.
+                organizar eventos, charlas o cualquier iniciativa, contactanos y armemos algo
+                juntos.
               </Paragraph>
               <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
                   <MessageSquare className="h-4 w-4" />
                   Contactanos
                 </Button>

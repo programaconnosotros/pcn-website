@@ -81,7 +81,7 @@ export function TableOfContents() {
             className={cn(
               'block rounded-md px-3 py-2 text-sm transition-colors',
               activeSection === section.id
-                ? 'bg-pcnPurple/10 text-pcnPurple dark:bg-pcnGreen/10 dark:text-pcnGreen font-medium'
+                ? 'bg-pcnPurple/10 font-medium text-pcnPurple dark:bg-pcnGreen/10 dark:text-pcnGreen'
                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
             )}
           >
@@ -92,4 +92,3 @@ export function TableOfContents() {
     </div>
   );
 }
-

@@ -161,15 +161,17 @@ const DashboardPage = async () => {
       },
       take: 5,
     }),
-    prisma.advise.findMany({
-      include: {
-        likes: true,
-      },
-    }).then((advises) => {
-      if (advises.length === 0) return null;
-      const sorted = advises.sort((a, b) => b.likes.length - a.likes.length);
-      return sorted[0];
-    }),
+    prisma.advise
+      .findMany({
+        include: {
+          likes: true,
+        },
+      })
+      .then((advises) => {
+        if (advises.length === 0) return null;
+        const sorted = advises.sort((a, b) => b.likes.length - a.likes.length);
+        return sorted[0];
+      }),
     prisma.like.count().then((likes) => {
       return prisma.advise.count().then((advises) => {
         return advises > 0 ? Math.round((likes / advises) * 10) / 10 : 0;
@@ -376,9 +378,7 @@ const DashboardPage = async () => {
                     <div className="space-y-2">
                       <p className="font-semibold">{nextEvent.name}</p>
                       <p className="text-sm text-muted-foreground">{nextEvent.city}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(nextEvent.date)}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{formatDate(nextEvent.date)}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -465,4 +465,3 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
-

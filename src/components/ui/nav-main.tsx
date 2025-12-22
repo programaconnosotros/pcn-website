@@ -36,55 +36,56 @@ export function NavMain({
     <SidebarGroup>
       <SidebarMenu>
         {items.map((item) => {
-          const isActive = pathname === item.url || (item.url !== '/home' && pathname.startsWith(item.url));
-          const hasActiveSubItem = item.items?.some(subItem => pathname === subItem.url);
-          
+          const isActive =
+            pathname === item.url || (item.url !== '/home' && pathname.startsWith(item.url));
+          const hasActiveSubItem = item.items?.some((subItem) => pathname === subItem.url);
+
           return (
-          <Collapsible key={item.title} asChild defaultOpen={isActive || hasActiveSubItem}>
-            <SidebarMenuItem>
-              <SidebarMenuButton 
-                asChild 
-                tooltip={item.title} 
-                data-active={isActive}
-                className={`transition-transform duration-200 hover:scale-105 ${isActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}`}
-              >
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-              {item.items?.length ? (
-                <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                      <span className="sr-only">Toggle</span>
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => {
-                        const isSubItemActive = pathname === subItem.url;
-                        return (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton 
-                            asChild 
-                            isActive={isSubItemActive}
-                            className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? "border-l-2 border-pcnPurple dark:border-pcnGreen bg-pcnPurple/10 dark:bg-pcnGreen/10 text-pcnPurple dark:text-pcnGreen" : ""}`}
-                          >
-                            <a href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </>
-              ) : null}
-            </SidebarMenuItem>
-          </Collapsible>
+            <Collapsible key={item.title} asChild defaultOpen={isActive || hasActiveSubItem}>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  data-active={isActive}
+                  className={`transition-transform duration-200 hover:scale-105 ${isActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen' : ''}`}
+                >
+                  <a href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </a>
+                </SidebarMenuButton>
+                {item.items?.length ? (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                        <span className="sr-only">Toggle</span>
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => {
+                          const isSubItemActive = pathname === subItem.url;
+                          return (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isSubItemActive}
+                                className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen' : ''}`}
+                              >
+                                <a href={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                ) : null}
+              </SidebarMenuItem>
+            </Collapsible>
           );
         })}
       </SidebarMenu>

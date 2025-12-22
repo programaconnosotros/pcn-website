@@ -49,41 +49,41 @@ const LanguageDialog = ({
       </Button>
     </DialogTrigger>
     <DialogContent className="border-gray-200 bg-white text-gray-950 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-  <DialogHeader>
-    <DialogTitle>Agregar lenguaje de programación</DialogTitle>
-  </DialogHeader>
-  <div className="space-y-4 py-4">
-    <div className="space-y-2">
-      <Label htmlFor="language" className="text-gray-700 dark:text-gray-300">
-        Selecciona un lenguaje
-      </Label>
-      <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-        <SelectTrigger className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-          <SelectValue placeholder="Seleccionar lenguaje" />
-        </SelectTrigger>
-        <SelectContent className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-          {programmingLanguages.map((lang) => (
-            <SelectItem key={lang.id} value={lang.id}>
-              <div className="flex items-center gap-2">
-                <div className="relative h-5 w-5">
-                  <img
-                    src={lang.logo || '/placeholder.svg'}
-                    alt={lang.name}
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-                <span>{lang.name}</span>
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-    <Button onClick={addLanguage} className="w-full">
-      Agregar
-    </Button>
-  </div>
-</DialogContent>
+      <DialogHeader>
+        <DialogTitle>Agregar lenguaje de programación</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4 py-4">
+        <div className="space-y-2">
+          <Label htmlFor="language" className="text-gray-700 dark:text-gray-300">
+            Selecciona un lenguaje
+          </Label>
+          <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
+            <SelectTrigger className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+              <SelectValue placeholder="Seleccionar lenguaje" />
+            </SelectTrigger>
+            <SelectContent className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+              {programmingLanguages.map((lang) => (
+                <SelectItem key={lang.id} value={lang.id}>
+                  <div className="flex items-center gap-2">
+                    <div className="relative h-5 w-5">
+                      <img
+                        src={lang.logo || '/placeholder.svg'}
+                        alt={lang.name}
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
+                    <span>{lang.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Button onClick={addLanguage} className="w-full">
+          Agregar
+        </Button>
+      </div>
+    </DialogContent>
   </Dialog>
 );
 
@@ -215,7 +215,7 @@ export const ProfileForm = ({
             <FormError error={form.formState.errors.linkedinUrl} />
           </div>
 
-        <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="gitHubUrl">URL de cuenta de GitHub</Label>
             <Input id="gitHubUrl" type="url" {...form.register('gitHubUrl')} />
             <FormError error={form.formState.errors.gitHubUrl} />

@@ -67,4 +67,3 @@ const AnunciosPage = async () => {
 };
 
 export default AnunciosPage;
-

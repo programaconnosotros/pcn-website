@@ -11,7 +11,7 @@ export const ScrollIndicator = () => {
     const checkScroll = () => {
       const isAtTop = window.scrollY === 0;
       const hasScrollableContent = document.documentElement.scrollHeight > window.innerHeight;
-      
+
       setIsVisible(isAtTop && hasScrollableContent);
     };
 
@@ -20,7 +20,7 @@ export const ScrollIndicator = () => {
 
     // Verificar al hacer scroll
     window.addEventListener('scroll', checkScroll);
-    
+
     // Verificar al cambiar el tamaño de la ventana
     window.addEventListener('resize', checkScroll);
 
@@ -38,7 +38,7 @@ export const ScrollIndicator = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-6 right-6 z-40 flex flex-col items-center gap-2 pointer-events-none"
+          className="pointer-events-none fixed bottom-6 right-6 z-40 flex flex-col items-center gap-2"
         >
           <motion.div
             animate={{
@@ -52,11 +52,13 @@ export const ScrollIndicator = () => {
             className="flex flex-col items-center gap-1"
           >
             <ChevronDown className="h-6 w-6 text-pcnPurple dark:text-pcnGreen" strokeWidth={2} />
-            <ChevronDown className="h-6 w-6 text-pcnPurple dark:text-pcnGreen opacity-50 -mt-3" strokeWidth={2} />
+            <ChevronDown
+              className="-mt-3 h-6 w-6 text-pcnPurple opacity-50 dark:text-pcnGreen"
+              strokeWidth={2}
+            />
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
-

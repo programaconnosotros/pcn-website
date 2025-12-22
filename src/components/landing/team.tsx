@@ -181,7 +181,10 @@ export const Team = () => (
         className="mx-auto mt-6 grid max-w-2xl grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:mx-0 lg:max-w-none lg:grid-cols-6 xl:grid-cols-6"
       >
         {people.map((person) => (
-          <li key={person.name} className="group relative z-0 transition-all duration-300 hover:z-10 hover:scale-105 hover:shadow-xl">
+          <li
+            key={person.name}
+            className="group relative z-0 transition-all duration-300 hover:z-10 hover:scale-105 hover:shadow-xl"
+          >
             {person.linkedinUrl ? (
               <a
                 href={person.linkedinUrl}
@@ -193,11 +196,9 @@ export const Team = () => (
                   <img
                     alt={person.name}
                     src={person.imageUrl}
-                    className="h-full w-full object-cover transition-all duration-300 grayscale group-hover:grayscale-0"
+                    className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
                   />
-                  <div 
-                    className="absolute inset-0 mix-blend-color bg-pcnPurple/40 transition-opacity duration-300 group-hover:opacity-0 dark:bg-pcnGreen/40"
-                  />
+                  <div className="absolute inset-0 bg-pcnPurple/40 mix-blend-color transition-opacity duration-300 group-hover:opacity-0 dark:bg-pcnGreen/40" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <h3 className="text-lg font-bold text-white">{person.name}</h3>
                   </div>
@@ -208,9 +209,9 @@ export const Team = () => (
                 <img
                   alt={person.name}
                   src={person.imageUrl}
-                  className="h-full w-full object-cover transition-all duration-300 grayscale group-hover:grayscale-0"
+                  className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
                 />
-                <div 
+                <div
                   className="absolute inset-0 mix-blend-color transition-opacity duration-300 group-hover:opacity-0"
                   style={{ backgroundColor: '#04f4be', opacity: 0.4 }}
                 />
