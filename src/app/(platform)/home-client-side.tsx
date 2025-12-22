@@ -12,6 +12,8 @@ import { Paragraph } from '@/components/ui/paragraph';
 import {
   Book,
   Brain,
+  Briefcase,
+  Building2,
   Calendar,
   Globe,
   GraduationCap,
@@ -602,6 +604,31 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
                 Si compartís los valores de PCN y en tu universidad o ciudad aún no hay muchos miembros,
                 podemos armar un plan para que la comunidad crezca ahí y que seas un referente.
+              </Paragraph>
+              <Link href="https://wa.me/5493815777562" target="_blank">
+                <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Contactanos
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
+          <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <Building2 className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Handshake className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Briefcase className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              </div>
+              <Heading2 className="text-pcnPurple dark:text-pcnGreen mb-0 pb-0">
+                ¿Sos una empresa y querés organizar algo en conjunto?
+              </Heading2>
+              <Paragraph className="max-w-3xl text-base md:text-lg -mt-3">
+                Si tu empresa comparte los valores de PCN y querés colaborar con la comunidad,
+                organizar eventos, charlas o cualquier iniciativa, contactanos y armemos algo juntos.
               </Paragraph>
               <Link href="https://wa.me/5493815777562" target="_blank">
                 <Button className="bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 flex items-center gap-2">
