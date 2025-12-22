@@ -3,26 +3,47 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import {
+  Globe,
+  Server,
+  Layers,
+  Smartphone,
+  Smartphone as AndroidIcon,
+  Cloud,
+  BarChart3,
+  Brain,
+  Shield,
+  Gamepad2,
+  TestTube,
+  Coins,
+  Palette,
+  Network,
+  ClipboardList,
+  UserCog,
+  Briefcase,
+  Building2,
+  type LucideIcon,
+} from 'lucide-react';
 
-const sections = [
-  { id: 'web-frontend', title: 'Web Frontend Development' },
-  { id: 'backend', title: 'Backend Development' },
-  { id: 'fullstack', title: 'Full Stack Development' },
-  { id: 'ios-mobile', title: 'iOS Mobile Development' },
-  { id: 'android-mobile', title: 'Android Mobile Development' },
-  { id: 'devops', title: 'DevOps & Cloud Engineering' },
-  { id: 'data-science', title: 'Data Science & Analytics' },
-  { id: 'machine-learning', title: 'Machine Learning & AI' },
-  { id: 'cybersecurity', title: 'Cybersecurity' },
-  { id: 'game-dev', title: 'Game Development' },
-  { id: 'qa', title: 'QA & Testing' },
-  { id: 'blockchain', title: 'Blockchain & Web3' },
-  { id: 'ui-ux-design', title: 'UI/UX Design' },
-  { id: 'networking', title: 'Networking & Infrastructure' },
-  { id: 'project-management', title: 'Project Management' },
-  { id: 'tech-lead', title: 'Tech Lead' },
-  { id: 'engineering-management', title: 'Engineering Management' },
-  { id: 'software-architect', title: 'Software Architect' },
+const sections: { id: string; title: string; icon: LucideIcon }[] = [
+  { id: 'web-frontend', title: 'Web Frontend Development', icon: Globe },
+  { id: 'backend', title: 'Backend Development', icon: Server },
+  { id: 'fullstack', title: 'Full Stack Development', icon: Layers },
+  { id: 'ios-mobile', title: 'iOS Mobile Development', icon: Smartphone },
+  { id: 'android-mobile', title: 'Android Mobile Development', icon: AndroidIcon },
+  { id: 'devops', title: 'DevOps & Cloud Engineering', icon: Cloud },
+  { id: 'data-science', title: 'Data Science & Analytics', icon: BarChart3 },
+  { id: 'machine-learning', title: 'Machine Learning & AI', icon: Brain },
+  { id: 'cybersecurity', title: 'Cybersecurity', icon: Shield },
+  { id: 'game-dev', title: 'Game Development', icon: Gamepad2 },
+  { id: 'qa', title: 'QA & Testing', icon: TestTube },
+  { id: 'blockchain', title: 'Blockchain & Web3', icon: Coins },
+  { id: 'ui-ux-design', title: 'UI/UX Design', icon: Palette },
+  { id: 'networking', title: 'Networking & Infrastructure', icon: Network },
+  { id: 'project-management', title: 'Project Management', icon: ClipboardList },
+  { id: 'tech-lead', title: 'Tech Lead', icon: UserCog },
+  { id: 'engineering-management', title: 'Engineering Management', icon: Briefcase },
+  { id: 'software-architect', title: 'Software Architect', icon: Building2 },
 ];
 
 export function TableOfContents() {
@@ -138,13 +159,14 @@ export function TableOfContents() {
               }
             }}
             className={cn(
-              'block rounded-md px-3 py-2 text-sm transition-colors',
+              'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
               activeSection === section.id
                 ? 'bg-pcnPurple/10 font-medium text-pcnPurple dark:bg-pcnGreen/10 dark:text-pcnGreen'
                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
             )}
           >
-            {section.title}
+            <section.icon className="h-4 w-4 shrink-0" />
+            <span>{section.title}</span>
           </Link>
         ))}
       </div>
