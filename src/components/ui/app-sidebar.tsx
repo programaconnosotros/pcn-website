@@ -5,6 +5,7 @@ import {
   BookOpen,
   Briefcase,
   CalendarDays,
+  Code,
   HelpCircle,
   Home,
   Image,
@@ -110,6 +111,11 @@ const data = {
           url: '/cursos',
         },
       ],
+    },
+    {
+      title: 'Especialidades',
+      url: '/especialidades',
+      icon: Code,
     },
     {
       title: 'Testimonios',
