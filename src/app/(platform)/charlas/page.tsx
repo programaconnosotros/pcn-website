@@ -67,7 +67,7 @@ const Talks = () => (
           {talks
             .sort((a, b) => b.date.getTime() - a.date.getTime())
             .map((talk, index) => (
-              <Card key={index} className="flex flex-col overflow-hidden md:flex-row">
+              <Card key={index} className="flex flex-col overflow-hidden md:flex-row transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-pcnGreen/20 border-2 border-transparent hover:border-pcnPurple dark:hover:border-pcnGreen bg-gradient-to-br from-white to-gray-50 dark:from-neutral-900 dark:to-neutral-800 dark:border-neutral-800">
                 {talk.portrait && (
                   <div className="relative h-48 w-full shrink-0 md:h-auto md:w-64">
                     <img
