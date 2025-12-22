@@ -11,6 +11,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TableOfContents } from '@/components/especialidades/table-of-contents';
 
 const SpecialtiesPage = () => (
   <>
@@ -42,8 +43,9 @@ const SpecialtiesPage = () => (
             </p>
           </div>
         </div>
-
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex gap-8">
+          <TableOfContents />
+          <div className="flex flex-1 flex-col items-center gap-6">
           <Card
             id="frontend"
             className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
@@ -405,6 +407,7 @@ const SpecialtiesPage = () => (
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
     </div>
