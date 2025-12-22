@@ -149,7 +149,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
 
           <div className="flex justify-center -mt-12 z-10 mb-6">
             <div 
-              className="group relative w-full max-w-4xl rounded-lg bg-gradient-to-r from-[#c8f4eb] to-[#d9f9f2] p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]"
+              className="group relative w-full max-w-4xl rounded-lg bg-[#e8e4f5] border-2 border-pcnPurple p-6 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)] dark:border-pcnGreen/20"
             >
             <div 
               className="absolute inset-0 opacity-10 dark:opacity-5 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:group-hover:opacity-8"
