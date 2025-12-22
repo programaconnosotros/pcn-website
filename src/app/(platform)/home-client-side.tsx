@@ -588,8 +588,6 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </Link>
         </div>
 
-        <SponsorsSection />
-
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
           <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
@@ -614,6 +612,8 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </div>
           </div>
         </div>
+
+        <SponsorsSection />
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
           <div className="mx-6 rounded-xl bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 dark:from-pcnGreen/10 dark:to-pcnGreen/5 border-2 border-pcnPurple/20 dark:border-pcnGreen/20 p-8 md:p-12">
