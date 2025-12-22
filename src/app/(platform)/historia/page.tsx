@@ -214,12 +214,13 @@ const PCNStory = () => (
               <CardContent>
                 <p className="text-muted-foreground">
                   En el año 2019, Agus y Germán conocieron 2 personas en la UTN-FRT que se
-                  convirtieron en grandes compañeros y amigos: Iván Taddei y Marcelo &quot;Chelo&quot; Núñez.
-                  El grupo de los 4, bautizado por el Chelo como &quot;Nibble&quot;, fue un grupo destacado en
-                  la facultad, más que nada por la pasión que tenían por la ingeniería del software.
-                  Nunca fueron a la facultad solo para aprobar materias y ya, sino que realmente
-                  querían entender cómo funcionan las cosas, cómo se relacionan, cómo se aplican, y
-                  estudiar mucho más de lo que adentro de las aulas se enseñaba.
+                  convirtieron en grandes compañeros y amigos: Iván Taddei y Marcelo
+                  &quot;Chelo&quot; Núñez. El grupo de los 4, bautizado por el Chelo como
+                  &quot;Nibble&quot;, fue un grupo destacado en la facultad, más que nada por la
+                  pasión que tenían por la ingeniería del software. Nunca fueron a la facultad solo
+                  para aprobar materias y ya, sino que realmente querían entender cómo funcionan las
+                  cosas, cómo se relacionan, cómo se aplican, y estudiar mucho más de lo que adentro
+                  de las aulas se enseñaba.
                 </p>
               </CardContent>
             </Card>
