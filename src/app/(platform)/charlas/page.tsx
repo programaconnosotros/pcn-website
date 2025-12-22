@@ -85,12 +85,12 @@ const Talks = () => (
 
                   <CardContent className="flex-1">
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
+                      <User className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                       <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
                     </div>
 
                     <div className="mt-2 flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                       <p className="text-sm text-muted-foreground">
                         {new Date(talk.date)
                           .toLocaleDateString('es-ES', {
@@ -104,7 +104,7 @@ const Talks = () => (
 
                     {talk.location && (
                       <div className="mt-2 flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                         <p className="text-sm text-muted-foreground">{talk.location}</p>
                       </div>
                     )}
@@ -115,7 +115,7 @@ const Talks = () => (
                       <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
                         <Button className="flex items-center gap-2" variant="youtube">
                           Ver en YouTube
-                          <Youtube className="h-4 w-4" />
+                          <Youtube className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                         </Button>
                       </Link>
                     )}
@@ -125,7 +125,7 @@ const Talks = () => (
                         <DialogTrigger asChild>
                           <Button className="flex items-center gap-2" variant="outline">
                             Ver slides
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                           </Button>
                         </DialogTrigger>
 
