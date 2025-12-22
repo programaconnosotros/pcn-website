@@ -2,6 +2,7 @@ import { ReactQueryProvider } from '@/components/react-query-provider';
 import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { ScrollIndicator } from '@/components/ui/scroll-indicator';
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
 import { GeistSans } from 'geist/font/sans';
@@ -51,6 +52,7 @@ const RootLayout = async ({
           <ReactQueryProvider>{children}</ReactQueryProvider>
           <Toaster closeButton position="top-center" />
           <ScrollToTop />
+          <ScrollIndicator />
         </ThemeProvider>
       </body>
     </html>
