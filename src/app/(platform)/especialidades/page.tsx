@@ -57,10 +57,7 @@ const SpecialtiesPage = () => (
       <div className="mt-4">
         <div className="mb-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center gap-3">
-              <Code className="hidden md:block h-8 w-8 text-pcnPurple dark:text-pcnGreen" />
-              <Heading2 className="m-0 text-center">Especialidades en ingeniería de software</Heading2>
-            </div>
+            <Heading2 className="m-0 text-center">Especialidades en ingeniería de software</Heading2>
             <p className="text-center text-muted-foreground max-w-3xl">
               El mundo del software es vasto y diverso. Acá te presentamos las principales
               especialidades en las que podés enfocar tu carrera profesional.
