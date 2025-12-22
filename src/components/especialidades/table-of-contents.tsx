@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const sections = [
-  { id: 'frontend', title: 'Frontend Development' },
+  { id: 'web-frontend', title: 'Web Frontend Development' },
   { id: 'backend', title: 'Backend Development' },
   { id: 'fullstack', title: 'Full Stack Development' },
-  { id: 'mobile', title: 'Mobile Development' },
+  { id: 'ios-mobile', title: 'iOS Mobile Development' },
+  { id: 'android-mobile', title: 'Android Mobile Development' },
   { id: 'devops', title: 'DevOps & Cloud Engineering' },
   { id: 'data-science', title: 'Data Science & Analytics' },
   { id: 'machine-learning', title: 'Machine Learning & AI' },
@@ -16,6 +17,11 @@ const sections = [
   { id: 'game-dev', title: 'Game Development' },
   { id: 'qa', title: 'QA & Testing' },
   { id: 'blockchain', title: 'Blockchain & Web3' },
+  { id: 'ui-ux-design', title: 'UI/UX Design' },
+  { id: 'networking', title: 'Networking & Infrastructure' },
+  { id: 'project-management', title: 'Project Management' },
+  { id: 'tech-lead', title: 'Tech Lead' },
+  { id: 'engineering-management', title: 'Engineering Management' },
 ];
 
 export function TableOfContents() {

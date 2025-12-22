@@ -47,16 +47,16 @@ const SpecialtiesPage = () => (
           <TableOfContents />
           <div className="flex flex-1 flex-col items-center gap-6">
           <Card
-            id="frontend"
+            id="web-frontend"
             className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
           >
             <CardHeader>
-              <CardTitle>Frontend Development</CardTitle>
+              <CardTitle>Web Frontend Development</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                El desarrollo frontend se enfoca en crear la parte visual e interactiva de las
-                aplicaciones web y móviles que los usuarios ven y con la que interactúan directamente.
+                El desarrollo frontend web se enfoca en crear la parte visual e interactiva de las
+                aplicaciones web que los usuarios ven y con la que interactúan directamente en navegadores.
               </p>
               <div>
                 <Heading3 className="mb-2 text-lg">Tecnologías principales:</Heading3>
@@ -66,13 +66,14 @@ const SpecialtiesPage = () => (
                   <li>TypeScript para desarrollo tipado</li>
                   <li>Herramientas de build: Webpack, Vite, Next.js</li>
                   <li>CSS moderno: Tailwind CSS, Sass, Styled Components</li>
+                  <li>Progressive Web Apps (PWA)</li>
                 </ul>
               </div>
               <div>
                 <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
                 <p className="text-muted-foreground">
-                  Para personas creativas que disfrutan diseñar interfaces, trabajar con UX/UI, y ver
-                  resultados visuales inmediatos de su trabajo.
+                  Para personas creativas que disfrutan diseñar interfaces web, trabajar con UX/UI, y ver
+                  resultados visuales inmediatos de su trabajo en navegadores.
                 </p>
               </div>
             </CardContent>
@@ -142,36 +143,68 @@ const SpecialtiesPage = () => (
           </Card>
 
           <Card
-            id="mobile"
+            id="ios-mobile"
             className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
           >
             <CardHeader>
-              <CardTitle>Mobile Development</CardTitle>
+              <CardTitle>iOS Mobile Development</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                El desarrollo móvil se enfoca en crear aplicaciones para dispositivos móviles (iOS y
-                Android), ya sea nativas o multiplataforma.
+                El desarrollo iOS se enfoca en crear aplicaciones nativas para dispositivos Apple (iPhone,
+                iPad) utilizando las herramientas y frameworks específicos de la plataforma.
               </p>
               <div>
-                <Heading3 className="mb-2 text-lg">Enfoques principales:</Heading3>
+                <Heading3 className="mb-2 text-lg">Tecnologías principales:</Heading3>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li>
-                    <strong>Nativo:</strong> Swift/Kotlin para iOS/Android respectivamente
-                  </li>
-                  <li>
-                    <strong>Cross-platform:</strong> React Native, Flutter, Xamarin
-                  </li>
-                  <li>Progressive Web Apps (PWA)</li>
-                  <li>Optimización de rendimiento y batería</li>
-                  <li>Integración con sensores del dispositivo</li>
+                  <li>Swift y Objective-C</li>
+                  <li>Frameworks: SwiftUI, UIKit</li>
+                  <li>Xcode como IDE principal</li>
+                  <li>Core Data para persistencia</li>
+                  <li>ARKit para realidad aumentada</li>
+                  <li>TestFlight para distribución beta</li>
+                  <li>App Store Connect para publicación</li>
                 </ul>
               </div>
               <div>
                 <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
                 <p className="text-muted-foreground">
-                  Para desarrolladores interesados en crear experiencias móviles optimizadas y
-                  trabajar con las particularidades de los dispositivos móviles.
+                  Para desarrolladores interesados en crear aplicaciones nativas para el ecosistema Apple,
+                  aprovechando las características únicas de iOS y macOS.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="android-mobile"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>Android Mobile Development</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                El desarrollo Android se enfoca en crear aplicaciones nativas para dispositivos Android
+                utilizando las herramientas y frameworks específicos de la plataforma.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Tecnologías principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Kotlin y Java</li>
+                  <li>Frameworks: Jetpack Compose, Android Views</li>
+                  <li>Android Studio como IDE principal</li>
+                  <li>Room para persistencia de datos</li>
+                  <li>Material Design para UI</li>
+                  <li>Google Play Console para publicación</li>
+                  <li>Firebase para servicios backend</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para desarrolladores interesados en crear aplicaciones para la plataforma Android más
+                  utilizada del mundo, con gran flexibilidad y personalización.
                 </p>
               </div>
             </CardContent>
@@ -403,6 +436,180 @@ const SpecialtiesPage = () => (
                 <p className="text-muted-foreground">
                   Para desarrolladores interesados en tecnología descentralizada, criptografía y crear
                   aplicaciones que operen sin intermediarios.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="ui-ux-design"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>UI/UX Design</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                El diseño UI/UX se enfoca en crear interfaces de usuario intuitivas, atractivas y
+                funcionales que proporcionen una excelente experiencia de usuario.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Áreas principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Diseño de interfaces (UI): Visual, layout, tipografía, color</li>
+                  <li>Experiencia de usuario (UX): Research, wireframes, prototipos</li>
+                  <li>Herramientas: Figma, Sketch, Adobe XD, Framer</li>
+                  <li>Design Systems y componentes reutilizables</li>
+                  <li>Prototipado interactivo</li>
+                  <li>Testing de usabilidad</li>
+                  <li>Accesibilidad y diseño inclusivo</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para personas creativas con sentido estético, empatía por los usuarios y pasión por
+                  crear experiencias digitales intuitivas y agradables.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="networking"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>Networking & Infrastructure</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                El networking y la infraestructura se enfocan en diseñar, implementar y mantener redes
+                de computadoras y sistemas de comunicación que permiten la conectividad y transferencia
+                de datos.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Áreas principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Protocolos de red: TCP/IP, HTTP/HTTPS, DNS</li>
+                  <li>Configuración de routers, switches y firewalls</li>
+                  <li>Redes inalámbricas: Wi-Fi, Bluetooth, 5G</li>
+                  <li>Seguridad de red: VPNs, firewalls, IDS/IPS</li>
+                  <li>Cloud networking: VPCs, CDNs, load balancers</li>
+                  <li>Monitoreo y troubleshooting de redes</li>
+                  <li>Certificaciones: CCNA, CCNP, Network+</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para personas interesadas en cómo funcionan las comunicaciones digitales, la
+                  infraestructura de red y asegurar la conectividad y seguridad de los sistemas.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="project-management"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>Project Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                La gestión de proyectos se enfoca en planificar, organizar y ejecutar proyectos de
+                software de manera eficiente, asegurando que se completen a tiempo, dentro del
+                presupuesto y con la calidad esperada.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Metodologías y herramientas:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Metodologías ágiles: Scrum, Kanban, SAFe</li>
+                  <li>Herramientas: Jira, Trello, Asana, Monday.com</li>
+                  <li>Gestión de recursos y presupuestos</li>
+                  <li>Planificación y estimación de tareas</li>
+                  <li>Gestión de riesgos y stakeholders</li>
+                  <li>Comunicación y coordinación de equipos</li>
+                  <li>Certificaciones: PMP, CSM, PMI-ACP</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para personas organizadas, con habilidades de comunicación y liderazgo, que disfrutan
+                  coordinar equipos y asegurar que los proyectos se completen exitosamente.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="tech-lead"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>Tech Lead</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                Un Tech Lead es un desarrollador senior que combina habilidades técnicas profundas con
+                liderazgo, guiando al equipo en decisiones técnicas y arquitectónicas mientras sigue
+                programando activamente.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Responsabilidades principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Diseño de arquitectura y decisiones técnicas</li>
+                  <li>Code reviews y mentoring de desarrolladores</li>
+                  <li>Resolución de problemas técnicos complejos</li>
+                  <li>Coordinación técnica entre equipos</li>
+                  <li>Balance entre desarrollo y liderazgo</li>
+                  <li>Establecimiento de estándares y mejores prácticas</li>
+                  <li>Comunicación técnica con stakeholders</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para desarrolladores senior que quieren liderar técnicamente sin dejar de programar,
+                  combinando expertise técnico con habilidades de mentoría y comunicación.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            id="engineering-management"
+            className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+          >
+            <CardHeader>
+              <CardTitle>Engineering Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                La gestión de ingeniería se enfoca en liderar equipos de desarrollo, gestionar recursos,
+                establecer procesos y estrategias técnicas, y asegurar que los equipos entreguen software
+                de calidad.
+              </p>
+              <div>
+                <Heading3 className="mb-2 text-lg">Responsabilidades principales:</Heading3>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Gestión de equipos de ingeniería</li>
+                  <li>Reclutamiento y desarrollo de talento</li>
+                  <li>Planificación estratégica técnica</li>
+                  <li>Establecimiento de procesos y cultura de ingeniería</li>
+                  <li>Gestión de presupuestos y recursos</li>
+                  <li>Comunicación con otros departamentos</li>
+                  <li>Métricas y KPIs de ingeniería</li>
+                </ul>
+              </div>
+              <div>
+                <Heading3 className="mb-2 text-lg">¿Para quién es ideal?</Heading3>
+                <p className="text-muted-foreground">
+                  Para ingenieros con experiencia que quieren transicionar a roles de gestión, liderando
+                  equipos y estrategias técnicas mientras mantienen conexión con el desarrollo.
                 </p>
               </div>
             </CardContent>
