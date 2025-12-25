@@ -115,6 +115,21 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     isRegistered = !!registration;
   }
 
+  // Obtener información del cupo
+  let capacityInfo = null;
+  if (event.capacity !== null) {
+    const currentRegistrations = await prisma.eventRegistration.count({
+      where: {
+        eventId: id,
+      },
+    });
+    capacityInfo = {
+      current: currentRegistrations,
+      capacity: event.capacity,
+      available: currentRegistrations < event.capacity,
+    };
+  }
+
   // Obtener inscripciones si el usuario es admin
   let registrations: Array<{
     id: string;
@@ -298,13 +313,30 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                           Te esperamos en el evento
                         </p>
                       </div>
+                    ) : capacityInfo && !capacityInfo.available ? (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-center text-destructive">
+                          Cupo completo
+                        </p>
+                        <p className="text-xs text-center text-muted-foreground">
+                          {capacityInfo.current} de {capacityInfo.capacity} cupos ocupados
+                        </p>
+                      </div>
                     ) : (
-                      <Link href={`/eventos/${id}/inscripcion`} className="block">
-                        <Button variant="pcn" className="w-full flex items-center gap-2">
-                          <UserPlus className="h-4 w-4" />
-                          Inscribirme al evento
-                        </Button>
-                      </Link>
+                      <div className="space-y-3">
+                        <Link href={`/eventos/${id}/inscripcion`} className="block">
+                          <Button variant="pcn" className="w-full flex items-center gap-2">
+                            <UserPlus className="h-4 w-4" />
+                            Inscribirme al evento
+                          </Button>
+                        </Link>
+                        {capacityInfo && (
+                          <p className="text-xs text-center text-muted-foreground">
+                            {capacityInfo.capacity - capacityInfo.current} de {capacityInfo.capacity}{' '}
+                            cupos disponibles
+                          </p>
+                        )}
+                      </div>
                     )}
                   </CardContent>
                 </Card>

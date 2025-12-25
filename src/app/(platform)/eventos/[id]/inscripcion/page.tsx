@@ -18,7 +18,8 @@ import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventRegistrationForm } from '@/components/events/event-registration-form';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { checkEventCapacity } from '@/actions/events/check-event-capacity';
 
 const EventRegistrationPage = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -28,6 +29,9 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
   if (!event) {
     redirect('/eventos');
   }
+
+  // Verificar cupo disponible
+  const capacityCheck = await checkEventCapacity(id);
 
   // Obtener datos del usuario si está logueado
   const sessionId = cookies().get('sessionId')?.value;
@@ -133,8 +137,37 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
                 </CardContent>
               </Card>
             </div>
+          ) : !capacityCheck.available ? (
+            <div className="mx-auto max-w-2xl">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center justify-center space-y-4 py-8 text-center">
+                    <AlertCircle className="h-16 w-16 text-destructive" />
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold">Cupo completo</h3>
+                      <p className="text-muted-foreground">
+                        Lo sentimos, el cupo del evento está completo. No se pueden aceptar más
+                        inscripciones.
+                      </p>
+                      {capacityCheck.capacity && (
+                        <p className="text-sm text-muted-foreground">
+                          {capacityCheck.current} de {capacityCheck.capacity} cupos ocupados
+                        </p>
+                      )}
+                    </div>
+                    <Link href={`/eventos/${id}`}>
+                      <Button variant="outline">Volver al evento</Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           ) : (
-            <EventRegistrationForm eventId={id} userData={userData} />
+            <EventRegistrationForm
+              eventId={id}
+              userData={userData}
+              capacityInfo={capacityCheck}
+            />
           )}
         </div>
       </div>

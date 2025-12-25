@@ -48,6 +48,19 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
     throw new Error('Ya estás registrado en este evento con este correo electrónico');
   }
 
+  // Validar cupo disponible (verificar nuevamente antes de crear la inscripción)
+  if (event.capacity !== null) {
+    const currentRegistrations = await prisma.eventRegistration.count({
+      where: {
+        eventId: eventId,
+      },
+    });
+
+    if (currentRegistrations >= event.capacity) {
+      throw new Error('El cupo del evento está completo. No se pueden aceptar más inscripciones.');
+    }
+  }
+
   // Crear la inscripción
   await prisma.eventRegistration.create({
     data: {

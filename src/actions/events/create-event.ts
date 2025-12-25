@@ -46,6 +46,7 @@ export const createEvent = async (data: EventFormData) => {
       endDate: endDate,
       latitude: validatedData.latitude ?? null,
       longitude: validatedData.longitude ?? null,
+      capacity: validatedData.capacity ?? null,
       sponsors: {
         create: sponsors?.filter((s) => s.name.trim() !== '').map((sponsor) => ({
           name: sponsor.name,

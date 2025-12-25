@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, MapPin, Building2, Image as ImageIcon, Save, Plus, Trash2, Globe } from 'lucide-react';
+import { Calendar, MapPin, Building2, Image as ImageIcon, Save, Plus, Trash2, Globe, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -45,6 +45,7 @@ export function EventForm({
       latitude: defaultValues?.latitude || '',
       longitude: defaultValues?.longitude || '',
       sponsors: defaultValues?.sponsors || [],
+      capacity: defaultValues?.capacity?.toString() || '',
     },
   });
 
@@ -244,6 +245,34 @@ export function EventForm({
                   <Input type="url" placeholder="https://ejemplo.com/flyer.jpg" {...field} />
                 </FormControl>
                 <FormDescription>URL de la imagen del flyer del evento</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Cupo */}
+          <FormField
+            control={form.control}
+            name="capacity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Users className="mr-2 inline h-4 w-4" />
+                  Cupo máximo (opcional)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    placeholder="Ej: 50"
+                    {...field}
+                    value={field.value || ''}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Número máximo de personas que pueden inscribirse al evento. Dejar vacío para
+                  cupo ilimitado.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

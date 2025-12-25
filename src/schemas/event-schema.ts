@@ -60,6 +60,13 @@ export const eventSchema = z.object({
     )
     .optional()
     .default([]),
+  capacity: z
+    .string()
+    .optional()
+    .transform((val) => (val === '' || val === undefined ? undefined : parseInt(val, 10)))
+    .refine((val) => val === undefined || (!isNaN(val) && val > 0), {
+      message: 'El cupo debe ser un número mayor a 0',
+    }),
 });
 
 export type EventFormData = z.infer<typeof eventSchema>;

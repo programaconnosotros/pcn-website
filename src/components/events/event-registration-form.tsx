@@ -1,6 +1,7 @@
 'use client';
 
 import { registerEvent } from '@/actions/events/register-event';
+import { checkEventCapacity } from '@/actions/events/check-event-capacity';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -21,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { eventRegistrationSchema, EventRegistrationFormData } from '@/schemas/event-registration-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save, User, Mail, Briefcase, GraduationCap } from 'lucide-react';
+import { Save, User, Mail, Briefcase, GraduationCap, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -38,9 +39,19 @@ type EventRegistrationFormProps = {
     university: string;
     career: string;
   } | null;
+  capacityInfo: {
+    available: boolean;
+    current: number;
+    capacity: number | null;
+    message?: string;
+  };
 };
 
-export function EventRegistrationForm({ eventId, userData }: EventRegistrationFormProps) {
+export function EventRegistrationForm({
+  eventId,
+  userData,
+  capacityInfo,
+}: EventRegistrationFormProps) {
   const form = useForm<EventRegistrationFormData>({
     resolver: zodResolver(eventRegistrationSchema),
     defaultValues: {
@@ -69,6 +80,15 @@ export function EventRegistrationForm({ eventId, userData }: EventRegistrationFo
   }, [userData, form]);
 
   const onSubmit = async (values: EventRegistrationFormData) => {
+    // Validar cupo nuevamente antes de submitear
+    const capacityCheck = await checkEventCapacity(eventId);
+    if (!capacityCheck.available) {
+      toast.error(
+        capacityCheck.message || 'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
+      );
+      return;
+    }
+
     await toast.promise(registerEvent(eventId, values), {
       loading: 'Inscribiéndote al evento...',
       success: '¡Te has inscrito exitosamente al evento! 🎉',
@@ -81,6 +101,19 @@ export function EventRegistrationForm({ eventId, userData }: EventRegistrationFo
 
   return (
     <div className="mx-auto max-w-2xl">
+      {/* Información de cupo */}
+      {capacityInfo.capacity !== null && (
+        <div className="mb-6 rounded-lg border bg-muted/50 p-4">
+          <div className="flex items-center gap-2 text-sm">
+            <Users className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+            <span className="font-medium">Cupo disponible:</span>
+            <span className="text-muted-foreground">
+              {capacityInfo.capacity - capacityInfo.current} de {capacityInfo.capacity} cupos
+            </span>
+          </div>
+        </div>
+      )}
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Nombre */}

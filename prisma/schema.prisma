@@ -108,6 +108,7 @@ model Event {
   flyerSrc    String
   latitude    Float?
   longitude   Float?
+  capacity    Int? // Cupo máximo del evento (opcional)
   deletedAt   DateTime? // Eliminación lógica
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
