@@ -13,6 +13,8 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
 import { TestimonialsClient } from './testimonials-client';
+import { TestimonialActionButton } from '@/components/testimonials/testimonial-action-button';
+import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 
 const TestimoniosPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -59,11 +61,7 @@ const TestimoniosPage = async () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6">
-            <Heading2 className="m-0">Testimonios</Heading2>
-          </div>
-
-          <TestimonialsClient
+          <TestimonialsClientWrapper
             testimonials={testimonials}
             currentUserId={currentUserId}
             isAdmin={isAdmin}

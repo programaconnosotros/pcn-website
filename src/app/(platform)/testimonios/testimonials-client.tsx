@@ -1,8 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit } from 'lucide-react';
+import { useState, useImperativeHandle, forwardRef } from 'react';
 import { TestimonialCard } from '@/components/testimonials/testimonial-card';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
 import {
@@ -30,32 +28,24 @@ type TestimonialsClientProps = {
   hasUserTestimonial?: boolean;
 };
 
-export function TestimonialsClient({
-  testimonials,
-  currentUserId,
-  isAdmin,
-  hasUserTestimonial,
-}: TestimonialsClientProps) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
+export type TestimonialsClientRef = {
+  openForm: (testimonial: Testimonial | null) => void;
+};
 
-  // Encontrar el testimonio del usuario actual
-  const userTestimonial = useMemo(() => {
-    if (!currentUserId) return null;
-    return testimonials.find((t) => t.userId === currentUserId) || null;
-  }, [testimonials, currentUserId]);
+export const TestimonialsClient = forwardRef<TestimonialsClientRef, TestimonialsClientProps>(
+  ({ testimonials, currentUserId, isAdmin }, ref) => {
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
 
-  const handleCreate = () => {
-    setEditingTestimonial(null);
-    setIsFormOpen(true);
-  };
-
-  const handleEditMyTestimonial = () => {
-    if (userTestimonial) {
-      setEditingTestimonial(userTestimonial);
+    // Exponer función para abrir el modal desde el botón externo
+    const openForm = (testimonial: Testimonial | null) => {
+      setEditingTestimonial(testimonial);
       setIsFormOpen(true);
-    }
-  };
+    };
+
+    useImperativeHandle(ref, () => ({
+      openForm,
+    }));
 
   const handleEdit = (testimonial: Testimonial) => {
     setEditingTestimonial(testimonial);
@@ -74,25 +64,6 @@ export function TestimonialsClient({
 
   return (
     <>
-      <div className="mb-6">
-        <p className="text-sm text-muted-foreground">
-          Conocé las experiencias de miembros de nuestra comunidad
-        </p>
-      </div>
-
-      <div className="mb-6 flex justify-end">
-        {hasUserTestimonial ? (
-          <Button variant="pcn" onClick={handleEditMyTestimonial}>
-            <Edit className="mr-2 h-4 w-4" />
-            Editar testimonio
-          </Button>
-        ) : (
-          <Button variant="pcn" onClick={handleCreate}>
-            <Plus className="mr-2 h-4 w-4" />
-            Agregar testimonio
-          </Button>
-        )}
-      </div>
 
       {testimonials.length === 0 ? (
         <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
@@ -144,5 +115,8 @@ export function TestimonialsClient({
       </Dialog>
     </>
   );
-}
+  },
+);
+
+TestimonialsClient.displayName = 'TestimonialsClient';
 
