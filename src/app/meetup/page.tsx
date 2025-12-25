@@ -1,7 +1,11 @@
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 
 const MeetupPage = async () => {
+  // Trackear la visita a /meetup antes del redirect
+  await trackPageVisit('/meetup');
+
   const now = new Date();
 
   // Buscar el próximo evento que sea un dev meetup
