@@ -77,7 +77,7 @@ export const SponsorsSection = () => {
             rel="noopener noreferrer"
             className="group block"
           >
-            <Card className="h-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-105 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-900 dark:from-black dark:to-neutral-950 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+            <Card className="h-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-900 dark:from-black dark:to-neutral-950 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
