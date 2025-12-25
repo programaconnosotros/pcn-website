@@ -67,12 +67,14 @@ export function TestimonialDetailActions({
     try {
       await deleteTestimonial(testimonial.id);
       toast.success('Testimonio eliminado exitosamente');
+      // Cerrar el diálogo antes de redirigir
+      setIsDeleteDialogOpen(false);
+      // Redirigir a la página de testimonios
       router.push('/testimonios');
+      router.refresh();
     } catch (error: any) {
       toast.error(error.message || 'Error al eliminar el testimonio');
-    } finally {
       setIsDeleting(false);
-      setIsDeleteDialogOpen(false);
     }
   };
 
