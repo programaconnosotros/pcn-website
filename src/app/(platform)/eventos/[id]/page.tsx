@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit } from 'lucide-react';
+import { Calendar, MapPin, Edit, UserPlus } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { Image as Images, Event } from '@prisma/client';
@@ -30,9 +30,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
   const event: EventWithImages | null = await fetchEvent(id);
 
-  // Verificar si el usuario es admin
+  // Verificar si el usuario es admin y obtener datos de sesión
   const sessionId = cookies().get('sessionId')?.value;
   let isAdmin = false;
+  let userId: string | null = null;
 
   if (sessionId) {
     const session = await prisma.session.findUnique({
@@ -40,8 +41,11 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
       include: { user: true },
     });
 
-    if (session?.user.role === 'ADMIN') {
-      isAdmin = true;
+    if (session) {
+      if (session.user.role === 'ADMIN') {
+        isAdmin = true;
+      }
+      userId = session.userId;
     }
   }
 
@@ -92,6 +96,23 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
       minute: '2-digit',
     });
   };
+
+  // Verificar si el evento ya pasó
+  const now = new Date();
+  const eventEndDate = event.endDate || event.date;
+  const hasEventPassed = new Date(eventEndDate) < now;
+
+  // Verificar si el usuario ya está registrado
+  let isRegistered = false;
+  if (userId) {
+    const registration = await prisma.eventRegistration.findFirst({
+      where: {
+        eventId: id,
+        userId: userId,
+      },
+    });
+    isRegistered = !!registration;
+  }
 
   return (
     <>
@@ -173,6 +194,29 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
             {/* Columna lateral con información */}
             <div className="flex w-full flex-col gap-5 xl:w-80">
+              {/* Botón de registro */}
+              {!hasEventPassed && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                  <CardContent className="pt-6">
+                    {isRegistered ? (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-center">Ya estás registrado</p>
+                        <p className="text-xs text-center text-muted-foreground">
+                          Te esperamos en el evento
+                        </p>
+                      </div>
+                    ) : (
+                      <Link href={`/eventos/${id}/inscripcion`} className="block">
+                        <Button variant="pcn" className="w-full flex items-center gap-2">
+                          <UserPlus className="h-4 w-4" />
+                          Inscribirme al evento
+                        </Button>
+                      </Link>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Información del evento */}
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardHeader>
