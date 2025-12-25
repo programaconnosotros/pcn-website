@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 import { TestimonialCard } from '@/components/testimonials/testimonial-card';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
 import {
@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Testimonial } from '@prisma/client';
-import { TestimonialFormData } from '@/schemas/testimonial-schema';
 
 type TestimonialWithUser = Testimonial & {
   user: {
@@ -40,9 +39,22 @@ export function TestimonialsClient({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
 
+  // Encontrar el testimonio del usuario actual
+  const userTestimonial = useMemo(() => {
+    if (!currentUserId) return null;
+    return testimonials.find((t) => t.userId === currentUserId) || null;
+  }, [testimonials, currentUserId]);
+
   const handleCreate = () => {
     setEditingTestimonial(null);
     setIsFormOpen(true);
+  };
+
+  const handleEditMyTestimonial = () => {
+    if (userTestimonial) {
+      setEditingTestimonial(userTestimonial);
+      setIsFormOpen(true);
+    }
   };
 
   const handleEdit = (testimonial: Testimonial) => {
@@ -68,14 +80,19 @@ export function TestimonialsClient({
         </p>
       </div>
 
-      {!hasUserTestimonial && (
-        <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex justify-end">
+        {hasUserTestimonial ? (
+          <Button variant="pcn" onClick={handleEditMyTestimonial}>
+            <Edit className="mr-2 h-4 w-4" />
+            Editar testimonio
+          </Button>
+        ) : (
           <Button variant="pcn" onClick={handleCreate}>
             <Plus className="mr-2 h-4 w-4" />
             Agregar testimonio
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       {testimonials.length === 0 ? (
         <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
