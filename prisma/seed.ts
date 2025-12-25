@@ -46,6 +46,17 @@ async function main() {
         password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
       },
     }),
+    prisma.user.upsert({
+      where: { email: 'admin@example.com' },
+      update: {},
+      create: {
+        email: 'admin@example.com',
+        name: 'Admin User',
+        image: 'https://avatars.githubusercontent.com/u/56789012?v=4',
+        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
+        role: 'ADMIN',
+      },
+    }),
   ]);
 
   // Array de consejos variados
