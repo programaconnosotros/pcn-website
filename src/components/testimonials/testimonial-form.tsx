@@ -60,7 +60,9 @@ export function TestimonialForm({
 
     toast.promise(promise, {
       loading: testimonialId ? 'Actualizando testimonio...' : 'Creando testimonio...',
-      success: testimonialId ? 'Testimonio actualizado exitosamente' : 'Testimonio creado exitosamente',
+      success: testimonialId
+        ? 'Testimonio actualizado exitosamente'
+        : 'Testimonio creado exitosamente',
       error: (err) => err.message || 'Error al guardar el testimonio',
     });
 
@@ -112,7 +114,7 @@ export function TestimonialForm({
           )}
         />
 
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           {testimonialId && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -130,14 +132,17 @@ export function TestimonialForm({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
                     Eliminar
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           )}
-          <div className="flex justify-end gap-2 ml-auto">
+          <div className="ml-auto flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>
               <X className="mr-2 h-4 w-4" />
               Cancelar
@@ -152,4 +157,3 @@ export function TestimonialForm({
     </Form>
   );
 }
-

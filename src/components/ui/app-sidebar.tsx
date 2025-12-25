@@ -295,10 +295,7 @@ export function AppSidebar(props: AppSidebarProps) {
         <NavMain items={navMainItems} />
         <NavMain items={getComunidadItems()} label="Comunidad" />
         {user?.role === 'ADMIN' && (
-          <NavMain
-            items={getAdminItems(unreadNotificationsCount)}
-            label="Administración"
-          />
+          <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />

@@ -5,7 +5,7 @@ import { logError, logClientError } from '@/actions/errors/log-error';
  */
 export async function withErrorLogging<T>(
   action: () => Promise<T>,
-  context?: { path?: string; metadata?: Record<string, any> }
+  context?: { path?: string; metadata?: Record<string, any> },
 ): Promise<T> {
   try {
     return await action();
@@ -20,7 +20,10 @@ export async function withErrorLogging<T>(
 /**
  * Helper para capturar errores de promesas en el cliente
  */
-export async function catchClientError(error: unknown, context?: { path?: string; metadata?: Record<string, any> }) {
+export async function catchClientError(
+  error: unknown,
+  context?: { path?: string; metadata?: Record<string, any> },
+) {
   if (typeof window !== 'undefined') {
     const errorData = {
       message: error instanceof Error ? error.message : String(error),
@@ -35,4 +38,3 @@ export async function catchClientError(error: unknown, context?: { path?: string
     });
   }
 }
-

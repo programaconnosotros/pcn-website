@@ -55,4 +55,3 @@ export const eventRegistrationSchema = z
   );
 
 export type EventRegistrationFormData = z.infer<typeof eventRegistrationSchema>;
-

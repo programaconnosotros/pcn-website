@@ -86,7 +86,7 @@ export function TestimonialCard({
 
   return (
     <Card
-      className={`border-2 transition-all duration-300 hover:scale-[1.02] flex flex-col ${
+      className={`flex flex-col border-2 transition-all duration-300 hover:scale-[1.02] ${
         isOwnTestimonial
           ? 'border-pcnPurple bg-gradient-to-br from-white to-pcnPurple/5 shadow-lg shadow-pcnPurple/20 dark:border-pcnGreen dark:from-neutral-900 dark:to-pcnGreen/10 dark:shadow-pcnGreen/20'
           : 'border-transparent bg-gradient-to-br from-white to-gray-50 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20'
@@ -108,7 +108,7 @@ export function TestimonialCard({
             <div className="flex items-center gap-2">
               <Link
                 href={`/perfil/${testimonial.user.id}`}
-                className="text-lg font-semibold hover:underline transition-colors hover:text-pcnPurple dark:hover:text-pcnGreen"
+                className="text-lg font-semibold transition-colors hover:text-pcnPurple hover:underline dark:hover:text-pcnGreen"
               >
                 {testimonial.user.name}
               </Link>
@@ -168,7 +168,9 @@ export function TestimonialCard({
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro de que quieres eliminar este testimonio?</AlertDialogTitle>
+            <AlertDialogTitle>
+              ¿Estás seguro de que quieres eliminar este testimonio?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Esta acción no se puede deshacer. El testimonio será eliminado permanentemente.
             </AlertDialogDescription>
@@ -184,4 +186,3 @@ export function TestimonialCard({
     </Card>
   );
 }
-
