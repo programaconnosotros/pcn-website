@@ -388,4 +388,10 @@ export const talks: Talk[] = [
     portrait: '/agus-charla-global-learning-1.webp',
     location: 'Alter City Business Park (Tucumán, Argentina)',
   },
+  {
+    name: 'Descubrí el mundo del desarrollo de software',
+    date: new Date('2024-10-19'),
+    speakerName: 'Agustín Sánchez & Matías Gutiérrez',
+    location: 'Aticana (Tucumán, Argentina)',
+  },
 ];
