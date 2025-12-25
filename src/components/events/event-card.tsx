@@ -41,7 +41,7 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
         <CardContent className="flex-1">
           {event.description && (
-            <p className="mb-4 text-sm text-muted-foreground">{event.description}</p>
+            <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
           )}
 
           <div className="mt-2 flex items-center gap-2">
