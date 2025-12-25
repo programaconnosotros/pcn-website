@@ -241,86 +241,31 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                 </Card>
               )}
 
-              {/* Listado de inscripciones (solo para admins) */}
+              {/* Link a página de inscripciones (solo para admins) */}
               {isAdmin && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5" />
-                      Inscripciones ({registrations.length})
+                      Inscripciones
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {registrations.length === 0 ? (
-                      <p className="text-sm text-muted-foreground text-center py-4">
-                        Aún no hay inscripciones para este evento.
-                      </p>
-                    ) : (
-                      <div className="space-y-4">
-                        {registrations.map((registration) => (
-                          <div
-                            key={registration.id}
-                            className={`rounded-lg border bg-background p-4 space-y-2 ${
-                              registration.cancelledAt ? 'opacity-60' : ''
-                            }`}
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <p className="font-medium">
-                                    {registration.firstName} {registration.lastName}
-                                  </p>
-                                  {registration.cancelledAt && (
-                                    <span className="text-xs px-2 py-1 rounded-full bg-destructive/10 text-destructive">
-                                      Cancelada
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-sm text-muted-foreground">{registration.email}</p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs px-2 py-1 rounded-full bg-muted">
-                                  {registration.type === 'PROFESSIONAL' ? 'Profesional' : 'Estudiante'}
-                                </span>
-                                {!registration.cancelledAt && (
-                                  <DeleteRegistrationButton
-                                    registrationId={registration.id}
-                                    userName={`${registration.firstName} ${registration.lastName}`}
-                                  />
-                                )}
-                              </div>
-                            </div>
-                            {registration.type === 'PROFESSIONAL' && (
-                              <div className="text-sm text-muted-foreground">
-                                <p>
-                                  <span className="font-medium">Trabaja:</span>{' '}
-                                  {registration.workTitle || '-'}
-                                </p>
-                                <p>
-                                  <span className="font-medium">En:</span>{' '}
-                                  {registration.workPlace || '-'}
-                                </p>
-                              </div>
-                            )}
-                            {registration.type === 'STUDENT' && (
-                              <div className="text-sm text-muted-foreground">
-                                <p>
-                                  <span className="font-medium">Estudia:</span>{' '}
-                                  {registration.studyField || '-'}
-                                </p>
-                                <p>
-                                  <span className="font-medium">En:</span>{' '}
-                                  {registration.studyPlace || '-'}
-                                </p>
-                              </div>
-                            )}
-                            <p className="text-xs text-muted-foreground">
-                              Inscrito el {formatDate(registration.createdAt)}
-                            </p>
-                          </div>
-                        ))}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">
+                          {registrations.filter((r) => r.cancelledAt === null).length} inscripciones activas
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {registrations.length} total (incluyendo canceladas)
+                        </p>
                       </div>
-                    )}
+                      <Link href={`/eventos/${id}/inscripciones`}>
+                        <Button variant="outline" size="sm">
+                          Ver todas
+                        </Button>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               )}
