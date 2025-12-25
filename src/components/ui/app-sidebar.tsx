@@ -126,11 +126,6 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       icon: Code,
     },
     {
-      title: 'Galería',
-      url: '/galeria',
-      icon: Image,
-    },
-    {
       title: 'Charlas',
       url: '/charlas',
       icon: BookOpen,
@@ -151,11 +146,6 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       icon: Star,
     },
     {
-      title: 'Comunidad',
-      url: '/comunidad',
-      icon: Users,
-    },
-    {
       title: 'Trabajos',
       url: '/trabajos',
       icon: Briefcase,
@@ -163,12 +153,22 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
   ];
 };
 
-const getInfoItems = () => {
+const getComunidadItems = () => {
   return [
     {
       title: 'Historia',
       url: '/historia',
       icon: ScrollText,
+    },
+    {
+      title: 'Galería',
+      url: '/galeria',
+      icon: Image,
+    },
+    {
+      title: 'Usuarios',
+      url: '/usuarios',
+      icon: Users,
     },
     {
       title: 'Anuncios',
@@ -279,7 +279,7 @@ export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarPr
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMainItems} />
-        <NavMain items={getInfoItems()} label="Información" />
+        <NavMain items={getComunidadItems()} label="Comunidad" />
         <NavMain items={getAdminItems()} label="Administración" />
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
