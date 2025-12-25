@@ -3,12 +3,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bell, Check, CheckCheck } from 'lucide-react';
+import { Bell, Check, CheckCheck, ExternalLink } from 'lucide-react';
 import { markNotificationAsRead } from '@/actions/notifications/mark-as-read';
 import { markAllNotificationsAsRead } from '@/actions/notifications/mark-all-as-read';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Notification = {
   id: string;
@@ -54,6 +55,30 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
 
   const unreadNotifications = notifications.filter((n) => !n.read);
   const readNotifications = notifications.filter((n) => n.read);
+
+  const getTestimonialId = (notification: Notification): string | null => {
+    if (
+      notification.type === 'testimonial_created' ||
+      notification.type === 'testimonial_updated' ||
+      notification.type === 'testimonial_deleted'
+    ) {
+      try {
+        const metadata = notification.metadata ? JSON.parse(notification.metadata) : null;
+        return metadata?.testimonialId || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const isTestimonialNotification = (notification: Notification): boolean => {
+    return (
+      notification.type === 'testimonial_created' ||
+      notification.type === 'testimonial_updated' ||
+      notification.type === 'testimonial_deleted'
+    );
+  };
 
   const handleMarkAsRead = async (notificationId: string) => {
     setMarkingAsRead(notificationId);
@@ -113,36 +138,51 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             </Button>
           </div>
           <div className="space-y-3">
-            {unreadNotifications.map((notification) => (
-              <Card
-                key={notification.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CardTitle className="text-base m-0">{notification.title}</CardTitle>
-                        <Badge variant="default">Nuevo</Badge>
+            {unreadNotifications.map((notification) => {
+              const testimonialId = getTestimonialId(notification);
+              const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
+
+              return (
+                <Card
+                  key={notification.id}
+                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <CardTitle className="text-base m-0">{notification.title}</CardTitle>
+                          <Badge variant="default">Nuevo</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{notification.message}</p>
+                        {hasTestimonialLink && (
+                          <div className="mt-3">
+                            <Link href={`/testimonios/${testimonialId}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver testimonio
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {formatRelativeTime(notification.createdAt)}
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground">{notification.message}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {formatRelativeTime(notification.createdAt)}
-                      </p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => handleMarkAsRead(notification.id)}
+                        disabled={markingAsRead === notification.id}
+                      >
+                        <Check className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => handleMarkAsRead(notification.id)}
-                      disabled={markingAsRead === notification.id}
-                    >
-                      <Check className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
+                  </CardHeader>
+                </Card>
+              );
+            })}
           </div>
         </div>
       )}
@@ -151,24 +191,39 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
         <div>
           <h3 className="text-lg font-semibold mb-4">Leídas ({readNotifications.length})</h3>
           <div className="space-y-3">
-            {readNotifications.map((notification) => (
-              <Card
-                key={notification.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 opacity-75"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-base m-0 mb-2">{notification.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{notification.message}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {formatRelativeTime(notification.createdAt)}
-                      </p>
+            {readNotifications.map((notification) => {
+              const testimonialId = getTestimonialId(notification);
+              const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
+
+              return (
+                <Card
+                  key={notification.id}
+                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 opacity-75"
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base m-0 mb-2">{notification.title}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{notification.message}</p>
+                        {hasTestimonialLink && (
+                          <div className="mt-3">
+                            <Link href={`/testimonios/${testimonialId}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver testimonio
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {formatRelativeTime(notification.createdAt)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
+                  </CardHeader>
+                </Card>
+              );
+            })}
           </div>
         </div>
       )}
