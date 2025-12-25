@@ -4,6 +4,7 @@ import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
+import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
 
 const PlatformLayout = async ({
   children,
@@ -32,6 +33,7 @@ const PlatformLayout = async ({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar user={user} upcomingEvents={upcomingEvents} />
+      <PageVisitTracker />
 
       <SidebarInset className="px-6">{children}</SidebarInset>
     </SidebarProvider>

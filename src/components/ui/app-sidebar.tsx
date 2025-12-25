@@ -6,6 +6,7 @@ import {
   Briefcase,
   CalendarDays,
   Code,
+  Eye,
   HelpCircle,
   Home,
   Image,
@@ -193,6 +194,11 @@ const getAdminItems = () => {
       title: 'Analíticas',
       url: '/analiticas',
       icon: LayoutDashboard,
+    },
+    {
+      title: 'Visitas',
+      url: '/visitas',
+      icon: Eye,
     },
   ];
 };
