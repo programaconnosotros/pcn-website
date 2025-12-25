@@ -33,7 +33,7 @@ export const checkEventCapacity = async (eventId: string) => {
     current: currentRegistrations,
     capacity: event.capacity,
     message: available
-      ? `${event.capacity - currentRegistrations} cupos disponibles`
+      ? `Quedan ${event.capacity - currentRegistrations} lugares disponibles.`
       : 'El cupo del evento está completo',
   };
 };

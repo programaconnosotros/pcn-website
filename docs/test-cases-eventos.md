@@ -746,9 +746,88 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 - Inscripciones actuales: 12
 - Navegar a `/eventos/[id]`
 
+**Pasos:**
+1. Verificar información de cupo en la columna lateral
+
 **Resultado Esperado:**
-- ✅ En la columna lateral se muestra: "8 de 20 cupos disponibles"
-- ✅ Si el cupo está completo, se muestra: "Cupo completo" y "20 de 20 cupos ocupados"
+- ✅ Se muestra: "Quedan 8 lugares disponibles."
+- ✅ El botón "Inscribirme al evento" está visible y habilitado
+
+---
+
+### TC-CUP-008: Botón de inscripción no aparece cuando cupo está completo
+
+**Precondiciones:**
+- Evento con cupo: 10
+- Inscripciones actuales: 10 (cupo completo)
+- Usuario NO registrado
+- Navegar a `/eventos/[id]`
+
+**Pasos:**
+1. Verificar la columna lateral donde debería estar el botón de inscripción
+
+**Resultado Esperado:**
+- ✅ NO se muestra el botón "Inscribirme al evento"
+- ✅ Se muestra mensaje: "Cupo completo"
+- ✅ Se muestra: "Ya no quedan lugares disponibles."
+
+---
+
+### TC-CUP-009: Acceso directo a página de inscripción con cupo completo
+
+**Precondiciones:**
+- Evento con cupo: 5
+- Inscripciones actuales: 5 (cupo completo)
+- Usuario NO registrado en el evento
+
+**Pasos:**
+1. Navegar directamente a `/eventos/[id]/inscripcion` (sin pasar por la página de detalle)
+
+**Resultado Esperado:**
+- ✅ NO se muestra el formulario de inscripción
+- ✅ Se muestra card con:
+  - Icono de alerta (AlertCircle)
+  - Título: "Cupo completo"
+  - Mensaje: "Ya no quedan lugares disponibles."
+  - Botón: "Volver al evento"
+- ✅ El botón redirige a `/eventos/[id]`
+
+---
+
+### TC-CUP-010: Texto de cupo disponible en formulario de inscripción
+
+**Precondiciones:**
+- Evento con cupo: 15
+- Inscripciones actuales: 8
+- Navegar a `/eventos/[id]/inscripcion`
+
+**Pasos:**
+1. Verificar información de cupo arriba del formulario
+
+**Resultado Esperado:**
+- ✅ Se muestra: "Cupo disponible:"
+- ✅ Se muestra: "Quedan 7 lugares disponibles."
+- ✅ Si el cupo está completo, se muestra: "Ya no quedan lugares disponibles."
+
+---
+
+### TC-CUP-011: Editar evento y agregar cupo (validación de tipo)
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento existente sin cupo definido
+- Navegar a `/eventos/[id]/editar`
+
+**Pasos:**
+1. Verificar que el campo "Cupo máximo" está vacío
+2. Ingresar un número: "50"
+3. Hacer clic en "Guardar"
+
+**Resultado Esperado:**
+- ✅ El campo acepta el valor correctamente
+- ✅ No se muestra error de tipo (string vs number)
+- ✅ El evento se actualiza exitosamente
+- ✅ En la página de detalle se muestra: "Quedan 50 lugares disponibles."
 
 ---
 
@@ -898,6 +977,46 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 
 ---
 
+### TC-EDGE-006: Acceso directo a inscripción con cupo completo (URL directa)
+
+**Precondiciones:**
+- Evento con cupo: 10
+- Inscripciones actuales: 10 (cupo completo)
+- Usuario NO registrado
+- URL directa: `/eventos/[id]/inscripcion`
+
+**Pasos:**
+1. Navegar directamente a la URL de inscripción (sin pasar por página de detalle)
+2. Verificar que se muestra el mensaje correcto
+
+**Resultado Esperado:**
+- ✅ NO se muestra el formulario
+- ✅ Se muestra card con mensaje de cupo completo
+- ✅ Mensaje: "Ya no quedan lugares disponibles."
+- ✅ Botón para volver al evento
+
+---
+
+### TC-EDGE-007: Cambio de cupo entre carga de página y envío de formulario
+
+**Precondiciones:**
+- Evento con cupo: 10
+- Inscripciones actuales: 9
+- Usuario en página de inscripción
+
+**Pasos:**
+1. Usuario carga página de inscripción (ve 1 lugar disponible)
+2. Otro usuario se inscribe (cupo completo)
+3. Usuario original completa y envía formulario
+
+**Resultado Esperado:**
+- ✅ Validación en servidor detecta cupo completo
+- ✅ Toast de error: "El cupo del evento está completo. No se pueden aceptar más inscripciones."
+- ✅ No se crea la inscripción
+- ✅ El usuario puede ver el mensaje de cupo completo si recarga
+
+---
+
 ## Visualización y UI
 
 ### TC-UI-001: Página de lista de eventos
@@ -975,7 +1094,8 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 
 **Resultado Esperado:**
 - ✅ Se muestra información de cupo disponible arriba del formulario
-- ✅ Formato: "X de Y cupos disponibles"
+- ✅ Formato: "Quedan X lugares disponibles." cuando hay cupo
+- ✅ Formato: "Ya no quedan lugares disponibles." cuando el cupo está completo
 - ✅ Icono de usuarios visible
 
 ---
@@ -1002,6 +1122,28 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 **Resultado Esperado:**
 - ✅ Redirección automática a `/eventos/[id]/inscripcion` del próximo meetup
 - ✅ Si no hay meetup futuro, redirección a `/eventos`
+
+---
+
+### TC-UI-009: Mensajes de cupo en diferentes estados
+
+**Precondiciones:**
+- Evento con cupo: 20
+- Varios estados de inscripciones
+
+**Pasos:**
+1. Verificar mensajes en diferentes escenarios:
+   - Cupo disponible (15 inscripciones)
+   - Cupo completo (20 inscripciones)
+   - En página de detalle
+   - En formulario de inscripción
+   - En página de inscripción cuando cupo completo
+
+**Resultado Esperado:**
+- ✅ Cuando hay cupo: "Quedan X lugares disponibles." (con punto final)
+- ✅ Cuando cupo completo: "Ya no quedan lugares disponibles." (con punto final)
+- ✅ Los mensajes son consistentes en todas las páginas
+- ✅ No se muestra información redundante (ej: "X de Y cupos")
 
 ---
 
@@ -1040,6 +1182,12 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 - [ ] Mensajes de error claros
 - [ ] Toasts informativos
 - [ ] Estados visuales correctos
+- [ ] Texto de cupo: "Quedan X lugares disponibles."
+- [ ] Texto cuando cupo completo: "Ya no quedan lugares disponibles."
+- [ ] Consistencia de mensajes en todas las páginas
+- [ ] Texto de cupo: "Quedan X lugares disponibles."
+- [ ] Texto cuando cupo completo: "Ya no quedan lugares disponibles."
+- [ ] Consistencia de mensajes en todas las páginas
 
 ---
 

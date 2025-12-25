@@ -146,14 +146,8 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">Cupo completo</h3>
                       <p className="text-muted-foreground">
-                        Lo sentimos, el cupo del evento está completo. No se pueden aceptar más
-                        inscripciones.
+                        Ya no quedan lugares disponibles.
                       </p>
-                      {capacityCheck.capacity && (
-                        <p className="text-sm text-muted-foreground">
-                          {capacityCheck.current} de {capacityCheck.capacity} cupos ocupados
-                        </p>
-                      )}
                     </div>
                     <Link href={`/eventos/${id}`}>
                       <Button variant="outline">Volver al evento</Button>

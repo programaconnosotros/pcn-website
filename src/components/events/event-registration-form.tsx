@@ -108,7 +108,9 @@ export function EventRegistrationForm({
             <Users className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
             <span className="font-medium">Cupo disponible:</span>
             <span className="text-muted-foreground">
-              {capacityInfo.capacity - capacityInfo.current} de {capacityInfo.capacity} cupos
+              {capacityInfo.available
+                ? `Quedan ${capacityInfo.capacity - capacityInfo.current} lugares disponibles.`
+                : 'Ya no quedan lugares disponibles.'}
             </span>
           </div>
         </div>

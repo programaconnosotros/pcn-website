@@ -352,7 +352,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                           Cupo completo
                         </p>
                         <p className="text-xs text-center text-muted-foreground">
-                          {capacityInfo.current} de {capacityInfo.capacity} cupos ocupados
+                          Ya no quedan lugares disponibles.
                         </p>
                       </div>
                     ) : (
@@ -365,8 +365,9 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         </Link>
                         {capacityInfo && (
                           <p className="text-xs text-center text-muted-foreground">
-                            {capacityInfo.capacity - capacityInfo.current} de {capacityInfo.capacity}{' '}
-                            cupos disponibles
+                            {capacityInfo.available
+                              ? `Quedan ${capacityInfo.capacity - capacityInfo.current} lugares disponibles.`
+                              : 'Ya no quedan lugares disponibles.'}
                           </p>
                         )}
                       </div>
