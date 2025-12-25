@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
 import { getUnreadNotificationsCount } from '@/actions/notifications/get-unread-count';
+import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
 
 const PlatformLayout = async ({
   children,
@@ -42,8 +43,9 @@ const PlatformLayout = async ({
         unreadNotificationsCount={unreadNotificationsCount}
       />
       <PageVisitTracker />
-
-      <SidebarInset className="px-6">{children}</SidebarInset>
+      <ConsoleInterceptor>
+        <SidebarInset className="px-6">{children}</SidebarInset>
+      </ConsoleInterceptor>
     </SidebarProvider>
   );
 };

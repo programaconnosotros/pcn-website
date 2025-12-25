@@ -40,6 +40,7 @@ model User {
   notifications   Notification[]
   errorLogs       ErrorLog[]
   resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
+  appLogs         AppLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -272,5 +273,24 @@ model ErrorLog {
   @@index([userId])
   @@index([path])
   @@index([resolved])
+  @@index([createdAt])
+}
+
+model AppLog {
+  id          String   @id @default(cuid())
+  level       String   // Nivel del log: info, warn, error, debug
+  message     String   // Mensaje del log
+  path        String?  // Ruta donde ocurrió el log
+  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent   String?  // User agent del navegador
+  ipAddress   String?  // Dirección IP
+  metadata    String?  // JSON con información adicional del log
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([path])
+  @@index([level])
   @@index([createdAt])
 }

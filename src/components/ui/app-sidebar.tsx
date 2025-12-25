@@ -208,8 +208,8 @@ const getAdminItems = (unreadCount: number = 0) => {
       badge: unreadCount,
     },
     {
-      title: 'Errores',
-      url: '/errores',
+      title: 'Monitoreo',
+      url: '/monitoreo',
       icon: AlertTriangle,
     },
   ];
