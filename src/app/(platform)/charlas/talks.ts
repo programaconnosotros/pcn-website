@@ -434,13 +434,13 @@ export const talks: Talk[] = [
     name: 'Buscando el diseño perfecto',
     date: new Date('2025-06-05'),
     speakerName: 'Mauricio Sánchez',
-    location: 'UTN Facultad Regional Tucumán (Tucumán, Argentina)',
+    location: 'UTN (Tucumán, Argentina)',
   },
   {
     name: 'Impulsá tu carrera con PCN',
     date: new Date('2025-06-05'),
     speakerName: 'Agustín Sánchez',
-    location: 'UTN Facultad Regional Tucumán (Tucumán, Argentina)',
+    location: 'UTN (Tucumán, Argentina)',
   },
   {
     name: 'Modern Software Architecture',
