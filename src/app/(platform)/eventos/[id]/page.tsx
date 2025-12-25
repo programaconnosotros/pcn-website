@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, UserPlus } from 'lucide-react';
+import { Calendar, MapPin, Edit, UserPlus, Users } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { Image as Images, Event } from '@prisma/client';
@@ -114,6 +114,31 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     isRegistered = !!registration;
   }
 
+  // Obtener inscripciones si el usuario es admin
+  let registrations: Array<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    type: 'STUDENT' | 'PROFESSIONAL';
+    workTitle: string | null;
+    workPlace: string | null;
+    studyField: string | null;
+    studyPlace: string | null;
+    createdAt: Date;
+  }> = [];
+
+  if (isAdmin) {
+    registrations = await prisma.eventRegistration.findMany({
+      where: {
+        eventId: id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -187,6 +212,73 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                   </CardHeader>
                   <CardContent>
                     <EventPhotos images={event.images} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Listado de inscripciones (solo para admins) */}
+              {isAdmin && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      Inscripciones ({registrations.length})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {registrations.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-4">
+                        Aún no hay inscripciones para este evento.
+                      </p>
+                    ) : (
+                      <div className="space-y-4">
+                        {registrations.map((registration) => (
+                          <div
+                            key={registration.id}
+                            className="rounded-lg border bg-background p-4 space-y-2"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium">
+                                  {registration.firstName} {registration.lastName}
+                                </p>
+                                <p className="text-sm text-muted-foreground">{registration.email}</p>
+                              </div>
+                              <span className="text-xs px-2 py-1 rounded-full bg-muted">
+                                {registration.type === 'PROFESSIONAL' ? 'Profesional' : 'Estudiante'}
+                              </span>
+                            </div>
+                            {registration.type === 'PROFESSIONAL' && (
+                              <div className="text-sm text-muted-foreground">
+                                <p>
+                                  <span className="font-medium">Trabaja:</span>{' '}
+                                  {registration.workTitle || '-'}
+                                </p>
+                                <p>
+                                  <span className="font-medium">En:</span>{' '}
+                                  {registration.workPlace || '-'}
+                                </p>
+                              </div>
+                            )}
+                            {registration.type === 'STUDENT' && (
+                              <div className="text-sm text-muted-foreground">
+                                <p>
+                                  <span className="font-medium">Estudia:</span>{' '}
+                                  {registration.studyField || '-'}
+                                </p>
+                                <p>
+                                  <span className="font-medium">En:</span>{' '}
+                                  {registration.studyPlace || '-'}
+                                </p>
+                              </div>
+                            )}
+                            <p className="text-xs text-muted-foreground">
+                              Inscrito el {formatDate(registration.createdAt)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               )}
