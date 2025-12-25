@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Star } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { TestimonialDetailActions } from './testimonial-detail-actions';
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('es-AR', {
@@ -80,13 +81,20 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center gap-4">
-            <Link href="/testimonios">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Heading2 className="m-0">Testimonio</Heading2>
+          <div className="mb-6 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/testimonios">
+                <Button variant="ghost" size="icon">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Heading2 className="m-0">Testimonio</Heading2>
+            </div>
+            <TestimonialDetailActions
+              testimonial={testimonial}
+              canEdit={isAdmin || (currentUserId === testimonial.userId)}
+              isAdmin={isAdmin}
+            />
           </div>
 
           <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
