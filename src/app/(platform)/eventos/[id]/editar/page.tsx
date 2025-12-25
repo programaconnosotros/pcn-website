@@ -10,15 +10,15 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
-import { EventForm } from '@/components/events/event-form';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { fetchEvent } from '@/actions/events/fetch-event';
+import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EventFormData } from '@/schemas/event-schema';
 import { EditEventForm } from '@/components/events/edit-event-form';
+import { DeleteEventButton } from '@/components/events/delete-event-button';
 
 const EditEventPage = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -42,7 +42,7 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
     redirect(`/eventos/${id}`);
   }
 
-  const event = await fetchEvent(id);
+  const event = await fetchEventForEdit(id);
 
   if (!event) {
     redirect('/eventos');
@@ -102,13 +102,16 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center gap-4">
-            <Link href={`/eventos/${id}`}>
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Heading2 className="m-0">Editar evento</Heading2>
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Link href={`/eventos/${id}`}>
+                <Button variant="ghost" size="icon">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Heading2 className="m-0">Editar evento</Heading2>
+            </div>
+            <DeleteEventButton eventId={id} eventName={event.name} />
           </div>
 
           <EditEventForm eventId={id} defaultValues={defaultValues} />

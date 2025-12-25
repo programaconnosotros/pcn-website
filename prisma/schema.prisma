@@ -107,6 +107,7 @@ model Event {
   flyerSrc    String
   latitude    Float?
   longitude   Float?
+  deletedAt   DateTime? // Eliminación lógica
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

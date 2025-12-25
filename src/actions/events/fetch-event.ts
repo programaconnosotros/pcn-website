@@ -3,9 +3,10 @@
 import prisma from '@/lib/prisma';
 
 export const fetchEvent = (id: string) =>
-  prisma.event.findUnique({
+  prisma.event.findFirst({
     where: {
       id: id,
+      deletedAt: null,
     },
     include: {
       images: true,
