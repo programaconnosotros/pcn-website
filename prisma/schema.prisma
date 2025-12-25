@@ -8,11 +8,17 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Role {
+  REGULAR
+  ADMIN
+}
+
 model User {
   id              String         @id @default(cuid())
   name            String
   email           String         @unique
   password        String
+  role            Role           @default(REGULAR)
   image           String?
   countryOfOrigin String?
   xAccountUrl     String?
