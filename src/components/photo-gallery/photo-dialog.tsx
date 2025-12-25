@@ -176,7 +176,7 @@ export function PhotoDialog({
             <div className="relative flex h-full w-full items-center justify-center">
               <img
                 src={currentPhoto.image || '/placeholder.svg'}
-                alt={currentPhoto.title}
+                alt=""
                 className="max-h-full max-w-full object-contain"
                 loading="eager"
               />
@@ -184,10 +184,10 @@ export function PhotoDialog({
           </div>
 
           <div className="p-4 text-center">
-            <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
+            {/* <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
             {currentPhoto.date && (
               <p className="mt-1 text-sm text-gray-500">{formatDate(currentPhoto.date)}</p>
-            )}
+            )} */}
           </div>
         </DialogContent>
       </Dialog>
