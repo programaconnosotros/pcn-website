@@ -328,7 +328,155 @@ async function main() {
     }),
   );
 
+  // Obtener usuarios regulares (no admin) para asociar errores y logs
+  const regularUsers = users.filter((user) => user.role !== 'ADMIN');
+  const adminUser = users.find((user) => user.role === 'ADMIN');
+
+  // Crear errores de ejemplo
+  const errorMessages = [
+    'Failed to fetch user data',
+    'Network request failed',
+    'Cannot read property "id" of undefined',
+    'TypeError: Cannot read properties of null',
+    'Uncaught ReferenceError: variable is not defined',
+    'Failed to load resource: the server responded with a status of 404',
+    'Maximum update depth exceeded',
+    'Invalid token: token expired',
+    'Database connection timeout',
+    'Validation error: email is required',
+    'Unauthorized access attempt',
+    'Failed to upload image: file too large',
+    'Component render error: missing required prop',
+    'API rate limit exceeded',
+    'CORS policy blocked request',
+  ];
+
+  const errorPaths = [
+    '/advises',
+    '/advises/[id]',
+    '/events',
+    '/events/[id]',
+    '/job-offers',
+    '/profile',
+    '/dashboard',
+    '/api/advises',
+    '/api/events',
+    '/api/users',
+  ];
+
+  const userAgents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15',
+  ];
+
+  // Crear 50 errores distribuidos en los últimos 30 días
+  const errors = await Promise.all(
+    Array.from({ length: 50 }).map(async (_, i) => {
+      const daysAgo = Math.floor(Math.random() * 30);
+      const createdAt = new Date();
+      createdAt.setDate(createdAt.getDate() - daysAgo);
+      createdAt.setHours(Math.floor(Math.random() * 24));
+      createdAt.setMinutes(Math.floor(Math.random() * 60));
+
+      const user = regularUsers[Math.floor(Math.random() * regularUsers.length)];
+      const isResolved = Math.random() > 0.6; // 40% resueltos
+      const resolvedAt = isResolved
+        ? new Date(createdAt.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000)
+        : null;
+
+      const stack = `Error: ${errorMessages[i % errorMessages.length]}
+    at Component.render (Component.tsx:${Math.floor(Math.random() * 100) + 1}:${Math.floor(Math.random() * 50) + 1})
+    at ReactDOM.render (react-dom.js:${Math.floor(Math.random() * 1000) + 1}:${Math.floor(Math.random() * 50) + 1})
+    at App.main (App.tsx:${Math.floor(Math.random() * 100) + 1}:${Math.floor(Math.random() * 50) + 1})`;
+
+      return prisma.errorLog.create({
+        data: {
+          message: errorMessages[i % errorMessages.length],
+          stack: stack,
+          path: errorPaths[Math.floor(Math.random() * errorPaths.length)],
+          userId: user.id,
+          userAgent: userAgents[Math.floor(Math.random() * userAgents.length)],
+          ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
+          metadata: JSON.stringify({
+            browser: Math.random() > 0.5 ? 'Chrome' : 'Firefox',
+            os: Math.random() > 0.5 ? 'Windows' : 'macOS',
+            timestamp: createdAt.toISOString(),
+          }),
+          resolved: isResolved,
+          resolvedAt: resolvedAt,
+          resolvedBy: isResolved && adminUser ? adminUser.id : null,
+          createdAt: createdAt,
+        },
+      });
+    }),
+  );
+
+  // Crear logs de aplicación de ejemplo
+  const logLevels = ['info', 'warn', 'error', 'debug'];
+  const logMessages = [
+    'User logged in successfully',
+    'Page loaded: /advises',
+    'API request completed',
+    'Form validation passed',
+    'Image uploaded successfully',
+    'User session expired',
+    'Cache cleared',
+    'Database query executed',
+    'Component mounted',
+    'State updated',
+    'Navigation occurred',
+    'File download started',
+    'Search query executed',
+    'Filter applied',
+    'Sort order changed',
+    'Warning: Slow network detected',
+    'Warning: Large payload size',
+    'Warning: Deprecated API used',
+    'Debug: Component re-rendered',
+    'Debug: State change detected',
+    'Error: Failed to save data',
+    'Error: Invalid form input',
+    'Error: Network timeout',
+  ];
+
+  // Crear 200 logs distribuidos en los últimos 7 días
+  const logs = await Promise.all(
+    Array.from({ length: 200 }).map(async (_, i) => {
+      const daysAgo = Math.floor(Math.random() * 7);
+      const createdAt = new Date();
+      createdAt.setDate(createdAt.getDate() - daysAgo);
+      createdAt.setHours(Math.floor(Math.random() * 24));
+      createdAt.setMinutes(Math.floor(Math.random() * 60));
+      createdAt.setSeconds(Math.floor(Math.random() * 60));
+
+      const user = Math.random() > 0.3 ? regularUsers[Math.floor(Math.random() * regularUsers.length)] : null;
+      const level = logLevels[Math.floor(Math.random() * logLevels.length)];
+      const message = logMessages[Math.floor(Math.random() * logMessages.length)];
+
+      return prisma.appLog.create({
+        data: {
+          level: level,
+          message: message,
+          path: errorPaths[Math.floor(Math.random() * errorPaths.length)],
+          userId: user?.id || null,
+          userAgent: user ? userAgents[Math.floor(Math.random() * userAgents.length)] : null,
+          ipAddress: user ? `192.168.1.${Math.floor(Math.random() * 255)}` : null,
+          metadata: JSON.stringify({
+            timestamp: createdAt.toISOString(),
+            sessionId: `session_${Math.random().toString(36).substring(7)}`,
+            additionalInfo: Math.random() > 0.5 ? { action: 'click', element: 'button' } : null,
+          }),
+          createdAt: createdAt,
+        },
+      });
+    }),
+  );
+
   console.log(`Seed data created successfully!`);
+  console.log(`Created ${errors.length} error logs`);
+  console.log(`Created ${logs.length} application logs`);
 }
 
 main()
