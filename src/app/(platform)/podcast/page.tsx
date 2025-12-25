@@ -56,7 +56,7 @@ const PodcastPage = async () => {
           </div>
 
           <div className="flex items-center justify-center py-12">
-            <p className="text-center text-lg text-muted-foreground">Proximamente</p>
+            <p className="text-center text-lg text-muted-foreground">Próximamente.</p>
           </div>
         </div>
       </div>
