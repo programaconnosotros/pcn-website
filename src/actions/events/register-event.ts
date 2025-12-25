@@ -34,25 +34,25 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
     }
   }
 
-  // Verificar si ya está registrado (por email)
-  const existingRegistration = await prisma.eventRegistration.findUnique({
+  // Verificar si ya existe una inscripción (activa o cancelada)
+  const existingRegistration = await prisma.eventRegistration.findFirst({
     where: {
-      eventId_email: {
-        eventId: eventId,
-        email: validatedData.email,
-      },
+      eventId: eventId,
+      email: validatedData.email,
     },
   });
 
-  if (existingRegistration) {
+  // Si existe una inscripción activa, no permitir
+  if (existingRegistration && existingRegistration.cancelledAt === null) {
     throw new Error('Ya estás registrado en este evento con este correo electrónico');
   }
 
-  // Validar cupo disponible (verificar nuevamente antes de crear la inscripción)
+  // Validar cupo disponible (verificar nuevamente antes de crear/actualizar la inscripción)
   if (event.capacity !== null) {
     const currentRegistrations = await prisma.eventRegistration.count({
       where: {
         eventId: eventId,
+        cancelledAt: null, // Excluir inscripciones canceladas
       },
     });
 
@@ -61,21 +61,39 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
     }
   }
 
-  // Crear la inscripción
-  await prisma.eventRegistration.create({
-    data: {
-      eventId: eventId,
-      firstName: validatedData.firstName,
-      lastName: validatedData.lastName,
-      email: validatedData.email,
-      type: validatedData.type,
-      workTitle: validatedData.workTitle || null,
-      workPlace: validatedData.workPlace || null,
-      studyField: validatedData.studyField || null,
-      studyPlace: validatedData.studyPlace || null,
-      userId: userId || null,
-    },
-  });
+  // Si existe una inscripción cancelada, reactivarla
+  if (existingRegistration && existingRegistration.cancelledAt !== null) {
+    await prisma.eventRegistration.update({
+      where: { id: existingRegistration.id },
+      data: {
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        type: validatedData.type,
+        workTitle: validatedData.workTitle || null,
+        workPlace: validatedData.workPlace || null,
+        studyField: validatedData.studyField || null,
+        studyPlace: validatedData.studyPlace || null,
+        userId: userId || null,
+        cancelledAt: null, // Reactivar la inscripción
+      },
+    });
+  } else {
+    // Crear nueva inscripción
+    await prisma.eventRegistration.create({
+      data: {
+        eventId: eventId,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        email: validatedData.email,
+        type: validatedData.type,
+        workTitle: validatedData.workTitle || null,
+        workPlace: validatedData.workPlace || null,
+        studyField: validatedData.studyField || null,
+        studyPlace: validatedData.studyPlace || null,
+        userId: userId || null,
+      },
+    });
+  }
 
   revalidatePath(`/eventos/${eventId}`);
   redirect(`/eventos/${eventId}`);

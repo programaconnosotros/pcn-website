@@ -22,6 +22,7 @@ export const checkEventCapacity = async (eventId: string) => {
   const currentRegistrations = await prisma.eventRegistration.count({
     where: {
       eventId: eventId,
+      cancelledAt: null, // Excluir inscripciones canceladas
     },
   });
 

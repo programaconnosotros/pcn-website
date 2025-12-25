@@ -14,6 +14,8 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, MapPin, Edit, UserPlus, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
+import { CancelRegistrationButton } from '@/components/events/cancel-registration-button';
+import { DeleteRegistrationButton } from '@/components/events/delete-registration-button';
 import { EventPhotos } from '@/components/events/event-photos';
 import { Image as Images, Event, Sponsor } from '@prisma/client';
 import { Button } from '@/components/ui/button';
@@ -103,16 +105,21 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   const eventEndDate = event.endDate || event.date;
   const hasEventPassed = new Date(eventEndDate) < now;
 
-  // Verificar si el usuario ya está registrado
+  // Verificar si el usuario ya está registrado (solo inscripciones activas)
   let isRegistered = false;
+  let registrationId: string | null = null;
   if (userId) {
     const registration = await prisma.eventRegistration.findFirst({
       where: {
         eventId: id,
         userId: userId,
+        cancelledAt: null, // Solo considerar inscripciones activas
       },
     });
-    isRegistered = !!registration;
+    if (registration) {
+      isRegistered = true;
+      registrationId = registration.id;
+    }
   }
 
   // Obtener información del cupo
@@ -121,6 +128,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     const currentRegistrations = await prisma.eventRegistration.count({
       where: {
         eventId: id,
+        cancelledAt: null, // Excluir inscripciones canceladas
       },
     });
     capacityInfo = {
@@ -141,6 +149,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     workPlace: string | null;
     studyField: string | null;
     studyPlace: string | null;
+    cancelledAt: Date | null;
     createdAt: Date;
   }> = [];
 
@@ -251,18 +260,35 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         {registrations.map((registration) => (
                           <div
                             key={registration.id}
-                            className="rounded-lg border bg-background p-4 space-y-2"
+                            className={`rounded-lg border bg-background p-4 space-y-2 ${
+                              registration.cancelledAt ? 'opacity-60' : ''
+                            }`}
                           >
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <p className="font-medium">
-                                  {registration.firstName} {registration.lastName}
-                                </p>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium">
+                                    {registration.firstName} {registration.lastName}
+                                  </p>
+                                  {registration.cancelledAt && (
+                                    <span className="text-xs px-2 py-1 rounded-full bg-destructive/10 text-destructive">
+                                      Cancelada
+                                    </span>
+                                  )}
+                                </div>
                                 <p className="text-sm text-muted-foreground">{registration.email}</p>
                               </div>
-                              <span className="text-xs px-2 py-1 rounded-full bg-muted">
-                                {registration.type === 'PROFESSIONAL' ? 'Profesional' : 'Estudiante'}
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs px-2 py-1 rounded-full bg-muted">
+                                  {registration.type === 'PROFESSIONAL' ? 'Profesional' : 'Estudiante'}
+                                </span>
+                                {!registration.cancelledAt && (
+                                  <DeleteRegistrationButton
+                                    registrationId={registration.id}
+                                    userName={`${registration.firstName} ${registration.lastName}`}
+                                  />
+                                )}
+                              </div>
                             </div>
                             {registration.type === 'PROFESSIONAL' && (
                               <div className="text-sm text-muted-foreground">
@@ -307,11 +333,18 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardContent className="pt-6">
                     {isRegistered ? (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium text-center">Ya estás registrado</p>
-                        <p className="text-xs text-center text-muted-foreground">
-                          Te esperamos en el evento
-                        </p>
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-center">Ya estás registrado</p>
+                          <p className="text-xs text-center text-muted-foreground">
+                            Te esperamos en el evento
+                          </p>
+                        </div>
+                        <CancelRegistrationButton
+                          eventId={id}
+                          registrationId={registrationId || undefined}
+                          isLoggedIn={!!userId}
+                        />
                       </div>
                     ) : capacityInfo && !capacityInfo.available ? (
                       <div className="space-y-2">

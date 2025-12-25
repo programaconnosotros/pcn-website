@@ -56,23 +56,23 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
         career: session.user.career || '',
       };
 
-      // Verificar si el usuario ya está registrado en este evento
+      // Verificar si el usuario ya está registrado en este evento (solo inscripciones activas)
       const registration = await prisma.eventRegistration.findFirst({
         where: {
           eventId: id,
           userId: session.userId,
+          cancelledAt: null, // Solo considerar inscripciones activas
         },
       });
       isRegistered = !!registration;
 
-      // Si no está registrado por userId, verificar por email
+      // Si no está registrado por userId, verificar por email (solo inscripciones activas)
       if (!isRegistered && userData.email) {
-        const registrationByEmail = await prisma.eventRegistration.findUnique({
+        const registrationByEmail = await prisma.eventRegistration.findFirst({
           where: {
-            eventId_email: {
-              eventId: id,
-              email: userData.email,
-            },
+            eventId: id,
+            email: userData.email,
+            cancelledAt: null, // Solo considerar inscripciones activas
           },
         });
         isRegistered = !!registrationByEmail;

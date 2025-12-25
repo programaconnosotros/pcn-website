@@ -173,6 +173,7 @@ model EventRegistration {
   studyField      String? // Para estudiantes: qué estudia
   studyPlace      String? // Para estudiantes: dónde estudia
   userId          String? // Si el usuario está logueado
+  cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
@@ -182,6 +183,7 @@ model EventRegistration {
   @@unique([eventId, email])
   @@index([eventId])
   @@index([userId])
+  @@index([cancelledAt])
 }
 
 model Sponsor {
