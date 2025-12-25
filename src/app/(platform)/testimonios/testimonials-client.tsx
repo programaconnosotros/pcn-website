@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useImperativeHandle, forwardRef } from 'react';
+import { useState, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { TestimonialCard } from '@/components/testimonials/testimonial-card';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
 import {
@@ -63,10 +63,35 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
     setEditingTestimonial(null);
   };
 
+  // Ordenar testimonios: primero el del usuario logueado, luego destacados, luego los demás
+  const sortedTestimonials = useMemo(() => {
+    if (!testimonials.length) return [];
+
+    const userTestimonial = currentUserId
+      ? testimonials.find((t) => t.userId === currentUserId)
+      : null;
+
+    const otherTestimonials = testimonials.filter(
+      (t) => t.id !== userTestimonial?.id,
+    );
+
+    const featured = otherTestimonials.filter((t) => t.featured);
+    const notFeatured = otherTestimonials.filter((t) => !t.featured);
+
+    const result: TestimonialWithUser[] = [];
+    if (userTestimonial) {
+      result.push(userTestimonial);
+    }
+    result.push(...featured);
+    result.push(...notFeatured);
+
+    return result;
+  }, [testimonials, currentUserId]);
+
   return (
     <>
 
-      {testimonials.length === 0 ? (
+      {sortedTestimonials.length === 0 ? (
         <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
           <CardContent className="pt-6">
             <div className="text-center py-8">
@@ -76,7 +101,7 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-          {testimonials.map((testimonial) => (
+          {sortedTestimonials.map((testimonial) => (
             <TestimonialCard
               key={testimonial.id}
               testimonial={testimonial}
