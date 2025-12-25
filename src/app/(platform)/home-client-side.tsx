@@ -15,6 +15,7 @@ import {
   Briefcase,
   Building2,
   Calendar,
+  FolderKanban,
   Globe,
   GraduationCap,
   Handshake,
@@ -643,7 +644,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-105 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
-              <Linkedin className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
+              <FolderKanban className="h-6 w-6 text-[#0077B5] dark:text-[#0077B5]" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">LinkedIn</h3>
