@@ -26,6 +26,7 @@ import {
   Users,
   Youtube,
   Bell,
+  AlertTriangle,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -205,6 +206,11 @@ const getAdminItems = (unreadCount: number = 0) => {
       url: '/notificaciones',
       icon: Bell,
       badge: unreadCount,
+    },
+    {
+      title: 'Errores',
+      url: '/errores',
+      icon: AlertTriangle,
     },
   ];
 };

@@ -38,6 +38,8 @@ model User {
   pageVisits      PageVisit[]
   testimonials    Testimonial[]
   notifications   Notification[]
+  errorLogs       ErrorLog[]
+  resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -247,5 +249,28 @@ model Notification {
 
   @@index([userId])
   @@index([read])
+  @@index([createdAt])
+}
+
+model ErrorLog {
+  id          String   @id @default(cuid())
+  message     String   // Mensaje del error
+  stack       String?  // Stack trace del error
+  path        String?  // Ruta donde ocurrió el error
+  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent   String?  // User agent del navegador
+  ipAddress   String?  // Dirección IP
+  metadata    String?  // JSON con información adicional del error
+  resolved    Boolean  @default(false) // Si el error fue resuelto
+  resolvedAt  DateTime? // Fecha en que se resolvió
+  resolvedBy  String?  // ID del admin que lo resolvió
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resolver    User?    @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([path])
+  @@index([resolved])
   @@index([createdAt])
 }
