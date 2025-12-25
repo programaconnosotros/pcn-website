@@ -40,7 +40,7 @@ type UserCardProps = {
 
 const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
   return (
-    <Card className="transition-shadow duration-300 hover:shadow-lg">
+    <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
       <CardHeader className="text-center">
         <Avatar className="mx-auto mb-4 h-20 w-20">
           <AvatarImage src={user.image || undefined} alt={user.name} />
@@ -52,16 +52,16 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
           </AvatarFallback>
         </Avatar>
         <a href={`/perfil/${user.id}`}>
-          <h3 className="text-xl font-semibold hover:underline">{user.name}</h3>
+          <h3 className="text-xl font-semibold hover:underline transition-colors hover:text-pcnPurple dark:hover:text-pcnGreen">{user.name}</h3>
         </a>
-        <p className="font-medium text-blue-600">{user.jobTitle}</p>
-        {user.slogan && <p className="text-sm">{user.slogan}</p>}
+        <p className="font-medium text-pcnPurple dark:text-pcnGreen">{user.jobTitle}</p>
+        {user.slogan && <p className="text-sm text-muted-foreground">{user.slogan}</p>}
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Información básica */}
         <div className="space-y-2">
           {user.countryOfOrigin && (
-            <div className="flex items-center gap-2 text-sm dark:text-gray-300">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" />
               <span>{user.countryOfOrigin}</span>
             </div>
@@ -70,7 +70,7 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
 
         {/* Universidad o lugar de estudios */}
         {user.university && (
-          <div className="flex items-center gap-2 text-sm dark:text-gray-300">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <GraduationCap className="h-4 w-4" />
             <span>{user.university}</span>
           </div>
@@ -78,7 +78,7 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
 
         {/* Empresa */}
         {user.enterprise && (
-          <div className="flex items-center gap-2 text-sm dark:text-gray-300">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Briefcase className="h-4 w-4" />
             <span>{user.enterprise}</span>
           </div>
@@ -88,8 +88,8 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
         {user.languages.length > 0 && (
           <div>
             <div className="mb-2 flex items-center gap-2">
-              <Code className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium dark:text-gray-300">Lenguajes</span>
+              <Code className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Lenguajes</span>
             </div>
             <div className="flex flex-wrap gap-1">
               {user.languages.map((lang) => (
@@ -106,7 +106,7 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
         )}
 
         {/* Miembro desde */}
-        <div className="flex items-center gap-2 text-sm dark:text-gray-300">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Handshake className="h-4 w-4" />
           <span>Miembro desde {calcMembershipTime}</span>
         </div>

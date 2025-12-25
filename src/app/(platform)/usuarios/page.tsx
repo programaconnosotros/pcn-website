@@ -1,13 +1,22 @@
 'use client';
 
 import { Heading2 } from '@/components/ui/heading-2';
-
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useState, useMemo, useEffect } from 'react';
 import { Search, Users, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -124,64 +133,40 @@ const CommunityPage = () => {
   };
 
   return (
-    <div className="mt-4 md:px-20">
-      <div className="relative">
-        <div className="sticky top-0 z-10 bg-background/95 pb-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex items-center justify-between">
-            <Heading2>Conoce a la comunidad!</Heading2>
-          </div>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Usuarios</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
-        <div className="container mx-auto px-4 py-8">
-          {/* Header */}
-
-          <div className="relative mb-12 text-center">
-            {/* Main content */}
-            <div className="relative z-10">
-              {/* Logo/Icon section */}
-
-              <div className="flex flex-col items-center">
-                <img
-                  src="/logo.webp"
-                  alt="programaConNosotros"
-                  className="w-[100px] md:w-[140px]"
-                />
-              </div>
-
-              {/* Title with gradient */}
-              <h1 className="mb-4 bg-gradient-to-r bg-clip-text text-5xl font-bold dark:text-white md:text-6xl">
-                Miembros de PCN
-              </h1>
-
-              {/* Subtitle */}
-              <div className="mb-6">
-                <p className="mb-2 text-xl font-medium dark:text-gray-300 md:text-2xl">
-                  programaConNosotros
-                </p>
-                <p className="mx-auto max-w-2xl text-lg dark:text-gray-300">
-                  Conoce a nuestra increíble comunidad de apasionados por la tecnología
-                </p>
-              </div>
-
-              {/* Stats section */}
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/80 px-6 py-3 shadow-lg backdrop-blur-sm">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-                  <Users className="h-5 w-5 text-gray-600" />
-                </div>
-                <span className="font-semibold text-gray-700">
-                  {users.length} de {users.length} miembros
-                </span>
-              </div>
-            </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mb-6">
+            <Heading2 className="m-0">Usuarios</Heading2>
+            <p className="text-sm text-muted-foreground mt-2">
+              Conoce a nuestra increíble comunidad de apasionados por la tecnología
+            </p>
           </div>
 
           {/* Filtros */}
-          <Card className="mb-8">
+          <Card className="mb-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardHeader>
-              <div className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2">
                 <Filter className="h-5 w-5" />
-                <h2 className="text-lg font-semibold">Filtros</h2>
-              </div>
+                Filtros
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Búsqueda */}
@@ -276,11 +261,11 @@ const CommunityPage = () => {
           {/* Mensaje cuando no hay resultados */}
           {filteredUsers.length === 0 && (
             <div className="py-12 text-center">
-              <Users className="mx-auto mb-4 h-16 w-16 text-gray-300" />
-              <h3 className="mb-2 text-xl font-semibold text-gray-600">
-                No se encontraron miembros
+              <Users className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+              <h3 className="mb-2 text-xl font-semibold">
+                No se encontraron usuarios
               </h3>
-              <p className="mb-4 text-gray-500">
+              <p className="mb-4 text-muted-foreground">
                 Intenta ajustar los filtros para encontrar más resultados
               </p>
               <Button onClick={clearFilters} variant="outline">
@@ -290,7 +275,7 @@ const CommunityPage = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
