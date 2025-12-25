@@ -65,7 +65,7 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
         <CardFooter className="mt-auto">
           <Link href={`/eventos/${event.id}`} className="w-full">
-            <Button variant="outline" className="w-full">
+            <Button variant="pcn" className="w-full">
               Ver evento
             </Button>
           </Link>
