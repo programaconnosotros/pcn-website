@@ -1,4 +1,4 @@
-import { Heading2 } from '@/components/ui/heading-2';
+import { Button } from '@/components/ui/button';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,27 +9,32 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { EventsList } from '@/components/events/events-list';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Heading2 } from '@/components/ui/heading-2';
+import { NewEventForm } from '@/components/events/new-event-form';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-const EventsPage = async () => {
+const NewEventPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
 
-  let isAdmin = false;
+  if (!sessionId) {
+    redirect('/eventos');
+  }
 
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+    include: { user: true },
+  });
 
-    if (session?.user.role === 'ADMIN') {
-      isAdmin = true;
-    }
+  if (!session) {
+    redirect('/eventos');
+  }
+
+  if (session.user.role !== 'ADMIN') {
+    redirect('/eventos');
   }
 
   return (
@@ -44,8 +49,12 @@ const EventsPage = async () => {
                 <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Eventos</BreadcrumbPage>
+                <BreadcrumbPage>Nuevo evento</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -53,23 +62,21 @@ const EventsPage = async () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex flex-col gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:flex-row sm:items-center sm:justify-between">
-            <Heading2 className="m-0">Eventos</Heading2>
-            {isAdmin && (
-              <Link href="/eventos/nuevo" className="w-full sm:w-auto">
-                <Button variant="pcn" className="flex w-full items-center justify-center gap-2 sm:w-auto">
-                  <Plus className="h-4 w-4" />
-                  Crear evento
-                </Button>
-              </Link>
-            )}
+          <div className="mb-6 flex items-center gap-4">
+            <Link href="/eventos">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Heading2 className="m-0">Crear nuevo evento</Heading2>
           </div>
 
-          <EventsList />
+          <NewEventForm />
         </div>
       </div>
     </>
   );
 };
 
-export default EventsPage;
+export default NewEventPage;
+
