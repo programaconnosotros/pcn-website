@@ -12,10 +12,14 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, Edit } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { Image as Images, Event } from '@prisma/client';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import prisma from '@/lib/prisma';
+import { cookies } from 'next/headers';
 
 type EventWithImages = Event & {
   images: Images[];
@@ -25,6 +29,21 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   const id: string = params.id;
 
   const event: EventWithImages | null = await fetchEvent(id);
+
+  // Verificar si el usuario es admin
+  const sessionId = cookies().get('sessionId')?.value;
+  let isAdmin = false;
+
+  if (sessionId) {
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { user: true },
+    });
+
+    if (session?.user.role === 'ADMIN') {
+      isAdmin = true;
+    }
+  }
 
   if (!event) {
     return (
@@ -99,8 +118,16 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="mb-4 flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <Heading2 className="m-0">{event.name}</Heading2>
+            {isAdmin && (
+              <Link href={`/eventos/${id}/editar`}>
+                <Button variant="pcn" className="flex items-center gap-2">
+                  <Edit className="h-4 w-4" />
+                  Editar evento
+                </Button>
+              </Link>
+            )}
           </div>
 
           <div className="my-5 ml-0 flex flex-col gap-5 xl:flex-row">
