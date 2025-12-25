@@ -26,6 +26,7 @@ import {
   Star,
   Users,
   Youtube,
+  Bell,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -200,6 +201,11 @@ const getAdminItems = () => {
       url: '/visitas',
       icon: Eye,
     },
+    {
+      title: 'Notificaciones',
+      url: '/notificaciones',
+      icon: Bell,
+    },
   ];
 };
 
@@ -280,7 +286,9 @@ export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarPr
       <SidebarContent>
         <NavMain items={navMainItems} />
         <NavMain items={getComunidadItems()} label="Comunidad" />
-        <NavMain items={getAdminItems()} label="Administración" />
+        {user?.role === 'ADMIN' && (
+          <NavMain items={getAdminItems()} label="Administración" />
+        )}
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
