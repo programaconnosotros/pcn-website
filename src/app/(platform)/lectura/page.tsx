@@ -174,7 +174,7 @@ const ReadingPage = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button className="flex items-center gap-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600">
+                    <Button variant="pcn" className="flex items-center gap-2">
                       <MessageCircle className="h-4 w-4" />
                       Unirme al grupo
                     </Button>
@@ -227,7 +227,10 @@ const ReadingPage = () => {
             {filteredBooks.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {filteredBooks.map((book) => (
-                  <Card key={book.id} className="flex flex-col">
+                  <Card
+                    key={book.id}
+                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                  >
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
