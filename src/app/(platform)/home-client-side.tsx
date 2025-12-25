@@ -305,15 +305,15 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
               software y avanzar en tu carrera profesional.
             </Paragraph>
 
-            <div className="flex flex-col gap-2 md:flex-row">
+            <div className="flex flex-col gap-2">
               <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black md:w-auto">
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                   PCN en WhatsApp
                 </Button>
               </Link>
 
               <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black md:w-auto">
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                   PCN en Discord
                 </Button>
               </Link>
@@ -416,7 +416,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
                 strokeWidth={1.0}
               />
             </div>
-            <Heading3 className="relative z-10">Software recomendado</Heading3>
+            <Heading3 className="relative z-10 text-center">Software recomendado</Heading3>
 
             <Paragraph className="relative z-10 text-center text-muted-foreground">
               Descubrí herramientas y software recomendados por la comunidad para mejorar tu
