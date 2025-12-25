@@ -25,4 +25,3 @@ export const getUnreadNotificationsCount = async (): Promise<number> => {
     },
   });
 };
-

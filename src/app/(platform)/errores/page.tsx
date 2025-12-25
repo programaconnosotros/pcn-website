@@ -14,14 +14,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchErrors, getErrorStats } from '@/actions/errors/fetch-errors';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  AlertTriangle,
-  CheckCircle2,
-  Calendar,
-  FileX,
-  TrendingUp,
-  User,
-} from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Calendar, FileX, TrendingUp, User } from 'lucide-react';
 import { ErrorsClient } from './errors-client';
 import { redirect } from 'next/navigation';
 
@@ -76,13 +69,13 @@ const ErroresPage = async () => {
         <div className="mt-4">
           <div className="mb-6">
             <Heading2 className="m-0">Errores</Heading2>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               Registro de errores de la aplicación
             </p>
           </div>
 
           {/* Estadísticas */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total de errores</CardTitle>
@@ -136,4 +129,3 @@ const ErroresPage = async () => {
 };
 
 export default ErroresPage;
-

@@ -45,5 +45,3 @@ export const deleteEvent = async (id: string) => {
   revalidatePath('/eventos');
   redirect('/eventos');
 };
-
-

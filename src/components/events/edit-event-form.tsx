@@ -31,4 +31,3 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
     />
   );
 }
-

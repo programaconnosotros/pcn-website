@@ -57,7 +57,10 @@ const EventsPage = async () => {
             <Heading2 className="m-0">Eventos</Heading2>
             {isAdmin && (
               <Link href="/eventos/nuevo" className="w-full sm:w-auto">
-                <Button variant="pcn" className="flex w-full items-center justify-center gap-2 sm:w-auto">
+                <Button
+                  variant="pcn"
+                  className="flex w-full items-center justify-center gap-2 sm:w-auto"
+                >
                   <Plus className="h-4 w-4" />
                   Crear evento
                 </Button>

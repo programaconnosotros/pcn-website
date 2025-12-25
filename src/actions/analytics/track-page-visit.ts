@@ -44,5 +44,3 @@ export const trackPageVisit = async (path: string) => {
     console.error('Error tracking page visit:', error);
   }
 };
-
-

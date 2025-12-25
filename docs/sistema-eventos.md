@@ -45,6 +45,7 @@ model Event {
 ```
 
 **Campos importantes:**
+
 - `capacity`: Cupo máximo del evento. Si es `null`, el evento tiene cupo ilimitado.
 - `deletedAt`: Campo para eliminación lógica. Los eventos eliminados no se muestran en listados públicos.
 - `endDate`: Fecha de finalización opcional. Si no se especifica, se usa `date` como referencia.
@@ -81,6 +82,7 @@ model EventRegistration {
 ```
 
 **Campos importantes:**
+
 - `type`: Tipo de registro (`STUDENT` o `PROFESSIONAL`)
 - `cancelledAt`: Si tiene valor, la inscripción está cancelada (no se cuenta para cupos)
 - `userId`: Opcional. Si el usuario está logueado, se vincula su cuenta.
@@ -165,11 +167,13 @@ enum RegistrationType {
 ### Páginas Públicas
 
 #### `/eventos`
+
 - **Componente**: `src/app/(platform)/eventos/page.tsx`
 - **Descripción**: Lista todos los eventos (excluye eliminados)
 - **Acceso**: Público
 
 #### `/eventos/[id]`
+
 - **Componente**: `src/app/(platform)/eventos/[id]/page.tsx`
 - **Descripción**: Página de detalle del evento
 - **Características**:
@@ -182,6 +186,7 @@ enum RegistrationType {
 - **Acceso**: Público
 
 #### `/eventos/[id]/inscripcion`
+
 - **Componente**: `src/app/(platform)/eventos/[id]/inscripcion/page.tsx`
 - **Descripción**: Página de inscripción al evento
 - **Características**:
@@ -193,6 +198,7 @@ enum RegistrationType {
 - **Acceso**: Público
 
 #### `/meetup`
+
 - **Componente**: `src/app/meetup/page.tsx`
 - **Descripción**: Redirige automáticamente a la página de inscripción del próximo "dev meetup"
 - **Lógica**: Busca el próximo evento cuyo nombre contenga "meetup" (case-insensitive)
@@ -201,11 +207,13 @@ enum RegistrationType {
 ### Páginas de Administración
 
 #### `/eventos/nuevo`
+
 - **Componente**: `src/app/(platform)/eventos/nuevo/page.tsx`
 - **Descripción**: Formulario para crear un nuevo evento
 - **Acceso**: Solo administradores (redirige si no es admin)
 
 #### `/eventos/[id]/editar`
+
 - **Componente**: `src/app/(platform)/eventos/[id]/editar/page.tsx`
 - **Descripción**: Formulario para editar un evento existente
 - **Características**:
@@ -221,6 +229,7 @@ enum RegistrationType {
 ### Eventos
 
 #### `create-event.ts`
+
 - **Ruta**: `src/actions/events/create-event.ts`
 - **Función**: `createEvent(data: EventFormData)`
 - **Descripción**: Crea un nuevo evento en la base de datos
@@ -231,6 +240,7 @@ enum RegistrationType {
 - **Retorno**: Redirige a la página de detalle del evento creado
 
 #### `update-event.ts`
+
 - **Ruta**: `src/actions/events/update-event.ts`
 - **Función**: `updateEvent(id: string, data: EventFormData)`
 - **Descripción**: Actualiza un evento existente
@@ -243,6 +253,7 @@ enum RegistrationType {
 - **Retorno**: Redirige a la página de detalle del evento
 
 #### `delete-event.ts`
+
 - **Ruta**: `src/actions/events/delete-event.ts`
 - **Función**: `deleteEvent(id: string)`
 - **Descripción**: Elimina lógicamente un evento (soft delete)
@@ -252,12 +263,14 @@ enum RegistrationType {
 - **Retorno**: Redirige a la lista de eventos
 
 #### `fetch-events.ts`
+
 - **Ruta**: `src/actions/events/fetch-events.ts`
 - **Función**: `fetchEvents()`
 - **Descripción**: Obtiene todos los eventos no eliminados
 - **Orden**: Por fecha descendente (más recientes primero)
 
 #### `fetch-event.ts`
+
 - **Ruta**: `src/actions/events/fetch-event.ts`
 - **Función**: `fetchEvent(id: string)`
 - **Descripción**: Obtiene un evento específico para visualización pública
@@ -265,6 +278,7 @@ enum RegistrationType {
 - **Includes**: `images`, `sponsors`
 
 #### `fetch-event-for-edit.ts`
+
 - **Ruta**: `src/actions/events/fetch-event-for-edit.ts`
 - **Función**: `fetchEventForEdit(id: string)`
 - **Descripción**: Obtiene un evento específico para edición (incluye eliminados)
@@ -273,6 +287,7 @@ enum RegistrationType {
 ### Inscripciones
 
 #### `register-event.ts`
+
 - **Ruta**: `src/actions/events/register-event.ts`
 - **Función**: `registerEvent(eventId: string, data: EventRegistrationFormData)`
 - **Descripción**: Registra un usuario a un evento
@@ -285,6 +300,7 @@ enum RegistrationType {
 - **Retorno**: Redirige a la página de detalle del evento
 
 #### `cancel-registration.ts`
+
 - **Ruta**: `src/actions/events/cancel-registration.ts`
 - **Función**: `cancelRegistration(params: CancelRegistrationParams)`
 - **Descripción**: Cancela una inscripción (marca como cancelada, no elimina)
@@ -299,6 +315,7 @@ enum RegistrationType {
 - **Efecto**: Marca `cancelledAt` con la fecha actual
 
 #### `delete-registration.ts`
+
 - **Ruta**: `src/actions/events/delete-registration.ts`
 - **Función**: `deleteRegistration(registrationId: string)`
 - **Descripción**: Elimina físicamente una inscripción (solo admins)
@@ -310,6 +327,7 @@ enum RegistrationType {
 ### Cupos
 
 #### `check-event-capacity.ts`
+
 - **Ruta**: `src/actions/events/check-event-capacity.ts`
 - **Función**: `checkEventCapacity(eventId: string)`
 - **Descripción**: Verifica el cupo disponible de un evento
@@ -331,6 +349,7 @@ enum RegistrationType {
 ### Formularios
 
 #### `EventForm`
+
 - **Ruta**: `src/components/events/event-form.tsx`
 - **Descripción**: Formulario reutilizable para crear/editar eventos
 - **Características**:
@@ -344,6 +363,7 @@ enum RegistrationType {
   - `onCancel`: Función a ejecutar al cancelar
 
 #### `EventRegistrationForm`
+
 - **Ruta**: `src/components/events/event-registration-form.tsx`
 - **Descripción**: Formulario de inscripción a eventos
 - **Características**:
@@ -359,6 +379,7 @@ enum RegistrationType {
 ### Botones y Acciones
 
 #### `CancelRegistrationButton`
+
 - **Ruta**: `src/components/events/cancel-registration-button.tsx`
 - **Descripción**: Botón para cancelar una inscripción
 - **Características**:
@@ -370,6 +391,7 @@ enum RegistrationType {
   - `isLoggedIn`: Si el usuario está logueado
 
 #### `DeleteRegistrationButton`
+
 - **Ruta**: `src/components/events/delete-registration-button.tsx`
 - **Descripción**: Botón para eliminar una inscripción (solo admins)
 - **Características**:
@@ -380,6 +402,7 @@ enum RegistrationType {
   - `userName`: Nombre del usuario (para mostrar en confirmación)
 
 #### `DeleteEventButton`
+
 - **Ruta**: `src/components/events/delete-event-button.tsx`
 - **Descripción**: Botón para eliminar un evento (soft delete)
 - **Características**:
@@ -389,6 +412,7 @@ enum RegistrationType {
 ### Visualización
 
 #### `EventCard`
+
 - **Ruta**: `src/components/events/event-card.tsx`
 - **Descripción**: Tarjeta para mostrar un evento en una lista
 - **Características**:
@@ -396,6 +420,7 @@ enum RegistrationType {
   - Descripción truncada con `line-clamp-3`
 
 #### `EventPhotos`
+
 - **Ruta**: `src/components/events/event-photos.tsx`
 - **Descripción**: Galería de fotos del evento
 
@@ -406,6 +431,7 @@ enum RegistrationType {
 ### Validación de Eventos
 
 #### Schema: `event-schema.ts`
+
 - **Nombre**: Requerido, string
 - **Descripción**: Requerido, string
 - **Fecha**: Requerido, formato `datetime-local`
@@ -423,6 +449,7 @@ enum RegistrationType {
 ### Validación de Inscripciones
 
 #### Schema: `event-registration-schema.ts`
+
 - **Nombre**: Requerido
 - **Apellido**: Requerido
 - **Email**: Requerido, formato de email válido
@@ -438,6 +465,7 @@ enum RegistrationType {
 ### Reglas de Negocio
 
 #### Cupos
+
 1. Si un evento tiene `capacity === null`, tiene cupo ilimitado
 2. Las inscripciones canceladas (`cancelledAt !== null`) no cuentan para el cupo
 3. La validación de cupo se hace:
@@ -446,17 +474,20 @@ enum RegistrationType {
 4. Si el cupo está completo, no se permite inscribirse
 
 #### Inscripciones
+
 1. No se puede inscribir dos veces con el mismo email (inscripciones activas)
 2. Si un usuario canceló, puede volver a inscribirse (se reactiva la inscripción)
 3. Las inscripciones canceladas no se eliminan, solo se marcan con `cancelledAt`
 4. Solo los administradores pueden eliminar inscripciones físicamente
 
 #### Eventos
+
 1. Los eventos eliminados (`deletedAt !== null`) no se muestran en listados públicos
 2. Los administradores pueden ver eventos eliminados en la página de edición
 3. La eliminación es lógica (soft delete), no física
 
 #### Permisos
+
 1. Solo administradores pueden:
    - Crear eventos (`/eventos/nuevo`)
    - Editar eventos (`/eventos/[id]/editar`)
@@ -598,7 +629,7 @@ enum RegistrationType {
 - **Eventos**: Soft delete (`deletedAt`)
   - Permite recuperar eventos eliminados
   - No se muestran en listados públicos
-- **Inscripciones**: 
+- **Inscripciones**:
   - Cancelación: Soft delete (`cancelledAt`)
   - Eliminación (admin): Hard delete (eliminación física)
 
@@ -607,23 +638,28 @@ enum RegistrationType {
 ## Mejoras Futuras Sugeridas
 
 1. **Notificaciones por email**:
+
    - Confirmación de inscripción
    - Recordatorio antes del evento
    - Notificación de cancelación
 
 2. **Lista de espera**:
+
    - Si el cupo está completo, permitir inscribirse en lista de espera
    - Notificar cuando se libere un cupo
 
 3. **Exportación de datos**:
+
    - Exportar lista de inscripciones a CSV/Excel
    - Filtros y búsqueda en la lista de inscripciones
 
 4. **Estadísticas**:
+
    - Dashboard con métricas de eventos
    - Gráficos de asistencia
 
 5. **QR Codes**:
+
    - Generar QR para check-in en el evento
    - Validación de asistencia
 
@@ -644,4 +680,3 @@ enum RegistrationType {
 ---
 
 **Última actualización**: Diciembre 2024
-

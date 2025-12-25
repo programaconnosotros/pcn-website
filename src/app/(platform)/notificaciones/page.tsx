@@ -85,12 +85,12 @@ const NotificacionesPage = async () => {
           <div className="mb-6 flex items-center justify-between">
             <div>
               <Heading2 className="m-0">Notificaciones</Heading2>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Gestiona tus notificaciones del sistema
               </p>
             </div>
             {unreadCount > 0 && (
-              <Badge variant="default" className="text-sm px-3 py-1">
+              <Badge variant="default" className="px-3 py-1 text-sm">
                 {unreadCount} sin leer
               </Badge>
             )}
@@ -104,4 +104,3 @@ const NotificacionesPage = async () => {
 };
 
 export default NotificacionesPage;
-

@@ -16,5 +16,3 @@ export function PageVisitTracker() {
 
   return null;
 }
-
-

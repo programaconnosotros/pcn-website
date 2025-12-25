@@ -37,4 +37,3 @@ export const deleteRegistration = async (registrationId: string) => {
   revalidatePath(`/eventos/${registration.eventId}`);
   return { success: true };
 };
-

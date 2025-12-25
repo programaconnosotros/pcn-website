@@ -31,4 +31,3 @@ export const notifyAdmins = async (data: NotificationData) => {
     })),
   });
 };
-

@@ -52,7 +52,9 @@ const UserCard = ({ user, calcMembershipTime }: UserCardProps) => {
           </AvatarFallback>
         </Avatar>
         <a href={`/perfil/${user.id}`}>
-          <h3 className="text-xl font-semibold hover:underline transition-colors hover:text-pcnPurple dark:hover:text-pcnGreen">{user.name}</h3>
+          <h3 className="text-xl font-semibold transition-colors hover:text-pcnPurple hover:underline dark:hover:text-pcnGreen">
+            {user.name}
+          </h3>
         </a>
         <p className="font-medium text-pcnPurple dark:text-pcnGreen">{user.jobTitle}</p>
         {user.slogan && <p className="text-sm text-muted-foreground">{user.slogan}</p>}

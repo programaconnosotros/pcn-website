@@ -95,7 +95,7 @@ export function TestimonialDetailActions({
             variant="outline"
             onClick={handleToggleFeatured}
             disabled={isToggling}
-            className={testimonial.featured ? 'text-yellow-500 border-yellow-500' : ''}
+            className={testimonial.featured ? 'border-yellow-500 text-yellow-500' : ''}
           >
             <Star
               className={`mr-2 h-4 w-4 ${
@@ -120,7 +120,9 @@ export function TestimonialDetailActions({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>¿Estás seguro de que quieres eliminar este testimonio?</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    ¿Estás seguro de que quieres eliminar este testimonio?
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
                     Esta acción no se puede deshacer. El testimonio será eliminado permanentemente.
                   </AlertDialogDescription>
@@ -162,4 +164,3 @@ export function TestimonialDetailActions({
     </>
   );
 }
-

@@ -45,12 +45,7 @@ import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Quote } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type FeaturedTestimonial = {
   id: string;
@@ -547,7 +542,9 @@ const HomeClientSide = ({
         {featuredTestimonials.length > 0 && (
           <>
             <div className="flex items-center justify-center p-6">
-              <Heading2 className="relative z-10 text-center">Lo que dicen nuestros miembros</Heading2>
+              <Heading2 className="relative z-10 text-center">
+                Lo que dicen nuestros miembros
+              </Heading2>
             </div>
 
             <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">

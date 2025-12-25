@@ -1,7 +1,10 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { eventRegistrationSchema, EventRegistrationFormData } from '@/schemas/event-registration-schema';
+import {
+  eventRegistrationSchema,
+  EventRegistrationFormData,
+} from '@/schemas/event-registration-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -132,7 +135,9 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
         throw new Error('Ya estás registrado en este evento con este correo electrónico');
       }
       // Si no hay inscripción activa, podría ser un error de timing, reintentar
-      throw new Error('Ocurrió un error al procesar la inscripción. Por favor, intenta nuevamente.');
+      throw new Error(
+        'Ocurrió un error al procesar la inscripción. Por favor, intenta nuevamente.',
+      );
     }
     throw error;
   }
@@ -140,5 +145,3 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
   revalidatePath(`/eventos/${eventId}`);
   redirect(`/eventos/${eventId}`);
 };
-
-

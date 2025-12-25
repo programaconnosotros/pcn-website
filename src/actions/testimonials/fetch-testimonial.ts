@@ -17,4 +17,3 @@ export const fetchTestimonial = async (id: string) => {
     },
   });
 };
-

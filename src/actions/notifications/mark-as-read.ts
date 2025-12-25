@@ -37,4 +37,3 @@ export const markNotificationAsRead = async (notificationId: string) => {
 
   revalidatePath('/notificaciones');
 };
-

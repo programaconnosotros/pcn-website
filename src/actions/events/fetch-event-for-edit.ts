@@ -14,5 +14,3 @@ export const fetchEventForEdit = (id: string) =>
       sponsors: true,
     },
   });
-
-

@@ -79,4 +79,3 @@ const NewEventPage = async () => {
 };
 
 export default NewEventPage;
-

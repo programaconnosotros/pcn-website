@@ -145,9 +145,7 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
                     <AlertCircle className="h-16 w-16 text-destructive" />
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">Cupo completo</h3>
-                      <p className="text-muted-foreground">
-                        Ya no quedan lugares disponibles.
-                      </p>
+                      <p className="text-muted-foreground">Ya no quedan lugares disponibles.</p>
                     </div>
                     <Link href={`/eventos/${id}`}>
                       <Button variant="outline">Volver al evento</Button>
@@ -157,11 +155,7 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
               </Card>
             </div>
           ) : (
-            <EventRegistrationForm
-              eventId={id}
-              userData={userData}
-              capacityInfo={capacityCheck}
-            />
+            <EventRegistrationForm eventId={id} userData={userData} capacityInfo={capacityCheck} />
           )}
         </div>
       </div>
@@ -170,5 +164,3 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
 };
 
 export default EventRegistrationPage;
-
-

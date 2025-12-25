@@ -63,10 +63,13 @@ export const updateEvent = async (id: string, data: EventFormData) => {
         longitude: validatedData.longitude ?? null,
         capacity: validatedData.capacity ?? null,
         sponsors: {
-          create: sponsors?.filter((s) => s.name.trim() !== '').map((sponsor) => ({
-            name: sponsor.name,
-            website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
-          })) || [],
+          create:
+            sponsors
+              ?.filter((s) => s.name.trim() !== '')
+              .map((sponsor) => ({
+                name: sponsor.name,
+                website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+              })) || [],
         },
       },
     }),
@@ -76,4 +79,3 @@ export const updateEvent = async (id: string, data: EventFormData) => {
   revalidatePath(`/eventos/${id}`);
   redirect(`/eventos/${id}`);
 };
-

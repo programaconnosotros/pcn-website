@@ -13,7 +13,10 @@ type ErrorLogData = {
 /**
  * Log error from server-side code
  */
-export const logError = async (error: Error | unknown, additionalData?: { path?: string; metadata?: Record<string, any> }) => {
+export const logError = async (
+  error: Error | unknown,
+  additionalData?: { path?: string; metadata?: Record<string, any> },
+) => {
   try {
     const sessionId = cookies().get('sessionId')?.value;
     let userId: string | undefined = undefined;
@@ -105,4 +108,3 @@ export const logClientError = async (errorData: {
     console.error('Error logging client error:', logError);
   }
 };
-

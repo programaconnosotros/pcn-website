@@ -72,10 +72,11 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
     latitude: event.latitude?.toString() || '',
     longitude: event.longitude?.toString() || '',
     capacity: event.capacity?.toString() || '',
-    sponsors: event.sponsors?.map((sponsor) => ({
-      name: sponsor.name,
-      website: sponsor.website || '',
-    })) || [],
+    sponsors:
+      event.sponsors?.map((sponsor) => ({
+        name: sponsor.name,
+        website: sponsor.website || '',
+      })) || [],
   };
 
   return (
@@ -127,4 +128,3 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
 };
 
 export default EditEventPage;
-

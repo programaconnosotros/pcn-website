@@ -37,4 +37,3 @@ export const toggleFeatured = async (id: string) => {
   revalidatePath('/testimonios');
   revalidatePath('/home');
 };
-

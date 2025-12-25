@@ -134,8 +134,8 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     return (
       <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
         <CardContent className="pt-6">
-          <div className="text-center py-8">
-            <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <div className="py-8 text-center">
+            <Bell className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <p className="text-muted-foreground">No tienes notificaciones</p>
           </div>
         </CardContent>
@@ -174,8 +174,8 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-base m-0">{notification.title}</CardTitle>
+                        <div className="mb-2 flex items-center gap-2">
+                          <CardTitle className="m-0 text-base">{notification.title}</CardTitle>
                           <Badge variant="default">Nuevo</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">{notification.message}</p>
@@ -190,7 +190,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                           </div>
                         )}
                         {hasEventLink && (
-                          <div className="mt-3 flex gap-2 flex-wrap">
+                          <div className="mt-3 flex flex-wrap gap-2">
                             <Link href={`/eventos/${eventId}`}>
                               <Button variant="outline" size="sm" className="gap-2">
                                 <ExternalLink className="h-4 w-4" />
@@ -205,7 +205,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                             </Link>
                           </div>
                         )}
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           {formatRelativeTime(notification.createdAt)}
                         </p>
                       </div>
@@ -229,7 +229,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
 
       {readNotifications.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Leídas ({readNotifications.length})</h3>
+          <h3 className="mb-4 text-lg font-semibold">Leídas ({readNotifications.length})</h3>
           <div className="space-y-3">
             {readNotifications.map((notification) => {
               const testimonialId = getTestimonialId(notification);
@@ -240,12 +240,12 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
               return (
                 <Card
                   key={notification.id}
-                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 opacity-75"
+                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-base m-0 mb-2">{notification.title}</CardTitle>
+                        <CardTitle className="m-0 mb-2 text-base">{notification.title}</CardTitle>
                         <p className="text-sm text-muted-foreground">{notification.message}</p>
                         {hasTestimonialLink && (
                           <div className="mt-3">
@@ -258,7 +258,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                           </div>
                         )}
                         {hasEventLink && (
-                          <div className="mt-3 flex gap-2 flex-wrap">
+                          <div className="mt-3 flex flex-wrap gap-2">
                             <Link href={`/eventos/${eventId}`}>
                               <Button variant="outline" size="sm" className="gap-2">
                                 <ExternalLink className="h-4 w-4" />
@@ -273,7 +273,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                             </Link>
                           </div>
                         )}
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           {formatRelativeTime(notification.createdAt)}
                         </p>
                       </div>
@@ -288,4 +288,3 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     </div>
   );
 }
-

@@ -34,7 +34,9 @@ const TestimoniosPage = async () => {
 
   // Verificar si el usuario actual ya tiene un testimonio
   const hasUserTestimonial = currentUserId
-    ? testimonials.some((testimonial: typeof testimonials[0]) => testimonial.userId === currentUserId)
+    ? testimonials.some(
+        (testimonial: (typeof testimonials)[0]) => testimonial.userId === currentUserId,
+      )
     : false;
 
   return (

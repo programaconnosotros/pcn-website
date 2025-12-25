@@ -37,4 +37,3 @@ export const checkEventCapacity = async (eventId: string) => {
       : 'El cupo del evento está completo',
   };
 };
-

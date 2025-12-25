@@ -32,5 +32,3 @@ export function DeleteEventButton({ eventId, eventName }: DeleteEventButtonProps
     </>
   );
 }
-
-

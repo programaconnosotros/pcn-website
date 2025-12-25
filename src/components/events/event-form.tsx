@@ -14,7 +14,17 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, MapPin, Building2, Image as ImageIcon, Save, Plus, Trash2, Globe, Users } from 'lucide-react';
+import {
+  Calendar,
+  MapPin,
+  Building2,
+  Image as ImageIcon,
+  Save,
+  Plus,
+  Trash2,
+  Globe,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -270,8 +280,8 @@ export function EventForm({
                   />
                 </FormControl>
                 <FormDescription>
-                  Número máximo de personas que pueden inscribirse al evento. Dejar vacío para
-                  cupo ilimitado.
+                  Número máximo de personas que pueden inscribirse al evento. Dejar vacío para cupo
+                  ilimitado.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -360,4 +370,3 @@ export function EventForm({
     </div>
   );
 }
-

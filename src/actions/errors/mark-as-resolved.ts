@@ -30,4 +30,3 @@ export const markErrorAsResolved = async (errorId: string) => {
 
   revalidatePath('/errores');
 };
-

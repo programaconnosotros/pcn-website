@@ -25,15 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import {
-  Eye,
-  Users,
-  TrendingUp,
-  Calendar,
-  Globe,
-  User,
-  ExternalLink,
-} from 'lucide-react';
+import { Eye, Users, TrendingUp, Calendar, Globe, User, ExternalLink } from 'lucide-react';
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('es-AR', {
@@ -101,13 +93,13 @@ const VisitasPage = async () => {
         <div className="mt-4">
           <div className="mb-6">
             <Heading2 className="m-0">Visitas</Heading2>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               Estadísticas y registro de visitas a las páginas principales
             </p>
           </div>
 
           {/* Estadísticas */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total de visitas</CardTitle>
@@ -164,9 +156,12 @@ const VisitasPage = async () => {
             <CardContent>
               <div className="space-y-2">
                 {stats.topPages.map((page, index) => (
-                  <div key={page.path} className="flex items-center justify-between py-2 border-b last:border-0">
+                  <div
+                    key={page.path}
+                    className="flex items-center justify-between border-b py-2 last:border-0"
+                  >
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-muted-foreground w-6">
+                      <span className="w-6 text-sm font-medium text-muted-foreground">
                         {index + 1}
                       </span>
                       <span className="text-sm font-medium">{page.path}</span>
@@ -188,7 +183,7 @@ const VisitasPage = async () => {
             </CardHeader>
             <CardContent>
               {visits.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
+                <p className="py-8 text-center text-sm text-muted-foreground">
                   Aún no hay visitas registradas.
                 </p>
               ) : (
@@ -217,7 +212,9 @@ const VisitasPage = async () => {
                                 <User className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                   <p className="text-sm font-medium">{visit.user.name}</p>
-                                  <p className="text-xs text-muted-foreground">{visit.user.email}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {visit.user.email}
+                                  </p>
                                 </div>
                               </div>
                             ) : (
@@ -236,7 +233,7 @@ const VisitasPage = async () => {
                             {visit.referer ? (
                               <div className="flex items-center gap-2">
                                 <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                                <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                                <span className="max-w-[200px] truncate text-xs text-muted-foreground">
                                   {visit.referer}
                                 </span>
                               </div>
@@ -259,5 +256,3 @@ const VisitasPage = async () => {
 };
 
 export default VisitasPage;
-
-

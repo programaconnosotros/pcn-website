@@ -67,4 +67,3 @@ export const updateTestimonial = async (id: string, data: TestimonialFormData) =
 
   revalidatePath('/testimonios');
 };
-

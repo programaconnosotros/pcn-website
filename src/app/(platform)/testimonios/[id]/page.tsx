@@ -92,7 +92,7 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
             </div>
             <TestimonialDetailActions
               testimonial={testimonial}
-              canEdit={isAdmin || (currentUserId === testimonial.userId)}
+              canEdit={isAdmin || currentUserId === testimonial.userId}
               isAdmin={isAdmin}
             />
           </div>
@@ -102,7 +102,10 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src={testimonial.user.image || undefined} alt={testimonial.user.name} />
+                    <AvatarImage
+                      src={testimonial.user.image || undefined}
+                      alt={testimonial.user.name}
+                    />
                     <AvatarFallback className="text-lg">
                       {testimonial.user.name
                         .split(' ')
@@ -112,10 +115,10 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-2 flex items-center gap-2">
                       <Link
                         href={`/perfil/${testimonial.user.id}`}
-                        className="text-xl font-semibold hover:underline transition-colors hover:text-pcnPurple dark:hover:text-pcnGreen"
+                        className="text-xl font-semibold transition-colors hover:text-pcnPurple hover:underline dark:hover:text-pcnGreen"
                       >
                         {testimonial.user.name}
                       </Link>
@@ -135,11 +138,11 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <p className="text-base text-foreground leading-relaxed whitespace-pre-wrap">
+                  <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground">
                     {testimonial.body}
                   </p>
                 </div>
-                <div className="pt-4 border-t">
+                <div className="border-t pt-4">
                   <p className="text-sm text-muted-foreground">
                     Publicado el {formatDate(testimonial.createdAt)}
                   </p>
@@ -159,4 +162,3 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
 };
 
 export default TestimonialDetailPage;
-

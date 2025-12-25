@@ -127,4 +127,3 @@ export function CancelRegistrationButton({
     </Dialog>
   );
 }
-

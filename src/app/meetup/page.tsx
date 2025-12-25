@@ -48,4 +48,3 @@ const MeetupPage = async () => {
 };
 
 export default MeetupPage;
-

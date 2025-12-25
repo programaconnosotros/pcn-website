@@ -58,4 +58,3 @@ export const getErrorStats = async () => {
     errorsThisWeek,
   };
 };
-

@@ -20,7 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { eventRegistrationSchema, EventRegistrationFormData } from '@/schemas/event-registration-schema';
+import {
+  eventRegistrationSchema,
+  EventRegistrationFormData,
+} from '@/schemas/event-registration-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save, User, Mail, Briefcase, GraduationCap, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -84,7 +87,8 @@ export function EventRegistrationForm({
     const capacityCheck = await checkEventCapacity(eventId);
     if (!capacityCheck.available) {
       toast.error(
-        capacityCheck.message || 'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
+        capacityCheck.message ||
+          'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
       );
       return;
     }
@@ -294,5 +298,3 @@ export function EventRegistrationForm({
     </div>
   );
 }
-
-

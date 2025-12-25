@@ -155,7 +155,7 @@ const CommunityPage = () => {
         <div className="mt-4">
           <div className="mb-6">
             <Heading2 className="m-0">Usuarios</Heading2>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               Conoce a nuestra increíble comunidad de apasionados por la tecnología
             </p>
           </div>
@@ -262,9 +262,7 @@ const CommunityPage = () => {
           {filteredUsers.length === 0 && (
             <div className="py-12 text-center">
               <Users className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-              <h3 className="mb-2 text-xl font-semibold">
-                No se encontraron usuarios
-              </h3>
+              <h3 className="mb-2 text-xl font-semibold">No se encontraron usuarios</h3>
               <p className="mb-4 text-muted-foreground">
                 Intenta ajustar los filtros para encontrar más resultados
               </p>

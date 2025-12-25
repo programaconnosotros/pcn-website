@@ -61,4 +61,3 @@ export const deleteTestimonial = async (id: string) => {
 
   revalidatePath('/testimonios');
 };
-

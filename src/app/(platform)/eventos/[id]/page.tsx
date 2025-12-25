@@ -75,9 +75,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="mt-4">
             <div className="flex flex-col items-center justify-center py-12">
-              <p className="text-lg text-muted-foreground">
-                No se encontró el evento solicitado.
-              </p>
+              <p className="text-lg text-muted-foreground">No se encontró el evento solicitado.</p>
             </div>
           </div>
         </div>
@@ -254,7 +252,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">
-                          {registrations.filter((r) => r.cancelledAt === null).length} inscripciones activas
+                          {registrations.filter((r) => r.cancelledAt === null).length} inscripciones
+                          activas
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {registrations.length} total (incluyendo canceladas)
@@ -280,8 +279,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                     {isRegistered ? (
                       <div className="space-y-3">
                         <div className="space-y-2">
-                          <p className="text-sm font-medium text-center">Ya estás registrado</p>
-                          <p className="text-xs text-center text-muted-foreground">
+                          <p className="text-center text-sm font-medium">Ya estás registrado</p>
+                          <p className="text-center text-xs text-muted-foreground">
                             Te esperamos en el evento
                           </p>
                         </div>
@@ -293,23 +292,23 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                       </div>
                     ) : capacityInfo && !capacityInfo.available ? (
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-center text-destructive">
+                        <p className="text-center text-sm font-medium text-destructive">
                           Cupo completo
                         </p>
-                        <p className="text-xs text-center text-muted-foreground">
+                        <p className="text-center text-xs text-muted-foreground">
                           Ya no quedan lugares disponibles.
                         </p>
                       </div>
                     ) : (
                       <div className="space-y-3">
                         <Link href={`/eventos/${id}/inscripcion`} className="block">
-                          <Button variant="pcn" className="w-full flex items-center gap-2">
+                          <Button variant="pcn" className="flex w-full items-center gap-2">
                             <UserPlus className="h-4 w-4" />
                             Inscribirme al evento
                           </Button>
                         </Link>
                         {capacityInfo && (
-                          <p className="text-xs text-center text-muted-foreground">
+                          <p className="text-center text-xs text-muted-foreground">
                             {capacityInfo.available
                               ? `Quedan ${capacityInfo.capacity - capacityInfo.current} lugares disponibles.`
                               : 'Ya no quedan lugares disponibles.'}
@@ -350,9 +349,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                           <p className="text-sm text-muted-foreground">{event.address}</p>
                         )}
                         {event.city && (
-                          <p className="text-sm text-muted-foreground">
-                            {event.city}, Argentina
-                          </p>
+                          <p className="text-sm text-muted-foreground">{event.city}, Argentina</p>
                         )}
                       </div>
                     </div>

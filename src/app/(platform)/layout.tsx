@@ -32,8 +32,7 @@ const PlatformLayout = async ({
   const upcomingEvents = await fetchUpcomingEvents(5);
 
   // Obtener contador de notificaciones no leídas (solo para admins)
-  const unreadNotificationsCount =
-    user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
+  const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

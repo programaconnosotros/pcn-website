@@ -8,11 +8,7 @@ import { markErrorAsResolved } from '@/actions/errors/mark-as-resolved';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 
 type ErrorLog = {
@@ -101,8 +97,8 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
     return (
       <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
         <CardContent className="pt-6">
-          <div className="text-center py-8">
-            <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-4" />
+          <div className="py-8 text-center">
+            <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-green-500" />
             <p className="text-muted-foreground">No hay errores registrados</p>
           </div>
         </CardContent>
@@ -114,9 +110,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
     <div className="space-y-6">
       {unresolvedErrors.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">
-            Sin resolver ({unresolvedErrors.length})
-          </h3>
+          <h3 className="mb-4 text-lg font-semibold">Sin resolver ({unresolvedErrors.length})</h3>
           <div className="space-y-3">
             {unresolvedErrors.map((error) => (
               <Card
@@ -126,12 +120,12 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="mb-2 flex items-center gap-2">
                         <AlertTriangle className="h-5 w-5 text-destructive" />
-                        <CardTitle className="text-base m-0">{error.message}</CardTitle>
+                        <CardTitle className="m-0 text-base">{error.message}</CardTitle>
                         <Badge variant="destructive">Sin resolver</Badge>
                       </div>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
+                      <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                         {error.path && (
                           <div className="flex items-center gap-1">
                             <Globe className="h-4 w-4" />
@@ -156,7 +150,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                           <CollapsibleTrigger asChild>
                             <Button variant="ghost" size="sm" className="mt-2">
                               <ChevronDown
-                                className={`h-4 w-4 mr-2 transition-transform ${
+                                className={`mr-2 h-4 w-4 transition-transform ${
                                   expandedErrors.has(error.id) ? 'rotate-180' : ''
                                 }`}
                               />
@@ -167,16 +161,16 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                             <div className="space-y-2 text-sm">
                               {error.stack && (
                                 <div>
-                                  <p className="font-semibold mb-1">Stack trace:</p>
-                                  <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                                  <p className="mb-1 font-semibold">Stack trace:</p>
+                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
                                     {error.stack}
                                   </pre>
                                 </div>
                               )}
                               {error.metadata && (
                                 <div>
-                                  <p className="font-semibold mb-1">Metadata:</p>
-                                  <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                                  <p className="mb-1 font-semibold">Metadata:</p>
+                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>
@@ -206,26 +200,24 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
 
       {resolvedErrors.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">
-            Resueltos ({resolvedErrors.length})
-          </h3>
+          <h3 className="mb-4 text-lg font-semibold">Resueltos ({resolvedErrors.length})</h3>
           <div className="space-y-3">
             {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 opacity-75"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="mb-2 flex items-center gap-2">
                         <CheckCircle2 className="h-5 w-5 text-green-500" />
-                        <CardTitle className="text-base m-0">{error.message}</CardTitle>
+                        <CardTitle className="m-0 text-base">{error.message}</CardTitle>
                         <Badge variant="default" className="bg-green-500">
                           Resuelto
                         </Badge>
                       </div>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
+                      <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                         {error.path && (
                           <div className="flex items-center gap-1">
                             <Globe className="h-4 w-4" />
@@ -246,9 +238,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                       </div>
                       <p className="text-xs text-muted-foreground">
                         {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
-                        {error.resolvedAt && (
-                          <> • Resuelto: {formatDate(error.resolvedAt)}</>
-                        )}
+                        {error.resolvedAt && <> • Resuelto: {formatDate(error.resolvedAt)}</>}
                       </p>
                       {(error.stack || error.metadata) && (
                         <Collapsible
@@ -258,7 +248,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                           <CollapsibleTrigger asChild>
                             <Button variant="ghost" size="sm" className="mt-2">
                               <ChevronDown
-                                className={`h-4 w-4 mr-2 transition-transform ${
+                                className={`mr-2 h-4 w-4 transition-transform ${
                                   expandedErrors.has(error.id) ? 'rotate-180' : ''
                                 }`}
                               />
@@ -269,16 +259,16 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                             <div className="space-y-2 text-sm">
                               {error.stack && (
                                 <div>
-                                  <p className="font-semibold mb-1">Stack trace:</p>
-                                  <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                                  <p className="mb-1 font-semibold">Stack trace:</p>
+                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
                                     {error.stack}
                                   </pre>
                                 </div>
                               )}
                               {error.metadata && (
                                 <div>
-                                  <p className="font-semibold mb-1">Metadata:</p>
-                                  <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                                  <p className="mb-1 font-semibold">Metadata:</p>
+                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>
@@ -298,4 +288,3 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
     </div>
   );
 }
-

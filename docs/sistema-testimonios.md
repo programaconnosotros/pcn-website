@@ -53,13 +53,14 @@ model Testimonial {
 
 ```typescript
 export const testimonialSchema = z.object({
-  body: z.string().min(10, { 
-    message: 'El testimonio debe tener al menos 10 caracteres' 
+  body: z.string().min(10, {
+    message: 'El testimonio debe tener al menos 10 caracteres',
   }),
 });
 ```
 
 **Reglas de validación:**
+
 - `body`: Debe ser una cadena de texto con al menos 10 caracteres
 
 ## Funcionalidades
@@ -73,11 +74,13 @@ export const testimonialSchema = z.object({
 **Permisos requeridos**: Usuario autenticado
 
 **Restricciones**:
+
 - Solo se permite un testimonio por usuario
 - El usuario debe estar autenticado
 - El testimonio debe tener al menos 10 caracteres
 
 **Flujo**:
+
 1. El usuario hace clic en "Agregar testimonio" (solo visible si no tiene testimonio)
 2. Se abre un modal con el formulario
 3. El usuario ingresa el contenido del testimonio
@@ -87,6 +90,7 @@ export const testimonialSchema = z.object({
 7. Se revalida la ruta `/testimonios`
 
 **Notificación a admins**:
+
 - Tipo: `testimonial_created`
 - Título: "Nuevo testimonio creado"
 - Mensaje: "{nombre del usuario} ha creado un nuevo testimonio"
@@ -96,11 +100,13 @@ export const testimonialSchema = z.object({
 
 **Acción del servidor**: `updateTestimonial`
 
-**Permisos requeridos**: 
+**Permisos requeridos**:
+
 - El autor del testimonio O
 - Administrador
 
 **Flujo**:
+
 1. El usuario hace clic en "Editar testimonio" (si ya tiene uno) o en el botón de editar en una tarjeta de testimonio
 2. Se abre un modal con el formulario prellenado
 3. El usuario modifica el contenido
@@ -110,6 +116,7 @@ export const testimonialSchema = z.object({
 7. Se revalida la ruta `/testimonios`
 
 **Notificación a admins** (solo si no es admin quien edita):
+
 - Tipo: `testimonial_updated`
 - Título: "Testimonio actualizado"
 - Mensaje: "{nombre del usuario} ha actualizado su testimonio"
@@ -120,10 +127,12 @@ export const testimonialSchema = z.object({
 **Acción del servidor**: `deleteTestimonial`
 
 **Permisos requeridos**:
+
 - El autor del testimonio O
 - Administrador
 
 **Flujo**:
+
 1. El usuario hace clic en el botón de eliminar (ícono de basura) en una tarjeta de testimonio
 2. Se muestra un diálogo de confirmación
 3. Al confirmar, se valida que el usuario tenga permisos
@@ -132,6 +141,7 @@ export const testimonialSchema = z.object({
 6. Se revalida la ruta `/testimonios`
 
 **Notificación a admins** (solo si no es admin quien elimina):
+
 - Tipo: `testimonial_deleted`
 - Título: "Testimonio eliminado"
 - Mensaje: "{nombre del usuario} ha eliminado su testimonio"
@@ -146,11 +156,13 @@ export const testimonialSchema = z.object({
 **Permisos requeridos**: Solo administradores
 
 **Flujo**:
+
 1. Un administrador hace clic en el ícono de estrella en una tarjeta de testimonio
 2. Se cambia el estado `featured` del testimonio (true/false)
 3. Se revalidan las rutas `/testimonios` y `/home`
 
 **Comportamiento**:
+
 - Si `featured = true`: El testimonio aparece en la home page (máximo 3 más recientes)
 - Si `featured = false`: El testimonio no aparece en la home page
 - Los testimonios destacados muestran un ícono de estrella amarilla en la tarjeta
@@ -164,6 +176,7 @@ export const testimonialSchema = z.object({
 **Permisos**: Público (cualquier usuario puede ver los testimonios)
 
 **Flujo**:
+
 1. Se obtienen todos los testimonios de la base de datos
 2. Se incluye la información del usuario (nombre, email)
 3. Se ordenan por fecha de creación descendente
@@ -178,6 +191,7 @@ export const testimonialSchema = z.object({
 **Permisos**: Público
 
 **Flujo**:
+
 1. Se obtienen los testimonios con `featured = true`
 2. Se ordenan por fecha de creación descendente
 3. Se limita a los 3 más recientes
@@ -191,12 +205,14 @@ export const testimonialSchema = z.object({
 Componente cliente principal que maneja la visualización y el estado del modal de formulario.
 
 **Props**:
+
 - `testimonials`: Array de testimonios con información del usuario
 - `currentUserId`: ID del usuario actual (opcional)
 - `isAdmin`: Si el usuario actual es administrador (opcional)
 - `hasUserTestimonial`: Si el usuario actual ya tiene un testimonio (opcional)
 
 **Funcionalidades**:
+
 - Renderiza la grilla de testimonios
 - Maneja el estado del modal de formulario
 - Expone la función `openForm` mediante `forwardRef` y `useImperativeHandle`
@@ -206,6 +222,7 @@ Componente cliente principal que maneja la visualización y el estado del modal 
 Componente wrapper que maneja el layout del título y el botón de acción.
 
 **Funcionalidades**:
+
 - Renderiza el título "Testimonios" y el botón de acción alineados horizontalmente
 - Determina qué botón mostrar ("Agregar testimonio" o "Editar testimonio")
 - Maneja la comunicación entre el botón y el componente `TestimonialsClient`
@@ -215,12 +232,14 @@ Componente wrapper que maneja el layout del título y el botón de acción.
 Componente que muestra una tarjeta individual de testimonio.
 
 **Props**:
+
 - `testimonial`: Testimonio con información del usuario
 - `currentUserId`: ID del usuario actual (opcional)
 - `isAdmin`: Si el usuario actual es administrador (opcional)
 - `onEdit`: Función callback para editar el testimonio
 
 **Funcionalidades**:
+
 - Muestra el nombre del autor y el contenido del testimonio
 - Muestra un ícono de estrella si el testimonio está destacado
 - Botones de acción según permisos:
@@ -233,12 +252,14 @@ Componente que muestra una tarjeta individual de testimonio.
 Componente de formulario para crear/editar testimonios.
 
 **Props**:
+
 - `defaultValues`: Valores por defecto (para edición)
 - `testimonialId`: ID del testimonio a editar (opcional)
 - `onCancel`: Función callback al cancelar
 - `onSuccess`: Función callback al guardar exitosamente
 
 **Funcionalidades**:
+
 - Formulario con validación usando React Hook Form y Zod
 - Campo de texto para el contenido del testimonio
 - Botón "Eliminar" (solo visible al editar)
@@ -250,10 +271,12 @@ Componente de formulario para crear/editar testimonios.
 Componente del botón de acción principal.
 
 **Props**:
+
 - `hasUserTestimonial`: Si el usuario ya tiene un testimonio
 - `onClick`: Función callback al hacer clic
 
 **Funcionalidades**:
+
 - Muestra "Agregar testimonio" si el usuario no tiene testimonio
 - Muestra "Editar testimonio" si el usuario ya tiene uno
 
@@ -264,15 +287,18 @@ Componente del botón de acción principal.
 **Ubicación**: `src/actions/testimonials/create-testimonial.ts`
 
 **Parámetros**:
+
 - `data: TestimonialFormData` - Datos del formulario validados
 
 **Retorna**: `Promise<void>`
 
 **Validaciones**:
+
 - Usuario debe estar autenticado
 - Datos deben pasar la validación del schema Zod
 
 **Efectos secundarios**:
+
 - Crea el testimonio en la base de datos
 - Envía notificación a administradores
 - Revalida la ruta `/testimonios`
@@ -282,18 +308,21 @@ Componente del botón de acción principal.
 **Ubicación**: `src/actions/testimonials/update-testimonial.ts`
 
 **Parámetros**:
+
 - `id: string` - ID del testimonio a actualizar
 - `data: TestimonialFormData` - Datos del formulario validados
 
 **Retorna**: `Promise<void>`
 
 **Validaciones**:
+
 - Usuario debe estar autenticado
 - Testimonio debe existir
 - Usuario debe ser el autor o administrador
 - Datos deben pasar la validación del schema Zod
 
 **Efectos secundarios**:
+
 - Actualiza el testimonio en la base de datos
 - Envía notificación a administradores (si no es admin quien edita)
 - Revalida la ruta `/testimonios`
@@ -303,16 +332,19 @@ Componente del botón de acción principal.
 **Ubicación**: `src/actions/testimonials/delete-testimonial.ts`
 
 **Parámetros**:
+
 - `id: string` - ID del testimonio a eliminar
 
 **Retorna**: `Promise<void>`
 
 **Validaciones**:
+
 - Usuario debe estar autenticado
 - Testimonio debe existir
 - Usuario debe ser el autor o administrador
 
 **Efectos secundarios**:
+
 - Elimina el testimonio de la base de datos
 - Envía notificación a administradores (si no es admin quien elimina)
 - Revalida la ruta `/testimonios`
@@ -322,16 +354,19 @@ Componente del botón de acción principal.
 **Ubicación**: `src/actions/testimonials/toggle-featured.ts`
 
 **Parámetros**:
+
 - `id: string` - ID del testimonio a marcar/desmarcar
 
 **Retorna**: `Promise<void>`
 
 **Validaciones**:
+
 - Usuario debe estar autenticado
 - Usuario debe ser administrador
 - Testimonio debe existir
 
 **Efectos secundarios**:
+
 - Actualiza el campo `featured` del testimonio
 - Revalida las rutas `/testimonios` y `/home`
 
@@ -344,6 +379,7 @@ Componente del botón de acción principal.
 **Retorna**: `Promise<TestimonialWithUser[]>`
 
 **Funcionalidad**:
+
 - Obtiene todos los testimonios de la base de datos
 - Incluye información del usuario (id, name, email)
 - Ordena por fecha de creación descendente
@@ -357,6 +393,7 @@ Componente del botón de acción principal.
 **Retorna**: `Promise<TestimonialWithUser[]>`
 
 **Funcionalidad**:
+
 - Obtiene solo los testimonios con `featured = true`
 - Incluye información del usuario (id, name, email)
 - Ordena por fecha de creación descendente
@@ -433,12 +470,14 @@ Componente del botón de acción principal.
 ### Usuario Regular (REGULAR)
 
 **Puede**:
+
 - Crear un testimonio (máximo uno)
 - Editar su propio testimonio
 - Eliminar su propio testimonio
 - Ver todos los testimonios
 
 **No puede**:
+
 - Editar testimonios de otros usuarios
 - Eliminar testimonios de otros usuarios
 - Marcar testimonios como destacados
@@ -447,6 +486,7 @@ Componente del botón de acción principal.
 ### Administrador (ADMIN)
 
 **Puede**:
+
 - Crear un testimonio (máximo uno)
 - Editar cualquier testimonio
 - Eliminar cualquier testimonio
@@ -455,14 +495,17 @@ Componente del botón de acción principal.
 - Recibir notificaciones cuando se crean, editan o eliminan testimonios
 
 **No puede**:
+
 - Recibir notificaciones de sus propias acciones (crear, editar, eliminar)
 
 ### Usuario Anónimo
 
 **Puede**:
+
 - Ver todos los testimonios
 
 **No puede**:
+
 - Crear testimonios
 - Editar testimonios
 - Eliminar testimonios
@@ -477,6 +520,7 @@ El sistema envía notificaciones a todos los administradores cuando:
 3. **Se elimina un testimonio**: Tipo `testimonial_deleted` (solo si no es admin quien elimina)
 
 Las notificaciones incluyen:
+
 - **Tipo**: Identificador del tipo de notificación
 - **Título**: Título descriptivo
 - **Mensaje**: Mensaje con el nombre del usuario que realizó la acción
@@ -487,6 +531,7 @@ Las notificaciones incluyen:
 Los testimonios destacados se muestran en la home page (`/home`) en la sección "Lo que dicen nuestros miembros".
 
 **Comportamiento**:
+
 - Solo se muestran testimonios con `featured = true`
 - Se muestran los 3 más recientes (ordenados por `createdAt` descendente)
 - Si no hay testimonios destacados, la sección se oculta completamente
@@ -528,6 +573,7 @@ Después de marcar/desmarcar como destacado, se revalidan las rutas `/testimonio
 ## Archivos Relacionados
 
 ### Acciones del Servidor
+
 - `src/actions/testimonials/create-testimonial.ts`
 - `src/actions/testimonials/update-testimonial.ts`
 - `src/actions/testimonials/delete-testimonial.ts`
@@ -536,11 +582,13 @@ Después de marcar/desmarcar como destacado, se revalidan las rutas `/testimonio
 - `src/actions/testimonials/fetch-featured-testimonials.ts`
 
 ### Componentes
+
 - `src/components/testimonials/testimonial-card.tsx`
 - `src/components/testimonials/testimonial-form.tsx`
 - `src/components/testimonials/testimonial-action-button.tsx`
 
 ### Páginas
+
 - `src/app/(platform)/testimonios/page.tsx`
 - `src/app/(platform)/testimonios/testimonials-client.tsx`
 - `src/app/(platform)/testimonios/testimonials-client-wrapper.tsx`
@@ -548,8 +596,9 @@ Después de marcar/desmarcar como destacado, se revalidan las rutas `/testimonio
 - `src/app/(platform)/home-client-side.tsx`
 
 ### Schemas
+
 - `src/schemas/testimonial-schema.ts`
 
 ### Base de Datos
-- `prisma/schema.prisma` (modelo `Testimonial`)
 
+- `prisma/schema.prisma` (modelo `Testimonial`)

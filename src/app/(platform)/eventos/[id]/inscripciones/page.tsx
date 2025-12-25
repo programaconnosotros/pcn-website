@@ -129,7 +129,7 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
             </CardHeader>
             <CardContent>
               {registrations.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
+                <p className="py-8 text-center text-sm text-muted-foreground">
                   Aún no hay inscripciones para este evento.
                 </p>
               ) : (
@@ -165,19 +165,23 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                             {registration.type === 'PROFESSIONAL' ? (
                               <div className="text-sm text-muted-foreground">
                                 <p>
-                                  <span className="font-medium">Trabaja:</span> {registration.workTitle || '-'}
+                                  <span className="font-medium">Trabaja:</span>{' '}
+                                  {registration.workTitle || '-'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">En:</span> {registration.workPlace || '-'}
+                                  <span className="font-medium">En:</span>{' '}
+                                  {registration.workPlace || '-'}
                                 </p>
                               </div>
                             ) : (
                               <div className="text-sm text-muted-foreground">
                                 <p>
-                                  <span className="font-medium">Estudia:</span> {registration.studyField || '-'}
+                                  <span className="font-medium">Estudia:</span>{' '}
+                                  {registration.studyField || '-'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">En:</span> {registration.studyPlace || '-'}
+                                  <span className="font-medium">En:</span>{' '}
+                                  {registration.studyPlace || '-'}
                                 </p>
                               </div>
                             )}
@@ -215,4 +219,3 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
 };
 
 export default EventRegistrationsPage;
-

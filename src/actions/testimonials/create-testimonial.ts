@@ -54,4 +54,3 @@ export const createTestimonial = async (data: TestimonialFormData) => {
 
   revalidatePath('/testimonios');
 };
-

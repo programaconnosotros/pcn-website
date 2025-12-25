@@ -109,4 +109,3 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
   revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 };
-

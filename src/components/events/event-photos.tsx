@@ -25,9 +25,7 @@ export const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (images.length === 0) {
-    return (
-      <p className="text-center text-sm text-muted-foreground">No hay imágenes aún.</p>
-    );
+    return <p className="text-center text-sm text-muted-foreground">No hay imágenes aún.</p>;
   }
 
   return (
