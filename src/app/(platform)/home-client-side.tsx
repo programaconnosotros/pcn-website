@@ -52,7 +52,23 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-const HomeClientSide = ({ session }: { session: (Session & { user: User }) | null }) => {
+type FeaturedTestimonial = {
+  id: string;
+  body: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
+const HomeClientSide = ({
+  session,
+  featuredTestimonials,
+}: {
+  session: (Session & { user: User }) | null;
+  featuredTestimonials: FeaturedTestimonial[];
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -527,47 +543,38 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
           </div>
         </div>
 
-        <div className="flex items-center justify-center p-6">
-          <Heading2 className="relative z-10 text-center">Lo que dicen nuestros miembros</Heading2>
-        </div>
+        {featuredTestimonials.length > 0 && (
+          <>
+            <div className="flex items-center justify-center p-6">
+              <Heading2 className="relative z-10 text-center">Lo que dicen nuestros miembros</Heading2>
+            </div>
 
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {[
-            {
-              name: 'Emiliano Grillo',
-              body: 'PCN es una comunidad llena de potencial, con gente que le gusta aprender, compartir y enseñar lo aprendido, donde te podes sentir libre de preguntar sin sentir presiones o miedos.',
-            },
-            {
-              name: 'Mateo Herrera',
-              body: 'PCN es un espacio donde las personas comparten generosamente sus conocimientos, se apoyan mutuamente y crecen juntas en el mundo de la programación.',
-            },
-            {
-              name: 'Vicky Grillo',
-              body: 'PCN es mucho más que una comunidad de desarrollo. Es un espacio donde se comparte conocimiento, se hacen amigos, se organizan charlas y eventos.',
-            },
-          ].map((testimonio, index) => (
-            <Card
-              key={index}
-              className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
-            >
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                  <h3 className="text-lg font-semibold">{testimonio.name}</h3>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{testimonio.body}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+            <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+              {featuredTestimonials.map((testimonial) => (
+                <Card
+                  key={testimonial.id}
+                  className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                >
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <h3 className="text-lg font-semibold">{testimonial.user.name}</h3>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">{testimonial.body}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
 
-        <div className="mb-6 flex justify-center">
-          <Link href="/testimonios">
-            <Button variant="outline">Ver todos los testimonios</Button>
-          </Link>
-        </div>
+            <div className="mb-6 flex justify-center">
+              <Link href="/testimonios">
+                <Button variant="outline">Ver todos los testimonios</Button>
+              </Link>
+            </div>
+          </>
+        )}
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">

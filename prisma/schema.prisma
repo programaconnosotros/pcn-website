@@ -36,6 +36,8 @@ model User {
   likes           Like[]
   eventRegistrations EventRegistration[]
   pageVisits      PageVisit[]
+  testimonials    Testimonial[]
+  notifications   Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -213,5 +215,37 @@ model PageVisit {
 
   @@index([path])
   @@index([userId])
+  @@index([createdAt])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  body      String
+  userId    String   // Usuario que creó el testimonio (requerido)
+  featured  Boolean  @default(false) // Si aparece en la home page
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([featured])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
+  title     String   // Título de la notificación
+  message   String   // Mensaje de la notificación
+  userId    String?  // Usuario destinatario (null = todos los admins)
+  read      Boolean  @default(false)
+  metadata  String?  // JSON con información adicional
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
   @@index([createdAt])
 }

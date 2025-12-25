@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 
 const Home = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -29,6 +30,8 @@ const Home = async () => {
     });
   }
 
+  const featuredTestimonials = await fetchFeaturedTestimonials();
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -44,7 +47,7 @@ const Home = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <HomeClientSide session={session} />
+      <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />
     </>
   );
 };
