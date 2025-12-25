@@ -41,53 +41,50 @@ import {
 import { User } from '@prisma/client';
 import { NavSecondary } from './nav-secondary';
 
-const data = {
-  navMain: [
+interface UpcomingEvent {
+  id: string;
+  name: string;
+  date: Date;
+}
+
+const formatEventDate = (date: Date) => {
+  return new Intl.DateTimeFormat('es-AR', {
+    month: 'short',
+    day: 'numeric',
+  }).format(date);
+};
+
+const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
+  const eventItems = upcomingEvents.map((event) => ({
+    title: `${formatEventDate(event.date)} - ${event.name}`,
+    url: `/eventos/${event.id}`,
+  }));
+
+  // Agregar "Ver todos" al final si hay eventos
+  if (eventItems.length > 0) {
+    eventItems.push({
+      title: 'Ver todos los eventos',
+      url: '/eventos',
+    });
+  }
+
+  return [
     {
       title: 'Inicio',
       url: '/home',
       icon: Home,
     },
     {
+      title: 'Eventos',
+      url: '/eventos',
+      icon: CalendarDays,
+      items: eventItems.length > 0 ? eventItems : undefined,
+    },
+    {
       title: 'Consejos',
       url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
-    },
-    {
-      title: 'Galería',
-      url: '/galeria',
-      icon: Image,
-    },
-    {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: BookOpen,
-    },
-    {
-      title: 'Podcast',
-      url: '/podcast',
-      icon: MicVocal,
-    },
-    {
-      title: 'Música',
-      url: '/music',
-      icon: Music,
-    },
-    {
-      title: 'Historia',
-      url: '/historia',
-      icon: ScrollText,
-    },
-    {
-      title: 'Lectura',
-      url: '/lectura',
-      icon: Book,
-    },
-    {
-      title: 'Eventos',
-      url: '/eventos',
-      icon: CalendarDays,
     },
     {
       title: 'Cursos',
@@ -113,19 +110,34 @@ const data = {
       ],
     },
     {
+      title: 'Podcast',
+      url: '/podcast',
+      icon: MicVocal,
+    },
+    {
+      title: 'Lectura',
+      url: '/lectura',
+      icon: Book,
+    },
+    {
       title: 'Especialidades',
       url: '/especialidades',
       icon: Code,
     },
     {
-      title: 'Testimonios',
-      url: '/testimonios',
-      icon: Quote,
+      title: 'Galería',
+      url: '/galeria',
+      icon: Image,
     },
     {
-      title: 'Preguntas frecuentes',
-      url: '/preguntas-frecuentes',
-      icon: HelpCircle,
+      title: 'Charlas',
+      url: '/charlas',
+      icon: BookOpen,
+    },
+    {
+      title: 'Música',
+      url: '/music',
+      icon: Music,
     },
     {
       title: 'Influencers',
@@ -147,17 +159,40 @@ const data = {
       url: '/trabajos',
       icon: Briefcase,
     },
+  ];
+};
+
+const getInfoItems = () => {
+  return [
     {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: LayoutDashboard,
+      title: 'Historia',
+      url: '/historia',
+      icon: ScrollText,
     },
     {
       title: 'Anuncios',
       url: '/anuncios',
       icon: Megaphone,
     },
-  ],
+    {
+      title: 'Preguntas frecuentes',
+      url: '/preguntas-frecuentes',
+      icon: HelpCircle,
+    },
+    {
+      title: 'Testimonios',
+      url: '/testimonios',
+      icon: Quote,
+    },
+    {
+      title: 'Dashboard',
+      url: '/dashboard',
+      icon: LayoutDashboard,
+    },
+  ];
+};
+
+const data = {
   navSecondary: [
     {
       title: 'Soporte',
@@ -206,9 +241,12 @@ const data = {
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User | null;
+  upcomingEvents?: UpcomingEvent[];
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarProps) {
+  const navMainItems = getNavMainItems(upcomingEvents);
+
   return (
     <Sidebar collapsible="offcanvas" variant="inset" {...props}>
       <SidebarHeader>
@@ -229,7 +267,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainItems} />
+        <NavMain items={getInfoItems()} label="Información" />
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

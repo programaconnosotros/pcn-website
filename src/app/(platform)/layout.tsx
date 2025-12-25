@@ -3,6 +3,7 @@ import { AppSidebar } from '@/components/ui/app-sidebar';
 import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 
 const PlatformLayout = async ({
   children,
@@ -25,9 +26,12 @@ const PlatformLayout = async ({
     }
   }
 
+  // Obtener próximos eventos para la sidebar
+  const upcomingEvents = await fetchUpcomingEvents(5);
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} upcomingEvents={upcomingEvents} />
 
       <SidebarInset className="px-6">{children}</SidebarInset>
     </SidebarProvider>

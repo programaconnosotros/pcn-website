@@ -18,6 +18,7 @@ import {
 
 export function NavMain({
   items,
+  label,
 }: {
   items: {
     title: string;
@@ -29,11 +30,13 @@ export function NavMain({
       url: string;
     }[];
   }[];
+  label?: string;
 }) {
   const pathname = usePathname();
 
   return (
     <SidebarGroup>
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
           const isActive =
