@@ -1,4 +1,3 @@
-import { EventsList } from '@/components/events/events-list';
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
@@ -10,6 +9,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { EventsList } from '@/components/events/events-list';
 
 const EventsPage = () => (
   <>

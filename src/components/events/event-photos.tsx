@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Heading3 } from '../ui/heading-3';
 import { Image as Images } from '@prisma/client';
 import {
   Dialog,
@@ -22,68 +21,56 @@ type EventPhotosProps = {
   images: Images[];
 };
 
-const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
+export const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  if (images.length === 0) {
+    return (
+      <p className="text-center text-sm text-muted-foreground">No hay imágenes aún.</p>
+    );
+  }
+
   return (
-    <div>
-      <Heading3 className="mb-4 mt-8 text-2xl font-semibold">Fotos</Heading3>
-
-      {images.length === 0 && (
-        <p className="mt-4 w-full text-center text-sm text-muted-foreground">
-          No hay imágenes aún.
-        </p>
-      )}
-
-      {images.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {images.map((image, index) => (
-            <Dialog key={index}>
-              <DialogTrigger asChild>
-                <div className="group relative cursor-pointer">
-                  <img
-                    src={image.imgSrc}
-                    alt={`Imagen ${index + 1}`}
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = '/placeholder-image.webp';
-                      e.currentTarget.alt = 'Error al cargar la imagen';
-                    }}
-                    className="h-full w-full transform rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
-                    onClick={() => setCurrentImageIndex(index)}
-                  />
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl px-6 py-4">
-                <DialogHeader>
-                  <DialogTitle>Galería de Imágenes</DialogTitle>
-                </DialogHeader>
-                <Carousel
-                  opts={{
-                    startIndex: currentImageIndex,
-                  }}
-                >
-                  <CarouselContent>
-                    {images.map((img, i) => (
-                      <CarouselItem key={i} className="flex items-center justify-center">
-                        <img
-                          src={img.imgSrc}
-                          alt={`Imagen ${i + 1}`}
-                          className="w-full rounded-lg shadow-lg"
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious aria-label="Ver imagen anterior" />
-                  <CarouselNext aria-label="Ver siguiente imagen" />
-                </Carousel>
-              </DialogContent>
-            </Dialog>
-          ))}
-        </div>
-      )}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {images.map((image, index) => (
+        <Dialog key={index}>
+          <DialogTrigger asChild>
+            <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg">
+              <img
+                src={image.imgSrc}
+                alt={`Imagen ${index + 1} del evento`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-opacity duration-200 group-hover:opacity-80"
+                onClick={() => setCurrentImageIndex(index)}
+              />
+            </div>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl px-6 py-4">
+            <DialogHeader>
+              <DialogTitle>Galería de imágenes</DialogTitle>
+            </DialogHeader>
+            <Carousel
+              opts={{
+                startIndex: currentImageIndex,
+              }}
+            >
+              <CarouselContent>
+                {images.map((img, i) => (
+                  <CarouselItem key={i} className="flex items-center justify-center">
+                    <img
+                      src={img.imgSrc}
+                      alt={`Imagen ${i + 1} del evento`}
+                      className="h-auto w-full rounded-lg"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </DialogContent>
+        </Dialog>
+      ))}
     </div>
   );
 };
-
-export default EventPhotos;
