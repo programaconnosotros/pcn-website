@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -12,8 +11,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
-import { TestimonialsClient } from './testimonials-client';
-import { TestimonialActionButton } from '@/components/testimonials/testimonial-action-button';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 
 const TestimoniosPage = async () => {
