@@ -28,12 +28,14 @@ type TestimonialsClientProps = {
   testimonials: TestimonialWithUser[];
   currentUserId?: string;
   isAdmin?: boolean;
+  hasUserTestimonial?: boolean;
 };
 
 export function TestimonialsClient({
   testimonials,
   currentUserId,
   isAdmin,
+  hasUserTestimonial,
 }: TestimonialsClientProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
@@ -66,12 +68,14 @@ export function TestimonialsClient({
         </p>
       </div>
 
-      <div className="mb-6 flex justify-end">
-        <Button variant="pcn" onClick={handleCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          Agregar testimonio
-        </Button>
-      </div>
+      {!hasUserTestimonial && (
+        <div className="mb-6 flex justify-end">
+          <Button variant="pcn" onClick={handleCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Agregar testimonio
+          </Button>
+        </div>
+      )}
 
       {testimonials.length === 0 ? (
         <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">

@@ -33,6 +33,11 @@ const TestimoniosPage = async () => {
 
   const testimonials = await fetchTestimonials();
 
+  // Verificar si el usuario actual ya tiene un testimonio
+  const hasUserTestimonial = currentUserId
+    ? testimonials.some((testimonial: typeof testimonials[0]) => testimonial.userId === currentUserId)
+    : false;
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -62,6 +67,7 @@ const TestimoniosPage = async () => {
             testimonials={testimonials}
             currentUserId={currentUserId}
             isAdmin={isAdmin}
+            hasUserTestimonial={hasUserTestimonial}
           />
         </div>
       </div>
