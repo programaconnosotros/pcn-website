@@ -110,7 +110,7 @@ const VisitasPage = async () => {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total de Visitas</CardTitle>
+                <CardTitle className="text-sm font-medium">Total de visitas</CardTitle>
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -121,18 +121,18 @@ const VisitasPage = async () => {
 
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Visitas Hoy</CardTitle>
+                <CardTitle className="text-sm font-medium">Visitas hoy</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.visitsToday.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">Últimas 24 horas</p>
+                <p className="text-xs text-muted-foreground">últimas 24 horas</p>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Páginas Únicas</CardTitle>
+                <CardTitle className="text-sm font-medium">Páginas únicas</CardTitle>
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -143,7 +143,7 @@ const VisitasPage = async () => {
 
             <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Usuarios Únicos</CardTitle>
+                <CardTitle className="text-sm font-medium">Usuarios únicos</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -158,7 +158,7 @@ const VisitasPage = async () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
-                Páginas Más Visitadas
+                Páginas más visitadas
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -183,7 +183,7 @@ const VisitasPage = async () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="h-5 w-5" />
-                Visitas Recientes (últimas 500)
+                Visitas recientes (últimas 500)
               </CardTitle>
             </CardHeader>
             <CardContent>
