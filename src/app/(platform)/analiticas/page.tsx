@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
-const DashboardPage = async () => {
+const AnaliticasPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
   let session: (Session & { user: User }) | null = null;
 
@@ -311,7 +311,7 @@ const DashboardPage = async () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                <BreadcrumbPage>Analíticas</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -321,7 +321,7 @@ const DashboardPage = async () => {
         <div className="mt-4">
           <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0">Dashboard</Heading2>
+              <Heading2 className="m-0">Analíticas</Heading2>
             </div>
           </div>
 
@@ -464,4 +464,4 @@ const DashboardPage = async () => {
   );
 };
 
-export default DashboardPage;
+export default AnaliticasPage;

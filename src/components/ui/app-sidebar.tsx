@@ -184,9 +184,14 @@ const getInfoItems = () => {
       url: '/testimonios',
       icon: Quote,
     },
+  ];
+};
+
+const getAdminItems = () => {
+  return [
     {
-      title: 'Dashboard',
-      url: '/dashboard',
+      title: 'Analíticas',
+      url: '/analiticas',
       icon: LayoutDashboard,
     },
   ];
@@ -269,6 +274,7 @@ export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarPr
       <SidebarContent>
         <NavMain items={navMainItems} />
         <NavMain items={getInfoItems()} label="Información" />
+        <NavMain items={getAdminItems()} label="Administración" />
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
