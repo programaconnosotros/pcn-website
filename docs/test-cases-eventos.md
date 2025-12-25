@@ -888,6 +888,212 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 
 ---
 
+### TC-PERM-005: Acceso a página de inscripciones (solo admin)
+
+**Precondiciones:**
+- Usuario regular (no admin)
+- Evento existente con inscripciones
+
+**Pasos:**
+1. Intentar navegar a `/eventos/[id]/inscripciones` directamente
+
+**Resultado Esperado:**
+- ✅ Redirección automática a `/eventos/[id]`
+- ✅ No se puede acceder a la página de inscripciones
+
+---
+
+### TC-PERM-006: Card de inscripciones en página de detalle (solo admin)
+
+**Precondiciones:**
+- Usuario regular (no admin)
+- Evento con inscripciones
+- Navegar a `/eventos/[id]`
+
+**Resultado Esperado:**
+- ✅ NO se muestra el card de inscripciones
+- ✅ Solo admin ve el card con resumen y botón "Ver todas"
+
+---
+
+## Página de Inscripciones (Admin)
+
+### TC-INS-ADM-001: Acceder a página de inscripciones
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento existente con inscripciones
+- Navegar a `/eventos/[id]`
+
+**Pasos:**
+1. Verificar que se muestra el card de inscripciones
+2. Hacer clic en "Ver todas"
+
+**Resultado Esperado:**
+- ✅ Se muestra card con resumen: "X inscripciones activas" y "Y total (incluyendo canceladas)"
+- ✅ Botón "Ver todas" visible
+- ✅ Redirección a `/eventos/[id]/inscripciones`
+- ✅ Se muestra la tabla con todas las inscripciones
+
+---
+
+### TC-INS-ADM-002: Visualizar tabla de inscripciones
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con múltiples inscripciones (activas y canceladas)
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Pasos:**
+1. Verificar estructura de la tabla
+2. Verificar columnas y datos mostrados
+
+**Resultado Esperado:**
+- ✅ Tabla con columnas: Nombre, Email, Tipo, Información, Estado, Fecha de inscripción, Acciones
+- ✅ Todas las inscripciones se muestran ordenadas por fecha descendente (más recientes primero)
+- ✅ Inscripciones canceladas se muestran con opacidad reducida
+- ✅ Header muestra resumen: "X total - Y activas, Z canceladas"
+
+---
+
+### TC-INS-ADM-003: Ver información de inscripciones en tabla
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con inscripciones de diferentes tipos
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Pasos:**
+1. Verificar información mostrada para cada tipo de inscripción
+
+**Resultado Esperado:**
+- ✅ Inscripciones de tipo "Profesional" muestran:
+  - Badge "Profesional"
+  - Información: "Trabaja: [puesto]" y "En: [lugar]"
+- ✅ Inscripciones de tipo "Estudiante" muestran:
+  - Badge "Estudiante"
+  - Información: "Estudia: [campo]" y "En: [lugar]"
+- ✅ Email y nombre completo visibles
+- ✅ Fecha de inscripción formateada correctamente
+
+---
+
+### TC-INS-ADM-004: Estados de inscripciones en tabla
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con inscripciones activas y canceladas
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Pasos:**
+1. Verificar cómo se muestran los diferentes estados
+
+**Resultado Esperado:**
+- ✅ Inscripciones activas muestran badge "Activa" (verde/default)
+- ✅ Inscripciones canceladas muestran badge "Cancelada" (rojo/destructive)
+- ✅ Inscripciones canceladas tienen opacidad reducida
+- ✅ Solo inscripciones activas tienen botón de eliminar
+
+---
+
+### TC-INS-ADM-005: Eliminar inscripción desde tabla
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con inscripciones activas
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Pasos:**
+1. Hacer clic en botón de eliminar (ícono de basura) de una inscripción activa
+2. Confirmar en el diálogo
+
+**Resultado Esperado:**
+- ✅ Se muestra diálogo de confirmación con nombre del usuario
+- ✅ Toast de éxito: "Inscripción eliminada exitosamente"
+- ✅ La inscripción desaparece de la tabla
+- ✅ El resumen en el header se actualiza
+- ✅ El cupo disponible aumenta en 1
+
+---
+
+### TC-INS-ADM-006: No mostrar botón eliminar en inscripciones canceladas
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con inscripciones canceladas
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Resultado Esperado:**
+- ✅ Las inscripciones canceladas NO tienen botón de eliminar en la columna "Acciones"
+- ✅ Solo las inscripciones activas tienen botón de eliminar
+
+---
+
+### TC-INS-ADM-007: Evento sin inscripciones
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento sin inscripciones
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Resultado Esperado:**
+- ✅ Se muestra mensaje: "Aún no hay inscripciones para este evento."
+- ✅ No se muestra la tabla
+- ✅ El header muestra: "Inscripciones (0 total - 0 activas, 0 canceladas)"
+
+---
+
+### TC-INS-ADM-008: Navegación y breadcrumbs
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento existente
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Pasos:**
+1. Verificar breadcrumbs
+2. Hacer clic en botón "Volver" (flecha hacia atrás)
+
+**Resultado Esperado:**
+- ✅ Breadcrumbs muestran: Inicio > Eventos > [Nombre del evento] > Inscripciones
+- ✅ Botón "Volver" redirige a `/eventos/[id]`
+- ✅ Navegación funciona correctamente
+
+---
+
+### TC-INS-ADM-009: Resumen en página de detalle
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con inscripciones (activas y canceladas)
+- Navegar a `/eventos/[id]`
+
+**Pasos:**
+1. Verificar card de inscripciones en la página de detalle
+
+**Resultado Esperado:**
+- ✅ Se muestra card con título "Inscripciones"
+- ✅ Muestra cantidad de inscripciones activas
+- ✅ Muestra total de inscripciones (incluyendo canceladas)
+- ✅ Botón "Ver todas" visible y funcional
+- ✅ Al hacer clic, redirige a `/eventos/[id]/inscripciones`
+
+---
+
+### TC-INS-ADM-010: Orden de inscripciones en tabla
+
+**Precondiciones:**
+- Usuario autenticado como administrador
+- Evento con múltiples inscripciones creadas en diferentes fechas
+- Navegar a `/eventos/[id]/inscripciones`
+
+**Resultado Esperado:**
+- ✅ Las inscripciones están ordenadas por fecha descendente
+- ✅ Las inscripciones más recientes aparecen primero
+- ✅ El orden se mantiene consistente
+
+---
+
 ## Casos Edge y Condiciones de Carrera
 
 ### TC-EDGE-001: Inscripción simultánea con mismo email
@@ -1151,13 +1357,18 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 
 ### Funcionalidades Críticas
 - [ ] Crear evento con todos los campos
-- [ ] Editar evento
+- [ ] Editar evento (incluyendo agregar/modificar cupo)
 - [ ] Eliminar evento (soft delete)
 - [ ] Inscribirse a evento (logueado y no logueado)
 - [ ] Cancelar inscripción (logueado y no logueado)
 - [ ] Eliminar inscripción (admin)
 - [ ] Validación de cupo completo
 - [ ] Prevenir duplicados de email
+- [ ] Botón de inscripción no aparece cuando cupo completo
+- [ ] Mensaje correcto al acceder directo a inscripción con cupo completo
+- [ ] Acceder a página de inscripciones (solo admin)
+- [ ] Visualizar tabla de inscripciones con todos los datos
+- [ ] Eliminar inscripción desde la tabla
 
 ### Validaciones
 - [ ] Campos obligatorios
@@ -1168,7 +1379,8 @@ Documento completo de casos de prueba para realizar regresión del sistema de ev
 
 ### Permisos
 - [ ] Solo admin puede crear/editar/eliminar eventos
-- [ ] Solo admin ve lista de inscripciones
+- [ ] Solo admin ve card de inscripciones en página de detalle
+- [ ] Solo admin puede acceder a página de inscripciones
 - [ ] Solo admin puede eliminar inscripciones
 
 ### Casos Edge
