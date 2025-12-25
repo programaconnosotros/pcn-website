@@ -80,6 +80,22 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     );
   };
 
+  const getEventId = (notification: Notification): string | null => {
+    if (notification.type === 'event_registration_created') {
+      try {
+        const metadata = notification.metadata ? JSON.parse(notification.metadata) : null;
+        return metadata?.eventId || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const isEventNotification = (notification: Notification): boolean => {
+    return notification.type === 'event_registration_created';
+  };
+
   const handleMarkAsRead = async (notificationId: string) => {
     setMarkingAsRead(notificationId);
     try {
@@ -141,6 +157,8 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             {unreadNotifications.map((notification) => {
               const testimonialId = getTestimonialId(notification);
               const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
+              const eventId = getEventId(notification);
+              const hasEventLink = isEventNotification(notification) && eventId;
 
               return (
                 <Card
@@ -161,6 +179,22 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                               <Button variant="outline" size="sm" className="gap-2">
                                 <ExternalLink className="h-4 w-4" />
                                 Ver testimonio
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                        {hasEventLink && (
+                          <div className="mt-3 flex gap-2 flex-wrap">
+                            <Link href={`/eventos/${eventId}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver evento
+                              </Button>
+                            </Link>
+                            <Link href={`/eventos/${eventId}/inscripciones`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver inscripciones
                               </Button>
                             </Link>
                           </div>
@@ -194,6 +228,8 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             {readNotifications.map((notification) => {
               const testimonialId = getTestimonialId(notification);
               const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
+              const eventId = getEventId(notification);
+              const hasEventLink = isEventNotification(notification) && eventId;
 
               return (
                 <Card
@@ -211,6 +247,22 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
                               <Button variant="outline" size="sm" className="gap-2">
                                 <ExternalLink className="h-4 w-4" />
                                 Ver testimonio
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                        {hasEventLink && (
+                          <div className="mt-3 flex gap-2 flex-wrap">
+                            <Link href={`/eventos/${eventId}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver evento
+                              </Button>
+                            </Link>
+                            <Link href={`/eventos/${eventId}/inscripciones`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ExternalLink className="h-4 w-4" />
+                                Ver inscripciones
                               </Button>
                             </Link>
                           </div>

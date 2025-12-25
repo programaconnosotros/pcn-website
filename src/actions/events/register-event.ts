@@ -5,6 +5,7 @@ import { eventRegistrationSchema, EventRegistrationFormData } from '@/schemas/ev
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
 export const registerEvent = async (eventId: string, data: EventRegistrationFormData) => {
   const validatedData = eventRegistrationSchema.parse(data);
@@ -24,13 +25,16 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
   // Obtener userId si el usuario está logueado
   const sessionId = cookies().get('sessionId')?.value;
   let userId: string | undefined = undefined;
+  let userName: string | undefined = undefined;
 
   if (sessionId) {
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
+      include: { user: true },
     });
     if (session) {
       userId = session.userId;
+      userName = session.user.name;
     }
   }
 
@@ -61,6 +65,7 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
     }
   }
 
+  let registrationId: string;
   try {
     // Si existe una inscripción cancelada, reactivarla
     if (existingRegistration && existingRegistration.cancelledAt !== null) {
@@ -78,9 +83,10 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
           cancelledAt: null, // Reactivar la inscripción
         },
       });
+      registrationId = existingRegistration.id;
     } else {
       // Crear nueva inscripción
-      await prisma.eventRegistration.create({
+      const newRegistration = await prisma.eventRegistration.create({
         data: {
           eventId: eventId,
           firstName: validatedData.firstName,
@@ -94,7 +100,22 @@ export const registerEvent = async (eventId: string, data: EventRegistrationForm
           userId: userId || null,
         },
       });
+      registrationId = newRegistration.id;
     }
+
+    // Notificar a los admins sobre la nueva inscripción
+    await notifyAdmins({
+      type: 'event_registration_created',
+      title: 'Nueva inscripción a evento',
+      message: `${userName || `${validatedData.firstName} ${validatedData.lastName}`} se ha inscrito al evento "${event.name}"`,
+      metadata: {
+        eventId: eventId,
+        eventName: event.name,
+        registrationId: registrationId,
+        userName: userName || `${validatedData.firstName} ${validatedData.lastName}`,
+        userEmail: validatedData.email,
+      },
+    });
   } catch (error: any) {
     // Manejar error de constraint único de Prisma (caso de condición de carrera)
     if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
