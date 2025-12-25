@@ -55,7 +55,7 @@ const Talks = () => (
             <Heading2 className="m-0">Charlas</Heading2>
 
             <Link className="block" href="https://wa.me/5493815777562">
-              <Button className="flex flex-row items-center gap-2">
+              <Button variant="pcn" className="flex flex-row items-center gap-2">
                 Quiero dar una charla
                 <MicVocal className="h-5 w-5" />
               </Button>
@@ -119,7 +119,7 @@ const Talks = () => (
                       <Link href={talk.youtubeUrl} target="_blank" rel="noopener noreferrer">
                         <Button className="flex items-center gap-2" variant="youtube">
                           Ver en YouTube
-                          <Youtube className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                          <Youtube className="h-4 w-4 text-white" />
                         </Button>
                       </Link>
                     )}

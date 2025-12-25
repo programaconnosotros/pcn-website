@@ -17,6 +17,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         youtube: 'bg-red-600 text-white hover:bg-red-600/90',
+        pcn: 'bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90',
       },
       size: {
         default: 'h-10 px-4 py-2',

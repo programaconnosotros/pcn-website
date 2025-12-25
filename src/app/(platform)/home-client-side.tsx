@@ -453,23 +453,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <div className="relative z-10">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <Button
-                        disabled
-                        className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black"
-                      >
-                        Ver foro
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Próximamente</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <p className="text-center text-muted-foreground">Próximamente</p>
             </div>
           </div>
 
@@ -489,23 +473,7 @@ const HomeClientSide = ({ session }: { session: (Session & { user: User }) | nul
             </Paragraph>
 
             <div className="relative z-10">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <Button
-                        disabled
-                        className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black"
-                      >
-                        Ver setups
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Próximamente</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <p className="text-center text-muted-foreground">Próximamente</p>
             </div>
           </div>
         </div>
