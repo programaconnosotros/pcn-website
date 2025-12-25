@@ -61,12 +61,21 @@ export const eventSchema = z.object({
     .optional()
     .default([]),
   capacity: z
-    .string()
-    .optional()
-    .transform((val) => (val === '' || val === undefined ? undefined : parseInt(val, 10)))
-    .refine((val) => val === undefined || (!isNaN(val) && val > 0), {
-      message: 'El cupo debe ser un número mayor a 0',
-    }),
+    .preprocess(
+      (val) => {
+        // Convertir number o null a string para el formulario
+        if (val === null || val === undefined) return '';
+        if (typeof val === 'number') return val.toString();
+        return val;
+      },
+      z
+        .string()
+        .optional()
+        .transform((val) => (val === '' || val === undefined ? undefined : parseInt(val, 10)))
+        .refine((val) => val === undefined || (!isNaN(val) && val > 0), {
+          message: 'El cupo debe ser un número mayor a 0',
+        }),
+    ),
 });
 
 export type EventFormData = z.infer<typeof eventSchema>;
