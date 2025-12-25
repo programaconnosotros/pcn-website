@@ -16,7 +16,6 @@ import {
   LifeBuoy,
   Linkedin,
   Megaphone,
-  MessageCircle,
   MicVocal,
   Music,
   Quote,
@@ -189,7 +188,7 @@ const getComunidadItems = () => {
   ];
 };
 
-const getAdminItems = () => {
+const getAdminItems = (unreadCount: number = 0) => {
   return [
     {
       title: 'Analíticas',
@@ -205,6 +204,7 @@ const getAdminItems = () => {
       title: 'Notificaciones',
       url: '/notificaciones',
       icon: Bell,
+      badge: unreadCount,
     },
   ];
 };
@@ -259,13 +259,15 @@ const data = {
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User | null;
   upcomingEvents?: UpcomingEvent[];
+  unreadNotificationsCount?: number;
 }
 
-export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarProps) {
+export function AppSidebar(props: AppSidebarProps) {
+  const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
   const navMainItems = getNavMainItems(upcomingEvents);
 
   return (
-    <Sidebar collapsible="offcanvas" variant="inset" {...props}>
+    <Sidebar collapsible="offcanvas" variant="inset" {...sidebarProps}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
@@ -287,7 +289,10 @@ export function AppSidebar({ user, upcomingEvents = [], ...props }: AppSidebarPr
         <NavMain items={navMainItems} />
         <NavMain items={getComunidadItems()} label="Comunidad" />
         {user?.role === 'ADMIN' && (
-          <NavMain items={getAdminItems()} label="Administración" />
+          <NavMain
+            items={getAdminItems(unreadNotificationsCount)}
+            label="Administración"
+          />
         )}
         <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />

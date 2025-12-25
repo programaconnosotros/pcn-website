@@ -9,6 +9,7 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -25,6 +26,7 @@ export function NavMain({
     url: string;
     icon: LucideIcon;
     isActive?: boolean;
+    badge?: number;
     items?: {
       title: string;
       url: string;
@@ -55,6 +57,11 @@ export function NavMain({
                   <a href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
+                    {item.badge !== undefined && item.badge > 0 && (
+                      <SidebarMenuBadge className="bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black">
+                        {item.badge > 99 ? '99+' : item.badge}
+                      </SidebarMenuBadge>
+                    )}
                   </a>
                 </SidebarMenuButton>
                 {item.items?.length ? (
