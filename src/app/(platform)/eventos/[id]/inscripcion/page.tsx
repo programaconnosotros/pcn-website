@@ -119,12 +119,11 @@ const EventRegistrationPage = async ({ params }: { params: { id: string } }) => 
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center justify-center space-y-4 py-8 text-center">
-                    <CheckCircle2 className="h-16 w-16 text-green-500 dark:text-green-400" />
+                    <CheckCircle2 className="h-16 w-16 text-pcnPurple dark:text-pcnGreen" />
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">Ya estás inscrito</h3>
                       <p className="text-muted-foreground">
-                        Ya te encuentras registrado en este evento. Te esperamos en{' '}
-                        <span className="font-medium">{event.name}</span>.
+                        Ya estás registrado en este evento. ¡Te esperamos!
                       </p>
                     </div>
                     <Link href={`/eventos/${id}`}>
