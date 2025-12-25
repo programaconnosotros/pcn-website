@@ -11,6 +11,7 @@ export const fetchTestimonials = () =>
           id: true,
           name: true,
           email: true,
+          image: true,
         },
       },
     },

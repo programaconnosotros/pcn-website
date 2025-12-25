@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2, Star } from 'lucide-react';
+import { Edit, Trash2, Star, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
 import { deleteTestimonial } from '@/actions/testimonials/delete-testimonial';
 import { toggleFeatured } from '@/actions/testimonials/toggle-featured';
@@ -18,6 +18,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 import { Testimonial } from '@prisma/client';
 
 type TestimonialCardProps = {
@@ -26,6 +34,7 @@ type TestimonialCardProps = {
       id: string;
       name: string;
       email: string;
+      image: string | null;
     };
   };
   currentUserId?: string;
@@ -44,6 +53,7 @@ export function TestimonialCard({
 
   const canEdit = isAdmin || (currentUserId && testimonial.userId === currentUserId);
   const isOwnTestimonial = currentUserId && testimonial.userId === currentUserId;
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleToggleFeatured = async () => {
     setIsToggling(true);
@@ -66,6 +76,7 @@ export function TestimonialCard({
     try {
       await deleteTestimonial(testimonial.id);
       toast.success('Testimonio eliminado exitosamente');
+      setIsDeleteDialogOpen(false);
     } catch (error: any) {
       toast.error(error.message || 'Error al eliminar el testimonio');
     } finally {
@@ -83,66 +94,93 @@ export function TestimonialCard({
     >
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">{testimonial.user.name}</h3>
-            {testimonial.featured && (
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            )}
-          </div>
-          <div className="flex gap-2">
-            {isAdmin && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`h-8 w-8 ${testimonial.featured ? 'text-yellow-500' : ''}`}
-                onClick={handleToggleFeatured}
-                disabled={isToggling}
-                title={testimonial.featured ? 'Remover de home page' : 'Mostrar en home page'}
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={testimonial.user.image || undefined} alt={testimonial.user.name} />
+              <AvatarFallback className="text-sm">
+                {testimonial.user.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/perfil/${testimonial.user.id}`}
+                className="text-lg font-semibold hover:underline transition-colors hover:text-pcnPurple dark:hover:text-pcnGreen"
               >
-                <Star
-                  className={`h-4 w-4 ${testimonial.featured ? 'fill-yellow-400 text-yellow-400' : ''}`}
-                />
-              </Button>
-            )}
-            {canEdit && (
-              <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => onEdit(testimonial)}
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>¿Estás seguro de que quieres eliminar este testimonio?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta acción no se puede deshacer. El testimonio será eliminado permanentemente.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
-                        Eliminar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </>
-            )}
+                {testimonial.user.name}
+              </Link>
+              {isAdmin && testimonial.featured && (
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              )}
+            </div>
           </div>
+          {(isAdmin || canEdit) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {isAdmin && (
+                  <DropdownMenuItem
+                    onClick={handleToggleFeatured}
+                    disabled={isToggling}
+                    className={testimonial.featured ? 'text-yellow-500' : ''}
+                  >
+                    <Star
+                      className={`mr-2 h-4 w-4 ${
+                        testimonial.featured ? 'fill-yellow-400 text-yellow-400' : ''
+                      }`}
+                    />
+                    <span>
+                      {testimonial.featured ? 'Remover de home page' : 'Mostrar en home page'}
+                    </span>
+                  </DropdownMenuItem>
+                )}
+                {canEdit && (
+                  <>
+                    <DropdownMenuItem onClick={() => onEdit(testimonial)}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      <span>Editar</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setIsDeleteDialogOpen(true)}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Eliminar</span>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex-1">
         <p className="text-sm text-muted-foreground">{testimonial.body}</p>
       </CardContent>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Estás seguro de que quieres eliminar este testimonio?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. El testimonio será eliminado permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
