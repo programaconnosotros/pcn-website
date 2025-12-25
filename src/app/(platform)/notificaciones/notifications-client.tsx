@@ -81,7 +81,10 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
   };
 
   const getEventId = (notification: Notification): string | null => {
-    if (notification.type === 'event_registration_created') {
+    if (
+      notification.type === 'event_registration_created' ||
+      notification.type === 'event_registration_cancelled'
+    ) {
       try {
         const metadata = notification.metadata ? JSON.parse(notification.metadata) : null;
         return metadata?.eventId || null;
@@ -93,7 +96,10 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
   };
 
   const isEventNotification = (notification: Notification): boolean => {
-    return notification.type === 'event_registration_created';
+    return (
+      notification.type === 'event_registration_created' ||
+      notification.type === 'event_registration_cancelled'
+    );
   };
 
   const handleMarkAsRead = async (notificationId: string) => {

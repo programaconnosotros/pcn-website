@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
 type CancelRegistrationParams = {
   registrationId?: string;
@@ -73,11 +74,35 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
     throw new Error('Debes proporcionar un ID de inscripción o un correo electrónico');
   }
 
+  // Obtener información del usuario para la notificación
+  let userName: string | undefined = undefined;
+  if (registration.userId) {
+    const user = await prisma.user.findUnique({
+      where: { id: registration.userId },
+      select: { name: true },
+    });
+    userName = user?.name;
+  }
+
   // Marcar como cancelada (no eliminar)
   await prisma.eventRegistration.update({
     where: { id: registration.id },
     data: {
       cancelledAt: new Date(),
+    },
+  });
+
+  // Notificar a los admins sobre la cancelación
+  await notifyAdmins({
+    type: 'event_registration_cancelled',
+    title: 'Inscripción cancelada',
+    message: `${userName || `${registration.firstName} ${registration.lastName}`} ha cancelado su inscripción al evento "${event.name}"`,
+    metadata: {
+      eventId: eventId,
+      eventName: event.name,
+      registrationId: registration.id,
+      userName: userName || `${registration.firstName} ${registration.lastName}`,
+      userEmail: registration.email,
     },
   });
 
