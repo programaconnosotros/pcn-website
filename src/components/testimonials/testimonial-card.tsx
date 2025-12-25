@@ -43,6 +43,7 @@ export function TestimonialCard({
   const [isToggling, setIsToggling] = useState(false);
 
   const canEdit = isAdmin || (currentUserId && testimonial.userId === currentUserId);
+  const isOwnTestimonial = currentUserId && testimonial.userId === currentUserId;
 
   const handleToggleFeatured = async () => {
     setIsToggling(true);
@@ -73,7 +74,13 @@ export function TestimonialCard({
   };
 
   return (
-    <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 flex flex-col">
+    <Card
+      className={`border-2 transition-all duration-300 hover:scale-[1.02] flex flex-col ${
+        isOwnTestimonial
+          ? 'border-pcnPurple bg-gradient-to-br from-white to-pcnPurple/5 shadow-lg shadow-pcnPurple/20 dark:border-pcnGreen dark:from-neutral-900 dark:to-pcnGreen/10 dark:shadow-pcnGreen/20'
+          : 'border-transparent bg-gradient-to-br from-white to-gray-50 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20'
+      }`}
+    >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
