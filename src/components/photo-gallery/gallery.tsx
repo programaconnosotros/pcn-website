@@ -566,6 +566,12 @@ const photos = [
     image: '/galeria/photo_2019-10-14_01-58-24.webp',
     date: new Date(2024, 2, 15),
   },
+  {
+    id: 94,
+    title: 'Evento de PCN',
+    image: '/IMG_1457.webp',
+    date: new Date(2024, 2, 15),
+  },
 ];
 
 interface GalleryProps {

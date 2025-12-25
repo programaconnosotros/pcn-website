@@ -82,7 +82,7 @@ const PCNStory = () => (
               <CardHeader>
                 <CardTitle>Comienzos en la UTN-FRT</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
                   En el año 2015, en la Universidad Tecnológica de Tucumán (Argentina), se
                   conocieron Agustín Sánchez y Germán Navarro, estudiando Ingeniería en Sistemas de
@@ -91,6 +91,13 @@ const PCNStory = () => (
                   enseñaba en la universidad y a participar de actividades extracurriculares como
                   charlas y competencias de programación.
                 </p>
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/IMG_20230809_113640.webp"
+                    alt="Comienzos en la UTN-FRT"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -107,6 +114,13 @@ const PCNStory = () => (
                   voluntariado, que tiene como objetivo hacer networking, organizar y participar de
                   eventos técnicos.
                 </p>
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/evento_abril (173) (2).webp"
+                    alt="Voluntariado en el IEEE"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
                 <p className="text-muted-foreground">
                   Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>,
                   y se hicieron amigos de Facu Gelatti y Franco Mirada. Facu y Franco ya estaban
@@ -140,12 +154,34 @@ const PCNStory = () => (
               <CardHeader>
                 <CardTitle>Code Warfare</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
                   A finales de 2017, organizaron un torneo de programación en la UTN de Tucumán, lo
                   llamaron Code Warfare. Se anotaron muchos equipos y estuvo muy divertido.
                 </p>
-                {/* TODO: Agregar fotos del Code Warfare. */}
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/code-warfare-logo.webp"
+                    alt="Code Warfare logo"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/photo_2017-10-08_20-24-40.webp"
+                      alt="Code Warfare"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/photo_2017-10-08_20-24-35.webp"
+                      alt="Code Warfare"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -171,12 +207,19 @@ const PCNStory = () => (
               <CardHeader>
                 <CardTitle>Club de Algoritmos</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
                   Agus creó un club de algoritmos que se juntaban todos los viernes desde las 18.00
                   hasta las 23.00 en un laboratorio del departamento de ingeniería en sistemas de
                   información de la UTN-FRT.
                 </p>
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/photo_2019-10-14_01-58-25.webp"
+                    alt="Club de Algoritmos"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -194,12 +237,62 @@ const PCNStory = () => (
                   organizado también por la organización Tucumán Hacking, presidida por Victor
                   Figueredo (ahora CEO de Endpoint Consulting).
                 </p>
-                {/* // TODO: Agregar fotos del Tucumán Hack Weekend. */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (167).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (10).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (118) (1).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (139).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (142).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <img
+                      src="/historia/evento_abril (147).webp"
+                      alt="Tucumán Hack Weekend"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
                 <p className="text-muted-foreground">
                   Organizaron varios talleres de seguridad informática en conjunto con la
                   organización Tucumán Hacking, destacándose los talleres de pentesting y hacking
                   ofensivo.
                 </p>
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/evento_abril (64).webp"
+                    alt="Tucumán Hack Weekend"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
                 {/* // TODO: Agregar fotos de los cursos de seguridad informática */}
               </CardContent>
             </Card>
@@ -211,7 +304,7 @@ const PCNStory = () => (
               <CardHeader>
                 <CardTitle>Nibble</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
                   En el año 2019, Agus y Germán conocieron 2 personas en la UTN-FRT que se
                   convirtieron en grandes compañeros y amigos: Iván Taddei y Marcelo
@@ -222,6 +315,13 @@ const PCNStory = () => (
                   cosas, cómo se relacionan, cómo se aplican, y estudiar mucho más de lo que adentro
                   de las aulas se enseñaba.
                 </p>
+                <div className="flex justify-center">
+                  <img
+                    src="/historia/IMG_1525.webp"
+                    alt="Nibble"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
               </CardContent>
             </Card>
 
