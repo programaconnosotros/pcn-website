@@ -11,6 +11,7 @@ export const fetchEventForEdit = (id: string) =>
     },
     include: {
       images: true,
+      sponsors: true,
     },
   });
 

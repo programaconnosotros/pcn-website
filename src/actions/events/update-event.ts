@@ -46,21 +46,30 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  await prisma.event.update({
-    where: { id },
-    data: {
-      name: validatedData.name,
-      description: validatedData.description,
-      date: date,
-      endDate: endDate,
-      city: validatedData.city,
-      address: validatedData.address,
-      placeName: validatedData.placeName,
-      flyerSrc: validatedData.flyerSrc,
-      latitude: validatedData.latitude ?? null,
-      longitude: validatedData.longitude ?? null,
-    },
-  });
+  const { sponsors, ...eventData } = validatedData;
+
+  // Eliminar sponsors existentes y crear los nuevos
+  await prisma.$transaction([
+    prisma.sponsor.deleteMany({
+      where: { eventId: id },
+    }),
+    prisma.event.update({
+      where: { id },
+      data: {
+        ...eventData,
+        date: date,
+        endDate: endDate,
+        latitude: validatedData.latitude ?? null,
+        longitude: validatedData.longitude ?? null,
+        sponsors: {
+          create: sponsors?.filter((s) => s.name.trim() !== '').map((sponsor) => ({
+            name: sponsor.name,
+            website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+          })) || [],
+        },
+      },
+    }),
+  ]);
 
   revalidatePath('/eventos');
   revalidatePath(`/eventos/${id}`);

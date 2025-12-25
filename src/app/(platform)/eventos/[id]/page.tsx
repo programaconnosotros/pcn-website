@@ -12,10 +12,10 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, UserPlus, Users } from 'lucide-react';
+import { Calendar, MapPin, Edit, UserPlus, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
-import { Image as Images, Event } from '@prisma/client';
+import { Image as Images, Event, Sponsor } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
@@ -23,6 +23,7 @@ import { cookies } from 'next/headers';
 
 type EventWithImages = Event & {
   images: Images[];
+  sponsors: Sponsor[];
 };
 
 const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
@@ -347,6 +348,36 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                   )}
                 </CardContent>
               </Card>
+
+              {/* Sponsors */}
+              {event.sponsors && event.sponsors.length > 0 && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                  <CardHeader>
+                    <CardTitle>Sponsors</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-3">
+                      {event.sponsors.map((sponsor) => (
+                        <div key={sponsor.id} className="flex items-center gap-2">
+                          {sponsor.website ? (
+                            <a
+                              href={sponsor.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-sm font-medium text-pcnPurple hover:underline dark:text-pcnGreen"
+                            >
+                              <Globe className="h-4 w-4" />
+                              {sponsor.name}
+                            </a>
+                          ) : (
+                            <span className="text-sm font-medium">{sponsor.name}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Mapa */}
               {event.latitude && event.longitude && (

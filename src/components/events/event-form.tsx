@@ -14,9 +14,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, MapPin, Building2, Image as ImageIcon, Save } from 'lucide-react';
+import { Calendar, MapPin, Building2, Image as ImageIcon, Save, Plus, Trash2, Globe } from 'lucide-react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -44,7 +44,13 @@ export function EventForm({
       flyerSrc: defaultValues?.flyerSrc || '',
       latitude: defaultValues?.latitude || '',
       longitude: defaultValues?.longitude || '',
+      sponsors: defaultValues?.sponsors || [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'sponsors',
   });
 
   const handleSubmit = async (values: EventFormData) => {
@@ -242,6 +248,71 @@ export function EventForm({
               </FormItem>
             )}
           />
+
+          {/* Sponsors */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <FormLabel>Sponsors (opcional)</FormLabel>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => append({ name: '', website: '' })}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Agregar sponsor
+              </Button>
+            </div>
+
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name={`sponsors.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input placeholder="Nombre del sponsor" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`sponsors.${index}.website`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="https://ejemplo.com"
+                          {...field}
+                          value={field.value || ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  className="shrink-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+
+            {fields.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                No hay sponsors agregados. Haz clic en "Agregar sponsor" para agregar uno.
+              </p>
+            )}
+          </div>
 
           {/* Botones */}
           <div className="flex gap-4">

@@ -114,6 +114,7 @@ model Event {
 
   images      Image[]
   registrations EventRegistration[]
+  sponsors    Sponsor[]
 }
 
 model Image {
@@ -180,4 +181,17 @@ model EventRegistration {
   @@unique([eventId, email])
   @@index([eventId])
   @@index([userId])
+}
+
+model Sponsor {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  website   String? // URL del sitio web del sponsor
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
 }

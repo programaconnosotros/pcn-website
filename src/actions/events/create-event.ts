@@ -37,18 +37,21 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
+  const { sponsors, ...eventData } = validatedData;
+
   const event = await prisma.event.create({
     data: {
-      name: validatedData.name,
-      description: validatedData.description,
+      ...eventData,
       date: date,
       endDate: endDate,
-      city: validatedData.city,
-      address: validatedData.address,
-      placeName: validatedData.placeName,
-      flyerSrc: validatedData.flyerSrc,
       latitude: validatedData.latitude ?? null,
       longitude: validatedData.longitude ?? null,
+      sponsors: {
+        create: sponsors?.filter((s) => s.name.trim() !== '').map((sponsor) => ({
+          name: sponsor.name,
+          website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+        })) || [],
+      },
     },
   });
 

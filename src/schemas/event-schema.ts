@@ -44,6 +44,22 @@ export const eventSchema = z.object({
     .refine((val) => val === undefined || (!isNaN(val) && val >= -180 && val <= 180), {
       message: 'La longitud debe ser un número entre -180 y 180',
     }),
+  sponsors: z
+    .array(
+      z.object({
+        name: z.string().min(1, { message: 'El nombre del sponsor es requerido' }),
+        website: z
+          .string()
+          .optional()
+          .refine(
+            (val) => !val || val === '' || z.string().url().safeParse(val).success,
+            { message: 'Debe ser una URL válida' },
+          )
+          .transform((val) => (val === '' ? undefined : val)),
+      }),
+    )
+    .optional()
+    .default([]),
 });
 
 export type EventFormData = z.infer<typeof eventSchema>;

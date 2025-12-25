@@ -10,5 +10,6 @@ export const fetchEvent = (id: string) =>
     },
     include: {
       images: true,
+      sponsors: true,
     },
   });
