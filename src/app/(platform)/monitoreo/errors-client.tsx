@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 type ErrorLog = {
   id: string;
@@ -130,12 +131,18 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <Accordion type="multiple" defaultValue={unresolvedErrors.length > 0 ? ['unresolved'] : ['resolved']} className="space-y-4">
       {unresolvedErrors.length > 0 && (
-        <div>
-          <h3 className="mb-4 text-lg font-semibold">Sin resolver ({unresolvedErrors.length})</h3>
-          <div className="space-y-3">
-            {unresolvedErrors.map((error) => (
+        <AccordionItem value="unresolved" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <span>Sin resolver ({unresolvedErrors.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {unresolvedErrors.map((error) => (
               <Card
                 key={error.id}
                 className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-neutral-900 dark:to-red-950/20 dark:hover:border-red-800"
@@ -218,16 +225,23 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
 
       {resolvedErrors.length > 0 && (
-        <div>
-          <h3 className="mb-4 text-lg font-semibold">Resueltos ({resolvedErrors.length})</h3>
-          <div className="space-y-3">
-            {resolvedErrors.map((error) => (
+        <AccordionItem value="resolved" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Resueltos ({resolvedErrors.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
                 className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
@@ -308,10 +322,11 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
-    </div>
+    </Accordion>
   );
 }

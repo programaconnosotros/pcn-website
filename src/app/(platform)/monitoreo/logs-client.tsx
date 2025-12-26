@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 type AppLog = {
   id: string;
@@ -143,13 +144,22 @@ export function LogsClient({ logs }: LogsClientProps) {
     );
   }
 
+  // Determinar qué secciones abrir por defecto (solo errores)
+  const defaultOpenSections = logsByLevel.error.length > 0 ? ['error'] : [];
+
   return (
-    <div className="space-y-6">
+    <Accordion type="multiple" defaultValue={defaultOpenSections} className="space-y-4">
       {logsByLevel.error.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Errores ({logsByLevel.error.length})</h3>
-          <div className="space-y-3">
-            {logsByLevel.error.map((log) => (
+        <AccordionItem value="error" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              {getLevelIcon('error')}
+              <span>Errores ({logsByLevel.error.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {logsByLevel.error.map((log) => (
               <Card
                 key={log.id}
                 className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-neutral-900 dark:to-red-950/20 dark:hover:border-red-800"
@@ -207,16 +217,23 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
 
       {logsByLevel.warn.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Advertencias ({logsByLevel.warn.length})</h3>
-          <div className="space-y-3">
-            {logsByLevel.warn.map((log) => (
+        <AccordionItem value="warn" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              {getLevelIcon('warn')}
+              <span>Advertencias ({logsByLevel.warn.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {logsByLevel.warn.map((log) => (
               <Card
                 key={log.id}
                 className="border-2 border-yellow-500/50 bg-gradient-to-br from-white to-yellow-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-yellow-500 hover:shadow-xl dark:border-yellow-900/50 dark:from-neutral-900 dark:to-yellow-950/20 dark:hover:border-yellow-800"
@@ -274,16 +291,23 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
 
       {logsByLevel.info.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Información ({logsByLevel.info.length})</h3>
-          <div className="space-y-3">
-            {logsByLevel.info.map((log) => (
+        <AccordionItem value="info" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              {getLevelIcon('info')}
+              <span>Información ({logsByLevel.info.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {logsByLevel.info.map((log) => (
               <Card
                 key={log.id}
                 className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
@@ -341,16 +365,23 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
 
       {logsByLevel.debug.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Debug ({logsByLevel.debug.length})</h3>
-          <div className="space-y-3">
-            {logsByLevel.debug.map((log) => (
+        <AccordionItem value="debug" className="border rounded-lg px-4">
+          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+            <div className="flex items-center gap-2">
+              {getLevelIcon('debug')}
+              <span>Debug ({logsByLevel.debug.length})</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 pt-4">
+              {logsByLevel.debug.map((log) => (
               <Card
                 key={log.id}
                 className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 opacity-75"
@@ -408,11 +439,12 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       )}
-    </div>
+    </Accordion>
   );
 }
 
