@@ -28,8 +28,8 @@ export const eventSchema = z.object({
     .max(100, { message: 'El nombre del lugar no puede exceder 100 caracteres' }),
   flyerSrc: z
     .string()
-    .url({ message: 'Debe ser una URL válida' })
-    .min(1, { message: 'La URL del flyer es requerida' }),
+    .min(1, { message: 'Debes subir una imagen del flyer' })
+    .url({ message: 'La imagen del flyer no es válida' }),
   latitude: z.preprocess(
     (val) => {
       if (val === null || val === undefined) return '';

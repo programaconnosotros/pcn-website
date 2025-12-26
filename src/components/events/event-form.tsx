@@ -18,13 +18,12 @@ import {
   Calendar,
   MapPin,
   Building2,
-  Image as ImageIcon,
   Save,
   Plus,
   Trash2,
-  Globe,
   Users,
 } from 'lucide-react';
+import { FileUpload } from '@/components/ui/file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -241,20 +240,21 @@ export function EventForm({
             )}
           />
 
-          {/* URL del flyer */}
+          {/* Flyer del evento */}
           <FormField
             control={form.control}
             name="flyerSrc"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  <ImageIcon className="mr-2 inline h-4 w-4" />
-                  URL del flyer
-                </FormLabel>
+                <FormLabel>Flyer del evento</FormLabel>
                 <FormControl>
-                  <Input type="url" placeholder="https://ejemplo.com/flyer.jpg" {...field} />
+                  <FileUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    folder="events/flyers"
+                  />
                 </FormControl>
-                <FormDescription>URL de la imagen del flyer del evento</FormDescription>
+                <FormDescription>Imagen del flyer del evento (JPEG, PNG, WebP, GIF)</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
