@@ -140,22 +140,27 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   // Obtener inscripciones si el usuario es admin
   let registrations: Array<{
     id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    type: 'STUDENT' | 'PROFESSIONAL';
-    workTitle: string | null;
-    workPlace: string | null;
-    studyField: string | null;
-    studyPlace: string | null;
+    userId: string;
     cancelledAt: Date | null;
     createdAt: Date;
+    user: {
+      name: string;
+      email: string;
+    };
   }> = [];
 
   if (isAdmin) {
     registrations = await prisma.eventRegistration.findMany({
       where: {
         eventId: id,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
