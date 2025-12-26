@@ -66,10 +66,13 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
     redirect('/eventos');
   }
 
-  // Obtener todas las inscripciones
+  // Obtener todas las inscripciones con datos del usuario
   const registrations = await prisma.eventRegistration.findMany({
     where: {
       eventId: id,
+    },
+    include: {
+      user: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -139,7 +142,6 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                       <TableRow>
                         <TableHead>Nombre</TableHead>
                         <TableHead>Email</TableHead>
-                        <TableHead>Tipo</TableHead>
                         <TableHead>Información</TableHead>
                         <TableHead>Estado</TableHead>
                         <TableHead>Fecha de inscripción</TableHead>
@@ -147,65 +149,72 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {registrations.map((registration) => (
-                        <TableRow
-                          key={registration.id}
-                          className={registration.cancelledAt ? 'opacity-60' : ''}
-                        >
-                          <TableCell className="font-medium">
-                            {registration.firstName} {registration.lastName}
-                          </TableCell>
-                          <TableCell>{registration.email}</TableCell>
-                          <TableCell>
-                            <Badge variant="outline">
-                              {registration.type === 'PROFESSIONAL' ? 'Profesional' : 'Estudiante'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {registration.type === 'PROFESSIONAL' ? (
-                              <div className="text-sm text-muted-foreground">
-                                <p>
-                                  <span className="font-medium">Trabaja:</span>{' '}
-                                  {registration.workTitle || '-'}
-                                </p>
-                                <p>
-                                  <span className="font-medium">En:</span>{' '}
-                                  {registration.workPlace || '-'}
-                                </p>
-                              </div>
-                            ) : (
-                              <div className="text-sm text-muted-foreground">
-                                <p>
-                                  <span className="font-medium">Estudia:</span>{' '}
-                                  {registration.studyField || '-'}
-                                </p>
-                                <p>
-                                  <span className="font-medium">En:</span>{' '}
-                                  {registration.studyPlace || '-'}
-                                </p>
-                              </div>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {registration.cancelledAt ? (
-                              <Badge variant="destructive">Cancelada</Badge>
-                            ) : (
-                              <Badge variant="default">Activa</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {formatDate(registration.createdAt)}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {!registration.cancelledAt && (
-                              <DeleteRegistrationButton
-                                registrationId={registration.id}
-                                userName={`${registration.firstName} ${registration.lastName}`}
-                              />
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {registrations.map((registration) => {
+                        const user = registration.user;
+                        const hasProfessionalData = user.jobTitle && user.enterprise;
+                        const hasStudentData = user.career && user.university;
+                        
+                        return (
+                          <TableRow
+                            key={registration.id}
+                            className={registration.cancelledAt ? 'opacity-60' : ''}
+                          >
+                            <TableCell className="font-medium">
+                              {user.name}
+                            </TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>
+                              {hasProfessionalData ? (
+                                <div className="text-sm text-muted-foreground">
+                                  <Badge variant="outline" className="mb-1">Profesional</Badge>
+                                  <p>
+                                    <span className="font-medium">Trabaja:</span>{' '}
+                                    {user.jobTitle}
+                                  </p>
+                                  <p>
+                                    <span className="font-medium">En:</span>{' '}
+                                    {user.enterprise}
+                                  </p>
+                                </div>
+                              ) : hasStudentData ? (
+                                <div className="text-sm text-muted-foreground">
+                                  <Badge variant="outline" className="mb-1">Estudiante</Badge>
+                                  <p>
+                                    <span className="font-medium">Estudia:</span>{' '}
+                                    {user.career}
+                                  </p>
+                                  <p>
+                                    <span className="font-medium">En:</span>{' '}
+                                    {user.university}
+                                  </p>
+                                </div>
+                              ) : (
+                                <span className="text-sm text-muted-foreground">
+                                  Sin información adicional
+                                </span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {registration.cancelledAt ? (
+                                <Badge variant="destructive">Cancelada</Badge>
+                              ) : (
+                                <Badge variant="default">Activa</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {formatDate(registration.createdAt)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {!registration.cancelledAt && (
+                                <DeleteRegistrationButton
+                                  registrationId={registration.id}
+                                  userName={user.name}
+                                />
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </div>

@@ -8,11 +8,25 @@ import { notifyAdmins } from '@/actions/notifications/notify-admins';
 type CancelRegistrationParams = {
   registrationId?: string;
   eventId: string;
-  email?: string;
 };
 
 export const cancelRegistration = async (params: CancelRegistrationParams) => {
-  const { registrationId, eventId, email } = params;
+  const { registrationId, eventId } = params;
+
+  // Verificar autenticación
+  const sessionId = cookies().get('sessionId')?.value;
+  if (!sessionId) {
+    throw new Error('No autorizado');
+  }
+
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+    include: { user: true },
+  });
+
+  if (!session?.user) {
+    throw new Error('No autorizado');
+  }
 
   // Verificar que el evento existe
   const event = await prisma.event.findFirst({
@@ -28,23 +42,8 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
 
   let registration = null;
 
-  // Si hay registrationId, el usuario está logueado
+  // Si hay registrationId, verificar que pertenece al usuario
   if (registrationId) {
-    const sessionId = cookies().get('sessionId')?.value;
-    if (!sessionId) {
-      throw new Error('No autorizado');
-    }
-
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (!session?.user) {
-      throw new Error('No autorizado');
-    }
-
-    // Verificar que la inscripción pertenece al usuario
     registration = await prisma.eventRegistration.findFirst({
       where: {
         id: registrationId,
@@ -52,37 +51,26 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
         userId: session.userId,
         cancelledAt: null, // Solo cancelar si no está ya cancelada
       },
+      include: { user: true },
     });
-
-    if (!registration) {
-      throw new Error('Inscripción no encontrada o ya cancelada');
-    }
-  } else if (email) {
-    // Si no está logueado, buscar por email
+  } else {
+    // Buscar inscripción del usuario actual
     registration = await prisma.eventRegistration.findFirst({
       where: {
         eventId: eventId,
-        email: email,
-        cancelledAt: null, // Solo cancelar si no está ya cancelada
+        userId: session.userId,
+        cancelledAt: null,
       },
+      include: { user: true },
     });
-
-    if (!registration) {
-      throw new Error('No se encontró una inscripción con ese correo electrónico para este evento');
-    }
-  } else {
-    throw new Error('Debes proporcionar un ID de inscripción o un correo electrónico');
   }
 
-  // Obtener información del usuario para la notificación
-  let userName: string | undefined = undefined;
-  if (registration.userId) {
-    const user = await prisma.user.findUnique({
-      where: { id: registration.userId },
-      select: { name: true },
-    });
-    userName = user?.name;
+  if (!registration) {
+    throw new Error('Inscripción no encontrada o ya cancelada');
   }
+
+  const userName = registration.user.name;
+  const userEmail = registration.user.email;
 
   // Marcar como cancelada (no eliminar)
   await prisma.eventRegistration.update({
@@ -96,13 +84,13 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
   await notifyAdmins({
     type: 'event_registration_cancelled',
     title: 'Inscripción cancelada',
-    message: `${userName || `${registration.firstName} ${registration.lastName}`} ha cancelado su inscripción al evento "${event.name}"`,
+    message: `${userName} ha cancelado su inscripción al evento "${event.name}"`,
     metadata: {
       eventId: eventId,
       eventName: event.name,
       registrationId: registration.id,
-      userName: userName || `${registration.firstName} ${registration.lastName}`,
-      userEmail: registration.email,
+      userName: userName,
+      userEmail: userEmail,
     },
   });
 

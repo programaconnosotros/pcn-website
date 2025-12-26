@@ -1,5 +1,6 @@
 'use server';
 
+import { Suspense } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,11 +13,11 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, UserPlus, Users, Globe } from 'lucide-react';
+import { Calendar, MapPin, Edit, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { CancelRegistrationButton } from '@/components/events/cancel-registration-button';
-import { DeleteRegistrationButton } from '@/components/events/delete-registration-button';
 import { EventPhotos } from '@/components/events/event-photos';
+import { EventDetailClient } from '@/components/events/event-detail-client';
 import { Image as Images, Event, Sponsor } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -287,7 +288,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         <CancelRegistrationButton
                           eventId={id}
                           registrationId={registrationId || undefined}
-                          isLoggedIn={!!userId}
                         />
                       </div>
                     ) : capacityInfo && !capacityInfo.available ? (
@@ -301,12 +301,15 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <Link href={`/eventos/${id}/inscripcion`} className="block">
-                          <Button variant="pcn" className="flex w-full items-center gap-2">
-                            <UserPlus className="h-4 w-4" />
-                            Inscribirme al evento
-                          </Button>
-                        </Link>
+                        <Suspense fallback={<Button variant="pcn" className="w-full" disabled>Cargando...</Button>}>
+                          <EventDetailClient
+                            eventId={id}
+                            eventName={event.name}
+                            isAuthenticated={!!sessionId}
+                            isRegistered={isRegistered}
+                            capacityAvailable={capacityInfo?.available ?? true}
+                          />
+                        </Suspense>
                         {capacityInfo && (
                           <p className="text-center text-xs text-muted-foreground">
                             {capacityInfo.available

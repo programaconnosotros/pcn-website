@@ -13,6 +13,7 @@ const formSchema = z.object({
   password: z.string().min(4, {
     message: 'La contraseña debe tener al menos 4 caracteres.',
   }),
+  redirectTo: z.string().optional(),
 });
 
 export const signIn = async (data: z.infer<typeof formSchema>) => {
@@ -47,5 +48,7 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365, // 1 año
   });
 
-  redirect('/home');
+  // Redirigir a la URL especificada o a home por defecto
+  const redirectTo = data.redirectTo || '/home';
+  redirect(redirectTo);
 };

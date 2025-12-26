@@ -27,6 +27,8 @@ export default function SignInPage() {
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email') || '';
   const passwordParam = searchParams.get('password') || '';
+  const redirectTo = searchParams.get('redirect') || '';
+  const autoRegister = searchParams.get('autoRegister') === 'true';
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,7 +40,14 @@ export default function SignInPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await toast.promise(signIn(values), {
+      // Construir redirectTo con autoRegister si es necesario
+      let finalRedirect = redirectTo;
+      if (autoRegister && redirectTo) {
+        const separator = redirectTo.includes('?') ? '&' : '?';
+        finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+      }
+      
+      await toast.promise(signIn({ ...values, redirectTo: finalRedirect }), {
         loading: 'Ingresando...',
         success: 'Bienvenido! 👋',
         error: 'No pudimos iniciar la sesión.',
@@ -100,7 +109,7 @@ export default function SignInPage() {
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href="/autenticacion/registro" className="w-full">
+          <Link href={redirectTo ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}` : '/autenticacion/registro'} className="w-full">
             <Button variant="outline" className="w-full">
               Crear cuenta
               <UserPlus className="ml-2 h-4 w-4" />

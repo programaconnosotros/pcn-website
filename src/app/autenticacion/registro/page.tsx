@@ -14,6 +14,7 @@ import { signUpSchema } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -21,6 +22,10 @@ import * as z from 'zod';
 const formSchema = signUpSchema;
 
 export default function SignUpPage() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '';
+  const autoRegister = searchParams.get('autoRegister') === 'true';
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,7 +37,14 @@ export default function SignUpPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await toast.promise(signUp(values), {
+    // Construir redirectTo con autoRegister si es necesario
+    let finalRedirect = redirectTo;
+    if (autoRegister && redirectTo) {
+      const separator = redirectTo.includes('?') ? '&' : '?';
+      finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+    }
+    
+    await toast.promise(signUp({ ...values, redirectTo: finalRedirect }), {
       loading: 'Creando usuario...',
       success: 'Usuario creado exitosamente! 🥳',
       error: (error) => {
@@ -148,7 +160,7 @@ export default function SignUpPage() {
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href="/autenticacion/iniciar-sesion" className="w-full">
+          <Link href={redirectTo ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}` : '/autenticacion/iniciar-sesion'} className="w-full">
             <Button variant="outline" className="w-full">
               Iniciar sesión
               <LogIn className="ml-2 h-4 w-4" />

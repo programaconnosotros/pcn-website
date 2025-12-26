@@ -162,31 +162,18 @@ model JobOffers {
   updatedAt DateTime @updatedAt
 }
 
-enum RegistrationType {
-  STUDENT
-  PROFESSIONAL
-}
-
 model EventRegistration {
-  id              String           @id @default(cuid())
+  id              String    @id @default(cuid())
   eventId         String
-  firstName       String
-  lastName        String
-  email           String
-  type            RegistrationType
-  workTitle       String? // Para profesionales: de qué trabaja
-  workPlace       String? // Para profesionales: dónde trabaja
-  studyField      String? // Para estudiantes: qué estudia
-  studyPlace      String? // Para estudiantes: dónde estudia
-  userId          String? // Si el usuario está logueado
+  userId          String    // Usuario registrado (requerido)
   cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  event           Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([eventId, email])
+  @@unique([eventId, userId])
   @@index([eventId])
   @@index([userId])
   @@index([cancelledAt])

@@ -7,10 +7,12 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { signUpSchema } from '@/lib/validations/auth-schemas';
 
-const formSchema = signUpSchema;
+const formSchema = signUpSchema.extend({
+  redirectTo: z.string().optional(),
+});
 
 export const signUp = async (data: z.infer<typeof formSchema>) => {
-  const { confirmPassword, ...cleanedData } = formSchema.parse(data);
+  const { confirmPassword, redirectTo, ...cleanedData } = formSchema.parse(data);
 
   const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
 
@@ -33,5 +35,7 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365,
   });
 
-  redirect('/home');
+  // Redirigir a la URL especificada o a home por defecto
+  const redirectPath = redirectTo || '/home';
+  redirect(redirectPath);
 };
