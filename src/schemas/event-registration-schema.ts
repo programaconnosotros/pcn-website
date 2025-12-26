@@ -12,7 +12,7 @@ export const eventRegistrationSchema = z
       .max(100, { message: 'El apellido no puede exceder 100 caracteres' }),
     email: z.string().email({ message: 'Debe ser un email válido' }),
     type: z.enum(['STUDENT', 'PROFESSIONAL'], {
-      required_error: 'Debes seleccionar si eres estudiante o profesional',
+      required_error: 'Debes seleccionar si sos estudiante o profesional',
     }),
     workTitle: z.string().optional(),
     workPlace: z.string().optional(),

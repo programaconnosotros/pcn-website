@@ -29,7 +29,7 @@ import { Save, User, Mail, Briefcase, GraduationCap, Users } from 'lucide-react'
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type EventRegistrationFormProps = {
   eventId: string;
@@ -70,6 +70,8 @@ export function EventRegistrationForm({
   });
 
   const registrationType = form.watch('type');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   // Determinar tipo automáticamente si el usuario tiene datos
   useEffect(() => {
@@ -81,6 +83,53 @@ export function EventRegistrationForm({
       }
     }
   }, [userData, form]);
+
+  // Verificar si el usuario tiene todos los datos necesarios para inscripción directa
+  const canAutoRegister = userData && 
+    userData.firstName && 
+    userData.lastName && 
+    userData.email &&
+    ((userData.jobTitle && userData.enterprise) || (userData.career && userData.university));
+
+  const handleAutoRegister = async () => {
+    if (!canAutoRegister) return;
+
+    setIsSubmitting(true);
+    
+    // Validar cupo antes de inscribir
+    const capacityCheck = await checkEventCapacity(eventId);
+    if (!capacityCheck.available) {
+      toast.error(
+        capacityCheck.message ||
+          'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Preparar datos para inscripción
+    const registrationData: EventRegistrationFormData = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      type: (userData.jobTitle && userData.enterprise) ? 'PROFESSIONAL' : 'STUDENT',
+      workTitle: userData.jobTitle || undefined,
+      workPlace: userData.enterprise || undefined,
+      studyField: userData.career || undefined,
+      studyPlace: userData.university || undefined,
+    };
+
+    await toast.promise(registerEvent(eventId, registrationData), {
+      loading: 'Inscribiéndote al evento...',
+      success: '¡Te has inscrito exitosamente al evento! 🎉',
+      error: (error) => {
+        console.error('Error al inscribirse al evento', error);
+        return error.message || 'Ocurrió un error al inscribirse al evento';
+      },
+    });
+
+    setIsSubmitting(false);
+  };
 
   const onSubmit = async (values: EventRegistrationFormData) => {
     // Validar cupo nuevamente antes de submitear
@@ -120,7 +169,50 @@ export function EventRegistrationForm({
         </div>
       )}
 
-      <Form {...form}>
+      {/* Inscripción directa si el usuario está autenticado con todos los datos */}
+      {canAutoRegister && !showForm ? (
+        <div className="space-y-4">
+          <div className="rounded-lg border bg-muted/50 p-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              Ya tenemos tu información. Podés inscribirte directamente al evento.
+            </p>
+            <div className="flex gap-4">
+              <Button 
+                type="button" 
+                variant="pcn" 
+                className="flex-1"
+                onClick={handleAutoRegister}
+                disabled={isSubmitting || !capacityInfo.available}
+              >
+                <Save className="mr-2 h-4 w-4" />
+                {isSubmitting ? 'Inscribiéndote...' : 'Inscribirme al evento'}
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => {
+                  // Mostrar formulario completo
+                  form.reset({
+                    firstName: userData!.firstName,
+                    lastName: userData!.lastName,
+                    email: userData!.email,
+                    type: (userData!.jobTitle && userData!.enterprise) ? 'PROFESSIONAL' : 'STUDENT',
+                    workTitle: userData!.jobTitle || '',
+                    workPlace: userData!.enterprise || '',
+                    studyField: userData!.career || '',
+                    studyPlace: userData!.university || '',
+                  });
+                  setShowForm(true);
+                }}
+              >
+                Editar información
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Nombre */}
           <FormField
@@ -182,7 +274,7 @@ export function EventRegistrationForm({
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>¿Eres estudiante o profesional del software?</FormLabel>
+                <FormLabel>¿Sos estudiante o profesional del software?</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -295,6 +387,7 @@ export function EventRegistrationForm({
           </div>
         </form>
       </Form>
+      )}
     </div>
   );
 }
