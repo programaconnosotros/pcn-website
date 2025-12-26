@@ -70,8 +70,8 @@ const MonitoreoPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-visible">
+        <div className="mt-4 overflow-visible">
           <div className="mb-6">
             <Heading2 className="m-0">Monitoreo</Heading2>
             <p className="text-sm text-muted-foreground mt-2">

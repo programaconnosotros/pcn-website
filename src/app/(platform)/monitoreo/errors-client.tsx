@@ -131,9 +131,9 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
   }
 
   return (
-    <Accordion type="multiple" defaultValue={unresolvedErrors.length > 0 ? ['unresolved'] : ['resolved']} className="space-y-4">
+    <Accordion type="multiple" defaultValue={unresolvedErrors.length > 0 ? ['unresolved'] : ['resolved']} className="space-y-4 overflow-visible">
       {unresolvedErrors.length > 0 && (
-        <AccordionItem value="unresolved" className="border rounded-lg px-4 overflow-visible">
+        <AccordionItem value="unresolved" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
@@ -141,7 +141,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
             </div>
           </AccordionTrigger>
           <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-2">
+            <div className="space-y-3 pt-4 px-1 md:px-2">
               {unresolvedErrors.map((error) => (
               <Card
                 key={error.id}
@@ -232,7 +232,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
       )}
 
       {resolvedErrors.length > 0 && (
-        <AccordionItem value="resolved" className="border rounded-lg px-4 overflow-visible">
+        <AccordionItem value="resolved" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -240,7 +240,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
             </div>
           </AccordionTrigger>
           <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-2">
+            <div className="space-y-3 pt-4 px-1 md:px-2">
               {resolvedErrors.map((error) => (
               <Card
                 key={error.id}

@@ -60,10 +60,10 @@ export function MonitoringClient({ errors, logs }: MonitoringClientProps) {
         <TabsTrigger value="errors">Errores</TabsTrigger>
         <TabsTrigger value="logs">Logs</TabsTrigger>
       </TabsList>
-      <TabsContent value="errors" className="mt-4">
+      <TabsContent value="errors" className="mt-4 overflow-visible">
         <ErrorsClient errors={errors} />
       </TabsContent>
-      <TabsContent value="logs" className="mt-4">
+      <TabsContent value="logs" className="mt-4 overflow-visible">
         <LogsClient logs={logs} />
       </TabsContent>
     </Tabs>
