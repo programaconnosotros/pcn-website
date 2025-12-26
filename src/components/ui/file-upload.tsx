@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, Loader2, Image as ImageIcon } from 'lucide-react';
@@ -30,6 +30,13 @@ export function FileUpload({
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(value || null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sincronizar preview con value cuando cambie (para edición)
+  useEffect(() => {
+    if (value && value !== preview) {
+      setPreview(value);
+    }
+  }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
