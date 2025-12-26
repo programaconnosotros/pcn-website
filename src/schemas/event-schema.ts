@@ -30,20 +30,34 @@ export const eventSchema = z.object({
     .string()
     .url({ message: 'Debe ser una URL válida' })
     .min(1, { message: 'La URL del flyer es requerida' }),
-  latitude: z
-    .string()
-    .optional()
-    .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
-    .refine((val) => val === undefined || (!isNaN(val) && val >= -90 && val <= 90), {
-      message: 'La latitud debe ser un número entre -90 y 90',
-    }),
-  longitude: z
-    .string()
-    .optional()
-    .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
-    .refine((val) => val === undefined || (!isNaN(val) && val >= -180 && val <= 180), {
-      message: 'La longitud debe ser un número entre -180 y 180',
-    }),
+  latitude: z.preprocess(
+    (val) => {
+      if (val === null || val === undefined) return '';
+      if (typeof val === 'number') return val.toString();
+      return val;
+    },
+    z
+      .string()
+      .optional()
+      .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
+      .refine((val) => val === undefined || (!isNaN(val) && val >= -90 && val <= 90), {
+        message: 'La latitud debe ser un número entre -90 y 90',
+      }),
+  ),
+  longitude: z.preprocess(
+    (val) => {
+      if (val === null || val === undefined) return '';
+      if (typeof val === 'number') return val.toString();
+      return val;
+    },
+    z
+      .string()
+      .optional()
+      .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
+      .refine((val) => val === undefined || (!isNaN(val) && val >= -180 && val <= 180), {
+        message: 'La longitud debe ser un número entre -180 y 180',
+      }),
+  ),
   sponsors: z
     .array(
       z.object({
