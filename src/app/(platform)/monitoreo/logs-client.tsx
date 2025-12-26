@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type AppLog = {
   id: string;
@@ -112,6 +112,19 @@ const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: nu
 
 export function LogsClient({ logs }: LogsClientProps) {
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    const logsByLevel = {
+      error: logs.filter((l) => l.level === 'error'),
+      warn: logs.filter((l) => l.level === 'warn'),
+      info: logs.filter((l) => l.level === 'info'),
+      debug: logs.filter((l) => l.level === 'debug'),
+    };
+    if (logsByLevel.error.length > 0) return 'error';
+    if (logsByLevel.warn.length > 0) return 'warn';
+    if (logsByLevel.info.length > 0) return 'info';
+    if (logsByLevel.debug.length > 0) return 'debug';
+    return 'error';
+  });
 
   const toggleExpand = (logId: string) => {
     const newExpanded = new Set(expandedLogs);
@@ -144,21 +157,39 @@ export function LogsClient({ logs }: LogsClientProps) {
     );
   }
 
-  // Determinar qué secciones abrir por defecto (solo errores)
-  const defaultOpenSections = logsByLevel.error.length > 0 ? ['error'] : [];
+  // Crear array de tabs disponibles
+  const availableTabs = [
+    { value: 'error', label: 'Errores', count: logsByLevel.error.length, icon: getLevelIcon('error') },
+    { value: 'warn', label: 'Advertencias', count: logsByLevel.warn.length, icon: getLevelIcon('warn') },
+    { value: 'info', label: 'Información', count: logsByLevel.info.length, icon: getLevelIcon('info') },
+    { value: 'debug', label: 'Debug', count: logsByLevel.debug.length, icon: getLevelIcon('debug') },
+  ].filter(tab => tab.count > 0);
+
+  const getGridColsClass = (count: number) => {
+    switch (count) {
+      case 1: return 'grid-cols-1';
+      case 2: return 'grid-cols-2';
+      case 3: return 'grid-cols-3';
+      case 4: return 'grid-cols-4';
+      default: return 'grid-cols-4';
+    }
+  };
 
   return (
-    <Accordion type="multiple" defaultValue={defaultOpenSections} className="space-y-4 overflow-visible">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <TabsList className={`grid w-full mb-4 ${getGridColsClass(availableTabs.length)}`}>
+        {availableTabs.map((tab) => (
+          <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">{tab.icon}</span>
+            <span className="truncate">{tab.label}</span>
+            <span className="hidden sm:inline">({tab.count})</span>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
       {logsByLevel.error.length > 0 && (
-        <AccordionItem value="error" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              {getLevelIcon('error')}
-              <span>Errores ({logsByLevel.error.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="error" className="mt-0">
+          <div className="space-y-3">
               {logsByLevel.error.map((log) => (
               <Card
                 key={log.id}
@@ -217,22 +248,14 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
 
       {logsByLevel.warn.length > 0 && (
-        <AccordionItem value="warn" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              {getLevelIcon('warn')}
-              <span>Advertencias ({logsByLevel.warn.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="warn" className="mt-0">
+          <div className="space-y-3">
               {logsByLevel.warn.map((log) => (
               <Card
                 key={log.id}
@@ -291,22 +314,14 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
 
       {logsByLevel.info.length > 0 && (
-        <AccordionItem value="info" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              {getLevelIcon('info')}
-              <span>Información ({logsByLevel.info.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="info" className="mt-0">
+          <div className="space-y-3">
               {logsByLevel.info.map((log) => (
               <Card
                 key={log.id}
@@ -365,22 +380,14 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
 
       {logsByLevel.debug.length > 0 && (
-        <AccordionItem value="debug" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              {getLevelIcon('debug')}
-              <span>Debug ({logsByLevel.debug.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="debug" className="mt-0">
+          <div className="space-y-3">
               {logsByLevel.debug.map((log) => (
               <Card
                 key={log.id}
@@ -439,12 +446,11 @@ export function LogsClient({ logs }: LogsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
-    </Accordion>
+    </Tabs>
   );
 }
 

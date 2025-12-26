@@ -16,7 +16,6 @@ import { fetchLogs, getLogStats } from '@/actions/logs/fetch-logs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertTriangle,
-  CheckCircle2,
   Calendar,
   FileX,
   TrendingUp,

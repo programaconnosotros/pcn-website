@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type ErrorLog = {
   id: string;
@@ -90,6 +90,9 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
   const router = useRouter();
   const [markingAsResolved, setMarkingAsResolved] = useState<string | null>(null);
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState<string>(
+    errors.filter((e) => !e.resolved).length > 0 ? 'unresolved' : 'resolved'
+  );
 
   const unresolvedErrors = errors.filter((e) => !e.resolved);
   const resolvedErrors = errors.filter((e) => e.resolved);
@@ -131,17 +134,25 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
   }
 
   return (
-    <Accordion type="multiple" defaultValue={unresolvedErrors.length > 0 ? ['unresolved'] : ['resolved']} className="space-y-4 overflow-visible">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <TabsList className="grid w-full grid-cols-2 mb-4">
+        {unresolvedErrors.length > 0 && (
+          <TabsTrigger value="unresolved" className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4 text-destructive" />
+            Sin resolver ({unresolvedErrors.length})
+          </TabsTrigger>
+        )}
+        {resolvedErrors.length > 0 && (
+          <TabsTrigger value="resolved" className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            Resueltos ({resolvedErrors.length})
+          </TabsTrigger>
+        )}
+      </TabsList>
+      
       {unresolvedErrors.length > 0 && (
-        <AccordionItem value="unresolved" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              <span>Sin resolver ({unresolvedErrors.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="unresolved" className="mt-0">
+          <div className="space-y-3">
               {unresolvedErrors.map((error) => (
               <Card
                 key={error.id}
@@ -225,22 +236,14 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
 
       {resolvedErrors.length > 0 && (
-        <AccordionItem value="resolved" className="border rounded-lg px-2 md:px-6 lg:px-8 overflow-visible">
-          <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>Resueltos ({resolvedErrors.length})</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="overflow-visible">
-            <div className="space-y-3 pt-4 px-1 md:px-2">
+        <TabsContent value="resolved" className="mt-0">
+          <div className="space-y-3">
               {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
@@ -322,11 +325,10 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                   </div>
                 </CardHeader>
               </Card>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            ))}
+          </div>
+        </TabsContent>
       )}
-    </Accordion>
+    </Tabs>
   );
 }
