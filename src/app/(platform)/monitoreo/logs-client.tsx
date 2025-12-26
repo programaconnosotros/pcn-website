@@ -150,15 +150,15 @@ export function LogsClient({ logs }: LogsClientProps) {
   return (
     <Accordion type="multiple" defaultValue={defaultOpenSections} className="space-y-4">
       {logsByLevel.error.length > 0 && (
-        <AccordionItem value="error" className="border rounded-lg px-4">
+        <AccordionItem value="error" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               {getLevelIcon('error')}
               <span>Errores ({logsByLevel.error.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {logsByLevel.error.map((log) => (
               <Card
                 key={log.id}
@@ -224,15 +224,15 @@ export function LogsClient({ logs }: LogsClientProps) {
       )}
 
       {logsByLevel.warn.length > 0 && (
-        <AccordionItem value="warn" className="border rounded-lg px-4">
+        <AccordionItem value="warn" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               {getLevelIcon('warn')}
               <span>Advertencias ({logsByLevel.warn.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {logsByLevel.warn.map((log) => (
               <Card
                 key={log.id}
@@ -298,15 +298,15 @@ export function LogsClient({ logs }: LogsClientProps) {
       )}
 
       {logsByLevel.info.length > 0 && (
-        <AccordionItem value="info" className="border rounded-lg px-4">
+        <AccordionItem value="info" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               {getLevelIcon('info')}
               <span>Información ({logsByLevel.info.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {logsByLevel.info.map((log) => (
               <Card
                 key={log.id}
@@ -372,15 +372,15 @@ export function LogsClient({ logs }: LogsClientProps) {
       )}
 
       {logsByLevel.debug.length > 0 && (
-        <AccordionItem value="debug" className="border rounded-lg px-4">
+        <AccordionItem value="debug" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               {getLevelIcon('debug')}
               <span>Debug ({logsByLevel.debug.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {logsByLevel.debug.map((log) => (
               <Card
                 key={log.id}

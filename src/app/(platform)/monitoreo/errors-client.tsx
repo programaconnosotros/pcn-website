@@ -133,15 +133,15 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
   return (
     <Accordion type="multiple" defaultValue={unresolvedErrors.length > 0 ? ['unresolved'] : ['resolved']} className="space-y-4">
       {unresolvedErrors.length > 0 && (
-        <AccordionItem value="unresolved" className="border rounded-lg px-4">
+        <AccordionItem value="unresolved" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
               <span>Sin resolver ({unresolvedErrors.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {unresolvedErrors.map((error) => (
               <Card
                 key={error.id}
@@ -232,15 +232,15 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
       )}
 
       {resolvedErrors.length > 0 && (
-        <AccordionItem value="resolved" className="border rounded-lg px-4">
+        <AccordionItem value="resolved" className="border rounded-lg px-4 overflow-visible">
           <AccordionTrigger className="text-lg font-semibold hover:no-underline">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-500" />
               <span>Resueltos ({resolvedErrors.length})</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 pt-4">
+          <AccordionContent className="overflow-visible">
+            <div className="space-y-3 pt-4 px-2">
               {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
