@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type ErrorLog = {
   id: string;
@@ -60,6 +61,28 @@ const formatRelativeTime = (date: Date) => {
   if (minutes < 60) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
   if (hours < 24) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
   return `hace ${days} día${days > 1 ? 's' : ''}`;
+};
+
+const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: number }) => {
+  const isTruncated = text.length > maxLength;
+  const displayText = isTruncated ? `${text.substring(0, maxLength)}...` : text;
+
+  if (!isTruncated) {
+    return <span className="break-words">{text}</span>;
+  }
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="cursor-help break-words">{displayText}</span>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-md break-words">
+          <p className="whitespace-pre-wrap">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 
 export function ErrorsClient({ errors }: ErrorsClientProps) {
@@ -119,11 +142,13 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-destructive" />
-                        <CardTitle className="m-0 text-base">{error.message}</CardTitle>
-                        <Badge variant="destructive">Sin resolver</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="mb-2 flex items-center gap-2 flex-wrap">
+                        <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0" />
+                        <CardTitle className="m-0 text-base min-w-0 flex-1">
+                          <TruncatedText text={error.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant="destructive" className="flex-shrink-0">Sin resolver</Badge>
                       </div>
                       <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                         {error.path && (
@@ -162,7 +187,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                               {error.stack && (
                                 <div>
                                   <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
+                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
                                     {error.stack}
                                   </pre>
                                 </div>
@@ -170,7 +195,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                               {error.metadata && (
                                 <div>
                                   <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
+                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>
@@ -209,11 +234,13 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                        <CardTitle className="m-0 text-base">{error.message}</CardTitle>
-                        <Badge variant="default" className="bg-green-500">
+                    <div className="flex-1 min-w-0">
+                      <div className="mb-2 flex items-center gap-2 flex-wrap">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                        <CardTitle className="m-0 text-base min-w-0 flex-1">
+                          <TruncatedText text={error.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant="default" className="bg-green-500 flex-shrink-0">
                           Resuelto
                         </Badge>
                       </div>
@@ -260,7 +287,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                               {error.stack && (
                                 <div>
                                   <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
+                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
                                     {error.stack}
                                   </pre>
                                 </div>
@@ -268,7 +295,7 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
                               {error.metadata && (
                                 <div>
                                   <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs">
+                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type AppLog = {
   id: string;
@@ -86,6 +87,28 @@ const getLevelBadgeVariant = (level: string): 'default' | 'secondary' | 'destruc
   }
 };
 
+const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: number }) => {
+  const isTruncated = text.length > maxLength;
+  const displayText = isTruncated ? `${text.substring(0, maxLength)}...` : text;
+
+  if (!isTruncated) {
+    return <span className="break-words">{text}</span>;
+  }
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="cursor-help break-words">{displayText}</span>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-md break-words">
+          <p className="whitespace-pre-wrap">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
 export function LogsClient({ logs }: LogsClientProps) {
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
 
@@ -133,11 +156,13 @@ export function LogsClient({ logs }: LogsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {getLevelIcon(log.level)}
-                        <CardTitle className="text-base m-0">{log.message}</CardTitle>
-                        <Badge variant={getLevelBadgeVariant(log.level)}>{log.level}</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="flex-shrink-0">{getLevelIcon(log.level)}</span>
+                        <CardTitle className="text-base m-0 min-w-0 flex-1">
+                          <TruncatedText text={log.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant={getLevelBadgeVariant(log.level)} className="flex-shrink-0">{log.level}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
                         {log.path && (
@@ -172,7 +197,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="mt-2">
-                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto overflow-y-auto max-h-96 break-words whitespace-pre-wrap break-all">
                               {JSON.stringify(JSON.parse(log.metadata), null, 2)}
                             </pre>
                           </CollapsibleContent>
@@ -198,11 +223,13 @@ export function LogsClient({ logs }: LogsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {getLevelIcon(log.level)}
-                        <CardTitle className="text-base m-0">{log.message}</CardTitle>
-                        <Badge variant={getLevelBadgeVariant(log.level)}>{log.level}</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="flex-shrink-0">{getLevelIcon(log.level)}</span>
+                        <CardTitle className="text-base m-0 min-w-0 flex-1">
+                          <TruncatedText text={log.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant={getLevelBadgeVariant(log.level)} className="flex-shrink-0">{log.level}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
                         {log.path && (
@@ -237,7 +264,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="mt-2">
-                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto overflow-y-auto max-h-96 break-words whitespace-pre-wrap break-all">
                               {JSON.stringify(JSON.parse(log.metadata), null, 2)}
                             </pre>
                           </CollapsibleContent>
@@ -263,11 +290,13 @@ export function LogsClient({ logs }: LogsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {getLevelIcon(log.level)}
-                        <CardTitle className="text-base m-0">{log.message}</CardTitle>
-                        <Badge variant={getLevelBadgeVariant(log.level)}>{log.level}</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="flex-shrink-0">{getLevelIcon(log.level)}</span>
+                        <CardTitle className="text-base m-0 min-w-0 flex-1">
+                          <TruncatedText text={log.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant={getLevelBadgeVariant(log.level)} className="flex-shrink-0">{log.level}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
                         {log.path && (
@@ -302,7 +331,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="mt-2">
-                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto overflow-y-auto max-h-96 break-words whitespace-pre-wrap break-all">
                               {JSON.stringify(JSON.parse(log.metadata), null, 2)}
                             </pre>
                           </CollapsibleContent>
@@ -328,11 +357,13 @@ export function LogsClient({ logs }: LogsClientProps) {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {getLevelIcon(log.level)}
-                        <CardTitle className="text-base m-0">{log.message}</CardTitle>
-                        <Badge variant={getLevelBadgeVariant(log.level)}>{log.level}</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="flex-shrink-0">{getLevelIcon(log.level)}</span>
+                        <CardTitle className="text-base m-0 min-w-0 flex-1">
+                          <TruncatedText text={log.message} maxLength={120} />
+                        </CardTitle>
+                        <Badge variant={getLevelBadgeVariant(log.level)} className="flex-shrink-0">{log.level}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-2">
                         {log.path && (
@@ -367,7 +398,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="mt-2">
-                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto">
+                            <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto overflow-y-auto max-h-96 break-words whitespace-pre-wrap break-all">
                               {JSON.stringify(JSON.parse(log.metadata), null, 2)}
                             </pre>
                           </CollapsibleContent>
