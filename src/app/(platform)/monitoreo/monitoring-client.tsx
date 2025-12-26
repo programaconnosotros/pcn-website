@@ -46,12 +46,28 @@ type AppLog = {
   } | null;
 };
 
-type MonitoringClientProps = {
-  errors: ErrorLog[];
-  logs: AppLog[];
+type PaginationInfo = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 };
 
-export function MonitoringClient({ errors, logs }: MonitoringClientProps) {
+type MonitoringClientProps = {
+  errors: ErrorLog[];
+  errorsPagination: PaginationInfo;
+  logs: AppLog[];
+  logsPagination: PaginationInfo;
+  logLevel?: string;
+};
+
+export function MonitoringClient({ 
+  errors, 
+  errorsPagination,
+  logs, 
+  logsPagination,
+  logLevel 
+}: MonitoringClientProps) {
   const [activeTab, setActiveTab] = useState('errors');
 
   return (
@@ -61,10 +77,10 @@ export function MonitoringClient({ errors, logs }: MonitoringClientProps) {
         <TabsTrigger value="logs">Logs</TabsTrigger>
       </TabsList>
       <TabsContent value="errors" className="mt-4 overflow-visible">
-        <ErrorsClient errors={errors} />
+        <ErrorsClient errors={errors} pagination={errorsPagination} />
       </TabsContent>
       <TabsContent value="logs" className="mt-4 overflow-visible">
-        <LogsClient logs={logs} />
+        <LogsClient logs={logs} pagination={logsPagination} logLevel={logLevel} />
       </TabsContent>
     </Tabs>
   );

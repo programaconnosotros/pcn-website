@@ -2,29 +2,45 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchErrors = async (limit: number = 100) => {
-  return prisma.errorLog.findMany({
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: limit,
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+export const fetchErrors = async (page: number = 1, limit: number = 50) => {
+  const skip = (page - 1) * limit;
+  
+  const [errors, total] = await Promise.all([
+    prisma.errorLog.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        resolver: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-      resolver: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
+    }),
+    prisma.errorLog.count(),
+  ]);
+
+  return {
+    errors,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
     },
-  });
+  };
 };
 
 export const getErrorStats = async () => {

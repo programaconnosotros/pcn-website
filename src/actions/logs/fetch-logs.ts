@@ -2,25 +2,40 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchLogs = async (limit: number = 500, level?: string) => {
+export const fetchLogs = async (page: number = 1, limit: number = 50, level?: string) => {
+  const skip = (page - 1) * limit;
   const where = level ? { level } : {};
   
-  return prisma.appLog.findMany({
-    where,
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: limit,
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+  const [logs, total] = await Promise.all([
+    prisma.appLog.findMany({
+      where,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
+    }),
+    prisma.appLog.count({ where }),
+  ]);
+
+  return {
+    logs,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
     },
-  });
+  };
 };
 
 export const getLogStats = async () => {

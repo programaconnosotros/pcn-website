@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Pagination } from '@/components/ui/pagination';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type AppLog = {
   id: string;
@@ -31,8 +33,17 @@ type AppLog = {
   } | null;
 };
 
+type PaginationInfo = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
 type LogsClientProps = {
   logs: AppLog[];
+  pagination: PaginationInfo;
+  logLevel?: string;
 };
 
 const formatDate = (date: Date) => {
@@ -110,7 +121,9 @@ const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: nu
   );
 };
 
-export function LogsClient({ logs }: LogsClientProps) {
+export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<string>(() => {
     const logsByLevel = {
@@ -119,12 +132,36 @@ export function LogsClient({ logs }: LogsClientProps) {
       info: logs.filter((l) => l.level === 'info'),
       debug: logs.filter((l) => l.level === 'debug'),
     };
+    if (logLevel) return logLevel;
     if (logsByLevel.error.length > 0) return 'error';
     if (logsByLevel.warn.length > 0) return 'warn';
     if (logsByLevel.info.length > 0) return 'info';
     if (logsByLevel.debug.length > 0) return 'debug';
     return 'error';
   });
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('logPage', page.toString());
+    if (activeTab !== 'error') {
+      params.set('logLevel', activeTab);
+    } else {
+      params.delete('logLevel');
+    }
+    router.push(`/monitoreo?${params.toString()}`);
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('logPage', '1'); // Reset to first page when changing tabs
+    if (tab !== 'error') {
+      params.set('logLevel', tab);
+    } else {
+      params.delete('logLevel');
+    }
+    router.push(`/monitoreo?${params.toString()}`);
+  };
 
   const toggleExpand = (logId: string) => {
     const newExpanded = new Set(expandedLogs);
@@ -176,7 +213,7 @@ export function LogsClient({ logs }: LogsClientProps) {
   };
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className={`grid w-full mb-4 ${getGridColsClass(availableTabs.length)}`}>
         {availableTabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value} className="flex items-center justify-center gap-2 text-xs sm:text-sm">
@@ -450,6 +487,17 @@ export function LogsClient({ logs }: LogsClientProps) {
           </div>
         </TabsContent>
       )}
+      
+      <div className="mt-6">
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+        <p className="text-center text-sm text-muted-foreground mt-4">
+          Mostrando {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} logs
+        </p>
+      </div>
     </Tabs>
   );
 }

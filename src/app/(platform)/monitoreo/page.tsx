@@ -27,7 +27,15 @@ import {
 import { MonitoringClient } from './monitoring-client';
 import { redirect } from 'next/navigation';
 
-const MonitoreoPage = async () => {
+type Props = {
+  searchParams: Promise<{
+    errorPage?: string;
+    logPage?: string;
+    logLevel?: string;
+  }>;
+};
+
+const MonitoreoPage = async ({ searchParams }: Props) => {
   const sessionId = cookies().get('sessionId')?.value;
 
   if (!sessionId) {
@@ -43,10 +51,15 @@ const MonitoreoPage = async () => {
     redirect('/home');
   }
 
-  const [errors, errorStats, logs, logStats] = await Promise.all([
-    fetchErrors(500),
+  const params = await searchParams;
+  const errorPage = Math.max(1, parseInt(params.errorPage || '1', 10));
+  const logPage = Math.max(1, parseInt(params.logPage || '1', 10));
+  const logLevel = params.logLevel;
+
+  const [errorsData, errorStats, logsData, logStats] = await Promise.all([
+    fetchErrors(errorPage, 50),
     getErrorStats(),
-    fetchLogs(500),
+    fetchLogs(logPage, 50, logLevel),
     getLogStats(),
   ]);
 
@@ -189,7 +202,13 @@ const MonitoreoPage = async () => {
             </div>
           </div>
 
-          <MonitoringClient errors={errors} logs={logs} />
+          <MonitoringClient 
+            errors={errorsData.errors} 
+            errorsPagination={errorsData.pagination}
+            logs={logsData.logs} 
+            logsPagination={logsData.pagination}
+            logLevel={logLevel}
+          />
         </div>
       </div>
     </>

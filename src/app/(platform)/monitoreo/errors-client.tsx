@@ -7,11 +7,12 @@ import { AlertTriangle, CheckCircle2, User, Globe, Check } from 'lucide-react';
 import { markErrorAsResolved } from '@/actions/errors/mark-as-resolved';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Pagination } from '@/components/ui/pagination';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type ErrorLog = {
   id: string;
@@ -37,8 +38,16 @@ type ErrorLog = {
   } | null;
 };
 
+type PaginationInfo = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
 type ErrorsClientProps = {
   errors: ErrorLog[];
+  pagination: PaginationInfo;
 };
 
 const formatDate = (date: Date) => {
@@ -86,13 +95,20 @@ const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: nu
   );
 };
 
-export function ErrorsClient({ errors }: ErrorsClientProps) {
+export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [markingAsResolved, setMarkingAsResolved] = useState<string | null>(null);
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<string>(
     errors.filter((e) => !e.resolved).length > 0 ? 'unresolved' : 'resolved'
   );
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('errorPage', page.toString());
+    router.push(`/monitoreo?${params.toString()}`);
+  };
 
   const unresolvedErrors = errors.filter((e) => !e.resolved);
   const resolvedErrors = errors.filter((e) => e.resolved);
@@ -329,6 +345,17 @@ export function ErrorsClient({ errors }: ErrorsClientProps) {
           </div>
         </TabsContent>
       )}
+      
+      <div className="mt-6">
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+        <p className="text-center text-sm text-muted-foreground mt-4">
+          Mostrando {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} errores
+        </p>
+      </div>
     </Tabs>
   );
 }
