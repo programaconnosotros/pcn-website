@@ -51,6 +51,10 @@ export const AdviseCard = ({
     (session?.user?.id && session.user.id === advise.author.id) ||
     (session?.user?.email && session.user.email === advise.author.email);
 
+  const isAdmin = session?.user?.role === 'ADMIN';
+
+  const canEditOrDelete = isAuthor || isAdmin;
+
   const isLiked = session?.user?.id
     ? optimisticLikes.some((like) => like.userId === session.user.id)
     : false;
@@ -132,7 +136,7 @@ export const AdviseCard = ({
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
           </Button>
-          {isAuthor && Options}
+          {canEditOrDelete && Options}
         </div>
       </CardHeader>
 
