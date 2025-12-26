@@ -95,6 +95,11 @@ export function EventDetailClient({
     router.refresh();
   };
 
+  const handleCancellation = () => {
+    // Resetear el estado local para mostrar el botón de inscripción
+    setJustRegisteredLocally(false);
+  };
+
   // Renderizar según el estado
   if (isRegistered) {
     return (
@@ -109,6 +114,7 @@ export function EventDetailClient({
           <CancelRegistrationButton
             eventId={eventId}
             registrationId={registrationId || undefined}
+            onCancel={handleCancellation}
           />
         </div>
         

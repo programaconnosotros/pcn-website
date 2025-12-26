@@ -10,11 +10,13 @@ import { useRouter } from 'next/navigation';
 type CancelRegistrationButtonProps = {
   eventId: string;
   registrationId?: string;
+  onCancel?: () => void;
 };
 
 export function CancelRegistrationButton({
   eventId,
   registrationId,
+  onCancel,
 }: CancelRegistrationButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -36,6 +38,9 @@ export function CancelRegistrationButton({
           },
         },
       );
+      if (onCancel) {
+        onCancel();
+      }
       router.refresh();
     } catch (error) {
       // El error ya se maneja en toast.promise
