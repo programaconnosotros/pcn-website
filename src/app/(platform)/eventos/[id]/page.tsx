@@ -15,7 +15,6 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, MapPin, Edit, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
-import { CancelRegistrationButton } from '@/components/events/cancel-registration-button';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
 import { Image as Images, Event, Sponsor } from '@prisma/client';
@@ -282,48 +281,17 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
               {!hasEventPassed && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardContent className="pt-6">
-                    {isRegistered ? (
-                      <div className="space-y-3">
-                        <div className="space-y-2">
-                          <p className="text-center text-sm font-medium">Ya estás registrado</p>
-                          <p className="text-center text-xs text-muted-foreground">
-                            Te esperamos en el evento
-                          </p>
-                        </div>
-                        <CancelRegistrationButton
-                          eventId={id}
-                          registrationId={registrationId || undefined}
-                        />
-                      </div>
-                    ) : capacityInfo && !capacityInfo.available ? (
-                      <div className="space-y-2">
-                        <p className="text-center text-sm font-medium text-destructive">
-                          Cupo completo
-                        </p>
-                        <p className="text-center text-xs text-muted-foreground">
-                          Ya no quedan lugares disponibles.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Suspense fallback={<Button variant="pcn" className="w-full" disabled>Cargando...</Button>}>
-                          <EventDetailClient
-                            eventId={id}
-                            eventName={event.name}
-                            isAuthenticated={!!sessionId}
-                            isRegistered={isRegistered}
-                            capacityAvailable={capacityInfo?.available ?? true}
-                          />
-                        </Suspense>
-                        {capacityInfo && (
-                          <p className="text-center text-xs text-muted-foreground">
-                            {capacityInfo.available
-                              ? `Quedan ${capacityInfo.capacity - capacityInfo.current} lugares disponibles.`
-                              : 'Ya no quedan lugares disponibles.'}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <Suspense fallback={<Button variant="pcn" className="w-full" disabled>Cargando...</Button>}>
+                      <EventDetailClient
+                        eventId={id}
+                        eventName={event.name}
+                        isAuthenticated={!!sessionId}
+                        isRegistered={isRegistered}
+                        registrationId={registrationId}
+                        capacityAvailable={capacityInfo?.available ?? true}
+                        capacityInfo={capacityInfo}
+                      />
+                    </Suspense>
                   </CardContent>
                 </Card>
               )}
