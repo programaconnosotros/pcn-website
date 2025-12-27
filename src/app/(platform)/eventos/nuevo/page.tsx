@@ -46,7 +46,7 @@ const NewEventPage = async () => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem className="hidden md:block">

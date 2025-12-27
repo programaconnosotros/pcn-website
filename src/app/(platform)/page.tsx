@@ -41,7 +41,7 @@ const Home = async () => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/home">Inicio</BreadcrumbLink>
+                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
