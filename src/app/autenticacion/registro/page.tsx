@@ -19,10 +19,11 @@ import {
 } from '@/components/ui/select';
 import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
+import { ArrowLeft, LogIn, Loader2, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -57,6 +58,7 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '';
   const autoRegister = searchParams.get('autoRegister') === 'true';
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,26 +79,31 @@ export default function SignUpPage() {
   const watchCountry = form.watch('country');
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Construir redirectTo con autoRegister si es necesario
-    let finalRedirect = redirectTo;
-    if (autoRegister && redirectTo) {
-      const separator = redirectTo.includes('?') ? '&' : '?';
-      finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+    setIsSubmitting(true);
+    try {
+      // Construir redirectTo con autoRegister si es necesario
+      let finalRedirect = redirectTo;
+      if (autoRegister && redirectTo) {
+        const separator = redirectTo.includes('?') ? '&' : '?';
+        finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+      }
+
+      await toast.promise(signUp({ ...values, redirectTo: finalRedirect }), {
+        loading: 'Creando usuario...',
+        success: 'Usuario creado exitosamente! 🥳',
+        error: (error) => {
+          console.error('Error al crear el usuario', error);
+
+          if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
+            return 'Ya hay un usuario con ese correo electrónico.';
+          }
+
+          return error.message;
+        },
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await toast.promise(signUp({ ...values, redirectTo: finalRedirect }), {
-      loading: 'Creando usuario...',
-      success: 'Usuario creado exitosamente! 🥳',
-      error: (error) => {
-        console.error('Error al crear el usuario', error);
-
-        if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
-          return 'Ya hay un usuario con ese correo electrónico.';
-        }
-
-        return error.message;
-      },
-    });
   };
 
   return (
@@ -323,9 +330,18 @@ export default function SignUpPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Crear usuario
-              <UserPlus className="ml-2 h-4 w-4" />
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creando usuario...
+                </>
+              ) : (
+                <>
+                  Crear usuario
+                  <UserPlus className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </form>
         </Form>
