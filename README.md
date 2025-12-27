@@ -20,16 +20,16 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
    > Si usas Visual Studio Code para desarrollar, hay una configuración para poder desarrollar usando los Dev Containers de Visual Studio Code, los cuales te permiten posicionar tu editor dentro del contenedor, y poder tener una experiencia de desarrollo similar a la que tendrías si estuvieras desarrollando el proyecto localmente en tu computadora sin utilizar Docker. Cuando abras el proyecto en Visual Studio Code, debería avisarte que podés desarrollar dentro del container, si aceptás, se configurará todo automáticamente para que puedas hacerlo.
 
-6. Una vez levantados los contenedores de base de datos y web, tenés que ejecutar las migraciones:
-    - Si posees MacOS o Linux simplemente ejecuta el siguiente comando:
-    ```bash
-    make apply-migrations
-    ```
-    - Si posees Windows y no podes usar el comando `make`, tendrías que ejecutar lo siguiente:
-    ```bash
-    docker exec -i pcn-web /bin/sh -c "pnpm apply-migrations"
-    ```
-    
+5. Una vez levantados los contenedores de base de datos y web, tenés que ejecutar las migraciones:
+   - Si posees MacOS o Linux simplemente ejecuta el siguiente comando:
+   ```bash
+   make apply-migrations
+   ```
+   - Si posees Windows y no podes usar el comando `make`, tendrías que ejecutar lo siguiente:
+   ```bash
+   docker exec -i pcn-web /bin/sh -c "pnpm apply-migrations"
+   ```
+
 > [!IMPORTANT]
 > Tenes que usar `pnpm` si o si en este proyecto. Si usas `npm` o `yarn`, vas a tener problemas. Por favor, asegurate de usar `pnpm` para todo lo relacionado a las dependencias del proyecto.
 
