@@ -36,6 +36,7 @@ import {
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
+import { Briefcase, GraduationCap, Link2 } from 'lucide-react';
 
 // Lista de países
 const COUNTRIES = [
@@ -296,7 +297,10 @@ export const ProfileForm = ({
           )}
 
           <div className="space-y-4 rounded-md border p-4">
-            <h3 className="text-lg font-semibold">Información profesional (opcional)</h3>
+            <h3 className="flex items-center gap-2 text-lg font-semibold">
+              <Briefcase className="h-5 w-5" />
+              Información profesional (opcional)
+            </h3>
             <div className="space-y-2">
               <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
               <Input
@@ -314,7 +318,10 @@ export const ProfileForm = ({
           </div>
 
           <div className="space-y-4 rounded-md border p-4">
-            <h3 className="text-lg font-semibold">Información académica (opcional)</h3>
+            <h3 className="flex items-center gap-2 text-lg font-semibold">
+              <GraduationCap className="h-5 w-5" />
+              Información académica (opcional)
+            </h3>
             <div className="space-y-2">
               <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
               <Input
@@ -346,7 +353,10 @@ export const ProfileForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="xAccountUrl">URL de cuenta de X (opcional)</Label>
+            <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
+              <Link2 className="h-4 w-4" />
+              URL de cuenta de X (opcional)
+            </Label>
             <Input
               id="xAccountUrl"
               type="url"
@@ -360,7 +370,10 @@ export const ProfileForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="linkedinUrl">URL de cuenta de LinkedIn (opcional)</Label>
+            <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
+              <Link2 className="h-4 w-4" />
+              URL de cuenta de LinkedIn (opcional)
+            </Label>
             <Input
               id="linkedinUrl"
               type="url"
@@ -374,7 +387,10 @@ export const ProfileForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="gitHubUrl">URL de cuenta de GitHub (opcional)</Label>
+            <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
+              <Link2 className="h-4 w-4" />
+              URL de cuenta de GitHub (opcional)
+            </Label>
             <Input
               id="gitHubUrl"
               type="url"
@@ -407,7 +423,7 @@ export const ProfileForm = ({
           />
         </div>
 
-        <Button type="submit" variant="default">
+        <Button type="submit" variant="default" className="mb-4">
           Guardar cambios
         </Button>
       </form>
