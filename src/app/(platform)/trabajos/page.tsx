@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+import prisma from '@/lib/prisma';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -12,6 +14,20 @@ import { JobsWrapper } from '@/components/jobs/jobs-wrapper';
 import { fetchJobs } from '@/actions/jobs/get-jobs';
 
 export default async function JobBoardPage() {
+  const sessionId = cookies().get('sessionId')?.value;
+  let isAdmin = false;
+
+  if (sessionId) {
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { user: true },
+    });
+
+    if (session) {
+      isAdmin = session.user.role === 'ADMIN';
+    }
+  }
+
   const initialJobs = await fetchJobs();
 
   return (
@@ -35,7 +51,11 @@ export default async function JobBoardPage() {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <JobsWrapper initialJobs={initialJobs} totalJobs={initialJobs.length} />
+          <JobsWrapper
+            initialJobs={initialJobs}
+            totalJobs={initialJobs.length}
+            isAdmin={isAdmin}
+          />
         </div>
       </div>
     </>

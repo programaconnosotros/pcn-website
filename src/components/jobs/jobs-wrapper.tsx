@@ -1,20 +1,36 @@
 'use client';
 
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X } from 'lucide-react';
+import { Search, X, Plus } from 'lucide-react';
 import { Heading2 } from '@/components/ui/heading-2';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { JobCard } from './job-card';
+import { JobForm } from './job-form';
 import { JobOffers } from '@prisma/client';
 import { useJobsSearch } from '@/hooks/use-jobs-search';
 import { EmptyState } from '@/components/empty-state';
+import { createJob } from '@/actions/jobs/create-job';
+import { JobFormData } from '@/schemas/job-schema';
+import { toast } from 'sonner';
 
 interface JobsWrapperProps {
   initialJobs: JobOffers[];
   totalJobs: number;
+  isAdmin?: boolean;
 }
 
-export function JobsWrapper({ initialJobs, totalJobs }: JobsWrapperProps) {
+export function JobsWrapper({ initialJobs, totalJobs, isAdmin = false }: JobsWrapperProps) {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
   const {
     filteredJobs,
     searchTerm,
@@ -24,6 +40,19 @@ export function JobsWrapper({ initialJobs, totalJobs }: JobsWrapperProps) {
     handleResetSearch,
     handleSearchChange,
   } = useJobsSearch({ initialJobs });
+
+  const handleCreate = async (data: JobFormData) => {
+    setIsCreating(true);
+    try {
+      await createJob(data);
+      toast.success('Oferta creada exitosamente');
+      setIsCreateOpen(false);
+    } catch (error: any) {
+      toast.error(error.message || 'Error al crear la oferta');
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   if (error) {
     return (
@@ -39,6 +68,12 @@ export function JobsWrapper({ initialJobs, totalJobs }: JobsWrapperProps) {
     <>
       <div className="mb-6 flex items-center justify-between">
         <Heading2 className="m-0">Ofertas de Trabajo</Heading2>
+        {isAdmin && (
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nueva oferta
+          </Button>
+        )}
       </div>
 
       <p className="mb-6 text-muted-foreground">
@@ -81,7 +116,7 @@ export function JobsWrapper({ initialJobs, totalJobs }: JobsWrapperProps) {
       {!isLoading && filteredJobs.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredJobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job.id} job={job} isAdmin={isAdmin} />
           ))}
         </div>
       ) : !isLoading ? (
@@ -91,6 +126,24 @@ export function JobsWrapper({ initialJobs, totalJobs }: JobsWrapperProps) {
           onRefresh={handleResetSearch}
         />
       ) : null}
+
+      {/* Dialog para crear nueva oferta */}
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Nueva oferta de trabajo</DialogTitle>
+            <DialogDescription>
+              Completa los datos para publicar una nueva oferta de trabajo.
+            </DialogDescription>
+          </DialogHeader>
+          <JobForm
+            onSubmit={handleCreate}
+            onCancel={() => setIsCreateOpen(false)}
+            isLoading={isCreating}
+            submitLabel="Crear oferta"
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
