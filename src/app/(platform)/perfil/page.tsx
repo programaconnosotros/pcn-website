@@ -76,16 +76,7 @@ const Profile = async () => {
       </header>
 
       <div className="mt-4 px-6 md:px-20">
-        <div className="mb-4 flex items-center gap-4">
-          {user.image && (
-            <img
-              src={user.image}
-              alt="Profile picture"
-              style={{ width: '40px', height: '40px' }}
-              className="rounded-full"
-            />
-          )}
-
+        <div className="mb-4">
           <Heading2>Mi perfil</Heading2>
         </div>
 
