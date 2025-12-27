@@ -174,7 +174,17 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>País</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // Limpiar provincia si cambia el país y no es Argentina
+                      if (value !== 'Argentina') {
+                        form.setValue('province', '');
+                        form.clearErrors('province');
+                      }
+                    }}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona tu país" />
@@ -199,8 +209,14 @@ export default function SignUpPage() {
                 name="province"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provincia (opcional)</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel>Provincia</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        form.clearErrors('province');
+                      }}
+                      value={field.value || ''}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecciona tu provincia" />
@@ -263,7 +279,7 @@ export default function SignUpPage() {
                 name="studyField"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Qué estudias?</FormLabel>
+                    <FormLabel>¿Qué estudias o estudiaste?</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Ej: Ingeniería en Sistemas, Desarrollo Web, etc."
@@ -280,7 +296,7 @@ export default function SignUpPage() {
                 name="studyPlace"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Dónde o cómo estudias?</FormLabel>
+                    <FormLabel>¿Dónde o cómo estudias/estudiaste?</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."

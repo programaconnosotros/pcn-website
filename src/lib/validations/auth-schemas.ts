@@ -50,8 +50,20 @@ const signUpSchemaBaseObject = z.object({
   studyPlace: z.string().optional(),
 });
 
-// Schema base (sin validaciones condicionales ya que todo es opcional)
-export const signUpSchemaBase = signUpSchemaBaseObject;
+// Schema base con validación condicional de provincia
+export const signUpSchemaBase = signUpSchemaBaseObject.refine(
+  (data) => {
+    // Si el país es Argentina, la provincia es requerida
+    if (data.country === 'Argentina' && (!data.province || data.province.trim().length === 0)) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: 'La provincia es requerida si el país es Argentina',
+    path: ['province'],
+  },
+);
 
 // Schema completo con validación de contraseñas
 export const signUpSchema = signUpSchemaBase.refine(
@@ -65,12 +77,25 @@ export const signUpSchema = signUpSchemaBase.refine(
 // Schema para la acción sign-up que incluye redirectTo
 export const signUpActionSchema = signUpSchemaBaseObject.extend({
   redirectTo: z.string().optional(),
-}).refine(
-  (data) => data.password === data.confirmPassword,
-  {
-    message: 'Las contraseñas no coinciden',
-    path: ['confirmPassword'],
-  },
-);
+})
+  .refine(
+    (data) => {
+      if (data.country === 'Argentina' && (!data.province || data.province.trim().length === 0)) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'La provincia es requerida si el país es Argentina',
+      path: ['province'],
+    },
+  )
+  .refine(
+    (data) => data.password === data.confirmPassword,
+    {
+      message: 'Las contraseñas no coinciden',
+      path: ['confirmPassword'],
+    },
+  );
 
 export { ARGENTINA_PROVINCES };
