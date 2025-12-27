@@ -64,7 +64,7 @@ export function FileUpload({
         folder,
       });
 
-      // 2. Subir directamente a S3
+      // 2. Subir directamente a S3 con el Content-Type correcto (firmado en la URL)
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
