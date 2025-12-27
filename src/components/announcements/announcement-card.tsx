@@ -32,8 +32,15 @@ type AnnouncementWithAuthor = Announcement & {
   author: Pick<User, 'id' | 'name' | 'image'>;
 };
 
+interface EventOption {
+  id: string;
+  name: string;
+  date: Date;
+}
+
 interface AnnouncementCardProps {
   announcement: AnnouncementWithAuthor;
+  events?: EventOption[];
   isAdmin?: boolean;
 }
 
@@ -53,7 +60,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   actualizacion: 'Actualización',
 };
 
-export function AnnouncementCard({ announcement, isAdmin = false }: AnnouncementCardProps) {
+export function AnnouncementCard({ announcement, events = [], isAdmin = false }: AnnouncementCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -159,6 +166,7 @@ export function AnnouncementCard({ announcement, isAdmin = false }: Announcement
           </DialogHeader>
           <AnnouncementForm
             defaultValues={announcement}
+            events={events}
             onSubmit={handleUpdate}
             onCancel={() => setIsEditOpen(false)}
             isLoading={isUpdating}

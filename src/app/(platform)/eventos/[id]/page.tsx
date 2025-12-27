@@ -17,6 +17,8 @@ import { Calendar, MapPin, Edit, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
+import { EventAnnouncements } from '@/components/announcements/event-announcements';
+import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
 import { Image as Images, Event, Sponsor } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -167,6 +169,9 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     });
   }
 
+  // Obtener anuncios del evento
+  const eventAnnouncements = await getEventAnnouncements(id);
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">
@@ -300,6 +305,11 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                     </Suspense>
                   </CardContent>
                 </Card>
+              )}
+
+              {/* Anuncios del evento */}
+              {eventAnnouncements.length > 0 && (
+                <EventAnnouncements announcements={eventAnnouncements} />
               )}
 
               {/* Información del evento */}

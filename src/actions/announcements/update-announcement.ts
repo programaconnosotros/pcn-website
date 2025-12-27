@@ -23,6 +23,12 @@ export async function updateAnnouncement(announcementId: string, data: Announcem
 
   const validatedData = announcementSchema.parse(data);
 
+  // Obtener el anuncio anterior para revalidar el evento si cambió
+  const previousAnnouncement = await prisma.announcement.findUnique({
+    where: { id: announcementId },
+    select: { eventId: true },
+  });
+
   const announcement = await prisma.announcement.update({
     where: { id: announcementId },
     data: {
@@ -31,10 +37,17 @@ export async function updateAnnouncement(announcementId: string, data: Announcem
       category: validatedData.category,
       pinned: validatedData.pinned,
       published: validatedData.published,
+      eventId: validatedData.category === 'evento' ? validatedData.eventId : null,
     },
   });
 
   revalidatePath('/anuncios');
+  if (validatedData.eventId) {
+    revalidatePath(`/eventos/${validatedData.eventId}`);
+  }
+  if (previousAnnouncement?.eventId && previousAnnouncement.eventId !== validatedData.eventId) {
+    revalidatePath(`/eventos/${previousAnnouncement.eventId}`);
+  }
 
   return announcement;
 }

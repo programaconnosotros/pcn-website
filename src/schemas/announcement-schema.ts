@@ -14,6 +14,7 @@ export const announcementSchema = z.object({
     .min(1, { message: 'La categoría es requerida' }),
   pinned: z.boolean().default(false),
   published: z.boolean().default(true),
+  eventId: z.string().optional().nullable(),
 });
 
 export type AnnouncementFormData = z.infer<typeof announcementSchema>;

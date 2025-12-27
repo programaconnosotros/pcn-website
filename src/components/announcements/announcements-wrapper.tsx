@@ -23,12 +23,19 @@ type AnnouncementWithAuthor = Announcement & {
   author: Pick<User, 'id' | 'name' | 'image'>;
 };
 
+interface EventOption {
+  id: string;
+  name: string;
+  date: Date;
+}
+
 interface AnnouncementsWrapperProps {
   announcements: AnnouncementWithAuthor[];
+  events?: EventOption[];
   isAdmin?: boolean;
 }
 
-export function AnnouncementsWrapper({ announcements, isAdmin = false }: AnnouncementsWrapperProps) {
+export function AnnouncementsWrapper({ announcements, events = [], isAdmin = false }: AnnouncementsWrapperProps) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -64,6 +71,7 @@ export function AnnouncementsWrapper({ announcements, isAdmin = false }: Announc
             <AnnouncementCard
               key={announcement.id}
               announcement={announcement}
+              events={events}
               isAdmin={isAdmin}
             />
           ))}
@@ -85,6 +93,7 @@ export function AnnouncementsWrapper({ announcements, isAdmin = false }: Announc
             </DialogDescription>
           </DialogHeader>
           <AnnouncementForm
+            events={events}
             onSubmit={handleCreate}
             onCancel={() => setIsCreateOpen(false)}
             isLoading={isCreating}

@@ -24,9 +24,18 @@ import {
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { Announcement } from '@prisma/client';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+interface EventOption {
+  id: string;
+  name: string;
+  date: Date;
+}
 
 interface AnnouncementFormProps {
   defaultValues?: Partial<Announcement>;
+  events?: EventOption[];
   onSubmit: (data: AnnouncementFormData) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
@@ -43,6 +52,7 @@ const CATEGORIES = [
 
 export function AnnouncementForm({
   defaultValues,
+  events = [],
   onSubmit,
   onCancel,
   isLoading = false,
@@ -56,8 +66,11 @@ export function AnnouncementForm({
       category: defaultValues?.category || '',
       pinned: defaultValues?.pinned ?? false,
       published: defaultValues?.published ?? true,
+      eventId: defaultValues?.eventId || null,
     },
   });
+
+  const watchCategory = form.watch('category');
 
   const handleSubmit = async (data: AnnouncementFormData) => {
     await onSubmit(data);
@@ -150,6 +163,39 @@ export function AnnouncementForm({
           />
         </div>
 
+        {watchCategory === 'evento' && events.length > 0 && (
+          <FormField
+            control={form.control}
+            name="eventId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Evento relacionado</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value || undefined}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un evento" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {events.map((event) => (
+                      <SelectItem key={event.id} value={event.id}>
+                        {event.name} - {format(new Date(event.date), 'dd MMM yyyy', { locale: es })}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Este anuncio aparecerá en la página del evento seleccionado
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <FormField
           control={form.control}
           name="pinned"
@@ -197,4 +243,3 @@ export function AnnouncementForm({
     </Form>
   );
 }
-

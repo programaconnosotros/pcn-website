@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
 import { fetchAnnouncements, fetchAllAnnouncements } from '@/actions/announcements/get-announcements';
+import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 
 const AnunciosPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -26,9 +27,10 @@ const AnunciosPage = async () => {
   }
 
   // Admins ven todos los anuncios (incluyendo borradores), usuarios normales solo los publicados
-  const announcements = isAdmin
-    ? await fetchAllAnnouncements()
-    : await fetchAnnouncements();
+  const [announcements, events] = await Promise.all([
+    isAdmin ? fetchAllAnnouncements() : fetchAnnouncements(),
+    isAdmin ? getEventsForSelect() : Promise.resolve([]),
+  ]);
 
   return (
     <>
@@ -51,7 +53,7 @@ const AnunciosPage = async () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <AnnouncementsWrapper announcements={announcements} isAdmin={isAdmin} />
+          <AnnouncementsWrapper announcements={announcements} events={events} isAdmin={isAdmin} />
         </div>
       </div>
     </>

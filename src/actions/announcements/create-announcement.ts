@@ -31,10 +31,14 @@ export async function createAnnouncement(data: AnnouncementFormData) {
       pinned: validatedData.pinned,
       published: validatedData.published,
       authorId: session.user.id,
+      eventId: validatedData.category === 'evento' ? validatedData.eventId : null,
     },
   });
 
   revalidatePath('/anuncios');
+  if (validatedData.eventId) {
+    revalidatePath(`/eventos/${validatedData.eventId}`);
+  }
 
   return announcement;
 }

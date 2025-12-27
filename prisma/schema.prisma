@@ -120,9 +120,10 @@ model Event {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  images      Image[]
+  images        Image[]
   registrations EventRegistration[]
-  sponsors    Sponsor[]
+  sponsors      Sponsor[]
+  announcements Announcement[]
 }
 
 model Image {
@@ -169,6 +170,8 @@ model Announcement {
   published   Boolean  @default(true)
   authorId    String
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  eventId     String?  // Evento relacionado (solo para categoría "evento")
+  event       Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -176,6 +179,7 @@ model Announcement {
   @@index([authorId])
   @@index([published])
   @@index([pinned])
+  @@index([eventId])
 }
 
 model EventRegistration {
