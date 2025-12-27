@@ -67,7 +67,7 @@ export function JobsWrapper({ initialJobs, totalJobs, isAdmin = false }: JobsWra
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
-        <Heading2 className="m-0">Ofertas de Trabajo</Heading2>
+        <Heading2 className="m-0">Ofertas de trabajo</Heading2>
         {isAdmin && (
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
