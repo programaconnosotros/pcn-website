@@ -37,7 +37,7 @@ import {
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
-import { Briefcase, GraduationCap, Link2, User as UserIcon } from 'lucide-react';
+import { Briefcase, GraduationCap, Link2, User as UserIcon, Code } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 
 // Lista de países
@@ -443,9 +443,12 @@ export const ProfileForm = ({
           </div>
 
         {/* Section for adding programming languages */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between gap-6">
-            <Label>Lenguajes de programación</Label>
+        <div className="space-y-4 rounded-md border p-4">
+          <div className="mb-4 flex items-center justify-between gap-6">
+            <h3 className="flex items-center gap-2 text-lg font-semibold">
+              <Code className="h-5 w-5" />
+              Lenguajes de programación
+            </h3>
             <LanguageDialog
               currentLanguage={currentLanguage}
               setCurrentLanguage={setCurrentLanguage}
