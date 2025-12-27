@@ -73,7 +73,7 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
   return [
     {
       title: 'Inicio',
-      url: '/home',
+      url: '/',
       icon: Home,
     },
     {

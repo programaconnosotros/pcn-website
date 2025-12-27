@@ -49,6 +49,6 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
   });
 
   // Redirigir a la URL especificada o a home por defecto
-  const redirectTo = data.redirectTo || '/home';
+  const redirectTo = data.redirectTo || '/';
   redirect(redirectTo);
 };

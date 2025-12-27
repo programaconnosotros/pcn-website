@@ -41,6 +41,6 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
   });
 
   // Redirigir a la URL especificada o a home por defecto
-  const redirectPath = redirectTo || '/home';
+  const redirectPath = redirectTo || '/';
   redirect(redirectPath);
 };
