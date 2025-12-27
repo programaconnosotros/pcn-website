@@ -54,7 +54,10 @@ const signUpSchemaBaseObject = z.object({
 export const signUpSchemaBase = signUpSchemaBaseObject.refine(
   (data) => {
     // Si el país es Argentina, la provincia es requerida
-    if (data.country === 'Argentina' && (!data.province || data.province.trim().length === 0)) {
+    if (
+      data.country === 'Argentina' &&
+      (!data.province || data.province.trim().length === 0 || data.province === '')
+    ) {
       return false;
     }
     return true;
@@ -80,7 +83,10 @@ export const signUpActionSchema = signUpSchemaBaseObject.extend({
 })
   .refine(
     (data) => {
-      if (data.country === 'Argentina' && (!data.province || data.province.trim().length === 0)) {
+      if (
+        data.country === 'Argentina' &&
+        (!data.province || data.province.trim().length === 0 || data.province === '')
+      ) {
         return false;
       }
       return true;

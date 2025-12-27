@@ -66,7 +66,7 @@ export default function SignUpPage() {
       password: undefined,
       confirmPassword: '',
       country: '',
-      province: '',
+      province: undefined,
       profession: '',
       enterprise: '',
       studyField: '',
@@ -111,7 +111,18 @@ export default function SignUpPage() {
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              // Mostrar toast cuando hay errores de validación
+              const firstError = Object.values(errors)[0];
+              if (firstError?.message) {
+                toast.error(firstError.message);
+              } else {
+                toast.error('Por favor, completa todos los campos requeridos correctamente');
+              }
+            })}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -179,8 +190,11 @@ export default function SignUpPage() {
                       field.onChange(value);
                       // Limpiar provincia si cambia el país y no es Argentina
                       if (value !== 'Argentina') {
-                        form.setValue('province', '');
+                        form.setValue('province', undefined);
                         form.clearErrors('province');
+                      } else {
+                        // Si cambia a Argentina, forzar validación de provincia
+                        form.trigger('province');
                       }
                     }}
                     value={field.value}
@@ -215,7 +229,7 @@ export default function SignUpPage() {
                         field.onChange(value);
                         form.clearErrors('province');
                       }}
-                      value={field.value || ''}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
