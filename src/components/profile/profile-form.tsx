@@ -223,69 +223,45 @@ export const ProfileForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nombre</Label>
-            <Input id="name" {...form.register('name')} />
-            <FormError error={form.formState.errors.name} />
-          </div>
+        <div className="space-y-4 rounded-md border p-4">
+          <h3 className="mb-4 text-lg font-semibold">Información personal</h3>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nombre</Label>
+              <Input id="name" {...form.register('name')} />
+              <FormError error={form.formState.errors.name} />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo electrónico</Label>
-            <Input id="email" type="email" {...form.register('email')} />
-            <FormError error={form.formState.errors.email} />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico</Label>
+              <Input id="email" type="email" {...form.register('email')} />
+              <FormError error={form.formState.errors.email} />
+            </div>
 
-          <FormField
-            control={form.control}
-            name="countryOfOrigin"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>País</FormLabel>
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    if (value !== 'Argentina') {
-                      form.setValue('province', '');
-                    }
-                  }}
-                  value={field.value || ''}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona tu país" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {COUNTRIES.map((country) => (
-                      <SelectItem key={country} value={country}>
-                        {country}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {watchCountry === 'Argentina' && (
             <FormField
               control={form.control}
-              name="province"
+              name="countryOfOrigin"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Provincia</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ''}>
+                  <FormLabel>País</FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      if (value !== 'Argentina') {
+                        form.setValue('province', '');
+                      }
+                    }}
+                    value={field.value || ''}
+                  >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu provincia" />
+                        <SelectValue placeholder="Selecciona tu país" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {ARGENTINA_PROVINCES.map((province) => (
-                        <SelectItem key={province} value={province}>
-                          {province}
+                      {COUNTRIES.map((country) => (
+                        <SelectItem key={country} value={country}>
+                          {country}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -294,7 +270,35 @@ export const ProfileForm = ({
                 </FormItem>
               )}
             />
-          )}
+
+            {watchCountry === 'Argentina' && (
+              <FormField
+                control={form.control}
+                name="province"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provincia</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona tu provincia" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ARGENTINA_PROVINCES.map((province) => (
+                          <SelectItem key={province} value={province}>
+                            {province}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+        </div>
 
           <div className="space-y-4 rounded-md border p-4">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -352,57 +356,64 @@ export const ProfileForm = ({
             <FormError error={form.formState.errors.slogan} />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
-              <Link2 className="h-4 w-4" />
-              URL de cuenta de X (opcional)
-            </Label>
-            <Input
-              id="xAccountUrl"
-              type="url"
-              placeholder="https://x.com/tu-usuario"
-              {...form.register('xAccountUrl', {
-                setValueAs: (v) => (v === '' ? null : v),
-              })}
-              value={form.watch('xAccountUrl') || ''}
-            />
-            <FormError error={form.formState.errors.xAccountUrl} />
-          </div>
+          <div className="space-y-4 rounded-md border p-4">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+              <Link2 className="h-5 w-5" />
+              Enlaces (opcional)
+            </h3>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de X (opcional)
+                </Label>
+                <Input
+                  id="xAccountUrl"
+                  type="url"
+                  placeholder="https://x.com/tu-usuario"
+                  {...form.register('xAccountUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('xAccountUrl') || ''}
+                />
+                <FormError error={form.formState.errors.xAccountUrl} />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
-              <Link2 className="h-4 w-4" />
-              URL de cuenta de LinkedIn (opcional)
-            </Label>
-            <Input
-              id="linkedinUrl"
-              type="url"
-              placeholder="https://linkedin.com/in/tu-usuario"
-              {...form.register('linkedinUrl', {
-                setValueAs: (v) => (v === '' ? null : v),
-              })}
-              value={form.watch('linkedinUrl') || ''}
-            />
-            <FormError error={form.formState.errors.linkedinUrl} />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de LinkedIn (opcional)
+                </Label>
+                <Input
+                  id="linkedinUrl"
+                  type="url"
+                  placeholder="https://linkedin.com/in/tu-usuario"
+                  {...form.register('linkedinUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('linkedinUrl') || ''}
+                />
+                <FormError error={form.formState.errors.linkedinUrl} />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
-              <Link2 className="h-4 w-4" />
-              URL de cuenta de GitHub (opcional)
-            </Label>
-            <Input
-              id="gitHubUrl"
-              type="url"
-              placeholder="https://github.com/tu-usuario"
-              {...form.register('gitHubUrl', {
-                setValueAs: (v) => (v === '' ? null : v),
-              })}
-              value={form.watch('gitHubUrl') || ''}
-            />
-            <FormError error={form.formState.errors.gitHubUrl} />
+              <div className="space-y-2">
+                <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de GitHub (opcional)
+                </Label>
+                <Input
+                  id="gitHubUrl"
+                  type="url"
+                  placeholder="https://github.com/tu-usuario"
+                  {...form.register('gitHubUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('gitHubUrl') || ''}
+                />
+                <FormError error={form.formState.errors.gitHubUrl} />
+              </div>
+            </div>
           </div>
-        </div>
 
         {/* Section for adding programming languages */}
         <div className="space-y-4">
