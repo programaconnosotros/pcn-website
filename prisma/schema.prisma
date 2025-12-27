@@ -8,20 +8,41 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Role {
+  REGULAR
+  ADMIN
+}
+
 model User {
   id              String         @id @default(cuid())
   name            String
   email           String         @unique
   password        String
+  role            Role           @default(REGULAR)
   image           String?
   countryOfOrigin String?
+  province        String? // Provincia (opcional)
   xAccountUrl     String?
   linkedinUrl     String?
+  gitHubUrl       String?
+  slogan          String?
+  jobTitle        String?
+  enterprise      String?
+  career          String?
+  studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
   sessions        Session[]
   advises         Advise[]
   languages       UserLanguage[]
   comments        Comment[]
   likes           Like[]
+  eventRegistrations EventRegistration[]
+  pageVisits      PageVisit[]
+  testimonials    Testimonial[]
+  notifications   Notification[]
+  errorLogs       ErrorLog[]
+  resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
+  appLogs         AppLog[]
+  announcements   Announcement[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -95,10 +116,15 @@ model Event {
   flyerSrc    String
   latitude    Float?
   longitude   Float?
+  capacity    Int? // Cupo máximo del evento (opcional)
+  deletedAt   DateTime? // Eliminación lógica
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  images Image[]
+  images        Image[]
+  registrations EventRegistration[]
+  sponsors      Sponsor[]
+  announcements Announcement[]
 }
 
 model Image {
@@ -120,4 +146,159 @@ model Like {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, adviseId])
+}
+
+model JobOffers {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  company     String
+  available   Boolean
+  tags        String[]
+  location    String
+  type        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  category    String   // ej: "general", "evento", "noticia", "importante"
+  pinned      Boolean  @default(false) // Para destacar anuncios importantes
+  published   Boolean  @default(true)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  eventId     String?  // Evento relacionado (solo para categoría "evento")
+  event       Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([published])
+  @@index([pinned])
+  @@index([eventId])
+}
+
+model EventRegistration {
+  id              String    @id @default(cuid())
+  eventId         String
+  userId          String    // Usuario registrado (requerido)
+  cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([cancelledAt])
+}
+
+model Sponsor {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  website   String? // URL del sitio web del sponsor
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+model PageVisit {
+  id        String   @id @default(cuid())
+  path      String   // Ruta de la página visitada
+  userId    String?  // Usuario que visitó (si está logueado)
+  ipAddress String?  // Dirección IP (opcional, para privacidad)
+  userAgent String?  // User agent del navegador
+  referer   String?  // Página de origen
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([path])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  body      String
+  userId    String   // Usuario que creó el testimonio (requerido)
+  featured  Boolean  @default(false) // Si aparece en la home page
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([featured])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
+  title     String   // Título de la notificación
+  message   String   // Mensaje de la notificación
+  userId    String?  // Usuario destinatario (null = todos los admins)
+  read      Boolean  @default(false)
+  metadata  String?  // JSON con información adicional
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model ErrorLog {
+  id          String   @id @default(cuid())
+  message     String   // Mensaje del error
+  stack       String?  // Stack trace del error
+  path        String?  // Ruta donde ocurrió el error
+  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent   String?  // User agent del navegador
+  ipAddress   String?  // Dirección IP
+  metadata    String?  // JSON con información adicional del error
+  resolved    Boolean  @default(false) // Si el error fue resuelto
+  resolvedAt  DateTime? // Fecha en que se resolvió
+  resolvedBy  String?  // ID del admin que lo resolvió
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resolver    User?    @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([path])
+  @@index([resolved])
+  @@index([createdAt])
+}
+
+model AppLog {
+  id          String   @id @default(cuid())
+  level       String   // Nivel del log: info, warn, error, debug
+  message     String   // Mensaje del log
+  path        String?  // Ruta donde ocurrió el log
+  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent   String?  // User agent del navegador
+  ipAddress   String?  // Dirección IP
+  metadata    String?  // JSON con información adicional del log
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([path])
+  @@index([level])
+  @@index([createdAt])
 }

@@ -1,6 +1,4 @@
-import { GitHubSVG } from '../logos/GitHubSVG';
-import { LinkedInSVG } from '../logos/LinkedInSVG';
-import { XLogoSVG } from '../logos/XLogoSVG';
+import { Heading3 } from '../ui/heading-3';
 
 type Person = {
   name: string;
@@ -24,27 +22,27 @@ const people: Person[] = [
     linkedinUrl: 'https://www.linkedin.com/in/agustinsanc/',
     githubUrl: 'https://github.com/agustin-sanc',
   },
-  {
-    name: 'Mauri',
-    role: (
-      <p>
-        Sr. Frontend Engineer (iOS) en <span className="underline">PedidosYa</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/mauris.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/mauriciosnchz/',
-    githubUrl: 'https://github.com/mausnchz',
-  },
-  {
-    name: 'Esteban',
-    role: (
-      <p>
-        Sr. Frontend Engineer (iOS) en <span className="underline">Compass</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/esteban.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/esteban-nicolas-sanchez-79b428172/',
-  },
+  // {
+  //   name: 'Mauri',
+  //   role: (
+  //     <p>
+  //       Sr. Frontend Engineer (iOS) en <span className="underline">PedidosYa</span>
+  //     </p>
+  //   ),
+  //   imageUrl: '/colaborators/mauris.webp',
+  //   linkedinUrl: 'https://www.linkedin.com/in/mauriciosnchz/',
+  //   githubUrl: 'https://github.com/mausnchz',
+  // },
+  // {
+  //   name: 'Esteban',
+  //   role: (
+  //     <p>
+  //       Sr. Frontend Engineer (iOS) en <span className="underline">Compass</span>
+  //     </p>
+  //   ),
+  //   imageUrl: '/colaborators/esteban.webp',
+  //   linkedinUrl: 'https://www.linkedin.com/in/esteban-nicolas-sanchez-79b428172/',
+  // },
   {
     name: 'Chelo',
     role: (
@@ -67,17 +65,17 @@ const people: Person[] = [
     linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
     githubUrl: 'https://github.com/gmanavarro',
   },
-  {
-    name: 'Chino',
-    role: (
-      <p>
-        CTO & Sr. Frontend Engineer (JS/TS) en <span className="underline">NotNini</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/chino.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/ivantaddei/',
-    githubUrl: 'https://github.com/ivantaddei',
-  },
+  // {
+  //   name: 'Chino',
+  //   role: (
+  //     <p>
+  //       CTO & Sr. Frontend Engineer (JS/TS) en <span className="underline">NotNini</span>
+  //     </p>
+  //   ),
+  //   imageUrl: '/colaborators/chino.webp',
+  //   linkedinUrl: 'https://www.linkedin.com/in/ivantaddei/',
+  //   githubUrl: 'https://github.com/ivantaddei',
+  // },
   {
     name: 'Carlos',
     role: (
@@ -176,66 +174,52 @@ const people: Person[] = [
 export const Team = () => (
   <div className="py-8">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl lg:mx-0">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Nuestros colaboradores</h2>
-
-        <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Conocé a las personas que hacen posible esta comunidad. Desde profesionales experimentados
-          hasta estudiantes apasionados, todos contribuyen a crear un espacio de aprendizaje y
-          crecimiento.
-        </p>
-      </div>
+      <Heading3>Team de desarrollo del website</Heading3>
 
       <ul
         role="list"
-        className="mx-auto mt-20 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-16 text-center sm:grid-cols-3 md:grid-cols-4 lg:mx-0 lg:max-w-none lg:grid-cols-5 xl:grid-cols-6"
+        className="mx-auto mt-6 grid max-w-2xl grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:mx-0 lg:max-w-none lg:grid-cols-6 xl:grid-cols-6"
       >
         {people.map((person) => (
-          <li key={person.name}>
-            <img
-              alt=""
-              src={person.imageUrl}
-              className="mx-auto h-24 w-24 rounded-full grayscale transition-all duration-300 hover:grayscale-0"
-            />
-
-            <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">{person.name}</h3>
-
-            <div className="text-sm leading-6 text-muted-foreground">{person.role}</div>
-
-            <ul role="list" className="mt-6 flex justify-center gap-x-6">
-              {person.xUrl && (
-                <li>
-                  <a href={person.xUrl} className="text-muted-foreground hover:text-foreground">
-                    <span className="sr-only">X</span>
-                    <XLogoSVG />
-                  </a>
-                </li>
-              )}
-
-              {person.linkedinUrl && (
-                <li>
-                  <a
-                    href={person.linkedinUrl}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <span className="sr-only">LinkedIn</span>
-                    <LinkedInSVG />
-                  </a>
-                </li>
-              )}
-
-              {person.githubUrl && (
-                <li>
-                  <a
-                    href={person.githubUrl}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <span className="sr-only">GitHub</span>
-                    <GitHubSVG />
-                  </a>
-                </li>
-              )}
-            </ul>
+          <li
+            key={person.name}
+            className="group relative z-0 transition-all duration-300 hover:z-10 hover:scale-105 hover:shadow-xl"
+          >
+            {person.linkedinUrl ? (
+              <a
+                href={person.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block cursor-pointer"
+              >
+                <div className="relative aspect-square overflow-hidden">
+                  <img
+                    alt={person.name}
+                    src={person.imageUrl}
+                    className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+                  />
+                  <div className="absolute inset-0 bg-pcnPurple/40 mix-blend-color transition-opacity duration-300 group-hover:opacity-0 dark:bg-pcnGreen/40" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <h3 className="text-lg font-bold text-white">{person.name}</h3>
+                  </div>
+                </div>
+              </a>
+            ) : (
+              <div className="relative aspect-square overflow-hidden rounded-lg">
+                <img
+                  alt={person.name}
+                  src={person.imageUrl}
+                  className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+                />
+                <div
+                  className="absolute inset-0 mix-blend-color transition-opacity duration-300 group-hover:opacity-0"
+                  style={{ backgroundColor: '#04f4be', opacity: 0.4 }}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 px-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <h3 className="text-lg font-bold text-white">{person.name}</h3>
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>

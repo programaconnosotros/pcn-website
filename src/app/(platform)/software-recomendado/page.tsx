@@ -3,7 +3,18 @@ import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { Heading2 } from '@/components/ui/heading-2';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ExternalLink, Search, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -31,86 +42,56 @@ function SoftwareRecommendationCard({
   isFree = false,
   isPopular = false,
 }: SoftwareRecommendationCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <div className="group relative overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-gray-700 dark:bg-black dark:text-white">
-      {/* Background gradient */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-500/5 to-blue-500/5 dark:from-gray-500/10"></div>
-
-      {/* Animated background on hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-500/10 to-blue-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500/20"></div>
-
-      <div className="relative z-10">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-gray-400/40 bg-white p-2 transition-colors duration-300 group-hover:border-gray-300 dark:bg-gray-800">
-                <Image
-                  src={logo || '/placeholder.svg?height=48&width=48'}
-                  alt={`${name} logo`}
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 object-contain"
-                />
-              </div>
+    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl border bg-white p-2 dark:bg-neutral-800">
+              <Image
+                src={logo || '/placeholder.svg?height=48&width=48'}
+                alt={`${name} logo`}
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+              />
             </div>
-
             <div>
-              <h3 className="text-xl font-semibold transition-colors duration-300">{name}</h3>
-              <p className="text-sm font-medium text-gray-600/60 dark:text-gray-300">{category}</p>
-              {isFree && (
-                <Badge className="mt-1 border-green-500/30 bg-green-500/20 text-green-700 dark:text-green-300">
-                  Gratis
-                </Badge>
-              )}
+              <h3 className="text-lg font-semibold">{name}</h3>
+              <p className="text-sm text-muted-foreground">{category}</p>
             </div>
           </div>
-
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap gap-1">
+            {isFree && (
+              <Badge className="border-green-500/30 bg-green-500/20 text-green-700 dark:text-green-300">
+                Gratis
+              </Badge>
+            )}
             {isPopular && (
-              <Badge className="border-orange-500/30 bg-orange-500/20 text-orange-700 hover:bg-orange-500/30 dark:text-orange-300">
+              <Badge className="border-orange-500/30 bg-orange-500/20 text-orange-700 dark:text-orange-300">
                 Popular
               </Badge>
             )}
           </div>
         </div>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-col">
+        <p className="mb-4 flex-1 text-sm text-muted-foreground">{description}</p>
 
-        {/* Description */}
-        <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-          {description}
-        </p>
-
-        {/* Tags */}
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mb-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="border-gray-200 bg-gray-100 text-gray-700 transition-colors duration-200 hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
+            <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
         </div>
 
-        {/* Action Button */}
-        <div className="bg-r flex w-full justify-center">
-          <Button
-            size="sm"
-            className="flex w-full transform items-center justify-center space-x-2 bg-gray-600/10 text-black transition-all duration-200 hover:scale-105 hover:bg-gray-700/10 hover:shadow-lg hover:shadow-gray-500/25 dark:bg-gray-600/50 dark:text-white"
-            onClick={() => window.open(website, '_blank')}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <ExternalLink
-              className={cn('h-4 w-4 transition-transform duration-200', isHovered && 'rotate-12')}
-            />
-            <span>Visitar sitio</span>
-          </Button>
-        </div>
-      </div>
-    </div>
+        <Button size="sm" className="w-full" onClick={() => window.open(website, '_blank')}>
+          <ExternalLink className="mr-2 h-4 w-4" />
+          Visitar sitio
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -135,21 +116,19 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
   return (
     <>
       {/* Search */}
-      <div className="mb-8 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+      <div className="mb-6 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
           <Input
             placeholder="Buscar software, categoría o tecnología..."
-            className="pl-10 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -159,7 +138,7 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
       {/* Software Grid or Empty State */}
       {filteredRecommendations.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 pb-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredRecommendations.map((software, index) => (
             <SoftwareRecommendationCard key={index} {...software} />
           ))}
@@ -254,19 +233,38 @@ const softwareRecommendations = [
 
 export default function SoftwareRecommendationsPage() {
   return (
-    <div className="mt-4 md:px-20">
-      <div className="mb-8">
-        <div className="mb-2 flex items-center space-x-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Software recomendado</h1>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Software recomendado</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mb-6 flex items-center justify-between">
+            <Heading2 className="m-0">Software recomendado</Heading2>
+          </div>
 
-        <p className="text-gray-600">
-          Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si queres
-          sumar alguno, avisá!
-        </p>
+          <p className="mb-6 text-muted-foreground">
+            Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si querés
+            sumar alguno, ¡avisanos!
+          </p>
+
+          <RecommendationsList recommendations={softwareRecommendations} />
+        </div>
       </div>
-
-      <RecommendationsList recommendations={softwareRecommendations} />
-    </div>
+    </>
   );
 }

@@ -1,8 +1,12 @@
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
+import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
+import { getUnreadNotificationsCount } from '@/actions/notifications/get-unread-count';
+import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
 
 const PlatformLayout = async ({
   children,
@@ -25,19 +29,23 @@ const PlatformLayout = async ({
     }
   }
 
+  // Obtener próximos eventos para la sidebar
+  const upcomingEvents = await fetchUpcomingEvents(5);
+
+  // Obtener contador de notificaciones no leídas (solo para admins)
+  const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar user={user} />
-
-      <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
-        <SidebarTrigger />
-        <span className="text-sm font-semibold">programaConNosotros</span>
-      </div>
-
-      <main className="relative w-full p-4 pt-16 md:p-0 md:pt-1">
-        <SidebarTrigger className="absolute hidden md:left-6 md:top-6 md:block" />
-        <div className="mx-auto max-w-7xl">{children}</div>
-      </main>
+      <AppSidebar
+        user={user}
+        upcomingEvents={upcomingEvents}
+        unreadNotificationsCount={unreadNotificationsCount}
+      />
+      <PageVisitTracker />
+      <ConsoleInterceptor>
+        <SidebarInset className="px-6">{children}</SidebarInset>
+      </ConsoleInterceptor>
     </SidebarProvider>
   );
 };

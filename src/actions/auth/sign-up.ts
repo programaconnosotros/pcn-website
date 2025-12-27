@@ -5,17 +5,32 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { signUpSchema } from '@/lib/validations/auth-schemas';
+import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 
-const formSchema = signUpSchema;
-
-export const signUp = async (data: z.infer<typeof formSchema>) => {
-  const { confirmPassword, ...cleanedData } = formSchema.parse(data);
+export const signUp = async (data: z.infer<typeof signUpActionSchema>) => {
+  const {
+    confirmPassword,
+    redirectTo,
+    country,
+    profession,
+    studyField,
+    enterprise,
+    studyPlace,
+    ...cleanedData
+  } = signUpActionSchema.parse(data);
 
   const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
 
   const user = await prisma.user.create({
-    data: { ...cleanedData, password: hashedPassword },
+    data: {
+      ...cleanedData,
+      password: hashedPassword,
+      countryOfOrigin: country,
+      jobTitle: profession || null,
+      career: studyField || null,
+      enterprise: enterprise || null,
+      studyPlace: studyPlace || null,
+    },
   });
 
   const session = await prisma.session.create({
@@ -33,5 +48,7 @@ export const signUp = async (data: z.infer<typeof formSchema>) => {
     maxAge: 60 * 60 * 24 * 365,
   });
 
-  redirect('/');
+  // Redirigir a la URL especificada o a home por defecto
+  const redirectPath = redirectTo || '/';
+  redirect(redirectPath);
 };

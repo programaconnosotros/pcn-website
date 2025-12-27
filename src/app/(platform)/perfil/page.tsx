@@ -1,6 +1,16 @@
 import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { Heading2 } from '@components/ui/heading-2';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -46,22 +56,33 @@ const Profile = async () => {
     : [];
 
   return (
-    <div className="mt-4 px-6 md:px-20">
-      <div className="mb-4 flex items-center gap-4">
-        {user.image && (
-          <img
-            src={user.image}
-            alt="Profile picture"
-            style={{ width: '40px', height: '40px' }}
-            className="rounded-full"
-          />
-        )}
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Mi perfil</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
 
-        <Heading2>Mi perfil</Heading2>
+      <div className="mt-4 px-6 md:px-20">
+        <div className="mb-4">
+          <Heading2>Mi perfil</Heading2>
+        </div>
+
+        <ProfileForm user={user} languages={userLanguages} />
       </div>
-
-      <ProfileForm user={user} languages={userLanguages} />
-    </div>
+    </>
   );
 };
 

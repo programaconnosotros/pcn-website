@@ -6,6 +6,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
   Carousel,
   CarouselContent,
@@ -22,66 +24,73 @@ const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
   if (!course) return <div>El curso no existe.</div>;
 
   return (
-    <div className="mt-4 md:mb-8 md:px-20">
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-          </BreadcrumbItem>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="/cursos">Cursos</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{course.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="mt-4">
+          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <Heading2 className="m-0">{course.name}</Heading2>
+          </div>
 
-          <BreadcrumbSeparator />
+          <div className="mt-6 px-12">
+            <Carousel>
+              <CarouselContent>
+                {course.youtubeUrls.map((classUrl) => (
+                  <CarouselItem key={classUrl}>
+                    <div className="w-full" style={{ aspectRatio: '16/9' }}>
+                      <iframe
+                        className="h-full w-full"
+                        src={classUrl}
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
 
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/cursos">Cursos</BreadcrumbLink>
-          </BreadcrumbItem>
+              {course.youtubeUrls.length > 1 && (
+                <>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </>
+              )}
+            </Carousel>
+          </div>
 
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbPage>{course.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <Heading2>{course.name}</Heading2>
-
-      <div className="mt-12 pr-20">
-        <Carousel>
-          <CarouselContent>
-            {course.youtubeUrls.map((classUrl) => (
-              <CarouselItem key={classUrl}>
-                <div className="w-full" style={{ aspectRatio: '16/9' }}>
-                  <iframe
-                    className="h-full w-full"
-                    src={classUrl}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-
-          {course.youtubeUrls.length > 1 && (
-            <>
-              <CarouselPrevious />
-              <CarouselNext />
-            </>
+          {!course.isMadeByCommunity && (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
+              en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
+              el curso aquí para que las ganancias y estadísticas de ver el video, sean para el
+              autor original del curso.
+            </p>
           )}
-        </Carousel>
+        </div>
       </div>
-
-      {!course.isMadeByCommunity && (
-        <p className="mt-4 text-sm text-muted-foreground md:mr-36">
-          Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente en
-          YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos el curso
-          aquí para que las ganancias y estadísticas de ver el video, sean para el autor original
-          del curso.
-        </p>
-      )}
-    </div>
+    </>
   );
 };
 

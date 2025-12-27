@@ -9,13 +9,13 @@ import { Heading3 } from '../ui/heading-3';
 
 export const InviteDevsToWork = () => {
   return (
-    <section className="rounded-md border-b border-t px-10 py-8">
+    <section className="rounded-md px-10 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-center gap-12 lg:flex-row">
           <div className="flex-1 text-white">
             <h2 className="mb-6 text-4xl font-bold">
               <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                Colabora en este proyecto!
+                Colabora en el proyecto!
               </span>
             </h2>
 
@@ -151,7 +151,7 @@ export const InviteDevsToWork = () => {
                 href="https://github.com/programaconnosotros/pcn-website"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 dark:bg-pcnGreen dark:hover:bg-pcnGreen-900 md:w-max"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 dark:bg-pcnGreen dark:hover:bg-pcnGreen-900 md:w-max"
               >
                 <GitHubSVG />
                 Ver repositorio en GitHub

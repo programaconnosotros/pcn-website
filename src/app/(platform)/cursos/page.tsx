@@ -3,6 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Send, TvMinimalPlay } from 'lucide-react';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
@@ -64,29 +74,50 @@ const CourseCard = ({ course }: { course: Course }) => {
 };
 
 const Courses = () => (
-  <div className="mt-4 md:px-20">
-    <div className="z-10 bg-background/95 pb-3 pt-1">
-      <div className="flex w-full flex-row items-center justify-between">
-        <Heading2 className="m-0">Cursos</Heading2>
+  <>
+    <header className="flex h-16 shrink-0 items-center gap-2">
+      <div className="flex items-center gap-2 px-4">
+        <SidebarTrigger />
+        <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="hidden md:block">
+              <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="hidden md:block" />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Cursos</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+    </header>
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="mt-4">
+        <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex w-full flex-row items-center justify-between">
+            <Heading2 className="m-0">Cursos</Heading2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {communityCourses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+
+          <AddCourseCard />
+        </div>
+
+        <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
+
+        <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {externalCourses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+        </div>
       </div>
     </div>
-
-    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {communityCourses.map((course) => (
-        <CourseCard key={course.id} course={course} />
-      ))}
-
-      <AddCourseCard />
-    </div>
-
-    <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
-
-    <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {externalCourses.map((course) => (
-        <CourseCard key={course.id} course={course} />
-      ))}
-    </div>
-  </div>
+  </>
 );
 
 export default Courses;

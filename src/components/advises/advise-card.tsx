@@ -23,7 +23,7 @@ export const AdviseCard = ({
   session,
 }: {
   advise: Advise & {
-    author: User;
+    author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
     likes: Like[];
   };
   session: (Session & { user: User }) | null;
@@ -50,6 +50,10 @@ export const AdviseCard = ({
   const isAuthor =
     (session?.user?.id && session.user.id === advise.author.id) ||
     (session?.user?.email && session.user.email === advise.author.email);
+
+  const isAdmin = session?.user?.role === 'ADMIN';
+
+  const canEditOrDelete = isAuthor || isAdmin;
 
   const isLiked = session?.user?.id
     ? optimisticLikes.some((like) => like.userId === session.user.id)
@@ -112,7 +116,10 @@ export const AdviseCard = ({
   );
 
   return (
-    <Card key={advise.id} className="w-full">
+    <Card
+      key={advise.id}
+      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+    >
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}
         <div className="flex items-center gap-2">
@@ -129,7 +136,7 @@ export const AdviseCard = ({
             <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
             <span className="sr-only">Me gusta</span>
           </Button>
-          {isAuthor && Options}
+          {canEditOrDelete && Options}
         </div>
       </CardHeader>
 

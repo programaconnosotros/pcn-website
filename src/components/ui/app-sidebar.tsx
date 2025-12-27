@@ -1,26 +1,35 @@
 'use client';
 
 import {
+  Book,
   BookOpen,
+  Briefcase,
   CalendarDays,
+  Code,
+  Eye,
+  HelpCircle,
   Home,
   Image,
   Instagram,
   Laptop,
+  LayoutDashboard,
   LifeBuoy,
   Linkedin,
+  Megaphone,
+  MicVocal,
+  Music,
+  Quote,
   ScrollText,
   Send,
   SquareTerminal,
   Star,
   Users,
   Youtube,
+  Bell,
+  AlertTriangle,
 } from 'lucide-react';
-import * as React from 'react';
-
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
-// import { NavSecondary } from '@/components/ui/nav-secondary'; Estaba declarado pero no se usaba, lo dejo comentado por las dudas.
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -32,39 +41,52 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
+import { NavSecondary } from './nav-secondary';
 
-const data = {
-  navMain: [
+interface UpcomingEvent {
+  id: string;
+  name: string;
+  date: Date;
+}
+
+const formatEventDate = (date: Date) => {
+  return new Intl.DateTimeFormat('es-AR', {
+    month: 'short',
+    day: 'numeric',
+  }).format(date);
+};
+
+const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
+  const eventItems = upcomingEvents.map((event) => ({
+    title: `${formatEventDate(event.date)} - ${event.name}`,
+    url: `/eventos/${event.id}`,
+  }));
+
+  // Agregar "Ver todos" al final si hay eventos
+  if (eventItems.length > 0) {
+    eventItems.push({
+      title: 'Ver todos los eventos',
+      url: '/eventos',
+    });
+  }
+
+  return [
     {
       title: 'Inicio',
       url: '/',
       icon: Home,
     },
     {
+      title: 'Eventos',
+      url: '/eventos',
+      icon: CalendarDays,
+      items: eventItems.length > 0 ? eventItems : undefined,
+    },
+    {
       title: 'Consejos',
       url: '/consejos',
       icon: SquareTerminal,
       isActive: true,
-    },
-    {
-      title: 'Fotos',
-      url: '/galeria',
-      icon: Image,
-    },
-    {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: BookOpen,
-    },
-    {
-      title: 'Historia',
-      url: '/historia',
-      icon: ScrollText,
-    },
-    {
-      title: 'Eventos',
-      url: '/eventos',
-      icon: CalendarDays,
     },
     {
       title: 'Cursos',
@@ -90,6 +112,31 @@ const data = {
       ],
     },
     {
+      title: 'Podcast',
+      url: '/podcast',
+      icon: MicVocal,
+    },
+    {
+      title: 'Lectura',
+      url: '/lectura',
+      icon: Book,
+    },
+    {
+      title: 'Especialidades',
+      url: '/especialidades',
+      icon: Code,
+    },
+    {
+      title: 'Charlas',
+      url: '/charlas',
+      icon: BookOpen,
+    },
+    {
+      title: 'Música',
+      url: '/music',
+      icon: Music,
+    },
+    {
       title: 'Influencers',
       url: '/influencers',
       icon: Users,
@@ -99,7 +146,76 @@ const data = {
       url: '/software-recomendado',
       icon: Star,
     },
-  ],
+    {
+      title: 'Trabajos',
+      url: '/trabajos',
+      icon: Briefcase,
+    },
+  ];
+};
+
+const getComunidadItems = () => {
+  return [
+    {
+      title: 'Historia',
+      url: '/historia',
+      icon: ScrollText,
+    },
+    {
+      title: 'Galería',
+      url: '/galeria',
+      icon: Image,
+    },
+    {
+      title: 'Usuarios',
+      url: '/usuarios',
+      icon: Users,
+    },
+    {
+      title: 'Anuncios',
+      url: '/anuncios',
+      icon: Megaphone,
+    },
+    {
+      title: 'Preguntas frecuentes',
+      url: '/preguntas-frecuentes',
+      icon: HelpCircle,
+    },
+    {
+      title: 'Testimonios',
+      url: '/testimonios',
+      icon: Quote,
+    },
+  ];
+};
+
+const getAdminItems = (unreadCount: number = 0) => {
+  return [
+    {
+      title: 'Analíticas',
+      url: '/analiticas',
+      icon: LayoutDashboard,
+    },
+    {
+      title: 'Visitas',
+      url: '/visitas',
+      icon: Eye,
+    },
+    {
+      title: 'Notificaciones',
+      url: '/notificaciones',
+      icon: Bell,
+      badge: unreadCount,
+    },
+    {
+      title: 'Monitoreo',
+      url: '/monitoreo',
+      icon: AlertTriangle,
+    },
+  ];
+};
+
+const data = {
   navSecondary: [
     {
       title: 'Soporte',
@@ -148,11 +264,16 @@ const data = {
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User | null;
+  upcomingEvents?: UpcomingEvent[];
+  unreadNotificationsCount?: number;
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar(props: AppSidebarProps) {
+  const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
+  const navMainItems = getNavMainItems(upcomingEvents);
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" variant="inset" {...sidebarProps}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
@@ -163,6 +284,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">programaConNosotros</span>
+                  <span className="text-xs text-muted-foreground">Impulsando desde 2020.</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -170,9 +292,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainItems} />
+        <NavMain items={getComunidadItems()} label="Comunidad" />
+        {user?.role === 'ADMIN' && (
+          <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
+        )}
         <NavProjects socialNetworks={data.socialNetworks} />
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

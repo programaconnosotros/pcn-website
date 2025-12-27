@@ -102,13 +102,13 @@ export function NavUser({ user }: { user: User | null }) {
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />
                 <AvatarFallback className="rounded-lg">{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
-              {!isCollapsed && !isMobile && (
+              {!isCollapsed && (
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               )}
-              {!isCollapsed && !isMobile && <ChevronsUpDown className="ml-auto size-4" />}
+              {!isCollapsed && <ChevronsUpDown className="ml-auto size-4" />}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           {!isCollapsed && (

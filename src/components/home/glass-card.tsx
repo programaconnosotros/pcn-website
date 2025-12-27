@@ -23,7 +23,7 @@ const GlassCard = ({ children, className = '' }: GlassCardProps) => {
 
   return (
     <div className={`group relative max-w-md ${className}`} onMouseMove={handleMouseMove}>
-      <div className="glass-card-gradient-hover absolute inset-0 z-0 rounded-xl bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,19,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
+      <div className="glass-card-gradient-hover absolute inset-0 z-0 rounded-xl bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(99,102,241,0.3),rgba(99,102,241,0))]"></div>
       {children}
     </div>
   );
