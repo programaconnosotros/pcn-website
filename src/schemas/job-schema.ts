@@ -21,9 +21,14 @@ export const jobSchema = z.object({
     .string()
     .min(1, { message: 'El tipo de trabajo es requerido' }),
   tags: z
-    .string()
-    .min(1, { message: 'Ingresa al menos una etiqueta' })
-    .transform((val) => val.split(',').map((tag) => tag.trim()).filter(Boolean)),
+    .union([
+      z.string().min(1, { message: 'Ingresa al menos una etiqueta' }),
+      z.array(z.string()).min(1, { message: 'Ingresa al menos una etiqueta' }),
+    ])
+    .transform((val) => {
+      if (Array.isArray(val)) return val;
+      return val.split(',').map((tag) => tag.trim()).filter(Boolean);
+    }),
   available: z.boolean().default(true),
   website: z
     .string()
