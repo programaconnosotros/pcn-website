@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { CircleDollarSign, MapPin, ExternalLink } from 'lucide-react';
+import { MapPin, ExternalLink } from 'lucide-react';
 import { JobOffers } from '@prisma/client';
 
 export function JobCard({ job }: { job: JobOffers }) {
@@ -43,16 +43,8 @@ export function JobCard({ job }: { job: JobOffers }) {
 
         <div className="mb-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <MapPin className="h-4 w-4 text-red-500" />
+            <MapPin className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
             <span>{job.location}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <CircleDollarSign className="h-4 w-4 text-green-500" />
-            <span>
-              {job.currency && job.salaryAmount
-                ? `${job.currency} ${job.salaryAmount}`
-                : 'No disponible'}
-            </span>
           </div>
         </div>
 
