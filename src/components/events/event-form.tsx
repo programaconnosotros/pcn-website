@@ -201,7 +201,7 @@ export function EventForm({
                     step="any"
                     placeholder="Ej: -34.6037"
                     {...field}
-                    value={field.value || ''}
+                    value={String(field.value ?? '')}
                   />
                 </FormControl>
                 <FormDescription>Coordenada de latitud para el mapa</FormDescription>
@@ -223,7 +223,7 @@ export function EventForm({
                     step="any"
                     placeholder="Ej: -58.3816"
                     {...field}
-                    value={field.value || ''}
+                    value={String(field.value ?? '')}
                   />
                 </FormControl>
                 <FormDescription>Coordenada de longitud para el mapa</FormDescription>
@@ -270,7 +270,7 @@ export function EventForm({
                     min="1"
                     placeholder="Ej: 50"
                     {...field}
-                    value={field.value || ''}
+                    value={String(field.value ?? '')}
                   />
                 </FormControl>
                 <FormDescription>
@@ -342,7 +342,7 @@ export function EventForm({
 
             {fields.length === 0 && (
               <p className="text-sm text-muted-foreground">
-                No hay sponsors agregados. Haz clic en "Agregar sponsor" para agregar uno.
+                No hay sponsors agregados. Haz clic en &quot;Agregar sponsor&quot; para agregar uno.
               </p>
             )}
           </div>

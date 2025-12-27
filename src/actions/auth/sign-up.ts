@@ -5,11 +5,16 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { signUpSchema } from '@/lib/validations/auth-schemas';
+import { signUpSchemaBase } from '@/lib/validations/auth-schemas';
 
-const formSchema = signUpSchema.extend({
-  redirectTo: z.string().optional(),
-});
+const formSchema = signUpSchemaBase
+  .extend({
+    redirectTo: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  });
 
 export const signUp = async (data: z.infer<typeof formSchema>) => {
   const { confirmPassword, redirectTo, ...cleanedData } = formSchema.parse(data);

@@ -90,4 +90,8 @@ export const eventSchema = z.object({
   ),
 });
 
-export type EventFormData = z.infer<typeof eventSchema>;
+// Tipo de entrada del formulario (antes del transform)
+export type EventFormData = z.input<typeof eventSchema>;
+
+// Tipo de salida después de la validación (después del transform)
+export type EventData = z.infer<typeof eventSchema>;
