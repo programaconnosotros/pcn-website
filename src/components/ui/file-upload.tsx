@@ -120,24 +120,21 @@ export function FileUpload({
           <div
             className={cn(
               'relative overflow-hidden border bg-muted',
-              variant === 'profile'
-                ? 'h-32 w-32 rounded-lg'
-                : 'aspect-video w-full rounded-lg',
+              variant === 'profile' ? 'h-32 w-32 rounded-lg' : 'aspect-video w-full rounded-lg',
             )}
           >
             <img
               src={preview}
               alt="Preview"
-              className={cn(
-                'h-full w-full object-cover',
-                variant === 'profile' && 'rounded-lg',
-              )}
+              className={cn('h-full w-full object-cover', variant === 'profile' && 'rounded-lg')}
             />
             {isUploading && (
-              <div className={cn(
-                'absolute inset-0 flex items-center justify-center bg-black/50',
-                variant === 'profile' ? 'rounded-lg' : 'rounded-lg',
-              )}>
+              <div
+                className={cn(
+                  'absolute inset-0 flex items-center justify-center bg-black/50',
+                  variant === 'profile' ? 'rounded-lg' : 'rounded-lg',
+                )}
+              >
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               </div>
             )}
@@ -165,9 +162,7 @@ export function FileUpload({
           disabled={disabled || isUploading}
           className={cn(
             'flex flex-col items-center justify-center gap-2 border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
-            variant === 'profile'
-              ? 'h-32 w-32 rounded-lg'
-              : 'aspect-video w-full rounded-lg',
+            variant === 'profile' ? 'h-32 w-32 rounded-lg' : 'aspect-video w-full rounded-lg',
             disabled && 'cursor-not-allowed opacity-50',
             isUploading && 'cursor-wait',
           )}

@@ -337,110 +337,110 @@ export const ProfileForm = ({
           </div>
         </div>
 
-          <div className="space-y-4 rounded-md border p-4">
-            <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Briefcase className="h-5 w-5" />
-              Información profesional (opcional)
-            </h3>
+        <div className="space-y-4 rounded-md border p-4">
+          <h3 className="flex items-center gap-2 text-lg font-semibold">
+            <Briefcase className="h-5 w-5" />
+            Información profesional (opcional)
+          </h3>
+          <div className="space-y-2">
+            <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
+            <Input
+              id="jobTitle"
+              placeholder="Ej: Desarrollador Frontend"
+              {...form.register('jobTitle')}
+            />
+            <FormError error={form.formState.errors.jobTitle} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
+            <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
+            <FormError error={form.formState.errors.enterprise} />
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-md border p-4">
+          <h3 className="flex items-center gap-2 text-lg font-semibold">
+            <GraduationCap className="h-5 w-5" />
+            Información académica (opcional)
+          </h3>
+          <div className="space-y-2">
+            <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
+            <Input
+              id="career"
+              placeholder="Ej: Ingeniería en Sistemas"
+              {...form.register('career')}
+            />
+            <FormError error={form.formState.errors.career} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
+            <Input
+              id="studyPlace"
+              placeholder="Ej: Universidad Nacional de Tucumán / Autodidacta"
+              {...form.register('studyPlace')}
+            />
+            <FormError error={form.formState.errors.studyPlace} />
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-md border p-4">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+            <Link2 className="h-5 w-5" />
+            Enlaces (opcional)
+          </h3>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
+              <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
+                <Link2 className="h-4 w-4" />
+                URL de cuenta de X
+              </Label>
               <Input
-                id="jobTitle"
-                placeholder="Ej: Desarrollador Frontend"
-                {...form.register('jobTitle')}
+                id="xAccountUrl"
+                type="url"
+                placeholder="https://x.com/tu-usuario"
+                {...form.register('xAccountUrl', {
+                  setValueAs: (v) => (v === '' ? null : v),
+                })}
+                value={form.watch('xAccountUrl') || ''}
               />
-              <FormError error={form.formState.errors.jobTitle} />
+              <FormError error={form.formState.errors.xAccountUrl} />
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
-              <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
-              <FormError error={form.formState.errors.enterprise} />
+              <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
+                <Link2 className="h-4 w-4" />
+                URL de cuenta de LinkedIn
+              </Label>
+              <Input
+                id="linkedinUrl"
+                type="url"
+                placeholder="https://linkedin.com/in/tu-usuario"
+                {...form.register('linkedinUrl', {
+                  setValueAs: (v) => (v === '' ? null : v),
+                })}
+                value={form.watch('linkedinUrl') || ''}
+              />
+              <FormError error={form.formState.errors.linkedinUrl} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
+                <Link2 className="h-4 w-4" />
+                URL de cuenta de GitHub
+              </Label>
+              <Input
+                id="gitHubUrl"
+                type="url"
+                placeholder="https://github.com/tu-usuario"
+                {...form.register('gitHubUrl', {
+                  setValueAs: (v) => (v === '' ? null : v),
+                })}
+                value={form.watch('gitHubUrl') || ''}
+              />
+              <FormError error={form.formState.errors.gitHubUrl} />
             </div>
           </div>
-
-          <div className="space-y-4 rounded-md border p-4">
-            <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <GraduationCap className="h-5 w-5" />
-              Información académica (opcional)
-            </h3>
-            <div className="space-y-2">
-              <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
-              <Input
-                id="career"
-                placeholder="Ej: Ingeniería en Sistemas"
-                {...form.register('career')}
-              />
-              <FormError error={form.formState.errors.career} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
-              <Input
-                id="studyPlace"
-                placeholder="Ej: Universidad Nacional de Tucumán / Autodidacta"
-                {...form.register('studyPlace')}
-              />
-              <FormError error={form.formState.errors.studyPlace} />
-            </div>
-          </div>
-
-          <div className="space-y-4 rounded-md border p-4">
-            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <Link2 className="h-5 w-5" />
-              Enlaces (opcional)
-            </h3>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
-                  <Link2 className="h-4 w-4" />
-                  URL de cuenta de X
-                </Label>
-                <Input
-                  id="xAccountUrl"
-                  type="url"
-                  placeholder="https://x.com/tu-usuario"
-                  {...form.register('xAccountUrl', {
-                    setValueAs: (v) => (v === '' ? null : v),
-                  })}
-                  value={form.watch('xAccountUrl') || ''}
-                />
-                <FormError error={form.formState.errors.xAccountUrl} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
-                  <Link2 className="h-4 w-4" />
-                  URL de cuenta de LinkedIn
-                </Label>
-                <Input
-                  id="linkedinUrl"
-                  type="url"
-                  placeholder="https://linkedin.com/in/tu-usuario"
-                  {...form.register('linkedinUrl', {
-                    setValueAs: (v) => (v === '' ? null : v),
-                  })}
-                  value={form.watch('linkedinUrl') || ''}
-                />
-                <FormError error={form.formState.errors.linkedinUrl} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
-                  <Link2 className="h-4 w-4" />
-                  URL de cuenta de GitHub
-                </Label>
-                <Input
-                  id="gitHubUrl"
-                  type="url"
-                  placeholder="https://github.com/tu-usuario"
-                  {...form.register('gitHubUrl', {
-                    setValueAs: (v) => (v === '' ? null : v),
-                  })}
-                  value={form.watch('gitHubUrl') || ''}
-                />
-                <FormError error={form.formState.errors.gitHubUrl} />
-              </div>
-            </div>
-          </div>
+        </div>
 
         {/* Section for adding programming languages */}
         <div className="space-y-4 rounded-md border p-4">

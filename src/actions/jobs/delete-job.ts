@@ -36,4 +36,3 @@ export async function deleteJob(jobId: string) {
 
   return { success: true };
 }
-

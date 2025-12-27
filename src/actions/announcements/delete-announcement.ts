@@ -28,4 +28,3 @@ export async function deleteAnnouncement(announcementId: string) {
 
   return { success: true };
 }
-

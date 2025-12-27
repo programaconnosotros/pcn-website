@@ -8,10 +8,7 @@ export async function getEventAnnouncements(eventId: string) {
       eventId,
       published: true,
     },
-    orderBy: [
-      { pinned: 'desc' },
-      { createdAt: 'desc' },
-    ],
+    orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
     include: {
       author: {
         select: {
@@ -23,4 +20,3 @@ export async function getEventAnnouncements(eventId: string) {
     },
   });
 }
-

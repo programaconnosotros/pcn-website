@@ -2,12 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  MapPin,
-  Briefcase,
-  GraduationCap,
-  SquareArrowOutUpRight,
-} from 'lucide-react';
+import { MapPin, Briefcase, GraduationCap, SquareArrowOutUpRight } from 'lucide-react';
 
 type UserWithoutPassword = {
   id: string;
@@ -61,9 +56,7 @@ const UserCard = ({ user }: UserCardProps) => {
               </h3>
             </a>
             {user.jobTitle && (
-              <p className="truncate text-sm text-pcnPurple dark:text-pcnGreen">
-                {user.jobTitle}
-              </p>
+              <p className="truncate text-sm text-pcnPurple dark:text-pcnGreen">{user.jobTitle}</p>
             )}
 
             {/* Info compacta */}
@@ -95,13 +88,13 @@ const UserCard = ({ user }: UserCardProps) => {
                   <Badge
                     key={lang.language}
                     variant="secondary"
-                    className="text-[10px] px-1.5 py-0"
+                    className="px-1.5 py-0 text-[10px]"
                   >
                     {lang.language}
                   </Badge>
                 ))}
                 {user.languages.length > 4 && (
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                  <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
                     +{user.languages.length - 4}
                   </Badge>
                 )}

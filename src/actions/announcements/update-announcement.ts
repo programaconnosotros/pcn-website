@@ -51,4 +51,3 @@ export async function updateAnnouncement(announcementId: string, data: Announcem
 
   return announcement;
 }
-

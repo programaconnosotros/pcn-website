@@ -5,10 +5,7 @@ import prisma from '@/lib/prisma';
 export const fetchAnnouncements = () =>
   prisma.announcement.findMany({
     where: { published: true },
-    orderBy: [
-      { pinned: 'desc' },
-      { createdAt: 'desc' },
-    ],
+    orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
     include: {
       author: {
         select: {
@@ -22,10 +19,7 @@ export const fetchAnnouncements = () =>
 
 export const fetchAllAnnouncements = () =>
   prisma.announcement.findMany({
-    orderBy: [
-      { pinned: 'desc' },
-      { createdAt: 'desc' },
-    ],
+    orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
     include: {
       author: {
         select: {
@@ -36,4 +30,3 @@ export const fetchAllAnnouncements = () =>
       },
     },
   });
-

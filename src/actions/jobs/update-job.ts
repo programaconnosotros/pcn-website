@@ -48,4 +48,3 @@ export async function updateJob(jobId: string, data: JobFormData) {
 
   return { success: true, jobId: job.id };
 }
-

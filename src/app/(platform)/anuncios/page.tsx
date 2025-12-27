@@ -11,7 +11,10 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
-import { fetchAnnouncements, fetchAllAnnouncements } from '@/actions/announcements/get-announcements';
+import {
+  fetchAnnouncements,
+  fetchAllAnnouncements,
+} from '@/actions/announcements/get-announcements';
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 
 const AnunciosPage = async () => {

@@ -15,4 +15,3 @@ export async function getEventsForSelect() {
 
   return events;
 }
-

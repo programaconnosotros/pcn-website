@@ -80,21 +80,13 @@ function SoftwareRecommendationCard({
 
         <div className="mb-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="text-xs"
-            >
+            <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
         </div>
 
-        <Button
-          size="sm"
-          className="w-full"
-          onClick={() => window.open(website, '_blank')}
-        >
+        <Button size="sm" className="w-full" onClick={() => window.open(website, '_blank')}>
           <ExternalLink className="mr-2 h-4 w-4" />
           Visitar sitio
         </Button>
@@ -266,8 +258,8 @@ export default function SoftwareRecommendationsPage() {
           </div>
 
           <p className="mb-6 text-muted-foreground">
-            Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si
-            querés sumar alguno, ¡avisanos!
+            Acá podés encontrar una lista de software recomendado por la comunidad de PCN. Si querés
+            sumar alguno, ¡avisanos!
           </p>
 
           <RecommendationsList recommendations={softwareRecommendations} />

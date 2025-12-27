@@ -39,4 +39,3 @@ export async function createJob(data: JobFormData) {
 
   return { success: true, jobId: job.id };
 }
-

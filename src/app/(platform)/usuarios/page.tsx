@@ -93,8 +93,7 @@ const CommunityPage = () => {
       const matchesLocation =
         selectedLocation === 'all' || user.countryOfOrigin === selectedLocation;
       const matchesLanguage =
-        selectedLanguage === 'all' ||
-        user.languages.some((l) => l.language === selectedLanguage);
+        selectedLanguage === 'all' || user.languages.some((l) => l.language === selectedLanguage);
 
       return matchesSearch && matchesLocation && matchesLanguage;
     });

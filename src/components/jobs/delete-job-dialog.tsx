@@ -22,12 +22,7 @@ interface DeleteJobDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteJobDialog({
-  jobId,
-  jobTitle,
-  open,
-  onOpenChange,
-}: DeleteJobDialogProps) {
+export function DeleteJobDialog({ jobId, jobTitle, open, onOpenChange }: DeleteJobDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -70,4 +65,3 @@ export function DeleteJobDialog({
     </AlertDialog>
   );
 }
-

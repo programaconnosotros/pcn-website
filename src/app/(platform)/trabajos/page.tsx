@@ -51,11 +51,7 @@ export default async function JobBoardPage() {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <JobsWrapper
-            initialJobs={initialJobs}
-            totalJobs={initialJobs.length}
-            isAdmin={isAdmin}
-          />
+          <JobsWrapper initialJobs={initialJobs} totalJobs={initialJobs.length} isAdmin={isAdmin} />
         </div>
       </div>
     </>

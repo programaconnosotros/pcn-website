@@ -34,7 +34,11 @@ interface AnnouncementsWrapperProps {
   isAdmin?: boolean;
 }
 
-export function AnnouncementsWrapper({ announcements, events = [], isAdmin = false }: AnnouncementsWrapperProps) {
+export function AnnouncementsWrapper({
+  announcements,
+  events = [],
+  isAdmin = false,
+}: AnnouncementsWrapperProps) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -86,9 +90,7 @@ export function AnnouncementsWrapper({ announcements, events = [], isAdmin = fal
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nuevo anuncio</DialogTitle>
-            <DialogDescription>
-              Crea un nuevo anuncio para la comunidad.
-            </DialogDescription>
+            <DialogDescription>Crea un nuevo anuncio para la comunidad.</DialogDescription>
           </DialogHeader>
           <AnnouncementForm
             events={events}
@@ -102,4 +104,3 @@ export function AnnouncementsWrapper({ announcements, events = [], isAdmin = fal
     </>
   );
 }
-

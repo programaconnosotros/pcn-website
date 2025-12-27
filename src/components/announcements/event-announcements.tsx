@@ -29,10 +29,7 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {announcements.map((announcement) => (
-          <div
-            key={announcement.id}
-            className="rounded-lg border border-border bg-muted/30 p-4"
-          >
+          <div key={announcement.id} className="rounded-lg border border-border bg-muted/30 p-4">
             <div className="mb-2 flex items-start justify-between gap-2">
               <h4 className="font-semibold">{announcement.title}</h4>
               {announcement.pinned && (
@@ -52,7 +49,9 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
                     <AvatarImage src={announcement.author.image} alt={announcement.author.name} />
                   ) : null}
                   <AvatarFallback className="text-[10px]">
-                    {announcement.author.name?.charAt(0).toUpperCase() || <UserIcon className="h-3 w-3" />}
+                    {announcement.author.name?.charAt(0).toUpperCase() || (
+                      <UserIcon className="h-3 w-3" />
+                    )}
                   </AvatarFallback>
                 </Avatar>
                 <span>{announcement.author.name}</span>
@@ -73,4 +72,3 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
     </Card>
   );
 }
-

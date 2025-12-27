@@ -17,9 +17,7 @@ export const jobSchema = z.object({
     .string()
     .min(2, { message: 'La ubicación debe tener al menos 2 caracteres' })
     .max(100, { message: 'La ubicación no puede exceder 100 caracteres' }),
-  type: z
-    .string()
-    .min(1, { message: 'El tipo de trabajo es requerido' }),
+  type: z.string().min(1, { message: 'El tipo de trabajo es requerido' }),
   tags: z
     .union([
       z.string().min(1, { message: 'Ingresa al menos una etiqueta' }),
@@ -27,16 +25,14 @@ export const jobSchema = z.object({
     ])
     .transform((val) => {
       if (Array.isArray(val)) return val;
-      return val.split(',').map((tag) => tag.trim()).filter(Boolean);
+      return val
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean);
     }),
   available: z.boolean().default(true),
-  website: z
-    .string()
-    .url({ message: 'Debe ser una URL válida' })
-    .optional()
-    .or(z.literal('')),
+  website: z.string().url({ message: 'Debe ser una URL válida' }).optional().or(z.literal('')),
 });
 
 export type JobFormData = z.input<typeof jobSchema>;
 export type JobData = z.infer<typeof jobSchema>;
-

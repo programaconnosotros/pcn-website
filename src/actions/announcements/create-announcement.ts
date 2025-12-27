@@ -42,4 +42,3 @@ export async function createAnnouncement(data: AnnouncementFormData) {
 
   return announcement;
 }
-

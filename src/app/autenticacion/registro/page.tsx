@@ -259,7 +259,7 @@ export default function SignUpPage() {
 
             <div className="space-y-4 rounded-lg border p-4">
               <h3 className="text-sm font-semibold">Información profesional (opcional)</h3>
-              
+
               <FormField
                 control={form.control}
                 name="profession"
@@ -294,7 +294,7 @@ export default function SignUpPage() {
 
             <div className="space-y-4 rounded-lg border p-4">
               <h3 className="text-sm font-semibold">Información académica (opcional)</h3>
-              
+
               <FormField
                 control={form.control}
                 name="studyField"

@@ -78,9 +78,10 @@ export const signUpSchema = signUpSchemaBase.refine(
 );
 
 // Schema para la acción sign-up que incluye redirectTo
-export const signUpActionSchema = signUpSchemaBaseObject.extend({
-  redirectTo: z.string().optional(),
-})
+export const signUpActionSchema = signUpSchemaBaseObject
+  .extend({
+    redirectTo: z.string().optional(),
+  })
   .refine(
     (data) => {
       if (
@@ -96,12 +97,9 @@ export const signUpActionSchema = signUpSchemaBaseObject.extend({
       path: ['province'],
     },
   )
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    {
-      message: 'Las contraseñas no coinciden',
-      path: ['confirmPassword'],
-    },
-  );
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  });
 
 export { ARGENTINA_PROVINCES };

@@ -170,10 +170,7 @@ export function AnnouncementForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Evento relacionado</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value || undefined}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona un evento" />

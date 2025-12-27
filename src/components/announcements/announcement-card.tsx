@@ -60,7 +60,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   actualizacion: 'Actualización',
 };
 
-export function AnnouncementCard({ announcement, events = [], isAdmin = false }: AnnouncementCardProps) {
+export function AnnouncementCard({
+  announcement,
+  events = [],
+  isAdmin = false,
+}: AnnouncementCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -83,22 +87,20 @@ export function AnnouncementCard({ announcement, events = [], isAdmin = false }:
 
   return (
     <>
-      <Card className={`flex h-full w-full flex-col border-2 bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 ${announcement.pinned ? 'border-pcnPurple dark:border-pcnGreen' : 'border-transparent dark:border-neutral-800'} ${!announcement.published ? 'opacity-60' : ''}`}>
+      <Card
+        className={`flex h-full w-full flex-col border-2 bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 ${announcement.pinned ? 'border-pcnPurple dark:border-pcnGreen' : 'border-transparent dark:border-neutral-800'} ${!announcement.published ? 'opacity-60' : ''}`}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className={`${categoryColor} border-0`}>
-                {categoryLabel}
-              </Badge>
+              <Badge className={`${categoryColor} border-0`}>{categoryLabel}</Badge>
               {announcement.pinned && (
                 <Badge variant="outline" className="gap-1">
                   <Pin className="h-3 w-3" />
                   Destacado
                 </Badge>
               )}
-              {!announcement.published && (
-                <Badge variant="secondary">Borrador</Badge>
-              )}
+              {!announcement.published && <Badge variant="secondary">Borrador</Badge>}
             </div>
             {isAdmin && (
               <DropdownMenu>
@@ -137,7 +139,9 @@ export function AnnouncementCard({ announcement, events = [], isAdmin = false }:
                   <AvatarImage src={announcement.author.image} alt={announcement.author.name} />
                 ) : null}
                 <AvatarFallback className="text-xs">
-                  {announcement.author.name?.charAt(0).toUpperCase() || <UserIcon className="h-3 w-3" />}
+                  {announcement.author.name?.charAt(0).toUpperCase() || (
+                    <UserIcon className="h-3 w-3" />
+                  )}
                 </AvatarFallback>
               </Avatar>
               <span>{announcement.author.name}</span>
@@ -160,9 +164,7 @@ export function AnnouncementCard({ announcement, events = [], isAdmin = false }:
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Editar anuncio</DialogTitle>
-            <DialogDescription>
-              Modifica los datos del anuncio.
-            </DialogDescription>
+            <DialogDescription>Modifica los datos del anuncio.</DialogDescription>
           </DialogHeader>
           <AnnouncementForm
             defaultValues={announcement}
@@ -185,4 +187,3 @@ export function AnnouncementCard({ announcement, events = [], isAdmin = false }:
     </>
   );
 }
-
