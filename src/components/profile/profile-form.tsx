@@ -222,7 +222,7 @@ export const ProfileForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
         <div className="space-y-4 rounded-md border p-4">
           <h3 className="mb-4 text-lg font-semibold">Información personal</h3>
           <div className="space-y-4">
@@ -434,9 +434,11 @@ export const ProfileForm = ({
           />
         </div>
 
-        <Button type="submit" variant="default" className="mb-4">
-          Guardar cambios
-        </Button>
+        <div className="mb-8 pb-4">
+          <Button type="submit" variant="default">
+            Guardar cambios
+          </Button>
+        </div>
       </form>
     </Form>
   );
