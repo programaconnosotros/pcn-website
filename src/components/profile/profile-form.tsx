@@ -365,7 +365,7 @@ export const ProfileForm = ({
               <div className="space-y-2">
                 <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
                   <Link2 className="h-4 w-4" />
-                  URL de cuenta de X (opcional)
+                  URL de cuenta de X
                 </Label>
                 <Input
                   id="xAccountUrl"
@@ -382,7 +382,7 @@ export const ProfileForm = ({
               <div className="space-y-2">
                 <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
                   <Link2 className="h-4 w-4" />
-                  URL de cuenta de LinkedIn (opcional)
+                  URL de cuenta de LinkedIn
                 </Label>
                 <Input
                   id="linkedinUrl"
@@ -399,7 +399,7 @@ export const ProfileForm = ({
               <div className="space-y-2">
                 <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
                   <Link2 className="h-4 w-4" />
-                  URL de cuenta de GitHub (opcional)
+                  URL de cuenta de GitHub
                 </Label>
                 <Input
                   id="gitHubUrl"
