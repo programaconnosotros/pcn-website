@@ -1,6 +1,5 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { GitHubSVG } from '@/components/logos/GitHubSVG';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -146,7 +145,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="flex flex-col items-end gap-2">
                 {user.xAccountUrl && (
                   <a
                     href={user.xAccountUrl}
@@ -168,6 +167,18 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     aria-label={`Perfil de LinkedIn de ${user.name}`}
                   >
                     <Linkedin className="h-5 w-5" />
+                  </a>
+                )}
+
+                {user.gitHubUrl && (
+                  <a
+                    href={user.gitHubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-blue-500 hover:underline"
+                    aria-label={`Perfil de GitHub de ${user.name}`}
+                  >
+                    <Github className="h-5 w-5" />
                   </a>
                 )}
               </div>
@@ -198,17 +209,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   <AdviseCard key={advise.id} session={session} advise={advise} />
                 ))}
               </div>
-            )}
-            {user.gitHubUrl && (
-              <a
-                href={user.gitHubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
-                aria-label={`Perfil de GitHub de ${user.name}`}
-              >
-                <Github className="h-5 w-5" />
-              </a>
             )}
           </div>
         </div>

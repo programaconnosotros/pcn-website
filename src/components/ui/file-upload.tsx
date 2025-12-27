@@ -15,6 +15,7 @@ type FileUploadProps = {
   maxSize?: number; // en bytes
   className?: string;
   disabled?: boolean;
+  variant?: 'default' | 'profile'; // Variante para fotos de perfil más pequeñas
 };
 
 export function FileUpload({
@@ -25,6 +26,7 @@ export function FileUpload({
   maxSize = 10 * 1024 * 1024, // 10MB por defecto
   className,
   disabled = false,
+  variant = 'default',
 }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,12 +116,26 @@ export function FileUpload({
       />
 
       {preview ? (
-        <div className="relative">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-            <img src={preview} alt="Preview" className="h-full w-full object-cover" />
+        <div className="relative inline-block">
+          <div
+            className={cn(
+              'relative overflow-hidden border bg-muted',
+              variant === 'profile'
+                ? 'h-32 w-32 rounded-full'
+                : 'aspect-video w-full rounded-lg',
+            )}
+          >
+            <img
+              src={preview}
+              alt="Preview"
+              className={cn(
+                'h-full w-full object-cover',
+                variant === 'profile' && 'rounded-full',
+              )}
+            />
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                <Loader2 className="h-8 w-8 animate-spin text-white" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                <Loader2 className="h-6 w-6 animate-spin text-white" />
               </div>
             )}
           </div>
@@ -128,7 +144,10 @@ export function FileUpload({
               type="button"
               variant="destructive"
               size="icon"
-              className="absolute -right-2 -top-2 h-6 w-6"
+              className={cn(
+                'absolute z-10 h-6 w-6',
+                variant === 'profile' ? '-right-1 -top-1' : '-right-2 -top-2',
+              )}
               onClick={handleRemove}
               disabled={disabled}
             >
@@ -142,20 +161,39 @@ export function FileUpload({
           onClick={() => inputRef.current?.click()}
           disabled={disabled || isUploading}
           className={cn(
-            'flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            'flex flex-col items-center justify-center gap-2 border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            variant === 'profile'
+              ? 'h-32 w-32 rounded-full'
+              : 'aspect-video w-full rounded-lg',
             disabled && 'cursor-not-allowed opacity-50',
             isUploading && 'cursor-wait',
           )}
         >
           {isUploading ? (
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <Loader2
+              className={cn(
+                'animate-spin text-muted-foreground',
+                variant === 'profile' ? 'h-6 w-6' : 'h-8 w-8',
+              )}
+            />
           ) : (
             <>
-              <ImageIcon className="h-8 w-8 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Haz clic para subir una imagen</span>
-              <span className="text-xs text-muted-foreground/70">
-                JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
-              </span>
+              <ImageIcon
+                className={cn(
+                  'text-muted-foreground',
+                  variant === 'profile' ? 'h-6 w-6' : 'h-8 w-8',
+                )}
+              />
+              {variant !== 'profile' && (
+                <>
+                  <span className="text-sm text-muted-foreground">
+                    Haz clic para subir una imagen
+                  </span>
+                  <span className="text-xs text-muted-foreground/70">
+                    JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+                  </span>
+                </>
+              )}
             </>
           )}
         </button>

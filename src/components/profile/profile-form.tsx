@@ -244,6 +244,7 @@ export const ProfileForm = ({
                       onChange={field.onChange}
                       folder="profiles"
                       maxSize={5 * 1024 * 1024} // 5MB
+                      variant="profile"
                     />
                   </FormControl>
                   <FormMessage />
