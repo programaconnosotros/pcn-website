@@ -41,6 +41,7 @@ model User {
   errorLogs       ErrorLog[]
   resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
   appLogs         AppLog[]
+  announcements   Announcement[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -157,6 +158,24 @@ model JobOffers {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  category    String   // ej: "general", "evento", "noticia", "importante"
+  pinned      Boolean  @default(false) // Para destacar anuncios importantes
+  published   Boolean  @default(true)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([published])
+  @@index([pinned])
 }
 
 model EventRegistration {

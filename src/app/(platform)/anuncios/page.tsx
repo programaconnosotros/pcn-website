@@ -1,7 +1,5 @@
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session, User } from '@prisma/client';
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -12,21 +10,25 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
+import { fetchAnnouncements, fetchAllAnnouncements } from '@/actions/announcements/get-announcements';
 
 const AnunciosPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
-  let session: (Session & { user: User }) | null = null;
+  let isAdmin = false;
 
   if (sessionId) {
-    session = await prisma.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { user: true },
     });
+    isAdmin = session?.user?.role === 'ADMIN';
   }
+
+  // Admins ven todos los anuncios (incluyendo borradores), usuarios normales solo los publicados
+  const announcements = isAdmin
+    ? await fetchAllAnnouncements()
+    : await fetchAnnouncements();
 
   return (
     <>
@@ -49,17 +51,7 @@ const AnunciosPage = async () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0">Anuncios</Heading2>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center py-12">
-            <p className="text-center text-lg text-muted-foreground">
-              Los anuncios de la comunidad aparecerán aquí
-            </p>
-          </div>
+          <AnnouncementsWrapper announcements={announcements} isAdmin={isAdmin} />
         </div>
       </div>
     </>
