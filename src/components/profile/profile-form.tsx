@@ -29,8 +29,6 @@ import { Form } from '@/components/ui/form';
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 
-export const dynamic = 'force-dynamic';
-
 type LanguageDialogProps = {
   currentLanguage: string;
   setCurrentLanguage: (value: string) => void;
@@ -111,7 +109,7 @@ export const ProfileForm = ({
       countryOfOrigin: user.countryOfOrigin ?? '',
       xAccountUrl: user.xAccountUrl ?? '',
       linkedinUrl: user.linkedinUrl ?? '',
-      gitHubUrl: user.linkedinUrl ?? '',
+      gitHubUrl: user.gitHubUrl ?? '',
       programmingLanguages: languages || [],
     },
   });
