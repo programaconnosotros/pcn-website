@@ -14,7 +14,6 @@ import {
 import { AnnouncementCard } from './announcement-card';
 import { AnnouncementForm } from './announcement-form';
 import { Announcement, User } from '@prisma/client';
-import { EmptyState } from '@/components/empty-state';
 import { createAnnouncement } from '@/actions/announcements/create-announcement';
 import { AnnouncementFormData } from '@/schemas/announcement-schema';
 import { toast } from 'sonner';
@@ -77,10 +76,9 @@ export function AnnouncementsWrapper({ announcements, events = [], isAdmin = fal
           ))}
         </div>
       ) : (
-        <EmptyState
-          title="No hay anuncios"
-          description="Aún no se han publicado anuncios en la comunidad."
-        />
+        <p className="py-12 text-center text-muted-foreground">
+          Aún no se han publicado anuncios en la comunidad.
+        </p>
       )}
 
       {/* Dialog para crear nuevo anuncio */}
