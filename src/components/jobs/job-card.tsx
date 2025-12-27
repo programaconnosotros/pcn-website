@@ -1,25 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CircleDollarSign, MapPin, ExternalLink } from 'lucide-react';
 import { JobOffers } from '@prisma/client';
-import Image from 'next/image';
 
 export function JobCard({ job }: { job: JobOffers }) {
+  const initial = job.enterprise?.charAt(0).toUpperCase() || '?';
+
   return (
     <Card className="flex h-full w-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white dark:bg-neutral-800">
-              <Image
-                src={job.logoPath || '/placeholder.svg'}
-                alt={`Logo of ${job.enterprise}`}
-                width={40}
-                height={40}
-                className="h-10 w-10 object-contain"
-              />
-            </div>
+            <Avatar className="h-12 w-12 rounded-xl">
+              <AvatarFallback className="rounded-xl bg-pcnPurple text-lg font-semibold text-white dark:bg-pcnGreen dark:text-black">
+                {initial}
+              </AvatarFallback>
+            </Avatar>
             <div className="flex flex-col">
               <p className="text-sm text-muted-foreground">{job.enterprise}</p>
               <h3 className="text-lg font-semibold leading-tight">{job.title}</h3>
@@ -62,7 +60,7 @@ export function JobCard({ job }: { job: JobOffers }) {
           {job.available ? (
             <>
               <ExternalLink className="mr-2 h-4 w-4" />
-              Aplicar ahora
+              Visitar
             </>
           ) : (
             'Posición cubierta'
