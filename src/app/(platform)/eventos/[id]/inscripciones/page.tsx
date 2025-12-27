@@ -152,7 +152,7 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                       {registrations.map((registration) => {
                         const user = registration.user;
                         const hasProfessionalData = user.jobTitle && user.enterprise;
-                        const hasStudentData = user.career && user.university;
+                        const hasStudentData = user.career && user.studyPlace;
 
                         return (
                           <TableRow
@@ -183,7 +183,7 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                                     <span className="font-medium">Estudia:</span> {user.career}
                                   </p>
                                   <p>
-                                    <span className="font-medium">En:</span> {user.university}
+                                    <span className="font-medium">Dónde:</span> {user.studyPlace}
                                   </p>
                                 </div>
                               ) : (

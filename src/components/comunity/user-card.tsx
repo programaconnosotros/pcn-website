@@ -27,8 +27,8 @@ type UserWithoutPassword = {
   slogan: string | null;
   jobTitle: string | null;
   enterprise: string | null;
-  university: string | null;
   career: string | null;
+  studyPlace: string | null;
 };
 
 type UserCardProps = {
@@ -80,10 +80,10 @@ const UserCard = ({ user }: UserCardProps) => {
                   {user.enterprise}
                 </span>
               )}
-              {(user.career || user.university) && (
+              {(user.career || user.studyPlace) && (
                 <span className="flex items-center gap-1">
                   <GraduationCap className="h-3 w-3" />
-                  {user.career || user.university}
+                  {user.career || user.studyPlace}
                 </span>
               )}
             </div>

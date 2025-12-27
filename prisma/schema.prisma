@@ -28,7 +28,6 @@ model User {
   slogan          String?
   jobTitle        String?
   enterprise      String?
-  university      String?
   career          String?
   studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
   sessions        Session[]

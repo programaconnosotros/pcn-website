@@ -43,8 +43,8 @@ type UserWithoutPassword = {
   slogan: string | null;
   jobTitle: string | null;
   enterprise: string | null;
-  university: string | null;
   career: string | null;
+  studyPlace: string | null;
 };
 
 const CommunityPage = () => {

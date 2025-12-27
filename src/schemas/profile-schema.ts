@@ -31,7 +31,6 @@ export const profileSchema = z.object({
   slogan: z.string().optional().nullable(),
   jobTitle: z.string().optional().nullable(),
   enterprise: z.string().optional().nullable(),
-  university: z.string().optional().nullable(),
   career: z.string().optional().nullable(),
   studyPlace: z.string().optional().nullable(),
   programmingLanguages: z.array(

@@ -19,8 +19,8 @@ type UserWithoutPassword = {
   slogan: string | null;
   jobTitle: string | null;
   enterprise: string | null;
-  university: string | null;
   career: string | null;
+  studyPlace: string | null;
 };
 
 export const getUsers = async (): Promise<UserWithoutPassword[]> => {
@@ -45,8 +45,8 @@ export const getUsers = async (): Promise<UserWithoutPassword[]> => {
       slogan: true,
       jobTitle: true,
       enterprise: true,
-      university: true,
       career: true,
+      studyPlace: true,
     },
   });
 

@@ -147,7 +147,6 @@ export const ProfileForm = ({
       slogan: user.slogan ?? '',
       jobTitle: user.jobTitle ?? '',
       enterprise: user.enterprise ?? '',
-      university: user.university ?? '',
       career: user.career ?? '',
       studyPlace: user.studyPlace ?? '',
       programmingLanguages: languages || [],
@@ -324,15 +323,6 @@ export const ProfileForm = ({
                 {...form.register('career')}
               />
               <FormError error={form.formState.errors.career} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="university">Universidad</Label>
-              <Input
-                id="university"
-                placeholder="Ej: Universidad Nacional de Tucumán"
-                {...form.register('university')}
-              />
-              <FormError error={form.formState.errors.university} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
