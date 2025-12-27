@@ -1,39 +1,51 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { CircleDollarSign, MapPin } from 'lucide-react';
+import { CircleDollarSign, MapPin, ExternalLink } from 'lucide-react';
 import { JobOffers } from '@prisma/client';
+import Image from 'next/image';
 
 export function JobCard({ job }: { job: JobOffers }) {
   return (
-    <Card className="flex h-full w-full flex-col bg-gray-50 dark:bg-transparent">
-      <CardHeader className="flex flex-shrink-0 flex-row items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 flex-shrink-0">
-            <img
-              src={job.logoPath || '/placeholder.svg'}
-              alt={`Logo of ${job.enterprise}`}
-              className="h-12 w-12 rounded-full border bg-white object-cover"
-            />
+    <Card className="flex h-full w-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white dark:bg-neutral-800">
+              <Image
+                src={job.logoPath || '/placeholder.svg'}
+                alt={`Logo of ${job.enterprise}`}
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+              />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-sm text-muted-foreground">{job.enterprise}</p>
+              <h3 className="text-lg font-semibold leading-tight">{job.title}</h3>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <p className="text-xs leading-tight">{job.enterprise}</p>
-            <h3 className="text-lg font-semibold leading-tight">{job.title}</h3>
-          </div>
+          {!job.available && (
+            <Badge variant="secondary" className="text-xs">
+              Cubierta
+            </Badge>
+          )}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-grow flex-col px-4 py-3">
-        <p className="mb-4 flex-grow text-sm">{job.description}</p>
-        <div className="mb-2 mt-1 flex flex-wrap gap-1">
+      <CardContent className="flex flex-1 flex-col">
+        <p className="mb-4 flex-1 text-sm text-muted-foreground">{job.description}</p>
+
+        <div className="mb-4 flex flex-wrap gap-2">
           {job.tags.map((tag: string) => (
             <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
         </div>
-        <div className="mb-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
+
+        <div className="mb-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <MapPin className="h-4 w-4 text-red-900" />
+            <MapPin className="h-4 w-4 text-red-500" />
             <span>{job.location}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -45,11 +57,17 @@ export function JobCard({ job }: { job: JobOffers }) {
             </span>
           </div>
         </div>
-        <div>
-          <Button className="w-full" variant="outline" disabled={!job.available}>
-            {job.available ? 'Aplica ahora!' : 'Posición cubierta'}
-          </Button>
-        </div>
+
+        <Button className="w-full" disabled={!job.available}>
+          {job.available ? (
+            <>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Aplicar ahora
+            </>
+          ) : (
+            'Posición cubierta'
+          )}
+        </Button>
       </CardContent>
     </Card>
   );
