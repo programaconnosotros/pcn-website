@@ -36,7 +36,7 @@ import {
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
-import { Briefcase, GraduationCap, Link2 } from 'lucide-react';
+import { Briefcase, GraduationCap, Link2, User as UserIcon } from 'lucide-react';
 
 // Lista de países
 const COUNTRIES = [
@@ -224,7 +224,10 @@ export const ProfileForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
         <div className="space-y-4 rounded-md border p-4">
-          <h3 className="mb-4 text-lg font-semibold">Información personal</h3>
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+            <UserIcon className="h-5 w-5" />
+            Información personal
+          </h3>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Nombre</Label>
