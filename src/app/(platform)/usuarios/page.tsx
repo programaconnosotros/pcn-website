@@ -12,11 +12,9 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useState, useMemo, useEffect } from 'react';
-import { Search, Users, Filter } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -24,14 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { getUsers } from '@/actions/users/get-users';
 import UserCard from '@/components/comunity/user-card';
 
@@ -60,7 +50,7 @@ type UserWithoutPassword = {
 const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
   const [users, setUsers] = useState<UserWithoutPassword[]>([]);
 
   useEffect(() => {
@@ -71,7 +61,6 @@ const CommunityPage = () => {
     fetchUsers();
   }, []);
 
-  // Obtener todas las tecnologías y ubicaciones únicas
   const allLanguages = useMemo(() => {
     const languages = new Set<string>();
     users.forEach((user) => {
@@ -79,7 +68,7 @@ const CommunityPage = () => {
         languages.add(lang.language);
       });
     });
-    return Array.from(languages);
+    return Array.from(languages).sort();
   }, [users]);
 
   const allLocations = useMemo(() => {
@@ -89,7 +78,7 @@ const CommunityPage = () => {
         locations.add(user.countryOfOrigin);
       }
     });
-    return Array.from(locations);
+    return Array.from(locations).sort();
   }, [users]);
 
   const filteredUsers = useMemo(() => {
@@ -103,24 +92,20 @@ const CommunityPage = () => {
 
       const matchesLocation =
         selectedLocation === 'all' || user.countryOfOrigin === selectedLocation;
-      const matchesLanguages =
-        selectedLanguages.length === 0 ||
-        selectedLanguages.some((lang) => user.languages.some((l) => l.language === lang));
+      const matchesLanguage =
+        selectedLanguage === 'all' ||
+        user.languages.some((l) => l.language === selectedLanguage);
 
-      return matchesSearch && matchesLocation && matchesLanguages;
+      return matchesSearch && matchesLocation && matchesLanguage;
     });
-  }, [users, searchTerm, selectedLocation, selectedLanguages]);
+  }, [users, searchTerm, selectedLocation, selectedLanguage]);
 
-  const handleLanguageToggle = (language: string) => {
-    setSelectedLanguages((prev) =>
-      prev.includes(language) ? prev.filter((l) => l !== language) : [...prev, language],
-    );
-  };
+  const hasFilters = searchTerm || selectedLocation !== 'all' || selectedLanguage !== 'all';
 
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedLocation('all');
-    setSelectedLanguages([]);
+    setSelectedLanguage('all');
   };
 
   const calcMembershipTime = (creationDate: Date): string => {
@@ -153,123 +138,109 @@ const CommunityPage = () => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6">
+          <div className="mb-4 flex items-center justify-between">
             <Heading2 className="m-0">Usuarios</Heading2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Conoce a nuestra increíble comunidad de apasionados por la tecnología
-            </p>
+            <span className="text-sm text-muted-foreground">
+              {filteredUsers.length} de {users.length}
+            </span>
           </div>
 
-          {/* Filtros */}
-          <Card className="mb-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Filter className="h-5 w-5" />
-                Filtros
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Búsqueda */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-                <Input
-                  placeholder="Buscar por nombre, email o lenguaje..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-
-              {/* Filtros en fila */}
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                {/* Ubicación */}
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todas las ubicaciones" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas las ubicaciones</SelectItem>
-                    {allLocations.map((location) => (
-                      <SelectItem key={location} value={location}>
-                        {location}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Lenguajes */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="justify-between">
-                      <span>
-                        {selectedLanguages.length === 0
-                          ? 'Lenguajes'
-                          : `${selectedLanguages.length} seleccionados`}
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>Lenguajes</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {allLanguages.map((lang) => (
-                      <DropdownMenuCheckboxItem
-                        key={lang}
-                        checked={selectedLanguages.includes(lang)}
-                        onCheckedChange={() => handleLanguageToggle(lang)}
-                      >
-                        {lang}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Limpiar filtros */}
-                <Button variant="outline" onClick={clearFilters} className="w-full">
-                  Limpiar filtros
-                </Button>
-              </div>
-
-              {/* Lenguajes seleccionados */}
-              {selectedLanguages.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {selectedLanguages.map((lang) => (
-                    <Badge
-                      key={lang}
-                      variant="secondary"
-                      className="cursor-pointer"
-                      onClick={() => handleLanguageToggle(lang)}
-                    >
-                      {lang} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Grid de miembros */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredUsers.map((user) => (
-              <UserCard
-                key={user.id}
-                user={user}
-                calcMembershipTime={calcMembershipTime(user.createdAt)}
+          {/* Filtros compactos */}
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar usuario..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
               />
-            ))}
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="País" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los países</SelectItem>
+                {allLocations.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="Lenguaje" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {allLanguages.map((lang) => (
+                  <SelectItem key={lang} value={lang}>
+                    {lang}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Mensaje cuando no hay resultados */}
-          {filteredUsers.length === 0 && (
-            <div className="py-12 text-center">
-              <Users className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-              <h3 className="mb-2 text-xl font-semibold">No se encontraron usuarios</h3>
-              <p className="mb-4 text-muted-foreground">
-                Intenta ajustar los filtros para encontrar más resultados
-              </p>
-              <Button onClick={clearFilters} variant="outline">
-                Limpiar todos los filtros
-              </Button>
+          {/* Filtros activos */}
+          {hasFilters && (
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              {selectedLocation !== 'all' && (
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer gap-1"
+                  onClick={() => setSelectedLocation('all')}
+                >
+                  {selectedLocation}
+                  <X className="h-3 w-3" />
+                </Badge>
+              )}
+              {selectedLanguage !== 'all' && (
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer gap-1"
+                  onClick={() => setSelectedLanguage('all')}
+                >
+                  {selectedLanguage}
+                  <X className="h-3 w-3" />
+                </Badge>
+              )}
+              <button
+                onClick={clearFilters}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Limpiar todo
+              </button>
             </div>
+          )}
+
+          {/* Grid de usuarios */}
+          {filteredUsers.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filteredUsers.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  calcMembershipTime={calcMembershipTime(user.createdAt)}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="py-12 text-center text-muted-foreground">
+              No se encontraron usuarios con estos filtros.
+            </p>
           )}
         </div>
       </div>
