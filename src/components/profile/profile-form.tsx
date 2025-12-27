@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Dialog,
@@ -300,6 +301,17 @@ export const ProfileForm = ({
                 )}
               />
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="slogan">Slogan o frase personal</Label>
+              <Textarea
+                id="slogan"
+                placeholder="Ej: Desarrollador apasionado por el código"
+                {...form.register('slogan')}
+                rows={3}
+              />
+              <FormError error={form.formState.errors.slogan} />
+            </div>
           </div>
         </div>
 
@@ -347,16 +359,6 @@ export const ProfileForm = ({
               />
               <FormError error={form.formState.errors.studyPlace} />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="slogan">Slogan o frase personal</Label>
-            <Input
-              id="slogan"
-              placeholder="Ej: Desarrollador apasionado por el código"
-              {...form.register('slogan')}
-            />
-            <FormError error={form.formState.errors.slogan} />
           </div>
 
           <div className="space-y-4 rounded-md border p-4">
