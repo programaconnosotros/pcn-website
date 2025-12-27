@@ -57,12 +57,6 @@ export function AnnouncementsWrapper({ announcements, isAdmin = false }: Announc
         )}
       </div>
 
-      <p className="mb-6 text-muted-foreground">
-        {announcements.length > 0
-          ? `${announcements.length} anuncio${announcements.length !== 1 ? 's' : ''} de la comunidad`
-          : 'Los anuncios de la comunidad aparecerán aquí'}
-      </p>
-
       {/* Announcements list */}
       {announcements.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

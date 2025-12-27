@@ -76,7 +76,7 @@ export function AnnouncementCard({ announcement, isAdmin = false }: Announcement
 
   return (
     <>
-      <Card className={`flex h-full w-full flex-col border-2 transition-all duration-300 ${announcement.pinned ? 'border-pcnPurple dark:border-pcnGreen' : 'border-transparent dark:border-neutral-800'} ${!announcement.published ? 'opacity-60' : ''}`}>
+      <Card className={`flex h-full w-full flex-col border-2 bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 ${announcement.pinned ? 'border-pcnPurple dark:border-pcnGreen' : 'border-transparent dark:border-neutral-800'} ${!announcement.published ? 'opacity-60' : ''}`}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
