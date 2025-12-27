@@ -28,7 +28,13 @@ export async function getPresignedUrl({
     include: { user: true },
   });
 
-  if (!session || session.user.role !== 'ADMIN') {
+  if (!session) {
+    throw new Error('No autorizado');
+  }
+
+  // Permitir subir archivos si es ADMIN o si es para perfil de usuario
+  const isProfileUpload = folder === 'profiles';
+  if (!isProfileUpload && session.user.role !== 'ADMIN') {
     throw new Error('No tienes permisos para subir archivos');
   }
 

@@ -38,6 +38,7 @@ import { UserProgrammingLanguage, programmingLanguages } from '@/types/programmi
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { Briefcase, GraduationCap, Link2, User as UserIcon } from 'lucide-react';
+import { FileUpload } from '@/components/ui/file-upload';
 
 // Lista de países
 const COUNTRIES = [
@@ -141,6 +142,7 @@ export const ProfileForm = ({
     defaultValues: {
       name: user.name ?? '',
       email: user.email ?? '',
+      image: user.image ?? '',
       countryOfOrigin: user.countryOfOrigin ?? '',
       province: user.province ?? '',
       xAccountUrl: user.xAccountUrl ?? '',
@@ -230,6 +232,25 @@ export const ProfileForm = ({
             Información personal
           </h3>
           <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Foto de perfil</FormLabel>
+                  <FormControl>
+                    <FileUpload
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      folder="profiles"
+                      maxSize={5 * 1024 * 1024} // 5MB
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="space-y-2">
               <Label htmlFor="name">Nombre</Label>
               <Input id="name" {...form.register('name')} />
