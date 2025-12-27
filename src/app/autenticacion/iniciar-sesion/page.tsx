@@ -46,7 +46,7 @@ export default function SignInPage() {
         const separator = redirectTo.includes('?') ? '&' : '?';
         finalRedirect = `${redirectTo}${separator}autoRegister=true`;
       }
-      
+
       await toast.promise(signIn({ ...values, redirectTo: finalRedirect }), {
         loading: 'Ingresando...',
         success: 'Bienvenido! 👋',
@@ -109,7 +109,14 @@ export default function SignInPage() {
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href={redirectTo ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}` : '/autenticacion/registro'} className="w-full">
+          <Link
+            href={
+              redirectTo
+                ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+                : '/autenticacion/registro'
+            }
+            className="w-full"
+          >
             <Button variant="outline" className="w-full">
               Crear cuenta
               <UserPlus className="ml-2 h-4 w-4" />

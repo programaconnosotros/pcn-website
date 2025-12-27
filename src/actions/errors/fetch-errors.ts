@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 
 export const fetchErrors = async (page: number = 1, limit: number = 50) => {
   const skip = (page - 1) * limit;
-  
+
   const [errors, total] = await Promise.all([
     prisma.errorLog.findMany({
       orderBy: {

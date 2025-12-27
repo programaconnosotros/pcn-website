@@ -43,7 +43,7 @@ export default function SignUpPage() {
       const separator = redirectTo.includes('?') ? '&' : '?';
       finalRedirect = `${redirectTo}${separator}autoRegister=true`;
     }
-    
+
     await toast.promise(signUp({ ...values, redirectTo: finalRedirect }), {
       loading: 'Creando usuario...',
       success: 'Usuario creado exitosamente! 🥳',
@@ -160,7 +160,14 @@ export default function SignUpPage() {
         </Form>
 
         <div className="mt-4 flex flex-row gap-4">
-          <Link href={redirectTo ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}` : '/autenticacion/iniciar-sesion'} className="w-full">
+          <Link
+            href={
+              redirectTo
+                ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+                : '/autenticacion/iniciar-sesion'
+            }
+            className="w-full"
+          >
             <Button variant="outline" className="w-full">
               Iniciar sesión
               <LogIn className="ml-2 h-4 w-4" />

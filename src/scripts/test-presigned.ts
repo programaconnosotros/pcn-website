@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 async function testPresignedUrl() {
   console.log('=== Test de Presigned URL ===\n');
-  
+
   const region = process.env.AWS_REGION || 'us-east-2';
   const bucket = process.env.AWS_S3_BUCKET || '';
 
@@ -17,7 +17,7 @@ async function testPresignedUrl() {
 
   const testKey = `test/presigned-${Date.now()}.txt`;
   const testContent = 'Test content ' + new Date().toISOString();
-  
+
   // Test 1: Sin ContentType en el command, solo host en signableHeaders
   console.log('Test 1: Sin ContentType, signableHeaders: [host]');
   try {
@@ -25,19 +25,19 @@ async function testPresignedUrl() {
       Bucket: bucket,
       Key: testKey + '-1',
     });
-    
+
     const url1 = await getSignedUrl(s3, command1, {
       expiresIn: 300,
       signableHeaders: new Set(['host']),
     });
-    
+
     console.log('URL generada (primeros 100 chars):', url1.substring(0, 100));
-    
+
     const response1 = await fetch(url1, {
       method: 'PUT',
       body: testContent,
     });
-    
+
     if (response1.ok) {
       console.log('✅ Test 1 EXITOSO\n');
     } else {
@@ -58,19 +58,19 @@ async function testPresignedUrl() {
       Bucket: bucket,
       Key: testKey + '-2',
     });
-    
+
     const url2 = await getSignedUrl(s3, command2, {
       expiresIn: 300,
       // Sin signableHeaders - usa el default
     });
-    
+
     console.log('URL generada (primeros 100 chars):', url2.substring(0, 100));
-    
+
     const response2 = await fetch(url2, {
       method: 'PUT',
       body: testContent,
     });
-    
+
     if (response2.ok) {
       console.log('✅ Test 2 EXITOSO\n');
     } else {
@@ -91,14 +91,14 @@ async function testPresignedUrl() {
       Key: testKey + '-3',
       ContentType: 'text/plain',
     });
-    
+
     const url3 = await getSignedUrl(s3, command3, {
       expiresIn: 300,
       signableHeaders: new Set(['host', 'content-type']),
     });
-    
+
     console.log('URL generada (primeros 100 chars):', url3.substring(0, 100));
-    
+
     const response3 = await fetch(url3, {
       method: 'PUT',
       body: testContent,
@@ -106,7 +106,7 @@ async function testPresignedUrl() {
         'Content-Type': 'text/plain',
       },
     });
-    
+
     if (response3.ok) {
       console.log('✅ Test 3 EXITOSO\n');
     } else {
@@ -123,4 +123,3 @@ async function testPresignedUrl() {
 }
 
 testPresignedUrl();
-

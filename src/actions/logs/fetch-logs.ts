@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 export const fetchLogs = async (page: number = 1, limit: number = 50, level?: string) => {
   const skip = (page - 1) * limit;
   const where = level ? { level } : {};
-  
+
   const [logs, total] = await Promise.all([
     prisma.appLog.findMany({
       where,
@@ -63,10 +63,13 @@ export const getLogStats = async () => {
     }),
   ]);
 
-  const logsByLevelMap = logsByLevel.reduce((acc, item) => {
-    acc[item.level] = item._count.level;
-    return acc;
-  }, {} as Record<string, number>);
+  const logsByLevelMap = logsByLevel.reduce(
+    (acc, item) => {
+      acc[item.level] = item._count.level;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   return {
     totalLogs,
@@ -80,5 +83,3 @@ export const getLogStats = async () => {
     },
   };
 };
-
-

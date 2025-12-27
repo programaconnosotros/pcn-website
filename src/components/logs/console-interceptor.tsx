@@ -14,9 +14,9 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
     // Interceptar console.log
     console.log = (...args: any[]) => {
       originalLog.apply(console, args);
-      const message = args.map((arg) => 
-        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-      ).join(' ');
+      const message = args
+        .map((arg) => (typeof arg === 'object' ? JSON.stringify(arg) : String(arg)))
+        .join(' ');
       logClient({
         level: 'info',
         message,
@@ -30,9 +30,9 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
     // Interceptar console.warn
     console.warn = (...args: any[]) => {
       originalWarn.apply(console, args);
-      const message = args.map((arg) => 
-        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-      ).join(' ');
+      const message = args
+        .map((arg) => (typeof arg === 'object' ? JSON.stringify(arg) : String(arg)))
+        .join(' ');
       logClient({
         level: 'warn',
         message,
@@ -46,9 +46,9 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
     // Interceptar console.error
     console.error = (...args: any[]) => {
       originalError.apply(console, args);
-      const message = args.map((arg) => 
-        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-      ).join(' ');
+      const message = args
+        .map((arg) => (typeof arg === 'object' ? JSON.stringify(arg) : String(arg)))
+        .join(' ');
       logClient({
         level: 'error',
         message,
@@ -62,9 +62,9 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
     // Interceptar console.debug
     console.debug = (...args: any[]) => {
       originalDebug.apply(console, args);
-      const message = args.map((arg) => 
-        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-      ).join(' ');
+      const message = args
+        .map((arg) => (typeof arg === 'object' ? JSON.stringify(arg) : String(arg)))
+        .join(' ');
       logClient({
         level: 'debug',
         message,
@@ -86,5 +86,3 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
 
   return <>{children}</>;
 }
-
-

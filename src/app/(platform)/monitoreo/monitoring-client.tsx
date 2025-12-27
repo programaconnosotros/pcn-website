@@ -61,12 +61,12 @@ type MonitoringClientProps = {
   logLevel?: string;
 };
 
-export function MonitoringClient({ 
-  errors, 
+export function MonitoringClient({
+  errors,
   errorsPagination,
-  logs, 
+  logs,
   logsPagination,
-  logLevel 
+  logLevel,
 }: MonitoringClientProps) {
   const [activeTab, setActiveTab] = useState('errors');
 
@@ -85,5 +85,3 @@ export function MonitoringClient({
     </Tabs>
   );
 }
-
-

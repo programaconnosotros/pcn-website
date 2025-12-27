@@ -6,10 +6,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
-export const registerEvent = async (
-  eventId: string,
-  options?: { skipRedirect?: boolean },
-) => {
+export const registerEvent = async (eventId: string, options?: { skipRedirect?: boolean }) => {
   // Verificar que el evento existe y no está eliminado
   const event = await prisma.event.findFirst({
     where: {
@@ -127,11 +124,11 @@ export const registerEvent = async (
   }
 
   revalidatePath(`/eventos/${eventId}`);
-  
+
   // Si skipRedirect es true, no redirigir (útil para inscripción automática desde el botón)
   if (options?.skipRedirect) {
     return { success: true, registrationId };
   }
-  
+
   redirect(`/eventos/${eventId}?registered=true`);
 };

@@ -14,15 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Calendar,
-  MapPin,
-  Building2,
-  Save,
-  Plus,
-  Trash2,
-  Users,
-} from 'lucide-react';
+import { Calendar, MapPin, Building2, Save, Plus, Trash2, Users } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -254,7 +246,9 @@ export function EventForm({
                     folder="events/flyers"
                   />
                 </FormControl>
-                <FormDescription>Imagen del flyer del evento (JPEG, PNG, WebP, GIF)</FormDescription>
+                <FormDescription>
+                  Imagen del flyer del evento (JPEG, PNG, WebP, GIF)
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

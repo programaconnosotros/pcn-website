@@ -101,7 +101,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
   const [markingAsResolved, setMarkingAsResolved] = useState<string | null>(null);
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<string>(
-    errors.filter((e) => !e.resolved).length > 0 ? 'unresolved' : 'resolved'
+    errors.filter((e) => !e.resolved).length > 0 ? 'unresolved' : 'resolved',
   );
 
   const handlePageChange = (page: number) => {
@@ -151,7 +151,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-2 mb-4">
+      <TabsList className="mb-4 grid w-full grid-cols-2">
         {unresolvedErrors.length > 0 && (
           <TabsTrigger value="unresolved" className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -165,24 +165,26 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
           </TabsTrigger>
         )}
       </TabsList>
-      
+
       {unresolvedErrors.length > 0 && (
         <TabsContent value="unresolved" className="mt-0">
           <div className="space-y-3">
-              {unresolvedErrors.map((error) => (
+            {unresolvedErrors.map((error) => (
               <Card
                 key={error.id}
                 className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-neutral-900 dark:to-red-950/20 dark:hover:border-red-800"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="mb-2 flex items-center gap-2 flex-wrap">
-                        <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0" />
-                        <CardTitle className="m-0 text-base min-w-0 flex-1">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 flex-shrink-0 text-destructive" />
+                        <CardTitle className="m-0 min-w-0 flex-1 text-base">
                           <TruncatedText text={error.message} maxLength={120} />
                         </CardTitle>
-                        <Badge variant="destructive" className="flex-shrink-0">Sin resolver</Badge>
+                        <Badge variant="destructive" className="flex-shrink-0">
+                          Sin resolver
+                        </Badge>
                       </div>
                       <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                         {error.path && (
@@ -221,7 +223,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                               {error.stack && (
                                 <div>
                                   <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
+                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
                                     {error.stack}
                                   </pre>
                                 </div>
@@ -229,7 +231,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                               {error.metadata && (
                                 <div>
                                   <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
+                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>
@@ -260,20 +262,20 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
       {resolvedErrors.length > 0 && (
         <TabsContent value="resolved" className="mt-0">
           <div className="space-y-3">
-              {resolvedErrors.map((error) => (
+            {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
                 className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="mb-2 flex items-center gap-2 flex-wrap">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                        <CardTitle className="m-0 text-base min-w-0 flex-1">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500" />
+                        <CardTitle className="m-0 min-w-0 flex-1 text-base">
                           <TruncatedText text={error.message} maxLength={120} />
                         </CardTitle>
-                        <Badge variant="default" className="bg-green-500 flex-shrink-0">
+                        <Badge variant="default" className="flex-shrink-0 bg-green-500">
                           Resuelto
                         </Badge>
                       </div>
@@ -320,7 +322,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                               {error.stack && (
                                 <div>
                                   <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
+                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
                                     {error.stack}
                                   </pre>
                                 </div>
@@ -328,7 +330,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                               {error.metadata && (
                                 <div>
                                   <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="overflow-x-auto overflow-y-auto max-h-96 rounded-md bg-muted p-3 text-xs break-words whitespace-pre-wrap break-all">
+                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
                                     {JSON.stringify(JSON.parse(error.metadata), null, 2)}
                                   </pre>
                                 </div>
@@ -345,15 +347,17 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
           </div>
         </TabsContent>
       )}
-      
+
       <div className="mt-6">
         <Pagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
           onPageChange={handlePageChange}
         />
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Mostrando {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} errores
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Mostrando {(pagination.page - 1) * pagination.limit + 1} -{' '}
+          {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total}{' '}
+          errores
         </p>
       </div>
     </Tabs>

@@ -40,5 +40,3 @@ export function RegistrationSuccessDialog({ open, onClose, eventName }: Props) {
     </Dialog>
   );
 }
-
-

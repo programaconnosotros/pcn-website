@@ -116,11 +116,7 @@ export function FileUpload({
       {preview ? (
         <div className="relative">
           <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-            <img
-              src={preview}
-              alt="Preview"
-              className="h-full w-full object-cover"
-            />
+            <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                 <Loader2 className="h-8 w-8 animate-spin text-white" />
@@ -148,7 +144,7 @@ export function FileUpload({
           className={cn(
             'flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
             disabled && 'cursor-not-allowed opacity-50',
-            isUploading && 'cursor-wait'
+            isUploading && 'cursor-wait',
           )}
         >
           {isUploading ? (
@@ -156,9 +152,7 @@ export function FileUpload({
           ) : (
             <>
               <ImageIcon className="h-8 w-8 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                Haz clic para subir una imagen
-              </span>
+              <span className="text-sm text-muted-foreground">Haz clic para subir una imagen</span>
               <span className="text-xs text-muted-foreground/70">
                 JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
               </span>
@@ -167,15 +161,10 @@ export function FileUpload({
         </button>
       )}
 
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       {/* Input oculto para mantener el valor de la URL */}
-      {value && (
-        <input type="hidden" value={value} />
-      )}
+      {value && <input type="hidden" value={value} />}
     </div>
   );
 }
-

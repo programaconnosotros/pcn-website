@@ -451,7 +451,8 @@ async function main() {
       createdAt.setMinutes(Math.floor(Math.random() * 60));
       createdAt.setSeconds(Math.floor(Math.random() * 60));
 
-      const user = Math.random() > 0.3 ? regularUsers[Math.floor(Math.random() * regularUsers.length)] : null;
+      const user =
+        Math.random() > 0.3 ? regularUsers[Math.floor(Math.random() * regularUsers.length)] : null;
       const level = logLevels[Math.floor(Math.random() * logLevels.length)];
       const message = logMessages[Math.floor(Math.random() * logMessages.length)];
 

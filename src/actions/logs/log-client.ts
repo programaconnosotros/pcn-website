@@ -50,5 +50,3 @@ export const logClient = async (data: {
     console.error('Error logging client log:', logError);
   }
 };
-
-

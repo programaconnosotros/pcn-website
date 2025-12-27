@@ -82,18 +82,18 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-visible">
+      <div className="flex flex-1 flex-col gap-4 overflow-visible p-4 pt-0">
         <div className="mt-4 overflow-visible">
           <div className="mb-6">
             <Heading2 className="m-0">Monitoreo</Heading2>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               Registro de errores y logs de la aplicación
             </p>
           </div>
 
           {/* Estadísticas de Errores */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-4">Errores</h3>
+            <h3 className="mb-4 text-lg font-semibold">Errores</h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -101,7 +101,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <FileX className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{errorStats.totalErrors.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {errorStats.totalErrors.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Todos los errores registrados</p>
                 </CardContent>
               </Card>
@@ -112,7 +114,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <AlertTriangle className="h-4 w-4 text-destructive" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{errorStats.unresolvedErrors.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {errorStats.unresolvedErrors.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Requieren atención</p>
                 </CardContent>
               </Card>
@@ -123,7 +127,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{errorStats.errorsToday.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {errorStats.errorsToday.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Últimas 24 horas</p>
                 </CardContent>
               </Card>
@@ -134,7 +140,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{errorStats.errorsThisWeek.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {errorStats.errorsThisWeek.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Últimos 7 días</p>
                 </CardContent>
               </Card>
@@ -143,7 +151,7 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
 
           {/* Estadísticas de Logs */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-4">Logs</h3>
+            <h3 className="mb-4 text-lg font-semibold">Logs</h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -162,7 +170,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <Info className="h-4 w-4 text-blue-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{logStats.logsByLevel.info.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {logStats.logsByLevel.info.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Logs informativos</p>
                 </CardContent>
               </Card>
@@ -173,7 +183,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <AlertCircle className="h-4 w-4 text-yellow-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{logStats.logsByLevel.warn.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {logStats.logsByLevel.warn.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Advertencias</p>
                 </CardContent>
               </Card>
@@ -184,7 +196,9 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <AlertTriangle className="h-4 w-4 text-destructive" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{logStats.logsByLevel.error.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {logStats.logsByLevel.error.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Errores en logs</p>
                 </CardContent>
               </Card>
@@ -195,17 +209,19 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
                   <Bug className="h-4 w-4 text-purple-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{logStats.logsByLevel.debug.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {logStats.logsByLevel.debug.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">Logs de debug</p>
                 </CardContent>
               </Card>
             </div>
           </div>
 
-          <MonitoringClient 
-            errors={errorsData.errors} 
+          <MonitoringClient
+            errors={errorsData.errors}
             errorsPagination={errorsData.pagination}
-            logs={logsData.logs} 
+            logs={logsData.logs}
             logsPagination={logsData.pagination}
             logLevel={logLevel}
           />

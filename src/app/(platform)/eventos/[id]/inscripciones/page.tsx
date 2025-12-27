@@ -153,39 +153,37 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                         const user = registration.user;
                         const hasProfessionalData = user.jobTitle && user.enterprise;
                         const hasStudentData = user.career && user.university;
-                        
+
                         return (
                           <TableRow
                             key={registration.id}
                             className={registration.cancelledAt ? 'opacity-60' : ''}
                           >
-                            <TableCell className="font-medium">
-                              {user.name}
-                            </TableCell>
+                            <TableCell className="font-medium">{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>
                               {hasProfessionalData ? (
                                 <div className="text-sm text-muted-foreground">
-                                  <Badge variant="outline" className="mb-1">Profesional</Badge>
+                                  <Badge variant="outline" className="mb-1">
+                                    Profesional
+                                  </Badge>
                                   <p>
-                                    <span className="font-medium">Trabaja:</span>{' '}
-                                    {user.jobTitle}
+                                    <span className="font-medium">Trabaja:</span> {user.jobTitle}
                                   </p>
                                   <p>
-                                    <span className="font-medium">En:</span>{' '}
-                                    {user.enterprise}
+                                    <span className="font-medium">En:</span> {user.enterprise}
                                   </p>
                                 </div>
                               ) : hasStudentData ? (
                                 <div className="text-sm text-muted-foreground">
-                                  <Badge variant="outline" className="mb-1">Estudiante</Badge>
+                                  <Badge variant="outline" className="mb-1">
+                                    Estudiante
+                                  </Badge>
                                   <p>
-                                    <span className="font-medium">Estudia:</span>{' '}
-                                    {user.career}
+                                    <span className="font-medium">Estudia:</span> {user.career}
                                   </p>
                                   <p>
-                                    <span className="font-medium">En:</span>{' '}
-                                    {user.university}
+                                    <span className="font-medium">En:</span> {user.university}
                                   </p>
                                 </div>
                               ) : (

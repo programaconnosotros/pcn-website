@@ -281,7 +281,13 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
               {!hasEventPassed && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardContent className="pt-6">
-                    <Suspense fallback={<Button variant="pcn" className="w-full" disabled>Cargando...</Button>}>
+                    <Suspense
+                      fallback={
+                        <Button variant="pcn" className="w-full" disabled>
+                          Cargando...
+                        </Button>
+                      }
+                    >
                       <EventDetailClient
                         eventId={id}
                         eventName={event.name}

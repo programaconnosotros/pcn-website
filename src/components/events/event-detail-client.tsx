@@ -57,14 +57,20 @@ export function EventDetailClient({
 
   // Auto-registrar si viene de login/registro
   useEffect(() => {
-    if (autoRegister && isAuthenticated && !isRegistered && !hasAutoRegistered && capacityAvailable) {
+    if (
+      autoRegister &&
+      isAuthenticated &&
+      !isRegistered &&
+      !hasAutoRegistered &&
+      capacityAvailable
+    ) {
       const performAutoRegister = async () => {
         setHasAutoRegistered(true);
         setIsAutoRegistering(true);
-        
+
         try {
           await registerEvent(eventId, { skipRedirect: true });
-          
+
           // Limpiar URL y mostrar dialog
           router.replace(`/eventos/${eventId}`, { scroll: false });
           setJustRegisteredLocally(true);
@@ -82,7 +88,15 @@ export function EventDetailClient({
       // Limpiar URL si no está autenticado
       router.replace(`/eventos/${eventId}`, { scroll: false });
     }
-  }, [autoRegister, isAuthenticated, isRegistered, hasAutoRegistered, eventId, capacityAvailable, router]);
+  }, [
+    autoRegister,
+    isAuthenticated,
+    isRegistered,
+    hasAutoRegistered,
+    eventId,
+    capacityAvailable,
+    router,
+  ]);
 
   const handleRegistrationSuccess = () => {
     setJustRegisteredLocally(true);
@@ -107,9 +121,7 @@ export function EventDetailClient({
         <div className="space-y-3">
           <div className="space-y-2">
             <p className="text-center text-sm font-medium">Ya estás registrado</p>
-            <p className="text-center text-xs text-muted-foreground">
-              Te esperamos en el evento
-            </p>
+            <p className="text-center text-xs text-muted-foreground">Te esperamos en el evento</p>
           </div>
           <CancelRegistrationButton
             eventId={eventId}
@@ -117,7 +129,7 @@ export function EventDetailClient({
             onCancel={handleCancellation}
           />
         </div>
-        
+
         <RegistrationSuccessDialog
           open={showSuccessDialog}
           onClose={handleDialogClose}
@@ -130,9 +142,7 @@ export function EventDetailClient({
   if (capacityInfo && !capacityInfo.available) {
     return (
       <div className="space-y-2">
-        <p className="text-center text-sm font-medium text-destructive">
-          Cupo completo
-        </p>
+        <p className="text-center text-sm font-medium text-destructive">Cupo completo</p>
         <p className="text-center text-xs text-muted-foreground">
           Ya no quedan lugares disponibles.
         </p>
@@ -156,7 +166,7 @@ export function EventDetailClient({
           </p>
         )}
       </div>
-      
+
       <RegistrationSuccessDialog
         open={showSuccessDialog}
         onClose={handleDialogClose}
@@ -165,5 +175,3 @@ export function EventDetailClient({
     </>
   );
 }
-
-

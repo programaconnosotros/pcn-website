@@ -19,7 +19,7 @@ const CLOUDFRONT_URL = process.env.AWS_CLOUDFRONT_URL || '';
 export async function getPresignedUploadUrl(
   fileName: string,
   contentType: string,
-  folder: string = 'events'
+  folder: string = 'events',
 ): Promise<{ uploadUrl: string; fileUrl: string }> {
   const extension = fileName.split('.').pop() || 'jpg';
   const uniqueFileName = `${folder}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
