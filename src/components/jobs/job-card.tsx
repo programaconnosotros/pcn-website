@@ -36,7 +36,7 @@ export function JobCard({ job, isAdmin = false }: JobCardProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const initial = job.enterprise?.charAt(0).toUpperCase() || '?';
+  const initial = job.company?.charAt(0).toUpperCase() || '?';
 
   const handleUpdate = async (data: JobFormData) => {
     setIsUpdating(true);
@@ -63,7 +63,7 @@ export function JobCard({ job, isAdmin = false }: JobCardProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <p className="text-sm text-muted-foreground">{job.enterprise}</p>
+                <p className="text-sm text-muted-foreground">{job.company}</p>
                 <h3 className="text-lg font-semibold leading-tight">{job.title}</h3>
               </div>
             </div>

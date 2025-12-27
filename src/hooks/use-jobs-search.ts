@@ -68,7 +68,7 @@ export function useJobsSearch({ initialJobs }: UseJobsSearchProps) {
       const searchLower = searchTerm.toLowerCase();
       return (
         job.title.toLowerCase().includes(searchLower) ||
-        job.enterprise.toLowerCase().includes(searchLower) ||
+        job.company.toLowerCase().includes(searchLower) ||
         job.description.toLowerCase().includes(searchLower) ||
         job.tags.some((tag) => tag.toLowerCase().includes(searchLower))
       );

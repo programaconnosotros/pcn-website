@@ -54,7 +54,7 @@ export function JobForm({
     defaultValues: {
       title: defaultValues?.title || '',
       description: defaultValues?.description || '',
-      enterprise: defaultValues?.enterprise || '',
+      company: defaultValues?.company || '',
       location: defaultValues?.location || '',
       type: defaultValues?.type || '',
       tags: defaultValues?.tags?.join(', ') || '',
@@ -85,7 +85,7 @@ export function JobForm({
 
         <FormField
           control={form.control}
-          name="enterprise"
+          name="company"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Empresa</FormLabel>

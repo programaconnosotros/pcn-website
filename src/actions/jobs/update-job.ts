@@ -36,7 +36,7 @@ export async function updateJob(jobId: string, data: JobFormData) {
     data: {
       title: validatedData.title,
       description: validatedData.description,
-      enterprise: validatedData.enterprise,
+      company: validatedData.company,
       location: validatedData.location,
       type: validatedData.type,
       tags: validatedData.tags,

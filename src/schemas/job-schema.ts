@@ -9,7 +9,7 @@ export const jobSchema = z.object({
     .string()
     .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
     .max(2000, { message: 'La descripción no puede exceder 2000 caracteres' }),
-  enterprise: z
+  company: z
     .string()
     .min(2, { message: 'El nombre de la empresa debe tener al menos 2 caracteres' })
     .max(100, { message: 'El nombre de la empresa no puede exceder 100 caracteres' }),

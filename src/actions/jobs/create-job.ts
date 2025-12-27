@@ -27,12 +27,11 @@ export async function createJob(data: JobFormData) {
     data: {
       title: validatedData.title,
       description: validatedData.description,
-      enterprise: validatedData.enterprise,
+      company: validatedData.company,
       location: validatedData.location,
       type: validatedData.type,
       tags: validatedData.tags,
       available: validatedData.available,
-      logoPath: '', // No usamos logo, pero el campo existe
     },
   });
 
