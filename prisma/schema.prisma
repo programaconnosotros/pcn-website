@@ -21,6 +21,7 @@ model User {
   role            Role           @default(REGULAR)
   image           String?
   countryOfOrigin String?
+  province        String? // Provincia (opcional)
   xAccountUrl     String?
   linkedinUrl     String?
   gitHubUrl       String?
@@ -29,6 +30,7 @@ model User {
   enterprise      String?
   university      String?
   career          String?
+  studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
   sessions        Session[]
   advises         Advise[]
   languages       UserLanguage[]

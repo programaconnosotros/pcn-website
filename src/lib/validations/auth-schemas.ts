@@ -1,7 +1,33 @@
 import { z } from 'zod';
 
-// Schema base sin refine (para poder extenderlo)
-export const signUpSchemaBase = z.object({
+const ARGENTINA_PROVINCES = [
+  'Buenos Aires',
+  'Catamarca',
+  'Chaco',
+  'Chubut',
+  'Córdoba',
+  'Corrientes',
+  'Entre Ríos',
+  'Formosa',
+  'Jujuy',
+  'La Pampa',
+  'La Rioja',
+  'Mendoza',
+  'Misiones',
+  'Neuquén',
+  'Río Negro',
+  'Salta',
+  'San Juan',
+  'San Luis',
+  'Santa Cruz',
+  'Santa Fe',
+  'Santiago del Estero',
+  'Tierra del Fuego',
+  'Tucumán',
+] as const;
+
+// Schema base sin refines (para poder extenderlo)
+const signUpSchemaBaseObject = z.object({
   name: z
     .string()
     .trim()
@@ -16,7 +42,16 @@ export const signUpSchemaBase = z.object({
     .string({ required_error: 'Campo obligatorio' })
     .min(8, 'La contraseña debe tener al menos 8 caracteres'),
   confirmPassword: z.string(),
+  country: z.string().min(1, 'El país es requerido'),
+  province: z.string().optional(),
+  profession: z.string().optional(),
+  enterprise: z.string().optional(),
+  studyField: z.string().optional(),
+  studyPlace: z.string().optional(),
 });
+
+// Schema base (sin validaciones condicionales ya que todo es opcional)
+export const signUpSchemaBase = signUpSchemaBaseObject;
 
 // Schema completo con validación de contraseñas
 export const signUpSchema = signUpSchemaBase.refine(
@@ -27,7 +62,15 @@ export const signUpSchema = signUpSchemaBase.refine(
   },
 );
 
-// Podemos agregar más esquemas relacionados aquí
-// Por ejemplo:
-// export const signInSchema = z.object({ ... });
-// export const resetPasswordSchema = z.object({ ... });
+// Schema para la acción sign-up que incluye redirectTo
+export const signUpActionSchema = signUpSchemaBaseObject.extend({
+  redirectTo: z.string().optional(),
+}).refine(
+  (data) => data.password === data.confirmPassword,
+  {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  },
+);
+
+export { ARGENTINA_PROVINCES };

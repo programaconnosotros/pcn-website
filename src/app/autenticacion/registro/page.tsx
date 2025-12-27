@@ -10,7 +10,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signUpSchema } from '@/lib/validations/auth-schemas';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
@@ -20,6 +27,31 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 
 const formSchema = signUpSchema;
+
+// Lista de países (puedes expandirla)
+const COUNTRIES = [
+  'Argentina',
+  'Bolivia',
+  'Brasil',
+  'Chile',
+  'Colombia',
+  'Costa Rica',
+  'Cuba',
+  'Ecuador',
+  'El Salvador',
+  'España',
+  'Guatemala',
+  'Honduras',
+  'México',
+  'Nicaragua',
+  'Panamá',
+  'Paraguay',
+  'Perú',
+  'República Dominicana',
+  'Uruguay',
+  'Venezuela',
+  'Otro',
+];
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
@@ -33,8 +65,16 @@ export default function SignUpPage() {
       email: '',
       password: undefined,
       confirmPassword: '',
+      country: '',
+      province: '',
+      profession: '',
+      enterprise: '',
+      studyField: '',
+      studyPlace: '',
     },
   });
+
+  const watchCountry = form.watch('country');
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Construir redirectTo con autoRegister si es necesario
@@ -61,7 +101,7 @@ export default function SignUpPage() {
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[425px]">
+      <div className="w-full max-w-[500px]">
         <div className="flex flex-col items-center gap-6">
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
@@ -78,27 +118,9 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nombre completo</FormLabel>
-
                   <FormControl>
-                    <Input
-                      placeholder="Lionel Messi"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (!/^[a-zA-ZÀ-ÿ\s]*$/.test(value)) {
-                          form.setError('name', {
-                            type: 'manual',
-                            message:
-                              'El nombre solo puede contener letras (a-z, A-Z) y espacios. No se permiten números ni caracteres especiales',
-                          });
-                        } else {
-                          form.clearErrors('name');
-                        }
-                        field.onChange(e);
-                      }}
-                    />
+                    <Input placeholder="Lionel Messi" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -110,11 +132,9 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Correo electrónico</FormLabel>
-
                   <FormControl>
                     <Input type="email" placeholder="correo@ejemplo.com" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -126,11 +146,9 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contraseña</FormLabel>
-
                   <FormControl>
                     <Input type="password" placeholder="********" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -142,15 +160,138 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirmar contraseña</FormLabel>
-
                   <FormControl>
                     <Input type="password" placeholder="********" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>País</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona tu país" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {COUNTRIES.map((country) => (
+                        <SelectItem key={country} value={country}>
+                          {country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {watchCountry === 'Argentina' && (
+              <FormField
+                control={form.control}
+                name="province"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provincia (opcional)</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona tu provincia" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ARGENTINA_PROVINCES.map((province) => (
+                          <SelectItem key={province} value={province}>
+                            {province}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <div className="space-y-4 rounded-lg border p-4">
+              <h3 className="text-sm font-semibold">Información profesional (opcional)</h3>
+              
+              <FormField
+                control={form.control}
+                name="profession"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>¿De qué trabajas?</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Desarrollador Full Stack, Diseñador UX, etc."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="enterprise"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>¿En qué empresa trabajas?</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ej: Google, Microsoft, etc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="space-y-4 rounded-lg border p-4">
+              <h3 className="text-sm font-semibold">Información académica (opcional)</h3>
+              
+              <FormField
+                control={form.control}
+                name="studyField"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>¿Qué estudias?</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Ingeniería en Sistemas, Desarrollo Web, etc."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="studyPlace"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>¿Dónde o cómo estudias?</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <Button type="submit" className="w-full">
               Crear usuario
