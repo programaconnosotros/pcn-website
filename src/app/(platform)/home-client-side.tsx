@@ -118,13 +118,18 @@ const HomeClientSide = ({
           </div>
         ) : (
           // Componente usuario no logueado
-          <div className="relative -mx-4 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background pt-12 md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)] md:pt-0">
-            <div
-              className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: "url('/pcn-header.webp')",
-              }}
-            />
+          <div className="relative -mx-6 min-h-[400px] w-[calc(100%+3rem)] overflow-hidden bg-background pt-12 md:h-[500px] md:pt-0">
+            {/* Background GIF */}
+            <div className="absolute inset-0 z-0">
+              <Image
+                src="/home.GIF"
+                alt="Background"
+                fill
+                className="object-cover"
+                priority
+                unoptimized
+              />
+            </div>
             <div className="absolute inset-0 z-0 bg-black/60" />
 
             <div className="absolute right-4 top-4 z-20">
