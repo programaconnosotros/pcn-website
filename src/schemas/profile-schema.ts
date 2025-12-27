@@ -1,17 +1,39 @@
 import { z } from 'zod';
 import { UserProgrammingLanguage } from '@/types/programming-language';
 
+// Helper para validar URLs opcionales (permite string vacío o URL válida)
+const optionalUrl = z
+  .string()
+  .optional()
+  .nullable()
+  .transform((val) => (val === '' || val === undefined ? null : val))
+  .refine(
+    (val) => {
+      if (val === null || val === undefined) return true;
+      try {
+        new URL(val);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { message: 'La URL debe ser válida' },
+  );
+
 export const profileSchema = z.object({
   name: z.string().min(3, { message: 'El nombre debe tener al menos 3 caracteres' }),
   email: z.string().email({ message: 'El email debe ser válido' }),
   countryOfOrigin: z.string().optional().nullable(),
-  xAccountUrl: z.string().url({ message: 'La URL de X debe ser válida' }).optional().nullable(),
-  linkedinUrl: z
-    .string()
-    .url({ message: 'La URL de LinkedIn debe ser válida' })
-    .optional()
-    .nullable(),
-  gitHubUrl: z.string().url({ message: 'La URL de GitHub debe ser válida' }).optional().nullable(),
+  province: z.string().optional().nullable(),
+  xAccountUrl: optionalUrl,
+  linkedinUrl: optionalUrl,
+  gitHubUrl: optionalUrl,
+  slogan: z.string().optional().nullable(),
+  jobTitle: z.string().optional().nullable(),
+  enterprise: z.string().optional().nullable(),
+  university: z.string().optional().nullable(),
+  career: z.string().optional().nullable(),
+  studyPlace: z.string().optional().nullable(),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),
