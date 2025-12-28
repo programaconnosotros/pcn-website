@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Code,
   Eye,
+  Handshake,
   HelpCircle,
   Home,
   Image,
@@ -85,7 +86,7 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
     {
       title: 'Consejos',
       url: '/consejos',
-      icon: SquareTerminal,
+      icon: Handshake,
       isActive: true,
     },
     {
