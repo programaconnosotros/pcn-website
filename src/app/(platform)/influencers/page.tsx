@@ -116,10 +116,6 @@ export default async function InfluencersPage() {
               Acá te mostramos algunas personas o grupos que consideramos referentes en el mundo del
               software y que creemos que pueden aportar mucho a tu crecimiento profesional.
             </p>
-
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Si querés sumar a alguien que creas que debería estar acá, avisanos por WhatsApp o Discord!
-            </p>
           </div>
 
           <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">

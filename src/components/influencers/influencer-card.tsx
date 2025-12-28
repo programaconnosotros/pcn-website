@@ -60,7 +60,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
           </Avatar>
 
           <div className="flex flex-col">
-            <h3 className="text-lg font-semibold leading-tight">{influencer.name}</h3>
+            <h3 className="mb-1 text-lg font-semibold leading-tight">{influencer.name}</h3>
             <div className="mt-1 flex flex-wrap gap-1">
               {influencer.specialties.map((specialty: string, index: number) => (
                 <Badge key={index} variant="secondary" className="text-xs">
