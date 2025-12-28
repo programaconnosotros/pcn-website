@@ -45,7 +45,7 @@ const influencersData: InfluencersData = {
       name: 'Miguel Ángel Durán Garcia - @midudev',
       image: 'midudev.webp',
       description:
-        'Creador de Contenido sobre Programación y Tecnología además de Ingeniero de Software, con más de 15 años de experiencia. Cuenta con una comunidad de más de 700k de seguidores en sus redes sociales. Su canal de programación en Twitch es el más visto en el mundo de habla hispana. Uno de los divulgadores más influyentes en el mundo de JavaScript según la encuesta mundial State of JS.',
+        'Creador de contenido sobre programación y tecnología, además de ingeniero de software con más de 15 años de experiencia. Tiene una comunidad de más de 700k seguidores en sus redes sociales. Su canal de programación en Twitch es el más visto en el mundo de habla hispana. Es uno de los divulgadores más influyentes en el mundo de JavaScript según la encuesta mundial State of JS.',
       platforms: {
         youtube: 'https://www.youtube.com/@midudev',
         instagram: 'https://www.instagram.com/midu.dev/',
@@ -59,7 +59,7 @@ const influencersData: InfluencersData = {
       name: 'Fernando Herrera - @fernando_her85',
       image: 'ferherrera.webp',
       description:
-        'Desarrollador Full Stack con más de 10 años de experiencia. Comparte tutoriales sobre programación, tecnologías y herramientas de desarrollo. Cuenta con una comunidad de más de 100k de seguidores en sus redes sociales.',
+        'Desarrollador Full Stack con más de 10 años de experiencia. Comparte tutoriales sobre programación, tecnologías y herramientas de desarrollo. Tiene una comunidad de más de 100k seguidores en sus redes sociales.',
       platforms: {
         youtube: 'https://www.youtube.com/@fernando_her85',
         page: 'https://cursos.devtalles.com/',
@@ -73,7 +73,7 @@ const influencersData: InfluencersData = {
       name: 'Brais Moure - @mouredev',
       image: 'mouredev.webp',
       description:
-        'Hola 👋🏼 Mi nombre es Brais Moure. Soy ingeniero de software desde 2010. Actualmente trabajo como freelance fullstack y creo contenido formativo sobre programación y desarrollo en redes',
+        'Ingeniero de software desde 2010. Actualmente trabaja como freelance fullstack y crea contenido formativo sobre programación y desarrollo en redes sociales.',
       platforms: {
         youtube: 'https://www.youtube.com/@mouredev',
         page: 'https://mouredev.pro/',
@@ -113,12 +113,12 @@ export default async function InfluencersPage() {
 
           <div className="mb-6">
             <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Te presentamos algunas personas o grupos que consideramos referentes en el mundo del
-              software.
+              Acá te mostramos algunas personas o grupos que consideramos referentes en el mundo del
+              software y que creemos que pueden aportar mucho a tu crecimiento profesional.
             </p>
 
             <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Si queres sumar a alguien, avisa por WhatsApp o Discord!
+              Si querés sumar a alguien que creas que debería estar acá, avisanos por WhatsApp o Discord!
             </p>
           </div>
 

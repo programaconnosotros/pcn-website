@@ -29,10 +29,19 @@ interface Influencer {
 const PlatformIcon: Record<string, React.ComponentType<any>> = {
   youtube: Youtube,
   instagram: Instagram,
-  twitter: Twitter,
+  twitter: Globe,
   linkedin: Linkedin,
   github: Github,
   page: Globe,
+};
+
+const PlatformLabel: Record<string, string> = {
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+  twitter: 'X',
+  linkedin: 'LinkedIn',
+  github: 'GitHub',
+  page: 'Página',
 };
 
 export function InfluencerCard({ influencer }: { influencer: Influencer }) {
@@ -44,7 +53,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
   return (
     <Card className="w-full bg-gray-50 dark:bg-transparent">
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <Avatar className="h-12 w-12">
             <AvatarImage src={imagePath} alt={influencer.name} />
             <AvatarFallback>{influencer.name.charAt(0)}</AvatarFallback>
@@ -74,7 +83,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
               <Link key={platform} href={url} target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Icon className="h-4 w-4" />
-                  <span className="capitalize">{platform}</span>
+                  <span>{PlatformLabel[platform] || platform}</span>
                 </Button>
               </Link>
             );
