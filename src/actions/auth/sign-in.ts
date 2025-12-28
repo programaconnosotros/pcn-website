@@ -17,51 +17,36 @@ const formSchema = z.object({
 });
 
 export const signIn = async (data: z.infer<typeof formSchema>) => {
-  try {
-    console.log('[signIn] Iniciando proceso de autenticación');
-    console.log('[signIn] Email recibido:', data.email);
-    console.log('[signIn] RedirectTo:', data.redirectTo);
+  // Variable para almacenar la URL de redirección después del try/catch
+  let redirectUrl: string | null = null;
 
+  try {
     // Validar datos
     const validatedData = formSchema.parse(data);
     const { email, password } = validatedData;
 
-    console.log('[signIn] Datos validados correctamente');
-
     // Buscar usuario
-    console.log('[signIn] Buscando usuario en la base de datos...');
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      console.log('[signIn] ERROR: Usuario no encontrado');
       throw new Error('Credenciales incorrectas.');
     }
 
-    console.log('[signIn] Usuario encontrado:', user.id);
-
     // Verificar contraseña
-    console.log('[signIn] Verificando contraseña...');
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      console.log('[signIn] ERROR: Contraseña incorrecta');
       throw new Error('Credenciales incorrectas.');
     }
 
-    console.log('[signIn] Contraseña válida');
-
     // Verificar si el email está verificado
     if (!user.emailVerified) {
-      console.log('[signIn] ERROR: Email no verificado');
       throw new Error(`EMAIL_NOT_VERIFIED:${email}`);
     }
 
-    console.log('[signIn] Email verificado');
-
     // Crear sesión
-    console.log('[signIn] Creando sesión...');
     const session = await prisma.session.create({
       data: {
         userId: user.id,
@@ -69,43 +54,29 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
       },
     });
 
-    console.log('[signIn] Sesión creada:', session.id);
-
     // Establecer cookie
-    console.log('[signIn] Estableciendo cookie...');
-    try {
-      const cookieStore = cookies();
-      cookieStore.set('sessionId', session.id, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-      });
-      console.log('[signIn] Cookie establecida correctamente');
-    } catch (cookieError) {
-      console.error('[signIn] ERROR al establecer cookie:', cookieError);
-      throw new Error('Error al establecer la sesión. Por favor, intenta nuevamente.');
-    }
+    const cookieStore = cookies();
+    cookieStore.set('sessionId', session.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+    });
 
-    // Redirigir a la URL especificada o a home por defecto
-    const redirectTo = data.redirectTo || '/';
-    console.log('[signIn] Proceso completado exitosamente, redirigiendo a:', redirectTo);
-
-    // redirect() lanza una excepción especial en Next.js que no debe ser capturada
-    // Esta es la forma correcta de redirigir desde un server action
-    redirect(redirectTo);
+    // Guardar URL de redirección para usar fuera del try/catch
+    redirectUrl = data.redirectTo || '/';
   } catch (error) {
-    console.error('[signIn] ERROR GENERAL:', error);
-    console.error(
-      '[signIn] Stack trace:',
-      error instanceof Error ? error.stack : 'No stack available',
-    );
-
     // Re-lanzar el error para que el cliente lo maneje
     if (error instanceof Error) {
       throw error;
     }
     throw new Error('Error desconocido al iniciar sesión');
+  }
+
+  // redirect() DEBE estar fuera del try/catch
+  // porque lanza una excepción especial (NEXT_REDIRECT) que Next.js intercepta
+  if (redirectUrl) {
+    redirect(redirectUrl);
   }
 };
