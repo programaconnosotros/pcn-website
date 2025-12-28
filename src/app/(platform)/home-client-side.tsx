@@ -446,7 +446,7 @@ const HomeClientSide = ({
               productividad y flujo de trabajo como desarrollador.
             </Paragraph>
 
-            <Link href="/software-recomendado" className="relative z-10">
+            <Link href="/software-util" className="relative z-10">
               <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver software
               </Button>

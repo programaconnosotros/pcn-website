@@ -145,7 +145,7 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
     },
     {
       title: 'Software útil',
-      url: '/software-recomendado',
+      url: '/software-util',
       icon: SquareMousePointer,
     },
     {
