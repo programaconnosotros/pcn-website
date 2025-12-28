@@ -112,7 +112,7 @@ export const SponsorsSection = () => {
                   </div>
                 )}
                 {sponsor.hasLogo && sponsor.showName !== false && (
-                  <h3 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white md:text-xl">
+                  <h3 className="mb-2 text-2xl font-bold text-neutral-900 dark:text-white md:text-3xl">
                     {sponsor.name}
                   </h3>
                 )}
