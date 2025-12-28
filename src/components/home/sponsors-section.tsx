@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Heading2 } from '../ui/heading-2';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
-import { Building2, Handshake, MessageSquare } from 'lucide-react';
+import { Building2, Handshake, MessageSquare, Star } from 'lucide-react';
 
 const sponsors = [
   {
@@ -77,10 +77,11 @@ const sponsors = [
 export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-      <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 mb-4 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
+      <div className="flex items-center justify-center gap-3 p-6">
+        <Heading2 className="relative z-10 mb-0 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
           Sponsors
         </Heading2>
+        <Star className="-mt-2 h-8 w-8 fill-pcnPurple text-pcnPurple drop-shadow-[0_0_10px_rgba(80,56,189,0.4)] dark:fill-pcnGreen dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)] md:h-10 md:w-10" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
