@@ -61,12 +61,12 @@ export const resetPassword = async (email: string) => {
       'Failed to send reset password email:',
       error instanceof Error ? error.message : 'Unknown error',
     );
-    
+
     // Si el error es por credenciales faltantes, dar un mensaje más claro
     if (error instanceof Error && error.message.includes('SMTP credentials not configured')) {
       throw new Error('Error de configuración: Las credenciales de email no están configuradas');
     }
-    
+
     throw new Error('Error al enviar el email. Por favor, contacta al administrador.');
   }
 };
