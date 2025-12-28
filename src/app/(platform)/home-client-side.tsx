@@ -137,14 +137,14 @@ const HomeClientSide = ({
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
-                <img src="/logo.webp" alt="programaConNosotros" className="w-[50px] md:w-[100px]" />
+                <img src="/logo.webp" alt="programaConNosotros" className="w-[80px] md:w-[100px]" />
               </div>
 
-              <Heading1 className="mb-4 mt-6 text-center font-mono text-2xl text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
+              <Heading1 className="mb-4 mt-6 text-center font-mono text-3xl text-pcnGreen md:mb-6 md:mt-8 md:text-4xl">
                 programaConNosotros
               </Heading1>
 
-              <p className="px-4 text-center text-base leading-relaxed text-white md:text-lg">
+              <p className="px-4 text-center text-lg leading-relaxed text-white md:text-lg">
                 La comunidad que necesitas para llevar tu carrera
                 <br className="hidden md:block" />
                 <span className="md:hidden"> </span>
