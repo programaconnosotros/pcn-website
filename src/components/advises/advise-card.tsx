@@ -157,7 +157,9 @@ export const AdviseCard = ({
         <CardContent className="px-4 pb-6 pt-2">
           <p>{advise.content}</p>
           <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-gray-500">{formatDate(advise.createdAt)}</p>
+            <p className="text-xs text-gray-500" suppressHydrationWarning>
+              {formatDate(advise.createdAt)}
+            </p>
             <p className="text-xs text-gray-500">
               {optimisticLikes.length} {optimisticLikes.length === 1 ? 'like' : 'likes'}
             </p>
