@@ -140,8 +140,14 @@ export const SponsorsSection = () => {
           <Card className="h-full border-2 border-dashed border-pcnPurple/50 bg-gradient-to-br from-pcnPurple/5 to-pcnPurple/10 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/50 dark:from-pcnGreen/5 dark:to-pcnGreen/10 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardContent className="flex h-full flex-col items-center justify-center p-6 text-center">
               <div className="mb-4 flex items-center justify-center gap-3">
-                <Building2 className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-                <Handshake className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Building2
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
+                <Handshake
+                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
+                  strokeWidth={1.5}
+                />
               </div>
               <h3 className="mb-2 text-lg font-semibold text-pcnPurple dark:text-pcnGreen md:text-xl">
                 ¿Querés sumarte como sponsor?
