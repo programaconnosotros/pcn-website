@@ -48,9 +48,12 @@ const sponsors = [
   {
     name: 'IEEE Computer Society',
     url: 'https://www.computer.org/',
+    logo: '/ieee-computer-society-logo.png',
     description: 'Avanzando en la computación como ciencia y profesión.',
     location: 'Buenos Aires, Argentina',
-    hasLogo: false,
+    hasLogo: true,
+    showName: false,
+    whiteBg: true,
   },
   {
     name: 'Endpoint Consulting',
@@ -81,7 +84,7 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
