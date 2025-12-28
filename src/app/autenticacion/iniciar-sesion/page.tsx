@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -28,6 +29,7 @@ const formSchema = z.object({
 export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { resolvedTheme } = useTheme();
   const emailParam = searchParams.get('email') || '';
   const passwordParam = searchParams.get('password') || '';
   const redirectTo = searchParams.get('redirect') || '';
@@ -87,7 +89,11 @@ export default function SignInPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
-          <img src="/logo.webp" alt="Logo" className="w-10" />
+          <img
+            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
+            alt="Logo"
+            className="w-20"
+          />
 
           <div className="space-y-2 text-center">
             <h1 className="mb-8 text-2xl font-semibold tracking-tight">Iniciar sesión</h1>

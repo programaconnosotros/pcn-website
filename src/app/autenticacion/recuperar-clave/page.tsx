@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useTheme } from 'next-themes';
 import * as z from 'zod';
 
 // Schemas para cada paso
@@ -46,6 +47,7 @@ const passwordSchema = z
 type Step = 'email' | 'code' | 'password' | 'success';
 
 export default function ResetPasswordPage() {
+  const { resolvedTheme } = useTheme();
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -166,7 +168,11 @@ export default function ResetPasswordPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
-          <img src="/logo.webp" alt="Logo" className="w-10" />
+          <img
+            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
+            alt="Logo"
+            className="w-20"
+          />
 
           <div className="space-y-2 text-center">
             <h1 className="mb-4 text-2xl font-semibold tracking-tight">

@@ -37,6 +37,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTheme } from 'next-themes';
 import * as z from 'zod';
 
 const formSchema = signUpSchema;
@@ -69,6 +70,7 @@ const COUNTRIES = [
 export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { resolvedTheme } = useTheme();
   const redirectTo = searchParams.get('redirect') || '';
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,7 +135,11 @@ export default function SignUpPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[500px]">
         <div className="flex flex-col items-center gap-6">
-          <img src="/logo.webp" alt="Logo" className="w-10" />
+          <img
+            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
+            alt="Logo"
+            className="w-20"
+          />
 
           <div className="space-y-2 text-center">
             <h1 className="mb-8 text-2xl font-semibold tracking-tight">Crear cuenta</h1>
