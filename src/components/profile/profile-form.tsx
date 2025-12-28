@@ -37,7 +37,7 @@ import {
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
-import { Briefcase, GraduationCap, Link2, User as UserIcon, Code, Loader2, Phone } from 'lucide-react';
+import { Briefcase, GraduationCap, Link2, User as UserIcon, Code, Loader2 } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 
 // Lista de países
@@ -270,8 +270,7 @@ export const ProfileForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber" className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
+              <Label htmlFor="phoneNumber">
                 Celular
               </Label>
               <Input id="phoneNumber" type="tel" placeholder="+54 9 11 1234-5678" {...form.register('phoneNumber')} />
