@@ -19,6 +19,7 @@ import {
   Megaphone,
   MicVocal,
   Music,
+  Podcast,
   Quote,
   ScrollText,
   Send,
@@ -116,7 +117,7 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
     {
       title: 'Podcast',
       url: '/podcast',
-      icon: MicVocal,
+      icon: Podcast,
     },
     {
       title: 'Lectura',
