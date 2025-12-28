@@ -13,33 +13,9 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Send, TvMinimalPlay } from 'lucide-react';
+import { TvMinimalPlay } from 'lucide-react';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
-
-const AddCourseCard = () => (
-  <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-    <div>
-      <CardHeader className="pb-2">
-        <CardTitle>¿Quéres sumar tu curso?</CardTitle>
-      </CardHeader>
-
-      <CardContent className="flex flex-1 flex-col text-sm">
-        Si querés sumar tu curso a esta página para que puedan verlo todos los miembros de la
-        comunidad, contactanos clickeando el botón de abajo!
-      </CardContent>
-    </div>
-
-    <CardFooter className="flex flex-row justify-between gap-4">
-      <Link className="block" href="https://wa.me/5493815777562">
-        <Button className="mt-4 flex flex-row items-center gap-2">
-          Contactar
-          <Send className="h-5 w-5" />
-        </Button>
-      </Link>
-    </CardFooter>
-  </Card>
-);
 
 const CourseCard = ({ course }: { course: Course }) => {
   const ViewButton = () => (
@@ -104,8 +80,6 @@ const Courses = () => (
           {communityCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
-
-          <AddCourseCard />
         </div>
 
         <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
