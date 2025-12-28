@@ -94,6 +94,7 @@ export default function SignUpPage() {
       toast.success('Usuario creado exitosamente! 🥳');
 
       // Redirigir a la página de verificación
+      // No deshabilitamos isSubmitting aquí para mantener el botón deshabilitado durante la redirección
       if (result?.redirectUrl) {
         router.push(result.redirectUrl);
       }
@@ -109,7 +110,8 @@ export default function SignUpPage() {
       } else {
         toast.error('Error al crear el usuario');
       }
-    } finally {
+      
+      // Solo rehabilitar el botón si hubo un error
       setIsSubmitting(false);
     }
   };
