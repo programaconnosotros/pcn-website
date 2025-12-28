@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma';
 import nodemailer from 'nodemailer';
 import { render } from '@react-email/render';
 
+const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
+
 const getTransporter = () => {
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
@@ -37,7 +39,25 @@ export const requestPasswordReset = async (email: string) => {
 
   if (!user) {
     // No revelar si el usuario existe o no por seguridad
-    return { success: true };
+    // Simular el mismo tiempo de respuesta
+    return { success: true, waitSeconds: 0 };
+  }
+
+  // Verificar rate limiting: buscar el último token enviado
+  const lastToken = await prisma.passwordResetToken.findFirst({
+    where: { email },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  if (lastToken) {
+    const secondsSinceLastToken = Math.floor(
+      (Date.now() - lastToken.createdAt.getTime()) / 1000,
+    );
+
+    if (secondsSinceLastToken < RATE_LIMIT_SECONDS) {
+      const waitSeconds = RATE_LIMIT_SECONDS - secondsSinceLastToken;
+      throw new Error(`RATE_LIMIT:${waitSeconds}`);
+    }
   }
 
   // Invalidar tokens anteriores para este email
@@ -88,6 +108,6 @@ export const requestPasswordReset = async (email: string) => {
     throw new Error('Error al enviar el email. Por favor, contacta al administrador.');
   }
 
-  return { success: true };
+  return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
 };
 

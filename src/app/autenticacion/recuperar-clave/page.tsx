@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, Loader2, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -50,6 +50,18 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Timer para el cooldown de reenvío
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
 
   const emailForm = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
@@ -69,12 +81,20 @@ export default function ResetPasswordPage() {
   const onEmailSubmit = async (values: z.infer<typeof emailSchema>) => {
     setIsLoading(true);
     try {
-      await requestPasswordReset(values.email);
+      const result = await requestPasswordReset(values.email);
       setEmail(values.email);
       setStep('code');
+      setResendCooldown(result.waitSeconds || 60);
       toast.success('Código enviado. Revisa tu correo electrónico.');
-    } catch {
-      toast.error('Error al enviar el código. Intenta nuevamente.');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      if (errorMessage.startsWith('RATE_LIMIT:')) {
+        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
+        setResendCooldown(waitSeconds);
+        toast.error(`Debes esperar ${waitSeconds} segundos antes de solicitar otro código.`);
+      } else {
+        toast.error('Error al enviar el código. Intenta nuevamente.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -108,12 +128,22 @@ export default function ResetPasswordPage() {
   };
 
   const resendCode = async () => {
+    if (resendCooldown > 0) return;
+
     setIsLoading(true);
     try {
-      await requestPasswordReset(email);
+      const result = await requestPasswordReset(email);
+      setResendCooldown(result.waitSeconds || 60);
       toast.success('Nuevo código enviado. Revisa tu correo electrónico.');
-    } catch {
-      toast.error('Error al reenviar el código.');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      if (errorMessage.startsWith('RATE_LIMIT:')) {
+        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
+        setResendCooldown(waitSeconds);
+        toast.error(`Debes esperar ${waitSeconds} segundos antes de reenviar.`);
+      } else {
+        toast.error('Error al reenviar el código.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -268,10 +298,10 @@ export default function ResetPasswordPage() {
                 <button
                   type="button"
                   onClick={resendCode}
-                  disabled={isLoading}
-                  className="text-muted-foreground hover:text-primary disabled:opacity-50"
+                  disabled={isLoading || resendCooldown > 0}
+                  className="text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Reenviar código
+                  {resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
                 </button>
               </div>
             </form>
