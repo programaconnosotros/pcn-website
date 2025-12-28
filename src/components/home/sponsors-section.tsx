@@ -78,7 +78,9 @@ export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
       <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 text-center">Sponsors</Heading2>
+        <Heading2 className="relative z-10 mb-4 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
+          Sponsors
+        </Heading2>
       </div>
 
       <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
