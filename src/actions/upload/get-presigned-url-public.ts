@@ -13,7 +13,10 @@ type GetPresignedUrlPublicParams = {
  * Obtiene una URL pre-firmada para subir imágenes de perfil durante el registro.
  * Esta función NO requiere autenticación, pero está limitada a la carpeta 'registration-profiles'.
  */
-export async function getPresignedUrlPublic({ fileName, contentType }: GetPresignedUrlPublicParams) {
+export async function getPresignedUrlPublic({
+  fileName,
+  contentType,
+}: GetPresignedUrlPublicParams) {
   if (!ALLOWED_TYPES.includes(contentType)) {
     throw new Error(
       'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)',
@@ -29,4 +32,3 @@ export async function getPresignedUrlPublic({ fileName, contentType }: GetPresig
 
   return { uploadUrl, fileUrl };
 }
-

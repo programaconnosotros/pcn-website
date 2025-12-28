@@ -46,7 +46,9 @@ const PCNStory = () => (
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
                 <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
               </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Historia de programaConNosotros</span>
+              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
+                Historia de programaConNosotros
+              </span>
             </Heading2>
           </div>
         </div>

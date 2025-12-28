@@ -116,11 +116,7 @@ export function FileUploadPublic({
       {preview ? (
         <div className="relative inline-block">
           <div className="relative h-32 w-32 overflow-hidden rounded-xl border bg-muted">
-            <img
-              src={preview}
-              alt="Preview"
-              className="h-full w-full object-cover"
-            />
+            <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
               <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
@@ -169,4 +165,3 @@ export function FileUploadPublic({
     </div>
   );
 }
-

@@ -44,8 +44,11 @@ export default function SignInPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log('[SignInPage] onSubmit iniciado');
-    console.log('[SignInPage] Valores del formulario:', { email: values.email, hasPassword: !!values.password });
-    
+    console.log('[SignInPage] Valores del formulario:', {
+      email: values.email,
+      hasPassword: !!values.password,
+    });
+
     setIsLoading(true);
 
     // Construir redirectTo con autoRegister si es necesario
@@ -66,9 +69,18 @@ export default function SignInPage() {
       // redirect() lanza una excepción especial que Next.js maneja internamente
     } catch (error) {
       console.error('[SignInPage] ERROR capturado:', error);
-      console.error('[SignInPage] Tipo de error:', error instanceof Error ? error.constructor.name : typeof error);
-      console.error('[SignInPage] Mensaje de error:', error instanceof Error ? error.message : String(error));
-      console.error('[SignInPage] Stack trace:', error instanceof Error ? error.stack : 'No disponible');
+      console.error(
+        '[SignInPage] Tipo de error:',
+        error instanceof Error ? error.constructor.name : typeof error,
+      );
+      console.error(
+        '[SignInPage] Mensaje de error:',
+        error instanceof Error ? error.message : String(error),
+      );
+      console.error(
+        '[SignInPage] Stack trace:',
+        error instanceof Error ? error.stack : 'No disponible',
+      );
 
       const errorMessage = error instanceof Error ? error.message : '';
 

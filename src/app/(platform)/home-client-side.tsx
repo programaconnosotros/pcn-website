@@ -202,7 +202,10 @@ const HomeClientSide = ({
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">Impulsá tu carrera</span> con estos{' '}
+            <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
+              Impulsá tu carrera
+            </span>{' '}
+            con estos{' '}
             <span className="relative inline-block">
               recursos
               <svg
@@ -502,7 +505,9 @@ const HomeClientSide = ({
 
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/IMG_8959.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
-              <Heading2 className="relative z-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.5)]">Conocé la historia de PCN</Heading2>
+              <Heading2 className="relative z-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.5)]">
+                Conocé la historia de PCN
+              </Heading2>
 
               <Paragraph className="relative z-10 text-center text-white">
                 Te contamos por qué decidimos crear la comunidad y todos los pasos que hicimos para
@@ -527,7 +532,9 @@ const HomeClientSide = ({
 
             <div className="relative flex min-h-[400px] flex-col items-center justify-center bg-[url('/photos/talk-class.webp')] bg-cover bg-center bg-no-repeat p-6">
               <div className="absolute inset-0 bg-black/70"></div>
-              <Heading2 className="relative z-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.5)]">Visita la galería de PCN</Heading2>
+              <Heading2 className="relative z-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.5)]">
+                Visita la galería de PCN
+              </Heading2>
 
               <Paragraph className="relative z-10 text-center text-white">
                 Conocé la comunidad o revisa algunos recuerdos en nuestra galería.

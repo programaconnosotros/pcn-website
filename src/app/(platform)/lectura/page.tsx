@@ -167,8 +167,10 @@ const ReadingPage = () => {
                 <BookOpen className="h-8 w-8 text-primary dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)]" />
               </div>
               <div className="flex-1">
-                <h3 className="mb-2 text-xl font-semibold dark:text-pcnGreen dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.9)]">Sumate al club de lectura!</h3>
-                <p className="mb-4 text-muted-foreground dark:text-shadow-[0_0_8px_rgba(4,244,190,0.4)]">
+                <h3 className="mb-2 text-xl font-semibold dark:text-pcnGreen dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.9)]">
+                  Sumate al club de lectura!
+                </h3>
+                <p className="dark:text-shadow-[0_0_8px_rgba(4,244,190,0.4)] mb-4 text-muted-foreground">
                   En PCN tenemos un club de lectura donde compartimos y discutimos libros sobre
                   programación, tecnología y desarrollo profesional. ¡Sumate al grupo de WhatsApp y
                   participá de nuestras lecturas!

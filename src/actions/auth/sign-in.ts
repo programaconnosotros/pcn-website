@@ -91,14 +91,17 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
     // Redirigir a la URL especificada o a home por defecto
     const redirectTo = data.redirectTo || '/';
     console.log('[signIn] Proceso completado exitosamente, redirigiendo a:', redirectTo);
-    
+
     // redirect() lanza una excepción especial en Next.js que no debe ser capturada
     // Esta es la forma correcta de redirigir desde un server action
     redirect(redirectTo);
   } catch (error) {
     console.error('[signIn] ERROR GENERAL:', error);
-    console.error('[signIn] Stack trace:', error instanceof Error ? error.stack : 'No stack available');
-    
+    console.error(
+      '[signIn] Stack trace:',
+      error instanceof Error ? error.stack : 'No stack available',
+    );
+
     // Re-lanzar el error para que el cliente lo maneje
     if (error instanceof Error) {
       throw error;
