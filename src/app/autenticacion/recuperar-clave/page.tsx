@@ -1,5 +1,8 @@
 'use client';
-import { resetPassword } from '@/actions/auth/reset-password';
+
+import { requestPasswordReset } from '@/actions/auth/request-password-reset';
+import { verifyResetCode } from '@/actions/auth/verify-reset-code';
+import { completePasswordReset } from '@/actions/auth/complete-password-reset';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -11,30 +14,120 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
+import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, Loader2, UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
-const formSchema = z.object({
+// Schemas para cada paso
+const emailSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
 });
 
-export default function ResetPasswordPage() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-    },
+const codeSchema = z.object({
+  code: z
+    .string()
+    .length(6, 'El código debe tener 6 dígitos')
+    .regex(/^\d+$/, 'El código solo puede contener números'),
+});
+
+const passwordSchema = z
+  .object({
+    password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) =>
-    toast.promise(resetPassword(values.email), {
-      loading: 'Generando nueva contraseña...',
-      success: 'Si el usuario existe, vas a recibir una nueva contraseña.',
-      error: 'No se pudo procesar la solicitud.',
-    });
+type Step = 'email' | 'code' | 'password' | 'success';
+
+export default function ResetPasswordPage() {
+  const [step, setStep] = useState<Step>('email');
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const emailForm = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: { email: '' },
+  });
+
+  const codeForm = useForm<z.infer<typeof codeSchema>>({
+    resolver: zodResolver(codeSchema),
+    defaultValues: { code: '' },
+  });
+
+  const passwordForm = useForm<z.infer<typeof passwordSchema>>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  });
+
+  const onEmailSubmit = async (values: z.infer<typeof emailSchema>) => {
+    setIsLoading(true);
+    try {
+      await requestPasswordReset(values.email);
+      setEmail(values.email);
+      setStep('code');
+      toast.success('Código enviado. Revisa tu correo electrónico.');
+    } catch {
+      toast.error('Error al enviar el código. Intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onCodeSubmit = async (values: z.infer<typeof codeSchema>) => {
+    setIsLoading(true);
+    try {
+      await verifyResetCode(email, values.code);
+      setCode(values.code);
+      setStep('password');
+      toast.success('Código verificado. Ahora puedes establecer tu nueva contraseña.');
+    } catch {
+      toast.error('Código inválido o expirado. Intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onPasswordSubmit = async (values: z.infer<typeof passwordSchema>) => {
+    setIsLoading(true);
+    try {
+      await completePasswordReset(email, code, values.password);
+      setStep('success');
+      toast.success('Contraseña actualizada exitosamente.');
+    } catch {
+      toast.error('Error al actualizar la contraseña. Intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resendCode = async () => {
+    setIsLoading(true);
+    try {
+      await requestPasswordReset(email);
+      toast.success('Nuevo código enviado. Revisa tu correo electrónico.');
+    } catch {
+      toast.error('Error al reenviar el código.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const goBack = () => {
+    if (step === 'code') {
+      setStep('email');
+      setEmail('');
+    } else if (step === 'password') {
+      setStep('code');
+      setCode('');
+    }
+  };
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
@@ -43,58 +136,252 @@ export default function ResetPasswordPage() {
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
           <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Restablecer contraseña</h1>
+            <h1 className="mb-4 text-2xl font-semibold tracking-tight">
+              {step === 'email' && 'Restablecer contraseña'}
+              {step === 'code' && 'Verificar código'}
+              {step === 'password' && 'Nueva contraseña'}
+              {step === 'success' && '¡Contraseña actualizada!'}
+            </h1>
+
+            {/* Indicador de pasos */}
+            {step !== 'success' && (
+              <div className="flex items-center justify-center gap-2">
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
+                    step === 'email'
+                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  1
+                </div>
+                <div className="h-0.5 w-8 bg-muted" />
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
+                    step === 'code'
+                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  2
+                </div>
+                <div className="h-0.5 w-8 bg-muted" />
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
+                    step === 'password'
+                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  3
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
+        {/* Paso 1: Email */}
+        {step === 'email' && (
+          <Form {...emailForm}>
+            <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="mt-6 space-y-4">
+              <FormField
+                control={emailForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Correo electrónico</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="correo@ejemplo.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormControl>
-                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                  </FormControl>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    Enviar código
+                    <Mail className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          </Form>
+        )}
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {/* Paso 2: Código */}
+        {step === 'code' && (
+          <Form {...codeForm}>
+            <form onSubmit={codeForm.handleSubmit(onCodeSubmit)} className="mt-6 space-y-4">
+              <p className="text-center text-sm text-muted-foreground">
+                Enviamos un código de 6 dígitos a <strong>{email}</strong>
+              </p>
 
-            <Button type="submit" className="w-full">
-              Generar nueva contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-        </Form>
+              <FormField
+                control={codeForm.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Código de verificación</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="000000"
+                        maxLength={6}
+                        className="text-center text-2xl tracking-widest"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <div className="mt-4 flex flex-row gap-4">
-          <Link href="/autenticacion/iniciar-sesion" className="w-full">
-            <Button variant="outline" className="w-full">
-              Iniciar sesión
-              <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Verificando...
+                  </>
+                ) : (
+                  <>
+                    Verificar código
+                    <ShieldCheck className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
 
-          <Link href="/autenticacion/registro" className="w-full">
-            <Button variant="outline" className="w-full">
-              Crear cuenta
-              <UserPlus className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+              <div className="flex justify-between text-sm">
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  ← Cambiar email
+                </button>
+                <button
+                  type="button"
+                  onClick={resendCode}
+                  disabled={isLoading}
+                  className="text-muted-foreground hover:text-primary disabled:opacity-50"
+                >
+                  Reenviar código
+                </button>
+              </div>
+            </form>
+          </Form>
+        )}
 
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
+        {/* Paso 3: Nueva contraseña */}
+        {step === 'password' && (
+          <Form {...passwordForm}>
+            <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="mt-6 space-y-4">
+              <FormField
+                control={passwordForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nueva contraseña</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={passwordForm.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmar contraseña</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Actualizando...
+                  </>
+                ) : (
+                  <>
+                    Actualizar contraseña
+                    <KeyRound className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+
+              <button
+                type="button"
+                onClick={goBack}
+                className="w-full text-center text-sm text-muted-foreground hover:text-primary"
+              >
+                ← Volver al código
+              </button>
+            </form>
+          </Form>
+        )}
+
+        {/* Éxito */}
+        {step === 'success' && (
+          <div className="mt-6 space-y-4 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+              <ShieldCheck className="h-8 w-8 text-green-600 dark:text-green-400" />
+            </div>
+            <p className="text-muted-foreground">
+              Tu contraseña ha sido actualizada exitosamente. Ya puedes iniciar sesión con tu nueva
+              contraseña.
+            </p>
+            <Link href="/autenticacion/iniciar-sesion">
+              <Button className="w-full">
+                Iniciar sesión
+                <LogIn className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {/* Enlaces adicionales */}
+        {step !== 'success' && (
+          <>
+            <div className="mt-4 flex flex-row gap-4">
+              <Link href="/autenticacion/iniciar-sesion" className="w-full">
+                <Button variant="outline" className="w-full">
+                  Iniciar sesión
+                  <LogIn className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Link href="/autenticacion/registro" className="w-full">
+                <Button variant="outline" className="w-full">
+                  Crear cuenta
+                  <UserPlus className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+
+            <Link
+              href="/"
+              className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Volver a la página principal
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

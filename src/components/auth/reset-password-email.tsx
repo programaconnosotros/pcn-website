@@ -1,6 +1,10 @@
-import { User } from '@prisma/client';
-
-export const ResetPasswordEmail = ({ user, newPassword }: { user: User; newPassword: string }) => (
+export const PasswordResetCodeEmail = ({
+  userName,
+  code,
+}: {
+  userName: string;
+  code: string;
+}) => (
   <div
     style={{
       fontFamily: 'Arial, sans-serif',
@@ -30,26 +34,27 @@ export const ResetPasswordEmail = ({ user, newPassword }: { user: User; newPassw
           letterSpacing: '-0.025em',
         }}
       >
-        Restablecimiento de Contraseña
+        Código de Verificación
       </h1>
     </div>
 
     {/* Contenido principal */}
     <div style={{ padding: '10px 0' }}>
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        ¡Hola {user.name || ''}!
+        ¡Hola {userName || ''}!
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Tu cuenta ha sido actualizada con una nueva contraseña temporal:
+        Recibimos una solicitud para restablecer la contraseña de tu cuenta. Usa el siguiente código
+        para verificar tu identidad:
       </p>
 
       <div
         style={{
           backgroundColor: '#0d1b2a',
-          padding: '15px',
+          padding: '25px',
           borderRadius: '5px',
-          margin: '20px 0',
+          margin: '25px 0',
           textAlign: 'center',
           borderLeft: '4px solid #04f4be',
         }}
@@ -57,50 +62,24 @@ export const ResetPasswordEmail = ({ user, newPassword }: { user: User; newPassw
         <p
           style={{
             fontFamily: 'monospace',
-            fontSize: '18px',
+            fontSize: '32px',
             fontWeight: 'bold',
             margin: '0',
-            color: '#e5e7eb',
-            letterSpacing: '1px',
+            color: '#04f4be',
+            letterSpacing: '8px',
           }}
         >
-          {newPassword}
+          {code}
         </p>
       </div>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Por motivos de seguridad, te recomendamos iniciar sesión y cambiar esta contraseña por una
-        que puedas recordar fácilmente.
+        Este código expira en <strong style={{ color: '#04f4be' }}>15 minutos</strong>.
       </p>
 
-      {/* Botón de acción */}
-      <div
-        style={{
-          textAlign: 'center',
-          margin: '25px 0',
-        }}
-      >
-        <a
-          href={`https://programaconnosotros.com/auth/sign-in?email=${encodeURIComponent(user.email)}`}
-          style={{
-            backgroundColor: '#04f4be',
-            color: '#000000',
-            padding: '12px 24px',
-            borderRadius: '5px',
-            textDecoration: 'none',
-            fontWeight: 'bold',
-            display: 'inline-block',
-            textAlign: 'center',
-            fontSize: '16px',
-          }}
-        >
-          Iniciar Sesión
-        </a>
-      </div>
-
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Si no has solicitado este cambio, por favor contacta inmediatamente con el administrador del
-        sistema.
+        Si no solicitaste este cambio, puedes ignorar este correo de forma segura. Tu contraseña
+        no será modificada.
       </p>
     </div>
 

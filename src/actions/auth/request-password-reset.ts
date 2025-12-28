@@ -1,8 +1,7 @@
 'use server';
 
-import { ResetPasswordEmail } from '@/components/auth/reset-password-email';
+import { PasswordResetCodeEmail } from '@/components/auth/reset-password-email';
 import prisma from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import { render } from '@react-email/render';
 
@@ -25,35 +24,55 @@ const getTransporter = () => {
   });
 };
 
-export const resetPassword = async (email: string) => {
+// Genera un código de 6 dígitos
+const generateCode = (): string => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+export const requestPasswordReset = async (email: string) => {
+  // Verificar que el usuario existe
   const user = await prisma.user.findUnique({
     where: { email },
   });
 
   if (!user) {
-    throw new Error('User not found');
+    // No revelar si el usuario existe o no por seguridad
+    return { success: true };
   }
 
-  await prisma.session.deleteMany({
-    where: { userId: user.id },
+  // Invalidar tokens anteriores para este email
+  await prisma.passwordResetToken.updateMany({
+    where: {
+      email,
+      used: false,
+    },
+    data: {
+      used: true,
+    },
   });
 
-  const newPassword = Math.random().toString(36).substring(2, 15);
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  // Generar nuevo código
+  const code = generateCode();
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { password: hashedPassword },
+  // Guardar token en la base de datos
+  await prisma.passwordResetToken.create({
+    data: {
+      email,
+      code,
+      expiresAt,
+    },
   });
 
-  const emailHtml = await render(ResetPasswordEmail({ user, newPassword }));
+  // Enviar email con el código
+  const emailHtml = await render(PasswordResetCodeEmail({ userName: user.name, code }));
 
   try {
     const transporter = getTransporter();
     await transporter.sendMail({
       from: process.env.SMTP_USER,
       to: user.email,
-      subject: 'Contraseña restablecida',
+      subject: 'Código de verificación para restablecer contraseña',
       html: emailHtml,
     });
   } catch (error) {
@@ -62,11 +81,13 @@ export const resetPassword = async (email: string) => {
       error instanceof Error ? error.message : 'Unknown error',
     );
 
-    // Si el error es por credenciales faltantes, dar un mensaje más claro
     if (error instanceof Error && error.message.includes('SMTP credentials not configured')) {
       throw new Error('Error de configuración: Las credenciales de email no están configuradas');
     }
 
     throw new Error('Error al enviar el email. Por favor, contacta al administrador.');
   }
+
+  return { success: true };
 };
+

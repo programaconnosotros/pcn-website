@@ -302,3 +302,15 @@ model AppLog {
   @@index([level])
   @@index([createdAt])
 }
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  code      String   // Código de 6 dígitos
+  expiresAt DateTime // Expira en 15 minutos
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([code])
+}
