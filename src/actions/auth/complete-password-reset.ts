@@ -21,7 +21,7 @@ export const completePasswordReset = async (
   });
 
   if (!token) {
-    throw new Error('Código inválido o expirado. Solicita un nuevo código.');
+    throw new Error('Código inválido o expirado. Solicitá un nuevo código.');
   }
 
   // Verificar que el usuario existe

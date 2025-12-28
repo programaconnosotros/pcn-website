@@ -105,7 +105,7 @@ export const requestPasswordReset = async (email: string) => {
       throw new Error('Error de configuración: Las credenciales de email no están configuradas');
     }
 
-    throw new Error('Error al enviar el email. Por favor, contacta al administrador.');
+    throw new Error('Error al enviar el email. Por favor, contactá al administrador.');
   }
 
   return { success: true, waitSeconds: RATE_LIMIT_SECONDS };

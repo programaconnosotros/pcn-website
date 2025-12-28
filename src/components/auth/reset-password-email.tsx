@@ -45,7 +45,7 @@ export const PasswordResetCodeEmail = ({
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Recibimos una solicitud para restablecer la contraseña de tu cuenta. Usa el siguiente código
+        Recibimos una solicitud para restablecer la contraseña de tu cuenta. Usá el siguiente código
         para verificar tu identidad:
       </p>
 
@@ -78,8 +78,8 @@ export const PasswordResetCodeEmail = ({
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Si no solicitaste este cambio, puedes ignorar este correo de forma segura. Tu contraseña
-        no será modificada.
+        Si no solicitaste este cambio, podés ignorar este correo tranquilo. Tu contraseña no va a
+        ser modificada.
       </p>
     </div>
 

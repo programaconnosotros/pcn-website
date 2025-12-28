@@ -85,15 +85,15 @@ export default function ResetPasswordPage() {
       setEmail(values.email);
       setStep('code');
       setResendCooldown(result.waitSeconds || 60);
-      toast.success('Código enviado. Revisa tu correo electrónico.');
+      toast.success('Código enviado. Revisá tu correo electrónico.');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
       if (errorMessage.startsWith('RATE_LIMIT:')) {
         const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
         setResendCooldown(waitSeconds);
-        toast.error(`Debes esperar ${waitSeconds} segundos antes de solicitar otro código.`);
+        toast.error(`Tenés que esperar ${waitSeconds} segundos antes de pedir otro código.`);
       } else {
-        toast.error('Error al enviar el código. Intenta nuevamente.');
+        toast.error('Error al enviar el código. Intentá de nuevo.');
       }
     } finally {
       setIsLoading(false);
@@ -106,9 +106,9 @@ export default function ResetPasswordPage() {
       await verifyResetCode(email, values.code);
       setCode(values.code);
       setStep('password');
-      toast.success('Código verificado. Ahora puedes establecer tu nueva contraseña.');
+      toast.success('Código verificado. Ahora podés crear tu nueva contraseña.');
     } catch {
-      toast.error('Código inválido o expirado. Intenta nuevamente.');
+      toast.error('Código inválido o expirado. Intentá de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +121,7 @@ export default function ResetPasswordPage() {
       setStep('success');
       toast.success('Contraseña actualizada exitosamente.');
     } catch {
-      toast.error('Error al actualizar la contraseña. Intenta nuevamente.');
+      toast.error('Error al actualizar la contraseña. Intentá de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -134,13 +134,13 @@ export default function ResetPasswordPage() {
     try {
       const result = await requestPasswordReset(email);
       setResendCooldown(result.waitSeconds || 60);
-      toast.success('Nuevo código enviado. Revisa tu correo electrónico.');
+      toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
       if (errorMessage.startsWith('RATE_LIMIT:')) {
         const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
         setResendCooldown(waitSeconds);
-        toast.error(`Debes esperar ${waitSeconds} segundos antes de reenviar.`);
+        toast.error(`Tenés que esperar ${waitSeconds} segundos antes de reenviar.`);
       } else {
         toast.error('Error al reenviar el código.');
       }
@@ -372,7 +372,7 @@ export default function ResetPasswordPage() {
               <ShieldCheck className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
             <p className="text-muted-foreground">
-              Tu contraseña ha sido actualizada exitosamente. Ya puedes iniciar sesión con tu nueva
+              Tu contraseña fue actualizada con éxito. Ya podés iniciar sesión con tu nueva
               contraseña.
             </p>
             <Link href="/autenticacion/iniciar-sesion">
