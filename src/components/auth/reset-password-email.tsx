@@ -34,7 +34,7 @@ export const PasswordResetCodeEmail = ({
           letterSpacing: '-0.025em',
         }}
       >
-        Código de Verificación
+        Código de verificación
       </h1>
     </div>
 
@@ -78,7 +78,7 @@ export const PasswordResetCodeEmail = ({
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Si no solicitaste este cambio, podés ignorar este correo tranquilo. Tu contraseña no va a
+        Si no solicitaste este cambio, podés ignorar este correo. Tu contraseña no va a
         ser modificada.
       </p>
     </div>
@@ -96,7 +96,7 @@ export const PasswordResetCodeEmail = ({
     >
       <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>
       <p style={{ margin: '5px 0' }}>
-        &copy; {new Date().getFullYear()} Programa Con Nosotros. Todos los derechos reservados.
+        &copy; {new Date().getFullYear()} programaConNosotros: la comunidad que necesitas para llevar tu carrera al siguiente nivel.
       </p>
     </div>
   </div>
