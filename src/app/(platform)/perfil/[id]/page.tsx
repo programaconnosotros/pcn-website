@@ -290,13 +290,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                       </div>
                     )}
 
-                     {/* Contacto */}
-                     {(user.email || user.phoneNumber) && (
-                       <div>
-                         <div className="mb-2 flex items-center gap-2">
-                           <Contact className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                           <h2 className="font-semibold">Contacto</h2>
-                         </div>
+                    {/* Contacto */}
+                    {(user.email || user.phoneNumber) && (
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <Contact className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                          <h2 className="font-semibold">Contacto</h2>
+                        </div>
                         <div className="space-y-1 pl-7">
                           {user.email && (
                             <div className="flex items-center gap-2">
