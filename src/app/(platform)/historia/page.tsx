@@ -49,7 +49,7 @@ const PCNStory = () => (
           <div className="flex flex-1 flex-col items-center gap-4 text-center">
             <Card
               id="introduccion"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle className="text-center">Introducción</CardTitle>
@@ -77,7 +77,7 @@ const PCNStory = () => (
 
             <Card
               id="comienzos-utn"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Comienzos en la UTN-FRT</CardTitle>
@@ -103,7 +103,7 @@ const PCNStory = () => (
 
             <Card
               id="voluntariado-ieee"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Voluntariado en el IEEE</CardTitle>
@@ -149,7 +149,7 @@ const PCNStory = () => (
 
             <Card
               id="code-warfare"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Code Warfare</CardTitle>
@@ -187,7 +187,7 @@ const PCNStory = () => (
 
             <Card
               id="ieee-computer-society"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>IEEE Computer Society</CardTitle>
@@ -202,7 +202,7 @@ const PCNStory = () => (
 
             <Card
               id="club-algoritmos"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Club de Algoritmos</CardTitle>
@@ -225,7 +225,7 @@ const PCNStory = () => (
 
             <Card
               id="tucuman-hacking"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Actividades con Tucumán Hacking</CardTitle>
@@ -299,7 +299,7 @@ const PCNStory = () => (
 
             <Card
               id="nibble"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Nibble</CardTitle>
@@ -327,7 +327,7 @@ const PCNStory = () => (
 
             <Card
               id="nacimiento-pcn"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>El nacimiento de programaConNosotros</CardTitle>
@@ -357,7 +357,7 @@ const PCNStory = () => (
 
             <Card
               id="cursos-git"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Cursos de Git & GitHub con la cátedra de AED</CardTitle>
@@ -375,7 +375,7 @@ const PCNStory = () => (
 
             <Card
               id="lightning-talks"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Lightning Talks</CardTitle>
@@ -392,7 +392,7 @@ const PCNStory = () => (
 
             <Card
               id="pcn-global-learning"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>PCN & Global Learning</CardTitle>
@@ -407,7 +407,7 @@ const PCNStory = () => (
 
             <Card
               id="desarrollo-website"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors md:hover:border-pcnPurple md:dark:hover:border-pcnGreen"
             >
               <CardHeader>
                 <CardTitle>Empezamos a desarrollar el website</CardTitle>
