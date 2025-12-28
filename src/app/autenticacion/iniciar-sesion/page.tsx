@@ -46,6 +46,7 @@ export default function SignInPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    console.log('[SignInPage] onSubmit iniciado');
 
     // Construir redirectTo con autoRegister si es necesario
     let finalRedirect = redirectTo;
@@ -55,22 +56,36 @@ export default function SignInPage() {
     }
 
     try {
+      console.log('[SignInPage] Llamando a signIn...');
       const result = await signIn({ ...values, redirectTo: finalRedirect });
+      console.log('[SignInPage] signIn exitoso, resultado:', result);
       toast.success('¡Bienvenido! 👋');
       // Redirect desde el cliente
       router.push(result.redirectTo);
     } catch (error) {
+      console.log('[SignInPage] Catch ejecutado');
       console.error('[SignInPage] Error capturado:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.error('[SignInPage] Error message:', errorMessage);
+      console.error('[SignInPage] Error type:', typeof error);
+      console.error('[SignInPage] Error instanceof Error:', error instanceof Error);
+      if (error instanceof Error) {
+        console.error('[SignInPage] Error name:', error.name);
+        console.error('[SignInPage] Error stack:', error.stack);
+      }
 
-      // Verificar si el email no está verificado
-      if (
-        errorMessage.startsWith('EMAIL_NOT_VERIFIED:') ||
-        (error instanceof Error && error.name === 'EMAIL_NOT_VERIFIED')
-      ) {
-        const email = errorMessage.includes(':') ? errorMessage.split(':')[1] : values.email;
+      // Verificar si el email no está verificado - múltiples formas de verificar
+      const isEmailNotVerified =
+        typeof errorMessage === 'string' &&
+        (errorMessage.includes('EMAIL_NOT_VERIFIED') ||
+          errorMessage.startsWith('EMAIL_NOT_VERIFIED:'));
+
+      if (isEmailNotVerified) {
+        // Extraer el email del mensaje de error
+        const emailMatch = errorMessage.match(/EMAIL_NOT_VERIFIED:(.+)/);
+        const email = emailMatch ? emailMatch[1] : values.email;
         console.log('[SignInPage] Email no verificado, redirigiendo a verificación:', email);
+        
         toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
 
         // Enviar código de verificación
