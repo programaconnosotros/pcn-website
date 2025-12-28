@@ -71,7 +71,7 @@ export function NavUser({ user }: { user: User | null }) {
             <Link href="/autenticacion/registro">
               <Button
                 className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}
-                variant="secondary"
+                variant="outline"
               >
                 {isCollapsed && !isMobile ? (
                   <UserPlus className="h-5 w-5" />
