@@ -82,20 +82,18 @@ const LanguageDialog = ({
         Agregar lenguaje
       </Button>
     </DialogTrigger>
-    <DialogContent className="border-gray-200 bg-white text-gray-950 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+    <DialogContent>
       <DialogHeader>
         <DialogTitle>Agregar lenguaje de programación</DialogTitle>
       </DialogHeader>
       <div className="space-y-4 py-4">
         <div className="space-y-2">
-          <Label htmlFor="language" className="text-gray-700 dark:text-gray-300">
-            Selecciona un lenguaje
-          </Label>
+          <Label htmlFor="language">Selecciona un lenguaje</Label>
           <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-            <SelectTrigger className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+            <SelectTrigger>
               <SelectValue placeholder="Seleccionar lenguaje" />
             </SelectTrigger>
-            <SelectContent className="border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+            <SelectContent>
               {programmingLanguages.map((lang) => (
                 <SelectItem key={lang.id} value={lang.id}>
                   <div className="flex items-center gap-2">
