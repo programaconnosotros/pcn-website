@@ -50,6 +50,7 @@ export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
 
   // Timer para el cooldown de reenvío
@@ -86,6 +87,8 @@ export default function ResetPasswordPage() {
       setStep('code');
       setResendCooldown(result.waitSeconds || 60);
       toast.success('Código enviado. Revisá tu correo electrónico.');
+      // Deshabilitar loading después del éxito para permitir interacción en el siguiente paso
+      setIsLoading(false);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
       if (errorMessage.startsWith('RATE_LIMIT:')) {
@@ -95,7 +98,6 @@ export default function ResetPasswordPage() {
       } else {
         toast.error('Error al enviar el código. Intentá de nuevo.');
       }
-    } finally {
       setIsLoading(false);
     }
   };
@@ -107,9 +109,10 @@ export default function ResetPasswordPage() {
       setCode(values.code);
       setStep('password');
       toast.success('Código verificado. Ahora podés crear tu nueva contraseña.');
+      // Deshabilitar loading después del éxito para permitir interacción en el siguiente paso
+      setIsLoading(false);
     } catch {
       toast.error('Código inválido o expirado. Intentá de nuevo.');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -120,9 +123,9 @@ export default function ResetPasswordPage() {
       await completePasswordReset(email, code, values.password);
       setStep('success');
       toast.success('Contraseña actualizada exitosamente.');
+      // Mantener el botón deshabilitado en el estado de éxito (ya no hay más acciones)
     } catch {
       toast.error('Error al actualizar la contraseña. Intentá de nuevo.');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -130,7 +133,7 @@ export default function ResetPasswordPage() {
   const resendCode = async () => {
     if (resendCooldown > 0) return;
 
-    setIsLoading(true);
+    setIsResending(true);
     try {
       const result = await requestPasswordReset(email);
       setResendCooldown(result.waitSeconds || 60);
@@ -145,7 +148,7 @@ export default function ResetPasswordPage() {
         toast.error('Error al reenviar el código.');
       }
     } finally {
-      setIsLoading(false);
+      setIsResending(false);
     }
   };
 
@@ -298,10 +301,10 @@ export default function ResetPasswordPage() {
                 <button
                   type="button"
                   onClick={resendCode}
-                  disabled={isLoading || resendCooldown > 0}
+                  disabled={isResending || resendCooldown > 0}
                   className="text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
+                  {isResending ? 'Enviando...' : resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
                 </button>
               </div>
             </form>

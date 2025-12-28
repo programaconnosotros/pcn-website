@@ -55,6 +55,7 @@ export default function SignInPage() {
     try {
       await signIn({ ...values, redirectTo: finalRedirect });
       toast.success('¡Bienvenido! 👋');
+      // No deshabilitamos isLoading aquí - el servidor redirige automáticamente
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
       
@@ -71,13 +72,14 @@ export default function SignInPage() {
         }
         
         // Redirigir a la página de verificación
+        // Mantener el botón deshabilitado durante la redirección
         const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
         router.push(verifyUrl);
         return;
       }
       
       toast.error(errorMessage || 'No pudimos iniciar la sesión.');
-    } finally {
+      // Solo rehabilitar el botón si hubo un error real
       setIsLoading(false);
     }
   };
