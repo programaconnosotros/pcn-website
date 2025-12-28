@@ -65,7 +65,10 @@ export default function SignInPage() {
       console.error('[SignInPage] Error message:', errorMessage);
 
       // Verificar si el email no está verificado
-      if (errorMessage.startsWith('EMAIL_NOT_VERIFIED:') || (error instanceof Error && error.name === 'EMAIL_NOT_VERIFIED')) {
+      if (
+        errorMessage.startsWith('EMAIL_NOT_VERIFIED:') ||
+        (error instanceof Error && error.name === 'EMAIL_NOT_VERIFIED')
+      ) {
         const email = errorMessage.includes(':') ? errorMessage.split(':')[1] : values.email;
         console.log('[SignInPage] Email no verificado, redirigiendo a verificación:', email);
         toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
