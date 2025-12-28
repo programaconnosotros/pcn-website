@@ -144,7 +144,7 @@ const HomeClientSide = ({
                 programaConNosotros
               </Heading1>
 
-              <p className="px-4 text-center text-lg leading-relaxed text-white md:text-lg">
+              <p className="px-4 text-center text-lg leading-relaxed text-white drop-shadow-[0_0_10px_rgba(4,244,190,0.6)] md:text-lg">
                 La comunidad que necesitas para llevar tu carrera
                 <br className="hidden md:block" />
                 <span className="md:hidden"> </span>
