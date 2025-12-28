@@ -37,7 +37,7 @@ import {
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
 import { LanguageCoinsContainer } from './language-coins-container';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
-import { Briefcase, GraduationCap, Link2, User as UserIcon, Code } from 'lucide-react';
+import { Briefcase, GraduationCap, Link2, User as UserIcon, Code, Loader2 } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 
 // Lista de países
@@ -159,6 +159,7 @@ export const ProfileForm = ({
 
   const [userLanguages, setUserLanguages] = useState<UserProgrammingLanguage[]>(languages || []);
   const [currentLanguage, setCurrentLanguage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const watchCountry = form.watch('countryOfOrigin');
 
   useEffect(() => {
@@ -214,13 +215,18 @@ export const ProfileForm = ({
   };
 
   const onSubmit = async (data: ProfileFormData) => {
+    setIsSubmitting(true);
     try {
       await toast.promise(updateProfile(data), {
         loading: 'Actualizando perfil...',
         success: 'Perfil actualizado correctamente',
         error: 'Error al actualizar el perfil',
       });
-    } catch (error) {}
+    } catch (error) {
+      // Error manejado por toast
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -465,8 +471,15 @@ export const ProfileForm = ({
         </div>
 
         <div className="mb-8 pb-4">
-          <Button type="submit" variant="default">
-            Guardar cambios
+          <Button type="submit" variant="default" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Guardando...
+              </>
+            ) : (
+              'Guardar cambios'
+            )}
           </Button>
         </div>
       </form>

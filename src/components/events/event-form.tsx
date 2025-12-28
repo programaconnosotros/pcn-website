@@ -14,10 +14,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, MapPin, Building2, Save, Plus, Trash2, Users } from 'lucide-react';
+import { Calendar, MapPin, Building2, Save, Plus, Trash2, Users, Loader2 } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
+import { useState } from 'react';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -55,8 +56,15 @@ export function EventForm({
     name: 'sponsors',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (values: EventFormData) => {
-    await onSubmit(values);
+    setIsSubmitting(true);
+    try {
+      await onSubmit(values);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -349,12 +357,21 @@ export function EventForm({
 
           {/* Botones */}
           <div className="flex gap-4">
-            <Button type="submit" variant="pcn" className="flex-1">
-              <Save className="mr-2 h-4 w-4" />
-              {submitLabel}
+            <Button type="submit" variant="pcn" className="flex-1" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {submitLabel}
+                </>
+              )}
             </Button>
             <Link href={cancelHref} className="flex-1">
-              <Button type="button" variant="outline" className="w-full">
+              <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>
                 Cancelar
               </Button>
             </Link>

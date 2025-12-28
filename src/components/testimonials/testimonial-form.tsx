@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { createTestimonial } from '@/actions/testimonials/create-testimonial';
 import { updateTestimonial } from '@/actions/testimonials/update-testimonial';
 import { deleteTestimonial } from '@/actions/testimonials/delete-testimonial';
-import { Save, X, Trash2 } from 'lucide-react';
+import { Save, X, Trash2, Loader2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,6 +46,7 @@ export function TestimonialForm({
   onSuccess,
 }: TestimonialFormProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<TestimonialFormData>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: defaultValues || {
@@ -54,20 +55,25 @@ export function TestimonialForm({
   });
 
   const onSubmit = async (values: TestimonialFormData) => {
-    const promise = testimonialId
-      ? updateTestimonial(testimonialId, values)
-      : createTestimonial(values);
+    setIsSubmitting(true);
+    try {
+      const promise = testimonialId
+        ? updateTestimonial(testimonialId, values)
+        : createTestimonial(values);
 
-    toast.promise(promise, {
-      loading: testimonialId ? 'Actualizando testimonio...' : 'Creando testimonio...',
-      success: testimonialId
-        ? 'Testimonio actualizado exitosamente'
-        : 'Testimonio creado exitosamente',
-      error: (err) => err.message || 'Error al guardar el testimonio',
-    });
+      toast.promise(promise, {
+        loading: testimonialId ? 'Actualizando testimonio...' : 'Creando testimonio...',
+        success: testimonialId
+          ? 'Testimonio actualizado exitosamente'
+          : 'Testimonio creado exitosamente',
+        error: (err) => err.message || 'Error al guardar el testimonio',
+      });
 
-    await promise;
-    onSuccess();
+      await promise;
+      onSuccess();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -147,9 +153,18 @@ export function TestimonialForm({
               <X className="mr-2 h-4 w-4" />
               Cancelar
             </Button>
-            <Button type="submit" variant="pcn">
-              <Save className="mr-2 h-4 w-4" />
-              {testimonialId ? 'Actualizar' : 'Crear'}
+            <Button type="submit" variant="pcn" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {testimonialId ? 'Actualizando...' : 'Creando...'}
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {testimonialId ? 'Actualizar' : 'Crear'}
+                </>
+              )}
             </Button>
           </div>
         </div>

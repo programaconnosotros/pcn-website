@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
@@ -23,6 +25,7 @@ export const EditAdviseDialog = ({
   isOpen,
   onOpenChange,
 }: EditAdviseDialogProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
     defaultValues: {
@@ -30,16 +33,21 @@ export const EditAdviseDialog = ({
     },
   });
 
-  const onSubmitEditAdvise = ({ content }: AdviseFormData) => {
-    toast.promise(editAdvise({ id: adviseId, content }), {
-      loading: 'Editando consejo...',
-      success: () => {
-        form.reset({ content });
-        onOpenChange(false);
-        return 'Tu consejo fue editado exitosamente.';
-      },
-      error: 'Ocurrió un error al editar el consejo',
-    });
+  const onSubmitEditAdvise = async ({ content }: AdviseFormData) => {
+    setIsSubmitting(true);
+    try {
+      await toast.promise(editAdvise({ id: adviseId, content }), {
+        loading: 'Editando consejo...',
+        success: () => {
+          form.reset({ content });
+          onOpenChange(false);
+          return 'Tu consejo fue editado exitosamente.';
+        },
+        error: 'Ocurrió un error al editar el consejo',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,8 +72,15 @@ export const EditAdviseDialog = ({
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Guardar cambios
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                'Guardar cambios'
+              )}
             </Button>
           </form>
         </Form>

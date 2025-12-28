@@ -1,6 +1,6 @@
 'use client';
 
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,6 +20,7 @@ import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
 
 export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
@@ -28,17 +29,21 @@ export const AddAdvise = () => {
     },
   });
 
-  function onSubmit({ content }: AdviseFormData) {
-    toast.promise(createAdvise(content), {
-      loading: 'Publicando consejo...',
-      success: () => {
-        form.reset();
-        return 'Consejo publicado! 👏';
-      },
-      error: 'Ocurrió un error al publicar el consejo',
-    });
-
-    setDialogOpen(false);
+  async function onSubmit({ content }: AdviseFormData) {
+    setIsSubmitting(true);
+    try {
+      await toast.promise(createAdvise(content), {
+        loading: 'Publicando consejo...',
+        success: () => {
+          form.reset();
+          return 'Consejo publicado! 👏';
+        },
+        error: 'Ocurrió un error al publicar el consejo',
+      });
+      setDialogOpen(false);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -71,8 +76,15 @@ export const AddAdvise = () => {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Publicar
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Publicando...
+                </>
+              ) : (
+                'Publicar'
+              )}
             </Button>
           </form>
         </Form>
