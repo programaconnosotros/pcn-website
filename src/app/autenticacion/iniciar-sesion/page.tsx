@@ -56,56 +56,39 @@ export default function SignInPage() {
     }
 
     try {
-      console.log('[SignInPage] Llamando a signIn...');
       const result = await signIn({ ...values, redirectTo: finalRedirect });
-      console.log('[SignInPage] signIn exitoso, resultado:', result);
-      toast.success('¡Bienvenido! 👋');
-      // Redirect desde el cliente
-      router.push(result.redirectTo);
-    } catch (error) {
-      console.log('[SignInPage] Catch ejecutado');
-      console.error('[SignInPage] Error capturado:', error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('[SignInPage] Error message:', errorMessage);
-      console.error('[SignInPage] Error type:', typeof error);
-      console.error('[SignInPage] Error instanceof Error:', error instanceof Error);
-      if (error instanceof Error) {
-        console.error('[SignInPage] Error name:', error.name);
-        console.error('[SignInPage] Error stack:', error.stack);
+
+      if (result.success) {
+        toast.success('Hola! 👋');
+        router.push(result.redirectTo);
+        return;
       }
 
-      // Verificar si el email no está verificado - múltiples formas de verificar
-      const isEmailNotVerified =
-        typeof errorMessage === 'string' &&
-        (errorMessage.includes('EMAIL_NOT_VERIFIED') ||
-          errorMessage.startsWith('EMAIL_NOT_VERIFIED:'));
-
-      if (isEmailNotVerified) {
-        // Extraer el email del mensaje de error
-        const emailMatch = errorMessage.match(/EMAIL_NOT_VERIFIED:(.+)/);
-        const email = emailMatch ? emailMatch[1] : values.email;
-        console.log('[SignInPage] Email no verificado, redirigiendo a verificación:', email);
-        
-        toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
-
-        // Enviar código de verificación
-        try {
-          await sendVerificationCode(email);
-          console.log('[SignInPage] Código de verificación enviado');
-        } catch (sendError) {
-          console.error('[SignInPage] Error al enviar código:', sendError);
-          // Ignorar error de rate limit, el usuario podrá reenviar desde la página
-        }
+      // Manejar errores específicos
+      if (result.error === 'EMAIL_NOT_VERIFIED') {
+        const email = result.email || values.email;
+        toast.info(
+          'Detectamos que tu email no está verificado. Por favor, verificá tu cuenta para continuar.',
+        );
 
         // Redirigir a la página de verificación
         const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
-        console.log('[SignInPage] Redirigiendo a:', verifyUrl);
         router.push(verifyUrl);
         return;
       }
 
-      console.error('[SignInPage] Error no manejado:', errorMessage);
-      toast.error(errorMessage || 'No pudimos iniciar la sesión.');
+      // Error de credenciales
+      if (result.error === 'INVALID_CREDENTIALS') {
+        toast.error('Credenciales incorrectas.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Error desconocido
+      toast.error('No pudimos iniciar la sesión.');
+      setIsLoading(false);
+    } catch (error) {
+      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
       setIsLoading(false);
     }
   };
