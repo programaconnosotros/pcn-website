@@ -3,7 +3,6 @@
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
-import { redirect } from 'next/navigation';
 import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
@@ -71,7 +70,7 @@ export const signUp = async (data: z.infer<typeof signUpActionSchema>) => {
     // El usuario podrá reenviar el código desde la página de verificación
   }
 
-  // Redirigir a la página de verificación
+  // Devolver la URL de verificación para que el cliente redirija
   const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;
-  redirect(verifyUrl);
+  return { success: true, redirectUrl: verifyUrl };
 };

@@ -21,7 +21,7 @@ import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schema
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, Loader2, SquareAsterisk, UserPlus, User, Briefcase, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -55,6 +55,7 @@ const COUNTRIES = [
 ];
 
 export default function SignUpPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '';
   const autoRegister = searchParams.get('autoRegister') === 'true';
@@ -88,19 +89,26 @@ export default function SignUpPage() {
         finalRedirect = `${redirectTo}${separator}autoRegister=true`;
       }
 
-      await toast.promise(signUp({ ...values, redirectTo: finalRedirect }), {
-        loading: 'Creando usuario...',
-        success: 'Usuario creado exitosamente! 🥳',
-        error: (error) => {
-          console.error('Error al crear el usuario', error);
+      const result = await signUp({ ...values, redirectTo: finalRedirect });
+      
+      toast.success('Usuario creado exitosamente! 🥳');
 
-          if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
-            return 'Ya hay un usuario con ese correo electrónico.';
-          }
-
-          return error.message;
-        },
-      });
+      // Redirigir a la página de verificación
+      if (result?.redirectUrl) {
+        router.push(result.redirectUrl);
+      }
+    } catch (error) {
+      console.error('Error al crear el usuario', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
+          toast.error('Ya hay un usuario con ese correo electrónico.');
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.error('Error al crear el usuario');
+      }
     } finally {
       setIsSubmitting(false);
     }
