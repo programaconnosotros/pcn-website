@@ -368,14 +368,14 @@ export default function ResetPasswordPage() {
         {/* Éxito */}
         {step === 'success' && (
           <div className="mt-6 space-y-4 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
-              <ShieldCheck className="h-8 w-8 text-green-600 dark:text-green-400" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-pcnPurple/10 dark:bg-pcnGreen/10">
+              <ShieldCheck className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" />
             </div>
             <p className="text-muted-foreground">
               Tu contraseña fue actualizada con éxito. Ya podés iniciar sesión con tu nueva
               contraseña.
             </p>
-            <Link href="/autenticacion/iniciar-sesion">
+            <Link href="/autenticacion/iniciar-sesion" className="mt-4 block">
               <Button className="w-full">
                 Iniciar sesión
                 <LogIn className="ml-2 h-4 w-4" />
