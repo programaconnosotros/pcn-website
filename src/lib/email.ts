@@ -75,7 +75,7 @@ export const sendEmail = async ({
   try {
     const transporter = getEmailTransporter();
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: "Agus de PCN",
       to,
       subject,
       html,
