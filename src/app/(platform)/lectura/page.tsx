@@ -161,14 +161,14 @@ const ReadingPage = () => {
             </Heading2>
           </div>
 
-          <div className="mb-6 rounded-lg border bg-gradient-to-r from-neutral-100 to-neutral-50 p-6 dark:from-neutral-800 dark:to-neutral-900">
+          <div className="mb-6 rounded-lg border border-pcnPurple/30 bg-gradient-to-r from-neutral-100 to-neutral-50 p-6 dark:border-pcnGreen/50 dark:from-neutral-800 dark:to-neutral-900 dark:shadow-[0_0_15px_rgba(4,244,190,0.3)]">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <BookOpen className="h-8 w-8 text-primary" />
+                <BookOpen className="h-8 w-8 text-primary dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)]" />
               </div>
               <div className="flex-1">
-                <h3 className="mb-2 text-xl font-semibold">Club de Lectura PCN</h3>
-                <p className="mb-4 text-muted-foreground">
+                <h3 className="mb-2 text-xl font-semibold dark:text-pcnGreen dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.9)]">Sumate al club de lectura!</h3>
+                <p className="mb-4 text-muted-foreground dark:text-shadow-[0_0_8px_rgba(4,244,190,0.4)]">
                   En PCN tenemos un club de lectura donde compartimos y discutimos libros sobre
                   programación, tecnología y desarrollo profesional. ¡Sumate al grupo de WhatsApp y
                   participá de nuestras lecturas!
