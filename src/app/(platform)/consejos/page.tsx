@@ -74,7 +74,7 @@ const AdvicePage = async () => {
             </p>
           ) : (
             <>
-              <div className="xl:hidden space-y-4">
+              <div className="space-y-4 xl:hidden">
                 {advises.map((advise) => (
                   <div key={advise.id}>
                     <AdviseCard advise={advise} session={session} />

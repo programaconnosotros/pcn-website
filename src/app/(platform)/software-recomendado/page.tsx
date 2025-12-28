@@ -258,8 +258,8 @@ export default function SoftwareRecommendationsPage() {
           </div>
 
           <p className="mb-6 text-muted-foreground">
-            Acá podés encontrar una lista de software útil recomendado por la comunidad de PCN. Si querés
-            sumar alguno, ¡avisanos!
+            Acá podés encontrar una lista de software útil recomendado por la comunidad de PCN. Si
+            querés sumar alguno, ¡avisanos!
           </p>
 
           <RecommendationsList recommendations={softwareRecommendations} />
