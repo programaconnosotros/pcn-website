@@ -19,6 +19,7 @@ model User {
   email           String         @unique
   password        String
   emailVerified   Boolean        @default(false)
+  phoneNumber     String?
   role            Role           @default(REGULAR)
   image           String?
   countryOfOrigin String?

@@ -18,6 +18,7 @@ export const signUp = async (data: z.infer<typeof signUpActionSchema>) => {
     enterprise,
     studyPlace,
     image,
+    phoneNumber,
     ...cleanedData
   } = signUpActionSchema.parse(data);
 
@@ -34,6 +35,7 @@ export const signUp = async (data: z.infer<typeof signUpActionSchema>) => {
       enterprise: enterprise || null,
       studyPlace: studyPlace || null,
       image: image || null,
+      phoneNumber: phoneNumber || null,
       emailVerified: false,
     },
   });

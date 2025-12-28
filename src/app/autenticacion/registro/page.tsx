@@ -29,6 +29,7 @@ import {
   Briefcase,
   GraduationCap,
   Camera,
+  Phone,
 } from 'lucide-react';
 import { FileUploadPublic } from '@/components/ui/file-upload-public';
 import { Badge } from '@/components/ui/badge';
@@ -82,6 +83,7 @@ export default function SignUpPage() {
       email: '',
       password: undefined,
       confirmPassword: '',
+      phoneNumber: '',
       country: '',
       province: undefined,
       profession: '',
@@ -188,6 +190,23 @@ export default function SignUpPage() {
                     <FormLabel>Correo electrónico</FormLabel>
                     <FormControl>
                       <Input type="email" placeholder="correo@ejemplo.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      Celular
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="tel" placeholder="+54 9 11 1234-5678" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
-import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote, Lightbulb, Images, MicVocal } from 'lucide-react';
+import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote, Lightbulb, Images, MicVocal, Phone, Mail } from 'lucide-react';
 import { talks } from '@/app/(platform)/charlas/talks';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -72,6 +72,7 @@ async function getUser(id: string) {
       image: user.image,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
+      phoneNumber: user.phoneNumber,
       slogan: user.slogan,
       jobTitle: user.jobTitle,
       enterprise: user.enterprise,
@@ -270,6 +271,34 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     <div className="space-y-1 pl-7">
                       {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
                       {user.province && <p className="text-sm text-muted-foreground">{user.province}</p>}
+                    </div>
+                  </div>
+                )}
+
+                {/* Contacto */}
+                {(user.email || user.phoneNumber) && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Mail className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <h2 className="font-semibold">Contacto</h2>
+                    </div>
+                    <div className="space-y-1 pl-7">
+                      {user.email && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <a href={`mailto:${user.email}`} className="text-pcnPurple hover:underline dark:text-pcnGreen">
+                            {user.email}
+                          </a>
+                        </div>
+                      )}
+                      {user.phoneNumber && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <a href={`tel:${user.phoneNumber}`} className="text-pcnPurple hover:underline dark:text-pcnGreen">
+                            {user.phoneNumber}
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

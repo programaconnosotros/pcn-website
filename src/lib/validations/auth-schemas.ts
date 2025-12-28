@@ -42,6 +42,7 @@ const signUpSchemaBaseObject = z.object({
     .string({ required_error: 'Campo obligatorio' })
     .min(8, 'La contraseña debe tener al menos 8 caracteres'),
   confirmPassword: z.string(),
+  phoneNumber: z.string().optional(),
   country: z.string().min(1, 'El país es requerido'),
   province: z.string().optional(),
   profession: z.string().optional(),
