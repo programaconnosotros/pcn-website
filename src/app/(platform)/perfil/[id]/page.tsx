@@ -131,66 +131,66 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-4">
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-                  <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
-                </Avatar>
+            <CardHeader className="flex flex-col items-center gap-4 pb-6">
+              <Avatar className="h-32 w-32">
+                <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                <AvatarFallback className="text-3xl">{user.name?.[0] ?? 'U'}</AvatarFallback>
+              </Avatar>
 
-                <div>
-                  <h1 className="text-2xl font-semibold">{user.name}</h1>
-                  {isOwnProfile && (
-                    <Link href="/perfil">
-                      <Button
-                        variant="link"
-                        className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
-                      >
-                        <Pencil className="h-3 w-3" />
-                        <span>Editar perfil</span>
-                      </Button>
-                    </Link>
+              <div className="flex flex-col items-center gap-2">
+                <h1 className="text-2xl font-semibold text-center">{user.name}</h1>
+                {isOwnProfile && (
+                  <Link href="/perfil">
+                    <Button
+                      variant="link"
+                      className="flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
+                    >
+                      <Pencil className="h-3 w-3" />
+                      <span>Editar perfil</span>
+                    </Button>
+                  </Link>
+                )}
+              </div>
+
+              {(user.xAccountUrl || user.linkedinUrl || user.gitHubUrl) && (
+                <div className="flex items-center gap-3">
+                  {user.xAccountUrl && (
+                    <a
+                      href={user.xAccountUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-500 hover:underline"
+                      aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                  )}
+
+                  {user.linkedinUrl && (
+                    <a
+                      href={user.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-500 hover:underline"
+                      aria-label={`Perfil de LinkedIn de ${user.name}`}
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  )}
+
+                  {user.gitHubUrl && (
+                    <a
+                      href={user.gitHubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-500 hover:underline"
+                      aria-label={`Perfil de GitHub de ${user.name}`}
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
                   )}
                 </div>
-              </div>
-
-              <div className="flex flex-col items-end gap-2">
-                {user.xAccountUrl && (
-                  <a
-                    href={user.xAccountUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-500 hover:underline"
-                    aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-                  >
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                )}
-
-                {user.linkedinUrl && (
-                  <a
-                    href={user.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-500 hover:underline"
-                    aria-label={`Perfil de LinkedIn de ${user.name}`}
-                  >
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                )}
-
-                {user.gitHubUrl && (
-                  <a
-                    href={user.gitHubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-500 hover:underline"
-                    aria-label={`Perfil de GitHub de ${user.name}`}
-                  >
-                    <Github className="h-5 w-5" />
-                  </a>
-                )}
-              </div>
+              )}
             </CardHeader>
 
             <CardContent>
