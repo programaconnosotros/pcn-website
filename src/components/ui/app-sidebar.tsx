@@ -132,7 +132,7 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
     {
       title: 'Charlas',
       url: '/charlas',
-      icon: BookOpen,
+      icon: MicVocal,
     },
     {
       title: 'Música',
