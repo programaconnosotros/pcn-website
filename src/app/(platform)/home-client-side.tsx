@@ -134,7 +134,11 @@ const HomeClientSide = ({
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
-                <img src="/logo.webp" alt="programaConNosotros" className="w-[80px] md:w-[100px]" />
+                <img
+                  src="/logo.webp"
+                  alt="programaConNosotros"
+                  className="w-[80px] md:w-[100px] drop-shadow-[0_0_20px_rgba(4,244,190,0.6)]"
+                />
               </div>
 
               <Heading1 className="mb-4 mt-6 text-center font-mono text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl">
