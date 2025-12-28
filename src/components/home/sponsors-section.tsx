@@ -34,6 +34,15 @@ const sponsors = [
     showName: false,
   },
   {
+    name: 'UTN-FRT',
+    url: 'https://www.frt.utn.edu.ar/',
+    logo: '/utn-frt-logo.png',
+    description: 'Universidad de ingeniería.',
+    location: 'Tucumán, Argentina',
+    hasLogo: true,
+    showName: false,
+  },
+  {
     name: 'Blackbox Cowork',
     url: 'https://www.instagram.com/blackboxcowork/',
     logo: '/blackbox-cowork-logo.jpeg',
@@ -43,13 +52,14 @@ const sponsors = [
     showName: false,
   },
   {
-    name: 'UTN-FRT',
-    url: 'https://www.frt.utn.edu.ar/',
-    logo: '/utn-frt-logo.png',
-    description: 'Universidad de ingeniería.',
+    name: 'Endpoint Consulting',
+    url: 'https://www.instagram.com/endpointconsulting/',
+    logo: '/endpoint-security-logo.png',
+    description: 'Expertos en seguridad informática y consultoría tecnológica.',
     location: 'Tucumán, Argentina',
     hasLogo: true,
     showName: false,
+    blackBg: true,
   },
   {
     name: 'IEEE Computer Society',
@@ -61,16 +71,6 @@ const sponsors = [
     hasLogo: true,
     showName: false,
     whiteBg: true,
-  },
-  {
-    name: 'Endpoint Consulting',
-    url: 'https://www.instagram.com/endpointconsulting/',
-    logo: '/endpoint-security-logo.png',
-    description: 'Expertos en seguridad informática y consultoría tecnológica.',
-    location: 'Tucumán, Argentina',
-    hasLogo: true,
-    showName: false,
-    blackBg: true,
   },
 ];
 
@@ -94,7 +94,7 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
