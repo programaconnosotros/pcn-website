@@ -99,11 +99,11 @@ const HomeClientSide = ({
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 z-0 bg-black/70" />
 
-            <Heading2 className="relative z-10 text-center text-white">
+            <Heading2 className="relative z-10 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.5)]">
               {session?.user?.name ? (
                 <>
                   Hola{' '}
-                  <span className="text-[#8B7FD9] dark:text-pcnGreen">
+                  <span className="text-[#8B7FD9] drop-shadow-[0_0_8px_rgba(139,127,217,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.5)]">
                     {session.user.name.split(' ')[0]}
                   </span>
                   ! Gracias por ser parte de la comunidad.
