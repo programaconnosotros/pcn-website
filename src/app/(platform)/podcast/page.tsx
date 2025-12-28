@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { MicVocal } from 'lucide-react';
 
 const PodcastPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;
@@ -51,7 +52,12 @@ const PodcastPage = async () => {
         <div className="mt-4">
           <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0">Podcast</Heading2>
+              <Heading2 className="m-0 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+                  <MicVocal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+                </div>
+                <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Podcast</span>
+              </Heading2>
             </div>
           </div>
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X, Plus } from 'lucide-react';
+import { Briefcase, Search, X, Plus } from 'lucide-react';
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Dialog,
@@ -67,7 +67,12 @@ export function JobsWrapper({ initialJobs, totalJobs, isAdmin = false }: JobsWra
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
-        <Heading2 className="m-0">Ofertas de trabajo</Heading2>
+        <Heading2 className="m-0 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+            <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+          </div>
+          <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Ofertas de trabajo</span>
+        </Heading2>
         {isAdmin && (
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />

@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -54,7 +54,12 @@ const EventsPage = async () => {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <div className="mb-4 flex flex-col gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:flex-row sm:items-center sm:justify-between">
-            <Heading2 className="m-0">Eventos</Heading2>
+            <Heading2 className="m-0 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+                <CalendarDays className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+              </div>
+              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Eventos</span>
+            </Heading2>
             {isAdmin && (
               <Link href="/eventos/nuevo" className="w-full sm:w-auto">
                 <Button

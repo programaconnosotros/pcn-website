@@ -12,6 +12,7 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/historia/table-of-contents';
+import { ScrollText } from 'lucide-react';
 
 const PCN = () => (
   <code className="font-bold text-pcnPurple dark:text-pcnGreen">programaConNosotros</code>
@@ -41,7 +42,12 @@ const PCNStory = () => (
         <div className="mb-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex flex-col items-center gap-4">
             <img src="/logo.webp" alt="programaConNosotros" className="mb-4 w-16 md:w-24" />
-            <Heading2 className="m-0 text-center">Historia de programaConNosotros</Heading2>
+            <Heading2 className="m-0 flex items-center justify-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+                <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+              </div>
+              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Historia de programaConNosotros</span>
+            </Heading2>
           </div>
         </div>
         <div className="flex gap-8">

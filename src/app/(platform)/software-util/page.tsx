@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ExternalLink, Search, X } from 'lucide-react';
+import { ExternalLink, Search, SquareMousePointer, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -249,7 +249,12 @@ export default function SoftwareRecommendationsPage() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <div className="mb-6 flex items-center justify-between">
-            <Heading2 className="m-0">Software útil</Heading2>
+            <Heading2 className="m-0 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+                <SquareMousePointer className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+              </div>
+              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Software útil</span>
+            </Heading2>
           </div>
 
           <p className="mb-6 text-muted-foreground">
