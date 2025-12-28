@@ -42,6 +42,7 @@ next-env.d.ts
 # environment
 .env
 .env.development
+.env.production
 
 # Playwright
 node_modules/
