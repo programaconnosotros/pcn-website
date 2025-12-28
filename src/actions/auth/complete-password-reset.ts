@@ -3,11 +3,7 @@
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
-export const completePasswordReset = async (
-  email: string,
-  code: string,
-  newPassword: string,
-) => {
+export const completePasswordReset = async (email: string, code: string, newPassword: string) => {
   // Verificar el token nuevamente
   const token = await prisma.passwordResetToken.findFirst({
     where: {
@@ -54,4 +50,3 @@ export const completePasswordReset = async (
 
   return { success: true };
 };
-

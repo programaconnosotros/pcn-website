@@ -48,9 +48,7 @@ export const getCodeExpirationDate = (): Date => {
 export const checkRateLimit = (lastTokenCreatedAt: Date | null): number => {
   if (!lastTokenCreatedAt) return 0;
 
-  const secondsSinceLastToken = Math.floor(
-    (Date.now() - lastTokenCreatedAt.getTime()) / 1000,
-  );
+  const secondsSinceLastToken = Math.floor((Date.now() - lastTokenCreatedAt.getTime()) / 1000);
 
   if (secondsSinceLastToken < RATE_LIMIT_SECONDS) {
     return RATE_LIMIT_SECONDS - secondsSinceLastToken;
@@ -75,7 +73,7 @@ export const sendEmail = async ({
   try {
     const transporter = getEmailTransporter();
     await transporter.sendMail({
-      from: "Agus de PCN",
+      from: 'Agus de PCN',
       to,
       subject,
       html,
@@ -93,4 +91,3 @@ export const sendEmail = async ({
     throw new Error('Error al enviar el email. Por favor, contactá al administrador.');
   }
 };
-

@@ -59,4 +59,3 @@ export const verifyEmailCode = async (email: string, code: string) => {
 
   return { success: true };
 };
-

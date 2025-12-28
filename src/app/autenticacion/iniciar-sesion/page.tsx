@@ -44,7 +44,7 @@ export default function SignInPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    
+
     // Construir redirectTo con autoRegister si es necesario
     let finalRedirect = redirectTo;
     if (autoRegister && redirectTo) {
@@ -58,26 +58,26 @@ export default function SignInPage() {
       // No deshabilitamos isLoading aquí - el servidor redirige automáticamente
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
-      
+
       // Verificar si el email no está verificado
       if (errorMessage.startsWith('EMAIL_NOT_VERIFIED:')) {
         const email = errorMessage.split(':')[1];
         toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
-        
+
         // Enviar código de verificación
         try {
           await sendVerificationCode(email);
         } catch {
           // Ignorar error de rate limit, el usuario podrá reenviar desde la página
         }
-        
+
         // Redirigir a la página de verificación
         // Mantener el botón deshabilitado durante la redirección
         const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
         router.push(verifyUrl);
         return;
       }
-      
+
       toast.error(errorMessage || 'No pudimos iniciar la sesión.');
       // Solo rehabilitar el botón si hubo un error real
       setIsLoading(false);

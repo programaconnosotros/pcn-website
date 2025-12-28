@@ -20,9 +20,8 @@ export const verifyResetCode = async (email: string, code: string) => {
   }
 
   // Retornar el token id para usarlo en el siguiente paso
-  return { 
-    success: true, 
-    tokenId: token.id 
+  return {
+    success: true,
+    tokenId: token.id,
   };
 };
-

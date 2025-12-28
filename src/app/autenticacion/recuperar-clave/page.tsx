@@ -304,7 +304,11 @@ export default function ResetPasswordPage() {
                   disabled={isResending || resendCooldown > 0}
                   className="text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isResending ? 'Enviando...' : resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
+                  {isResending
+                    ? 'Enviando...'
+                    : resendCooldown > 0
+                      ? `Reenviar en ${resendCooldown}s`
+                      : 'Reenviar código'}
                 </button>
               </div>
             </form>

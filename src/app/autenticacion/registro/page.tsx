@@ -19,7 +19,16 @@ import {
 } from '@/components/ui/select';
 import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, Loader2, SquareAsterisk, UserPlus, User, Briefcase, GraduationCap } from 'lucide-react';
+import {
+  ArrowLeft,
+  LogIn,
+  Loader2,
+  SquareAsterisk,
+  UserPlus,
+  User,
+  Briefcase,
+  GraduationCap,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -90,7 +99,7 @@ export default function SignUpPage() {
       }
 
       const result = await signUp({ ...values, redirectTo: finalRedirect });
-      
+
       toast.success('Usuario creado exitosamente! 🥳');
 
       // Redirigir a la página de verificación
@@ -100,7 +109,7 @@ export default function SignUpPage() {
       }
     } catch (error) {
       console.error('Error al crear el usuario', error);
-      
+
       if (error instanceof Error) {
         if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
           toast.error('Ya hay un usuario con ese correo electrónico.');
@@ -110,7 +119,7 @@ export default function SignUpPage() {
       } else {
         toast.error('Error al crear el usuario');
       }
-      
+
       // Solo rehabilitar el botón si hubo un error
       setIsSubmitting(false);
     }

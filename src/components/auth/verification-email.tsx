@@ -1,10 +1,4 @@
-export const EmailVerificationEmail = ({
-  userName,
-  code,
-}: {
-  userName: string;
-  code: string;
-}) => (
+export const EmailVerificationEmail = ({ userName, code }: { userName: string; code: string }) => (
   <div
     style={{
       fontFamily: 'Arial, sans-serif',
@@ -95,9 +89,9 @@ export const EmailVerificationEmail = ({
     >
       <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>
       <p style={{ margin: '5px 0' }}>
-        &copy; {new Date().getFullYear()} programaConNosotros: la comunidad que necesitas para llevar tu carrera al siguiente nivel.
+        &copy; {new Date().getFullYear()} programaConNosotros: la comunidad que necesitas para
+        llevar tu carrera al siguiente nivel.
       </p>
     </div>
   </div>
 );
-

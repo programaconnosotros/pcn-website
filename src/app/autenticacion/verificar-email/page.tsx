@@ -137,12 +137,8 @@ export default function VerifyEmailPage() {
         <div className="w-full max-w-[425px] text-center">
           <div className="flex flex-col items-center gap-6">
             <img src="/logo.webp" alt="Logo" className="w-10" />
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Verificación de email
-            </h1>
-            <p className="text-muted-foreground">
-              No se especificó un email para verificar.
-            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">Verificación de email</h1>
+            <p className="text-muted-foreground">No se especificó un email para verificar.</p>
             <Link href="/autenticacion/iniciar-sesion">
               <Button>Ir a iniciar sesión</Button>
             </Link>
@@ -222,7 +218,11 @@ export default function VerifyEmailPage() {
                   disabled={isResending || resendCooldown > 0}
                   className="text-sm text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isResending ? 'Enviando...' : resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
+                  {isResending
+                    ? 'Enviando...'
+                    : resendCooldown > 0
+                      ? `Reenviar en ${resendCooldown}s`
+                      : 'Reenviar código'}
                 </button>
               </div>
             </form>
@@ -240,4 +240,3 @@ export default function VerifyEmailPage() {
     </div>
   );
 }
-

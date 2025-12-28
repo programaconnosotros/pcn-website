@@ -6,11 +6,7 @@ import bcrypt from 'bcryptjs';
 import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
-import {
-  generateVerificationCode,
-  getCodeExpirationDate,
-  sendEmail,
-} from '@/lib/email';
+import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
 
 export const signUp = async (data: z.infer<typeof signUpActionSchema>) => {
   const {
