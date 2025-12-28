@@ -31,6 +31,7 @@ import {
   Camera,
 } from 'lucide-react';
 import { FileUploadPublic } from '@/components/ui/file-upload-public';
+import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -291,7 +292,10 @@ export default function SignUpPage() {
             <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Briefcase className="h-5 w-5" />
-                Información profesional (opcional)
+                Información profesional
+                <Badge variant="secondary" className="text-xs font-normal">
+                  opcional
+                </Badge>
               </h3>
 
               <FormField
@@ -330,7 +334,10 @@ export default function SignUpPage() {
             <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <GraduationCap className="h-5 w-5" />
-                Información académica (opcional)
+                Información académica
+                <Badge variant="secondary" className="text-xs font-normal">
+                  opcional
+                </Badge>
               </h3>
 
               <FormField
@@ -372,7 +379,10 @@ export default function SignUpPage() {
             <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Camera className="h-5 w-5" />
-                Foto de perfil (opcional)
+                Foto de perfil
+                <Badge variant="secondary" className="text-xs font-normal">
+                  opcional
+                </Badge>
               </h3>
 
               <FormField
