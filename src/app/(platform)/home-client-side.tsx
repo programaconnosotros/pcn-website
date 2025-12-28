@@ -27,6 +27,7 @@ import {
   MapPin,
   MessageSquare,
   MicVocal,
+  Podcast,
   Monitor,
   MonitorPlay,
   Rocket,
@@ -390,7 +391,7 @@ const HomeClientSide = ({
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
-              <MicVocal
+              <Podcast
                 className="h-10 w-10 text-pcnPurple drop-shadow-[0_0_10px_rgba(80,56,189,0.4)] transition-transform duration-300 group-hover:-rotate-12 dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)] md:h-12 md:w-12"
                 strokeWidth={1.0}
               />
