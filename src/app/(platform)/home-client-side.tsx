@@ -78,7 +78,7 @@ const HomeClientSide = ({
           duration: 0.8,
           staggerChildren: 0.1,
         }}
-        className="mb-6"
+        className="mb-6 -mx-1 px-6 md:-mx-6 md:px-6"
       >
         {session ? (
           <div className="relative -mx-6 mb-6 flex min-h-[400px] w-[calc(100%+3rem)] flex-col items-center justify-center gap-2 overflow-hidden p-4 md:p-12">

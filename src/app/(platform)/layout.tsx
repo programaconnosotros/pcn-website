@@ -44,7 +44,7 @@ const PlatformLayout = async ({
       />
       <PageVisitTracker />
       <ConsoleInterceptor>
-        <SidebarInset className="px-4 md:px-8">{children}</SidebarInset>
+        <SidebarInset className="px-1 md:px-6">{children}</SidebarInset>
       </ConsoleInterceptor>
     </SidebarProvider>
   );
