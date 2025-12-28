@@ -144,7 +144,7 @@ export const SponsorsSection = () => {
                 ¿Querés sumarte como sponsor?
               </h3>
               <p className="mb-4 text-sm text-muted-foreground dark:text-neutral-400 md:text-base">
-                Si tu empresa comparte los valores de PCN y querés colaborar con la comunidad, contactanos.
+                Sumate y ayudanos a impulsar personas apasionadas por el software.
               </p>
               <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
                 <MessageSquare className="h-4 w-4" />
