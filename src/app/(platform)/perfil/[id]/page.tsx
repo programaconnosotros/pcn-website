@@ -14,8 +14,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
-import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote } from 'lucide-react';
+import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote, Lightbulb, Images, MicVocal } from 'lucide-react';
+import { talks } from '@/app/(platform)/charlas/talks';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -105,6 +107,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     : [];
 
   const isOwnProfile = session?.user?.id === params.id;
+
+  // Filtrar charlas del usuario
+  const userTalks = talks.filter((talk) => 
+    talk.speakerName.toLowerCase().includes(user.name?.toLowerCase() || '') ||
+    user.name?.toLowerCase().includes(talk.speakerName.toLowerCase() || '')
+  );
 
   return (
     <>
@@ -281,20 +289,92 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </div>
           </div>
 
-          {/* Columna derecha: Consejos y demás contenido */}
+          {/* Columna derecha: Tabs con Consejos, Fotos y Charlas */}
           <div className="lg:col-span-2">
-            <div>
-              <h2 className="mb-4 text-2xl font-semibold">Consejos compartidos</h2>
-              {user.advises.length === 0 ? (
-                <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
-              ) : (
-                <div className="space-y-4">
-                  {user.advises.map((advise) => (
-                    <AdviseCard key={advise.id} session={session} advise={advise} />
-                  ))}
-                </div>
-              )}
-            </div>
+            <Tabs defaultValue="consejos" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="consejos" className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  Consejos
+                </TabsTrigger>
+                <TabsTrigger value="fotos" className="flex items-center gap-2">
+                  <Images className="h-4 w-4" />
+                  Fotos
+                </TabsTrigger>
+                <TabsTrigger value="charlas" className="flex items-center gap-2">
+                  <MicVocal className="h-4 w-4" />
+                  Charlas
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="consejos" className="mt-6">
+                {user.advises.length === 0 ? (
+                  <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {user.advises.map((advise) => (
+                      <AdviseCard key={advise.id} session={session} advise={advise} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="fotos" className="mt-6">
+                <p className="text-gray-500">Las fotos estarán disponibles próximamente.</p>
+              </TabsContent>
+
+              <TabsContent value="charlas" className="mt-6">
+                {userTalks.length === 0 ? (
+                  <p className="text-gray-500">Este usuario aún no ha dado ninguna charla.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {userTalks.map((talk, index) => (
+                      <Card key={index} className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                        <CardContent className="p-6">
+                          <div className="flex flex-col gap-4 md:flex-row">
+                            {talk.portrait && (
+                              <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
+                                <img
+                                  src={talk.portrait}
+                                  alt={talk.speakerName}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                            )}
+                            <div className="flex flex-1 flex-col gap-2">
+                              <h3 className="text-xl font-semibold">{talk.name}</h3>
+                              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                <span>{talk.speakerName}</span>
+                                {talk.date && (
+                                  <span>
+                                    {new Date(talk.date).toLocaleDateString('es-AR', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric',
+                                    })}
+                                  </span>
+                                )}
+                                {talk.location && <span>{talk.location}</span>}
+                              </div>
+                              {talk.youtubeUrl && (
+                                <a
+                                  href={talk.youtubeUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mt-2 inline-flex items-center gap-2 text-pcnPurple hover:underline dark:text-pcnGreen"
+                                >
+                                  Ver en YouTube
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
