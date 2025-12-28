@@ -48,6 +48,7 @@ const signUpSchemaBaseObject = z.object({
   enterprise: z.string().optional(),
   studyField: z.string().optional(),
   studyPlace: z.string().optional(),
+  image: z.string().optional(),
 });
 
 // Schema base con validación condicional de provincia

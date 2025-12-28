@@ -28,7 +28,9 @@ import {
   User,
   Briefcase,
   GraduationCap,
+  Camera,
 } from 'lucide-react';
+import { FileUploadPublic } from '@/components/ui/file-upload-public';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -83,6 +85,7 @@ export default function SignUpPage() {
       enterprise: '',
       studyField: '',
       studyPlace: '',
+      image: '',
     },
   });
 
@@ -357,6 +360,32 @@ export default function SignUpPage() {
                       <Input
                         placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Sección: Foto de perfil */}
+            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
+                <Camera className="h-5 w-5" />
+                Foto de perfil (opcional)
+              </h3>
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Subí una foto para tu perfil</FormLabel>
+                    <FormControl>
+                      <FileUploadPublic
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        maxSize={10 * 1024 * 1024}
                       />
                     </FormControl>
                     <FormMessage />
