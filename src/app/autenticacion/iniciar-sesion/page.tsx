@@ -1,5 +1,6 @@
 'use client';
 import { signIn } from '@/actions/auth/sign-in';
+import { sendVerificationCode } from '@/actions/auth/send-verification-code';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -11,9 +12,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
+import { ArrowLeft, LogIn, SquareAsterisk, UserPlus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -24,11 +26,13 @@ const formSchema = z.object({
 });
 
 export default function SignInPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email') || '';
   const passwordParam = searchParams.get('password') || '';
   const redirectTo = searchParams.get('redirect') || '';
   const autoRegister = searchParams.get('autoRegister') === 'true';
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,21 +43,42 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      // Construir redirectTo con autoRegister si es necesario
-      let finalRedirect = redirectTo;
-      if (autoRegister && redirectTo) {
-        const separator = redirectTo.includes('?') ? '&' : '?';
-        finalRedirect = `${redirectTo}${separator}autoRegister=true`;
-      }
+    setIsLoading(true);
+    
+    // Construir redirectTo con autoRegister si es necesario
+    let finalRedirect = redirectTo;
+    if (autoRegister && redirectTo) {
+      const separator = redirectTo.includes('?') ? '&' : '?';
+      finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+    }
 
-      await toast.promise(signIn({ ...values, redirectTo: finalRedirect }), {
-        loading: 'Ingresando...',
-        success: 'Bienvenido! 👋',
-        error: 'No pudimos iniciar la sesión.',
-      });
+    try {
+      await signIn({ ...values, redirectTo: finalRedirect });
+      toast.success('¡Bienvenido! 👋');
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      const errorMessage = error instanceof Error ? error.message : '';
+      
+      // Verificar si el email no está verificado
+      if (errorMessage.startsWith('EMAIL_NOT_VERIFIED:')) {
+        const email = errorMessage.split(':')[1];
+        toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
+        
+        // Enviar código de verificación
+        try {
+          await sendVerificationCode(email);
+        } catch {
+          // Ignorar error de rate limit, el usuario podrá reenviar desde la página
+        }
+        
+        // Redirigir a la página de verificación
+        const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
+        router.push(verifyUrl);
+        return;
+      }
+      
+      toast.error(errorMessage || 'No pudimos iniciar la sesión.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -102,8 +127,18 @@ export default function SignInPage() {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Ingresar <LogIn className="ml-2 h-4 w-4" />
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Ingresando...
+                </>
+              ) : (
+                <>
+                  Ingresar
+                  <LogIn className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </form>
         </Form>

@@ -18,6 +18,7 @@ model User {
   name            String
   email           String         @unique
   password        String
+  emailVerified   Boolean        @default(false)
   role            Role           @default(REGULAR)
   image           String?
   countryOfOrigin String?
@@ -304,6 +305,18 @@ model AppLog {
 }
 
 model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  code      String   // Código de 6 dígitos
+  expiresAt DateTime // Expira en 15 minutos
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([code])
+}
+
+model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
   code      String   // Código de 6 dígitos

@@ -33,6 +33,11 @@ export const signIn = async (data: z.infer<typeof formSchema>) => {
     throw new Error('Credenciales incorrectas.');
   }
 
+  // Verificar si el email está verificado
+  if (!user.emailVerified) {
+    throw new Error(`EMAIL_NOT_VERIFIED:${email}`);
+  }
+
   const session = await prisma.session.create({
     data: {
       userId: user.id,
