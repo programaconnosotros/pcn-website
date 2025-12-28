@@ -67,11 +67,6 @@ function SoftwareRecommendationCard({
                 Gratis
               </Badge>
             )}
-            {isPopular && (
-              <Badge className="border-orange-500/30 bg-orange-500/20 text-orange-700 dark:text-orange-300">
-                Popular
-              </Badge>
-            )}
           </div>
         </div>
       </CardHeader>
