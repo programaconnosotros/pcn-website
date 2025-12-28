@@ -72,7 +72,7 @@ const Talks = () => (
                 className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:flex-row"
               >
                 {talk.portrait && (
-                  <div className="relative h-48 w-full shrink-0 md:h-auto md:w-64">
+                  <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
                     <img
                       src={talk.portrait}
                       alt={`${talk.speakerName}'s photo`}
