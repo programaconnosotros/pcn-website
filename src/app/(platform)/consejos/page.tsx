@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Suspense } from 'react';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -69,39 +68,31 @@ const AdvicePage = async () => {
             </div>
           </div>
 
-          <div className="xl:hidden">
-            {advises.length === 0 && (
-              <p className="w-full text-center text-sm text-muted-foreground">
-                No hay consejos para ver aún.
-              </p>
-            )}
-
-            <Suspense fallback={<div>Cargando consejos...</div>}>
-              {advises.map((advise) => (
-                <div key={advise.id} className="mb-4">
-                  <AdviseCard advise={advise} session={session} />
-                </div>
-              ))}
-            </Suspense>
-          </div>
-
-          <div className="hidden xl:block">
-            <div className="mb-4 gap-4 space-y-4" style={{ columnCount: 2, columnGap: '1rem' }}>
-              {advises.length === 0 && (
-                <p className="w-full text-center text-sm text-muted-foreground">
-                  No hay consejos para ver aún.
-                </p>
-              )}
-
-              <Suspense fallback={<div>Cargando consejos...</div>}>
+          {advises.length === 0 ? (
+            <p className="w-full text-center text-sm text-muted-foreground">
+              No hay consejos para ver aún.
+            </p>
+          ) : (
+            <>
+              <div className="xl:hidden space-y-4">
                 {advises.map((advise) => (
-                  <div key={advise.id} className="mb-4" style={{ breakInside: 'avoid' }}>
+                  <div key={advise.id}>
                     <AdviseCard advise={advise} session={session} />
                   </div>
                 ))}
-              </Suspense>
-            </div>
-          </div>
+              </div>
+
+              <div className="hidden xl:block">
+                <div className="mb-4 columns-2 gap-4">
+                  {advises.map((advise) => (
+                    <div key={advise.id} className="mb-4 break-inside-avoid">
+                      <AdviseCard advise={advise} session={session} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
