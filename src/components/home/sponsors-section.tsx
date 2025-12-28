@@ -86,7 +86,7 @@ export const SponsorsSection = () => {
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' ? 'max-h-20 w-auto' : 'max-h-16 w-auto'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
