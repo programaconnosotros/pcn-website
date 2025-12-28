@@ -510,7 +510,7 @@ const HomeClientSide = ({
               <Link href="/historia" className="relative z-10">
                 <Button
                   variant="outline"
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:text-black"
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:text-black dark:group-hover:shadow-[0_0_20px_rgba(4,244,190,0.7)]"
                 >
                   Leer historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
