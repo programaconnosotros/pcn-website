@@ -232,7 +232,7 @@ export const ProfileForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
-        <div className="space-y-4 rounded-md border p-4">
+        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <UserIcon className="h-5 w-5" />
             Información personal
@@ -343,7 +343,7 @@ export const ProfileForm = ({
           </div>
         </div>
 
-        <div className="space-y-4 rounded-md border p-4">
+        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
             <Briefcase className="h-5 w-5" />
             Información profesional
@@ -367,7 +367,7 @@ export const ProfileForm = ({
           </div>
         </div>
 
-        <div className="space-y-4 rounded-md border p-4">
+        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
             <GraduationCap className="h-5 w-5" />
             Información académica
@@ -395,7 +395,7 @@ export const ProfileForm = ({
           </div>
         </div>
 
-        <div className="space-y-4 rounded-md border p-4">
+        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <Link2 className="h-5 w-5" />
             Enlaces
@@ -458,7 +458,7 @@ export const ProfileForm = ({
         </div>
 
         {/* Section for adding programming languages */}
-        <div className="space-y-4 rounded-md border p-4">
+        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
           <div className="mb-4 flex items-center justify-between gap-6">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
               <Code className="h-5 w-5" />
