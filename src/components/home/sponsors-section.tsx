@@ -81,12 +81,12 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : 'max-h-16 w-auto group-hover:scale-110'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' ? 'max-h-20 w-auto' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
