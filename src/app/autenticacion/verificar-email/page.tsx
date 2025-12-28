@@ -34,7 +34,8 @@ export default function VerifyEmailPage() {
   const email = searchParams.get('email') || '';
   const redirectTo = searchParams.get('redirect') || '/';
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
 
@@ -89,7 +90,7 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    setIsLoading(true);
+    setIsVerifying(true);
     try {
       await verifyEmailCode(email, values.code);
       setIsVerified(true);
@@ -99,15 +100,14 @@ export default function VerifyEmailPage() {
       }, 1500);
     } catch {
       toast.error('Código inválido o expirado. Intentá de nuevo.');
-    } finally {
-      setIsLoading(false);
+      setIsVerifying(false);
     }
   };
 
   const resendCode = async () => {
     if (resendCooldown > 0 || !email) return;
 
-    setIsLoading(true);
+    setIsResending(true);
     try {
       const result = await sendVerificationCode(email);
       if (result.alreadyVerified) {
@@ -127,7 +127,7 @@ export default function VerifyEmailPage() {
         toast.error('Error al reenviar el código.');
       }
     } finally {
-      setIsLoading(false);
+      setIsResending(false);
     }
   };
 
@@ -201,8 +201,8 @@ export default function VerifyEmailPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
+              <Button type="submit" className="w-full" disabled={isVerifying || isResending}>
+                {isVerifying ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Verificando...
@@ -219,10 +219,10 @@ export default function VerifyEmailPage() {
                 <button
                   type="button"
                   onClick={resendCode}
-                  disabled={isLoading || resendCooldown > 0}
+                  disabled={isResending || resendCooldown > 0}
                   className="text-sm text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
+                  {isResending ? 'Enviando...' : resendCooldown > 0 ? `Reenviar en ${resendCooldown}s` : 'Reenviar código'}
                 </button>
               </div>
             </form>
