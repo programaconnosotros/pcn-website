@@ -92,7 +92,7 @@ export const SponsorsSection = () => {
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto' : 'max-h-16 w-auto'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-32 w-auto' : sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto dark:invert' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
