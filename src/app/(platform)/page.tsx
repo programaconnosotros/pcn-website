@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 
 const Home = async () => {
@@ -34,7 +35,7 @@ const Home = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-2">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -45,6 +46,9 @@ const Home = async () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+        </div>
+        <div className="flex items-center gap-2 px-4">
+          <ThemeToggle />
         </div>
       </header>
       <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />

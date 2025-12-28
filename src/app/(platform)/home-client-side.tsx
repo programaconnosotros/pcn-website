@@ -43,7 +43,6 @@ import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
 import { FlickeringGrid } from '@/components/magicui/flickering-grid';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Quote } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -132,10 +131,6 @@ const HomeClientSide = ({
               />
             </div>
             <div className="absolute inset-0 z-0 bg-black/60" />
-
-            <div className="absolute right-4 top-4 z-20">
-              <ThemeToggle />
-            </div>
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
