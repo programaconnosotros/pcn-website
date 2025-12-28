@@ -389,7 +389,7 @@ export default function SignUpPage() {
 
           <Link href="/autenticacion/recuperar-clave" className="w-full">
             <Button variant="outline" className="w-full">
-              Me olvidé la contraseña
+              Recuperar contraseña
               <SquareAsterisk className="ml-2 h-4 w-4" />
             </Button>
           </Link>
