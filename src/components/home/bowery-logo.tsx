@@ -6,7 +6,7 @@ const BoweryLogo = () => (
     style={{ border: 'none' }}
   >
     <div className="mb-4 mt-4 flex flex-row items-center">
-      <img src="/bowery-logo.webp" alt="Bowery" className="h-12" />
+      <img src="/bowery-logo-light.svg" alt="Bowery" className="h-12" />
 
       <h1 className="ml-4 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">
         Bowery

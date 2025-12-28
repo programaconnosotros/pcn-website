@@ -16,7 +16,7 @@ const sponsors = [
   {
     name: 'Bowery',
     url: 'https://bowerystudio.co/en/',
-    logo: '/bowery-logo.webp',
+    logo: '/bowery-logo-light.svg',
     description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
     location: 'Buenos Aires, Argentina',
     hasLogo: true,
