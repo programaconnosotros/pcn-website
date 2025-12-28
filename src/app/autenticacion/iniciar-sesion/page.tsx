@@ -43,6 +43,9 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('[SignInPage] onSubmit iniciado');
+    console.log('[SignInPage] Valores del formulario:', { email: values.email, hasPassword: !!values.password });
+    
     setIsLoading(true);
 
     // Construir redirectTo con autoRegister si es necesario
@@ -52,15 +55,26 @@ export default function SignInPage() {
       finalRedirect = `${redirectTo}${separator}autoRegister=true`;
     }
 
+    console.log('[SignInPage] RedirectTo final:', finalRedirect);
+
     try {
+      console.log('[SignInPage] Llamando a signIn action...');
       await signIn({ ...values, redirectTo: finalRedirect });
+      console.log('[SignInPage] signIn completado exitosamente');
       toast.success('¡Bienvenido! 👋');
       // No deshabilitamos isLoading aquí - el servidor redirige automáticamente
+      // redirect() lanza una excepción especial que Next.js maneja internamente
     } catch (error) {
+      console.error('[SignInPage] ERROR capturado:', error);
+      console.error('[SignInPage] Tipo de error:', error instanceof Error ? error.constructor.name : typeof error);
+      console.error('[SignInPage] Mensaje de error:', error instanceof Error ? error.message : String(error));
+      console.error('[SignInPage] Stack trace:', error instanceof Error ? error.stack : 'No disponible');
+
       const errorMessage = error instanceof Error ? error.message : '';
 
       // Verificar si el email no está verificado
       if (errorMessage.startsWith('EMAIL_NOT_VERIFIED:')) {
+        console.log('[SignInPage] Email no verificado, redirigiendo a verificación');
         const email = errorMessage.split(':')[1];
         toast.info('Tu email no está verificado. Te enviamos un código de verificación.');
 
@@ -74,10 +88,12 @@ export default function SignInPage() {
         // Redirigir a la página de verificación
         // Mantener el botón deshabilitado durante la redirección
         const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
+        console.log('[SignInPage] Redirigiendo a:', verifyUrl);
         router.push(verifyUrl);
         return;
       }
 
+      console.error('[SignInPage] Error no manejado, mostrando toast de error');
       toast.error(errorMessage || 'No pudimos iniciar la sesión.');
       // Solo rehabilitar el botón si hubo un error real
       setIsLoading(false);
