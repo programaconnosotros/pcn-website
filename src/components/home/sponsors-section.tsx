@@ -54,6 +54,7 @@ const sponsors = [
     url: 'https://www.computer.org/',
     logo: '/ieee-computer-society-logo.png',
     description: 'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
+    location: 'IEEE CS Región Latinoamérica',
     hasLogo: true,
     showName: false,
     whiteBg: true,
