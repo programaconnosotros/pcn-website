@@ -134,7 +134,7 @@ export default function SignUpPage() {
             <div className="space-y-4 rounded-md border p-4">
               <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
                 <User className="h-5 w-5" />
-                Información de cuenta
+                Datos principales
               </h3>
 
               <FormField
