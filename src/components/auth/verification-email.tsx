@@ -34,7 +34,7 @@ export const EmailVerificationEmail = ({
           letterSpacing: '-0.025em',
         }}
       >
-        ¡Bienvenido/a a Programa Con Nosotros!
+        ¡Bienvenido a programaConNosotros!
       </h1>
     </div>
 
@@ -78,7 +78,7 @@ export const EmailVerificationEmail = ({
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Si no creaste una cuenta en Programa Con Nosotros, podés ignorar este correo.
+        Si no creaste una cuenta en programaConNosotros, podés ignorar este correo.
       </p>
     </div>
 
@@ -95,7 +95,7 @@ export const EmailVerificationEmail = ({
     >
       <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>
       <p style={{ margin: '5px 0' }}>
-        &copy; {new Date().getFullYear()} Programa Con Nosotros. Todos los derechos reservados.
+        &copy; {new Date().getFullYear()} programaConNosotros: la comunidad que necesitas para llevar tu carrera al siguiente nivel.
       </p>
     </div>
   </div>
