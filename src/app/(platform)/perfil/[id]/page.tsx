@@ -126,8 +126,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </div>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-4">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16">
@@ -191,10 +194,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </CardHeader>
 
             <CardContent>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6">
                 {/* Slogan */}
                 {user.slogan && (
-                  <div className="md:col-span-2">
+                  <div>
                     <div className="flex items-start gap-2">
                       <Quote className="mt-1 h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
                       <div>
@@ -274,19 +277,24 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </div>
               </div>
             </CardContent>
-          </Card>
+              </Card>
+            </div>
+          </div>
 
-          <div className="mt-8">
-            <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
-            {user.advises.length === 0 ? (
-              <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
-            ) : (
-              <div className="space-y-4">
-                {user.advises.map((advise) => (
-                  <AdviseCard key={advise.id} session={session} advise={advise} />
-                ))}
-              </div>
-            )}
+          {/* Columna derecha: Consejos y demás contenido */}
+          <div className="lg:col-span-2">
+            <div>
+              <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
+              {user.advises.length === 0 ? (
+                <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
+              ) : (
+                <div className="space-y-4">
+                  {user.advises.map((advise) => (
+                    <AdviseCard key={advise.id} session={session} advise={advise} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
