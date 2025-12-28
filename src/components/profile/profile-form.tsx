@@ -346,7 +346,10 @@ export const ProfileForm = ({
         <div className="space-y-4 rounded-md border p-4">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
             <Briefcase className="h-5 w-5" />
-            Información profesional (opcional)
+            Información profesional
+            <Badge variant="secondary" className="text-xs font-normal">
+              opcional
+            </Badge>
           </h3>
           <div className="space-y-2">
             <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
@@ -367,7 +370,10 @@ export const ProfileForm = ({
         <div className="space-y-4 rounded-md border p-4">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
             <GraduationCap className="h-5 w-5" />
-            Información académica (opcional)
+            Información académica
+            <Badge variant="secondary" className="text-xs font-normal">
+              opcional
+            </Badge>
           </h3>
           <div className="space-y-2">
             <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
@@ -392,7 +398,10 @@ export const ProfileForm = ({
         <div className="space-y-4 rounded-md border p-4">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <Link2 className="h-5 w-5" />
-            Enlaces (opcional)
+            Enlaces
+            <Badge variant="secondary" className="text-xs font-normal">
+              opcional
+            </Badge>
           </h3>
           <div className="space-y-4">
             <div className="space-y-2">
