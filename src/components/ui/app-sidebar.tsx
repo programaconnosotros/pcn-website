@@ -22,6 +22,7 @@ import {
   Quote,
   ScrollText,
   Send,
+  SquareMousePointer,
   SquareTerminal,
   Star,
   Users,
@@ -143,9 +144,9 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       icon: Users,
     },
     {
-      title: 'Software recomendado',
+      title: 'Software útil',
       url: '/software-recomendado',
-      icon: Star,
+      icon: SquareMousePointer,
     },
     {
       title: 'Trabajos',
