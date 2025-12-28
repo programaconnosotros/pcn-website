@@ -139,7 +139,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </Avatar>
 
                 <div>
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
+                  <h1 className="text-2xl font-semibold">{user.name}</h1>
                   {isOwnProfile && (
                     <Link href="/perfil">
                       <Button
@@ -284,7 +284,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {/* Columna derecha: Consejos y demás contenido */}
           <div className="lg:col-span-2">
             <div>
-              <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
+              <h2 className="mb-4 text-2xl font-semibold">Consejos compartidos</h2>
               {user.advises.length === 0 ? (
                 <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
               ) : (
