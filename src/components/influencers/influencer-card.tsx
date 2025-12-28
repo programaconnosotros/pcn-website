@@ -51,8 +51,8 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
     : `/influencers/${influencer.image}`;
 
   return (
-    <Card className="w-full bg-gray-50 dark:bg-transparent">
-      <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
+    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+      <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2">
         <div className="flex items-start gap-3">
           <Avatar className="h-12 w-12">
             <AvatarImage src={imagePath} alt={influencer.name} />
@@ -72,7 +72,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
         </div>
       </CardHeader>
 
-      <CardContent className="px-4 py-3">
+      <CardContent className="flex flex-1 flex-col">
         <p className="mb-4 text-sm">{influencer.description}</p>
 
         <div className="flex flex-wrap gap-2">
