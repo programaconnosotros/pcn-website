@@ -42,7 +42,7 @@ const sponsors = [
     name: 'UTN-FRT',
     url: 'https://www.frt.utn.edu.ar/',
     logo: '/utn-frt-logo.png',
-    description: 'Universidad de ingeniería',
+    description: 'Universidad de ingeniería.',
     location: 'Tucumán, Argentina',
     hasLogo: true,
     showName: false,
@@ -90,7 +90,7 @@ export const SponsorsSection = () => {
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' || sponsor.name === 'UTN-FRT' ? 'max-h-[5.5rem] w-auto' : 'max-h-16 w-auto'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-24 w-auto' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
