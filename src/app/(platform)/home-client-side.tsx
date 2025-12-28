@@ -580,10 +580,11 @@ const HomeClientSide = ({
           </>
         )}
 
-        <div className="flex items-center justify-center p-6">
-          <Heading2 className="relative z-10 text-center">
-            Sumate en todas las redes para aprovechar PCN al máximo!
+        <div className="flex items-center justify-center gap-3 p-6">
+          <Heading2 className="relative z-10 mb-0 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
+            Redes
           </Heading2>
+          <Globe className="-mt-2 h-8 w-8 text-pcnPurple drop-shadow-[0_0_10px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)] md:h-10 md:w-10" />
         </div>
 
         <div className="flex flex-wrap gap-3">
