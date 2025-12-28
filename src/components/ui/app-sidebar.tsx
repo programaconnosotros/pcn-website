@@ -115,6 +115,11 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       ],
     },
     {
+      title: 'Charlas',
+      url: '/charlas',
+      icon: MicVocal,
+    },
+    {
       title: 'Podcast',
       url: '/podcast',
       icon: Podcast,
@@ -128,11 +133,6 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       title: 'Especialidades',
       url: '/especialidades',
       icon: Code,
-    },
-    {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: MicVocal,
     },
     {
       title: 'Música',
