@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground border border-transparent transition-all duration-300 hover:border-pcnPurple/30 dark:hover:border-pcnGreen/30',
+      'inline-flex h-10 items-center justify-center rounded-md border border-transparent bg-muted p-1 text-muted-foreground transition-all duration-300 hover:border-pcnPurple/30 dark:hover:border-pcnGreen/30',
       className,
     )}
     {...props}
@@ -29,7 +29,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm hover:text-pcnPurple hover:border-pcnPurple dark:hover:text-pcnGreen dark:hover:border-pcnGreen data-[state=active]:text-pcnPurple data-[state=active]:border-pcnPurple data-[state=active]:shadow-[0_0_10px_rgba(80,56,189,0.3)] dark:data-[state=active]:text-pcnGreen dark:data-[state=active]:border-pcnGreen dark:data-[state=active]:shadow-[0_0_10px_rgba(4,244,190,0.4)] dark:data-[state=active]:[&_svg]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]',
+      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all hover:border-pcnPurple hover:text-pcnPurple focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-pcnPurple data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:text-pcnPurple data-[state=active]:shadow-[0_0_10px_rgba(80,56,189,0.3)] data-[state=active]:shadow-sm dark:hover:border-pcnGreen dark:hover:text-pcnGreen dark:data-[state=active]:border-pcnGreen dark:data-[state=active]:text-pcnGreen dark:data-[state=active]:shadow-[0_0_10px_rgba(4,244,190,0.4)] dark:data-[state=active]:[&_svg]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]',
       className,
     )}
     {...props}

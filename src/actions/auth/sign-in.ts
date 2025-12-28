@@ -81,10 +81,7 @@ export const signIn = async (
       '[signIn] Error message:',
       error instanceof Error ? error.message : String(error),
     );
-    console.error(
-      '[signIn] Error stack:',
-      error instanceof Error ? error.stack : 'No stack',
-    );
+    console.error('[signIn] Error stack:', error instanceof Error ? error.stack : 'No stack');
     throw error;
   }
 };

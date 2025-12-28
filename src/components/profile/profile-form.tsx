@@ -270,10 +270,13 @@ export const ProfileForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">
-                Celular
-              </Label>
-              <Input id="phoneNumber" type="tel" placeholder="+54 9 11 1234-5678" {...form.register('phoneNumber')} />
+              <Label htmlFor="phoneNumber">Celular</Label>
+              <Input
+                id="phoneNumber"
+                type="tel"
+                placeholder="+54 9 11 1234-5678"
+                {...form.register('phoneNumber')}
+              />
               <FormError error={form.formState.errors.phoneNumber} />
             </div>
 

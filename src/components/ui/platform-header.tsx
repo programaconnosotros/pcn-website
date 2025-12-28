@@ -37,4 +37,3 @@ export function PlatformHeader({ children }: PlatformHeaderProps) {
     </header>
   );
 }
-

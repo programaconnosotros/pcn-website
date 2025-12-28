@@ -16,7 +16,21 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
-import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote, Lightbulb, Images, MicVocal, Phone, Mail } from 'lucide-react';
+import {
+  Github,
+  Linkedin,
+  Pencil,
+  Twitter,
+  Briefcase,
+  GraduationCap,
+  MapPin,
+  Quote,
+  Lightbulb,
+  Images,
+  MicVocal,
+  Phone,
+  Mail,
+} from 'lucide-react';
 import { talks } from '@/app/(platform)/charlas/talks';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -110,9 +124,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const isOwnProfile = session?.user?.id === params.id;
 
   // Filtrar charlas del usuario
-  const userTalks = talks.filter((talk) => 
-    talk.speakerName.toLowerCase().includes(user.name?.toLowerCase() || '') ||
-    user.name?.toLowerCase().includes(talk.speakerName.toLowerCase() || '')
+  const userTalks = talks.filter(
+    (talk) =>
+      talk.speakerName.toLowerCase().includes(user.name?.toLowerCase() || '') ||
+      user.name?.toLowerCase().includes(talk.speakerName.toLowerCase() || ''),
   );
 
   return (
@@ -140,175 +155,187 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-4">
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader className="flex flex-col items-center gap-4 pb-6">
-              <Avatar className="h-32 w-32">
-                <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-                <AvatarFallback className="text-3xl">{user.name?.[0] ?? 'U'}</AvatarFallback>
-              </Avatar>
+                <CardHeader className="flex flex-col items-center gap-4 pb-6">
+                  <Avatar className="h-32 w-32">
+                    <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                    <AvatarFallback className="text-3xl">{user.name?.[0] ?? 'U'}</AvatarFallback>
+                  </Avatar>
 
-              <div className="flex flex-col items-center gap-2">
-                <h1 className="text-2xl font-semibold text-center">{user.name}</h1>
-                {isOwnProfile && (
-                  <Link href="/perfil">
-                    <Button
-                      variant="link"
-                      className="flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
-                    >
-                      <Pencil className="h-3 w-3" />
-                      <span>Editar perfil</span>
-                    </Button>
-                  </Link>
-                )}
-              </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <h1 className="text-center text-2xl font-semibold">{user.name}</h1>
+                    {isOwnProfile && (
+                      <Link href="/perfil">
+                        <Button
+                          variant="link"
+                          className="flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
+                        >
+                          <Pencil className="h-3 w-3" />
+                          <span>Editar perfil</span>
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
 
-              {(user.xAccountUrl || user.linkedinUrl || user.gitHubUrl) && (
-                <div className="flex items-center gap-3">
-                  {user.xAccountUrl && (
-                    <a
-                      href={user.xAccountUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-500 hover:underline"
-                      aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-                    >
-                      <Twitter className="h-5 w-5" />
-                    </a>
+                  {(user.xAccountUrl || user.linkedinUrl || user.gitHubUrl) && (
+                    <div className="flex items-center gap-3">
+                      {user.xAccountUrl && (
+                        <a
+                          href={user.xAccountUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-500 hover:underline"
+                          aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
+                        >
+                          <Twitter className="h-5 w-5" />
+                        </a>
+                      )}
+
+                      {user.linkedinUrl && (
+                        <a
+                          href={user.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-500 hover:underline"
+                          aria-label={`Perfil de LinkedIn de ${user.name}`}
+                        >
+                          <Linkedin className="h-5 w-5" />
+                        </a>
+                      )}
+
+                      {user.gitHubUrl && (
+                        <a
+                          href={user.gitHubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-500 hover:underline"
+                          aria-label={`Perfil de GitHub de ${user.name}`}
+                        >
+                          <Github className="h-5 w-5" />
+                        </a>
+                      )}
+                    </div>
                   )}
+                </CardHeader>
 
-                  {user.linkedinUrl && (
-                    <a
-                      href={user.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-500 hover:underline"
-                      aria-label={`Perfil de LinkedIn de ${user.name}`}
-                    >
-                      <Linkedin className="h-5 w-5" />
-                    </a>
-                  )}
-
-                  {user.gitHubUrl && (
-                    <a
-                      href={user.gitHubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-500 hover:underline"
-                      aria-label={`Perfil de GitHub de ${user.name}`}
-                    >
-                      <Github className="h-5 w-5" />
-                    </a>
-                  )}
-                </div>
-              )}
-            </CardHeader>
-
-            <CardContent>
-              <div className="grid grid-cols-1 gap-6">
-                {/* Slogan */}
-                {user.slogan && (
-                  <div className="flex items-start gap-3">
-                    <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                    <p className="text-muted-foreground italic leading-relaxed">{user.slogan}</p>
-                  </div>
-                )}
-
-                {/* Información laboral */}
-                {(user.jobTitle || user.enterprise) && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                      <h2 className="font-semibold">Información laboral</h2>
-                    </div>
-                    <div className="space-y-1 pl-7">
-                      {user.jobTitle && (
-                        <p>
-                          <span className="font-medium">Cargo:</span> {user.jobTitle}
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-6">
+                    {/* Slogan */}
+                    {user.slogan && (
+                      <div className="flex items-start gap-3">
+                        <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
+                        <p className="italic leading-relaxed text-muted-foreground">
+                          {user.slogan}
                         </p>
-                      )}
-                      {user.enterprise && (
-                        <p>
-                          <span className="font-medium">Empresa:</span> {user.enterprise}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
+                      </div>
+                    )}
 
-                {/* Información académica */}
-                {(user.career || user.studyPlace) && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                      <h2 className="font-semibold">Información académica</h2>
-                    </div>
-                    <div className="space-y-1 pl-7">
-                      {user.career && (
-                        <p>
-                          <span className="font-medium">Carrera:</span> {user.career}
-                        </p>
-                      )}
-                      {user.studyPlace && (
-                        <p>
-                          <span className="font-medium">Institución:</span> {user.studyPlace}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Ubicación */}
-                {(user.countryOfOrigin || user.province) && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                      <h2 className="font-semibold">Ubicación</h2>
-                    </div>
-                    <div className="space-y-1 pl-7">
-                      {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
-                      {user.province && <p className="text-sm text-muted-foreground">{user.province}</p>}
-                    </div>
-                  </div>
-                )}
-
-                {/* Contacto */}
-                {(user.email || user.phoneNumber) && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Mail className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                      <h2 className="font-semibold">Contacto</h2>
-                    </div>
-                    <div className="space-y-1 pl-7">
-                      {user.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          <a href={`mailto:${user.email}`} className="text-pcnPurple hover:underline dark:text-pcnGreen">
-                            {user.email}
-                          </a>
+                    {/* Información laboral */}
+                    {(user.jobTitle || user.enterprise) && (
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                          <h2 className="font-semibold">Información laboral</h2>
                         </div>
-                      )}
-                      {user.phoneNumber && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                          <a href={`tel:${user.phoneNumber}`} className="text-pcnPurple hover:underline dark:text-pcnGreen">
-                            {user.phoneNumber}
-                          </a>
+                        <div className="space-y-1 pl-7">
+                          {user.jobTitle && (
+                            <p>
+                              <span className="font-medium">Cargo:</span> {user.jobTitle}
+                            </p>
+                          )}
+                          {user.enterprise && (
+                            <p>
+                              <span className="font-medium">Empresa:</span> {user.enterprise}
+                            </p>
+                          )}
                         </div>
+                      </div>
+                    )}
+
+                    {/* Información académica */}
+                    {(user.career || user.studyPlace) && (
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                          <h2 className="font-semibold">Información académica</h2>
+                        </div>
+                        <div className="space-y-1 pl-7">
+                          {user.career && (
+                            <p>
+                              <span className="font-medium">Carrera:</span> {user.career}
+                            </p>
+                          )}
+                          {user.studyPlace && (
+                            <p>
+                              <span className="font-medium">Institución:</span> {user.studyPlace}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Ubicación */}
+                    {(user.countryOfOrigin || user.province) && (
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                          <h2 className="font-semibold">Ubicación</h2>
+                        </div>
+                        <div className="space-y-1 pl-7">
+                          {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
+                          {user.province && (
+                            <p className="text-sm text-muted-foreground">{user.province}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Contacto */}
+                    {(user.email || user.phoneNumber) && (
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <Mail className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                          <h2 className="font-semibold">Contacto</h2>
+                        </div>
+                        <div className="space-y-1 pl-7">
+                          {user.email && (
+                            <div className="flex items-center gap-2">
+                              <Mail className="h-4 w-4 text-muted-foreground" />
+                              <a
+                                href={`mailto:${user.email}`}
+                                className="text-pcnPurple hover:underline dark:text-pcnGreen"
+                              >
+                                {user.email}
+                              </a>
+                            </div>
+                          )}
+                          {user.phoneNumber && (
+                            <div className="flex items-center gap-2">
+                              <Phone className="h-4 w-4 text-muted-foreground" />
+                              <a
+                                href={`tel:${user.phoneNumber}`}
+                                className="text-pcnPurple hover:underline dark:text-pcnGreen"
+                              >
+                                {user.phoneNumber}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Lenguajes de programación */}
+                    <div>
+                      <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
+                      {userLanguages.length > 0 ? (
+                        <LanguageCoinsContainer languages={userLanguages} />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          No hay lenguajes registrados
+                        </p>
                       )}
                     </div>
                   </div>
-                )}
-
-                {/* Lenguajes de programación */}
-                <div>
-                  <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
-                  {userLanguages.length > 0 ? (
-                    <LanguageCoinsContainer languages={userLanguages} />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No hay lenguajes registrados</p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
+                </CardContent>
               </Card>
             </div>
           </div>
@@ -353,7 +380,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 ) : (
                   <div className="space-y-4">
                     {userTalks.map((talk, index) => (
-                      <Card key={index} className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                      <Card
+                        key={index}
+                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                      >
                         <CardContent className="p-6">
                           <div className="flex flex-col gap-4 md:flex-row">
                             {talk.portrait && (

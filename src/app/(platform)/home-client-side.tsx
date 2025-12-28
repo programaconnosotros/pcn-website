@@ -137,7 +137,7 @@ const HomeClientSide = ({
                 <img
                   src="/logo.webp"
                   alt="programaConNosotros"
-                  className="w-[80px] md:w-[100px] drop-shadow-[0_0_20px_rgba(4,244,190,0.6)]"
+                  className="w-[80px] drop-shadow-[0_0_20px_rgba(4,244,190,0.6)] md:w-[100px]"
                 />
               </div>
 
