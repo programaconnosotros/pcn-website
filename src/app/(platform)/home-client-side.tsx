@@ -169,7 +169,7 @@ const HomeClientSide = ({
           </div>
         )}
 
-        <div className="z-10 -mt-12 mb-6 flex justify-center">
+        <div className="z-10 mt-4 mb-6 flex justify-center md:-mt-12">
           <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
             <div
               className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:opacity-5"
