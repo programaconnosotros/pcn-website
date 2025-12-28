@@ -40,7 +40,7 @@ jobs:
 
       - name: Setup env variables from Github Secrets
         run: |
-          echo "${{ secrets.ENVS }}" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+        echo "${{ secrets.ENVS }}" | tr ' ' '\n' >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
