@@ -53,7 +53,7 @@ export function NavMain({
                   asChild
                   tooltip={item.title}
                   data-active={isActive}
-                  className={`transition-transform duration-200 hover:scale-105 ${isActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen' : ''}`}
+                  className={`transition-transform duration-200 hover:scale-105 ${isActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen dark:[&_span]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)] dark:[&_svg]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]' : ''}`}
                 >
                   <a href={item.url}>
                     <item.icon />
@@ -82,7 +82,7 @@ export function NavMain({
                               <SidebarMenuSubButton
                                 asChild
                                 isActive={isSubItemActive}
-                                className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen' : ''}`}
+                                className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen dark:[&_span]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]' : ''}`}
                               >
                                 <a href={subItem.url}>
                                   <span>{subItem.title}</span>
