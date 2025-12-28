@@ -41,9 +41,11 @@ const sponsors = [
   {
     name: 'UTN-FRT',
     url: 'https://www.frt.utn.edu.ar/',
+    logo: '/utn-frt-logo.png',
     description: 'Universidad de ingeniería',
     location: 'Tucumán, Argentina',
-    hasLogo: false,
+    hasLogo: true,
+    showName: false,
   },
   {
     name: 'IEEE Computer Society',
@@ -83,12 +85,12 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'UTN-FRT' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : 'max-h-16 w-auto'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'scale-150 group-hover:scale-[1.65]' : sponsor.name === 'ASZ Software' || sponsor.name === 'UTN-FRT' ? 'max-h-[5.5rem] w-auto' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
