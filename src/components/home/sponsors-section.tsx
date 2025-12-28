@@ -34,9 +34,11 @@ const sponsors = [
   {
     name: 'Blackbox Cowork',
     url: 'https://www.instagram.com/blackboxcowork/',
+    logo: '/blackbox-cowork-logo.jpeg',
     description: 'Espacio de coworking adaptable.',
     location: 'Tucumán, Argentina',
-    hasLogo: false,
+    hasLogo: true,
+    showName: false,
   },
   {
     name: 'UTN-FRT',
