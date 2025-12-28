@@ -59,7 +59,7 @@ const SpecialtiesPage = () => (
         <div className="mb-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex flex-col items-center gap-4">
             <Heading2 className="m-0 text-center">
-              Especialidades en ingeniería de software
+              Especialidades
             </Heading2>
             <p className="max-w-3xl text-center text-muted-foreground">
               El mundo del software es vasto y diverso. Acá te presentamos las principales
