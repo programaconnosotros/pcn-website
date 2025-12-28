@@ -202,7 +202,7 @@ const HomeClientSide = ({
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-            <span className="text-pcnPurple dark:text-pcnGreen">Impulsá tu carrera</span> con estos{' '}
+            <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">Impulsá tu carrera</span> con estos{' '}
             <span className="relative inline-block">
               recursos
               <svg
@@ -213,7 +213,7 @@ const HomeClientSide = ({
               >
                 <path
                   d="M 0,7 L 6,2 L 11,5 L 16,1 L 22,4 L 28,2 L 34,6 L 40,1 L 46,5 L 52,2 L 58,6 L 64,1 L 70,5 L 76,2 L 82,6 L 88,1 L 94,5 L 100,4"
-                  className="stroke-pcnPurple dark:stroke-pcnGreen"
+                  className="stroke-pcnPurple drop-shadow-[0_0_8px_rgba(80,56,189,0.6)] dark:stroke-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]"
                   strokeWidth="2"
                   fill="none"
                   strokeLinecap="round"
