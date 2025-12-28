@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { Heading2 } from '../ui/heading-2';
 import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
+import { Building2, Handshake, MessageSquare } from 'lucide-react';
 
 const sponsors = [
   {
@@ -76,7 +78,7 @@ export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
       <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 text-center">Nos acompañan</Heading2>
+        <Heading2 className="relative z-10 text-center">Sponsors</Heading2>
       </div>
 
       <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
@@ -124,6 +126,33 @@ export const SponsorsSection = () => {
             </Card>
           </Link>
         ))}
+
+        {/* Card para empresas que quieren sumarse */}
+        <Link
+          href="https://wa.me/5493815777562"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block"
+        >
+          <Card className="h-full border-2 border-dashed border-pcnPurple/50 bg-gradient-to-br from-pcnPurple/5 to-pcnPurple/10 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/50 dark:from-pcnGreen/5 dark:to-pcnGreen/10 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+            <CardContent className="flex h-full flex-col items-center justify-center p-6 text-center">
+              <div className="mb-4 flex items-center justify-center gap-3">
+                <Building2 className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+                <Handshake className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-pcnPurple dark:text-pcnGreen md:text-xl">
+                ¿Querés sumarte como sponsor?
+              </h3>
+              <p className="mb-4 text-sm text-muted-foreground dark:text-neutral-400 md:text-base">
+                Si tu empresa comparte los valores de PCN y querés colaborar con la comunidad, contactanos.
+              </p>
+              <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
+                <MessageSquare className="h-4 w-4" />
+                Contactanos
+              </Button>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

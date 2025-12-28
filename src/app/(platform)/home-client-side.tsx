@@ -544,6 +544,8 @@ const HomeClientSide = ({
           </div>
         </div>
 
+        <SponsorsSection />
+
         {featuredTestimonials.length > 0 && (
           <>
             <div className="flex items-center justify-center p-6">
@@ -722,43 +724,6 @@ const HomeClientSide = ({
               <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
                 Si tenés una idea que sea buena para la comunidad, querés organizar algo o proponer
                 cualquier iniciativa, contactanos y vemos la forma de llevarlo a cabo.
-              </Paragraph>
-              <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
-                  <MessageSquare className="h-4 w-4" />
-                  Contactanos
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <SponsorsSection />
-
-        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="mb-2 flex items-center justify-center gap-4">
-                <Building2
-                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
-                  strokeWidth={1.5}
-                />
-                <Handshake
-                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
-                  strokeWidth={1.5}
-                />
-                <Briefcase
-                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
-                ¿Sos una empresa y querés organizar algo en conjunto?
-              </Heading2>
-              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
-                Si tu empresa comparte los valores de PCN y querés colaborar con la comunidad,
-                organizar eventos, charlas o cualquier iniciativa, contactanos y armemos algo
-                juntos.
               </Paragraph>
               <Link href="https://wa.me/5493815777562" target="_blank">
                 <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
