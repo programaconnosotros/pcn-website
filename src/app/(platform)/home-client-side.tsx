@@ -593,7 +593,7 @@ const HomeClientSide = ({
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
-              <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-6 w-6" />
+              <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">WhatsApp</h3>
@@ -609,7 +609,7 @@ const HomeClientSide = ({
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
-              <img src="/social-networks/discord.svg" alt="Discord" className="h-6 w-6" />
+              <img src="/social-networks/discord.svg" alt="Discord" className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">Discord</h3>
@@ -625,7 +625,7 @@ const HomeClientSide = ({
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
-              <img src="/social-networks/instagram.svg" alt="Instagram" className="h-6 w-6" />
+              <img src="/social-networks/instagram.svg" alt="Instagram" className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">Instagram</h3>
@@ -641,7 +641,7 @@ const HomeClientSide = ({
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
-              <img src="/social-networks/youtube.svg" alt="YouTube" className="h-6 w-6" />
+              <img src="/social-networks/youtube.svg" alt="YouTube" className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">YouTube</h3>
@@ -657,7 +657,7 @@ const HomeClientSide = ({
             className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
-              <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-6 w-6" />
+              <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-neutral-900 dark:text-white">LinkedIn</h3>
