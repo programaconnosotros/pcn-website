@@ -15,7 +15,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import prisma from '@/lib/prisma';
-import { Github, Linkedin, Pencil, Twitter } from 'lucide-react';
+import { Github, Linkedin, Pencil, Twitter, Briefcase, GraduationCap, MapPin, Quote } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -69,6 +69,12 @@ async function getUser(id: string) {
       email: user.email,
       image: user.image,
       countryOfOrigin: user.countryOfOrigin,
+      province: user.province,
+      slogan: user.slogan,
+      jobTitle: user.jobTitle,
+      enterprise: user.enterprise,
+      career: user.career,
+      studyPlace: user.studyPlace,
       xAccountUrl: user.xAccountUrl,
       linkedinUrl: user.linkedinUrl,
       gitHubUrl: user.gitHubUrl,
@@ -121,7 +127,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <Card>
+          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16">
@@ -185,15 +191,86 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </CardHeader>
 
             <CardContent>
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <h2 className="font-semibold">País de origen</h2>
-                  <p>{user.countryOfOrigin || '-'}</p>
-                </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Slogan */}
+                {user.slogan && (
+                  <div className="md:col-span-2">
+                    <div className="flex items-start gap-2">
+                      <Quote className="mt-1 h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <div>
+                        <h2 className="mb-1 font-semibold">Slogan</h2>
+                        <p className="text-muted-foreground italic">{user.slogan}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
+                {/* Información laboral */}
+                {(user.jobTitle || user.enterprise) && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <h2 className="font-semibold">Información laboral</h2>
+                    </div>
+                    <div className="space-y-1 pl-7">
+                      {user.jobTitle && (
+                        <p>
+                          <span className="font-medium">Cargo:</span> {user.jobTitle}
+                        </p>
+                      )}
+                      {user.enterprise && (
+                        <p>
+                          <span className="font-medium">Empresa:</span> {user.enterprise}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Información académica */}
+                {(user.career || user.studyPlace) && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <h2 className="font-semibold">Información académica</h2>
+                    </div>
+                    <div className="space-y-1 pl-7">
+                      {user.career && (
+                        <p>
+                          <span className="font-medium">Carrera:</span> {user.career}
+                        </p>
+                      )}
+                      {user.studyPlace && (
+                        <p>
+                          <span className="font-medium">Institución:</span> {user.studyPlace}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Ubicación */}
+                {(user.countryOfOrigin || user.province) && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
+                      <h2 className="font-semibold">Ubicación</h2>
+                    </div>
+                    <div className="space-y-1 pl-7">
+                      {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
+                      {user.province && <p className="text-sm text-muted-foreground">{user.province}</p>}
+                    </div>
+                  </div>
+                )}
+
+                {/* Lenguajes de programación */}
                 <div>
                   <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
-                  <LanguageCoinsContainer languages={userLanguages} />
+                  {userLanguages.length > 0 ? (
+                    <LanguageCoinsContainer languages={userLanguages} />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No hay lenguajes registrados</p>
+                  )}
                 </div>
               </div>
             </CardContent>
