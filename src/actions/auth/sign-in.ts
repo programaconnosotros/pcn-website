@@ -49,7 +49,9 @@ export const signIn = async (
     console.log('[signIn] 8. Verificando email verificado:', user.emailVerified);
     if (!user.emailVerified) {
       console.log('[signIn] ERROR: Email no verificado');
-      throw new Error(`EMAIL_NOT_VERIFIED:${email}`);
+      const error = new Error(`EMAIL_NOT_VERIFIED:${email}`);
+      error.name = 'EMAIL_NOT_VERIFIED';
+      throw error;
     }
 
     console.log('[signIn] 9. Creando sesión...');
