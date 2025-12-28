@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select';
 import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, Loader2, SquareAsterisk, UserPlus } from 'lucide-react';
+import { ArrowLeft, LogIn, Loader2, SquareAsterisk, UserPlus, User, Briefcase, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -128,125 +128,100 @@ export default function SignUpPage() {
                 toast.error('Por favor, completa todos los campos requeridos correctamente');
               }
             })}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre completo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Lionel Messi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Sección: Información de cuenta */}
+            <div className="space-y-4 rounded-md border p-4">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                <User className="h-5 w-5" />
+                Información de cuenta
+              </h3>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirmar contraseña</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>País</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Limpiar provincia si cambia el país y no es Argentina
-                      if (value !== 'Argentina') {
-                        form.setValue('province', undefined);
-                        form.clearErrors('province');
-                      } else {
-                        // Si cambia a Argentina, forzar validación de provincia
-                        form.trigger('province');
-                      }
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu país" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {watchCountry === 'Argentina' && (
               <FormField
                 control={form.control}
-                name="province"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provincia</FormLabel>
+                    <FormLabel>Nombre completo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Lionel Messi" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Correo electrónico</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="correo@ejemplo.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="********" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmar contraseña</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="********" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>País</FormLabel>
                     <Select
                       onValueChange={(value) => {
                         field.onChange(value);
-                        form.clearErrors('province');
+                        // Limpiar provincia si cambia el país y no es Argentina
+                        if (value !== 'Argentina') {
+                          form.setValue('province', undefined);
+                          form.clearErrors('province');
+                        } else {
+                          // Si cambia a Argentina, forzar validación de provincia
+                          form.trigger('province');
+                        }
                       }}
                       value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona tu provincia" />
+                          <SelectValue placeholder="Selecciona tu país" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {ARGENTINA_PROVINCES.map((province) => (
-                          <SelectItem key={province} value={province}>
-                            {province}
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country} value={country}>
+                            {country}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -255,17 +230,54 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
-            )}
 
-            <div className="space-y-4 rounded-lg border p-4">
-              <h3 className="text-sm font-semibold">Información profesional (opcional)</h3>
+              {watchCountry === 'Argentina' && (
+                <FormField
+                  control={form.control}
+                  name="province"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Provincia</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          form.clearErrors('province');
+                        }}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona tu provincia" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {ARGENTINA_PROVINCES.map((province) => (
+                            <SelectItem key={province} value={province}>
+                              {province}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
+
+            {/* Sección: Información profesional */}
+            <div className="space-y-4 rounded-md border p-4">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
+                <Briefcase className="h-5 w-5" />
+                Información profesional (opcional)
+              </h3>
 
               <FormField
                 control={form.control}
                 name="profession"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿De qué trabajas?</FormLabel>
+                    <FormLabel>¿De qué trabajás?</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Ej: Desarrollador Full Stack, Diseñador UX, etc."
@@ -282,7 +294,7 @@ export default function SignUpPage() {
                 name="enterprise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿En qué empresa trabajas?</FormLabel>
+                    <FormLabel>¿En qué empresa trabajás?</FormLabel>
                     <FormControl>
                       <Input placeholder="Ej: Google, Microsoft, etc." {...field} />
                     </FormControl>
@@ -292,15 +304,19 @@ export default function SignUpPage() {
               />
             </div>
 
-            <div className="space-y-4 rounded-lg border p-4">
-              <h3 className="text-sm font-semibold">Información académica (opcional)</h3>
+            {/* Sección: Información académica */}
+            <div className="space-y-4 rounded-md border p-4">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
+                <GraduationCap className="h-5 w-5" />
+                Información académica (opcional)
+              </h3>
 
               <FormField
                 control={form.control}
                 name="studyField"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Qué estudias o estudiaste?</FormLabel>
+                    <FormLabel>¿Qué estudiás o estudiaste?</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Ej: Ingeniería en Sistemas, Desarrollo Web, etc."
@@ -317,7 +333,7 @@ export default function SignUpPage() {
                 name="studyPlace"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Dónde o cómo estudias/estudiaste?</FormLabel>
+                    <FormLabel>¿Dónde o cómo estudiás/estudiaste?</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."
