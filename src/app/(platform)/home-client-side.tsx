@@ -288,7 +288,7 @@ const HomeClientSide = ({
               áreas y de todos los niveles.
             </Paragraph>
 
-            <Link href="/consejos" className="relative z-10">
+            <Link href="/usuarios" className="relative z-10">
               <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Conocer a la comunidad
               </Button>
