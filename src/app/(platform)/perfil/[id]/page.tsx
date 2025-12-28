@@ -206,14 +206,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <div className="grid grid-cols-1 gap-6">
                 {/* Slogan */}
                 {user.slogan && (
-                  <div>
-                    <div className="flex items-start gap-2">
-                      <Quote className="mt-1 h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                      <div>
-                        <h2 className="mb-1 font-semibold">Slogan</h2>
-                        <p className="text-muted-foreground italic">{user.slogan}</p>
-                      </div>
-                    </div>
+                  <div className="flex items-start gap-3">
+                    <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
+                    <p className="text-muted-foreground italic leading-relaxed">{user.slogan}</p>
                   </div>
                 )}
 
