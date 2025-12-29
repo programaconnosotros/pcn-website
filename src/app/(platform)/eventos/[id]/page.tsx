@@ -24,11 +24,48 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import type { Metadata } from 'next';
 
 type EventWithImages = Event & {
   images: Images[];
   sponsors: Sponsor[];
 };
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const event = await fetchEvent(params.id);
+
+  if (!event) {
+    return {
+      title: 'Evento no encontrado (PCN)',
+      description: 'El evento que buscas no existe o ha sido eliminado.',
+    };
+  }
+
+  const imageUrl = event.flyerSrc || (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+  const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
+  const pageUrl = `${SITE_URL}/eventos/${event.id}`;
+
+  return {
+    title: `${event.name} (PCN)`,
+    description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+    openGraph: {
+      title: `${event.name} (PCN)`,
+      description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+      images: [absoluteImageUrl],
+      url: pageUrl,
+      type: 'website',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${event.name} (PCN)`,
+      description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+      images: [absoluteImageUrl],
+    },
+  };
+}
 
 const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
   const id: string = params.id;

@@ -12,6 +12,53 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const advise = await prisma.advise.findUnique({
+    where: { id: params.id },
+    select: {
+      content: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!advise) {
+    return {
+      title: 'Consejo no encontrado (PCN)',
+      description: 'El consejo que buscas no existe.',
+    };
+  }
+
+  const title = `Consejo de ${advise.author.name} (PCN)`;
+  const description = advise.content.length > 160 ? advise.content.substring(0, 157) + '...' : advise.content;
+  const pageUrl = `${SITE_URL}/consejos/${params.id}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+      url: pageUrl,
+      type: 'article',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+    },
+  };
+}
 
 export default async function AdvisePage({ params }: { params: { id: string } }) {
   const sessionId = cookies().get('sessionId');

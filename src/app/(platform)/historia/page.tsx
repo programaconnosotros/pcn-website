@@ -13,6 +13,28 @@ import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/historia/table-of-contents';
 import { ScrollText } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Historia de programaConNosotros (PCN)',
+  description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+  openGraph: {
+    title: 'Historia de programaConNosotros (PCN)',
+    description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/historia`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Historia de programaConNosotros (PCN)',
+    description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const PCN = () => (
   <code className="font-bold text-pcnPurple dark:text-pcnGreen">programaConNosotros</code>

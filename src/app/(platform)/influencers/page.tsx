@@ -34,9 +34,27 @@ interface InfluencersData {
   influencers: Influencer[];
 }
 
-export const metadata = {
-  title: 'Influencers - PCN',
-  description: 'Influencers recomendados por la comunidad.',
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Influencers (PCN)',
+  description: 'Influencers y creadores de contenido recomendados por la comunidad.',
+  openGraph: {
+    title: 'Influencers (PCN)',
+    description: 'Influencers y creadores de contenido recomendados por la comunidad.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/influencers`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Influencers (PCN)',
+    description: 'Influencers y creadores de contenido recomendados por la comunidad',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
 };
 
 const influencersData: InfluencersData = {

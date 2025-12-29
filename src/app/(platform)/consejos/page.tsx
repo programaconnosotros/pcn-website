@@ -15,6 +15,28 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Handshake } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Consejos (PCN)',
+  description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+  openGraph: {
+    title: 'Consejos (PCN)',
+    description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/consejos`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Consejos (PCN)',
+    description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const AdvicePage = async () => {
   const sessionId = cookies().get('sessionId')?.value;

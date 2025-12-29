@@ -14,6 +14,28 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'programaConNosotros (PCN)',
+  description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
+  openGraph: {
+    title: 'programaConNosotros (PCN)',
+    description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'programaConNosotros (PCN)',
+    description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const Home = async () => {
   const sessionId = cookies().get('sessionId')?.value;

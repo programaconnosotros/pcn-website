@@ -12,6 +12,28 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Testimonios (PCN)',
+  description: 'Conocé la opinión de otros miembros de la comunidad.',
+  openGraph: {
+    title: 'Testimonios (PCN)',
+    description: 'Conocé la opinión de otros miembros de la comunidad.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/testimonios`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Testimonios (PCN)',
+    description: 'Conocé la opinión de otros miembros de la comunidad.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const TestimoniosPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;

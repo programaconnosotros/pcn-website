@@ -13,6 +13,28 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Podcast } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Podcast (PCN)',
+  description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+  openGraph: {
+    title: 'Podcast (PCN)',
+    description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/podcast`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Podcast (PCN)',
+    description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const PodcastPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;

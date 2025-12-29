@@ -35,8 +35,57 @@ import {
 import { talks } from '@/app/(platform)/charlas/talks';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 export const revalidate = 0;
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const user = await prisma.user.findUnique({
+    where: { id: params.id },
+    select: {
+      name: true,
+      slogan: true,
+      image: true,
+    },
+  });
+
+  if (!user) {
+    return {
+      title: 'Perfil no encontrado (PCN)',
+      description: 'El perfil que buscas no existe.',
+    };
+  }
+
+  const title = `${user.name} (PCN)`;
+  const description = user.slogan
+    ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
+    : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;
+  const imageUrl = user.image
+    ? (user.image.startsWith('http') ? user.image : `${SITE_URL}${user.image}`)
+    : `${SITE_URL}/pcn-link-preview.png`;
+  const pageUrl = `${SITE_URL}/perfil/${params.id}`;
+
+  return {
+    title,
+    description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+    openGraph: {
+      title,
+      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+      images: [imageUrl],
+      url: pageUrl,
+      type: 'profile',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+      images: [imageUrl],
+    },
+  };
+}
 
 interface ProfilePageProps {
   params: {
@@ -87,7 +136,7 @@ async function getUser(id: string) {
       image: user.image,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
-      phoneNumber: user.phoneNumber,
+      phoneNumber: (user as any).phoneNumber ?? null,
       slogan: user.slogan,
       jobTitle: user.jobTitle,
       enterprise: user.enterprise,

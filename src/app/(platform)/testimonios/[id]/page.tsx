@@ -20,6 +20,43 @@ import { ArrowLeft, Star } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { TestimonialDetailActions } from './testimonial-detail-actions';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const testimonial = await fetchTestimonial(params.id);
+
+  if (!testimonial) {
+    return {
+      title: 'Testimonio no encontrado (PCN)',
+      description: 'El testimonio que buscas no existe.',
+    };
+  }
+
+  const title = `Testimonio de ${testimonial.user.name} (PCN)`;
+  const description = testimonial.content.length > 160 ? testimonial.content.substring(0, 157) + '...' : testimonial.content;
+  const pageUrl = `${SITE_URL}/testimonios/${params.id}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+      url: pageUrl,
+      type: 'article',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+    },
+  };
+}
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('es-AR', {
