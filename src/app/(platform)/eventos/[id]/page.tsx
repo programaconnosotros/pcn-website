@@ -372,7 +372,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                       <p className="text-sm font-medium">Fecha y hora</p>
                       <p className="text-sm text-muted-foreground">
                         {formatDate(event.date)} a las {formatTime(event.date)}
-                        {event.endDate && ` - ${formatTime(event.endDate)}`}
                       </p>
                     </div>
                   </div>
