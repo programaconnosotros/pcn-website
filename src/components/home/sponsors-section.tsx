@@ -53,7 +53,7 @@ const sponsors = [
   },
   {
     name: 'Endpoint Consulting',
-    url: 'https://www.instagram.com/endpointconsulting/',
+    url: 'https://www.instagram.com/endpoint_ciberseguridad/',
     logo: '/endpoint-security-logo.png',
     description: 'Expertos en seguridad informática y consultoría tecnológica.',
     location: 'Tucumán, Argentina',
