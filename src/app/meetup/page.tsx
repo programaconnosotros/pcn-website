@@ -65,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   return {
-    title: `${nextMeetup.name} - Meetup - PCN`,
+    title: `${nextMeetup.name} (PCN)`,
     description:
       nextMeetup.description.length > 160
         ? nextMeetup.description.substring(0, 157) + '...'
@@ -83,7 +83,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${nextMeetup.name} - Meetup - PCN`,
+      title: `${nextMeetup.name} (PCN)`,
       description:
         nextMeetup.description.length > 160
           ? nextMeetup.description.substring(0, 157) + '...'
@@ -134,8 +134,8 @@ const MeetupPage = async () => {
     redirect('/eventos');
   }
 
-  // Redirigir a la página de inscripción del meetup
-  redirect(`/eventos/${nextMeetup.id}/inscripcion`);
+  // Redirigir a la página de detalle del meetup
+  redirect(`/eventos/${nextMeetup.id}`);
 };
 
 export default MeetupPage;
