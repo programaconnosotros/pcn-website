@@ -35,7 +35,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   const title = `Testimonio de ${testimonial.user.name} (PCN)`;
-  const description = testimonial.content.length > 160 ? testimonial.content.substring(0, 157) + '...' : testimonial.content;
+  const description =
+    testimonial.content.length > 160
+      ? testimonial.content.substring(0, 157) + '...'
+      : testimonial.content;
   const pageUrl = `${SITE_URL}/testimonios/${params.id}`;
 
   return {

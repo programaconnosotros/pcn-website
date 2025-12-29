@@ -20,10 +20,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'programaConNosotros (PCN)',
-  description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
+  description:
+    'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
   openGraph: {
     title: 'programaConNosotros (PCN)',
-    description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel',
+    description:
+      'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}`,
     type: 'website',
@@ -32,7 +34,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'programaConNosotros (PCN)',
-    description: 'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
+    description:
+      'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

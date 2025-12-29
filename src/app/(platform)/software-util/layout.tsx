@@ -21,11 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SoftwareUtilLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SoftwareUtilLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
-

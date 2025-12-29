@@ -21,11 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function UsuariosLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function UsuariosLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
-

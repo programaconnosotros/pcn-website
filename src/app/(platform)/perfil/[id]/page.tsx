@@ -63,7 +63,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
     : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;
   const imageUrl = user.image
-    ? (user.image.startsWith('http') ? user.image : `${SITE_URL}${user.image}`)
+    ? user.image.startsWith('http')
+      ? user.image
+      : `${SITE_URL}${user.image}`
     : `${SITE_URL}/pcn-link-preview.png`;
   const pageUrl = `${SITE_URL}/perfil/${params.id}`;
 

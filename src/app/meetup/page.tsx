@@ -57,15 +57,25 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const imageUrl = nextMeetup.flyerSrc || (nextMeetup.images.length > 0 ? nextMeetup.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+  const imageUrl =
+    nextMeetup.flyerSrc ||
+    (nextMeetup.images.length > 0
+      ? nextMeetup.images[0].imgSrc
+      : `${SITE_URL}/pcn-link-preview.png`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   return {
     title: `${nextMeetup.name} - Meetup - PCN`,
-    description: nextMeetup.description.length > 160 ? nextMeetup.description.substring(0, 157) + '...' : nextMeetup.description,
+    description:
+      nextMeetup.description.length > 160
+        ? nextMeetup.description.substring(0, 157) + '...'
+        : nextMeetup.description,
     openGraph: {
       title: `${nextMeetup.name} - Meetup - PCN`,
-      description: nextMeetup.description.length > 160 ? nextMeetup.description.substring(0, 157) + '...' : nextMeetup.description,
+      description:
+        nextMeetup.description.length > 160
+          ? nextMeetup.description.substring(0, 157) + '...'
+          : nextMeetup.description,
       images: [absoluteImageUrl],
       url: `${SITE_URL}/meetup`,
       type: 'website',
@@ -74,7 +84,10 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: `${nextMeetup.name} - Meetup - PCN`,
-      description: nextMeetup.description.length > 160 ? nextMeetup.description.substring(0, 157) + '...' : nextMeetup.description,
+      description:
+        nextMeetup.description.length > 160
+          ? nextMeetup.description.substring(0, 157) + '...'
+          : nextMeetup.description,
       images: [absoluteImageUrl],
     },
   };

@@ -43,16 +43,24 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     };
   }
 
-  const imageUrl = event.flyerSrc || (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+  const imageUrl =
+    event.flyerSrc ||
+    (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
   const pageUrl = `${SITE_URL}/eventos/${event.id}`;
 
   return {
     title: `${event.name} (PCN)`,
-    description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+    description:
+      event.description.length > 160
+        ? event.description.substring(0, 157) + '...'
+        : event.description,
     openGraph: {
       title: `${event.name} (PCN)`,
-      description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+      description:
+        event.description.length > 160
+          ? event.description.substring(0, 157) + '...'
+          : event.description,
       images: [absoluteImageUrl],
       url: pageUrl,
       type: 'website',
@@ -61,7 +69,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     twitter: {
       card: 'summary_large_image',
       title: `${event.name} (PCN)`,
-      description: event.description.length > 160 ? event.description.substring(0, 157) + '...' : event.description,
+      description:
+        event.description.length > 160
+          ? event.description.substring(0, 157) + '...'
+          : event.description,
       images: [absoluteImageUrl],
     },
   };
