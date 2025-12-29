@@ -108,26 +108,25 @@ export default function SignUpPage() {
 
       const result = await signUp({ ...values, redirectTo: finalRedirect });
 
-      toast.success('Usuario creado exitosamente! 🥳');
+      if (result.success) {
+        toast.success('Usuario creado exitosamente! 🥳');
+        // Redirigir a la página de verificación
+        // No deshabilitamos isSubmitting aquí para mantener el botón deshabilitado durante la redirección
+        if (result.redirectUrl) {
+          router.push(result.redirectUrl);
+        }
+        return;
+      }
 
-      // Redirigir a la página de verificación
-      // No deshabilitamos isSubmitting aquí para mantener el botón deshabilitado durante la redirección
-      if (result?.redirectUrl) {
-        router.push(result.redirectUrl);
+      // Manejar errores específicos
+      if (result.error === 'EMAIL_ALREADY_EXISTS') {
+        toast.error('Ya hay un usuario con ese correo electrónico.');
+      } else {
+        toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
     } catch (error) {
-      console.error('Error al crear el usuario', error);
-
-      if (error instanceof Error) {
-        if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
-          toast.error('Ya hay un usuario con ese correo electrónico.');
-        } else {
-          toast.error(error.message);
-        }
-      } else {
-        toast.error('Error al crear el usuario');
-      }
-
+      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
+    } finally {
       // Solo rehabilitar el botón si hubo un error
       setIsSubmitting(false);
     }
