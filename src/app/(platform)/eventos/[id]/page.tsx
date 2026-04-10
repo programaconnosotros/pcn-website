@@ -186,6 +186,28 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }
 
+  // Verificar si el usuario está en la lista de espera
+  let isOnWaitlist = false;
+  let waitlistPosition: number | null = null;
+  let waitlistCount = 0;
+  if (event.capacity !== null) {
+    if (userId) {
+      const waitlistEntry = await prisma.waitlistEntry.findFirst({
+        where: { eventId: id, userId },
+      });
+      if (waitlistEntry) {
+        isOnWaitlist = true;
+        const entriesAhead = await prisma.waitlistEntry.count({
+          where: { eventId: id, createdAt: { lt: waitlistEntry.createdAt } },
+        });
+        waitlistPosition = entriesAhead + 1;
+      }
+    }
+    waitlistCount = await prisma.waitlistEntry.count({
+      where: { eventId: id },
+    });
+  }
+
   // Obtener inscripciones si el usuario es admin
   let registrations: Array<{
     id: string;
@@ -349,6 +371,9 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         registrationId={registrationId}
                         capacityAvailable={capacityInfo?.available ?? true}
                         capacityInfo={capacityInfo}
+                        isOnWaitlist={isOnWaitlist}
+                        waitlistPosition={waitlistPosition}
+                        waitlistCount={waitlistCount}
                       />
                     </Suspense>
                   </CardContent>
