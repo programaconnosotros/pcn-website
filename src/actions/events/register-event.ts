@@ -1,24 +1,29 @@
 'use server';
 
+import { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
-export const registerEvent = async (eventId: string, options?: { skipRedirect?: boolean }) => {
-  // Verificar que el evento existe y no está eliminado
-  const event = await prisma.event.findFirst({
-    where: {
-      id: eventId,
-      deletedAt: null,
-    },
-  });
+type RegistrationResult =
+  | {
+      success: true;
+      status: 'registered';
+      registrationId: string;
+    }
+  | {
+      success: true;
+      status: 'waitlisted';
+      waitlistId: string;
+      position: number;
+    };
 
-  if (!event) {
-    throw new Error('Evento no encontrado');
-  }
-
+export const registerEvent = async (
+  eventId: string,
+  options?: { skipRedirect?: boolean },
+): Promise<RegistrationResult> => {
   // Requerir autenticación - solo usuarios autenticados pueden inscribirse
   const sessionId = cookies().get('sessionId')?.value;
   if (!sessionId) {
@@ -38,97 +43,201 @@ export const registerEvent = async (eventId: string, options?: { skipRedirect?: 
   const userName = session.user.name;
   const userEmail = session.user.email;
 
-  // Verificar si ya existe una inscripción (activa o cancelada)
-  const existingRegistration = await prisma.eventRegistration.findFirst({
-    where: {
-      eventId: eventId,
-      userId: userId,
-    },
-  });
-
-  // Si existe una inscripción activa, no permitir
-  if (existingRegistration && existingRegistration.cancelledAt === null) {
-    throw new Error('Ya estás registrado en este evento');
-  }
-
-  // Validar cupo disponible (verificar nuevamente antes de crear/actualizar la inscripción)
-  if (event.capacity !== null) {
-    const currentRegistrations = await prisma.eventRegistration.count({
-      where: {
-        eventId: eventId,
-        cancelledAt: null, // Excluir inscripciones canceladas
-      },
-    });
-
-    if (currentRegistrations >= event.capacity) {
-      throw new Error('El cupo del evento está completo. No se pueden aceptar más inscripciones.');
-    }
-  }
-
-  let registrationId: string;
   try {
-    // Si existe una inscripción cancelada, reactivarla
-    if (existingRegistration && existingRegistration.cancelledAt !== null) {
-      await prisma.eventRegistration.update({
-        where: { id: existingRegistration.id },
-        data: {
-          cancelledAt: null, // Reactivar la inscripción
+    const result = await prisma.$transaction(
+      async (tx) => {
+        const event = await tx.event.findFirst({
+          where: {
+            id: eventId,
+            deletedAt: null,
+          },
+          select: {
+            id: true,
+            name: true,
+            capacity: true,
+          },
+        });
+
+        if (!event) {
+          throw new Error('Evento no encontrado');
+        }
+
+        const [existingRegistration, existingWaitlist] = await Promise.all([
+          tx.eventRegistration.findFirst({
+            where: {
+              eventId,
+              userId,
+            },
+          }),
+          tx.eventWaitlistEntry.findFirst({
+            where: {
+              eventId,
+              userId,
+            },
+          }),
+        ]);
+
+        if (existingRegistration && existingRegistration.cancelledAt === null) {
+          throw new Error('Ya estás registrado en este evento');
+        }
+
+        const currentRegistrations = await tx.eventRegistration.count({
+          where: {
+            eventId,
+            cancelledAt: null,
+          },
+        });
+
+        const hasCapacity = event.capacity === null || currentRegistrations < event.capacity;
+
+        if (hasCapacity) {
+          let registrationId: string;
+          if (existingRegistration) {
+            const registration = await tx.eventRegistration.update({
+              where: { id: existingRegistration.id },
+              data: { cancelledAt: null },
+              select: { id: true },
+            });
+            registrationId = registration.id;
+          } else {
+            const registration = await tx.eventRegistration.create({
+              data: {
+                eventId,
+                userId,
+              },
+              select: { id: true },
+            });
+            registrationId = registration.id;
+          }
+
+          if (existingWaitlist && existingWaitlist.cancelledAt === null && !existingWaitlist.promotedAt) {
+            await tx.eventWaitlistEntry.update({
+              where: { id: existingWaitlist.id },
+              data: {
+                cancelledAt: new Date(),
+              },
+            });
+          }
+
+          return {
+            eventName: event.name,
+            result: {
+              success: true,
+              status: 'registered',
+              registrationId,
+            } as RegistrationResult,
+          };
+        }
+
+        if (existingWaitlist && existingWaitlist.cancelledAt === null && !existingWaitlist.promotedAt) {
+          throw new Error('Ya estás en la lista de espera de este evento');
+        }
+
+        let waitlistId: string;
+        let waitlistCreatedAt: Date;
+        if (existingWaitlist) {
+          const reactivatedWaitlist = await tx.eventWaitlistEntry.update({
+            where: { id: existingWaitlist.id },
+            data: {
+              cancelledAt: null,
+              promotedAt: null,
+              createdAt: new Date(),
+            },
+            select: {
+              id: true,
+              createdAt: true,
+            },
+          });
+          waitlistId = reactivatedWaitlist.id;
+          waitlistCreatedAt = reactivatedWaitlist.createdAt;
+        } else {
+          const createdWaitlist = await tx.eventWaitlistEntry.create({
+            data: {
+              eventId,
+              userId,
+            },
+            select: {
+              id: true,
+              createdAt: true,
+            },
+          });
+          waitlistId = createdWaitlist.id;
+          waitlistCreatedAt = createdWaitlist.createdAt;
+        }
+
+        const position = await tx.eventWaitlistEntry.count({
+          where: {
+            eventId,
+            cancelledAt: null,
+            promotedAt: null,
+            createdAt: {
+              lte: waitlistCreatedAt,
+            },
+          },
+        });
+
+        return {
+          eventName: event.name,
+          result: {
+            success: true,
+            status: 'waitlisted',
+            waitlistId,
+            position,
+          } as RegistrationResult,
+        };
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+
+    if (result.result.status === 'registered') {
+      await notifyAdmins({
+        type: 'event_registration_created',
+        title: 'Nueva inscripción a evento',
+        message: `${userName} se ha inscrito al evento "${result.eventName}"`,
+        metadata: {
+          eventId,
+          eventName: result.eventName,
+          registrationId: result.result.registrationId,
+          userName,
+          userEmail,
         },
       });
-      registrationId = existingRegistration.id;
     } else {
-      // Crear nueva inscripción
-      const newRegistration = await prisma.eventRegistration.create({
-        data: {
-          eventId: eventId,
-          userId: userId,
+      await notifyAdmins({
+        type: 'event_waitlist_joined',
+        title: 'Nueva inscripción fuera de cupo',
+        message: `${userName} se sumó a la lista de espera del evento "${result.eventName}"`,
+        metadata: {
+          eventId,
+          eventName: result.eventName,
+          waitlistId: result.result.waitlistId,
+          waitlistPosition: result.result.position,
+          userName,
+          userEmail,
         },
       });
-      registrationId = newRegistration.id;
     }
 
-    // Notificar a los admins sobre la nueva inscripción
-    await notifyAdmins({
-      type: 'event_registration_created',
-      title: 'Nueva inscripción a evento',
-      message: `${userName} se ha inscrito al evento "${event.name}"`,
-      metadata: {
-        eventId: eventId,
-        eventName: event.name,
-        registrationId: registrationId,
-        userName: userName,
-        userEmail: userEmail,
-      },
-    });
-  } catch (error: any) {
-    // Manejar error de constraint único de Prisma (caso de condición de carrera)
-    if (error.code === 'P2002' && error.meta?.target?.includes('userId')) {
-      // Verificar nuevamente si existe una inscripción activa
-      const duplicateCheck = await prisma.eventRegistration.findFirst({
-        where: {
-          eventId: eventId,
-          userId: userId,
-          cancelledAt: null,
-        },
-      });
+    revalidatePath(`/eventos/${eventId}`);
 
-      if (duplicateCheck) {
-        throw new Error('Ya estás registrado en este evento');
-      }
-      // Si no hay inscripción activa, podría ser un error de timing, reintentar
-      throw new Error(
-        'Ocurrió un error al procesar la inscripción. Por favor, intenta nuevamente.',
-      );
+    if (options?.skipRedirect) {
+      return result.result;
+    }
+
+    if (result.result.status === 'waitlisted') {
+      redirect(`/eventos/${eventId}?waitlisted=true`);
+    }
+
+    redirect(`/eventos/${eventId}?registered=true`);
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      throw new Error('Ya estás inscripto para este evento o en su lista de espera');
+    }
+    if (error.code === 'P2034') {
+      throw new Error('Se detectó mucha actividad en simultáneo. Intentá nuevamente.');
     }
     throw error;
   }
-
-  revalidatePath(`/eventos/${eventId}`);
-
-  // Si skipRedirect es true, no redirigir (útil para inscripción automática desde el botón)
-  if (options?.skipRedirect) {
-    return { success: true, registrationId };
-  }
-
-  redirect(`/eventos/${eventId}?registered=true`);
 };

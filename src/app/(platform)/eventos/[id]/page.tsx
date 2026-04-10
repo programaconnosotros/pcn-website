@@ -25,6 +25,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
+import { getWaitlistPosition } from '@/actions/events/event-capacity';
 
 type EventWithImages = Event & {
   images: Images[];
@@ -153,36 +154,63 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   const eventEndDate = event.endDate || event.date;
   const hasEventPassed = new Date(eventEndDate) < now;
 
-  // Verificar si el usuario ya está registrado (solo inscripciones activas)
+  // Verificar si el usuario está confirmado o fuera de cupo
   let isRegistered = false;
+  let isWaitlisted = false;
+  let waitlistPosition: number | null = null;
   let registrationId: string | null = null;
   if (userId) {
-    const registration = await prisma.eventRegistration.findFirst({
-      where: {
-        eventId: id,
-        userId: userId,
-        cancelledAt: null, // Solo considerar inscripciones activas
-      },
-    });
+    const [registration, waitlistEntry] = await Promise.all([
+      prisma.eventRegistration.findFirst({
+        where: {
+          eventId: id,
+          userId: userId,
+          cancelledAt: null,
+        },
+      }),
+      prisma.eventWaitlistEntry.findFirst({
+        where: {
+          eventId: id,
+          userId: userId,
+          cancelledAt: null,
+          promotedAt: null,
+        },
+      }),
+    ]);
+
     if (registration) {
       isRegistered = true;
       registrationId = registration.id;
     }
+    if (waitlistEntry) {
+      isWaitlisted = true;
+      waitlistPosition = await getWaitlistPosition(id, userId);
+    }
   }
 
-  // Obtener información del cupo
+  // Obtener información del cupo y demanda fuera de cupo
   let capacityInfo = null;
   if (event.capacity !== null) {
-    const currentRegistrations = await prisma.eventRegistration.count({
-      where: {
-        eventId: id,
-        cancelledAt: null, // Excluir inscripciones canceladas
-      },
-    });
+    const [currentRegistrations, waitlistCount] = await Promise.all([
+      prisma.eventRegistration.count({
+        where: {
+          eventId: id,
+          cancelledAt: null,
+        },
+      }),
+      prisma.eventWaitlistEntry.count({
+        where: {
+          eventId: id,
+          cancelledAt: null,
+          promotedAt: null,
+        },
+      }),
+    ]);
     capacityInfo = {
       current: currentRegistrations,
       capacity: event.capacity,
       available: currentRegistrations < event.capacity,
+      waitlistCount,
     };
   }
 
@@ -198,23 +226,36 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }> = [];
 
+  let activeWaitlistCount = 0;
+
   if (isAdmin) {
-    registrations = await prisma.eventRegistration.findMany({
-      where: {
-        eventId: id,
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
+    const [eventRegistrations, waitlistCount] = await Promise.all([
+      prisma.eventRegistration.findMany({
+        where: {
+          eventId: id,
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      prisma.eventWaitlistEntry.count({
+        where: {
+          eventId: id,
+          cancelledAt: null,
+          promotedAt: null,
+        },
+      }),
+    ]);
+    registrations = eventRegistrations;
+    activeWaitlistCount = waitlistCount;
   }
 
   // Obtener anuncios del evento
@@ -314,6 +355,9 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                           activas
                         </p>
                         <p className="text-xs text-muted-foreground">
+                          {activeWaitlistCount} fuera de cupo en lista de espera
+                        </p>
+                        <p className="text-xs text-muted-foreground">
                           {registrations.length} total (incluyendo canceladas)
                         </p>
                       </div>
@@ -346,6 +390,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         eventName={event.name}
                         isAuthenticated={!!sessionId}
                         isRegistered={isRegistered}
+                        isWaitlisted={isWaitlisted}
+                        waitlistPosition={waitlistPosition}
                         registrationId={registrationId}
                         capacityAvailable={capacityInfo?.available ?? true}
                         capacityInfo={capacityInfo}

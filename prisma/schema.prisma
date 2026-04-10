@@ -38,6 +38,7 @@ model User {
   comments        Comment[]
   likes           Like[]
   eventRegistrations EventRegistration[]
+  eventWaitlistEntries EventWaitlistEntry[]
   pageVisits      PageVisit[]
   testimonials    Testimonial[]
   notifications   Notification[]
@@ -125,6 +126,7 @@ model Event {
 
   images        Image[]
   registrations EventRegistration[]
+  waitlistEntries EventWaitlistEntry[]
   sponsors      Sponsor[]
   announcements Announcement[]
 }
@@ -200,6 +202,25 @@ model EventRegistration {
   @@index([eventId])
   @@index([userId])
   @@index([cancelledAt])
+}
+
+model EventWaitlistEntry {
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String
+  cancelledAt DateTime?
+  promotedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([cancelledAt])
+  @@index([promotedAt])
 }
 
 model Sponsor {
