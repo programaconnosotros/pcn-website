@@ -64,7 +64,7 @@ const FAQPage = async () => {
     {
       question: '¿Cómo puedo encontrar oportunidades laborales?',
       answer:
-        'Regularmente compartimos oportunidades laborales en nuestros grupos de WhatsApp y Discord. También tenemos una sección de trabajos en la plataforma donde las empresas pueden publicar ofertas.',
+        'Regularmente compartimos oportunidades laborales en nuestros grupos de WhatsApp y Discord.',
     },
     {
       question: '¿Ofrecen mentorías?',

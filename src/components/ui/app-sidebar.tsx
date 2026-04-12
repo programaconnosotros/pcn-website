@@ -3,7 +3,6 @@
 import {
   Book,
   BookOpen,
-  Briefcase,
   CalendarDays,
   Code,
   Eye,
@@ -148,11 +147,6 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       title: 'Software útil',
       url: '/software-util',
       icon: SquareMousePointer,
-    },
-    {
-      title: 'Trabajos',
-      url: '/trabajos',
-      icon: Briefcase,
     },
   ];
 };
