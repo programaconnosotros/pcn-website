@@ -1,8 +1,9 @@
 'use client';
 
 import {
+  AlertTriangle,
+  Bell,
   Book,
-  BookOpen,
   CalendarDays,
   Code,
   Eye,
@@ -23,12 +24,8 @@ import {
   ScrollText,
   Send,
   SquareMousePointer,
-  SquareTerminal,
-  Star,
   Users,
   Youtube,
-  Bell,
-  AlertTriangle,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
 import { NavProjects } from '@/components/ui/nav-projects';
@@ -58,7 +55,17 @@ const formatEventDate = (date: Date) => {
   }).format(date);
 };
 
-const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
+const getHomeItem = () => {
+  return [
+    {
+      title: 'Inicio',
+      url: '/',
+      icon: Home,
+    },
+  ];
+};
+
+const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
   const eventItems = upcomingEvents.map((event) => ({
     title: `${formatEventDate(event.date)} - ${event.name}`,
     url: `/eventos/${event.id}`,
@@ -74,21 +81,45 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
 
   return [
     {
-      title: 'Inicio',
-      url: '/',
-      icon: Home,
-    },
-    {
       title: 'Eventos',
       url: '/eventos',
       icon: CalendarDays,
       items: eventItems.length > 0 ? eventItems : undefined,
     },
     {
+      title: 'Charlas',
+      url: '/charlas',
+      icon: MicVocal,
+    },
+    {
       title: 'Consejos',
       url: '/consejos',
       icon: Handshake,
-      isActive: true,
+    },
+    {
+      title: 'Podcast',
+      url: '/podcast',
+      icon: Podcast,
+    },
+  ];
+};
+
+const getInfoGeneralItems = () => {
+  return [
+    {
+      title: 'Especialidades',
+      url: '/especialidades',
+      icon: Code,
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
+    },
+    {
+      title: 'Lectura',
+      url: '/lectura',
+      icon: Book,
     },
     {
       title: 'Cursos',
@@ -114,39 +145,14 @@ const getNavMainItems = (upcomingEvents: UpcomingEvent[] = []) => {
       ],
     },
     {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: MicVocal,
-    },
-    {
-      title: 'Podcast',
-      url: '/podcast',
-      icon: Podcast,
-    },
-    {
-      title: 'Lectura',
-      url: '/lectura',
-      icon: Book,
-    },
-    {
-      title: 'Especialidades',
-      url: '/especialidades',
-      icon: Code,
+      title: 'Software útil',
+      url: '/software-util',
+      icon: SquareMousePointer,
     },
     {
       title: 'Música',
       url: '/music',
       icon: Music,
-    },
-    {
-      title: 'Influencers',
-      url: '/influencers',
-      icon: Users,
-    },
-    {
-      title: 'Software útil',
-      url: '/software-util',
-      icon: SquareMousePointer,
     },
   ];
 };
@@ -267,7 +273,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
-  const navMainItems = getNavMainItems(upcomingEvents);
 
   return (
     <Sidebar collapsible="offcanvas" variant="inset" {...sidebarProps}>
@@ -289,7 +294,9 @@ export function AppSidebar(props: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMainItems} />
+        <NavMain items={getHomeItem()} />
+        <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
+        <NavMain items={getInfoGeneralItems()} label="Info General" />
         <NavMain items={getComunidadItems()} label="Comunidad" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
