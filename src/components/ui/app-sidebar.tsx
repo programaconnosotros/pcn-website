@@ -302,8 +302,8 @@ export function AppSidebar(props: AppSidebarProps) {
       <SidebarContent>
         <NavMain items={getHomeItem()} />
         <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
-        <NavMain items={getInfoGeneralItems()} label="Info General" />
         <NavMain items={getComunidadItems()} label="Comunidad" />
+        <NavMain items={getInfoGeneralItems()} label="Info General" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
