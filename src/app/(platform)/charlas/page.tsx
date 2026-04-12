@@ -96,7 +96,7 @@ const Talks = () => (
             .map((talk, index) => (
               <Card
                 key={index}
-                className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:flex-row"
+                className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.005] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:flex-row"
               >
                 {talk.portrait && (
                   <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
