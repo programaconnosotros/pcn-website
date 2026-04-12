@@ -6,6 +6,7 @@ import {
   Book,
   CalendarDays,
   Code,
+  Code2,
   Eye,
   Handshake,
   HelpCircle,
@@ -100,6 +101,11 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
       title: 'Podcast',
       url: '/podcast',
       icon: Podcast,
+    },
+    {
+      title: 'Desarrollo',
+      url: '/desarrollo',
+      icon: Code2,
     },
   ];
 };
