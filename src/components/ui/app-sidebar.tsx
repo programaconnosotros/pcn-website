@@ -164,11 +164,6 @@ const getComunidadItems = () => {
       icon: Image,
     },
     {
-      title: 'Usuarios',
-      url: '/usuarios',
-      icon: Users,
-    },
-    {
       title: 'Anuncios',
       url: '/anuncios',
       icon: Megaphone,
@@ -188,6 +183,11 @@ const getComunidadItems = () => {
 
 const getAdminItems = (unreadCount: number = 0) => {
   return [
+    {
+      title: 'Usuarios',
+      url: '/usuarios',
+      icon: Users,
+    },
     {
       title: 'Analíticas',
       url: '/analiticas',
