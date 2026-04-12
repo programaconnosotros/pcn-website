@@ -7,6 +7,7 @@ on:
 
 jobs:
   notify:
+    if: false  # Disabled - remove this line to re-enable
     runs-on: ubuntu-latest
     steps:
       - name: Notificar merge en branch testing en Discord
