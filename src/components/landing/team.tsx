@@ -120,7 +120,7 @@ const people: Person[] = [
     name: 'Lemi',
     role: (
       <p>
-        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+        Jr. QA Engineer (JS/TS) en <span className="underline">DIZENZ</span>
       </p>
     ),
     imageUrl: '/colaborators/lemi.webp',
@@ -130,7 +130,7 @@ const people: Person[] = [
     name: 'Vicky',
     role: (
       <p>
-        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+        Jr. QA Engineer (JS/TS) en <span className="underline">DIZENZ</span>
       </p>
     ),
     imageUrl: '/colaborators/vicky.webp',
@@ -140,7 +140,7 @@ const people: Person[] = [
     name: 'Mati',
     role: (
       <p>
-        Jr. Frontend Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+        Jr. Frontend Engineer (JS/TS) en <span className="underline">DIZENZ</span>
       </p>
     ),
     imageUrl: '/colaborators/mati.webp',
@@ -151,7 +151,7 @@ const people: Person[] = [
     name: 'Mauri',
     role: (
       <p>
-        Ssr. Full-Stack Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+        Ssr. Full-Stack Engineer (JS/TS) en <span className="underline">DIZENZ</span>
       </p>
     ),
     imageUrl: '/colaborators/mauric.webp',
@@ -162,7 +162,7 @@ const people: Person[] = [
     name: 'Nico',
     role: (
       <p>
-        Ssr. Frontend Engineer (JS/TS) en <span className="underline">ASZ Software</span>
+        Ssr. Frontend Engineer (JS/TS) en <span className="underline">DIZENZ</span>
       </p>
     ),
     imageUrl: '/colaborators/nico.webp',

@@ -8,8 +8,8 @@ import { Building2, Handshake, MessageSquare, Star } from 'lucide-react';
 
 const sponsors = [
   {
-    name: 'ASZ Software',
-    url: 'https://asz.software',
+    name: 'DIZENZ',
+    url: 'https://dizenz.com',
     logo: '/asz-software-logo-2.webp',
     description: 'Estudio de software.',
     location: 'Tucumán, Argentina',
@@ -97,12 +97,12 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'ASZ Software' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'ASZ Software' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'ASZ Software' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-32 w-auto rounded-lg' : sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto dark:invert' : 'max-h-16 w-auto'}`}
+                      className={`object-contain transition-transform duration-300 group-hover:scale-110 ${sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'DIZENZ' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-32 w-auto rounded-lg' : sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto dark:invert' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
