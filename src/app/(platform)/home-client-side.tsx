@@ -164,6 +164,17 @@ const HomeClientSide = ({
                     Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
+
+                <Link
+                  href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
+                  target="_blank"
+                  className="w-full md:w-auto"
+                >
+                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
+                    Sumate en WhatsApp
+                    <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
