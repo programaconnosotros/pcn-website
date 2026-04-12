@@ -52,10 +52,12 @@ export function TestimonialsClientWrapper({
           </div>
           <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Testimonios</span>
         </Heading2>
-        <TestimonialActionButton
-          hasUserTestimonial={hasUserTestimonial || false}
-          onClick={handleButtonClick}
-        />
+        {currentUserId && (
+          <TestimonialActionButton
+            hasUserTestimonial={hasUserTestimonial || false}
+            onClick={handleButtonClick}
+          />
+        )}
       </div>
 
       <TestimonialsClient
