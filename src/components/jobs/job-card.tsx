@@ -54,7 +54,7 @@ export function JobCard({ job, isAdmin = false }: JobCardProps) {
   return (
     <>
       <Card
-        className={`flex h-full w-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 ${!job.available ? 'opacity-70' : ''}`}
+        className={`flex h-full w-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.015] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 ${!job.available ? 'opacity-70' : ''}`}
       >
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">

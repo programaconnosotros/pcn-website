@@ -86,7 +86,7 @@ export function TestimonialCard({
 
   return (
     <Card
-      className={`flex flex-col border-2 transition-all duration-300 hover:scale-[1.02] ${
+      className={`flex flex-col border-2 transition-all duration-300 hover:scale-[1.015] ${
         isOwnTestimonial
           ? 'border-pcnPurple bg-gradient-to-br from-white to-pcnPurple/5 shadow-lg shadow-pcnPurple/20 dark:border-pcnGreen dark:from-neutral-900 dark:to-pcnGreen/10 dark:shadow-pcnGreen/20'
           : 'border-transparent bg-gradient-to-br from-white to-gray-50 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20'

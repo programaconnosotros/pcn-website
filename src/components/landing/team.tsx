@@ -183,7 +183,7 @@ export const Team = () => (
         {people.map((person) => (
           <li
             key={person.name}
-            className="group relative z-0 transition-all duration-300 hover:z-10 hover:scale-105 hover:shadow-xl"
+            className="group relative z-0 transition-all duration-300 hover:z-10 hover:scale-[1.015] hover:shadow-xl"
           >
             {person.linkedinUrl ? (
               <a

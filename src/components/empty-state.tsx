@@ -34,7 +34,7 @@ export function EmptyState({ title, description, showRefresh = true, onRefresh }
         <Button
           variant="outline"
           onClick={onRefresh}
-          className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105"
+          className="flex items-center space-x-2 transition-transform duration-200 hover:scale-[1.015]"
         >
           <RefreshCw className="h-4 w-4" />
           <span>Limpiar filtros</span>
