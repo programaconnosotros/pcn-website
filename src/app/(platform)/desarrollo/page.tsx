@@ -19,6 +19,10 @@ import { NextJsSVG } from '@/components/logos/NextJsSVG';
 import { ReactSVG } from '@/components/logos/ReactSVG';
 import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
 import { TailwindSVG } from '@/components/logos/TailwindSVG';
+import { PrismaSVG } from '@/components/logos/PrismaSVG';
+import { PostgresqlSVG } from '@/components/logos/PostgresqlSVG';
+import { DockerSVG } from '@/components/logos/DockerSVG';
+import { GitSVG } from '@/components/logos/GitSVG';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -49,6 +53,10 @@ const technologies = [
   { name: 'React', icon: ReactSVG },
   { name: 'TypeScript', icon: TypescriptSVG },
   { name: 'Tailwind CSS', icon: TailwindSVG },
+  { name: 'Prisma', icon: PrismaSVG },
+  { name: 'PostgreSQL', icon: PostgresqlSVG },
+  { name: 'Docker', icon: DockerSVG },
+  { name: 'Git', icon: GitSVG },
 ];
 
 const contributionSteps = [
@@ -139,8 +147,7 @@ const DesarrolloPage = () => (
                 ))}
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
-                También usamos Prisma como ORM, PostgreSQL como base de datos, y shadcn/ui para los
-                componentes de interfaz.
+                También usamos shadcn/ui para los componentes de interfaz.
               </p>
             </CardContent>
           </Card>
