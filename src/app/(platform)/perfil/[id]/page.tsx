@@ -3,6 +3,7 @@ import { AdviseCard } from '@/components/advises/advise-card';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Breadcrumb,
@@ -399,6 +400,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <TabsTrigger value="consejos" className="flex items-center gap-2">
                   <Lightbulb className="h-4 w-4" />
                   Consejos
+                  <Badge className="ml-1 bg-pcnPurple/20 text-pcnPurple dark:bg-pcnGreen/20 dark:text-pcnGreen">
+                    {user.advises.length}
+                  </Badge>
                 </TabsTrigger>
                 <TabsTrigger value="fotos" className="flex items-center gap-2">
                   <Images className="h-4 w-4" />
@@ -407,6 +411,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <TabsTrigger value="charlas" className="flex items-center gap-2">
                   <MicVocal className="h-4 w-4" />
                   Charlas
+                  <Badge className="ml-1 bg-pcnPurple/20 text-pcnPurple dark:bg-pcnGreen/20 dark:text-pcnGreen">
+                    {userTalks.length}
+                  </Badge>
                 </TabsTrigger>
               </TabsList>
 
@@ -434,7 +441,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     {userTalks.map((talk, index) => (
                       <Card
                         key={index}
-                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
                       >
                         <CardContent className="p-6">
                           <div className="flex flex-col gap-4 md:flex-row">
