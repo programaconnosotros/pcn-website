@@ -160,7 +160,7 @@ const HomeClientSide = ({
                 </Link>
 
                 <Link href="/autenticacion/iniciar-sesion" className="w-full md:w-auto">
-                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
+                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base hover:!bg-black">
                     Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -170,7 +170,7 @@ const HomeClientSide = ({
                   target="_blank"
                   className="w-full md:w-auto"
                 >
-                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
+                  <Button variant="outline" className="w-full text-sm md:w-auto md:text-base hover:!bg-black">
                     Sumate en WhatsApp
                     <img
                       src="/social-networks/whatsapp.svg"
