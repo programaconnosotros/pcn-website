@@ -187,7 +187,7 @@ const HomeClientSide = ({
         <div className="z-10 mb-6 mt-4 flex justify-center md:-mt-12">
           <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
             <div
-              className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:scale-110 group-hover:opacity-15 dark:opacity-5"
+              className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:opacity-15 dark:opacity-5"
               style={{
                 backgroundImage: "url('/logo.webp')",
                 backgroundSize: 'contain',
@@ -242,7 +242,7 @@ const HomeClientSide = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Calendar
@@ -258,13 +258,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/eventos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver eventos
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Handshake
@@ -280,13 +280,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/consejos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver consejos
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <MicVocal
@@ -303,14 +303,14 @@ const HomeClientSide = ({
 
             <div className="flex flex-col gap-2 md:flex-row">
               <Link href="/charlas" className="relative z-10">
-                <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                   Ver charlas
                 </Button>
               </Link>
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Users
@@ -326,13 +326,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/usuarios" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Conocer a la comunidad
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Brain
@@ -348,13 +348,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/mentores" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Conocer mentores
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Globe
@@ -371,20 +371,20 @@ const HomeClientSide = ({
 
             <div className="flex flex-col gap-2">
               <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                   PCN en WhatsApp
                 </Button>
               </Link>
 
               <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-                <Button className="relative z-10 w-full transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                <Button className="relative z-10 w-full transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                   PCN en Discord
                 </Button>
               </Link>
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Book
@@ -400,13 +400,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/lectura" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver libros
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Podcast
@@ -422,13 +422,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/podcast" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver podcast
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Laptop
@@ -444,13 +444,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/cursos" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver cursos
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <SquareMousePointer
@@ -466,13 +466,13 @@ const HomeClientSide = ({
             </Paragraph>
 
             <Link href="/software-util" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:scale-110 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
                 Ver software
               </Button>
             </Link>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <MessageSquare
@@ -492,7 +492,7 @@ const HomeClientSide = ({
             </div>
           </div>
 
-          <div className="group relative flex flex-col items-center p-6 transition-all duration-300 hover:scale-[1.02]">
+          <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
             <div className="glass-card-gradient-hover absolute inset-0 z-0 bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(80,56,189,0.15),rgba(80,56,189,0))] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-[radial-gradient(circle_at_var(--x)_var(--y),rgba(4,244,190,0.3),rgba(4,244,190,0))]"></div>
             <div className="relative z-10 mb-4 flex justify-center">
               <Monitor
@@ -531,7 +531,7 @@ const HomeClientSide = ({
               <Link href="/historia" className="relative z-10">
                 <Button
                   variant="outline"
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:!text-black dark:group-hover:shadow-[0_0_20px_rgba(4,244,190,0.7)]"
+                  className="transition-all duration-300 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:!text-black dark:group-hover:shadow-[0_0_20px_rgba(4,244,190,0.7)]"
                 >
                   Leer historia <ScrollText className="ml-2 h-4 w-4" />
                 </Button>
@@ -557,7 +557,7 @@ const HomeClientSide = ({
               <Link href="/galeria" className="relative z-10">
                 <Button
                   variant="outline"
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:!text-black"
+                  className="transition-all duration-300 group-hover:border-pcnPurple group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:border-pcnGreen dark:group-hover:bg-pcnGreen dark:group-hover:!text-black"
                 >
                   Ver galería <Images className="ml-2 h-4 w-4" />
                 </Button>
@@ -580,7 +580,7 @@ const HomeClientSide = ({
               {featuredTestimonials.map((testimonial) => (
                 <Card
                   key={testimonial.id}
-                  className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                  className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
                 >
                   <CardHeader>
                     <div className="flex items-center gap-2">
@@ -613,7 +613,7 @@ const HomeClientSide = ({
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
               <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-8 w-8" />
@@ -629,7 +629,7 @@ const HomeClientSide = ({
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
               <img src="/social-networks/discord.svg" alt="Discord" className="h-8 w-8" />
@@ -645,7 +645,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
               <img src="/social-networks/instagram.svg" alt="Instagram" className="h-8 w-8" />
@@ -661,7 +661,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
               <img src="/social-networks/youtube.svg" alt="YouTube" className="h-8 w-8" />
@@ -677,7 +677,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:scale-[1.02] hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
               <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-8 w-8" />
@@ -692,7 +692,7 @@ const HomeClientSide = ({
         </div>
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
               <div className="mb-2 flex items-center justify-center gap-4">
                 <GraduationCap
@@ -730,7 +730,7 @@ const HomeClientSide = ({
         </div>
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
               <div className="mb-2 flex items-center justify-center gap-4">
                 <Lightbulb
