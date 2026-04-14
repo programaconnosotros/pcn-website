@@ -172,7 +172,11 @@ const HomeClientSide = ({
                 >
                   <Button variant="outline" className="w-full text-sm md:w-auto md:text-base">
                     Sumate en WhatsApp
-                    <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="ml-2 h-4 w-4" />
+                    <img
+                      src="/social-networks/whatsapp.svg"
+                      alt="WhatsApp"
+                      className="ml-2 h-4 w-4"
+                    />
                   </Button>
                 </Link>
               </div>
@@ -603,7 +607,6 @@ const HomeClientSide = ({
           <Heading2 className="relative z-10 mb-0 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
             Redes
           </Heading2>
-          <Globe className="-mt-2 h-8 w-8 text-pcnPurple drop-shadow-[0_0_10px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_10px_rgba(4,244,190,0.8)] md:h-10 md:w-10" />
         </div>
 
         <div className="flex flex-wrap gap-3">
