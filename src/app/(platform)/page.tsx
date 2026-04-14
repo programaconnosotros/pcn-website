@@ -1,7 +1,9 @@
 import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import HomeClientSide from '@/app/(platform)/home-client-side';
+import { Button } from '@/components/ui/button';
 import {
   BreadcrumbLink,
   Breadcrumb,
@@ -71,6 +73,16 @@ const Home = async () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
+        {!session && (
+          <div className="px-4">
+            <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
+              <Button variant="outline" size="sm" className="text-sm hover:!bg-black">
+                Sumate en WhatsApp
+                <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
       </header>
       <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />
     </>
