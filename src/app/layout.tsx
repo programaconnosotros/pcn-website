@@ -58,12 +58,12 @@ const RootLayout = async ({
   }
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body className={GeistSans.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
           disableTransitionOnChange
         >
           <ReactQueryProvider>{children}</ReactQueryProvider>

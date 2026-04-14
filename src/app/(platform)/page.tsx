@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ThemeToggle } from '@/components/themes/theme-toggle';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 import type { Metadata } from 'next';
 
@@ -71,9 +70,6 @@ const Home = async () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </div>
-        <div className="flex items-center gap-2 px-4">
-          <ThemeToggle />
         </div>
       </header>
       <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />

@@ -5,9 +5,6 @@ import {
   ChevronsUpDown,
   LogIn,
   LogOut,
-  Monitor,
-  Moon,
-  Sun,
   UserPlus,
 } from 'lucide-react';
 
@@ -21,9 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -33,7 +27,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -41,7 +34,6 @@ import { toast } from 'sonner';
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile, isCollapsed } = useSidebar();
   const router = useRouter();
-  const { setTheme } = useTheme();
 
   if (!user)
     return (
@@ -141,31 +133,6 @@ export function NavUser({ user }: { user: User | null }) {
                   <BadgeCheck size={16} />
                   Mi cuenta
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="flex cursor-pointer flex-row gap-2">
-                    <Sun size={16} />
-                    Tema
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => setTheme('light')}>
-                      <Sun className="mr-2" size={16} />
-                      Claro
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme('dark')}>
-                      <Moon className="mr-2" size={16} />
-                      Oscuro
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme('system')}>
-                      <Monitor className="mr-2" size={16} />
-                      Sistema
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />

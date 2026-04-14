@@ -1,6 +1,5 @@
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
-import { ThemeToggle } from '@/components/themes/theme-toggle';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,9 +29,6 @@ export function PlatformHeader({ children }: PlatformHeaderProps) {
             </BreadcrumbList>
           </Breadcrumb>
         )}
-      </div>
-      <div className="flex items-center gap-2 px-4">
-        <ThemeToggle />
       </div>
     </header>
   );
