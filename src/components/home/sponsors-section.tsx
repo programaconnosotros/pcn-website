@@ -72,6 +72,24 @@ const sponsors = [
     showName: false,
     whiteBg: true,
   },
+  {
+    name: 'Xetro',
+    url: 'https://xetro.ai',
+    logo: '/xetro-logo.png',
+    description: 'AI Software Factory.',
+    location: 'Tucumán, Argentina',
+    hasLogo: true,
+    showName: false,
+  },
+  {
+    name: 'Once57',
+    url: 'https://once57.com.ar',
+    logo: '/once57-logo.PNG',
+    description: 'Espacio de coworking moderno.',
+    location: 'San Miguel de Tucumán, Argentina',
+    hasLogo: true,
+    showName: false,
+  },
 ];
 
 export const SponsorsSection = () => {
