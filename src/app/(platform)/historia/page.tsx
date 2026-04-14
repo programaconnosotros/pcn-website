@@ -61,9 +61,8 @@ const PCNStory = () => (
     </header>
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="mt-4">
-        <div className="mb-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex flex-col items-center gap-4">
-            <img src="/logo.webp" alt="programaConNosotros" className="mb-4 w-16 md:w-24" />
+        <div className="mb-8 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex flex-col items-center gap-3 text-center">
             <Heading2 className="m-0 flex items-center justify-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
                 <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
@@ -72,6 +71,11 @@ const PCNStory = () => (
                 Historia de programaConNosotros
               </span>
             </Heading2>
+            <p className="max-w-xl text-sm text-muted-foreground">
+              Conocé cómo empezó todo, quiénes somos y el camino que recorrimos hasta convertirnos
+              en la comunidad que somos hoy.
+            </p>
+            <div className="mt-1 h-px w-24 bg-gradient-to-r from-pcnPurple/0 via-pcnPurple to-pcnPurple/0 dark:from-pcnGreen/0 dark:via-pcnGreen dark:to-pcnGreen/0" />
           </div>
         </div>
         <div className="flex gap-8">
