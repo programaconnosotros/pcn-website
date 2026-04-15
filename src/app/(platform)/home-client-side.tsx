@@ -155,14 +155,14 @@ const HomeClientSide = ({
                 en la industria del software al siguiente nivel!
               </p>
 
-              <div className="mt-6 flex w-full max-w-sm flex-col gap-3 px-4 md:mt-3 md:max-w-none md:flex-row md:justify-center md:gap-2 md:px-0 md:py-6">
-                <Link href="/autenticacion/registro" className="w-full md:w-auto">
+              <div className="mt-6 flex w-full flex-row justify-center gap-3 px-4 md:mt-3 md:gap-2 md:px-0 md:py-6">
+                <Link href="/autenticacion/registro" className="flex-1 md:flex-none">
                   <Button className="w-full text-sm md:w-auto md:text-base">
                     Registrarme <UserPlus className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
 
-                <Link href="/autenticacion/iniciar-sesion" className="w-full md:w-auto">
+                <Link href="/autenticacion/iniciar-sesion" className="flex-1 md:flex-none">
                   <Button
                     variant="outline"
                     className="w-full text-sm hover:!bg-black md:w-auto md:text-base"
