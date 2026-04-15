@@ -114,12 +114,12 @@ export const SponsorsSection = () => {
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' || sponsor.name === 'Xetro' ? 'h-48' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' ? 'h-48' : sponsor.name === 'Xetro' ? 'h-40' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className={`object-contain ${sponsor.name === 'Once57' || sponsor.name === 'Xetro' ? 'max-h-44 w-auto' : sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'DIZENZ' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-32 w-auto rounded-lg' : sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto dark:invert' : 'max-h-16 w-auto'}`}
+                      className={`object-contain ${sponsor.name === 'Once57' ? 'max-h-44 w-auto' : sponsor.name === 'Xetro' ? 'max-h-36 w-auto' : sponsor.name === 'Eagerworks' ? 'max-h-10 w-auto' : sponsor.name === 'DIZENZ' ? 'max-h-[5.5rem] w-auto' : sponsor.name === 'UTN-FRT' ? 'max-h-32 w-auto rounded-lg' : sponsor.name === 'Blackbox Cowork' ? 'max-h-32 w-auto dark:invert' : 'max-h-16 w-auto'}`}
                     />
                   </div>
                 ) : (
