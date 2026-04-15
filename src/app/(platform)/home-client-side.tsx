@@ -38,6 +38,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Heading1 } from '@/components/ui/heading-1';
+import { GeistMono } from 'geist/font/mono';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
@@ -141,7 +142,7 @@ const HomeClientSide = ({
                 />
               </div>
 
-              <Heading1 className="mb-4 mt-6 text-center font-mono text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl">
+              <Heading1 className={`${GeistMono.className} mb-4 mt-6 text-center text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl`}>
                 programaConNosotros
               </Heading1>
 
@@ -167,8 +168,6 @@ const HomeClientSide = ({
                     Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-
-
               </div>
             </div>
           </div>
