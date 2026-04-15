@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { CheckCircle2, Code2, Github, GitBranch, Terminal } from 'lucide-react';
 import Link from 'next/link';
+import { Team } from '@/components/landing/team';
 import { NextJsSVG } from '@/components/logos/NextJsSVG';
 import { ReactSVG } from '@/components/logos/ReactSVG';
 import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
@@ -192,6 +193,8 @@ const DesarrolloPage = () => (
             </ul>
           </CardContent>
         </Card>
+
+        <Team />
 
         <div className="mt-8 flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-pcnPurple/30 bg-pcnPurple/5 p-8 dark:border-pcnGreen/30 dark:bg-pcnGreen/5">
           <Heading3 className="m-0 text-center">¿Listo para empezar?</Heading3>

@@ -4,7 +4,6 @@ import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { Heading2 } from '@/components/ui/heading-2';
 import { SponsorsSection } from '@components/home/sponsors-section';
 import { MotivationalQuotes } from '@components/home/motivational-quotes';
-import { Team } from '@components/landing/team';
 import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
@@ -712,7 +711,6 @@ const HomeClientSide = ({
         </div>
 
         <InviteDevsToWork />
-        <Team />
 
         <div className="flex items-center justify-center p-6">
           <Heading2 className="relative z-10 text-center">
