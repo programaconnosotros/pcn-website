@@ -77,7 +77,7 @@ const Home = async () => {
           <div className="px-4">
             <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
               <Button variant="outline" size="sm" className="text-sm hover:!bg-black">
-                Sumate en WhatsApp
+                Unirme en WhatsApp
                 <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="ml-2 h-4 w-4" />
               </Button>
             </Link>
