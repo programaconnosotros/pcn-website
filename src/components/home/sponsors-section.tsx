@@ -29,7 +29,7 @@ const sponsors = [
     url: 'https://once57.com.ar',
     logo: '/once57-logo.PNG',
     description: 'Espacio de coworking moderno.',
-    location: 'San Miguel de Tucumán, Argentina',
+    location: 'Tucumán, Argentina',
     hasLogo: true,
     showName: false,
   },
