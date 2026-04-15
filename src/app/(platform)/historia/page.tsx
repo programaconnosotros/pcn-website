@@ -42,7 +42,7 @@ const PCN = () => (
 
 const PCNStory = () => (
   <>
-    <header className="flex h-16 shrink-0 items-center gap-2">
+    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 bg-background">
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
