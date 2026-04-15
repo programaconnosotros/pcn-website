@@ -142,7 +142,9 @@ const HomeClientSide = ({
                 />
               </div>
 
-              <Heading1 className={`${GeistMono.className} mb-4 mt-6 text-center text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl`}>
+              <Heading1
+                className={`${GeistMono.className} mb-4 mt-6 text-center text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl`}
+              >
                 programaConNosotros
               </Heading1>
 
@@ -598,11 +600,11 @@ const HomeClientSide = ({
           </Heading2>
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#25D366] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#25D366] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
               <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-8 w-8" />
@@ -618,7 +620,7 @@ const HomeClientSide = ({
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#5865F2] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#5865F2] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
               <img src="/social-networks/discord.svg" alt="Discord" className="h-8 w-8" />
@@ -634,7 +636,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#E4405F] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#E4405F] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
               <img src="/social-networks/instagram.svg" alt="Instagram" className="h-8 w-8" />
@@ -650,7 +652,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#FF0000] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#FF0000] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
               <img src="/social-networks/youtube.svg" alt="YouTube" className="h-8 w-8" />
@@ -666,7 +668,7 @@ const HomeClientSide = ({
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex flex-[1_1_100%] items-center gap-4 rounded-lg border border-neutral-200 bg-transparent p-4 transition-all duration-300 hover:border-[#0077B5] hover:shadow-lg dark:border-neutral-800 dark:bg-transparent dark:hover:border-[#0077B5] sm:flex-[1_1_calc(50%-0.375rem)] lg:flex-[1_1_calc(33.333%-0.5rem)]"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
               <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-8 w-8" />
