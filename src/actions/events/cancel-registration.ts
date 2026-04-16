@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { promoteNextFromWaitlist } from '@/actions/events/event-capacity';
 
 type CancelRegistrationParams = {
   registrationId?: string;
@@ -41,6 +42,7 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
   }
 
   let registration = null;
+  let waitlistEntry = null;
 
   // Si hay registrationId, verificar que pertenece al usuario
   if (registrationId) {
@@ -66,34 +68,90 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
   }
 
   if (!registration) {
-    throw new Error('Inscripción no encontrada o ya cancelada');
+    waitlistEntry = await prisma.eventWaitlistEntry.findFirst({
+      where: {
+        eventId: eventId,
+        userId: session.userId,
+        cancelledAt: null,
+        promotedAt: null,
+      },
+      include: {
+        user: true,
+      },
+    });
   }
 
-  const userName = registration.user.name;
-  const userEmail = registration.user.email;
+  if (!registration && !waitlistEntry) {
+    throw new Error('No se encontró una inscripción activa ni una inscripción fuera de cupo');
+  }
 
-  // Marcar como cancelada (no eliminar)
-  await prisma.eventRegistration.update({
-    where: { id: registration.id },
-    data: {
-      cancelledAt: new Date(),
-    },
-  });
+  const targetUser = registration?.user || waitlistEntry?.user;
+  const userName = targetUser?.name || session.user.name;
+  const userEmail = targetUser?.email || session.user.email;
 
-  // Notificar a los admins sobre la cancelación
-  await notifyAdmins({
-    type: 'event_registration_cancelled',
-    title: 'Inscripción cancelada',
-    message: `${userName} ha cancelado su inscripción al evento "${event.name}"`,
-    metadata: {
-      eventId: eventId,
-      eventName: event.name,
-      registrationId: registration.id,
-      userName: userName,
-      userEmail: userEmail,
-    },
-  });
+  if (registration) {
+    await prisma.eventRegistration.update({
+      where: { id: registration.id },
+      data: {
+        cancelledAt: new Date(),
+      },
+    });
+
+    const promoted = await promoteNextFromWaitlist(eventId);
+    if (promoted) {
+      await notifyAdmins({
+        type: 'event_waitlist_promoted',
+        title: 'Promoción automática desde lista de espera',
+        message: `${promoted.userName} obtuvo un cupo en "${event.name}"`,
+        metadata: {
+          eventId,
+          eventName: event.name,
+          registrationId: promoted.registrationId,
+          userId: promoted.userId,
+          userName: promoted.userName,
+          userEmail: promoted.userEmail,
+        },
+      });
+    }
+  }
+
+  if (waitlistEntry) {
+    await prisma.eventWaitlistEntry.update({
+      where: { id: waitlistEntry.id },
+      data: {
+        cancelledAt: new Date(),
+      },
+    });
+  }
+
+  await notifyAdmins(
+    registration
+      ? {
+          type: 'event_registration_cancelled',
+          title: 'Inscripción cancelada',
+          message: `${userName} ha cancelado su inscripción al evento "${event.name}"`,
+          metadata: {
+            eventId: eventId,
+            eventName: event.name,
+            registrationId: registration.id,
+            userName: userName,
+            userEmail: userEmail,
+          },
+        }
+      : {
+          type: 'event_waitlist_cancelled',
+          title: 'Salida de lista de espera',
+          message: `${userName} salió de la lista de espera del evento "${event.name}"`,
+          metadata: {
+            eventId: eventId,
+            eventName: event.name,
+            waitlistId: waitlistEntry!.id,
+            userName: userName,
+            userEmail: userEmail,
+          },
+        },
+  );
 
   revalidatePath(`/eventos/${eventId}`);
-  return { success: true };
+  return { success: true, status: registration ? 'cancelled_registration' : 'cancelled_waitlist' };
 };

@@ -6,13 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { registerEvent } from '@/actions/events/register-event';
-import { checkEventCapacity } from '@/actions/events/check-event-capacity';
 
 type RegisterEventButtonProps = {
   eventId: string;
   isAuthenticated: boolean;
   capacityAvailable: boolean;
-  onSuccess?: () => void;
+  onSuccess?: (status: 'registered' | 'waitlisted') => void;
   isLoading?: boolean;
 };
 
@@ -33,32 +32,20 @@ export function RegisterEventButton({
       return;
     }
 
-    // Si no hay cupo disponible, no hacer nada
-    if (!capacityAvailable) {
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      // Validar cupo antes de inscribir
-      const capacityCheck = await checkEventCapacity(eventId);
-      if (!capacityCheck.available) {
-        toast.error(
-          capacityCheck.message ||
-            'El cupo del evento está completo. No se pueden aceptar más inscripciones.',
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      await registerEvent(eventId, { skipRedirect: true });
+      const result = await registerEvent(eventId, { skipRedirect: true });
 
       // Notificar éxito
       if (onSuccess) {
-        onSuccess();
+        onSuccess(result.status);
       } else {
-        toast.success('¡Te has inscrito exitosamente al evento! 🎉');
+        if (result.status === 'registered') {
+          toast.success('¡Te has inscrito exitosamente al evento! 🎉');
+        } else {
+          toast.success('Te sumaste a la lista de espera del evento.');
+        }
         router.refresh();
       }
     } catch (error: any) {
@@ -76,10 +63,14 @@ export function RegisterEventButton({
       variant="pcn"
       className="flex w-full items-center gap-2"
       onClick={handleClick}
-      disabled={buttonIsLoading || !capacityAvailable}
+      disabled={buttonIsLoading}
     >
       <UserPlus className="h-4 w-4" />
-      {buttonIsLoading ? 'Inscribiéndote...' : 'Inscribirme al evento'}
+      {buttonIsLoading
+        ? 'Procesando...'
+        : capacityAvailable
+          ? 'Inscribirme al evento'
+          : 'Sumarme a lista de espera'}
     </Button>
   );
 }

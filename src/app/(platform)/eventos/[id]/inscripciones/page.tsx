@@ -66,21 +66,36 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
     redirect('/eventos');
   }
 
-  // Obtener todas las inscripciones con datos del usuario
-  const registrations = await prisma.eventRegistration.findMany({
-    where: {
-      eventId: id,
-    },
-    include: {
-      user: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const [registrations, waitlistEntries] = await Promise.all([
+    prisma.eventRegistration.findMany({
+      where: {
+        eventId: id,
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+    prisma.eventWaitlistEntry.findMany({
+      where: {
+        eventId: id,
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    }),
+  ]);
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
   const cancelledRegistrations = registrations.filter((r) => r.cancelledAt !== null);
+  const activeWaitlistEntries = waitlistEntries.filter(
+    (entry) => entry.cancelledAt === null && entry.promotedAt === null,
+  );
 
   return (
     <>
@@ -127,7 +142,7 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
                 Inscripciones ({registrations.length} total - {activeRegistrations.length} activas,{' '}
-                {cancelledRegistrations.length} canceladas)
+                {cancelledRegistrations.length} canceladas, {activeWaitlistEntries.length} fuera de cupo)
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -213,6 +228,47 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                           </TableRow>
                         );
                       })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="mt-5 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Lista de espera ({activeWaitlistEntries.length} activas)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {activeWaitlistEntries.length === 0 ? (
+                <p className="py-4 text-sm text-muted-foreground">
+                  No hay personas en lista de espera para este evento.
+                </p>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Posición</TableHead>
+                        <TableHead>Nombre</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Ingreso a lista</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {activeWaitlistEntries.map((entry, index) => (
+                        <TableRow key={entry.id}>
+                          <TableCell className="font-medium">#{index + 1}</TableCell>
+                          <TableCell>{entry.user.name}</TableCell>
+                          <TableCell>{entry.user.email}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {formatDate(entry.createdAt)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </div>

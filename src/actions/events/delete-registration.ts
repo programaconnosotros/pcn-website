@@ -3,6 +3,8 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { promoteNextFromWaitlist } from '@/actions/events/event-capacity';
+import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
 export const deleteRegistration = async (registrationId: string) => {
   // Verificar que el usuario es admin
@@ -33,6 +35,28 @@ export const deleteRegistration = async (registrationId: string) => {
   await prisma.eventRegistration.delete({
     where: { id: registrationId },
   });
+
+  const event = await prisma.event.findUnique({
+    where: { id: registration.eventId },
+    select: { name: true },
+  });
+
+  const promoted = await promoteNextFromWaitlist(registration.eventId);
+  if (promoted && event) {
+    await notifyAdmins({
+      type: 'event_waitlist_promoted',
+      title: 'Promoción automática desde lista de espera',
+      message: `${promoted.userName} obtuvo un cupo en "${event.name}"`,
+      metadata: {
+        eventId: registration.eventId,
+        eventName: event.name,
+        registrationId: promoted.registrationId,
+        userId: promoted.userId,
+        userName: promoted.userName,
+        userEmail: promoted.userEmail,
+      },
+    });
+  }
 
   revalidatePath(`/eventos/${registration.eventId}`);
   return { success: true };
