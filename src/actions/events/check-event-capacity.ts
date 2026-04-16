@@ -28,10 +28,15 @@ export const checkEventCapacity = async (eventId: string) => {
 
   const available = currentRegistrations < event.capacity;
 
+  const waitlistCount = await prisma.waitlistEntry.count({
+    where: { eventId },
+  });
+
   return {
     available,
     current: currentRegistrations,
     capacity: event.capacity,
+    waitlistCount,
     message: available
       ? `Quedan ${event.capacity - currentRegistrations} lugares disponibles.`
       : 'El cupo del evento está completo',

@@ -11,7 +11,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
@@ -81,6 +81,16 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
   const cancelledRegistrations = registrations.filter((r) => r.cancelledAt !== null);
+
+  // Obtener lista de espera (solo si el evento tiene capacidad definida)
+  const waitlistEntries =
+    event.capacity !== null
+      ? await prisma.waitlistEntry.findMany({
+          where: { eventId: id },
+          include: { user: true },
+          orderBy: { createdAt: 'asc' },
+        })
+      : [];
 
   return (
     <>
@@ -219,6 +229,50 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
               )}
             </CardContent>
           </Card>
+          {/* Lista de espera (solo si el evento tiene capacidad definida) */}
+          {event.capacity !== null && (
+            <Card className="mt-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  Lista de espera ({waitlistEntries.length}{' '}
+                  {waitlistEntries.length === 1 ? 'persona' : 'personas'})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {waitlistEntries.length === 0 ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">
+                    No hay personas en la lista de espera.
+                  </p>
+                ) : (
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Posición</TableHead>
+                          <TableHead>Nombre</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Fecha de ingreso</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {waitlistEntries.map((entry, index) => (
+                          <TableRow key={entry.id}>
+                            <TableCell className="font-medium">#{index + 1}</TableCell>
+                            <TableCell>{entry.user.name}</TableCell>
+                            <TableCell>{entry.user.email}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {formatDate(entry.createdAt)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </>

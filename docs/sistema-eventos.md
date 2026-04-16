@@ -56,25 +56,17 @@ Representa la inscripción de un usuario a un evento.
 
 ```prisma
 model EventRegistration {
-  id              String           @id @default(cuid())
-  eventId         String
-  firstName       String
-  lastName        String
-  email           String
-  type            RegistrationType
-  workTitle       String?
-  workPlace       String?
-  studyField      String?
-  studyPlace      String?
-  userId          String?
-  cancelledAt     DateTime?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String    // Usuario registrado (requerido)
+  cancelledAt DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  event           Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([eventId, email])
+  @@unique([eventId, userId])
   @@index([eventId])
   @@index([userId])
   @@index([cancelledAt])
@@ -83,12 +75,36 @@ model EventRegistration {
 
 **Campos importantes:**
 
-- `type`: Tipo de registro (`STUDENT` o `PROFESSIONAL`)
 - `cancelledAt`: Si tiene valor, la inscripción está cancelada (no se cuenta para cupos)
-- `userId`: Opcional. Si el usuario está logueado, se vincula su cuenta.
-- Campos condicionales:
-  - `workTitle` y `workPlace`: Requeridos si `type === 'PROFESSIONAL'`
-  - `studyField` y `studyPlace`: Requeridos si `type === 'STUDENT'`
+- `@@unique([eventId, userId])`: Un usuario solo puede tener una inscripción por evento. Las inscripciones canceladas se reactivan en lugar de crear duplicados.
+
+### WaitlistEntry
+
+Representa la entrada de un usuario a la lista de espera de un evento.
+
+```prisma
+model WaitlistEntry {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([createdAt])
+}
+```
+
+**Campos importantes:**
+
+- `createdAt`: Determina el orden FIFO de la lista de espera
+- `@@unique([eventId, userId])`: Un usuario solo puede tener una entrada por evento
+- Las entradas se eliminan físicamente cuando el usuario es promovido o sale voluntariamente (no hay soft delete)
 
 ### Sponsor
 
@@ -106,17 +122,6 @@ model Sponsor {
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
-}
-```
-
-### RegistrationType
-
-Enum que define el tipo de inscripción.
-
-```prisma
-enum RegistrationType {
-  STUDENT
-  PROFESSIONAL
 }
 ```
 
@@ -156,9 +161,19 @@ enum RegistrationType {
 ### 5. Visualización
 
 - **Página de detalle**: Muestra toda la información del evento
-- **Lista de inscripciones (Admin)**: Los administradores pueden ver todas las inscripciones
+- **Lista de inscripciones (Admin)**: Los administradores pueden ver todas las inscripciones y la lista de espera
 - **Información de cupo**: Se muestra cuántos cupos quedan disponibles
 - **Mapa**: Si hay coordenadas, se muestra un mapa con la ubicación
+
+### 6. Lista de Espera
+
+- **Unirse a la lista**: Cuando el cupo está completo, los usuarios pueden unirse a la lista de espera
+- **Orden FIFO**: La lista de espera es ordenada por fecha de ingreso (el primero en entrar es el primero en ser promovido)
+- **Promoción automática**: Cuando se cancela una inscripción, el primer usuario de la lista de espera es inscrito automáticamente
+- **Notificación por email**: El usuario promovido recibe un email informando que tiene un lugar confirmado
+- **Notificación a admins**: Los admins son notificados tanto de la cancelación como de la promoción
+- **Salir de la lista**: Los usuarios pueden abandonar la lista de espera en cualquier momento
+- **Protección ante condiciones de carrera**: Todas las operaciones utilizan transacciones con bloqueo de fila (`SELECT ... FOR UPDATE`) para evitar promociones duplicadas o inscripciones incorrectas cuando múltiples usuarios operan simultáneamente
 
 ---
 
@@ -289,40 +304,56 @@ enum RegistrationType {
 #### `register-event.ts`
 
 - **Ruta**: `src/actions/events/register-event.ts`
-- **Función**: `registerEvent(eventId: string, data: EventRegistrationFormData)`
-- **Descripción**: Registra un usuario a un evento
-- **Validaciones**:
+- **Función**: `registerEvent(eventId: string, options?: { skipRedirect?: boolean })`
+- **Descripción**: Registra un usuario a un evento. Si el cupo está completo, lo agrega a la lista de espera.
+- **Validaciones** (dentro de una transacción con `FOR UPDATE`):
   - Verifica que el evento exista y no esté eliminado
-  - Verifica que no haya una inscripción activa con el mismo email
+  - Verifica que no haya una inscripción activa para el usuario
+  - Verifica que el usuario no esté ya en la lista de espera activa
   - Valida el cupo disponible (excluyendo cancelados)
 - **Lógica especial**:
-  - Si existe una inscripción cancelada con el mismo email, la reactiva en lugar de crear una nueva
-- **Retorno**: Redirige a la página de detalle del evento
+  - Si existe una inscripción o entrada de lista de espera cancelada, la reactiva en lugar de crear una nueva
+  - Si hay cupo: inscribe directamente → devuelve `{ status: 'registered' }`
+  - Si no hay cupo: agrega a lista de espera → devuelve `{ status: 'waitlisted' }`
+- **Retorno**: `{ success: true, registrationId?, status: 'registered' | 'waitlisted' }` o redirige
 
 #### `cancel-registration.ts`
 
 - **Ruta**: `src/actions/events/cancel-registration.ts`
 - **Función**: `cancelRegistration(params: CancelRegistrationParams)`
-- **Descripción**: Cancela una inscripción (marca como cancelada, no elimina)
+- **Descripción**: Cancela una inscripción y, si hay lista de espera, promueve automáticamente al primer usuario
 - **Parámetros**:
-  - `registrationId`: Si el usuario está logueado
+  - `registrationId`: ID de la inscripción (opcional)
   - `eventId`: ID del evento
-  - `email`: Si el usuario no está logueado
-- **Validaciones**:
-  - Si hay `registrationId`, verifica que pertenezca al usuario logueado
-  - Si hay `email`, busca la inscripción por email
-  - Verifica que la inscripción no esté ya cancelada
-- **Efecto**: Marca `cancelledAt` con la fecha actual
+- **Efecto** (dentro de una transacción con `FOR UPDATE`):
+  1. Marca la inscripción con `cancelledAt = now()`
+  2. Si el evento tiene capacidad definida, busca el primer usuario en la lista de espera
+  3. Si lo encuentra: marca la entrada de lista de espera como cancelada y crea/reactiva su inscripción
+  4. Envía email al usuario promovido notificándole que tiene lugar confirmado
 
 #### `delete-registration.ts`
 
 - **Ruta**: `src/actions/events/delete-registration.ts`
 - **Función**: `deleteRegistration(registrationId: string)`
-- **Descripción**: Elimina físicamente una inscripción (solo admins)
+- **Descripción**: Elimina físicamente una inscripción activa (solo admins) y promueve al primer usuario de la lista de espera
 - **Validaciones**:
   - Verifica que el usuario sea administrador
   - Verifica que la inscripción exista
-- **Efecto**: Elimina el registro de la base de datos (libera el cupo)
+- **Efecto** (dentro de una transacción con `FOR UPDATE`):
+  1. Elimina el registro de la base de datos
+  2. Si la inscripción era activa y el evento tiene capacidad, promueve al primer usuario de la lista de espera
+  3. Envía email al usuario promovido
+
+#### `cancel-waitlist.ts`
+
+- **Ruta**: `src/actions/events/cancel-waitlist.ts`
+- **Función**: `cancelWaitlist(params: CancelWaitlistParams)`
+- **Descripción**: Permite a un usuario salir voluntariamente de la lista de espera
+- **Parámetros**:
+  - `eventId`: ID del evento
+- **Efecto** (dentro de una transacción con `FOR UPDATE`):
+  - Marca la entrada de lista de espera con `cancelledAt = now()`
+  - Notifica a los admins
 
 ### Cupos
 
@@ -401,6 +432,22 @@ enum RegistrationType {
   - `registrationId`: ID de la inscripción
   - `userName`: Nombre del usuario (para mostrar en confirmación)
 
+#### `CancelWaitlistButton`
+
+- **Ruta**: `src/components/events/cancel-waitlist-button.tsx`
+- **Descripción**: Botón para salir de la lista de espera
+- **Características**:
+  - Llama a `cancelWaitlist()` con feedback de toast
+  - Refresca la página después de salir
+
+#### `WaitlistSuccessDialog`
+
+- **Ruta**: `src/components/events/waitlist-success-dialog.tsx`
+- **Descripción**: Diálogo de confirmación al unirse a la lista de espera
+- **Características**:
+  - Informa al usuario que será inscrito automáticamente cuando se libere un lugar
+  - Se muestra al unirse exitosamente a la lista
+
 #### `DeleteEventButton`
 
 - **Ruta**: `src/components/events/delete-event-button.tsx`
@@ -475,10 +522,21 @@ enum RegistrationType {
 
 #### Inscripciones
 
-1. No se puede inscribir dos veces con el mismo email (inscripciones activas)
+1. No se puede inscribir dos veces (por usuario, inscripciones activas)
 2. Si un usuario canceló, puede volver a inscribirse (se reactiva la inscripción)
 3. Las inscripciones canceladas no se eliminan, solo se marcan con `cancelledAt`
 4. Solo los administradores pueden eliminar inscripciones físicamente
+
+#### Lista de Espera
+
+1. Solo disponible para eventos con `capacity` definido (no `null`)
+2. Un usuario no puede estar en la lista de espera y en inscripciones activas al mismo tiempo
+3. La lista sigue orden FIFO por `createdAt`
+4. Cuando se libera un cupo (cancelación o eliminación de inscripción activa), el primer usuario de la lista es promovido automáticamente
+5. La promoción es atómica: usa `prisma.$transaction` con `SELECT ... FOR UPDATE` para evitar condiciones de carrera
+6. El usuario promovido recibe un email de notificación
+7. Al salir de la lista de espera voluntariamente no se libera ningún cupo (no activa promociones)
+8. Las entradas de `WaitlistEntry` se eliminan físicamente al ser promovidas o al salir el usuario (no hay soft delete)
 
 #### Eventos
 
@@ -570,6 +628,28 @@ enum RegistrationType {
    - Se libera el cupo
    - Se actualiza la lista
 
+### Flujo: Unirse a la Lista de Espera
+
+1. Usuario navega a `/eventos/[id]`
+2. El evento tiene cupo completo → Ve botón "Unirme a la lista de espera" y cantidad de personas en espera
+3. Si no está autenticado: redirige al login con `autoRegister=true`; al volver, la acción lo coloca automáticamente en la lista de espera
+4. Si está autenticado: llama a `registerEvent()` → el servidor detecta cupo completo y crea `WaitlistEntry`
+5. Se muestra diálogo de confirmación: "Te inscribiremos automáticamente cuando se libere un lugar"
+6. La página muestra ahora el estado "En lista de espera" con la posición del usuario y botón "Salir de la lista de espera"
+
+### Flujo: Promoción Automática desde Lista de Espera
+
+1. Un usuario cancela su inscripción (o un admin la elimina)
+2. El servidor, dentro de una transacción atómica:
+   a. Cancela/elimina la inscripción
+   b. Busca la primera entrada activa en `WaitlistEntry` ordenada por `createdAt`
+   c. Marca esa entrada como cancelada (consumida)
+   d. Crea o reactiva una `EventRegistration` para el usuario promovido
+3. Fuera de la transacción:
+   a. Notifica a los admins sobre la cancelación y la promoción
+   b. Envía email al usuario promovido: "¡Conseguiste un lugar! Tu inscripción está confirmada."
+4. El usuario promovido, al recargar la página del evento, verá que ya está inscrito
+
 ### Flujo: Editar un Evento (Admin)
 
 1. Admin navega a `/eventos/[id]`
@@ -643,12 +723,7 @@ enum RegistrationType {
    - Recordatorio antes del evento
    - Notificación de cancelación
 
-2. **Lista de espera**:
-
-   - Si el cupo está completo, permitir inscribirse en lista de espera
-   - Notificar cuando se libere un cupo
-
-3. **Exportación de datos**:
+2. **Exportación de datos**:
 
    - Exportar lista de inscripciones a CSV/Excel
    - Filtros y búsqueda en la lista de inscripciones
@@ -679,4 +754,4 @@ enum RegistrationType {
 
 ---
 
-**Última actualización**: Diciembre 2024
+**Última actualización**: Abril 2026
