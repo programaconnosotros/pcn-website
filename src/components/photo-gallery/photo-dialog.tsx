@@ -9,21 +9,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ShareDialog } from '@/components/photo-gallery/share-dialog';
 import { formatDate } from '@/lib/date-formatter';
 import { downloadImage } from '@/lib/download-helper';
-
-interface Photo {
-  id: number;
-  title: string;
-  image: string;
-  date?: Date;
-}
+import { GalleryPhoto } from '@prisma/client';
 
 interface PhotoDialogProps {
-  photos: Photo[];
+  photos: GalleryPhoto[];
   currentPhotoIndex: number;
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (index: number) => void;
-  getShareUrl: (photoId: number) => string;
+  getShareUrl: (photoId: string) => string;
 }
 
 export function PhotoDialog({
@@ -48,7 +42,6 @@ export function PhotoDialog({
     onNavigate(newIndex);
   };
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft') {
       handlePrevious();
@@ -59,27 +52,18 @@ export function PhotoDialog({
     }
   };
 
-  const handleShare = () => {
-    setIsShareDialogOpen(true);
-  };
-
-  const handleCloseShareDialog = () => {
-    setIsShareDialogOpen(false);
-  };
-
   const handleDownload = async () => {
     if (!currentPhoto || isDownloading) return;
 
     setIsDownloading(true);
     try {
-      // Crear un nombre de archivo basado en el título de la foto
       const fileName = currentPhoto.title
         .toLowerCase()
-        .replace(/\s+/g, '-') // Reemplazar espacios con guiones
-        .replace(/[^\w-]/g, '') // Eliminar caracteres especiales
-        .concat('.jpg'); // Añadir extensión
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '')
+        .concat('.jpg');
 
-      await downloadImage(currentPhoto.image, fileName);
+      await downloadImage(currentPhoto.imageUrl, fileName);
     } finally {
       setIsDownloading(false);
     }
@@ -126,7 +110,7 @@ export function PhotoDialog({
                       variant="ghost"
                       size="icon"
                       className="rounded-full bg-black/50 text-white hover:bg-black/70"
-                      onClick={handleShare}
+                      onClick={() => setIsShareDialogOpen(true)}
                     >
                       <Share2 className="h-5 w-5" />
                       <span className="sr-only">Compartir</span>
@@ -175,7 +159,7 @@ export function PhotoDialog({
 
             <div className="relative flex h-full w-full items-center justify-center">
               <img
-                src={currentPhoto.image || '/placeholder.svg'}
+                src={currentPhoto.imageUrl || '/placeholder.svg'}
                 alt=""
                 className="max-h-full max-w-full object-contain"
                 loading="eager"
@@ -184,17 +168,18 @@ export function PhotoDialog({
           </div>
 
           <div className="p-4 text-center">
-            {/* <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
-            {currentPhoto.date && (
-              <p className="mt-1 text-sm text-gray-500">{formatDate(currentPhoto.date)}</p>
-            )} */}
+            <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
+            <p className="mt-1 text-sm text-gray-500">
+              {formatDate(new Date(currentPhoto.takenAt))}
+            </p>
+            <p className="text-sm text-gray-400">{currentPhoto.location}</p>
           </div>
         </DialogContent>
       </Dialog>
 
       <ShareDialog
         isOpen={isShareDialogOpen}
-        onClose={handleCloseShareDialog}
+        onClose={() => setIsShareDialogOpen(false)}
         url={shareUrl}
         title={currentPhoto.title}
       />

@@ -317,6 +317,20 @@ model PasswordResetToken {
   @@index([code])
 }
 
+model GalleryPhoto {
+  id        String    @id @default(cuid())
+  title     String
+  takenAt   DateTime
+  location  String
+  imageUrl  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([takenAt])
+  @@index([deletedAt])
+}
+
 model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
