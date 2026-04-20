@@ -6,12 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { GalleryPhoto } from '@prisma/client';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -47,9 +42,7 @@ export function GalleryPhotoFormDialog({
     defaultValues: {
       title: photo?.title ?? '',
       location: photo?.location ?? '',
-      takenAt: photo?.takenAt
-        ? new Date(photo.takenAt.toISOString().substring(0, 10))
-        : undefined,
+      takenAt: photo?.takenAt ? new Date(photo.takenAt.toISOString().substring(0, 10)) : undefined,
       imageUrl: photo?.imageUrl ?? '',
     },
   });

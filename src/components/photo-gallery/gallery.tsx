@@ -132,11 +132,7 @@ export function Gallery({ photos, currentUser }: GalleryProps) {
       )}
 
       {isAdmin && (
-        <GalleryPhotoFormDialog
-          mode="create"
-          open={isCreateOpen}
-          onOpenChange={setIsCreateOpen}
-        />
+        <GalleryPhotoFormDialog mode="create" open={isCreateOpen} onOpenChange={setIsCreateOpen} />
       )}
     </>
   );
