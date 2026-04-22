@@ -156,7 +156,7 @@ const ZeroToAgentSponsors = () => (
       </div>
     </header>
 
-    <div className="mt-4 px-4 md:px-20">
+    <div className="mt-4 px-4 pb-16 md:px-20">
       {/* Hero */}
       <Image
         src="/zero-to-agent-card.png"
