@@ -1,5 +1,4 @@
-import { Users } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Heading3 } from '../ui/heading-3';
 
 type Person = {
   name: string;
@@ -173,17 +172,13 @@ const people: Person[] = [
 ];
 
 export const Team = () => (
-  <Card className="mt-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-    <CardHeader>
-      <CardTitle className="flex items-center gap-2">
-        <Users className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-        Team de desarrollo del website
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
+  <div className="py-8">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <Heading3>Team de desarrollo del website</Heading3>
+
       <ul
         role="list"
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6"
+        className="mx-auto mt-6 grid max-w-2xl grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:mx-0 lg:max-w-none lg:grid-cols-6 xl:grid-cols-6"
       >
         {people.map((person) => (
           <li
@@ -228,6 +223,6 @@ export const Team = () => (
           </li>
         ))}
       </ul>
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
