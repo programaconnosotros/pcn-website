@@ -23,12 +23,12 @@ import {
   Podcast,
   ScrollText,
   Send,
+  Share2,
   SquareMousePointer,
   Users,
   Youtube,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
-import { NavProjects } from '@/components/ui/nav-projects';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -157,6 +157,39 @@ const getInfoGeneralItems = () => {
   ];
 };
 
+const socialNetworks = [
+  {
+    name: 'WhatsApp',
+    url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
+    icon: Send,
+  },
+  {
+    name: 'Discord',
+    url: 'https://discord.gg/dTQexKw56S',
+    icon: Send,
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/programa.con.nosotros/',
+    icon: Instagram,
+  },
+  // {
+  //   name: 'X',
+  //   url: 'https://x.com/programaconnos',
+  //   icon: X,
+  // },
+  {
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@programaconnosotros2689/videos',
+    icon: Youtube,
+  },
+  {
+    name: 'LinkedIn',
+    url: 'https://www.linkedin.com/company/programaconnosotros/',
+    icon: Linkedin,
+  },
+];
+
 const getComunidadItems = () => {
   return [
     {
@@ -178,6 +211,11 @@ const getComunidadItems = () => {
       title: 'Preguntas frecuentes',
       url: '/preguntas-frecuentes',
       icon: HelpCircle,
+    },
+    {
+      title: 'Redes',
+      icon: Share2,
+      items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
     },
   ];
 };
@@ -226,38 +264,6 @@ const data = {
       icon: Send,
     },
   ],
-  socialNetworks: [
-    {
-      name: 'WhatsApp',
-      url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
-      icon: Send,
-    },
-    {
-      name: 'Discord',
-      url: 'https://discord.gg/dTQexKw56S',
-      icon: Send,
-    },
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/programa.con.nosotros/',
-      icon: Instagram,
-    },
-    // {
-    //   name: 'X',
-    //   url: 'https://x.com/programaconnos',
-    //   icon: X,
-    // },
-    {
-      name: 'YouTube',
-      url: 'https://www.youtube.com/@programaconnosotros2689/videos',
-      icon: Youtube,
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/company/programaconnosotros/',
-      icon: Linkedin,
-    },
-  ],
 };
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -296,7 +302,6 @@ export function AppSidebar(props: AppSidebarProps) {
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
-        <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
