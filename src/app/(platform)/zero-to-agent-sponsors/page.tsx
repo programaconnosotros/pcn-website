@@ -13,7 +13,6 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
 import {
@@ -165,9 +164,6 @@ const ZeroToAgentSponsors = () => (
         priority
         className="mb-6 w-full rounded-lg"
       />
-      <Heading2 className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
-        Zero to Agent
-      </Heading2>
       <Paragraph className="text-muted-foreground">
         El evento más importante de inteligencia artificial de Tucumán en lo que va del año.
         Organizado por Vercel, programaConNosotros y Xetro — con más de 6.000 USD en premios.
