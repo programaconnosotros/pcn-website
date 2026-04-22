@@ -50,7 +50,7 @@ const CourseCard = ({ course }: { course: Course }) => {
   );
 
   return (
-    <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:min-h-[320px]">
+    <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:min-h-[320px]">
       <div>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle>{course.name}</CardTitle>

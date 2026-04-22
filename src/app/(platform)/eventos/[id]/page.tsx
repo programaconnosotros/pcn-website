@@ -264,7 +264,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
             <div className="flex flex-1 flex-col gap-5">
               {/* Flyer del evento */}
               {event.flyerSrc && (
-                <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <div className="relative w-full overflow-hidden">
                     <img
                       src={event.flyerSrc}
@@ -277,7 +277,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Descripción */}
               {event.description && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle>Descripción</CardTitle>
                   </CardHeader>
@@ -289,7 +289,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Fotos */}
               {event.images && event.images.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle>Fotos del evento</CardTitle>
                   </CardHeader>
@@ -301,7 +301,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
               {isAdmin && !isExternalEvent && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5" />
@@ -334,7 +334,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
             <div className="flex w-full flex-col gap-5 xl:w-80">
               {/* Botón de registro */}
               {!hasEventPassed && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardContent className="pt-6">
                     <Suspense
                       fallback={
@@ -364,7 +364,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
               )}
 
               {/* Información del evento */}
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                 <CardHeader>
                   <CardTitle>Información</CardTitle>
                 </CardHeader>
@@ -401,7 +401,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Sponsors */}
               {event.sponsors && event.sponsors.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle>Sponsors</CardTitle>
                   </CardHeader>
@@ -431,7 +431,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Mapa */}
               {event.latitude && event.longitude && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle>Mapa</CardTitle>
                   </CardHeader>

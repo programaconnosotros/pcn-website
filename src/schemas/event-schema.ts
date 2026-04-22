@@ -76,10 +76,9 @@ export const eventSchema = z.object({
   externalRegistrationUrl: z
     .string()
     .optional()
-    .refine(
-      (val) => !val || val === '' || z.string().url().safeParse(val).success,
-      { message: 'Debe ser una URL válida' },
-    )
+    .refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
+      message: 'Debe ser una URL válida',
+    })
     .transform((val) => (val === '' ? undefined : val)),
   capacity: z.preprocess(
     (val) => {

@@ -77,7 +77,7 @@ const SpecialtiesPage = () => (
           <div className="flex flex-1 flex-col items-center gap-6">
             <Card
               id="web-frontend"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -114,7 +114,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="backend"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -149,7 +149,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="fullstack"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -183,7 +183,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="ios-mobile"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -221,7 +221,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="android-mobile"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -258,7 +258,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="mobile-development"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -320,7 +320,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="devops"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -356,7 +356,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="data-science"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -393,7 +393,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="machine-learning"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -429,7 +429,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="cybersecurity"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -465,7 +465,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="game-dev"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -501,7 +501,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="qa"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -537,7 +537,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="blockchain"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -573,7 +573,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="ui-ux-design"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -610,7 +610,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="networking"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -648,7 +648,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="project-management"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -687,7 +687,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="tech-lead"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -726,7 +726,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="engineering-management"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -765,7 +765,7 @@ const SpecialtiesPage = () => (
 
             <Card
               id="software-architect"
-              className="w-full max-w-4xl scroll-mt-24 transition-colors hover:border-pcnPurple dark:hover:border-pcnGreen"
+              className="w-full max-w-4xl scroll-mt-24 transition-colors"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
