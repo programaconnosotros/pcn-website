@@ -155,11 +155,6 @@ const getComunidadItems = () => {
       icon: Image,
     },
     {
-      title: 'Anuncios',
-      url: '/anuncios',
-      icon: Megaphone,
-    },
-    {
       title: 'Preguntas frecuentes',
       url: '/preguntas-frecuentes',
       icon: HelpCircle,
