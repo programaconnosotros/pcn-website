@@ -341,11 +341,6 @@ const HomeClientSide = ({
               áreas y de todos los niveles.
             </Paragraph>
 
-            <Link href="/usuarios" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
-                Conocer a la comunidad
-              </Button>
-            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
@@ -363,11 +358,6 @@ const HomeClientSide = ({
               muchas personas en su crecimiento profesional.
             </Paragraph>
 
-            <Link href="/mentores" className="relative z-10">
-              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
-                Conocer mentores
-              </Button>
-            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
