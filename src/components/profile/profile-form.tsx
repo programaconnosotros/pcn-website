@@ -506,4 +506,3 @@ export const ProfileForm = ({
     </Form>
   );
 };
-

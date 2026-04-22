@@ -15,16 +15,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import {
-  Calendar,
-  MapPin,
-  Users,
-  Check,
-  Crown,
-  Medal,
-  Award,
-  MessageSquare,
-} from 'lucide-react';
+import { Calendar, MapPin, Users, Check, Crown, Medal, Award, MessageSquare } from 'lucide-react';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -164,9 +155,9 @@ const ZeroToAgentSponsors = () => (
       <Heading3 className="mb-4 mt-10">¿De qué se trata el evento?</Heading3>
       <Paragraph>
         Zero to Agent es un evento que reúne a personas apasionadas por el software que quieren
-        aprender a desarrollar agentes de inteligencia artificial utilizando la plataforma &ldquo;v0&rdquo; de
-        Vercel, y poder participar por más de 6.000 USD en premios otorgados por Vercel a los
-        mejores proyectos presentados.
+        aprender a desarrollar agentes de inteligencia artificial utilizando la plataforma
+        &ldquo;v0&rdquo; de Vercel, y poder participar por más de 6.000 USD en premios otorgados por
+        Vercel a los mejores proyectos presentados.
       </Paragraph>
       <Paragraph>
         El objetivo del evento es que las personas creen software real con inteligencia artificial,
@@ -192,7 +183,9 @@ const ZeroToAgentSponsors = () => (
               <h4 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white">
                 {org.name}
               </h4>
-              <p className="break-words text-sm leading-6 text-muted-foreground">{org.description}</p>
+              <p className="break-words text-sm leading-6 text-muted-foreground">
+                {org.description}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -267,11 +260,10 @@ const ZeroToAgentSponsors = () => (
                 <ul className="mb-6 flex flex-1 flex-col gap-2.5">
                   {tier.benefits.map((benefit) => (
                     <li key={benefit} className="flex items-start gap-2">
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0"
-                        style={{ color: tier.accent }}
-                      />
-                      <span className="break-words text-sm leading-5 text-muted-foreground">{benefit}</span>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: tier.accent }} />
+                      <span className="break-words text-sm leading-5 text-muted-foreground">
+                        {benefit}
+                      </span>
                     </li>
                   ))}
                 </ul>
