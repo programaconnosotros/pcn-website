@@ -21,7 +21,6 @@ import {
   MicVocal,
   Music,
   Podcast,
-  Quote,
   ScrollText,
   Send,
   SquareMousePointer,
@@ -179,11 +178,6 @@ const getComunidadItems = () => {
       title: 'Preguntas frecuentes',
       url: '/preguntas-frecuentes',
       icon: HelpCircle,
-    },
-    {
-      title: 'Testimonios',
-      url: '/testimonios',
-      icon: Quote,
     },
   ];
 };
