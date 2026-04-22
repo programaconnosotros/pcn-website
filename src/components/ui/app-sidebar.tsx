@@ -7,7 +7,6 @@ import {
   Code2,
   Eye,
   Handshake,
-  HelpCircle,
   Home,
   Image,
   Instagram,
@@ -107,6 +106,7 @@ const getRecursosSubItems = () => [
   { title: 'Cursos', url: '/cursos' },
   { title: 'Software útil', url: '/software-util' },
   { title: 'Música', url: '/music' },
+  { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
 ];
 
 const socialNetworks = [
@@ -153,11 +153,6 @@ const getComunidadItems = () => {
       title: 'Galería',
       url: '/galeria',
       icon: Image,
-    },
-    {
-      title: 'Preguntas frecuentes',
-      url: '/preguntas-frecuentes',
-      icon: HelpCircle,
     },
     {
       title: 'Redes',
