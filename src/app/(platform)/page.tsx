@@ -15,6 +15,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
+import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -81,7 +82,11 @@ const Home = async () => {
           </Link>
         </div>
       </header>
-      <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />
+      <HomeClientSide
+        session={session}
+        featuredTestimonials={featuredTestimonials}
+        recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
+      />
     </>
   );
 };

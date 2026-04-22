@@ -46,6 +46,7 @@ import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Quote } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import React from 'react';
 
 type FeaturedTestimonial = {
   id: string;
@@ -61,9 +62,11 @@ type FeaturedTestimonial = {
 const HomeClientSide = ({
   session,
   featuredTestimonials,
+  recentlyAddedEventsSection,
 }: {
   session: (Session & { user: User }) | null;
   featuredTestimonials: FeaturedTestimonial[];
+  recentlyAddedEventsSection: React.ReactNode;
 }) => {
   return (
     <motion.div
@@ -173,6 +176,8 @@ const HomeClientSide = ({
             </div>
           </div>
         )}
+
+        {recentlyAddedEventsSection}
 
         <div className="z-10 mb-6 mt-4 flex justify-center md:-mt-12">
           <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
@@ -340,7 +345,6 @@ const HomeClientSide = ({
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
               áreas y de todos los niveles.
             </Paragraph>
-
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
@@ -357,7 +361,6 @@ const HomeClientSide = ({
               Podés encontrar mentores de primer nivel y también convertirte en uno para ayudar a
               muchas personas en su crecimiento profesional.
             </Paragraph>
-
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
