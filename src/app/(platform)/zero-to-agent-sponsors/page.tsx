@@ -92,6 +92,7 @@ const tiers = [
     icon: Crown,
     amount: 'AR$ 2.000.000',
     accent: '#D4AF37',
+    variant: 'gold' as const,
     waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Oro.',
     benefits: [
       'Logo destacado en cartelería del evento, llegando a miles de personas apasionadas por el software.',
@@ -111,6 +112,7 @@ const tiers = [
     icon: Medal,
     amount: 'AR$ 1.500.000',
     accent: '#A8A8A8',
+    variant: 'silver' as const,
     waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Plata.',
     benefits: [
       'Logo en ubicación secundaria en cartelería del evento.',
@@ -126,6 +128,7 @@ const tiers = [
     icon: Award,
     amount: 'AR$ 1.000.000',
     accent: '#CD7F32',
+    variant: 'bronze' as const,
     waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Bronce.',
     benefits: [
       'Mención durante el cierre del evento junto al resto de los sponsors bronce.',
@@ -305,7 +308,7 @@ const ZeroToAgentSponsors = () => (
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="w-full bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
+                  <Button variant={tier.variant} className="w-full">
                     <MessageSquare className="mr-2 h-4 w-4" />
                     Patrocinar como {tier.name}
                   </Button>
@@ -317,7 +320,7 @@ const ZeroToAgentSponsors = () => (
       </div>
 
       {/* Closing hero banner */}
-      <div className="relative mt-10 min-h-[400px] w-full overflow-hidden bg-background md:h-[500px]">
+      <div className="relative mt-10 min-h-[400px] w-full overflow-hidden rounded-lg bg-background md:h-[500px]">
         <div className="absolute inset-0 z-0">
           <Image
             src="/home.GIF"
@@ -344,7 +347,7 @@ const ZeroToAgentSponsors = () => (
           </Heading1>
 
           <p className="px-4 text-center text-lg leading-relaxed text-white drop-shadow-[0_0_10px_rgba(4,244,190,0.6)] md:text-lg">
-            Apasionados por el software
+            Apasionados por el software.
           </p>
         </div>
       </div>
