@@ -228,7 +228,7 @@ export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="inset" {...sidebarProps}>
+    <Sidebar collapsible="offcanvas" variant="sidebar" {...sidebarProps}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
