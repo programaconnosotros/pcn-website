@@ -113,9 +113,6 @@ const FAQPage = async () => {
           </div>
 
           <div className="mb-14 max-w-3xl">
-            <p className="mb-6 text-center text-muted-foreground">
-              Encontrá respuestas a las preguntas más comunes sobre nuestra comunidad
-            </p>
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
