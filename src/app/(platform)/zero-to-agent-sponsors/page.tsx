@@ -13,8 +13,10 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Heading1 } from '@/components/ui/heading-1';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
+import { GeistMono } from 'geist/font/mono';
 import {
   Calendar,
   MapPin,
@@ -312,6 +314,39 @@ const ZeroToAgentSponsors = () => (
             </Card>
           );
         })}
+      </div>
+
+      {/* Closing hero banner */}
+      <div className="relative -mx-4 mt-10 min-h-[400px] w-[calc(100%+2rem)] overflow-hidden bg-background md:-mx-20 md:h-[500px] md:w-[calc(100%+10rem)]">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/home.GIF"
+            alt=""
+            fill
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+        <div className="absolute inset-0 z-0 bg-black/60" />
+
+        <div className="relative z-10 flex h-full min-h-[400px] w-full flex-col items-center justify-center px-4 py-6 md:min-h-[500px]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.webp"
+            alt="programaConNosotros"
+            className="w-[80px] drop-shadow-[0_0_20px_rgba(4,244,190,0.6)] md:w-[100px]"
+          />
+
+          <Heading1
+            className={`${GeistMono.className} mb-4 mt-6 text-center text-3xl text-pcnGreen drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:mb-6 md:mt-8 md:text-4xl`}
+          >
+            programaConNosotros
+          </Heading1>
+
+          <p className="px-4 text-center text-lg leading-relaxed text-white drop-shadow-[0_0_10px_rgba(4,244,190,0.6)] md:text-lg">
+            Apasionados por el software
+          </p>
+        </div>
       </div>
     </div>
   </>
