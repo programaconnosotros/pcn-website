@@ -447,6 +447,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                           <div className="flex flex-col gap-4 md:flex-row">
                             {talk.portrait && (
                               <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={talk.portrait}
                                   alt={talk.speakerName}

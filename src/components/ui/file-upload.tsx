@@ -9,7 +9,7 @@ import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
 
 type FileUploadProps = {
   value?: string;
-  onChange: (url: string) => void;
+  onChange: (_url: string) => void;
   folder?: string;
   accept?: string;
   maxSize?: number; // en bytes
@@ -38,6 +38,7 @@ export function FileUpload({
     if (value && value !== preview) {
       setPreview(value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +124,7 @@ export function FileUpload({
               variant === 'profile' ? 'h-32 w-32 rounded-lg' : 'aspect-video w-full rounded-lg',
             )}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview}
               alt="Preview"

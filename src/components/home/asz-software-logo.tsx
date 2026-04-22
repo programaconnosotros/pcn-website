@@ -7,6 +7,7 @@ const ASZSoftwareLogo = () => (
     style={{ border: 'none' }}
   >
     <div className="mb-4 mt-4 flex flex-row items-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/asz-software-logo-2.webp" alt="ASZ Studio" className="-ml-8 h-12" />
 
       <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">

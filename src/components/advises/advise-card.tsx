@@ -63,7 +63,7 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-    const previousLikes = [...optimisticLikes];
+    const _previousLikes = [...optimisticLikes];
 
     try {
       // Optimistically update the UI

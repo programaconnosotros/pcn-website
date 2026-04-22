@@ -3,7 +3,6 @@
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { Heading2 } from '@/components/ui/heading-2';
 import { SponsorsSection } from '@components/home/sponsors-section';
-import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
@@ -11,28 +10,22 @@ import { Paragraph } from '@/components/ui/paragraph';
 import {
   Book,
   Brain,
-  Briefcase,
-  Building2,
   Calendar,
   GraduationCap,
   Handshake,
   MessageCircle,
-  HelpCircle,
   Images,
   Laptop,
   Lightbulb,
-  Linkedin,
   LogIn,
   MapPin,
   MessageSquare,
   MicVocal,
   Podcast,
   Monitor,
-  MonitorPlay,
   Rocket,
   ScrollText,
   SquareMousePointer,
-  Star,
   UserPlus,
   Users,
 } from 'lucide-react';
@@ -42,10 +35,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
-import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Quote } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import React from 'react';
 
 type FeaturedTestimonial = {
@@ -137,6 +128,7 @@ const HomeClientSide = ({
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo.webp"
                   alt="programaConNosotros"
@@ -569,6 +561,7 @@ const HomeClientSide = ({
             className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -585,6 +578,7 @@ const HomeClientSide = ({
             className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/discord.svg" alt="Discord" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -601,6 +595,7 @@ const HomeClientSide = ({
             className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/instagram.svg" alt="Instagram" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -617,6 +612,7 @@ const HomeClientSide = ({
             className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/youtube.svg" alt="YouTube" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -633,6 +629,7 @@ const HomeClientSide = ({
             className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-8 w-8" />
             </div>
             <div className="flex-1">

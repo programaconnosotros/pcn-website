@@ -29,6 +29,7 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
       <Dialog>
         <DialogTrigger>
           <div className="mt-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={flyerSrc}
               alt={`Flyer del evento ${name}`}
@@ -43,6 +44,7 @@ const EventFlyer: React.FC<EventFlyerProps> = ({ name, flyerSrc, date, endDate }
           </DialogHeader>
 
           <div className="flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={flyerSrc}
               alt={`Flyer del evento ${name}`}

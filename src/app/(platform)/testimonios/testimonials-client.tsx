@@ -30,7 +30,7 @@ type TestimonialsClientProps = {
 };
 
 export type TestimonialsClientRef = {
-  openForm: (testimonial: Testimonial | null) => void;
+  openForm: (_testimonial: Testimonial | null) => void;
 };
 
 export const TestimonialsClient = forwardRef<TestimonialsClientRef, TestimonialsClientProps>(

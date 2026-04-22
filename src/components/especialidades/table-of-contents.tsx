@@ -50,7 +50,7 @@ const sections: { id: string; title: string; icon: LucideIcon }[] = [
 
 export function TableOfContents() {
   const [activeSection, setActiveSection] = useState<string>('');
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [_isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     // Check for hash in URL on mount

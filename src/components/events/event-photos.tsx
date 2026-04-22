@@ -34,6 +34,7 @@ export const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
         <Dialog key={index}>
           <DialogTrigger asChild>
             <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image.imgSrc}
                 alt={`Imagen ${index + 1} del evento`}
@@ -55,6 +56,7 @@ export const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
               <CarouselContent>
                 {images.map((img, i) => (
                   <CarouselItem key={i} className="flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img.imgSrc}
                       alt={`Imagen ${i + 1} del evento`}

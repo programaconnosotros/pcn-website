@@ -7,8 +7,6 @@ export const trackPageVisit = async (path: string) => {
   try {
     const sessionId = cookies().get('sessionId')?.value;
     let userId: string | undefined = undefined;
-    let isAdmin = false;
-
     if (sessionId) {
       const session = await prisma.session.findUnique({
         where: { id: sessionId },

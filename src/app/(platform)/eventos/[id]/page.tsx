@@ -266,6 +266,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
               {event.flyerSrc && (
                 <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <div className="relative w-full overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={event.flyerSrc}
                       alt={`Flyer de ${event.name}`}

@@ -19,6 +19,7 @@ export function LanguageCoin({ language, editable = false, onRemove }: LanguageC
           className="relative flex h-12 w-12 items-center justify-center p-2"
           style={{ backgroundColor: language.color || languageInfo?.color || '#333' }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={language.logo || languageInfo?.logo || '/placeholder.svg'}
             alt={languageInfo?.name || language.languageId}

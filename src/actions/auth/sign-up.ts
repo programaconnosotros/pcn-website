@@ -16,7 +16,7 @@ export const signUp = async (
   | { success: false; error: 'UNKNOWN_ERROR' }
 > => {
   const {
-    confirmPassword,
+    confirmPassword: _confirmPassword,
     redirectTo,
     country,
     profession,

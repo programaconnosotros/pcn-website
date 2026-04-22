@@ -6,7 +6,7 @@ import { LanguageCoin } from './language-coin';
 interface LanguageCoinsContainerProps {
   languages: UserProgrammingLanguage[];
   editable?: boolean;
-  onRemoveLanguage?: (languageId: string) => void;
+  onRemoveLanguage?: (_languageId: string) => void;
 }
 
 export function LanguageCoinsContainer({

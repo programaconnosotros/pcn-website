@@ -3,11 +3,8 @@ import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
-import prisma from '@/lib/prisma';
-import { User } from '@prisma/client';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -41,22 +38,6 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const defaultOpen = (await cookies().get('sidebar_state')?.value) === 'true';
-  const sessionId = await cookies().get('sessionId')?.value;
-
-  let user: User | null = null;
-
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (session) {
-      user = session.user;
-    }
-  }
-
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={GeistSans.className}>

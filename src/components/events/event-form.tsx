@@ -32,7 +32,7 @@ import { useState } from 'react';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
-  onSubmit: (values: EventFormData) => Promise<void>;
+  onSubmit: (_values: EventFormData) => Promise<void>;
   submitLabel?: string;
   cancelHref?: string;
 };

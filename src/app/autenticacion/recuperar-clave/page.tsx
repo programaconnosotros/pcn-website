@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, Loader2, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
@@ -168,6 +168,7 @@ export default function ResetPasswordPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
             alt="Logo"

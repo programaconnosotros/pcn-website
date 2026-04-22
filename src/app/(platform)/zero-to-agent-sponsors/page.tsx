@@ -164,7 +164,7 @@ const ZeroToAgentSponsors = () => (
       <Heading3 className="mb-4 mt-10">¿De qué se trata el evento?</Heading3>
       <Paragraph>
         Zero to Agent es un evento que reúne a personas apasionadas por el software que quieren
-        aprender a desarrollar agentes de inteligencia artificial utilizando la plataforma "v0" de
+        aprender a desarrollar agentes de inteligencia artificial utilizando la plataforma &ldquo;v0&rdquo; de
         Vercel, y poder participar por más de 6.000 USD en premios otorgados por Vercel a los
         mejores proyectos presentados.
       </Paragraph>

@@ -1,6 +1,4 @@
-import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session, User } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
@@ -28,20 +26,6 @@ import {
 import { formatDate } from '@/lib/utils';
 
 const AnaliticasPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
-  let session: (Session & { user: User }) | null = null;
-
-  if (sessionId) {
-    session = await prisma.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
-    });
-  }
-
   // Obtener estadísticas
   const now = new Date();
   const oneMonthAgo = new Date(now);
@@ -394,7 +378,7 @@ const AnaliticasPage = async () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {topLanguages.map((lang, index) => (
+                      {topLanguages.map((lang) => (
                         <div key={lang.language} className="flex items-center justify-between">
                           <span className="text-sm">{lang.language}</span>
                           <span className="text-sm font-semibold text-muted-foreground">

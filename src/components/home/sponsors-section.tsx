@@ -116,6 +116,7 @@ export const SponsorsSection = () => {
                   <div
                     className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' ? 'h-48' : sponsor.name === 'Xetro' ? 'h-40' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}

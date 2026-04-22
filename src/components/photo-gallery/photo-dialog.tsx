@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import type React from 'react';
 import { ChevronLeft, ChevronRight, X, Share2, Download } from 'lucide-react';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ShareDialog } from '@/components/photo-gallery/share-dialog';
-import { formatDate } from '@/lib/date-formatter';
 import { downloadImage } from '@/lib/download-helper';
 
 interface Photo {
@@ -22,8 +21,8 @@ interface PhotoDialogProps {
   currentPhotoIndex: number;
   isOpen: boolean;
   onClose: () => void;
-  onNavigate: (index: number) => void;
-  getShareUrl: (photoId: number) => string;
+  onNavigate: (_index: number) => void;
+  getShareUrl: (_photoId: number) => string;
 }
 
 export function PhotoDialog({
@@ -174,6 +173,7 @@ export function PhotoDialog({
             </div>
 
             <div className="relative flex h-full w-full items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={currentPhoto.image || '/placeholder.svg'}
                 alt=""

@@ -1,6 +1,5 @@
 'use client';
 import { signIn } from '@/actions/auth/sign-in';
-import { sendVerificationCode } from '@/actions/auth/send-verification-code';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -97,6 +96,7 @@ export default function SignInPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
             alt="Logo"

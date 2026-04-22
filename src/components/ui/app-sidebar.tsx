@@ -6,7 +6,6 @@ import {
   CalendarDays,
   Code2,
   Eye,
-  Handshake,
   Home,
   Image,
   Instagram,
@@ -14,7 +13,6 @@ import {
   Library,
   LifeBuoy,
   Linkedin,
-  Megaphone,
   MicVocal,
   Podcast,
   ScrollText,
@@ -230,6 +228,7 @@ export function AppSidebar(props: AppSidebarProps) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.webp" alt="programaConNosotros" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">

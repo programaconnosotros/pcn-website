@@ -15,7 +15,7 @@ interface PhotoCardProps {
     image: string;
     date?: Date;
   };
-  getShareUrl: (photoId: number) => string;
+  getShareUrl: (_photoId: number) => string;
   onCardClick: () => void;
 }
 
@@ -54,6 +54,7 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
   return (
     <>
       <div className="group relative aspect-square w-full overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={photo.image || '/placeholder.svg'}
           alt={photo.title}

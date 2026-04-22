@@ -193,6 +193,7 @@ export const Team = () => (
                 className="block cursor-pointer"
               >
                 <div className="relative aspect-square overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     alt={person.name}
                     src={person.imageUrl}
@@ -206,6 +207,7 @@ export const Team = () => (
               </a>
             ) : (
               <div className="relative aspect-square overflow-hidden rounded-lg">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt={person.name}
                   src={person.imageUrl}

@@ -9,7 +9,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/historia/table-of-contents';
 import { ScrollText } from 'lucide-react';
@@ -35,10 +34,6 @@ export const metadata: Metadata = {
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
-
-const PCN = () => (
-  <code className="font-bold text-pcnPurple dark:text-pcnGreen">programaConNosotros</code>
-);
 
 const PCNStory = () => (
   <>
@@ -119,6 +114,7 @@ const PCNStory = () => (
                   charlas y competencias de programación.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/IMG_20230809_113640.webp"
                     alt="Comienzos en la UTN-FRT"
@@ -142,6 +138,7 @@ const PCNStory = () => (
                   eventos técnicos.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/evento_abril (173) (2).webp"
                     alt="Voluntariado en el IEEE"
@@ -187,6 +184,7 @@ const PCNStory = () => (
                   llamaron Code Warfare. Se anotaron muchos equipos y estuvo muy divertido.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/code-warfare-logo.webp"
                     alt="Code Warfare logo"
@@ -195,6 +193,7 @@ const PCNStory = () => (
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/photo_2017-10-08_20-24-40.webp"
                       alt="Code Warfare"
@@ -202,6 +201,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/photo_2017-10-08_20-24-35.webp"
                       alt="Code Warfare"
@@ -241,6 +241,7 @@ const PCNStory = () => (
                   información de la UTN-FRT.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/photo_2019-10-14_01-58-25.webp"
                     alt="Club de Algoritmos"
@@ -266,6 +267,7 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (167).webp"
                       alt="Tucumán Hack Weekend"
@@ -273,6 +275,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (10).webp"
                       alt="Tucumán Hack Weekend"
@@ -280,6 +283,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (118) (1).webp"
                       alt="Tucumán Hack Weekend"
@@ -287,6 +291,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (139).webp"
                       alt="Tucumán Hack Weekend"
@@ -294,6 +299,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (142).webp"
                       alt="Tucumán Hack Weekend"
@@ -301,6 +307,7 @@ const PCNStory = () => (
                     />
                   </div>
                   <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/historia/evento_abril (147).webp"
                       alt="Tucumán Hack Weekend"
@@ -314,6 +321,7 @@ const PCNStory = () => (
                   ofensivo.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/evento_abril (64).webp"
                     alt="Tucumán Hack Weekend"
@@ -343,6 +351,7 @@ const PCNStory = () => (
                   de las aulas se enseñaba.
                 </p>
                 <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/historia/IMG_1525.webp"
                     alt="Nibble"

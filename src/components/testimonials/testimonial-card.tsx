@@ -16,7 +16,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import {
   DropdownMenu,
@@ -39,7 +38,7 @@ type TestimonialCardProps = {
   };
   currentUserId?: string;
   isAdmin?: boolean;
-  onEdit: (testimonial: Testimonial) => void;
+  onEdit: (_testimonial: Testimonial) => void;
 };
 
 export function TestimonialCard({

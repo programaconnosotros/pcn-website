@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { BookOpen, Calendar, FileText, MapPin, MicVocal, User, Youtube } from 'lucide-react';
+import { Calendar, FileText, MapPin, MicVocal, User, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { talks } from './talks';
 
@@ -100,6 +100,7 @@ const Talks = () => (
               >
                 {talk.portrait && (
                   <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={talk.portrait}
                       alt={`${talk.speakerName}'s photo`}
@@ -169,6 +170,7 @@ const Talks = () => (
                             <CarouselContent>
                               {talk.slides.map((slide, index) => (
                                 <CarouselItem key={index}>
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img
                                     key={index}
                                     src={slide}

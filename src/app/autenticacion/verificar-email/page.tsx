@@ -136,6 +136,7 @@ export default function VerifyEmailPage() {
       <div className="container flex min-h-screen items-center justify-center py-12">
         <div className="w-full max-w-[425px] text-center">
           <div className="flex flex-col items-center gap-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.webp" alt="Logo" className="w-10" />
             <h1 className="text-2xl font-semibold tracking-tight">Verificación de email</h1>
             <p className="text-muted-foreground">No se especificó un email para verificar.</p>
@@ -152,6 +153,7 @@ export default function VerifyEmailPage() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
           <div className="space-y-2 text-center">
