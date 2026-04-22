@@ -93,11 +93,6 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
       icon: MicVocal,
     },
     {
-      title: 'Consejos',
-      url: '/consejos',
-      icon: Handshake,
-    },
-    {
       title: 'Podcast',
       url: '/podcast',
       icon: Podcast,
