@@ -29,13 +29,13 @@ import {
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Zero to Agents · Sponsors | programaConNosotros',
+  title: 'Zero to Agent · Sponsors | programaConNosotros',
   description:
-    'Conocé los niveles de sponsorship para Zero to Agents, el evento más importante de inteligencia artificial de Tucumán. Vercel, PCN y Xetro.',
+    'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán. Vercel, PCN y Xetro.',
   openGraph: {
-    title: 'Zero to Agents · Sponsors | programaConNosotros',
+    title: 'Zero to Agent · Sponsors | programaConNosotros',
     description:
-      'Conocé los niveles de sponsorship para Zero to Agents, el evento más importante de inteligencia artificial de Tucumán.',
+      'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/zero-to-agent-sponsors`,
     type: 'website',
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zero to Agents · Sponsors | programaConNosotros',
+    title: 'Zero to Agent · Sponsors | programaConNosotros',
     description:
-      'Conocé los niveles de sponsorship para Zero to Agents, el evento más importante de inteligencia artificial de Tucumán.',
+      'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
@@ -86,7 +86,7 @@ const tiers = [
     icon: Crown,
     amount: 'AR$ 2.000.000',
     accent: '#D4AF37',
-    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agents+como+sponsor+Oro.',
+    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Oro.',
     benefits: [
       'Logo destacado en cartelería del evento, llegando a miles de personas apasionadas por el software.',
       'Posibilidad de incluir merchandising propio para todos los participantes del evento.',
@@ -105,7 +105,7 @@ const tiers = [
     icon: Medal,
     amount: 'AR$ 1.500.000',
     accent: '#A8A8A8',
-    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agents+como+sponsor+Plata.',
+    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Plata.',
     benefits: [
       'Logo en ubicación secundaria en cartelería del evento.',
       'Posibilidad de incluir merchandising propio para todos los participantes del evento.',
@@ -120,7 +120,7 @@ const tiers = [
     icon: Award,
     amount: 'AR$ 1.000.000',
     accent: '#CD7F32',
-    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agents+como+sponsor+Bronce.',
+    waText: 'Hola%21+Quiero+patrocinar+el+evento+Zero+to+Agent+como+sponsor+Bronce.',
     benefits: [
       'Mención durante el cierre del evento junto al resto de los sponsors bronce.',
       'Logo en ubicación terciaria en cartelería del evento.',
@@ -143,7 +143,7 @@ const ZeroToAgentSponsors = () => (
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
-              <BreadcrumbPage>Zero to Agents · Sponsors</BreadcrumbPage>
+              <BreadcrumbPage>Zero to Agent · Sponsors</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -153,7 +153,7 @@ const ZeroToAgentSponsors = () => (
     <div className="mt-4 px-4 md:px-20">
       {/* Hero */}
       <Heading2 className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
-        Zero to Agents
+        Zero to Agent
       </Heading2>
       <Paragraph className="text-muted-foreground">
         El evento más importante de inteligencia artificial de Tucumán en lo que va del año.
