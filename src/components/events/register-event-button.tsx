@@ -85,11 +85,7 @@ export function RegisterEventButton({
       onClick={handleClick}
       disabled={!externalUrl && (buttonIsLoading || !capacityAvailable)}
     >
-      {externalUrl ? (
-        <ExternalLink className="h-4 w-4" />
-      ) : (
-        <UserPlus className="h-4 w-4" />
-      )}
+      {externalUrl ? <ExternalLink className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
       {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : 'Inscribirme al evento'}
     </Button>
   );
