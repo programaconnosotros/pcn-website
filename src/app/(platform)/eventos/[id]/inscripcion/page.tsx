@@ -1,20 +1,26 @@
 import { redirect } from 'next/navigation';
+import prisma from '@/lib/prisma';
 
 type Props = {
   params: { id: string };
   searchParams: Promise<{ autoRegister?: string }>;
 };
 
-/**
- * Esta página ahora solo redirige a la página de detalle del evento.
- * La inscripción se maneja directamente desde la página de detalle.
- */
 const EventRegistrationPage = async ({ params, searchParams }: Props) => {
   const id = params.id;
+
+  const event = await prisma.event.findUnique({
+    where: { id },
+    select: { externalRegistrationUrl: true },
+  });
+
+  if (event?.externalRegistrationUrl) {
+    redirect(event.externalRegistrationUrl);
+  }
+
   const params_await = await searchParams;
   const autoRegister = params_await.autoRegister === 'true';
 
-  // Redirigir a la página de detalle del evento con el parámetro autoRegister si corresponde
   if (autoRegister) {
     redirect(`/eventos/${id}?autoRegister=true`);
   } else {

@@ -153,10 +153,12 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   const eventEndDate = event.endDate || event.date;
   const hasEventPassed = new Date(eventEndDate) < now;
 
+  const isExternalEvent = !!event.externalRegistrationUrl;
+
   // Verificar si el usuario ya está registrado (solo inscripciones activas)
   let isRegistered = false;
   let registrationId: string | null = null;
-  if (userId) {
+  if (userId && !isExternalEvent) {
     const registration = await prisma.eventRegistration.findFirst({
       where: {
         eventId: id,
@@ -172,7 +174,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
   // Obtener información del cupo
   let capacityInfo = null;
-  if (event.capacity !== null) {
+  if (event.capacity !== null && !isExternalEvent) {
     const currentRegistrations = await prisma.eventRegistration.count({
       where: {
         eventId: id,
@@ -186,7 +188,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }
 
-  // Obtener inscripciones si el usuario es admin
+  // Obtener inscripciones si el usuario es admin (solo para eventos con inscripción interna)
   let registrations: Array<{
     id: string;
     userId: string;
@@ -198,7 +200,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }> = [];
 
-  if (isAdmin) {
+  if (isAdmin && !isExternalEvent) {
     registrations = await prisma.eventRegistration.findMany({
       where: {
         eventId: id,
@@ -297,8 +299,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                 </Card>
               )}
 
-              {/* Link a página de inscripciones (solo para admins) */}
-              {isAdmin && (
+              {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
+              {isAdmin && !isExternalEvent && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -349,6 +351,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         registrationId={registrationId}
                         capacityAvailable={capacityInfo?.available ?? true}
                         capacityInfo={capacityInfo}
+                        externalRegistrationUrl={event.externalRegistrationUrl}
                       />
                     </Suspense>
                   </CardContent>
