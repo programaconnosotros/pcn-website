@@ -15,7 +15,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Paragraph } from '@/components/ui/paragraph';
-import { Calendar, MapPin, Users, Check, Crown, Medal, Award, MessageSquare } from 'lucide-react';
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Check,
+  Crown,
+  Medal,
+  Award,
+  MessageSquare,
+  ExternalLink,
+} from 'lucide-react';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -44,16 +54,19 @@ export const metadata: Metadata = {
 const organizers = [
   {
     name: 'Vercel',
+    url: 'https://vercel.com',
     description:
       'Empresa de infraestructura de software muy apreciada mundialmente por la facilidad que ofrece para desarrollar software y las herramientas de vanguardia con inteligencia artificial como foco principal.',
   },
   {
     name: 'programaConNosotros',
+    url: 'https://programaConNosotros.com',
     description:
       'Comunidad sin fines de lucro de apasionados por el software, radicada en Tucumán, cuyo propósito es elevar la calidad técnica de la industria del software mediante eventos y recursos que faciliten descubrir oportunidades, compartir experiencias y conocimientos.',
   },
   {
     name: 'Xetro',
+    url: 'https://xetro.ai',
     description:
       'Empresa de software B2B que permite optimizar los procesos de venta utilizando inteligencia artificial para aumentar ganancias, bajar los costos y mejorar la experiencia de los clientes.',
   },
@@ -186,6 +199,17 @@ const ZeroToAgentSponsors = () => (
               <p className="break-words text-sm leading-6 text-muted-foreground">
                 {org.description}
               </p>
+              <Link
+                href={org.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block"
+              >
+                <Button variant="outline" size="sm">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Visitar sitio web
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ))}
