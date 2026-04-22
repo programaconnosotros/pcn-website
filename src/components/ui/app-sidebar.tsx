@@ -3,9 +3,7 @@
 import {
   AlertTriangle,
   Bell,
-  Book,
   CalendarDays,
-  Code,
   Code2,
   Eye,
   Handshake,
@@ -13,18 +11,16 @@ import {
   Home,
   Image,
   Instagram,
-  Laptop,
   LayoutDashboard,
+  Library,
   LifeBuoy,
   Linkedin,
   Megaphone,
   MicVocal,
-  Music,
   Podcast,
   ScrollText,
   Send,
   Share2,
-  SquareMousePointer,
   Users,
   Youtube,
 } from 'lucide-react';
@@ -104,58 +100,14 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
   ];
 };
 
-const getInfoGeneralItems = () => {
-  return [
-    {
-      title: 'Especialidades',
-      url: '/especialidades',
-      icon: Code,
-    },
-    {
-      title: 'Influencers',
-      url: '/influencers',
-      icon: Users,
-    },
-    {
-      title: 'Lectura',
-      url: '/lectura',
-      icon: Book,
-    },
-    {
-      title: 'Cursos',
-      url: '/cursos',
-      icon: Laptop,
-      items: [
-        {
-          title: 'Vim',
-          url: '/cursos/vim',
-        },
-        {
-          title: 'LaTeX',
-          url: '/cursos/latex',
-        },
-        {
-          title: 'Git & GitHub',
-          url: '/cursos/git-and-github',
-        },
-        {
-          title: 'Ver todos',
-          url: '/cursos',
-        },
-      ],
-    },
-    {
-      title: 'Software útil',
-      url: '/software-util',
-      icon: SquareMousePointer,
-    },
-    {
-      title: 'Música',
-      url: '/music',
-      icon: Music,
-    },
-  ];
-};
+const getRecursosSubItems = () => [
+  { title: 'Especialidades', url: '/especialidades' },
+  { title: 'Influencers', url: '/influencers' },
+  { title: 'Lectura', url: '/lectura' },
+  { title: 'Cursos', url: '/cursos' },
+  { title: 'Software útil', url: '/software-util' },
+  { title: 'Música', url: '/music' },
+];
 
 const socialNetworks = [
   {
@@ -216,6 +168,11 @@ const getComunidadItems = () => {
       title: 'Redes',
       icon: Share2,
       items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
+    },
+    {
+      title: 'Recursos',
+      icon: Library,
+      items: getRecursosSubItems(),
     },
   ];
 };
@@ -298,7 +255,6 @@ export function AppSidebar(props: AppSidebarProps) {
         <NavMain items={getHomeItem()} />
         <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
         <NavMain items={getComunidadItems()} label="Comunidad" />
-        <NavMain items={getInfoGeneralItems()} label="Info General" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
