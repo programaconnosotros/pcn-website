@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, SquareAsterisk, UserPlus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
@@ -25,7 +25,7 @@ const formSchema = z.object({
   password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
 });
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resolvedTheme } = useTheme();
@@ -190,5 +190,13 @@ export default function SignInPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInContent />
+    </Suspense>
   );
 }

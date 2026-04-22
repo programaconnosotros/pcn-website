@@ -36,7 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 import * as z from 'zod';
@@ -68,7 +68,7 @@ const COUNTRIES = [
   'Otro',
 ];
 
-export default function SignUpPage() {
+function SignUpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resolvedTheme } = useTheme();
@@ -477,5 +477,13 @@ export default function SignUpPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpContent />
+    </Suspense>
   );
 }

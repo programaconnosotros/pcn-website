@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Loader2, ShieldCheck, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -28,7 +28,7 @@ const codeSchema = z.object({
     .regex(/^\d+$/, 'El código solo puede contener números'),
 });
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -240,5 +240,13 @@ export default function VerifyEmailPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
