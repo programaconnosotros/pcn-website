@@ -181,7 +181,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
 
   if (logs.length === 0) {
     return (
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
         <CardContent className="pt-6">
           <div className="py-8 text-center">
             <Info className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
@@ -393,7 +393,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.info.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -461,7 +461,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.debug.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">

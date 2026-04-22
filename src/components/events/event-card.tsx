@@ -31,7 +31,7 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
   return (
     <Link href={`/eventos/${event.id}`}>
-      <Card className="flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
+      <Card className="flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
         {event.flyerSrc && (
           <div className="relative aspect-square w-full shrink-0 overflow-hidden">
             <img
