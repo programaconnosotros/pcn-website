@@ -249,8 +249,7 @@ const ZeroToAgentSponsors = () => (
           return (
             <Card
               key={tier.name}
-              className="flex flex-col border-2 bg-gradient-to-br from-white to-gray-50 dark:from-black dark:to-neutral-950"
-              style={{ borderColor: tier.accent }}
+              className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-neutral-900 dark:from-black dark:to-neutral-950"
             >
               <CardContent className="flex flex-1 flex-col p-6">
                 {/* Tier header */}
