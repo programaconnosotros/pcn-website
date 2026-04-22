@@ -267,7 +267,7 @@ const ZeroToAgentSponsors = () => (
       </ul>
 
       {/* Niveles de sponsorship */}
-      <Heading3 className="mb-6 mt-10 text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
+      <Heading3 className="mb-6 mt-10 text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-white dark:drop-shadow-none">
         Niveles de sponsorship
       </Heading3>
       <div className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
