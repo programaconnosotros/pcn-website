@@ -20,24 +20,24 @@ import { Calendar, MapPin, Users, Check, Crown, Medal, Award, MessageSquare } fr
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Zero to Agent · Sponsors | programaConNosotros',
+  title: 'Sumate como sponsor · Zero to Agent | programaConNosotros',
   description:
-    'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán. Vercel, PCN y Xetro.',
+    'Sumate como sponsor a Zero to Agent, el evento de inteligencia artificial más importante de Tucumán. Organizado junto a Vercel y Xetro.',
   openGraph: {
-    title: 'Zero to Agent · Sponsors | programaConNosotros',
+    title: 'Sumate como sponsor · Zero to Agent | programaConNosotros',
     description:
-      'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Sumate como sponsor a Zero to Agent, el evento de inteligencia artificial más importante de Tucumán. Organizado junto a Vercel y Xetro.',
+    images: [`${SITE_URL}/zero-to-agent-card.png`],
     url: `${SITE_URL}/zero-to-agent-sponsors`,
     type: 'website',
     siteName: 'programaConNosotros',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zero to Agent · Sponsors | programaConNosotros',
+    title: 'Sumate como sponsor · Zero to Agent | programaConNosotros',
     description:
-      'Conocé los niveles de sponsorship para Zero to Agent, el evento más importante de inteligencia artificial de Tucumán.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Sumate como sponsor a Zero to Agent, el evento de inteligencia artificial más importante de Tucumán. Organizado junto a Vercel y Xetro.',
+    images: [`${SITE_URL}/zero-to-agent-card.png`],
   },
 };
 
