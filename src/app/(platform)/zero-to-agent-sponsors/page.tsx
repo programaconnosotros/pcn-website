@@ -182,7 +182,7 @@ const ZeroToAgentSponsors = () => (
 
       {/* Organizadores */}
       <Heading3 className="mb-6 mt-10">Organizadores</Heading3>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {organizers.map((org) => (
           <Card
             key={org.name}
@@ -192,7 +192,7 @@ const ZeroToAgentSponsors = () => (
               <h4 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white">
                 {org.name}
               </h4>
-              <p className="text-sm leading-6 text-muted-foreground">{org.description}</p>
+              <p className="break-words text-sm leading-6 text-muted-foreground">{org.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -243,13 +243,13 @@ const ZeroToAgentSponsors = () => (
       <Heading3 className="mb-6 mt-10 text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
         Niveles de sponsorship
       </Heading3>
-      <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {tiers.map((tier) => {
           const Icon = tier.icon;
           return (
             <Card
               key={tier.name}
-              className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-neutral-900 dark:from-black dark:to-neutral-950"
+              className="flex min-w-0 flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-neutral-900 dark:from-black dark:to-neutral-950"
             >
               <CardContent className="flex flex-1 flex-col p-6">
                 {/* Tier header */}
@@ -271,7 +271,7 @@ const ZeroToAgentSponsors = () => (
                         className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: tier.accent }}
                       />
-                      <span className="text-sm leading-5 text-muted-foreground">{benefit}</span>
+                      <span className="break-words text-sm leading-5 text-muted-foreground">{benefit}</span>
                     </li>
                   ))}
                 </ul>
