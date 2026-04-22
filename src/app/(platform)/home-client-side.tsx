@@ -179,32 +179,6 @@ const HomeClientSide = ({
 
         {recentlyAddedEventsSection}
 
-        <div className="z-10 mb-6 mt-4 flex justify-center md:-mt-12">
-          <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
-            <div
-              className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:opacity-15 dark:opacity-5"
-              style={{
-                backgroundImage: "url('/logo.webp')",
-                backgroundSize: 'contain',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                filter: 'grayscale(100%)',
-                transform: 'scale(1)',
-              }}
-            />
-            <div className="relative z-10 flex flex-col items-center">
-              <p className="text-center text-black dark:text-white">
-                Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí
-                para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad
-                es altamente inspirador y motivador para poder expandir nuestras capacidades, e
-                intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el
-                nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen
-                superarse todos los días.
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* <Testimonials /> */}
 
         {/* TODO: Agregar sección de Lightning Talks */}
