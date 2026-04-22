@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import {
@@ -156,6 +157,14 @@ const ZeroToAgentSponsors = () => (
 
     <div className="mt-4 px-4 md:px-20">
       {/* Hero */}
+      <Image
+        src="/zero-to-agent-card.png"
+        alt="Zero to Agent"
+        width={2400}
+        height={1256}
+        priority
+        className="mb-6 w-full rounded-lg"
+      />
       <Heading2 className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
         Zero to Agent
       </Heading2>
