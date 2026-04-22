@@ -322,13 +322,7 @@ const ZeroToAgentSponsors = () => (
       {/* Closing hero banner */}
       <div className="relative mt-10 min-h-[400px] w-full overflow-hidden rounded-lg bg-background md:h-[500px]">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/home.GIF"
-            alt=""
-            fill
-            className="object-cover"
-            unoptimized
-          />
+          <Image src="/home.GIF" alt="" fill className="object-cover" unoptimized />
         </div>
         <div className="absolute inset-0 z-0 bg-black/60" />
 
