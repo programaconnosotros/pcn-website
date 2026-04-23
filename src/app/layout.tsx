@@ -10,6 +10,7 @@ import './globals.css';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'programaConNosotros',
     template: '%s - PCN',
@@ -21,15 +22,15 @@ export const metadata: Metadata = {
     locale: 'es_AR',
     url: SITE_URL,
     siteName: 'programaConNosotros',
-    title: 'programaConNosotros (PCN)',
+    title: 'programaConNosotros',
     description: 'Comunidad de apasionados por la ingeniería de software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+    images: ['/pcn-link-preview.png'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'programaConNosotros (PCN)',
+    title: 'programaConNosotros',
     description: 'Comunidad de apasionados por la ingeniería de software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+    images: ['/pcn-link-preview.png'],
   },
 };
 
