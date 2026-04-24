@@ -7,7 +7,6 @@ export const Activities = () => (
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 lg:px-24">
         <div className="flex flex-col space-y-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt="Desarrollo open-source"
             className="aspect-video overflow-hidden rounded object-cover object-center"
@@ -25,7 +24,6 @@ export const Activities = () => (
         </div>
 
         <div className="flex flex-col space-y-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt="Lightning Talks"
             className="aspect-video overflow-hidden rounded object-cover object-center"
@@ -44,7 +42,6 @@ export const Activities = () => (
         </div>
 
         <div className="flex flex-col space-y-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt="Competencias de programación"
             className="aspect-video overflow-hidden rounded object-cover object-center"
@@ -62,7 +59,6 @@ export const Activities = () => (
         </div>
 
         <div className="flex flex-col space-y-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt="Reuniones"
             className="aspect-video overflow-hidden rounded object-cover object-center"

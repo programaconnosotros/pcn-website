@@ -45,7 +45,6 @@ const ReviewCard = ({ img, name, body }: { img: string; name: string; body: stri
       )}
     >
       <div className="flex flex-row items-center gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rounded-full" width="32" height="32" alt="" src={img} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>

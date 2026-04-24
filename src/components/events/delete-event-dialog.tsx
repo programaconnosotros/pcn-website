@@ -17,7 +17,7 @@ interface DeleteEventDialogProps {
   eventId: string;
   eventName: string;
   isOpen: boolean;
-  onOpenChange: (_isOpen: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 }
 
 export const DeleteEventDialog = ({

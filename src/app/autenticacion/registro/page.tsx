@@ -36,7 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 import * as z from 'zod';
@@ -68,7 +68,7 @@ const COUNTRIES = [
   'Otro',
 ];
 
-function SignUpContent() {
+export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resolvedTheme } = useTheme();
@@ -136,7 +136,6 @@ function SignUpContent() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[500px]">
         <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
             alt="Logo"
@@ -477,13 +476,5 @@ function SignUpContent() {
         </Link>
       </div>
     </div>
-  );
-}
-
-export default function SignUpPage() {
-  return (
-    <Suspense>
-      <SignUpContent />
-    </Suspense>
   );
 }

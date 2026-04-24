@@ -67,7 +67,7 @@ const COUNTRIES = [
 
 type LanguageDialogProps = {
   currentLanguage: string;
-  setCurrentLanguage: (_value: string) => void;
+  setCurrentLanguage: (value: string) => void;
   addLanguage: () => void;
 };
 
@@ -98,7 +98,6 @@ const LanguageDialog = ({
                 <SelectItem key={lang.id} value={lang.id}>
                   <div className="flex items-center gap-2">
                     <div className="relative h-5 w-5">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={lang.logo || '/placeholder.svg'}
                         alt={lang.name}
@@ -506,3 +505,12 @@ export const ProfileForm = ({
     </Form>
   );
 };
+
+function getBestTextColor(bgColor: string): 'black' | 'white' {
+  const hex = bgColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? 'black' : 'white';
+}

@@ -14,7 +14,7 @@ import {
 interface DeleteAdviseDialogProps {
   adviseId: string;
   isOpen: boolean;
-  onOpenChange: (_isOpen: boolean) => void;
+  onOpenChange: (isOpen: boolean) => void;
 }
 
 export const DeleteAdviseDialog = ({ adviseId, isOpen, onOpenChange }: DeleteAdviseDialogProps) => {

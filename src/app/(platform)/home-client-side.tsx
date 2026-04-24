@@ -3,6 +3,7 @@
 import { InviteDevsToWork } from '@/components/home/invite-devs-to-work';
 import { Heading2 } from '@/components/ui/heading-2';
 import { SponsorsSection } from '@components/home/sponsors-section';
+import { MotivationalQuotes } from '@components/home/motivational-quotes';
 import { Session, User } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Heading3 } from '@/components/ui/heading-3';
@@ -10,22 +11,28 @@ import { Paragraph } from '@/components/ui/paragraph';
 import {
   Book,
   Brain,
+  Briefcase,
+  Building2,
   Calendar,
   GraduationCap,
   Handshake,
   MessageCircle,
+  HelpCircle,
   Images,
   Laptop,
   Lightbulb,
+  Linkedin,
   LogIn,
   MapPin,
   MessageSquare,
   MicVocal,
   Podcast,
   Monitor,
+  MonitorPlay,
   Rocket,
   ScrollText,
   SquareMousePointer,
+  Star,
   UserPlus,
   Users,
 } from 'lucide-react';
@@ -35,9 +42,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { GlassCardHover } from '@/components/home/glass-card-hover';
 import { motion } from 'motion/react';
+import { FlickeringGrid } from '@/components/magicui/flickering-grid';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Quote } from 'lucide-react';
-import React from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type FeaturedTestimonial = {
   id: string;
@@ -53,11 +61,9 @@ type FeaturedTestimonial = {
 const HomeClientSide = ({
   session,
   featuredTestimonials,
-  recentlyAddedEventsSection,
 }: {
   session: (Session & { user: User }) | null;
   featuredTestimonials: FeaturedTestimonial[];
-  recentlyAddedEventsSection: React.ReactNode;
 }) => {
   return (
     <motion.div
@@ -128,7 +134,6 @@ const HomeClientSide = ({
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 py-6">
               <div className="flex flex-col items-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo.webp"
                   alt="programaConNosotros"
@@ -169,7 +174,31 @@ const HomeClientSide = ({
           </div>
         )}
 
-        {recentlyAddedEventsSection}
+        <div className="z-10 mb-6 mt-4 flex justify-center md:-mt-12">
+          <div className="group relative w-full max-w-4xl rounded-lg border-2 border-pcnPurple bg-[#e8e4f5] p-6 dark:border-pcnGreen/20 dark:bg-[linear-gradient(to_right,#012e24,#014a3a)]">
+            <div
+              className="dark:group-hover:opacity-8 absolute inset-0 opacity-10 transition-all duration-500 ease-out group-hover:opacity-15 dark:opacity-5"
+              style={{
+                backgroundImage: "url('/logo.webp')",
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                filter: 'grayscale(100%)',
+                transform: 'scale(1)',
+              }}
+            />
+            <div className="relative z-10 flex flex-col items-center">
+              <p className="text-center text-black dark:text-white">
+                Somos un grupo de personas apasionadas por el software que nos ayudamos entre sí
+                para llevar nuestras carreras al siguiente nivel. El ambiente de nuestra comunidad
+                es altamente inspirador y motivador para poder expandir nuestras capacidades, e
+                intentamos atraer a más personas como nosotros, sin importar de dónde sean ni el
+                nivel actual que tengan, siempre y cuando tengan pasión por el software y busquen
+                superarse todos los días.
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* <Testimonials /> */}
 
@@ -311,6 +340,12 @@ const HomeClientSide = ({
               Podés conocer personas apasionadas por el software de todo el mundo, de todas las
               áreas y de todos los niveles.
             </Paragraph>
+
+            <Link href="/usuarios" className="relative z-10">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Conocer a la comunidad
+              </Button>
+            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
@@ -327,6 +362,12 @@ const HomeClientSide = ({
               Podés encontrar mentores de primer nivel y también convertirte en uno para ayudar a
               muchas personas en su crecimiento profesional.
             </Paragraph>
+
+            <Link href="/mentores" className="relative z-10">
+              <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
+                Conocer mentores
+              </Button>
+            </Link>
           </div>
 
           <div className="group relative flex flex-col items-center p-6 transition-all duration-300">
@@ -525,7 +566,7 @@ const HomeClientSide = ({
               {featuredTestimonials.map((testimonial) => (
                 <Card
                   key={testimonial.id}
-                  className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+                  className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
                 >
                   <CardHeader>
                     <div className="flex items-center gap-2">
@@ -558,10 +599,9 @@ const HomeClientSide = ({
           <Link
             href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
             target="_blank"
-            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -575,10 +615,9 @@ const HomeClientSide = ({
           <Link
             href="https://discord.gg/dTQexKw56S"
             target="_blank"
-            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#5865F2]/10 dark:bg-[#5865F2]/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/discord.svg" alt="Discord" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -592,10 +631,9 @@ const HomeClientSide = ({
           <Link
             href="https://www.instagram.com/programaconnosotros/"
             target="_blank"
-            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E4405F]/10 dark:bg-[#E4405F]/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/instagram.svg" alt="Instagram" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -609,10 +647,9 @@ const HomeClientSide = ({
           <Link
             href="https://www.youtube.com/@programaconnosotros2689/videos"
             target="_blank"
-            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#FF0000]/10 dark:bg-[#FF0000]/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/youtube.svg" alt="YouTube" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -626,10 +663,9 @@ const HomeClientSide = ({
           <Link
             href="https://www.linkedin.com/company/programaconnosotros"
             target="_blank"
-            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="group relative flex h-full items-center gap-4 rounded-lg border border-neutral-200 bg-gradient-to-br from-white to-gray-50 p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-lg dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#0077B5]/10 dark:bg-[#0077B5]/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/social-networks/linkedin.svg" alt="LinkedIn" className="h-8 w-8" />
             </div>
             <div className="flex-1">
@@ -641,35 +677,6 @@ const HomeClientSide = ({
           </Link>
         </div>
 
-        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 md:p-12">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="mb-2 flex items-center justify-center gap-4">
-                <GraduationCap
-                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
-                  strokeWidth={1.5}
-                />
-                <MapPin className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-                <Rocket className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-              </div>
-              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
-                ¿Querés ser referente de PCN en tu ciudad o universidad?
-              </Heading2>
-              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
-                Si compartís los valores de PCN y en tu universidad o ciudad aún no hay muchos
-                miembros, podemos armar un plan para que la comunidad crezca ahí y que seas un
-                referente.
-              </Paragraph>
-              <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
-                  <MessageSquare className="h-4 w-4" />
-                  Contactanos
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
         <InviteDevsToWork />
 
         <div className="flex items-center justify-center p-6">
@@ -679,7 +686,7 @@ const HomeClientSide = ({
         </div>
 
         <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 md:p-12">
+          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
             <div className="flex flex-col items-center gap-4 text-center">
               <div className="mb-2 flex items-center justify-center gap-4">
                 <Lightbulb

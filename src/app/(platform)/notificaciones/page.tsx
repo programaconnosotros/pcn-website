@@ -12,9 +12,35 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Bell, Check, CheckCheck } from 'lucide-react';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
+
+const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat('es-AR', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+};
+
+const formatRelativeTime = (date: Date) => {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'hace menos de un minuto';
+  if (minutes < 60) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+  if (hours < 24) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
+  return `hace ${days} día${days > 1 ? 's' : ''}`;
+};
 
 const NotificacionesPage = async () => {
   const sessionId = cookies().get('sessionId')?.value;

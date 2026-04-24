@@ -1,0 +1,25 @@
+{
+  "name": "programaConNosotros",
+  "short_name": "PCN",
+  "description": "Comunidad de apasionados por la ingeniería de software.",
+  "categories": ["education", "developer tools"],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/pcn-purple.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

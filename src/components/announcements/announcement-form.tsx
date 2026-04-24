@@ -36,7 +36,7 @@ interface EventOption {
 interface AnnouncementFormProps {
   defaultValues?: Partial<Announcement>;
   events?: EventOption[];
-  onSubmit: (_data: AnnouncementFormData) => Promise<void>;
+  onSubmit: (data: AnnouncementFormData) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
   submitLabel?: string;

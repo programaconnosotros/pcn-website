@@ -63,7 +63,7 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-    const _previousLikes = [...optimisticLikes];
+    const previousLikes = [...optimisticLikes];
 
     try {
       // Optimistically update the UI
@@ -118,7 +118,7 @@ export const AdviseCard = ({
   return (
     <Card
       key={advise.id}
-      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
     >
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}

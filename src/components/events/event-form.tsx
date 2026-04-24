@@ -14,17 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Calendar,
-  MapPin,
-  Building2,
-  Save,
-  Plus,
-  Trash2,
-  Users,
-  Loader2,
-  ExternalLink,
-} from 'lucide-react';
+import { Calendar, MapPin, Building2, Save, Plus, Trash2, Users, Loader2 } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -32,7 +22,7 @@ import { useState } from 'react';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
-  onSubmit: (_values: EventFormData) => Promise<void>;
+  onSubmit: (values: EventFormData) => Promise<void>;
   submitLabel?: string;
   cancelHref?: string;
 };
@@ -58,7 +48,6 @@ export function EventForm({
       longitude: defaultValues?.longitude || '',
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
-      externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
     },
   });
 
@@ -295,33 +284,6 @@ export function EventForm({
                 <FormDescription>
                   Número máximo de personas que pueden inscribirse al evento. Dejar vacío para cupo
                   ilimitado.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* URL de inscripción externa */}
-          <FormField
-            control={form.control}
-            name="externalRegistrationUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <ExternalLink className="mr-2 inline h-4 w-4" />
-                  URL de inscripción externa (opcional)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="url"
-                    placeholder="https://lu.ma/mi-evento"
-                    {...field}
-                    value={field.value || ''}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Si se completa, el botón de inscripción redirigirá a esta URL (por ejemplo, un
-                  evento de Luma) en lugar de usar el sistema interno.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

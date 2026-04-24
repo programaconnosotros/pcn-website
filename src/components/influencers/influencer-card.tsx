@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ExternalLink, Github, Globe, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { ExternalLink, Github, Globe, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -51,7 +51,7 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
     : `/influencers/${influencer.image}`;
 
   return (
-    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.015] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.015] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
       <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2">
         <div className="flex items-start gap-3">
           <Avatar className="h-12 w-12">

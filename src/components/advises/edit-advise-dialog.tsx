@@ -16,7 +16,7 @@ interface EditAdviseDialogProps {
   adviseId: string;
   initialContent: string;
   isOpen: boolean;
-  onOpenChange: (_open: boolean) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const EditAdviseDialog = ({

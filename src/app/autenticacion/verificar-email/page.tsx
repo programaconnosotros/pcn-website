@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Loader2, ShieldCheck, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -28,7 +28,7 @@ const codeSchema = z.object({
     .regex(/^\d+$/, 'El código solo puede contener números'),
 });
 
-function VerifyEmailContent() {
+export default function VerifyEmailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -136,7 +136,6 @@ function VerifyEmailContent() {
       <div className="container flex min-h-screen items-center justify-center py-12">
         <div className="w-full max-w-[425px] text-center">
           <div className="flex flex-col items-center gap-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.webp" alt="Logo" className="w-10" />
             <h1 className="text-2xl font-semibold tracking-tight">Verificación de email</h1>
             <p className="text-muted-foreground">No se especificó un email para verificar.</p>
@@ -153,7 +152,6 @@ function VerifyEmailContent() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
           <div className="space-y-2 text-center">
@@ -240,13 +238,5 @@ function VerifyEmailContent() {
         </Link>
       </div>
     </div>
-  );
-}
-
-export default function VerifyEmailPage() {
-  return (
-    <Suspense>
-      <VerifyEmailContent />
-    </Suspense>
   );
 }

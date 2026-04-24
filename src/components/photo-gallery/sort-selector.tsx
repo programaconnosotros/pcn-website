@@ -13,7 +13,7 @@ export type SortOrder = 'default' | 'date-asc' | 'date-desc';
 
 interface SortSelectorProps {
   sortOrder: SortOrder;
-  onSortChange: (_order: SortOrder) => void;
+  onSortChange: (order: SortOrder) => void;
   className?: string;
 }
 

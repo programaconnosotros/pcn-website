@@ -56,7 +56,6 @@ export const PlatformFeaturesLarge = () => (
       </div>
 
       <div className="-ml-12 -mt-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt=""
           src="/discord-demo.webp"

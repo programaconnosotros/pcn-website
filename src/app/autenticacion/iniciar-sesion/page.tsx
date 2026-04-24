@@ -1,5 +1,6 @@
 'use client';
 import { signIn } from '@/actions/auth/sign-in';
+import { sendVerificationCode } from '@/actions/auth/send-verification-code';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -14,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, LogIn, SquareAsterisk, UserPlus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
@@ -25,7 +26,7 @@ const formSchema = z.object({
   password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
 });
 
-function SignInContent() {
+export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resolvedTheme } = useTheme();
@@ -96,7 +97,6 @@ function SignInContent() {
     <div className="container flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-[425px]">
         <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
             alt="Logo"
@@ -190,13 +190,5 @@ function SignInContent() {
         </Link>
       </div>
     </div>
-  );
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense>
-      <SignInContent />
-    </Suspense>
   );
 }
