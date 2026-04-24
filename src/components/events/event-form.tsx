@@ -69,10 +69,16 @@ export function EventForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const toUtcIso = (local: string) => (local ? new Date(local).toISOString() : '');
+
   const handleSubmit = async (values: EventFormData) => {
     setIsSubmitting(true);
     try {
-      await onSubmit(values);
+      await onSubmit({
+        ...values,
+        date: toUtcIso(values.date),
+        endDate: values.endDate ? toUtcIso(values.endDate) : '',
+      });
     } finally {
       setIsSubmitting(false);
     }

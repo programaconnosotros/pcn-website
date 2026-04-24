@@ -16,7 +16,6 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
-import { EventFormData } from '@/schemas/event-schema';
 import { EditEventForm } from '@/components/events/edit-event-form';
 import { DeleteEventButton } from '@/components/events/delete-event-button';
 
@@ -48,23 +47,11 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
     redirect('/eventos');
   }
 
-  // Convertir las fechas a formato datetime-local
-  const formatDateForInput = (date: Date | null): string => {
-    if (!date) return '';
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
-
-  const defaultValues: EventFormData = {
+  const defaultValues = {
     name: event.name,
     description: event.description,
-    date: formatDateForInput(event.date),
-    endDate: event.endDate ? formatDateForInput(event.endDate) : '',
+    date: event.date.toISOString(),
+    endDate: event.endDate?.toISOString() ?? '',
     city: event.city,
     address: event.address,
     placeName: event.placeName,
