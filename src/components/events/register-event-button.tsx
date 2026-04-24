@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { UserPlus, ExternalLink } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -14,7 +14,6 @@ type RegisterEventButtonProps = {
   capacityAvailable: boolean;
   onSuccess?: () => void;
   isLoading?: boolean;
-  externalUrl?: string;
 };
 
 export function RegisterEventButton({
@@ -23,17 +22,11 @@ export function RegisterEventButton({
   capacityAvailable,
   onSuccess,
   isLoading = false,
-  externalUrl,
 }: RegisterEventButtonProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClick = async () => {
-    if (externalUrl) {
-      window.open(externalUrl, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
     // Si no está autenticado, redirigir a login con autoRegister
     if (!isAuthenticated) {
       router.push(`/autenticacion/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`);
@@ -83,10 +76,10 @@ export function RegisterEventButton({
       variant="pcn"
       className="flex w-full items-center gap-2"
       onClick={handleClick}
-      disabled={!externalUrl && (buttonIsLoading || !capacityAvailable)}
+      disabled={buttonIsLoading || !capacityAvailable}
     >
-      {externalUrl ? <ExternalLink className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : 'Inscribirme al evento'}
+      <UserPlus className="h-4 w-4" />
+      {buttonIsLoading ? 'Inscribiéndote...' : 'Inscribirme al evento'}
     </Button>
   );
 }

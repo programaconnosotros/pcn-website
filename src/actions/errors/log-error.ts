@@ -3,6 +3,13 @@
 import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
 
+type ErrorLogData = {
+  message: string;
+  stack?: string;
+  path?: string;
+  metadata?: Record<string, any>;
+};
+
 /**
  * Log error from server-side code
  */

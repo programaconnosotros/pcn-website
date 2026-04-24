@@ -10,7 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -72,7 +72,6 @@ const EditEventPage = async ({ params }: { params: { id: string } }) => {
     latitude: event.latitude?.toString() || '',
     longitude: event.longitude?.toString() || '',
     capacity: event.capacity?.toString() || '',
-    externalRegistrationUrl: event.externalRegistrationUrl ?? '',
     sponsors:
       event.sponsors?.map((sponsor) => ({
         name: sponsor.name,

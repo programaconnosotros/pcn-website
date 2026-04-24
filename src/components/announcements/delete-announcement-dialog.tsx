@@ -19,7 +19,7 @@ interface DeleteAnnouncementDialogProps {
   announcementId: string;
   announcementTitle: string;
   open: boolean;
-  onOpenChange: (_open: boolean) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function DeleteAnnouncementDialog({

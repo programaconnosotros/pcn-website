@@ -73,13 +73,6 @@ export const eventSchema = z.object({
     )
     .optional()
     .default([]),
-  externalRegistrationUrl: z
-    .string()
-    .optional()
-    .refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
-      message: 'Debe ser una URL válida',
-    })
-    .transform((val) => (val === '' ? undefined : val)),
   capacity: z.preprocess(
     (val) => {
       // Convertir number o null a string para el formulario

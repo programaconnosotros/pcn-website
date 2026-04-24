@@ -207,7 +207,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-4">
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardHeader className="flex flex-col items-center gap-4 pb-6">
                   <Avatar className="h-32 w-32">
                     <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
@@ -441,13 +441,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     {userTalks.map((talk, index) => (
                       <Card
                         key={index}
-                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
                       >
                         <CardContent className="p-6">
                           <div className="flex flex-col gap-4 md:flex-row">
                             {talk.portrait && (
                               <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={talk.portrait}
                                   alt={talk.speakerName}

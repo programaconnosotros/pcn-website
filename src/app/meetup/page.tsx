@@ -3,8 +3,6 @@ import prisma from '@/lib/prisma';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
-
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export async function generateMetadata(): Promise<Metadata> {

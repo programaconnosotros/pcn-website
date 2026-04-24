@@ -9,11 +9,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
-import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -74,17 +75,14 @@ const Home = async () => {
         </div>
         <div className="px-4">
           <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-            <Button variant="default" size="sm" className="text-sm">
+            <Button variant="outline" size="sm" className="text-sm hover:!bg-black">
               Unirme en WhatsApp
+              <img src="/social-networks/whatsapp.svg" alt="WhatsApp" className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
       </header>
-      <HomeClientSide
-        session={session}
-        featuredTestimonials={featuredTestimonials}
-        recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
-      />
+      <HomeClientSide session={session} featuredTestimonials={featuredTestimonials} />
     </>
   );
 };

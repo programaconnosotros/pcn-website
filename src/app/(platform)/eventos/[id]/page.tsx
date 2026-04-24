@@ -1,3 +1,5 @@
+'use server';
+
 import { Suspense } from 'react';
 import {
   Breadcrumb,
@@ -29,57 +31,49 @@ type EventWithImages = Event & {
   sponsors: Sponsor[];
 };
 
-function normalizeDescription(text: string): string {
-  return text
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const event = await fetchEvent(params.id);
 
   if (!event) {
     return {
-      title: 'Evento no encontrado',
+      title: 'Evento no encontrado (PCN)',
       description: 'El evento que buscas no existe o ha sido eliminado.',
     };
   }
 
-  const dateLabel = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long' }).format(
-    new Date(event.date),
-  );
-  const locationParts = [event.city, event.placeName].filter(Boolean);
-  const contextSuffix = [
-    `📅 ${dateLabel}`,
-    locationParts.length > 0 ? `📍 ${locationParts.join(', ')}` : '',
-  ]
-    .filter(Boolean)
-    .join(' · ');
-
-  const normalizedDesc = normalizeDescription(event.description);
-  const fullDesc = [normalizedDesc, contextSuffix].filter(Boolean).join(' · ');
-  const description = fullDesc.length > 160 ? fullDesc.substring(0, 157) + '…' : fullDesc;
-
-  const image = event.flyerSrc || event.images[0]?.imgSrc || '/pcn-link-preview.png';
-  const url = `/eventos/${event.id}`;
+  const imageUrl =
+    event.flyerSrc ||
+    (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+  const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
+  const pageUrl = `${SITE_URL}/eventos/${event.id}`;
 
   return {
-    title: event.name,
-    description,
+    title: `${event.name} (PCN)`,
+    description:
+      event.description.length > 160
+        ? event.description.substring(0, 157) + '...'
+        : event.description,
     openGraph: {
-      title: event.name,
-      description,
-      images: [image],
-      url,
+      title: `${event.name} (PCN)`,
+      description:
+        event.description.length > 160
+          ? event.description.substring(0, 157) + '...'
+          : event.description,
+      images: [absoluteImageUrl],
+      url: pageUrl,
       type: 'website',
       siteName: 'programaConNosotros',
     },
     twitter: {
       card: 'summary_large_image',
-      title: event.name,
-      description,
-      images: [image],
+      title: `${event.name} (PCN)`,
+      description:
+        event.description.length > 160
+          ? event.description.substring(0, 157) + '...'
+          : event.description,
+      images: [absoluteImageUrl],
     },
   };
 }
@@ -159,12 +153,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
   const eventEndDate = event.endDate || event.date;
   const hasEventPassed = new Date(eventEndDate) < now;
 
-  const isExternalEvent = !!event.externalRegistrationUrl;
-
   // Verificar si el usuario ya está registrado (solo inscripciones activas)
   let isRegistered = false;
   let registrationId: string | null = null;
-  if (userId && !isExternalEvent) {
+  if (userId) {
     const registration = await prisma.eventRegistration.findFirst({
       where: {
         eventId: id,
@@ -180,7 +172,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
   // Obtener información del cupo
   let capacityInfo = null;
-  if (event.capacity !== null && !isExternalEvent) {
+  if (event.capacity !== null) {
     const currentRegistrations = await prisma.eventRegistration.count({
       where: {
         eventId: id,
@@ -194,7 +186,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }
 
-  // Obtener inscripciones si el usuario es admin (solo para eventos con inscripción interna)
+  // Obtener inscripciones si el usuario es admin
   let registrations: Array<{
     id: string;
     userId: string;
@@ -206,7 +198,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }> = [];
 
-  if (isAdmin && !isExternalEvent) {
+  if (isAdmin) {
     registrations = await prisma.eventRegistration.findMany({
       where: {
         eventId: id,
@@ -270,9 +262,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
             <div className="flex flex-1 flex-col gap-5">
               {/* Flyer del evento */}
               {event.flyerSrc && (
-                <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <div className="relative w-full overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={event.flyerSrc}
                       alt={`Flyer de ${event.name}`}
@@ -284,7 +275,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Descripción */}
               {event.description && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle>Descripción</CardTitle>
                   </CardHeader>
@@ -296,7 +287,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Fotos */}
               {event.images && event.images.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle>Fotos del evento</CardTitle>
                   </CardHeader>
@@ -306,9 +297,9 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                 </Card>
               )}
 
-              {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
-              {isAdmin && !isExternalEvent && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              {/* Link a página de inscripciones (solo para admins) */}
+              {isAdmin && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5" />
@@ -341,7 +332,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
             <div className="flex w-full flex-col gap-5 xl:w-80">
               {/* Botón de registro */}
               {!hasEventPassed && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardContent className="pt-6">
                     <Suspense
                       fallback={
@@ -358,7 +349,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         registrationId={registrationId}
                         capacityAvailable={capacityInfo?.available ?? true}
                         capacityInfo={capacityInfo}
-                        externalRegistrationUrl={event.externalRegistrationUrl}
                       />
                     </Suspense>
                   </CardContent>
@@ -371,7 +361,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
               )}
 
               {/* Información del evento */}
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                 <CardHeader>
                   <CardTitle>Información</CardTitle>
                 </CardHeader>
@@ -408,7 +398,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Sponsors */}
               {event.sponsors && event.sponsors.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle>Sponsors</CardTitle>
                   </CardHeader>
@@ -438,7 +428,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
 
               {/* Mapa */}
               {event.latitude && event.longitude && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
                   <CardHeader>
                     <CardTitle>Mapa</CardTitle>
                   </CardHeader>

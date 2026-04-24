@@ -1,3 +1,6 @@
+import { cookies } from 'next/headers';
+import prisma from '@/lib/prisma';
+import { Session, User } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
@@ -18,6 +21,20 @@ import {
 } from '@/components/ui/accordion';
 
 const FAQPage = async () => {
+  const sessionId = cookies().get('sessionId')?.value;
+  let session: (Session & { user: User }) | null = null;
+
+  if (sessionId) {
+    session = await prisma.session.findUnique({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
   const faqs = [
     {
       question: '¿Qué es programaConNosotros?',
@@ -96,6 +113,9 @@ const FAQPage = async () => {
           </div>
 
           <div className="mb-14 max-w-3xl">
+            <p className="mb-6 text-center text-muted-foreground">
+              Encontrá respuestas a las preguntas más comunes sobre nuestra comunidad
+            </p>
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>

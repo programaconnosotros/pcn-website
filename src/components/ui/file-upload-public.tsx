@@ -9,7 +9,7 @@ import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public
 
 type FileUploadPublicProps = {
   value?: string;
-  onChange: (_url: string) => void;
+  onChange: (url: string) => void;
   accept?: string;
   maxSize?: number; // en bytes
   className?: string;
@@ -38,7 +38,6 @@ export function FileUploadPublic({
     if (value && value !== preview) {
       setPreview(value);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +116,6 @@ export function FileUploadPublic({
       {preview ? (
         <div className="relative inline-block">
           <div className="relative h-32 w-32 overflow-hidden rounded-xl border bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
               <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">

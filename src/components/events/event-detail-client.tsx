@@ -20,7 +20,6 @@ type Props = {
     capacity: number;
     available: boolean;
   } | null;
-  externalRegistrationUrl?: string | null;
 };
 
 export function EventDetailClient({
@@ -31,7 +30,6 @@ export function EventDetailClient({
   registrationId,
   capacityAvailable,
   capacityInfo,
-  externalRegistrationUrl,
 }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -64,8 +62,7 @@ export function EventDetailClient({
       isAuthenticated &&
       !isRegistered &&
       !hasAutoRegistered &&
-      capacityAvailable &&
-      !externalRegistrationUrl
+      capacityAvailable
     ) {
       const performAutoRegister = async () => {
         setHasAutoRegistered(true);
@@ -98,7 +95,6 @@ export function EventDetailClient({
     hasAutoRegistered,
     eventId,
     capacityAvailable,
-    externalRegistrationUrl,
     router,
   ]);
 
@@ -119,17 +115,6 @@ export function EventDetailClient({
   };
 
   // Renderizar según el estado
-  if (externalRegistrationUrl) {
-    return (
-      <RegisterEventButton
-        eventId={eventId}
-        isAuthenticated={isAuthenticated}
-        capacityAvailable={true}
-        externalUrl={externalRegistrationUrl}
-      />
-    );
-  }
-
   if (isRegistered) {
     return (
       <>

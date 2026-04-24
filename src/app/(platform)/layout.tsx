@@ -1,5 +1,6 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
+import { PlatformHeader } from '@/components/ui/platform-header';
 import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';

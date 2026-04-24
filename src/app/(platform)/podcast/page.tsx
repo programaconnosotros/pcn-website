@@ -1,3 +1,6 @@
+import { cookies } from 'next/headers';
+import prisma from '@/lib/prisma';
+import { Session, User } from '@prisma/client';
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
@@ -34,6 +37,20 @@ export const metadata: Metadata = {
 };
 
 const PodcastPage = async () => {
+  const sessionId = cookies().get('sessionId')?.value;
+  let session: (Session & { user: User }) | null = null;
+
+  if (sessionId) {
+    session = await prisma.session.findUnique({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2">

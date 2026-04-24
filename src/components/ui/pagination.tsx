@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (_page: number) => void;
+  onPageChange: (page: number) => void;
   className?: string;
 }
 

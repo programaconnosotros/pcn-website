@@ -13,7 +13,6 @@ export const DiscordCard = () => (
       lleva tu carrera al siguiente nivel!
     </p>
 
-    {/* eslint-disable-next-line @next/next/no-img-element */}
     <img alt="Discord" src="/discord-demo.webp" className="w-full object-cover" />
 
     <div className="flex w-full justify-center">

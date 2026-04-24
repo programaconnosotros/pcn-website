@@ -1,7 +1,6 @@
 'use server';
 
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Event } from '@prisma/client';
 import { Calendar, MapPin } from 'lucide-react';
@@ -23,18 +22,11 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     });
   };
 
-  const now = new Date();
-  const start = new Date(event.date);
-  const end = event.endDate ? new Date(event.endDate) : start;
-  const status: 'upcoming' | 'in-progress' | 'ended' =
-    now < start ? 'upcoming' : now <= end ? 'in-progress' : 'ended';
-
   return (
     <Link href={`/eventos/${event.id}`}>
-      <Card className="flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+      <Card className="flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
         {event.flyerSrc && (
           <div className="relative aspect-square w-full shrink-0 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={event.flyerSrc}
               alt={`Flyer de ${event.name}`}
@@ -45,10 +37,7 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
         <div className="flex flex-1 flex-col">
           <CardHeader>
-            <CardTitle className="flex items-start justify-between gap-2 text-lg">
-              <span>{event.name}</span>
-              {status !== 'ended' && <EventStatusBadge status={status} />}
-            </CardTitle>
+            <CardTitle className="text-lg">{event.name}</CardTitle>
           </CardHeader>
 
           <CardContent className="flex-1">
@@ -83,28 +72,5 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
         </div>
       </Card>
     </Link>
-  );
-};
-
-const EventStatusBadge: React.FC<{ status: 'upcoming' | 'in-progress' }> = ({ status }) => {
-  if (status === 'in-progress') {
-    return (
-      <Badge className="shrink-0 whitespace-nowrap border-transparent bg-red-500 text-white hover:bg-red-500">
-        <span className="relative mr-1.5 flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
-        </span>
-        En vivo
-      </Badge>
-    );
-  }
-
-  return (
-    <Badge
-      variant="outline"
-      className="shrink-0 animate-pulse whitespace-nowrap border-pcnPurple/40 text-pcnPurple dark:border-pcnGreen/40 dark:text-pcnGreen"
-    >
-      Inscripciones abiertas
-    </Badge>
   );
 };

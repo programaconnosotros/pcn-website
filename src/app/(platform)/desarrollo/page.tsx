@@ -128,7 +128,7 @@ const DesarrolloPage = () => (
         </p>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Terminal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
@@ -153,7 +153,7 @@ const DesarrolloPage = () => (
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <GitBranch className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
@@ -175,7 +175,7 @@ const DesarrolloPage = () => (
           </Card>
         </div>
 
-        <Card className="mt-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+        <Card className="mt-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />

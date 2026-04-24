@@ -3,25 +3,33 @@
 import {
   AlertTriangle,
   Bell,
+  Book,
   CalendarDays,
+  Code,
   Code2,
   Eye,
+  Handshake,
+  HelpCircle,
   Home,
   Image,
   Instagram,
+  Laptop,
   LayoutDashboard,
-  Library,
   LifeBuoy,
   Linkedin,
+  Megaphone,
   MicVocal,
+  Music,
   Podcast,
+  Quote,
   ScrollText,
   Send,
-  Share2,
+  SquareMousePointer,
   Users,
   Youtube,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
+import { NavProjects } from '@/components/ui/nav-projects';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -85,6 +93,11 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
       icon: MicVocal,
     },
     {
+      title: 'Consejos',
+      url: '/consejos',
+      icon: Handshake,
+    },
+    {
       title: 'Podcast',
       url: '/podcast',
       icon: Podcast,
@@ -97,48 +110,58 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
   ];
 };
 
-const getRecursosSubItems = () => [
-  { title: 'Especialidades', url: '/especialidades' },
-  { title: 'Influencers', url: '/influencers' },
-  { title: 'Lectura', url: '/lectura' },
-  { title: 'Cursos', url: '/cursos' },
-  { title: 'Software útil', url: '/software-util' },
-  { title: 'Música', url: '/music' },
-  { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
-];
-
-const socialNetworks = [
-  {
-    name: 'WhatsApp',
-    url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
-    icon: Send,
-  },
-  {
-    name: 'Discord',
-    url: 'https://discord.gg/dTQexKw56S',
-    icon: Send,
-  },
-  {
-    name: 'Instagram',
-    url: 'https://www.instagram.com/programa.con.nosotros/',
-    icon: Instagram,
-  },
-  // {
-  //   name: 'X',
-  //   url: 'https://x.com/programaconnos',
-  //   icon: X,
-  // },
-  {
-    name: 'YouTube',
-    url: 'https://www.youtube.com/@programaconnosotros2689/videos',
-    icon: Youtube,
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/company/programaconnosotros/',
-    icon: Linkedin,
-  },
-];
+const getInfoGeneralItems = () => {
+  return [
+    {
+      title: 'Especialidades',
+      url: '/especialidades',
+      icon: Code,
+    },
+    {
+      title: 'Influencers',
+      url: '/influencers',
+      icon: Users,
+    },
+    {
+      title: 'Lectura',
+      url: '/lectura',
+      icon: Book,
+    },
+    {
+      title: 'Cursos',
+      url: '/cursos',
+      icon: Laptop,
+      items: [
+        {
+          title: 'Vim',
+          url: '/cursos/vim',
+        },
+        {
+          title: 'LaTeX',
+          url: '/cursos/latex',
+        },
+        {
+          title: 'Git & GitHub',
+          url: '/cursos/git-and-github',
+        },
+        {
+          title: 'Ver todos',
+          url: '/cursos',
+        },
+      ],
+    },
+    {
+      title: 'Software útil',
+      url: '/software-util',
+      icon: SquareMousePointer,
+    },
+    {
+      title: 'Música',
+      url: '/music',
+      icon: Music,
+    },
+  ];
+};
 
 const getComunidadItems = () => {
   return [
@@ -153,14 +176,19 @@ const getComunidadItems = () => {
       icon: Image,
     },
     {
-      title: 'Redes',
-      icon: Share2,
-      items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
+      title: 'Anuncios',
+      url: '/anuncios',
+      icon: Megaphone,
     },
     {
-      title: 'Recursos',
-      icon: Library,
-      items: getRecursosSubItems(),
+      title: 'Preguntas frecuentes',
+      url: '/preguntas-frecuentes',
+      icon: HelpCircle,
+    },
+    {
+      title: 'Testimonios',
+      url: '/testimonios',
+      icon: Quote,
     },
   ];
 };
@@ -209,6 +237,38 @@ const data = {
       icon: Send,
     },
   ],
+  socialNetworks: [
+    {
+      name: 'WhatsApp',
+      url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
+      icon: Send,
+    },
+    {
+      name: 'Discord',
+      url: 'https://discord.gg/dTQexKw56S',
+      icon: Send,
+    },
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/programa.con.nosotros/',
+      icon: Instagram,
+    },
+    // {
+    //   name: 'X',
+    //   url: 'https://x.com/programaconnos',
+    //   icon: X,
+    // },
+    {
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@programaconnosotros2689/videos',
+      icon: Youtube,
+    },
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/company/programaconnosotros/',
+      icon: Linkedin,
+    },
+  ],
 };
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -221,14 +281,13 @@ export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="sidebar" {...sidebarProps}>
+    <Sidebar collapsible="offcanvas" variant="inset" {...sidebarProps}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
             <SidebarMenuButton size="lg" asChild>
               <a href="#" className="flex items-center gap-3">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.webp" alt="programaConNosotros" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -244,9 +303,11 @@ export function AppSidebar(props: AppSidebarProps) {
         <NavMain items={getHomeItem()} />
         <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
         <NavMain items={getComunidadItems()} label="Comunidad" />
+        <NavMain items={getInfoGeneralItems()} label="Info General" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
+        <NavProjects socialNetworks={data.socialNetworks} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

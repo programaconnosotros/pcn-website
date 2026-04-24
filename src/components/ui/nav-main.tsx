@@ -23,7 +23,7 @@ export function NavMain({
 }: {
   items: {
     title: string;
-    url?: string;
+    url: string;
     icon: LucideIcon;
     isActive?: boolean;
     badge?: number;
@@ -41,38 +41,29 @@ export function NavMain({
       {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
-          const isActive = item.url
-            ? pathname === item.url ||
-              (item.url === '/' ? false : item.url !== '/home' && pathname.startsWith(item.url))
-            : false;
+          const isActive =
+            pathname === item.url ||
+            (item.url === '/' ? false : item.url !== '/home' && pathname.startsWith(item.url));
           const hasActiveSubItem = item.items?.some((subItem) => pathname === subItem.url);
-          const isToggleOnly = !item.url && !!item.items?.length;
 
           return (
             <Collapsible key={item.title} asChild defaultOpen={isActive || hasActiveSubItem}>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  asChild={!isToggleOnly}
+                  asChild
                   tooltip={item.title}
                   data-active={isActive}
                   className={`transition-transform duration-200 hover:scale-[1.015] ${isActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen dark:[&_span]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)] dark:[&_svg]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]' : ''}`}
                 >
-                  {isToggleOnly ? (
-                    <CollapsibleTrigger className="flex w-full items-center gap-2">
-                      <item.icon className="size-4 shrink-0" />
-                      <span>{item.title}</span>
-                    </CollapsibleTrigger>
-                  ) : (
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                      {item.badge !== undefined && item.badge > 0 && (
-                        <SidebarMenuBadge className="bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black">
-                          {item.badge > 99 ? '99+' : item.badge}
-                        </SidebarMenuBadge>
-                      )}
-                    </a>
-                  )}
+                  <a href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                    {item.badge !== undefined && item.badge > 0 && (
+                      <SidebarMenuBadge className="bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black">
+                        {item.badge > 99 ? '99+' : item.badge}
+                      </SidebarMenuBadge>
+                    )}
+                  </a>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <>

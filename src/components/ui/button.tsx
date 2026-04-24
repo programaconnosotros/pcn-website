@@ -19,11 +19,6 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         youtube: 'bg-red-600 text-white hover:bg-red-600/90',
         pcn: 'bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 disabled:bg-pcnPurple/50 disabled:text-white/70 dark:disabled:bg-pcnGreen/50 dark:disabled:text-black/70',
-        gold: 'bg-[#FFE066] text-black hover:bg-[#FFE066]/90 dark:bg-[#FFE066] dark:text-black dark:shadow-[0_0_15px_rgba(255,224,102,0.5)] dark:hover:bg-[#FFE066] dark:hover:shadow-[0_0_20px_rgba(255,224,102,0.7)] disabled:bg-[#FFE066]/50 disabled:text-black/70 dark:disabled:bg-[#FFE066]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
-        silver:
-          'bg-[#E8E8E8] text-black hover:bg-[#E8E8E8]/90 dark:bg-[#E8E8E8] dark:text-black dark:shadow-[0_0_15px_rgba(232,232,232,0.5)] dark:hover:bg-[#E8E8E8] dark:hover:shadow-[0_0_20px_rgba(232,232,232,0.7)] disabled:bg-[#E8E8E8]/50 disabled:text-black/70 dark:disabled:bg-[#E8E8E8]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
-        bronze:
-          'bg-[#F5B56A] text-black hover:bg-[#F5B56A]/90 dark:bg-[#F5B56A] dark:text-black dark:shadow-[0_0_15px_rgba(245,181,106,0.5)] dark:hover:bg-[#F5B56A] dark:hover:shadow-[0_0_20px_rgba(245,181,106,0.7)] disabled:bg-[#F5B56A]/50 disabled:text-black/70 dark:disabled:bg-[#F5B56A]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
       },
       size: {
         default: 'h-10 px-4 py-2',

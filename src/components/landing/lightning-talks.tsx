@@ -114,7 +114,6 @@ const LightningTalksCarousel = () => {
         <CarouselContent className="-ml-4">
           {carouselImages.map((photo, index) => (
             <CarouselItem key={index} className="flex flex-col md:basis-1/2 lg:basis-1/3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.src} alt={photo.alt} className="h-full w-full object-cover" />
               <span className="mt-2 text-sm">{photo.description}</span>
             </CarouselItem>

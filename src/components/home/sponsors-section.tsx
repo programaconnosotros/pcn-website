@@ -110,13 +110,12 @@ export const SponsorsSection = () => {
             rel="noopener noreferrer"
             className="group block"
           >
-            <Card className="h-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-900 dark:from-black dark:to-neutral-950">
+            <Card className="h-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-900 dark:from-black dark:to-neutral-950 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
                     className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' ? 'h-48' : sponsor.name === 'Xetro' ? 'h-40' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={sponsor.logo}
                       alt={sponsor.name}
@@ -155,7 +154,7 @@ export const SponsorsSection = () => {
           rel="noopener noreferrer"
           className="group block"
         >
-          <Card className="h-full border-2 border-dashed border-pcnPurple/50 bg-gradient-to-br from-pcnPurple/5 to-pcnPurple/10 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen/50 dark:from-pcnGreen/5 dark:to-pcnGreen/10">
+          <Card className="h-full border-2 border-dashed border-pcnPurple/50 bg-gradient-to-br from-pcnPurple/5 to-pcnPurple/10 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/50 dark:from-pcnGreen/5 dark:to-pcnGreen/10 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
             <CardContent className="flex h-full flex-col items-center justify-center p-6 text-center">
               <div className="mb-4 flex items-center justify-center gap-3">
                 <Building2

@@ -138,7 +138,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
 
   if (errors.length === 0) {
     return (
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
         <CardContent className="pt-6">
           <div className="py-8 text-center">
             <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-green-500" />
@@ -265,7 +265,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
             {resolvedErrors.map((error) => (
               <Card
                 key={error.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">

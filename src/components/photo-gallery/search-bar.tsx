@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 interface SearchBarProps {
   searchQuery: string;
-  setSearchQuery: (_query: string) => void;
+  setSearchQuery: (query: string) => void;
   placeholder?: string;
 }
 
