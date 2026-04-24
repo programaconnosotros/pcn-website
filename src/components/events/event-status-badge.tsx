@@ -9,10 +9,7 @@ const endOfDayFrom = (date: Date): Date => {
   return d;
 };
 
-const computeStatus = (
-  date: Date,
-  endDate: Date | null,
-): 'upcoming' | 'in-progress' | 'ended' => {
+const computeStatus = (date: Date, endDate: Date | null): 'upcoming' | 'in-progress' | 'ended' => {
   const start = new Date(date);
   const end = endDate ? new Date(endDate) : endOfDayFrom(start);
   const now = new Date();

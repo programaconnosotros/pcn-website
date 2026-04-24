@@ -79,4 +79,3 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     </Link>
   );
 };
-
