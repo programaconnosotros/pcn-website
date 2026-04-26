@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
 import { fetchEvents } from '@/actions/events/fetch-events';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, Video } from 'lucide-react';
 import Link from 'next/link';
 
 type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
@@ -62,14 +62,21 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
               </p>
             </div>
 
-            {(event.city || event.placeName) && (
-              <div className="mt-2 flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                <p className="text-sm text-muted-foreground">
-                  {event.placeName && `${event.placeName}, `}
-                  {event.city}, Argentina
-                </p>
+            {event.isOnline ? (
+              <div className="mt-2 flex items-center gap-2">
+                <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                <p className="text-sm text-muted-foreground">Online</p>
               </div>
+            ) : (
+              (event.city || event.placeName) && (
+                <div className="mt-2 flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                  <p className="text-sm text-muted-foreground">
+                    {event.placeName && `${event.placeName}, `}
+                    {event.city}, Argentina
+                  </p>
+                </div>
+              )
             )}
           </CardContent>
 

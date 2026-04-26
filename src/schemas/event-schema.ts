@@ -16,16 +16,19 @@ export const eventSchema = z.object({
     .transform((val) => (val === '' || val === undefined ? undefined : val)),
   city: z
     .string()
-    .min(2, { message: 'La ciudad debe tener al menos 2 caracteres' })
-    .max(100, { message: 'La ciudad no puede exceder 100 caracteres' }),
+    .max(100, { message: 'La ciudad no puede exceder 100 caracteres' })
+    .optional()
+    .transform((val) => (val === '' || val === undefined ? undefined : val)),
   address: z
     .string()
-    .min(5, { message: 'La dirección debe tener al menos 5 caracteres' })
-    .max(200, { message: 'La dirección no puede exceder 200 caracteres' }),
+    .max(200, { message: 'La dirección no puede exceder 200 caracteres' })
+    .optional()
+    .transform((val) => (val === '' || val === undefined ? undefined : val)),
   placeName: z
     .string()
-    .min(2, { message: 'El nombre del lugar debe tener al menos 2 caracteres' })
-    .max(100, { message: 'El nombre del lugar no puede exceder 100 caracteres' }),
+    .max(100, { message: 'El nombre del lugar no puede exceder 100 caracteres' })
+    .optional()
+    .transform((val) => (val === '' || val === undefined ? undefined : val)),
   flyerSrc: z
     .string()
     .min(1, { message: 'Debes subir una imagen del flyer' })
@@ -80,13 +83,23 @@ export const eventSchema = z.object({
       message: 'Debe ser una URL válida',
     })
     .transform((val) => (val === '' ? undefined : val)),
+  isOnline: z.preprocess(
+    (val) => (val === undefined || val === null ? false : val),
+    z.boolean().default(false),
+  ),
+  streamingUrl: z
+    .string()
+    .optional()
+    .refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
+      message: 'Debe ser una URL válida',
+    })
+    .transform((val) => (val === '' ? undefined : val)),
   markedAsFull: z.preprocess(
     (val) => (val === undefined || val === null ? false : val),
     z.boolean().default(false),
   ),
   capacity: z.preprocess(
     (val) => {
-      // Convertir number o null a string para el formulario
       if (val === null || val === undefined) return '';
       if (typeof val === 'number') return val.toString();
       return val;
@@ -99,6 +112,39 @@ export const eventSchema = z.object({
         message: 'El cupo debe ser un número mayor a 0',
       }),
   ),
+}).superRefine((data, ctx) => {
+  if (!data.isOnline) {
+    if (!data.city || data.city.length < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 2,
+        type: 'string',
+        inclusive: true,
+        message: 'La ciudad debe tener al menos 2 caracteres',
+        path: ['city'],
+      });
+    }
+    if (!data.placeName || data.placeName.length < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 2,
+        type: 'string',
+        inclusive: true,
+        message: 'El nombre del lugar debe tener al menos 2 caracteres',
+        path: ['placeName'],
+      });
+    }
+    if (!data.address || data.address.length < 5) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 5,
+        type: 'string',
+        inclusive: true,
+        message: 'La dirección debe tener al menos 5 caracteres',
+        path: ['address'],
+      });
+    }
+  }
 });
 
 // Tipo de entrada del formulario (antes del transform)

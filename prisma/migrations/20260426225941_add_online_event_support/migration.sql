@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "isOnline" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "streamingUrl" TEXT,
+ALTER COLUMN "city" DROP NOT NULL,
+ALTER COLUMN "address" DROP NOT NULL,
+ALTER COLUMN "placeName" DROP NOT NULL;

@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, Users, Globe } from 'lucide-react';
+import { Calendar, MapPin, Edit, Users, Globe, Video } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
@@ -50,7 +50,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const dateLabel = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long' }).format(
     new Date(event.date),
   );
-  const locationParts = [event.city, event.placeName].filter(Boolean);
+  const locationParts = event.isOnline
+    ? ['Online']
+    : [event.city, event.placeName].filter(Boolean);
   const contextSuffix = [
     `📅 ${dateLabel}`,
     locationParts.length > 0 ? `📍 ${locationParts.join(', ')}` : '',
@@ -393,22 +395,34 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                     </div>
                   </div>
 
-                  {(event.city || event.placeName || event.address) && (
-                    <div className="flex items-start gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                  {event.isOnline ? (
+                    <div className="flex items-center gap-2">
+                      <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
                       <div className="flex flex-col">
-                        <p className="text-sm font-medium">Ubicación</p>
-                        {event.placeName && (
-                          <p className="text-sm text-muted-foreground">{event.placeName}</p>
-                        )}
-                        {event.address && (
-                          <p className="text-sm text-muted-foreground">{event.address}</p>
-                        )}
-                        {event.city && (
-                          <p className="text-sm text-muted-foreground">{event.city}, Argentina</p>
-                        )}
+                        <p className="text-sm font-medium">Modalidad</p>
+                        <p className="text-sm text-muted-foreground">Online</p>
                       </div>
                     </div>
+                  ) : (
+                    (event.city || event.placeName || event.address) && (
+                      <div className="flex items-start gap-2">
+                        <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                        <div className="flex flex-col">
+                          <p className="text-sm font-medium">Ubicación</p>
+                          {event.placeName && (
+                            <p className="text-sm text-muted-foreground">{event.placeName}</p>
+                          )}
+                          {event.address && (
+                            <p className="text-sm text-muted-foreground">{event.address}</p>
+                          )}
+                          {event.city && (
+                            <p className="text-sm text-muted-foreground">
+                              {event.city}, Argentina
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )
                   )}
                 </CardContent>
               </Card>
@@ -443,8 +457,28 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                 </Card>
               )}
 
+              {/* Transmisión online */}
+              {event.isOnline && event.streamingUrl && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                  <CardHeader>
+                    <CardTitle>Transmisión</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <a
+                      href={event.streamingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-pcnPurple hover:underline dark:text-pcnGreen"
+                    >
+                      <Video className="h-4 w-4" />
+                      Ver transmisión
+                    </a>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Mapa */}
-              {event.latitude && event.longitude && (
+              {!event.isOnline && event.latitude && event.longitude && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle>Mapa</CardTitle>

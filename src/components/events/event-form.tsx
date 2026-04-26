@@ -24,6 +24,7 @@ import {
   Users,
   Loader2,
   ExternalLink,
+  Video,
 } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import Link from 'next/link';
@@ -59,9 +60,13 @@ export function EventForm({
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
       externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
+      isOnline: defaultValues?.isOnline ?? false,
+      streamingUrl: defaultValues?.streamingUrl ?? '',
       markedAsFull: defaultValues?.markedAsFull ?? false,
     },
   });
+
+  const isOnline = !!form.watch('isOnline');
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -160,59 +165,128 @@ export function EventForm({
             )}
           />
 
-          {/* Ciudad */}
+          {/* Es online */}
           <FormField
             control={form.control}
-            name="city"
+            name="isOnline"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  <MapPin className="mr-2 inline h-4 w-4" />
-                  Ciudad
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Ej: Buenos Aires" {...field} />
-                </FormControl>
+                <div className="flex items-center gap-3">
+                  <FormControl>
+                    <input
+                      type="checkbox"
+                      id="isOnline"
+                      checked={!!field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="isOnline" className="cursor-pointer">
+                    <Video className="mr-2 inline h-4 w-4" />
+                    Es un evento online
+                  </FormLabel>
+                </div>
+                <FormDescription>
+                  Si el evento se realiza de forma virtual, no es necesario ingresar ubicación
+                  física.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Nombre del lugar */}
-          <FormField
-            control={form.control}
-            name="placeName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <Building2 className="mr-2 inline h-4 w-4" />
-                  Nombre del lugar
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Ej: Universidad de Buenos Aires, Bar XYZ" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Campos de ubicación (solo presencial) */}
+          {!isOnline && (
+            <>
+              {/* Ciudad */}
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <MapPin className="mr-2 inline h-4 w-4" />
+                      Ciudad
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ej: Buenos Aires" {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Dirección */}
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <MapPin className="mr-2 inline h-4 w-4" />
-                  Dirección
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Ej: Av. Corrientes 1234" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Nombre del lugar */}
+              <FormField
+                control={form.control}
+                name="placeName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <Building2 className="mr-2 inline h-4 w-4" />
+                      Nombre del lugar
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Universidad de Buenos Aires, Bar XYZ"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Dirección */}
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <MapPin className="mr-2 inline h-4 w-4" />
+                      Dirección
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Av. Corrientes 1234"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
+
+          {/* Link de transmisión (solo online) */}
+          {isOnline && (
+            <FormField
+              control={form.control}
+              name="streamingUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Video className="mr-2 inline h-4 w-4" />
+                    Link de transmisión (opcional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://meet.google.com/..."
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormDescription>Link de Zoom, Google Meet, YouTube, etc.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* Latitud */}
           <FormField
