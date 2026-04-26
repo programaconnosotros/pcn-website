@@ -356,8 +356,8 @@ export function EventForm({
                   </FormLabel>
                 </div>
                 <FormDescription>
-                  Muestra el badge &quot;Cupo completo&quot; en el listado y en la página del evento.
-                  Útil cuando las inscripciones se manejan fuera del sistema (ej. Luma).
+                  Muestra el badge &quot;Cupo completo&quot; en el listado y en la página del
+                  evento. Útil cuando las inscripciones se manejan fuera del sistema (ej. Luma).
                 </FormDescription>
                 <FormMessage />
               </FormItem>
