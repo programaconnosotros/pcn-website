@@ -7,4 +7,11 @@ export const fetchRecentlyAddedEvents = () =>
     where: { deletedAt: null },
     orderBy: { createdAt: 'desc' },
     take: 3,
+    include: {
+      _count: {
+        select: {
+          registrations: { where: { cancelledAt: null } },
+        },
+      },
+    },
   });

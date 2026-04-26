@@ -18,10 +18,11 @@ const computeStatus = (date: Date, endDate: Date | null): 'upcoming' | 'in-progr
   return 'ended';
 };
 
-export const EventStatusBadge: React.FC<{ date: Date; endDate: Date | null }> = ({
-  date,
-  endDate,
-}) => {
+export const EventStatusBadge: React.FC<{
+  date: Date;
+  endDate: Date | null;
+  isFull?: boolean;
+}> = ({ date, endDate, isFull = false }) => {
   const [status, setStatus] = useState<'upcoming' | 'in-progress' | 'ended' | null>(null);
 
   useEffect(() => {
@@ -41,6 +42,17 @@ export const EventStatusBadge: React.FC<{ date: Date; endDate: Date | null }> = 
           <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
         </span>
         En curso
+      </Badge>
+    );
+  }
+
+  if (isFull) {
+    return (
+      <Badge
+        variant="outline"
+        className="shrink-0 whitespace-nowrap border-muted-foreground/40 text-muted-foreground"
+      >
+        Cupo completo
       </Badge>
     );
   }

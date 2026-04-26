@@ -8,4 +8,11 @@ export const fetchEvents = () =>
       deletedAt: null,
     },
     orderBy: { date: 'desc' },
+    include: {
+      _count: {
+        select: {
+          registrations: { where: { cancelledAt: null } },
+        },
+      },
+    },
   });

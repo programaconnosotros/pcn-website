@@ -3,11 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
-import { Event } from '@prisma/client';
+import { fetchEvents } from '@/actions/events/fetch-events';
 import { Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
-export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
+type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
+
+export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
+  const isFull = event.capacity !== null && event._count.registrations >= event.capacity;
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('es-ES', {
       day: '2-digit',
@@ -41,7 +44,7 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
           <CardHeader>
             <CardTitle className="flex items-start justify-between gap-2 text-lg">
               <span>{event.name}</span>
-              <EventStatusBadge date={event.date} endDate={event.endDate} />
+              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
             </CardTitle>
           </CardHeader>
 
