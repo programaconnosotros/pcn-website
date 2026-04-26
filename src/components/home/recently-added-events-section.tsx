@@ -1,4 +1,5 @@
 import { fetchRecentlyAddedEvents } from '@/actions/events/fetch-recently-added-events';
+import { ArrowRight } from 'lucide-react';
 import { EventCard } from '@/components/events/event-card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,7 @@ export const RecentlyAddedEventsSection = async () => {
 
       <div className="mb-6 flex justify-center">
         <Link href="/eventos">
-          <Button variant="outline">Ver todos los eventos</Button>
+          <Button variant="outline">Ver todos los eventos <ArrowRight className="ml-2 h-4 w-4" /></Button>
         </Link>
       </div>
     </div>

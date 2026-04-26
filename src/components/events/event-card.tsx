@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
 import { fetchEvents } from '@/actions/events/fetch-events';
-import { Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
@@ -75,7 +75,7 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
 
           <CardFooter className="mt-auto">
             <Button variant="pcn" className="w-full">
-              Ver evento
+              Ver evento <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardFooter>
         </div>
