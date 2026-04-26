@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Plus, PartyPopper } from 'lucide-react';
+import { CalendarDays, Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -91,7 +91,7 @@ const EventsPage = async () => {
                 className="flex w-full items-center justify-center gap-2 sm:w-auto"
               >
                 Quiero organizar algo
-                <PartyPopper className="h-4 w-4" />
+                <Handshake className="h-4 w-4" />
               </Button>
             </Link>
             {isAdmin && (
