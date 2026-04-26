@@ -705,35 +705,6 @@ const HomeClientSide = ({
             </div>
           </div>
         </div>
-
-        <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-          <div className="mx-6 rounded-xl border-2 border-pcnPurple/20 bg-gradient-to-br from-pcnPurple/10 to-pcnPurple/5 p-8 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-pcnGreen/20 dark:from-pcnGreen/10 dark:to-pcnGreen/5 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20 md:p-12">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="mb-2 flex items-center justify-center gap-4">
-                <GraduationCap
-                  className="h-8 w-8 text-pcnPurple dark:text-pcnGreen"
-                  strokeWidth={1.5}
-                />
-                <MapPin className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-                <Rocket className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" strokeWidth={1.5} />
-              </div>
-              <Heading2 className="mb-0 pb-0 text-pcnPurple dark:text-pcnGreen">
-                ¿Querés ser referente de PCN en tu ciudad o universidad?
-              </Heading2>
-              <Paragraph className="-mt-3 max-w-3xl text-base md:text-lg">
-                Si compartís los valores de PCN y en tu universidad o ciudad aún no hay muchos
-                miembros, podemos armar un plan para que la comunidad crezca ahí y que seas un
-                referente.
-              </Paragraph>
-              <Link href="https://wa.me/5493815777562" target="_blank">
-                <Button className="flex items-center gap-2 bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90">
-                  <MessageSquare className="h-4 w-4" />
-                  Contactanos
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
       </motion.div>
     </motion.div>
   );
