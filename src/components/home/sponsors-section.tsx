@@ -11,7 +11,7 @@ const sponsors = [
     name: 'DIZENZ',
     url: 'https://dizenz.com',
     logo: '/asz-software-logo-2.webp',
-    description: 'Estudio de software.',
+    description: 'Modern Software Studio.',
     location: 'Tucumán, Argentina',
     hasLogo: true,
   },
@@ -34,24 +34,6 @@ const sponsors = [
     showName: false,
   },
   {
-    name: 'Bowery',
-    url: 'https://bowerystudio.co/en/',
-    logo: '/bowery-logo-light.svg',
-    description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
-    location: 'Buenos Aires, Argentina',
-    hasLogo: true,
-    showName: false,
-  },
-  {
-    name: 'Eagerworks',
-    url: 'https://eagerworks.com/',
-    logo: '/eagerworks-white-logo.svg',
-    description: 'Agencia de diseño y desarrollo de software.',
-    location: 'Montevideo, Uruguay',
-    hasLogo: true,
-    showName: false,
-  },
-  {
     name: 'UTN-FRT',
     url: 'https://www.frt.utn.edu.ar/',
     logo: '/utn-frt-logo.png',
@@ -66,6 +48,24 @@ const sponsors = [
     logo: '/blackbox-cowork-logo.jpeg',
     description: 'Espacio de coworking adaptable.',
     location: 'Tucumán, Argentina',
+    hasLogo: true,
+    showName: false,
+  },
+  {
+    name: 'Bowery',
+    url: 'https://bowerystudio.co/en/',
+    logo: '/bowery-logo-light.svg',
+    description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
+    location: 'Buenos Aires, Argentina',
+    hasLogo: true,
+    showName: false,
+  },
+  {
+    name: 'Eagerworks',
+    url: 'https://eagerworks.com/',
+    logo: '/eagerworks-white-logo.svg',
+    description: 'Agencia de diseño y desarrollo de software.',
+    location: 'Montevideo, Uruguay',
     hasLogo: true,
     showName: false,
   },
@@ -95,9 +95,12 @@ const sponsors = [
 export const SponsorsSection = () => {
   return (
     <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-      <div className="flex items-center justify-center gap-3 p-6">
-        <Heading2 className="relative z-10 mb-0 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
-          Sponsors
+      <div className="flex items-center justify-center p-6">
+        <Heading2 className="relative z-10 mb-0 flex items-center gap-3 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+            <Handshake className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+          </div>
+          <span>Sponsors</span>
         </Heading2>
       </div>
 
