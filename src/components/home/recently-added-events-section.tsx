@@ -29,7 +29,9 @@ export const RecentlyAddedEventsSection = async () => {
 
       <div className="mb-6 flex justify-center">
         <Link href="/eventos">
-          <Button variant="outline">Ver todos los eventos <ArrowRight className="ml-2 h-4 w-4" /></Button>
+          <Button variant="outline">
+            Ver todos los eventos <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </Link>
       </div>
     </div>
