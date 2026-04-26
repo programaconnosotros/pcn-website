@@ -15,6 +15,7 @@ import { Calendar, MapPin, Edit, Users, Globe } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
+import { EventStatusBadge } from '@/components/events/event-status-badge';
 import { EventAnnouncements } from '@/components/announcements/event-announcements';
 import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
 import { Image as Images, Event, Sponsor } from '@prisma/client';
@@ -194,6 +195,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
     };
   }
 
+  const isFull = event.markedAsFull || (capacityInfo !== null && !capacityInfo.available);
+
   // Obtener inscripciones si el usuario es admin (solo para eventos con inscripción interna)
   let registrations: Array<{
     id: string;
@@ -254,7 +257,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <div className="mb-4 flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0">{event.name}</Heading2>
+            <div className="flex items-center gap-3">
+              <Heading2 className="m-0">{event.name}</Heading2>
+              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+            </div>
             {isAdmin && (
               <Link href={`/eventos/${id}/editar`}>
                 <Button variant="pcn" className="flex items-center gap-2">
@@ -359,6 +365,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                         capacityAvailable={capacityInfo?.available ?? true}
                         capacityInfo={capacityInfo}
                         externalRegistrationUrl={event.externalRegistrationUrl}
+                        isFull={isFull}
                       />
                     </Suspense>
                   </CardContent>

@@ -120,6 +120,7 @@ model Event {
   longitude   Float?
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
+  markedAsFull            Boolean   @default(false)
   deletedAt               DateTime? // Eliminación lógica
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

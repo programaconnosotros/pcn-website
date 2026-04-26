@@ -80,6 +80,10 @@ export const eventSchema = z.object({
       message: 'Debe ser una URL válida',
     })
     .transform((val) => (val === '' ? undefined : val)),
+  markedAsFull: z.preprocess(
+    (val) => (val === undefined || val === null ? false : val),
+    z.boolean().default(false),
+  ),
   capacity: z.preprocess(
     (val) => {
       // Convertir number o null a string para el formulario

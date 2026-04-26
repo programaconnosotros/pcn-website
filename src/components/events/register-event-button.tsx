@@ -15,6 +15,7 @@ type RegisterEventButtonProps = {
   onSuccess?: () => void;
   isLoading?: boolean;
   externalUrl?: string;
+  label?: string;
 };
 
 export function RegisterEventButton({
@@ -24,6 +25,7 @@ export function RegisterEventButton({
   onSuccess,
   isLoading = false,
   externalUrl,
+  label,
 }: RegisterEventButtonProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -86,7 +88,7 @@ export function RegisterEventButton({
       disabled={!externalUrl && (buttonIsLoading || !capacityAvailable)}
     >
       {externalUrl ? <ExternalLink className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : 'Inscribirme al evento'}
+      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : (label ?? 'Inscribirme al evento')}
     </Button>
   );
 }

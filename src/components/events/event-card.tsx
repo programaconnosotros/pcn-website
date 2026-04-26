@@ -10,7 +10,9 @@ import Link from 'next/link';
 type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
 
 export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
-  const isFull = event.capacity !== null && event._count.registrations >= event.capacity;
+  const isFull =
+    event.markedAsFull ||
+    (event.capacity !== null && event._count.registrations >= event.capacity);
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('es-ES', {
       day: '2-digit',

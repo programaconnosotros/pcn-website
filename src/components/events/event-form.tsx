@@ -59,6 +59,7 @@ export function EventForm({
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
       externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
+      markedAsFull: defaultValues?.markedAsFull ?? false,
     },
   });
 
@@ -328,6 +329,35 @@ export function EventForm({
                 <FormDescription>
                   Si se completa, el botón de inscripción redirigirá a esta URL (por ejemplo, un
                   evento de Luma) en lugar de usar el sistema interno.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Cupo completo manual */}
+          <FormField
+            control={form.control}
+            name="markedAsFull"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-3">
+                  <FormControl>
+                    <input
+                      type="checkbox"
+                      id="markedAsFull"
+                      checked={!!field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="markedAsFull" className="cursor-pointer">
+                    Marcar como cupo completo
+                  </FormLabel>
+                </div>
+                <FormDescription>
+                  Muestra el badge &quot;Cupo completo&quot; en el listado y en la página del evento.
+                  Útil cuando las inscripciones se manejan fuera del sistema (ej. Luma).
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -21,6 +21,7 @@ type Props = {
     available: boolean;
   } | null;
   externalRegistrationUrl?: string | null;
+  isFull?: boolean;
 };
 
 export function EventDetailClient({
@@ -32,6 +33,7 @@ export function EventDetailClient({
   capacityAvailable,
   capacityInfo,
   externalRegistrationUrl,
+  isFull = false,
 }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -126,6 +128,7 @@ export function EventDetailClient({
         isAuthenticated={isAuthenticated}
         capacityAvailable={true}
         externalUrl={externalRegistrationUrl}
+        label={isFull ? 'Inscribirse en lista de espera' : undefined}
       />
     );
   }
@@ -154,7 +157,7 @@ export function EventDetailClient({
     );
   }
 
-  if (capacityInfo && !capacityInfo.available) {
+  if (!externalRegistrationUrl && isFull) {
     return (
       <div className="space-y-2">
         <p className="text-center text-sm font-medium text-destructive">Cupo completo</p>
