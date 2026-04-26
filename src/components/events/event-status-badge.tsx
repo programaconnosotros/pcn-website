@@ -40,7 +40,7 @@ export const EventStatusBadge: React.FC<{ date: Date; endDate: Date | null }> = 
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
         </span>
-        En vivo
+        En curso
       </Badge>
     );
   }
