@@ -1,5 +1,5 @@
 import { fetchRecentlyAddedEvents } from '@/actions/events/fetch-recently-added-events';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CalendarDays } from 'lucide-react';
 import { EventCard } from '@/components/events/event-card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Button } from '@/components/ui/button';
@@ -13,10 +13,15 @@ export const RecentlyAddedEventsSection = async () => {
   return (
     <div className="mb-6 mt-6">
       <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 mb-6 text-center md:text-left">
-          Eventos publicados{' '}
-          <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
-            recientemente
+        <Heading2 className="relative z-10 mb-6 flex items-center gap-3 text-center md:text-left">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+            <CalendarDays className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+          </div>
+          <span>
+            Eventos publicados{' '}
+            <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
+              recientemente
+            </span>
           </span>
         </Heading2>
       </div>
