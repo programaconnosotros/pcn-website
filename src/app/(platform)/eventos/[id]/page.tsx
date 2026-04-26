@@ -24,6 +24,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
+import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 
 type EventWithImages = Event & {
   images: Images[];
@@ -47,9 +48,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     };
   }
 
-  const dateLabel = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long' }).format(
-    new Date(event.date),
-  );
+  const dateLabel = new Intl.DateTimeFormat('es-AR', {
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'America/Argentina/Buenos_Aires',
+  }).format(new Date(event.date));
   const locationParts = event.isOnline
     ? ['Online']
     : [event.city, event.placeName].filter(Boolean);
@@ -141,21 +144,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
       </>
     );
   }
-
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
-  const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
 
   // Verificar si el evento ya pasó
   const now = new Date();
@@ -390,7 +378,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                     <div className="flex flex-col">
                       <p className="text-sm font-medium">Fecha y hora</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatDate(event.date)} a las {formatTime(event.date)}
+                        <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
                       </p>
                     </div>
                   </div>

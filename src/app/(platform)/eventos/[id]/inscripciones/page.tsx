@@ -29,16 +29,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { DeleteRegistrationButton } from '@/components/events/delete-registration-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
-};
+import { LocalDateTime } from '@/components/ui/local-date-time';
 
 const EventRegistrationsPage = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -200,7 +191,7 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
                               )}
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                              {formatDate(registration.createdAt)}
+                              <LocalDateTime date={registration.createdAt} />
                             </TableCell>
                             <TableCell className="text-right">
                               {!registration.cancelledAt && (
