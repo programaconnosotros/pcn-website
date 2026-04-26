@@ -53,9 +53,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     month: 'long',
     timeZone: 'America/Argentina/Buenos_Aires',
   }).format(new Date(event.date));
-  const locationParts = event.isOnline
-    ? ['Online']
-    : [event.city, event.placeName].filter(Boolean);
+  const locationParts = event.isOnline ? ['Online'] : [event.city, event.placeName].filter(Boolean);
   const contextSuffix = [
     `📅 ${dateLabel}`,
     locationParts.length > 0 ? `📍 ${locationParts.join(', ')}` : '',
@@ -404,9 +402,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params })
                             <p className="text-sm text-muted-foreground">{event.address}</p>
                           )}
                           {event.city && (
-                            <p className="text-sm text-muted-foreground">
-                              {event.city}, Argentina
-                            </p>
+                            <p className="text-sm text-muted-foreground">{event.city}, Argentina</p>
                           )}
                         </div>
                       </div>

@@ -44,7 +44,12 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
               <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
               <p className="text-sm text-muted-foreground">
                 <LocalDate date={event.date} />
-                {event.date && <> - <LocalTime date={event.date} /></>}
+                {event.date && (
+                  <>
+                    {' '}
+                    - <LocalTime date={event.date} />
+                  </>
+                )}
               </p>
             </div>
 
