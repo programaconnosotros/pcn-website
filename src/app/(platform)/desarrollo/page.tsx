@@ -63,11 +63,12 @@ const technologies = [
 const contributionSteps = [
   'Instalar Docker y Docker Compose',
   'Clonar el repositorio desde GitHub',
-  'Configurar las variables de entorno (.env)',
-  'Ejecutar docker-compose up -d para levantar la base de datos',
-  'Correr las migraciones con npx prisma migrate dev',
-  'Iniciar el servidor de desarrollo con npm run dev',
-  'Crear un branch, hacer los cambios y enviar un PR',
+  'Crear el archivo .env usando .env.template como base',
+  'Levantar los contenedores con docker-compose up -d (incluye base de datos y web)',
+  'Opcional: si usás VS Code, abrí el proyecto con Dev Containers para desarrollar dentro del contenedor',
+  'Aplicar las migraciones con make apply-migrations (o pnpm apply-migrations en Windows)',
+  'Opcional: poblar la base de datos con datos de prueba ejecutando pnpm populate-database',
+  'Crear una branch, hacer los cambios y enviar una PR hacia testing',
 ];
 
 const benefits = [
