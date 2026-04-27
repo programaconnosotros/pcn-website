@@ -30,6 +30,7 @@ export const createTalk = async (data: TalkFormData) => {
   const talk = await prisma.talk.create({
     data: {
       eventId: talkData.eventId ?? null,
+      speakerId: talkData.speakerId ?? null,
       title: talkData.title,
       description: talkData.description,
       speakerName: talkData.speakerName,

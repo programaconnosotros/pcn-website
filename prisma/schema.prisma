@@ -39,6 +39,7 @@ model User {
   likes           Like[]
   eventRegistrations EventRegistration[]
   talkProposals   TalkProposal[]
+  speakerTalks    Talk[]         @relation("UserSpeakerTalks")
   pageVisits      PageVisit[]
   testimonials    Testimonial[]
   notifications   Notification[]
@@ -377,6 +378,7 @@ model Talk {
   title       String
   description String
 
+  speakerId      String?
   speakerName    String
   speakerPhone   String
   isProfessional Boolean @default(false)
@@ -397,7 +399,9 @@ model Talk {
 
   event    Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
   proposal TalkProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+  speaker  User?         @relation("UserSpeakerTalks", fields: [speakerId], references: [id], onDelete: SetNull)
 
   @@index([eventId])
+  @@index([speakerId])
   @@index([order])
 }

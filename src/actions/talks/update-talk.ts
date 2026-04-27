@@ -36,6 +36,7 @@ export const updateTalk = async (id: string, data: TalkFormData) => {
     where: { id },
     data: {
       eventId: talkData.eventId ?? null,
+      speakerId: talkData.speakerId ?? null,
       title: talkData.title,
       description: talkData.description,
       speakerName: talkData.speakerName,

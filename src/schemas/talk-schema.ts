@@ -3,6 +3,12 @@ import { z } from 'zod';
 export const talkSchema = z
   .object({
     eventId: z.string().cuid().optional().nullable(),
+    speakerId: z
+      .string()
+      .cuid()
+      .optional()
+      .nullable()
+      .transform((v) => (v === '' ? null : (v ?? null))),
     title: z
       .string()
       .min(3, { message: 'El título debe tener al menos 3 caracteres' })

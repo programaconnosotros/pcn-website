@@ -21,6 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { FileUpload } from '@/components/ui/file-upload';
 import { MultiFileUpload } from '@/components/ui/multi-file-upload';
+import { SpeakerUserPicker } from '@/components/talks/speaker-user-picker';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -61,6 +62,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
     resolver: zodResolver(talkSchema),
     defaultValues: {
       eventId: talk?.eventId ?? eventId ?? null,
+      speakerId: talk?.speakerId ?? null,
       title: talk?.title ?? '',
       description: talk?.description ?? '',
       speakerName: talk?.speakerName ?? '',
@@ -167,6 +169,46 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="speakerId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Usuario registrado (opcional)</FormLabel>
+              <FormControl>
+                <SpeakerUserPicker
+                  value={field.value ?? null}
+                  onSelect={(user) => {
+                    field.onChange(user?.id ?? null);
+                    if (user) {
+                      form.setValue('speakerName', user.name, { shouldValidate: true });
+                      if (user.phoneNumber)
+                        form.setValue('speakerPhone', user.phoneNumber, {
+                          shouldValidate: true,
+                        });
+                      if (user.image) form.setValue('portraitUrl', user.image);
+                      if (user.jobTitle || user.enterprise) {
+                        form.setValue('isProfessional', true);
+                        if (user.jobTitle) form.setValue('jobTitle', user.jobTitle);
+                        if (user.enterprise) form.setValue('enterprise', user.enterprise);
+                      }
+                      if (user.career || user.studyPlace) {
+                        form.setValue('isStudent', true);
+                        if (user.career) form.setValue('career', user.career);
+                        if (user.studyPlace) form.setValue('studyPlace', user.studyPlace);
+                      }
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormDescription>
+                Buscá un usuario para autocompletar los datos del speaker.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
