@@ -33,7 +33,6 @@ import {
   Mail,
   Contact,
 } from 'lucide-react';
-import { talks } from '@/app/(platform)/charlas/talks';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -180,12 +179,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   const isOwnProfile = session?.user?.id === params.id;
 
-  // Filtrar charlas del usuario
-  const userTalks = talks.filter(
-    (talk) =>
-      talk.speakerName.toLowerCase().includes(user.name?.toLowerCase() || '') ||
-      user.name?.toLowerCase().includes(talk.speakerName.toLowerCase() || ''),
-  );
+  const userTalks = user.name
+    ? await prisma.talk.findMany({
+        where: { speakerName: { contains: user.name, mode: 'insensitive' } },
+        include: { event: { select: { date: true, placeName: true, city: true } } },
+        orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
+      })
+    : [];
 
   return (
     <>
@@ -442,53 +442,58 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   <p className="text-gray-500">Este usuario aún no ha dado ninguna charla.</p>
                 ) : (
                   <div className="space-y-4">
-                    {userTalks.map((talk, index) => (
-                      <Card
-                        key={index}
-                        className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
-                      >
-                        <CardContent className="p-6">
-                          <div className="flex flex-col gap-4 md:flex-row">
-                            {talk.portrait && (
-                              <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={talk.portrait}
-                                  alt={talk.speakerName}
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
-                            )}
-                            <div className="flex flex-1 flex-col gap-2">
-                              <h3 className="text-xl font-semibold">{talk.name}</h3>
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                                <span>{talk.speakerName}</span>
-                                {talk.date && (
-                                  <span>
-                                    {new Date(talk.date).toLocaleDateString('es-AR', {
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                )}
-                                {talk.location && <span>{talk.location}</span>}
-                              </div>
-                              {talk.youtubeUrl && (
-                                <a
-                                  href={talk.youtubeUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="mt-2 inline-flex items-center gap-2 text-pcnPurple hover:underline dark:text-pcnGreen"
-                                >
-                                  Ver en YouTube
-                                </a>
+                    {userTalks.map((talk) => {
+                      const location = [talk.event?.placeName, talk.event?.city]
+                        .filter(Boolean)
+                        .join(', ');
+                      return (
+                        <Card
+                          key={talk.id}
+                          className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+                        >
+                          <CardContent className="p-6">
+                            <div className="flex flex-col gap-4 md:flex-row">
+                              {talk.portraitUrl && (
+                                <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={talk.portraitUrl}
+                                    alt={talk.speakerName}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
                               )}
+                              <div className="flex flex-1 flex-col gap-2">
+                                <h3 className="text-xl font-semibold">{talk.title}</h3>
+                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                  <span>{talk.speakerName}</span>
+                                  {talk.event?.date && (
+                                    <span>
+                                      {new Date(talk.event.date).toLocaleDateString('es-AR', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                      })}
+                                    </span>
+                                  )}
+                                  {location && <span>{location}</span>}
+                                </div>
+                                {talk.videoUrl && (
+                                  <a
+                                    href={talk.videoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-2 inline-flex items-center gap-2 text-pcnPurple hover:underline dark:text-pcnGreen"
+                                  >
+                                    Ver en YouTube
+                                  </a>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                   </div>
                 )}
               </TabsContent>

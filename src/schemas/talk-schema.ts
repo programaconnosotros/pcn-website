@@ -52,12 +52,21 @@ export const talkSchema = z
       .optional()
       .transform((val) => (val === '' || val === undefined ? undefined : val)),
     order: z.number().int().min(0).default(0),
+    portraitUrl: z
+      .string()
+      .url({ message: 'La URL del retrato no es válida' })
+      .optional()
+      .or(z.literal(''))
+      .transform((val) => (val === '' ? undefined : val)),
     slidesUrl: z
       .string()
       .url({ message: 'La URL de slides no es válida' })
       .optional()
       .or(z.literal(''))
       .transform((val) => (val === '' ? undefined : val)),
+    slideImages: z
+      .array(z.string().url({ message: 'Cada imagen debe ser una URL válida' }))
+      .default([]),
     videoUrl: z
       .string()
       .url({ message: 'La URL del video no es válida' })

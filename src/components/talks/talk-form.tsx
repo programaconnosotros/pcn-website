@@ -47,7 +47,9 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
       career: talk?.career ?? '',
       studyPlace: talk?.studyPlace ?? '',
       order: talk?.order ?? 0,
+      portraitUrl: talk?.portraitUrl ?? '',
       slidesUrl: talk?.slidesUrl ?? '',
+      slideImages: talk?.slideImages ?? [],
       videoUrl: talk?.videoUrl ?? '',
     },
   });
@@ -279,12 +281,12 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
 
           <FormField
             control={form.control}
-            name="slidesUrl"
+            name="portraitUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>URL de slides</FormLabel>
+                <FormLabel>URL del retrato</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://slides.example.com" {...field} value={field.value ?? ''} />
+                  <Input placeholder="https://example.com/foto.jpg" {...field} value={field.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -299,6 +301,48 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                 <FormLabel>URL del video</FormLabel>
                 <FormControl>
                   <Input placeholder="https://youtube.com/watch?v=..." {...field} value={field.value ?? ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="slidesUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>URL de slides</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://slides.example.com" {...field} value={field.value ?? ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="slideImages"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Imágenes de slides</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Una URL por línea&#10;https://example.com/slide1.png&#10;https://example.com/slide2.png"
+                    className="min-h-[80px] font-mono text-xs"
+                    value={(field.value ?? []).join('\n')}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value
+                          .split('\n')
+                          .map((s) => s.trim())
+                          .filter(Boolean),
+                      )
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
