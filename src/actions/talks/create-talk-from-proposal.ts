@@ -21,7 +21,7 @@ export const createTalkFromProposal = async (proposalId: string) => {
 
   const proposal = await prisma.talkProposal.findUnique({
     where: { id: proposalId },
-    include: { talk: true },
+    include: { talk: true, speakers: { orderBy: { order: 'asc' } } },
   });
 
   if (!proposal) {
@@ -39,20 +39,18 @@ export const createTalkFromProposal = async (proposalId: string) => {
       title: proposal.title,
       description: proposal.description,
       speakers: {
-        create: [
-          {
-            userId: proposal.userId,
-            speakerName: proposal.speakerName,
-            speakerPhone: proposal.speakerPhone,
-            isProfessional: proposal.isProfessional,
-            jobTitle: proposal.jobTitle,
-            enterprise: proposal.enterprise,
-            isStudent: proposal.isStudent,
-            career: proposal.career,
-            studyPlace: proposal.studyPlace,
-            order: 0,
-          },
-        ],
+        create: proposal.speakers.map((s, idx) => ({
+          userId: s.userId ?? null,
+          speakerName: s.speakerName,
+          speakerPhone: s.speakerPhone,
+          isProfessional: s.isProfessional,
+          jobTitle: s.jobTitle,
+          enterprise: s.enterprise,
+          isStudent: s.isStudent,
+          career: s.career,
+          studyPlace: s.studyPlace,
+          order: idx,
+        })),
       },
     },
   });

@@ -46,16 +46,24 @@ export const createTalkProposal = async (eventId: string, data: TalkProposalForm
       userId: session.user.id,
       title: proposalData.title,
       description: proposalData.description,
-      speakerName: proposalData.speakerName,
-      speakerPhone: proposalData.speakerPhone,
-      isProfessional: proposalData.isProfessional,
-      jobTitle: proposalData.jobTitle,
-      enterprise: proposalData.enterprise,
-      isStudent: proposalData.isStudent,
-      career: proposalData.career,
-      studyPlace: proposalData.studyPlace,
+      speakers: {
+        create: proposalData.speakers.map((s, idx) => ({
+          userId: s.userId ?? null,
+          speakerName: s.speakerName,
+          speakerPhone: s.speakerPhone,
+          isProfessional: s.isProfessional,
+          jobTitle: s.jobTitle,
+          enterprise: s.enterprise,
+          isStudent: s.isStudent,
+          career: s.career,
+          studyPlace: s.studyPlace,
+          order: idx,
+        })),
+      },
     },
   });
+
+  const speakerNames = proposalData.speakers.map((s) => s.speakerName).join(', ');
 
   await notifyAdmins({
     type: 'talk_proposal_created',
@@ -65,7 +73,7 @@ export const createTalkProposal = async (eventId: string, data: TalkProposalForm
       eventId,
       eventName: event.name,
       talkProposalId: proposal.id,
-      speakerName: proposalData.speakerName,
+      speakerNames,
     },
   });
 

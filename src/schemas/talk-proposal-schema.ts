@@ -1,15 +1,13 @@
 import { z } from 'zod';
 
-export const talkProposalSchema = z
+export const talkProposalSpeakerSchema = z
   .object({
-    title: z
+    userId: z
       .string()
-      .min(3, { message: 'El título debe tener al menos 3 caracteres' })
-      .max(200, { message: 'El título no puede exceder 200 caracteres' }),
-    description: z
-      .string()
-      .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
-      .max(2000, { message: 'La descripción no puede exceder 2000 caracteres' }),
+      .cuid()
+      .optional()
+      .nullable()
+      .transform((v) => (v === '' ? null : (v ?? null))),
     speakerName: z
       .string()
       .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })
@@ -107,5 +105,19 @@ export const talkProposalSchema = z
     }
   });
 
+export const talkProposalSchema = z.object({
+  title: z
+    .string()
+    .min(3, { message: 'El título debe tener al menos 3 caracteres' })
+    .max(200, { message: 'El título no puede exceder 200 caracteres' }),
+  description: z
+    .string()
+    .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
+    .max(2000, { message: 'La descripción no puede exceder 2000 caracteres' }),
+  speakers: z.array(talkProposalSpeakerSchema).min(1, { message: 'Agregá al menos un orador' }),
+});
+
+export type TalkProposalSpeakerFormData = z.input<typeof talkProposalSpeakerSchema>;
+export type TalkProposalSpeakerData = z.infer<typeof talkProposalSpeakerSchema>;
 export type TalkProposalFormData = z.input<typeof talkProposalSchema>;
 export type TalkProposalData = z.infer<typeof talkProposalSchema>;

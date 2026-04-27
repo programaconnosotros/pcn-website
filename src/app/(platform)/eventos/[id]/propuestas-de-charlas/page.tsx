@@ -141,90 +141,99 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {proposals.map((proposal) => {
-                        const hasProfessionalData =
-                          proposal.isProfessional && proposal.jobTitle && proposal.enterprise;
-                        const hasStudentData =
-                          proposal.isStudent && proposal.career && proposal.studyPlace;
-
-                        return (
-                          <TableRow key={proposal.id}>
-                            <TableCell className="max-w-[180px] font-medium">
-                              {proposal.title}
-                            </TableCell>
-                            <TableCell className="whitespace-nowrap">
-                              {proposal.speakerName}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex flex-col gap-1">
-                                {hasProfessionalData && (
-                                  <div className="text-sm text-muted-foreground">
-                                    <Badge variant="outline" className="mb-1">
-                                      Profesional
-                                    </Badge>
-                                    <p>
-                                      <span className="font-medium">Rol:</span> {proposal.jobTitle}
-                                    </p>
-                                    <p>
-                                      <span className="font-medium">Empresa:</span>{' '}
-                                      {proposal.enterprise}
-                                    </p>
+                      {proposals.map((proposal) => (
+                        <TableRow key={proposal.id}>
+                          <TableCell className="max-w-[180px] font-medium">
+                            {proposal.title}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            <div className="flex flex-col gap-0.5">
+                              {proposal.speakers.map((s) => (
+                                <span key={s.id}>{s.speakerName}</span>
+                              ))}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col gap-3">
+                              {proposal.speakers.map((s) => {
+                                const hasProfessionalData =
+                                  s.isProfessional && s.jobTitle && s.enterprise;
+                                const hasStudentData = s.isStudent && s.career && s.studyPlace;
+                                return (
+                                  <div key={s.id} className="flex flex-col gap-1">
+                                    <span className="text-xs font-medium">{s.speakerName}</span>
+                                    {hasProfessionalData && (
+                                      <div className="text-sm text-muted-foreground">
+                                        <Badge variant="outline" className="mb-1">
+                                          Profesional
+                                        </Badge>
+                                        <p>
+                                          <span className="font-medium">Rol:</span> {s.jobTitle}
+                                        </p>
+                                        <p>
+                                          <span className="font-medium">Empresa:</span>{' '}
+                                          {s.enterprise}
+                                        </p>
+                                      </div>
+                                    )}
+                                    {hasStudentData && (
+                                      <div className="text-sm text-muted-foreground">
+                                        <Badge variant="outline" className="mb-1">
+                                          Estudiante
+                                        </Badge>
+                                        <p>
+                                          <span className="font-medium">Carrera:</span> {s.career}
+                                        </p>
+                                        <p>
+                                          <span className="font-medium">Universidad:</span>{' '}
+                                          {s.studyPlace}
+                                        </p>
+                                      </div>
+                                    )}
+                                    {!hasProfessionalData && !hasStudentData && (
+                                      <span className="text-sm text-muted-foreground">
+                                        Sin información adicional
+                                      </span>
+                                    )}
                                   </div>
-                                )}
-                                {hasStudentData && (
-                                  <div className="text-sm text-muted-foreground">
-                                    <Badge variant="outline" className="mb-1">
-                                      Estudiante
-                                    </Badge>
-                                    <p>
-                                      <span className="font-medium">Carrera:</span>{' '}
-                                      {proposal.career}
-                                    </p>
-                                    <p>
-                                      <span className="font-medium">Universidad:</span>{' '}
-                                      {proposal.studyPlace}
-                                    </p>
-                                  </div>
-                                )}
-                                {!hasProfessionalData && !hasStudentData && (
-                                  <span className="text-sm text-muted-foreground">
-                                    Sin información adicional
-                                  </span>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="max-w-[200px]">
-                              <p className="line-clamp-3 text-sm text-muted-foreground">
-                                {proposal.description}
-                              </p>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={statusVariant[proposal.status]}>
-                                {statusLabel[proposal.status]}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                              <LocalDateTime date={proposal.createdAt} />
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex items-center justify-end gap-2">
+                                );
+                              })}
+                            </div>
+                          </TableCell>
+                          <TableCell className="max-w-[200px]">
+                            <p className="line-clamp-3 text-sm text-muted-foreground">
+                              {proposal.description}
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={statusVariant[proposal.status]}>
+                              {statusLabel[proposal.status]}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                            <LocalDateTime date={proposal.createdAt} />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              {proposal.speakers.map((s) => (
                                 <WhatsappSpeakerButton
-                                  phone={proposal.speakerPhone}
-                                  speakerName={proposal.speakerName}
+                                  key={s.id}
+                                  phone={s.speakerPhone}
+                                  speakerName={s.speakerName}
                                   talkTitle={proposal.title}
                                   eventName={event.name}
                                 />
-                                <ProposalStatusActions
-                                  proposalId={proposal.id}
-                                  currentStatus={proposal.status}
-                                  speakerName={proposal.speakerName}
-                                  hasTalk={!!proposal.talk}
-                                />
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              ))}
+                              <ProposalStatusActions
+                                proposalId={proposal.id}
+                                currentStatus={proposal.status}
+                                speakerName={proposal.speakers.map((s) => s.speakerName).join(', ')}
+                                hasTalk={!!proposal.talk}
+                              />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </div>

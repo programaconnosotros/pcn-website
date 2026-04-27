@@ -46,14 +46,17 @@ const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) =>
   const user = session.user;
 
   const defaults = {
-    speakerName: user.name,
-    speakerPhone: user.phoneNumber ?? '',
-    isProfessional: !!(user.jobTitle && user.enterprise),
-    jobTitle: user.jobTitle ?? '',
-    enterprise: user.enterprise ?? '',
-    isStudent: !!(user.career && user.studyPlace),
-    career: user.career ?? '',
-    studyPlace: user.studyPlace ?? '',
+    firstSpeaker: {
+      userId: user.id,
+      speakerName: user.name,
+      speakerPhone: user.phoneNumber ?? '',
+      isProfessional: !!(user.jobTitle && user.enterprise),
+      jobTitle: user.jobTitle ?? '',
+      enterprise: user.enterprise ?? '',
+      isStudent: !!(user.career && user.studyPlace),
+      career: user.career ?? '',
+      studyPlace: user.studyPlace ?? '',
+    },
   };
 
   return (
