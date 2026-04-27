@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button';
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
@@ -12,21 +11,21 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
-import { EditEventForm } from '@/components/events/edit-event-form';
-import { DeleteEventButton } from '@/components/events/delete-event-button';
+import { fetchEvent } from '@/actions/events/fetch-event';
+import { NewTalkProposalForm } from '@/components/talk-proposals/new-talk-proposal-form';
 
-const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
+const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
   const id = params.id;
 
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
-    redirect(`/eventos/${id}`);
+    redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
   }
 
   const session = await prisma.session.findUnique({
@@ -35,41 +34,26 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
   });
 
   if (!session) {
+    redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
+  }
+
+  const event = await fetchEvent(id);
+
+  if (!event || !event.callForTalksEnabled) {
     redirect(`/eventos/${id}`);
   }
 
-  if (session.user.role !== 'ADMIN') {
-    redirect(`/eventos/${id}`);
-  }
+  const user = session.user;
 
-  const event = await fetchEventForEdit(id);
-
-  if (!event) {
-    redirect('/eventos');
-  }
-
-  const defaultValues = {
-    name: event.name,
-    description: event.description,
-    date: event.date.toISOString(),
-    endDate: event.endDate?.toISOString() ?? '',
-    city: event.city ?? '',
-    address: event.address ?? '',
-    placeName: event.placeName ?? '',
-    flyerSrc: event.flyerSrc,
-    latitude: event.latitude?.toString() || '',
-    longitude: event.longitude?.toString() || '',
-    capacity: event.capacity?.toString() || '',
-    externalRegistrationUrl: event.externalRegistrationUrl ?? '',
-    isOnline: event.isOnline ?? false,
-    streamingUrl: event.streamingUrl ?? '',
-    markedAsFull: event.markedAsFull ?? false,
-    callForTalksEnabled: event.callForTalksEnabled ?? false,
-    sponsors:
-      event.sponsors?.map((sponsor) => ({
-        name: sponsor.name,
-        website: sponsor.website || '',
-      })) || [],
+  const defaults = {
+    speakerName: user.name,
+    speakerPhone: user.phoneNumber ?? '',
+    isProfessional: !!(user.jobTitle && user.enterprise),
+    jobTitle: user.jobTitle ?? '',
+    enterprise: user.enterprise ?? '',
+    isStudent: !!(user.career && user.studyPlace),
+    career: user.career ?? '',
+    studyPlace: user.studyPlace ?? '',
   };
 
   return (
@@ -93,7 +77,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Editar</BreadcrumbPage>
+                <BreadcrumbPage>Proponer charla</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -101,23 +85,20 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Link href={`/eventos/${id}`}>
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Heading2 className="m-0">Editar evento</Heading2>
-            </div>
-            <DeleteEventButton eventId={id} eventName={event.name} />
+          <div className="mb-6 flex items-center gap-4">
+            <Link href={`/eventos/${id}`}>
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Heading2 className="m-0">Proponer charla — {event.name}</Heading2>
           </div>
 
-          <EditEventForm eventId={id} defaultValues={defaultValues} />
+          <NewTalkProposalForm eventId={id} defaults={defaults} />
         </div>
       </div>
     </>
   );
 };
 
-export default EditEventPage;
+export default ProponerCharlaPage;

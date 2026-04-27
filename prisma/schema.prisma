@@ -38,6 +38,7 @@ model User {
   comments        Comment[]
   likes           Like[]
   eventRegistrations EventRegistration[]
+  talkProposals   TalkProposal[]
   pageVisits      PageVisit[]
   testimonials    Testimonial[]
   notifications   Notification[]
@@ -121,6 +122,7 @@ model Event {
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)
+  callForTalksEnabled     Boolean   @default(false)
   isOnline                Boolean   @default(false)
   streamingUrl            String?
   deletedAt               DateTime? // Eliminación lógica
@@ -131,6 +133,7 @@ model Event {
   registrations EventRegistration[]
   sponsors      Sponsor[]
   announcements Announcement[]
+  talkProposals TalkProposal[]
 }
 
 model Image {
@@ -331,4 +334,36 @@ model EmailVerificationToken {
 
   @@index([email])
   @@index([code])
+}
+
+enum TalkProposalStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model TalkProposal {
+  id             String             @id @default(cuid())
+  eventId        String
+  userId         String
+  title          String
+  description    String
+  speakerName    String
+  speakerPhone   String
+  isProfessional Boolean            @default(false)
+  jobTitle       String?
+  enterprise     String?
+  isStudent      Boolean            @default(false)
+  career         String?
+  studyPlace     String?
+  status         TalkProposalStatus @default(PENDING)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  event          Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([userId])
+  @@index([status])
 }

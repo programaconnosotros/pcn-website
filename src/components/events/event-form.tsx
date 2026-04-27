@@ -63,6 +63,7 @@ export function EventForm({
       isOnline: defaultValues?.isOnline ?? false,
       streamingUrl: defaultValues?.streamingUrl ?? '',
       markedAsFull: defaultValues?.markedAsFull ?? false,
+      callForTalksEnabled: defaultValues?.callForTalksEnabled ?? false,
     },
   });
 
@@ -432,6 +433,34 @@ export function EventForm({
                 <FormDescription>
                   Muestra el badge &quot;Cupo completo&quot; en el listado y en la página del
                   evento. Útil cuando las inscripciones se manejan fuera del sistema (ej. Luma).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Call for talks */}
+          <FormField
+            control={form.control}
+            name="callForTalksEnabled"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-3">
+                  <FormControl>
+                    <input
+                      type="checkbox"
+                      id="callForTalksEnabled"
+                      checked={!!field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="callForTalksEnabled" className="cursor-pointer">
+                    Habilitar call for talks
+                  </FormLabel>
+                </div>
+                <FormDescription>
+                  Los miembros autenticados podrán proponer charlas para este evento.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

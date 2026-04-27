@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, Users, Globe, Video } from 'lucide-react';
+import { Calendar, MapPin, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
@@ -331,6 +331,30 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async pro
                   </CardContent>
                 </Card>
               )}
+
+              {/* Link a propuestas de charlas (solo para admins con call for talks habilitado) */}
+              {isAdmin && event.callForTalksEnabled && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Mic className="h-5 w-5" />
+                      Propuestas de charlas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-muted-foreground">
+                        Call for talks habilitado para este evento.
+                      </p>
+                      <Link href={`/eventos/${id}/propuestas-de-charlas`}>
+                        <Button variant="outline" size="sm">
+                          Ver propuestas
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* Columna lateral con información */}
@@ -358,6 +382,32 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async pro
                         isFull={isFull}
                       />
                     </Suspense>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Call for talks — botón para usuarios */}
+              {event.callForTalksEnabled && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col gap-2 text-center">
+                      <p className="text-sm font-medium">¿Querés dar una charla?</p>
+                      <p className="text-xs text-muted-foreground">
+                        Este evento acepta propuestas de charlas de la comunidad.
+                      </p>
+                      <Link
+                        href={
+                          sessionId
+                            ? `/eventos/${id}/proponer-charla`
+                            : `/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
+                        }
+                      >
+                        <Button variant="pcn" className="mt-1 w-full gap-2">
+                          <Mic className="h-4 w-4" />
+                          Proponer una charla
+                        </Button>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               )}

@@ -99,6 +99,10 @@ export const eventSchema = z
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),
     ),
+    callForTalksEnabled: z.preprocess(
+      (val) => (val === undefined || val === null ? false : val),
+      z.boolean().default(false),
+    ),
     capacity: z.preprocess(
       (val) => {
         if (val === null || val === undefined) return '';
