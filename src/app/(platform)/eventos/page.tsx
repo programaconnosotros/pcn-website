@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 const EventsPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   let isAdmin = false;
 

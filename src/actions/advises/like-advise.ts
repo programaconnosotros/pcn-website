@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 
 export const toggleLike = async (adviseId: string) => {
   try {
-    const sessionId = await cookies().get('sessionId');
+    const sessionId = (await cookies()).get('sessionId');
 
     if (!sessionId) throw new Error('User not authenticated');
 

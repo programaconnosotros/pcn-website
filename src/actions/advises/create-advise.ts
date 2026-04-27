@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 export const createAdvise = async (content: string) => {
   const validatedData = adviseSchema.parse({ content });
 
-  const sessionId = await cookies().get('sessionId');
+  const sessionId = (await cookies()).get('sessionId');
 
   if (!sessionId) throw new Error('User not authenticated');
 

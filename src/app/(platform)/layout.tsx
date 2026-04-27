@@ -13,8 +13,9 @@ const PlatformLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const defaultOpen = (await cookies().get('sidebar_state')?.value) === 'true';
-  const sessionId = await cookies().get('sessionId')?.value;
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
+  const sessionId = cookieStore.get('sessionId')?.value;
 
   let user: User | null = null;
 

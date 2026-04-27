@@ -14,7 +14,7 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
   const { registrationId, eventId } = params;
 
   // Verificar autenticación
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }

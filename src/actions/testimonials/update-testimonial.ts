@@ -9,7 +9,7 @@ import { notifyAdmins } from '@/actions/notifications/notify-admins';
 export const updateTestimonial = async (id: string, data: TestimonialFormData) => {
   const validatedData = testimonialSchema.parse(data);
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }

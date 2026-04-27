@@ -2,11 +2,12 @@ import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
   searchParams: Promise<{ autoRegister?: string }>;
 };
 
-const EventRegistrationPage = async ({ params, searchParams }: Props) => {
+const EventRegistrationPage = async (props: Props) => {
+  const params = await props.params;
   const id = params.id;
 
   const event = await prisma.event.findUnique({
@@ -18,8 +19,8 @@ const EventRegistrationPage = async ({ params, searchParams }: Props) => {
     redirect(event.externalRegistrationUrl);
   }
 
-  const params_await = await searchParams;
-  const autoRegister = params_await.autoRegister === 'true';
+  const searchParams = await props.searchParams;
+  const autoRegister = searchParams.autoRegister === 'true';
 
   if (autoRegister) {
     redirect(`/eventos/${id}?autoRegister=true`);

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 const TestimoniosPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let currentUserId: string | undefined = undefined;
   let isAdmin = false;
 

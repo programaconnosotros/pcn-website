@@ -31,11 +31,12 @@ import { DeleteRegistrationButton } from '@/components/events/delete-registratio
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LocalDateTime } from '@/components/ui/local-date-time';
 
-const EventRegistrationsPage = async ({ params }: { params: { id: string } }) => {
+const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const id = params.id;
 
   // Verificar autenticación y permisos de admin
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect(`/eventos/${id}`);

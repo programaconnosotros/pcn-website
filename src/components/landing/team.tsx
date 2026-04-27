@@ -1,8 +1,9 @@
+import React from 'react';
 import { Heading3 } from '../ui/heading-3';
 
 type Person = {
   name: string;
-  role: string | JSX.Element;
+  role: string | React.JSX.Element;
   imageUrl: string;
   xUrl?: string;
   linkedinUrl?: string;

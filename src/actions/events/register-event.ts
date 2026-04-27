@@ -20,7 +20,7 @@ export const registerEvent = async (eventId: string, options?: { skipRedirect?: 
   }
 
   // Requerir autenticación - solo usuarios autenticados pueden inscribirse
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('Debes estar autenticado para inscribirte a un evento');
   }

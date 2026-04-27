@@ -17,7 +17,7 @@ import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
 
 const NotificacionesPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect('/home');

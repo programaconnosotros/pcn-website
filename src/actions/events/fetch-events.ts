@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchEvents = () =>
+export const fetchEvents = async () =>
   prisma.event.findMany({
     where: {
       deletedAt: null,

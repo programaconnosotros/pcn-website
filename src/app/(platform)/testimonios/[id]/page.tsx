@@ -24,7 +24,8 @@ import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const testimonial = await fetchTestimonial(params.id);
 
   if (!testimonial) {
@@ -69,7 +70,8 @@ const formatDate = (date: Date) => {
   }).format(date);
 };
 
-const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => {
+const TestimonialDetailPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const id = params.id;
 
   const testimonial = await fetchTestimonial(id);
@@ -78,7 +80,7 @@ const TestimonialDetailPage = async ({ params }: { params: { id: string } }) => 
     redirect('/testimonios');
   }
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let currentUserId: string | undefined = undefined;
   let isAdmin = false;
 

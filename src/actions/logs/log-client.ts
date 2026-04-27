@@ -12,7 +12,7 @@ export const logClient = async (data: {
   metadata?: Record<string, any>;
 }) => {
   try {
-    const sessionId = cookies().get('sessionId')?.value;
+    const sessionId = (await cookies()).get('sessionId')?.value;
     let userId: string | undefined = undefined;
 
     if (sessionId) {
@@ -30,7 +30,7 @@ export const logClient = async (data: {
     }
 
     // Obtener información del request
-    const headersList = headers();
+    const headersList = await headers();
     const userAgent = headersList.get('user-agent') || null;
     const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null;
 

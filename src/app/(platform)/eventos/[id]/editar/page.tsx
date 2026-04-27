@@ -19,10 +19,11 @@ import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
 import { DeleteEventButton } from '@/components/events/delete-event-button';
 
-const EditEventPage = async ({ params }: { params: { id: string } }) => {
+const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const id = params.id;
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect(`/eventos/${id}`);

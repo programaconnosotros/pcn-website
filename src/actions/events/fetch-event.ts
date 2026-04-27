@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchEvent = (id: string) =>
+export const fetchEvent = async (id: string) =>
   prisma.event.findFirst({
     where: {
       id: id,

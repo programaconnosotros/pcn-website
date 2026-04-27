@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { announcementSchema, AnnouncementFormData } from '@/schemas/announcement-schema';
 
 export async function updateAnnouncement(announcementId: string, data: AnnouncementFormData) {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     throw new Error('No autorizado');

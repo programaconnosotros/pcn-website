@@ -38,7 +38,8 @@ function normalizeDescription(text: string): string {
     .trim();
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const event = await fetchEvent(params.id);
 
   if (!event) {
@@ -88,13 +89,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-const EventDetailPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
+const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async props => {
+  const params = await props.params;
   const id: string = params.id;
 
   const event: EventWithImages | null = await fetchEvent(id);
 
   // Verificar si el usuario es admin y obtener datos de sesión
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let isAdmin = false;
   let userId: string | null = null;
 

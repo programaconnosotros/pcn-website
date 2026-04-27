@@ -51,7 +51,7 @@ export const signIn = async (
       },
     });
 
-    cookies().set('sessionId', session.id, {
+    (await cookies()).set('sessionId', session.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

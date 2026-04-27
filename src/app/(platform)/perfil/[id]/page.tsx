@@ -42,7 +42,8 @@ export const revalidate = 0;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const user = await prisma.user.findUnique({
     where: { id: params.id },
     select: {
@@ -91,9 +92,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 interface ProfilePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getUser(id: string) {
@@ -162,7 +163,8 @@ async function getUser(id: string) {
   }
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
+export default async function ProfilePage(props: ProfilePageProps) {
+  const params = await props.params;
   const user = await getUser(params.id);
   const session = await getCurrentSession();
 

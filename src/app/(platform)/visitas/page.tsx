@@ -52,7 +52,7 @@ const formatRelativeTime = (date: Date) => {
 
 const VisitasPage = async () => {
   // Verificar autenticación y permisos de admin
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect('/home');

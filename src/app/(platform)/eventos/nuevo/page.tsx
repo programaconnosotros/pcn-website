@@ -18,7 +18,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const NewEventPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect('/eventos');

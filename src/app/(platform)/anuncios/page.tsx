@@ -18,7 +18,7 @@ import {
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 
 const AnunciosPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let isAdmin = false;
 
   if (sessionId) {

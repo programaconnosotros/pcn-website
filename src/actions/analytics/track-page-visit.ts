@@ -5,7 +5,7 @@ import { cookies, headers } from 'next/headers';
 
 export const trackPageVisit = async (path: string) => {
   try {
-    const sessionId = cookies().get('sessionId')?.value;
+    const sessionId = (await cookies()).get('sessionId')?.value;
     let userId: string | undefined = undefined;
     if (sessionId) {
       const session = await prisma.session.findUnique({
@@ -22,7 +22,7 @@ export const trackPageVisit = async (path: string) => {
     }
 
     // Obtener información del request
-    const headersList = headers();
+    const headersList = await headers();
     const userAgent = headersList.get('user-agent') || null;
     const referer = headersList.get('referer') || null;
     const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null;

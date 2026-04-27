@@ -18,7 +18,13 @@ import {
 import { Heading2 } from '@/components/ui/heading-2';
 import { getCourseById } from '../courses';
 
-const Course = ({ params: { courseId } }: { params: { courseId: string } }) => {
+const Course = async (props: { params: Promise<{ courseId: string }> }) => {
+  const params = await props.params;
+
+  const {
+    courseId
+  } = params;
+
   const course = getCourseById(courseId);
 
   if (!course) return <div>El curso no existe.</div>;

@@ -36,7 +36,7 @@ type Props = {
 };
 
 const MonitoreoPage = async ({ searchParams }: Props) => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect('/home');

@@ -9,7 +9,7 @@ import { notifyAdmins } from '@/actions/notifications/notify-admins';
 export const createTestimonial = async (data: TestimonialFormData) => {
   const validatedData = testimonialSchema.parse(data);
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     throw new Error('Debes estar autenticado para crear un testimonio');

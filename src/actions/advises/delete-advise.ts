@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 export const deleteAdvise = async (id: string) => {
-  const sessionId = await cookies().get('sessionId');
+  const sessionId = (await cookies()).get('sessionId');
 
   if (!sessionId) throw new Error('User not authenticated');
 

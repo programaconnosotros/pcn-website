@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchTestimonials = () =>
+export const fetchTestimonials = async () =>
   prisma.testimonial.findMany({
     orderBy: { createdAt: 'desc' },
     include: {

@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 
 export const deleteRegistration = async (registrationId: string) => {
   // Verificar que el usuario es admin
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }

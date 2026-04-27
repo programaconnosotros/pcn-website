@@ -21,7 +21,7 @@ export const createComment = async ({
 }: z.infer<typeof commentSchema>) => {
   const validatedData = commentSchema.parse({ content, adviseId, parentCommentId });
 
-  const sessionId = cookies().get('sessionId');
+  const sessionId = (await cookies()).get('sessionId');
 
   if (!sessionId) throw new Error('No autenticado');
 

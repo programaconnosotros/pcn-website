@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   let session: (Session & { user: User }) | null = null;
 

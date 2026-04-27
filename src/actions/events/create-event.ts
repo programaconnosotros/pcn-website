@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 export const createEvent = async (data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     throw new Error('Usuario no autenticado');

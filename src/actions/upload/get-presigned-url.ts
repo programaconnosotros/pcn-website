@@ -18,7 +18,7 @@ export async function getPresignedUrl({
   folder = 'events',
 }: GetPresignedUrlParams) {
   // Verificar autenticación
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }

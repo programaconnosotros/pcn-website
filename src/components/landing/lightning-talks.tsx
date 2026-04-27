@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +12,7 @@ import {
 type CarouselImage = {
   src: string;
   alt: string;
-  description: JSX.Element;
+  description: React.JSX.Element;
 };
 
 const carouselImages: CarouselImage[] = [

@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 };
 
 const AdvicePage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let session: (Session & { user: User }) | null = null;
 
   if (sessionId) {

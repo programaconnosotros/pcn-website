@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 
 export const deleteTestimonial = async (id: string) => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }

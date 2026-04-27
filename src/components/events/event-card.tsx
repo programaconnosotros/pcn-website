@@ -1,5 +1,3 @@
-'use server';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
