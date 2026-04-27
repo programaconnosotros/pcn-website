@@ -34,7 +34,18 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Calendar, Edit, FileText, MapPin, MicVocal, MoreVertical, Plus, Trash2, User, Youtube } from 'lucide-react';
+import {
+  Calendar,
+  Edit,
+  FileText,
+  MapPin,
+  MicVocal,
+  MoreVertical,
+  Plus,
+  Trash2,
+  User,
+  Youtube,
+} from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { TalkForm } from './talk-form';

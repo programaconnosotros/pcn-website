@@ -13,12 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Mic, Plus, Pencil, ExternalLink } from 'lucide-react';
 import { DeleteTalkButton } from './delete-talk-button';
 import { TalkForm } from './talk-form';
@@ -66,7 +61,8 @@ export function TalksList({ talks, eventId }: Props) {
               </TableHeader>
               <TableBody>
                 {talks.map((talk) => {
-                  const hasProfessionalData = talk.isProfessional && talk.jobTitle && talk.enterprise;
+                  const hasProfessionalData =
+                    talk.isProfessional && talk.jobTitle && talk.enterprise;
                   const hasStudentData = talk.isStudent && talk.career && talk.studyPlace;
 
                   return (
@@ -80,16 +76,28 @@ export function TalksList({ talks, eventId }: Props) {
                         <div className="flex flex-col gap-1">
                           {hasProfessionalData && (
                             <div className="text-sm text-muted-foreground">
-                              <Badge variant="outline" className="mb-1">Profesional</Badge>
-                              <p><span className="font-medium">Rol:</span> {talk.jobTitle}</p>
-                              <p><span className="font-medium">Empresa:</span> {talk.enterprise}</p>
+                              <Badge variant="outline" className="mb-1">
+                                Profesional
+                              </Badge>
+                              <p>
+                                <span className="font-medium">Rol:</span> {talk.jobTitle}
+                              </p>
+                              <p>
+                                <span className="font-medium">Empresa:</span> {talk.enterprise}
+                              </p>
                             </div>
                           )}
                           {hasStudentData && (
                             <div className="text-sm text-muted-foreground">
-                              <Badge variant="outline" className="mb-1">Estudiante</Badge>
-                              <p><span className="font-medium">Carrera:</span> {talk.career}</p>
-                              <p><span className="font-medium">Universidad:</span> {talk.studyPlace}</p>
+                              <Badge variant="outline" className="mb-1">
+                                Estudiante
+                              </Badge>
+                              <p>
+                                <span className="font-medium">Carrera:</span> {talk.career}
+                              </p>
+                              <p>
+                                <span className="font-medium">Universidad:</span> {talk.studyPlace}
+                              </p>
                             </div>
                           )}
                           {!hasProfessionalData && !hasStudentData && (
@@ -128,11 +136,7 @@ export function TalksList({ talks, eventId }: Props) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setEditingTalk(talk)}
-                          >
+                          <Button size="sm" variant="ghost" onClick={() => setEditingTalk(talk)}>
                             <Pencil className="h-3 w-3" />
                           </Button>
                           <DeleteTalkButton talkId={talk.id} talkTitle={talk.title} />
@@ -148,7 +152,7 @@ export function TalksList({ talks, eventId }: Props) {
       </CardContent>
 
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
@@ -161,7 +165,7 @@ export function TalksList({ talks, eventId }: Props) {
       </Dialog>
 
       <Dialog open={!!editingTalk} onOpenChange={(open) => !open && setEditingTalk(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Editar charla</DialogTitle>
           </DialogHeader>

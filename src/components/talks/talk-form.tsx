@@ -234,7 +234,11 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                 <FormItem>
                   <FormLabel>Rol / Puesto</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ej: Software Engineer" {...field} value={field.value ?? ''} />
+                    <Input
+                      placeholder="Ej: Software Engineer"
+                      {...field}
+                      value={field.value ?? ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -346,7 +350,11 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               <FormItem>
                 <FormLabel>URL del retrato</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://example.com/foto.jpg" {...field} value={field.value ?? ''} />
+                  <Input
+                    placeholder="https://example.com/foto.jpg"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -360,7 +368,11 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               <FormItem>
                 <FormLabel>URL del video</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://youtube.com/watch?v=..." {...field} value={field.value ?? ''} />
+                  <Input
+                    placeholder="https://youtube.com/watch?v=..."
+                    {...field}
+                    value={field.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -376,7 +388,11 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               <FormItem>
                 <FormLabel>URL de slides</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://slides.example.com" {...field} value={field.value ?? ''} />
+                  <Input
+                    placeholder="https://slides.example.com"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
