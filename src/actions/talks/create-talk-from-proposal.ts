@@ -38,14 +38,22 @@ export const createTalkFromProposal = async (proposalId: string) => {
       proposalId: proposal.id,
       title: proposal.title,
       description: proposal.description,
-      speakerName: proposal.speakerName,
-      speakerPhone: proposal.speakerPhone,
-      isProfessional: proposal.isProfessional,
-      jobTitle: proposal.jobTitle,
-      enterprise: proposal.enterprise,
-      isStudent: proposal.isStudent,
-      career: proposal.career,
-      studyPlace: proposal.studyPlace,
+      speakers: {
+        create: [
+          {
+            userId: proposal.userId,
+            speakerName: proposal.speakerName,
+            speakerPhone: proposal.speakerPhone,
+            isProfessional: proposal.isProfessional,
+            jobTitle: proposal.jobTitle,
+            enterprise: proposal.enterprise,
+            isStudent: proposal.isStudent,
+            career: proposal.career,
+            studyPlace: proposal.studyPlace,
+            order: 0,
+          },
+        ],
+      },
     },
   });
 

@@ -32,28 +32,37 @@ export const updateTalk = async (id: string, data: TalkFormData) => {
     throw new Error('Charla no encontrada');
   }
 
-  await prisma.talk.update({
-    where: { id },
-    data: {
-      eventId: talkData.eventId ?? null,
-      speakerId: talkData.speakerId ?? null,
-      title: talkData.title,
-      description: talkData.description,
-      speakerName: talkData.speakerName,
-      speakerPhone: talkData.speakerPhone,
-      isProfessional: talkData.isProfessional,
-      jobTitle: talkData.jobTitle,
-      enterprise: talkData.enterprise,
-      isStudent: talkData.isStudent,
-      career: talkData.career,
-      studyPlace: talkData.studyPlace,
-      order: talkData.order,
-      portraitUrl: talkData.portraitUrl ?? null,
-      slidesUrl: talkData.slidesUrl,
-      slideImages: talkData.slideImages ?? [],
-      videoUrl: talkData.videoUrl,
-    },
-  });
+  await prisma.$transaction([
+    prisma.talk.update({
+      where: { id },
+      data: {
+        eventId: talkData.eventId ?? null,
+        title: talkData.title,
+        description: talkData.description,
+        order: talkData.order,
+        portraitUrl: talkData.portraitUrl ?? null,
+        slidesUrl: talkData.slidesUrl,
+        slideImages: talkData.slideImages ?? [],
+        videoUrl: talkData.videoUrl,
+      },
+    }),
+    prisma.talkSpeaker.deleteMany({ where: { talkId: id } }),
+    prisma.talkSpeaker.createMany({
+      data: talkData.speakers.map((s, idx) => ({
+        talkId: id,
+        userId: s.userId ?? null,
+        speakerName: s.speakerName,
+        speakerPhone: s.speakerPhone,
+        isProfessional: s.isProfessional,
+        jobTitle: s.jobTitle,
+        enterprise: s.enterprise,
+        isStudent: s.isStudent,
+        career: s.career,
+        studyPlace: s.studyPlace,
+        order: idx,
+      })),
+    }),
+  ]);
 
   const eventId = talkData.eventId ?? existing.eventId;
   if (eventId) {

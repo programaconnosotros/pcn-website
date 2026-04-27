@@ -39,7 +39,7 @@ model User {
   likes           Like[]
   eventRegistrations EventRegistration[]
   talkProposals   TalkProposal[]
-  speakerTalks    Talk[]         @relation("UserSpeakerTalks")
+  speakerTalks    TalkSpeaker[]  @relation("UserTalkSpeakers")
   pageVisits      PageVisit[]
   testimonials    Testimonial[]
   notifications   Notification[]
@@ -378,16 +378,6 @@ model Talk {
   title       String
   description String
 
-  speakerId      String?
-  speakerName    String
-  speakerPhone   String
-  isProfessional Boolean @default(false)
-  jobTitle       String?
-  enterprise     String?
-  isStudent      Boolean @default(false)
-  career         String?
-  studyPlace     String?
-
   order       Int      @default(0)
   portraitUrl String?
   slidesUrl   String?
@@ -399,9 +389,35 @@ model Talk {
 
   event    Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
   proposal TalkProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
-  speaker  User?         @relation("UserSpeakerTalks", fields: [speakerId], references: [id], onDelete: SetNull)
+  speakers TalkSpeaker[]
 
   @@index([eventId])
-  @@index([speakerId])
   @@index([order])
+}
+
+model TalkSpeaker {
+  id     String  @id @default(cuid())
+  talkId String
+  userId String?
+
+  speakerName    String
+  speakerPhone   String
+  isProfessional Boolean @default(false)
+  jobTitle       String?
+  enterprise     String?
+  isStudent      Boolean @default(false)
+  career         String?
+  studyPlace     String?
+
+  order Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  talk Talk  @relation(fields: [talkId], references: [id], onDelete: Cascade)
+  user User? @relation("UserTalkSpeakers", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([talkId])
+  @@index([userId])
+  @@index([talkId, order])
 }

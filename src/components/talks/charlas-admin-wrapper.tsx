@@ -119,7 +119,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={talk.portraitUrl}
-                    alt={`${talk.speakerName}'s photo`}
+                    alt={`Foto de la charla "${talk.title}"`}
                     className="h-full w-full object-cover grayscale"
                   />
                   <div className="absolute inset-0 bg-pcnPurple/20 mix-blend-multiply dark:bg-pcnGreen/30 dark:mix-blend-screen" />
@@ -156,9 +156,25 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                 </CardHeader>
 
                 <CardContent className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                    <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
+                  <div className="flex items-start gap-2">
+                    <User className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
+                    <div className="flex flex-col gap-0.5">
+                      {talk.speakers.map((speaker) =>
+                        speaker.user ? (
+                          <Link
+                            key={speaker.id}
+                            href={`/perfil/${speaker.user.id}`}
+                            className="text-sm text-muted-foreground hover:underline"
+                          >
+                            {speaker.speakerName}
+                          </Link>
+                        ) : (
+                          <p key={speaker.id} className="text-sm text-muted-foreground">
+                            {speaker.speakerName}
+                          </p>
+                        ),
+                      )}
+                    </div>
                   </div>
 
                   {talk.event?.date && (

@@ -179,13 +179,14 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   const isOwnProfile = session?.user?.id === params.id;
 
-  const userTalks = user.name
-    ? await prisma.talk.findMany({
-        where: { speakerName: { contains: user.name, mode: 'insensitive' } },
-        include: { event: { select: { date: true, placeName: true, city: true } } },
-        orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-      })
-    : [];
+  const userTalks = await prisma.talk.findMany({
+    where: { speakers: { some: { userId: user.id } } },
+    include: {
+      event: { select: { date: true, placeName: true, city: true } },
+      speakers: { orderBy: { order: 'asc' } },
+    },
+    orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
+  });
 
   return (
     <>
@@ -458,7 +459,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                                   {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img
                                     src={talk.portraitUrl}
-                                    alt={talk.speakerName}
+                                    alt={`Foto de la charla "${talk.title}"`}
                                     className="h-full w-full object-cover"
                                   />
                                 </div>
@@ -466,7 +467,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                               <div className="flex flex-1 flex-col gap-2">
                                 <h3 className="text-xl font-semibold">{talk.title}</h3>
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                                  <span>{talk.speakerName}</span>
+                                  <span>{talk.speakers.map((s) => s.speakerName).join(', ')}</span>
                                   {talk.event?.date && (
                                     <span>
                                       {new Date(talk.event.date).toLocaleDateString('es-AR', {

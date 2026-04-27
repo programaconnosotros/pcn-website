@@ -1,22 +1,13 @@
 import { z } from 'zod';
 
-export const talkSchema = z
+export const talkSpeakerSchema = z
   .object({
-    eventId: z.string().cuid().optional().nullable(),
-    speakerId: z
+    userId: z
       .string()
       .cuid()
       .optional()
       .nullable()
       .transform((v) => (v === '' ? null : (v ?? null))),
-    title: z
-      .string()
-      .min(3, { message: 'El título debe tener al menos 3 caracteres' })
-      .max(200, { message: 'El título no puede exceder 200 caracteres' }),
-    description: z
-      .string()
-      .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
-      .max(2000, { message: 'La descripción no puede exceder 2000 caracteres' }),
     speakerName: z
       .string()
       .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })
@@ -57,28 +48,6 @@ export const talkSchema = z
       .max(200, { message: 'La universidad no puede exceder 200 caracteres' })
       .optional()
       .transform((val) => (val === '' || val === undefined ? undefined : val)),
-    order: z.number().int().min(0).default(0),
-    portraitUrl: z
-      .string()
-      .url({ message: 'La URL del retrato no es válida' })
-      .optional()
-      .or(z.literal(''))
-      .transform((val) => (val === '' ? undefined : val)),
-    slidesUrl: z
-      .string()
-      .url({ message: 'La URL de slides no es válida' })
-      .optional()
-      .or(z.literal(''))
-      .transform((val) => (val === '' ? undefined : val)),
-    slideImages: z
-      .array(z.string().url({ message: 'Cada imagen debe ser una URL válida' }))
-      .default([]),
-    videoUrl: z
-      .string()
-      .url({ message: 'La URL del video no es válida' })
-      .optional()
-      .or(z.literal(''))
-      .transform((val) => (val === '' ? undefined : val)),
   })
   .superRefine((data, ctx) => {
     if (!data.isProfessional && !data.isStudent) {
@@ -136,5 +105,42 @@ export const talkSchema = z
     }
   });
 
+export const talkSchema = z.object({
+  eventId: z.string().cuid().optional().nullable(),
+  title: z
+    .string()
+    .min(3, { message: 'El título debe tener al menos 3 caracteres' })
+    .max(200, { message: 'El título no puede exceder 200 caracteres' }),
+  description: z
+    .string()
+    .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
+    .max(2000, { message: 'La descripción no puede exceder 2000 caracteres' }),
+  speakers: z.array(talkSpeakerSchema).min(1, { message: 'Agregá al menos un orador' }),
+  order: z.number().int().min(0).default(0),
+  portraitUrl: z
+    .string()
+    .url({ message: 'La URL de la foto no es válida' })
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  slidesUrl: z
+    .string()
+    .url({ message: 'La URL de slides no es válida' })
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  slideImages: z
+    .array(z.string().url({ message: 'Cada imagen debe ser una URL válida' }))
+    .default([]),
+  videoUrl: z
+    .string()
+    .url({ message: 'La URL del video no es válida' })
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+});
+
+export type TalkSpeakerFormData = z.input<typeof talkSpeakerSchema>;
+export type TalkSpeakerData = z.infer<typeof talkSpeakerSchema>;
 export type TalkFormData = z.input<typeof talkSchema>;
 export type TalkData = z.infer<typeof talkSchema>;

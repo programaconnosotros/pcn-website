@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Talk } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,15 +16,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Mic, Plus, Pencil, ExternalLink } from 'lucide-react';
 import { DeleteTalkButton } from './delete-talk-button';
 import { TalkForm } from './talk-form';
+import { fetchTalks } from '@/actions/talks/fetch-talks';
+
+type TalkWithSpeakers = Awaited<ReturnType<typeof fetchTalks>>[number];
 
 type Props = {
-  talks: Talk[];
+  talks: TalkWithSpeakers[];
   eventId: string;
 };
 
 export function TalksList({ talks, eventId }: Props) {
   const [showCreate, setShowCreate] = useState(false);
-  const [editingTalk, setEditingTalk] = useState<Talk | null>(null);
+  const [editingTalk, setEditingTalk] = useState<TalkWithSpeakers | null>(null);
 
   return (
     <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
@@ -53,7 +55,7 @@ export function TalksList({ talks, eventId }: Props) {
                 <TableRow>
                   <TableHead className="w-12">Orden</TableHead>
                   <TableHead>Título</TableHead>
-                  <TableHead>Speaker</TableHead>
+                  <TableHead>Oradores</TableHead>
                   <TableHead>Perfil</TableHead>
                   <TableHead>Recursos</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
@@ -61,9 +63,12 @@ export function TalksList({ talks, eventId }: Props) {
               </TableHeader>
               <TableBody>
                 {talks.map((talk) => {
-                  const hasProfessionalData =
-                    talk.isProfessional && talk.jobTitle && talk.enterprise;
-                  const hasStudentData = talk.isStudent && talk.career && talk.studyPlace;
+                  const hasProfessionalData = talk.speakers.some(
+                    (s) => s.isProfessional && s.jobTitle && s.enterprise,
+                  );
+                  const hasStudentData = talk.speakers.some(
+                    (s) => s.isStudent && s.career && s.studyPlace,
+                  );
 
                   return (
                     <TableRow key={talk.id}>
@@ -71,33 +76,48 @@ export function TalksList({ talks, eventId }: Props) {
                         {talk.order}
                       </TableCell>
                       <TableCell className="max-w-[200px] font-medium">{talk.title}</TableCell>
-                      <TableCell className="whitespace-nowrap">{talk.speakerName}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {talk.speakers.map((s) => s.speakerName).join(', ') || '—'}
+                      </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
-                          {hasProfessionalData && (
+                          {talk.speakers.some((s) => s.isProfessional && s.jobTitle && s.enterprise) && (
                             <div className="text-sm text-muted-foreground">
                               <Badge variant="outline" className="mb-1">
                                 Profesional
                               </Badge>
-                              <p>
-                                <span className="font-medium">Rol:</span> {talk.jobTitle}
-                              </p>
-                              <p>
-                                <span className="font-medium">Empresa:</span> {talk.enterprise}
-                              </p>
+                              {talk.speakers
+                                .filter((s) => s.isProfessional && s.jobTitle && s.enterprise)
+                                .map((s) => (
+                                  <div key={s.id}>
+                                    <p>
+                                      <span className="font-medium">Rol:</span> {s.jobTitle}
+                                    </p>
+                                    <p>
+                                      <span className="font-medium">Empresa:</span> {s.enterprise}
+                                    </p>
+                                  </div>
+                                ))}
                             </div>
                           )}
-                          {hasStudentData && (
+                          {talk.speakers.some((s) => s.isStudent && s.career && s.studyPlace) && (
                             <div className="text-sm text-muted-foreground">
                               <Badge variant="outline" className="mb-1">
                                 Estudiante
                               </Badge>
-                              <p>
-                                <span className="font-medium">Carrera:</span> {talk.career}
-                              </p>
-                              <p>
-                                <span className="font-medium">Universidad:</span> {talk.studyPlace}
-                              </p>
+                              {talk.speakers
+                                .filter((s) => s.isStudent && s.career && s.studyPlace)
+                                .map((s) => (
+                                  <div key={s.id}>
+                                    <p>
+                                      <span className="font-medium">Carrera:</span> {s.career}
+                                    </p>
+                                    <p>
+                                      <span className="font-medium">Universidad:</span>{' '}
+                                      {s.studyPlace}
+                                    </p>
+                                  </div>
+                                ))}
                             </div>
                           )}
                           {!hasProfessionalData && !hasStudentData && (

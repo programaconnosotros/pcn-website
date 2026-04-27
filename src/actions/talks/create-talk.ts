@@ -30,22 +30,27 @@ export const createTalk = async (data: TalkFormData) => {
   const talk = await prisma.talk.create({
     data: {
       eventId: talkData.eventId ?? null,
-      speakerId: talkData.speakerId ?? null,
       title: talkData.title,
       description: talkData.description,
-      speakerName: talkData.speakerName,
-      speakerPhone: talkData.speakerPhone,
-      isProfessional: talkData.isProfessional,
-      jobTitle: talkData.jobTitle,
-      enterprise: talkData.enterprise,
-      isStudent: talkData.isStudent,
-      career: talkData.career,
-      studyPlace: talkData.studyPlace,
       order: talkData.order,
       portraitUrl: talkData.portraitUrl ?? null,
       slidesUrl: talkData.slidesUrl,
       slideImages: talkData.slideImages ?? [],
       videoUrl: talkData.videoUrl,
+      speakers: {
+        create: talkData.speakers.map((s, idx) => ({
+          userId: s.userId ?? null,
+          speakerName: s.speakerName,
+          speakerPhone: s.speakerPhone,
+          isProfessional: s.isProfessional,
+          jobTitle: s.jobTitle,
+          enterprise: s.enterprise,
+          isStudent: s.isStudent,
+          career: s.career,
+          studyPlace: s.studyPlace,
+          order: idx,
+        })),
+      },
     },
   });
 
