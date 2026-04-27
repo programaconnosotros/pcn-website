@@ -41,7 +41,9 @@ export const createTalk = async (data: TalkFormData) => {
       career: talkData.career,
       studyPlace: talkData.studyPlace,
       order: talkData.order,
+      portraitUrl: talkData.portraitUrl ?? null,
       slidesUrl: talkData.slidesUrl,
+      slideImages: talkData.slideImages ?? [],
       videoUrl: talkData.videoUrl,
     },
   });
@@ -49,6 +51,7 @@ export const createTalk = async (data: TalkFormData) => {
   if (talkData.eventId) {
     revalidatePath(`/eventos/${talkData.eventId}/charlas`);
   }
+  revalidatePath('/charlas');
 
   return { success: true, talkId: talk.id };
 };

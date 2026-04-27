@@ -51,6 +51,7 @@ export const createTalkFromProposal = async (proposalId: string) => {
 
   revalidatePath(`/eventos/${proposal.eventId}/charlas`);
   revalidatePath(`/eventos/${proposal.eventId}/propuestas-de-charlas`);
+  revalidatePath('/charlas');
 
   return { success: true, talkId: talk.id, alreadyExists: false };
 };

@@ -1,20 +1,3 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Heading2 } from '@/components/ui/heading-2';
 import type { Metadata } from 'next';
 import {
   Breadcrumb,
@@ -26,9 +9,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Calendar, FileText, MapPin, MicVocal, User, Youtube } from 'lucide-react';
-import Link from 'next/link';
+import { cookies } from 'next/headers';
+import prisma from '@/lib/prisma';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
+import { CharlasAdminWrapper } from '@/components/talks/charlas-admin-wrapper';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -52,7 +36,16 @@ export const metadata: Metadata = {
 };
 
 const Talks = async () => {
-  const talks = await fetchPublicTalks();
+  const [talks, sessionId] = await Promise.all([
+    fetchPublicTalks(),
+    cookies().then((c) => c.get('sessionId')?.value),
+  ]);
+
+  const session = sessionId
+    ? await prisma.session.findUnique({ where: { id: sessionId }, include: { user: true } })
+    : null;
+
+  const isAdmin = session?.user.role === 'ADMIN';
 
   return (
     <>
@@ -74,137 +67,7 @@ const Talks = async () => {
         </div>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                  <MicVocal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-                </div>
-                <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Charlas</span>
-              </Heading2>
-
-              <Link className="block" href="https://wa.me/5493815777562">
-                <Button variant="pcn" className="flex flex-row items-center gap-2">
-                  Quiero dar una charla
-                  <MicVocal className="h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
-            {talks.map((talk) => {
-              const location = [talk.event?.placeName, talk.event?.city].filter(Boolean).join(', ');
-              return (
-                <Card
-                  key={talk.id}
-                  className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:flex-row"
-                >
-                  {talk.portraitUrl && (
-                    <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={talk.portraitUrl}
-                        alt={`${talk.speakerName}'s photo`}
-                        className="h-full w-full object-cover grayscale"
-                      />
-                      <div className="absolute inset-0 bg-pcnPurple/20 mix-blend-multiply dark:bg-pcnGreen/30 dark:mix-blend-screen" />
-                    </div>
-                  )}
-
-                  <div className="flex flex-1 flex-col">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{talk.title}</CardTitle>
-                    </CardHeader>
-
-                    <CardContent className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                        <p className="text-sm text-muted-foreground">{talk.speakerName}</p>
-                      </div>
-
-                      {talk.event?.date && (
-                        <div className="mt-2 flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(talk.event.date)
-                              .toLocaleDateString('es-ES', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                              })
-                              .replace(/\//g, '/')}
-                          </p>
-                        </div>
-                      )}
-
-                      {location && (
-                        <div className="mt-2 flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                          <p className="text-sm text-muted-foreground">{location}</p>
-                        </div>
-                      )}
-                    </CardContent>
-
-                    <CardFooter className="mt-auto flex flex-col items-start gap-2">
-                      {talk.videoUrl && (
-                        <Link href={talk.videoUrl} target="_blank" rel="noopener noreferrer">
-                          <Button className="flex items-center gap-2" variant="youtube">
-                            Ver en YouTube
-                            <Youtube className="h-4 w-4 text-white" />
-                          </Button>
-                        </Link>
-                      )}
-
-                      {talk.slideImages.length > 0 ? (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="flex items-center gap-2" variant="outline">
-                              Ver slides
-                              <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                            </Button>
-                          </DialogTrigger>
-
-                          <DialogContent className="max-w-4xl px-16">
-                            <DialogHeader>
-                              <DialogTitle>{talk.title}</DialogTitle>
-                            </DialogHeader>
-
-                            <Carousel>
-                              <CarouselContent>
-                                {talk.slideImages.map((slide, index) => (
-                                  <CarouselItem key={index}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                      src={slide}
-                                      alt={`Slide ${index + 1}`}
-                                      className="h-auto w-full"
-                                    />
-                                  </CarouselItem>
-                                ))}
-                              </CarouselContent>
-
-                              <CarouselPrevious />
-                              <CarouselNext />
-                            </Carousel>
-                          </DialogContent>
-                        </Dialog>
-                      ) : talk.slidesUrl ? (
-                        <Link href={talk.slidesUrl} target="_blank" rel="noopener noreferrer">
-                          <Button className="flex items-center gap-2" variant="outline">
-                            Ver slides
-                            <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                          </Button>
-                        </Link>
-                      ) : null}
-                    </CardFooter>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+        <CharlasAdminWrapper talks={talks} isAdmin={isAdmin} />
       </div>
     </>
   );

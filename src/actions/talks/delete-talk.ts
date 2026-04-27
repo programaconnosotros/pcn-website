@@ -29,6 +29,7 @@ export const deleteTalk = async (id: string) => {
   if (talk.eventId) {
     revalidatePath(`/eventos/${talk.eventId}/charlas`);
   }
+  revalidatePath('/charlas');
 
   return { success: true };
 };

@@ -11,16 +11,32 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { createTalk } from '@/actions/talks/create-talk';
 import { updateTalk } from '@/actions/talks/update-talk';
+import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
 import { Loader2, Save } from 'lucide-react';
 import { Talk } from '@prisma/client';
+
+type EventOption = {
+  id: string;
+  name: string;
+  date: Date;
+  placeName: string | null;
+  city: string | null;
+};
 
 type Props = {
   eventId?: string;
@@ -31,6 +47,13 @@ type Props = {
 
 export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [events, setEvents] = useState<EventOption[]>([]);
+
+  useEffect(() => {
+    if (eventId === undefined) {
+      fetchEventsForSelect().then(setEvents);
+    }
+  }, []);
 
   const form = useForm<TalkFormData>({
     resolver: zodResolver(talkSchema),
@@ -78,6 +101,43 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        {eventId === undefined && (
+          <FormField
+            control={form.control}
+            name="eventId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Evento (opcional)</FormLabel>
+                <Select
+                  onValueChange={(val) => field.onChange(val === '__none__' ? null : val)}
+                  value={field.value ?? '__none__'}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sin evento" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="__none__">Sin evento</SelectItem>
+                    {events.map((event) => (
+                      <SelectItem key={event.id} value={event.id}>
+                        {event.name} &mdash;{' '}
+                        {new Date(event.date).toLocaleDateString('es-ES', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}{' '}
+                        &mdash; {event.placeName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <FormField
           control={form.control}
           name="title"
