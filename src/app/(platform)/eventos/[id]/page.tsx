@@ -38,7 +38,9 @@ function normalizeDescription(text: string): string {
     .trim();
 }
 
-export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
   const params = await props.params;
   const event = await fetchEvent(params.id);
 
@@ -89,7 +91,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   };
 }
 
-const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async props => {
+const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (props) => {
   const params = await props.params;
   const id: string = params.id;
 

@@ -18,7 +18,10 @@ export const talkProposalSchema = z
       .string()
       .min(8, { message: 'El teléfono debe tener al menos 8 dígitos' })
       .max(15, { message: 'El teléfono no puede exceder 15 dígitos' })
-      .regex(/^\d+$/, { message: 'El teléfono debe contener solo dígitos (sin +, espacios ni guiones). Incluí el código de país. Ej: 5493815123456' }),
+      .regex(/^\d+$/, {
+        message:
+          'El teléfono debe contener solo dígitos (sin +, espacios ni guiones). Incluí el código de país. Ej: 5493815123456',
+      }),
     isProfessional: z.preprocess(
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),

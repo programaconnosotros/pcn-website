@@ -21,9 +21,7 @@ import { getCourseById } from '../courses';
 const Course = async (props: { params: Promise<{ courseId: string }> }) => {
   const params = await props.params;
 
-  const {
-    courseId
-  } = params;
+  const { courseId } = params;
 
   const course = getCourseById(courseId);
 

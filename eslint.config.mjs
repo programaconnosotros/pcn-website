@@ -6,10 +6,7 @@ const config = [
   prettierConfig,
   {
     rules: {
-      'no-unused-vars': [
-        'warn',
-        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-      ],
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       // New react-hooks v5 React Compiler rules — disabled until pre-existing
       // patterns in the codebase are addressed in follow-up tickets.
       'react-hooks/set-state-in-effect': 'off',

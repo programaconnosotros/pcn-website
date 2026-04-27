@@ -142,8 +142,10 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
                     </TableHeader>
                     <TableBody>
                       {proposals.map((proposal) => {
-                        const hasProfessionalData = proposal.isProfessional && proposal.jobTitle && proposal.enterprise;
-                        const hasStudentData = proposal.isStudent && proposal.career && proposal.studyPlace;
+                        const hasProfessionalData =
+                          proposal.isProfessional && proposal.jobTitle && proposal.enterprise;
+                        const hasStudentData =
+                          proposal.isStudent && proposal.career && proposal.studyPlace;
 
                         return (
                           <TableRow key={proposal.id}>

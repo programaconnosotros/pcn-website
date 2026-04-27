@@ -136,8 +136,7 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
                   <Input placeholder="Ej: 5493815123456" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Solo dígitos, sin espacios ni guiones. Incluí el código de país. Ej:
-                  5493815123456
+                  Solo dígitos, sin espacios ni guiones. Incluí el código de país. Ej: 5493815123456
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -178,7 +177,11 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
                   <FormItem>
                     <FormLabel>Rol / Puesto</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: Software Engineer" {...field} value={field.value ?? ''} />
+                      <Input
+                        placeholder="Ej: Software Engineer"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -234,7 +237,11 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
                   <FormItem>
                     <FormLabel>Carrera</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: Ingeniería en Sistemas" {...field} value={field.value ?? ''} />
+                      <Input
+                        placeholder="Ej: Ingeniería en Sistemas"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -247,7 +254,11 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
                   <FormItem>
                     <FormLabel>Universidad / Institución</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: Universidad Nacional de Tucumán" {...field} value={field.value ?? ''} />
+                      <Input
+                        placeholder="Ej: Universidad Nacional de Tucumán"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
