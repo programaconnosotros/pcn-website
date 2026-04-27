@@ -19,6 +19,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { FileUpload } from '@/components/ui/file-upload';
+import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -323,7 +325,25 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-4">
+        <FormField
+          control={form.control}
+          name="portraitUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Retrato del speaker</FormLabel>
+              <FormControl>
+                <FileUpload
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  folder="talks/portraits"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="order"
@@ -336,24 +356,6 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                     min={0}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="portraitUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL del retrato</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://example.com/foto.jpg"
-                    {...field}
-                    value={field.value ?? ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -380,51 +382,41 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="slidesUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL de slides</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://slides.example.com"
-                    {...field}
-                    value={field.value ?? ''}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="slidesUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL de slides</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="https://slides.example.com"
+                  {...field}
+                  value={field.value ?? ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="slideImages"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Imágenes de slides</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Una URL por línea&#10;https://example.com/slide1.png&#10;https://example.com/slide2.png"
-                    className="min-h-[80px] font-mono text-xs"
-                    value={(field.value ?? []).join('\n')}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value
-                          .split('\n')
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="slideImages"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Imágenes de slides</FormLabel>
+              <FormControl>
+                <MultiFileUpload
+                  value={field.value ?? []}
+                  onChange={field.onChange}
+                  folder="talks/slides"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex gap-4">
           <Button type="submit" variant="pcn" className="flex-1" disabled={isSubmitting}>
