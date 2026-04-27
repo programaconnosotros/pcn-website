@@ -17,15 +17,17 @@ import { toast } from 'sonner';
 import { TalkProposalStatus } from '@prisma/client';
 import { updateTalkProposalStatus } from '@/actions/talk-proposals/update-talk-proposal-status';
 import { deleteTalkProposal } from '@/actions/talk-proposals/delete-talk-proposal';
-import { CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import { createTalkFromProposal } from '@/actions/talks/create-talk-from-proposal';
+import { CheckCircle, XCircle, Trash2, Mic } from 'lucide-react';
 
 type Props = {
   proposalId: string;
   currentStatus: TalkProposalStatus;
   speakerName: string;
+  hasTalk?: boolean;
 };
 
-export function ProposalStatusActions({ proposalId, currentStatus, speakerName }: Props) {
+export function ProposalStatusActions({ proposalId, currentStatus, speakerName, hasTalk }: Props) {
   const [isPending, setIsPending] = useState(false);
 
   const handleStatusChange = async (status: TalkProposalStatus) => {
@@ -35,6 +37,22 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName }
       toast.success(status === 'ACCEPTED' ? 'Propuesta aceptada' : 'Propuesta rechazada');
     } catch (error: any) {
       toast.error(error.message || 'Error al actualizar el estado');
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const handlePromoteToTalk = async () => {
+    setIsPending(true);
+    try {
+      const result = await createTalkFromProposal(proposalId);
+      if (result.alreadyExists) {
+        toast.info('Esta propuesta ya tiene una charla creada');
+      } else {
+        toast.success('Charla creada a partir de la propuesta');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Error al crear la charla');
     } finally {
       setIsPending(false);
     }
@@ -75,6 +93,20 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName }
         <XCircle className="h-3 w-3" />
         Rechazar
       </Button>
+
+      {currentStatus === 'ACCEPTED' && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-1"
+          disabled={isPending || !!hasTalk}
+          onClick={handlePromoteToTalk}
+          title={hasTalk ? 'Ya tiene una charla creada' : 'Crear charla a partir de esta propuesta'}
+        >
+          <Mic className="h-3 w-3" />
+          {hasTalk ? 'Charla creada' : 'Crear charla'}
+        </Button>
+      )}
 
       <AlertDialog>
         <AlertDialogTrigger asChild>

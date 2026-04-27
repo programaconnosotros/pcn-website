@@ -134,6 +134,7 @@ model Event {
   sponsors      Sponsor[]
   announcements Announcement[]
   talkProposals TalkProposal[]
+  talks         Talk[]
 }
 
 model Image {
@@ -362,8 +363,39 @@ model TalkProposal {
 
   event          Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  talk           Talk?
 
   @@index([eventId])
   @@index([userId])
   @@index([status])
+}
+
+model Talk {
+  id          String  @id @default(cuid())
+  eventId     String?
+  proposalId  String? @unique
+  title       String
+  description String
+
+  speakerName    String
+  speakerPhone   String
+  isProfessional Boolean @default(false)
+  jobTitle       String?
+  enterprise     String?
+  isStudent      Boolean @default(false)
+  career         String?
+  studyPlace     String?
+
+  order     Int     @default(0)
+  slidesUrl String?
+  videoUrl  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event    Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  proposal TalkProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+
+  @@index([eventId])
+  @@index([order])
 }

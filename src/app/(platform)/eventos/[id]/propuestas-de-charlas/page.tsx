@@ -218,6 +218,7 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
                                   proposalId={proposal.id}
                                   currentStatus={proposal.status}
                                   speakerName={proposal.speakerName}
+                                  hasTalk={!!proposal.talk}
                                 />
                               </div>
                             </TableCell>
