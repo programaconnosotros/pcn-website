@@ -1,0 +1,464 @@
+[
+  {
+    "name": "Arquitectura de software: frontend, backend, bases de datos y más",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/lightning-talks/arquitectura-software.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Arquitectura modular en aplicaciones móviles",
+    "speakerName": "Mauricio Sánchez",
+    "portrait": "/lightning-talks/arquitectura-modular.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Depuración de código",
+    "speakerName": "Tobías Paz Posse",
+    "portrait": "/lightning-talks/debugging.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Paradigmas de programación",
+    "speakerName": "Marcelo Núñez",
+    "portrait": "/lightning-talks/paradigmas.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "La Shell",
+    "speakerName": "Marcelo Núnez",
+    "portrait": "/lightning-talks/la-shell.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Ingeniería en sistemas de información",
+    "speakerName": "Marcelo Núnez",
+    "portrait": "/lightning-talks/ingenieria-en-sistemas.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Programación optimizada con ChatGPT",
+    "speakerName": "Facundo Bazán",
+    "portrait": "/lightning-talks/chatgpt.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Java funcional: agilizando el procesamiento de datos",
+    "speakerName": "Marcelo Núñez",
+    "portrait": "/lightning-talks/java-funcional.webp",
+    "date": "2023-05-06",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Database indexing",
+    "speakerName": "Josefina Japaze",
+    "portrait": "/lightning-talks/database-indexing.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Introducción al unit testing",
+    "speakerName": "Tobías Paz Posse",
+    "portrait": "/lightning-talks/unit-testing.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Domain-driven design, hexagonal architecture & vertical slicing",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/lightning-talks/ddd-y-hexagonal-6.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Diseño perfecto",
+    "speakerName": "Mauricio Sánchez",
+    "portrait": "/lightning-talks/diseno-perfecto.webp",
+    "date": "2023-09-16",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Sitios para alojar repositorios de Git",
+    "speakerName": "Camila Rodriguez",
+    "date": "2021-10-09",
+    "youtubeUrl": "https://www.youtube.com/live/QMyCntZ5rIY?si=24Y1uD9PtsoDVqGo&t=934"
+  },
+  {
+    "name": "Creación de repositorios en GitHub y conexión a repositorio local",
+    "speakerName": "Marcelo Núñez",
+    "date": "2021-10-09",
+    "youtubeUrl": "https://www.youtube.com/live/QMyCntZ5rIY?si=gd0ubcoGW1iQokM-&t=1281"
+  },
+  {
+    "name": "Subida de cambios locales a repositorio de GitHub",
+    "speakerName": "Lucas Pérez",
+    "date": "2021-10-09",
+    "youtubeUrl": "https://www.youtube.com/live/QMyCntZ5rIY?si=_6U8-KJkfOUKs1_U&t=1921"
+  },
+  {
+    "name": "Conflictos y soluciones trabajando en equipo usando Git y GitHub",
+    "speakerName": "Mauricio Sánchez y Tobías Paz Posse",
+    "date": "2021-10-09",
+    "youtubeUrl": "https://www.youtube.com/live/QMyCntZ5rIY?si=qkz-Sg3tmtuWuXnV&t=2631"
+  },
+  {
+    "name": "Repaso de conceptos básicos de computación y desarrollo de software",
+    "speakerName": "Lucas Perez",
+    "date": "2021-06-26",
+    "youtubeUrl": "https://www.youtube.com/live/4yBLY947A0E?si=VyGzfqBG3HjG904J&t=742"
+  },
+  {
+    "name": "¿Qué es un sistema de control de versiones y cómo nos beneficia utilizarlo?",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2021-06-26",
+    "youtubeUrl": "https://www.youtube.com/live/4yBLY947A0E?si=x4WrBIMy5C3R4CYQ&t=1629"
+  },
+  {
+    "name": "Conceptos fundamentales de Git",
+    "speakerName": "Marcelo Nuñez",
+    "date": "2021-06-26",
+    "youtubeUrl": "https://www.youtube.com/live/4yBLY947A0E?si=WWX9mB65_rO6t2KK&t=1932"
+  },
+  {
+    "name": "Instalación de Git en Windows y Linux",
+    "speakerName": "Jeremías Moreno Ivanoff",
+    "date": "2021-06-26",
+    "youtubeUrl": "https://www.youtube.com/live/4yBLY947A0E?si=Poyd76WCSBR9PdCE&t=2785"
+  },
+  {
+    "name": "Workflow básico local con Git y C/C++",
+    "speakerName": "Agustín Sánchez",
+    "date": "2021-06-26",
+    "youtubeUrl": "https://www.youtube.com/live/4yBLY947A0E?si=D8qRBMKdjMchkYEQ&t=3633"
+  },
+  {
+    "name": "Claves de la ingeniería en sistemas",
+    "speakerName": "Agustín Sánchez",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=V9T2ovOXMAx-ErB1&t=681"
+  },
+  {
+    "name": "¿Qué es un algoritmo?",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=JFtHNSBVVcdH-30U&t=1591"
+  },
+  {
+    "name": "Terminal vs. interfaz gráfica",
+    "speakerName": "Jeremías Moreno Ivanoff",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=t3l1Cggh5MpNiNJC&t=2171"
+  },
+  {
+    "name": "Superando la facultad virtual con un equipo",
+    "speakerName": "Gadiel Scharf y Tobías Paz Posse",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=P85jvVZYQo-SqrE8&t=2971"
+  },
+  {
+    "name": "Herramientas para el trabajo en equipo",
+    "speakerName": "Gadiel Scharf y Tobías Paz Posse",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=-IZyGVkqqYklvAZ5&t=3560"
+  },
+  {
+    "name": "La visión sistémica en la programación",
+    "speakerName": "Germán Navarro",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=kf_zDIku8V-0wBaf&t=4350"
+  },
+  {
+    "name": "El camino del programador",
+    "speakerName": "Esteban Sánchez",
+    "date": "2021-04-24",
+    "youtubeUrl": "https://www.youtube.com/live/7F1m0PwHO38?si=2Y61JSVvkAvzsNN9&t=5000"
+  },
+  {
+    "name": "¿Qué es Linux? ¿Qué es una distribución?",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2020-11-28",
+    "youtubeUrl": "https://www.youtube.com/live/t41jcBED8y0?si=TRYJWUVIj_XAxaq3&t=214"
+  },
+  {
+    "name": "¿Por qué la gente le tiene miedo a Linux?",
+    "speakerName": "Agustín Sánchez",
+    "date": "2020-11-28",
+    "youtubeUrl": "https://www.youtube.com/live/t41jcBED8y0?si=lEiOYsrQDKkUwkMc&t=559"
+  },
+  {
+    "name": "¿Qué es un entorno de escritorio?",
+    "speakerName": "Esteban Sánchez",
+    "date": "2020-11-28",
+    "youtubeUrl": "https://www.youtube.com/live/t41jcBED8y0?si=s4ml8mAJTKJ413Ph&t=1284"
+  },
+  {
+    "name": "One Line Linux",
+    "speakerName": "Marcelo Nuñez",
+    "date": "2020-11-28",
+    "youtubeUrl": "https://www.youtube.com/live/t41jcBED8y0?si=yXcElQHdNoBIFRUF&t=1530"
+  },
+  {
+    "name": "Revisión de conceptos básicos de Git",
+    "speakerName": "Agustín Sánchez",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=TvQENg_AF2Wro5f1&t=987"
+  },
+  {
+    "name": "Sitios web para alojar repositorios de Git",
+    "speakerName": "Iván Taddei",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=Nset4A1cy_o76QR4&t=2252"
+  },
+  {
+    "name": "Creación de repositorio en GitHub y conexión a repositorio local",
+    "speakerName": "Marcelo Núñez",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=FxBJof6AqcRWVCXf&t=2743"
+  },
+  {
+    "name": "Clonación de repositorio de GitHub",
+    "speakerName": "Agustín Lencina",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=Y_Dkqt1I8O1qmmqq&t=3694"
+  },
+  {
+    "name": "Subida de cambios locales a repositorio de GitHub",
+    "speakerName": "Esteban Sánchez",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=M4MUtBD-CW9XhX3z&t=4222"
+  },
+  {
+    "name": "Trabajo en repositorios compartidos de GitHub",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=JjChJbKXI8nw2VXi&t=4772"
+  },
+  {
+    "name": "Conflictos y su solución trabajando en equipo usando Git y GitHub",
+    "speakerName": "Germán Navarro & Mauricio Sánchez",
+    "date": "2020-10-24",
+    "youtubeUrl": "https://www.youtube.com/live/Nb0qN3x3Wfs?si=oIZvZoLA1vWjR7Lb&t=5551"
+  },
+  {
+    "name": "Introducción conceptual a bases de datos",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=0eP6jjlNw-xfzw_W&t=1057"
+  },
+  {
+    "name": "Introducción a las redes de computadoras",
+    "speakerName": "Agustín Sánchez, Ivan Taddei & Marcelo Nuñez",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=w_Bh1R7asBNfLL09&t=1553"
+  },
+  {
+    "name": "Redes en juegos online",
+    "speakerName": "German Navarro",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=VPc2D5X-sbc_iN8u&t=2316"
+  },
+  {
+    "name": "Sobrecarga vs Polimorfismo",
+    "speakerName": "Facundo Gelatti",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=zXUtSGCEJBnflfIe&t=2808"
+  },
+  {
+    "name": "¿Qué son los puertos en redes informáticas?",
+    "speakerName": "Agustín Lencina",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=zBEWxgpnEd8NaWM-&t=3620"
+  },
+  {
+    "name": "Sistemas de gestión de bases de datos. Uso de comandos y ejemplos",
+    "speakerName": "Franco Tarchini",
+    "date": "2020-09-19",
+    "youtubeUrl": "https://www.youtube.com/live/o-rHlSQHNEk?si=1kuz4w_m-e27BYHx&t=4140"
+  },
+  {
+    "name": "Búsqueda web y fuentes de información",
+    "speakerName": "David Leila",
+    "date": "2020-08-01",
+    "youtubeUrl": "https://www.youtube.com/live/cZiYoiNyVN0?si=NHQUbJAPLOJdlLba&t=5620s"
+  },
+  {
+    "name": "Programación competitiva",
+    "speakerName": "Esteban Sánchez & Iván Taddei",
+    "date": "2020-08-01",
+    "youtubeUrl": "https://www.youtube.com/live/cZiYoiNyVN0?si=8ZMRFwhD3emaK01Y&t=3960"
+  },
+  {
+    "name": "Filosofía del software: Charlando sobre software libre, privativo, código abierto, etc.",
+    "speakerName": "Agustín Sánchez & Marcelo Nuñez",
+    "date": "2020-08-01",
+    "youtubeUrl": "https://www.youtube.com/live/cZiYoiNyVN0?si=jHJbsyUeeKjLGWTN&t=1391"
+  },
+  {
+    "name": "¿De qué se trata la ingeniería en sistemas de información?",
+    "speakerName": "Agustín Sánchez",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=fkbuYOhExaCzCzmY&t=632"
+  },
+  {
+    "name": "Introducción al desarrollo de videojuegos con Godot Engine",
+    "speakerName": "Germán Navarro",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=-IK0Gp2rTMTi2cxQ&t=2345"
+  },
+  {
+    "name": "Funciones recursivas",
+    "speakerName": "Esteban Sánchez",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=lZtUBr3TNpo-yYG6&t=3491"
+  },
+  {
+    "name": "Aplicación insegura = desastre en el sistema operativo",
+    "speakerName": "Marcelo Núñez",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=NxC6oQu8ZsMtEtDI&t=5255"
+  },
+  {
+    "name": "DevOps, cultura y cambio",
+    "speakerName": "Marco Canevaro",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=A4heB1QGNAJm9pJK&t=7045"
+  },
+  {
+    "name": "Deno... y no es sólo un acrónimo de Node",
+    "speakerName": "Agustín Lencina",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=lGkJ9ClsGH9NxM5G&t=7890"
+  },
+  {
+    "name": "Patrón de diseño orientado a objetos \"Observer\"",
+    "speakerName": "Mauricio Sánchez",
+    "date": "2020-07-04",
+    "youtubeUrl": "https://www.youtube.com/live/L4RP34KjHns?si=NRFGpSTE7D0VWJvw&t=9400"
+  },
+  {
+    "name": "Una mirada a la industria del software",
+    "speakerName": "Agustín Sánchez & Marcelo Nuñez",
+    "portrait": "/una-mirada-a-la-industria-del-software.webp",
+    "date": "2023-11-24",
+    "location": "Mercado de Tafí Viejo (Tucumán, Argentina)",
+    "slides": [
+      "/charla-industria-software-24-11-2024/001.webp",
+      "/charla-industria-software-24-11-2024/002.webp",
+      "/charla-industria-software-24-11-2024/003.webp",
+      "/charla-industria-software-24-11-2024/004.webp",
+      "/charla-industria-software-24-11-2024/005.webp",
+      "/charla-industria-software-24-11-2024/006.webp",
+      "/charla-industria-software-24-11-2024/007.webp",
+      "/charla-industria-software-24-11-2024/008.webp",
+      "/charla-industria-software-24-11-2024/009.webp",
+      "/charla-industria-software-24-11-2024/010.webp",
+      "/charla-industria-software-24-11-2024/011.webp",
+      "/charla-industria-software-24-11-2024/012.webp",
+      "/charla-industria-software-24-11-2024/013.webp",
+      "/charla-industria-software-24-11-2024/014.webp",
+      "/charla-industria-software-24-11-2024/015.webp",
+      "/charla-industria-software-24-11-2024/016.webp",
+      "/charla-industria-software-24-11-2024/017.webp",
+      "/charla-industria-software-24-11-2024/018.webp",
+      "/charla-industria-software-24-11-2024/019.webp",
+      "/charla-industria-software-24-11-2024/020.webp"
+    ]
+  },
+  {
+    "name": "Arquitectura de software: fundamentos, experiencias y recomendaciones",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/agus-charla-global-learning-1.webp",
+    "date": "2023-10-04",
+    "location": "Alter City Business Park (Tucumán, Argentina)"
+  },
+  {
+    "name": "Descubrí el mundo del desarrollo de software",
+    "speakerName": "Agustín Sánchez & Matías Gutiérrez",
+    "portrait": "/IMG_8406.webp",
+    "date": "2024-10-19",
+    "location": "Aticana (Tucumán, Argentina)"
+  },
+  {
+    "name": "NULL",
+    "speakerName": "Marcelo Núñez",
+    "portrait": "/IMG_9069.webp",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Startups",
+    "speakerName": "Iván Taddei",
+    "portrait": "/IMG_9027.webp",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Hello world: Introducción al mundo de la programación",
+    "speakerName": "Matías Gútierrez",
+    "portrait": "/IMG_8680.webp",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Aprendiendo Machine Learning con calabozos y dragones",
+    "speakerName": "Alejo Boga",
+    "portrait": "/IMG_8771.jpg",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Introducción a las bases de datos",
+    "speakerName": "Lucas Pérez",
+    "portrait": "/IMG_8871.webp",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Claves del testing de software",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/IMG_8912.webp",
+    "date": "2024-10-26",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Buscando el diseño perfecto",
+    "speakerName": "Mauricio Sánchez",
+    "portrait": "/IMG_8951.webp",
+    "date": "2025-06-05",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Impulsá tu carrera con PCN",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/IMG_8982.webp",
+    "date": "2025-06-05",
+    "location": "UTN (Tucumán, Argentina)"
+  },
+  {
+    "name": "Modern Software Architecture",
+    "speakerName": "Agustín Sánchez",
+    "portrait": "/agus-jornada-ciberseguridad.webp",
+    "date": "2024-11-28",
+    "location": "Jornada de Ciberseguridad (Tucumán, Argentina)"
+  },
+  {
+    "name": "Introducción al desarrollo de software",
+    "speakerName": "Mauricio Sánchez",
+    "portrait": "/IMG_8974.webp",
+    "date": "2024-11-29",
+    "location": "Instituto Montserrat (Tucumán, Argentina)"
+  },
+  {
+    "name": "Paradigmas de programación",
+    "speakerName": "Marcelo Núñez",
+    "portrait": "/IMG_0618.webp",
+    "date": "2024-11-28",
+    "location": "Jornada de Ciberseguridad (Tucumán, Argentina)"
+  }
+]
