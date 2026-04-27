@@ -26,6 +26,7 @@ export function LocalTime({ date }: { date: Date | string }) {
   const formatted = new Intl.DateTimeFormat('es-AR', {
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
     timeZone: tz(),
   }).format(d);
   return (
@@ -43,6 +44,7 @@ export function LocalDateTime({ date }: { date: Date | string }) {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
     timeZone: tz(),
   }).format(d);
   return (
