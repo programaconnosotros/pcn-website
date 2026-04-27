@@ -49,7 +49,7 @@ const RootLayout = async ({
           disableTransitionOnChange
         >
           <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-center" />
+          <Toaster closeButton position="top-right" />
           <ScrollToTop />
           <ScrollIndicator />
         </ThemeProvider>
