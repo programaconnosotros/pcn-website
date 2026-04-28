@@ -51,42 +51,38 @@ export async function generateMetadata(props: {
     };
   }
 
-  const dateLabel = new Intl.DateTimeFormat('es-AR', {
+  const shortDateLabel = new Intl.DateTimeFormat('es-AR', {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     timeZone: 'America/Argentina/Buenos_Aires',
   }).format(new Date(event.date));
-  const locationParts = event.isOnline ? ['Online'] : [event.city, event.placeName].filter(Boolean);
-  const contextSuffix = [
-    `📅 ${dateLabel}`,
-    locationParts.length > 0 ? `📍 ${locationParts.join(', ')}` : '',
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  const titleLocation = event.isOnline ? 'Online' : event.city;
+  const ogTitle = [event.name, shortDateLabel, titleLocation].filter(Boolean).join(' · ');
 
   const normalizedDesc = normalizeDescription(event.description);
-  const fullDesc = [normalizedDesc, contextSuffix].filter(Boolean).join(' · ');
-  const description = fullDesc.length > 160 ? fullDesc.substring(0, 157) + '…' : fullDesc;
+  const description =
+    normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
-  const image = event.flyerSrc || event.images[0]?.imgSrc || '/pcn-link-preview.png';
+  const imageUrl = event.flyerSrc || event.images[0]?.imgSrc || '/pcn-link-preview.png';
+  const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
 
   return {
     title: event.name,
     description,
     openGraph: {
-      title: event.name,
+      title: ogTitle,
       description,
-      images: [image],
+      images: [{ url: imageUrl, alt: imageAlt }],
       url,
       type: 'website',
       siteName: 'programaConNosotros',
     },
     twitter: {
       card: 'summary_large_image',
-      title: event.name,
+      title: ogTitle,
       description,
-      images: [image],
+      images: [{ url: imageUrl, alt: imageAlt }],
     },
   };
 }
