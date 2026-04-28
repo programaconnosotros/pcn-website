@@ -183,7 +183,11 @@ function SpeakerFields({
               <FormItem>
                 <FormLabel>Rol / Puesto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ej: Software Engineer" {...field} value={field.value ?? ''} />
+                  <Input
+                    placeholder="Ej: Software Engineer"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -196,7 +200,11 @@ function SpeakerFields({
               <FormItem>
                 <FormLabel>Empresa</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ej: Mercado Libre" {...field} value={field.value ?? ''} />
+                  <Input
+                    placeholder="Ej: Mercado Libre"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

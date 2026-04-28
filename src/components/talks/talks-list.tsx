@@ -81,9 +81,7 @@ export function TalksList({ talks, eventId }: Props) {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
-                          {talk.speakers.some(
-                            (s) => s.isProfessional && s.jobTitle && s.enterprise,
-                          ) && (
+                          {talk.speakers.some((s) => s.isProfessional && s.jobTitle && s.enterprise) && (
                             <div className="text-sm text-muted-foreground">
                               <Badge variant="outline" className="mb-1">
                                 Profesional

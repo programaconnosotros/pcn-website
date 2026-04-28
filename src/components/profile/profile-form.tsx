@@ -491,7 +491,12 @@ export const ProfileForm = ({
         </div>
 
         <div className="mb-8 pb-4">
-          <Button type="submit" variant="default" loading={isSubmitting} loadingText="Guardando...">
+          <Button
+            type="submit"
+            variant="default"
+            loading={isSubmitting}
+            loadingText="Guardando..."
+          >
             Guardar cambios
           </Button>
         </div>

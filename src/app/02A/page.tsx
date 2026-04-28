@@ -13,7 +13,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const nextEvent = await prisma.event.findFirst({
     where: {
       deletedAt: null,
-      OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
+      OR: [
+        { date: { gte: now } },
+        { endDate: { gte: now } },
+      ],
       name: { contains: 'zero to agent', mode: 'insensitive' },
     },
     orderBy: { date: 'asc' },
@@ -43,7 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const imageUrl =
     nextEvent.flyerSrc ||
-    (nextEvent.images.length > 0 ? nextEvent.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+    (nextEvent.images.length > 0
+      ? nextEvent.images[0].imgSrc
+      : `${SITE_URL}/pcn-link-preview.png`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   return {
@@ -83,7 +88,10 @@ const ZeroToAgentPage = async () => {
   const nextEvent = await prisma.event.findFirst({
     where: {
       deletedAt: null,
-      OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
+      OR: [
+        { date: { gte: now } },
+        { endDate: { gte: now } },
+      ],
       name: { contains: 'zero to agent', mode: 'insensitive' },
     },
     orderBy: { date: 'asc' },

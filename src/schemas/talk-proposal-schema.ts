@@ -7,7 +7,7 @@ export const talkProposalSpeakerSchema = z
       .cuid()
       .optional()
       .nullable()
-      .transform((v) => (v === '' ? null : v ?? null)),
+      .transform((v) => (v === '' ? null : (v ?? null))),
     speakerName: z
       .string()
       .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })

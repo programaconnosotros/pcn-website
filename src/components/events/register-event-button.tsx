@@ -94,7 +94,7 @@ export function RegisterEventButton({
       ) : (
         <UserPlus className="h-4 w-4" />
       )}
-      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : label ?? 'Inscribirme al evento'}
+      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : (label ?? 'Inscribirme al evento')}
     </Button>
   );
 }
