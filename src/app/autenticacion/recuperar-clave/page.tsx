@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, Loader2, UserPlus } from 'lucide-react';
+import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -238,18 +238,14 @@ export default function ResetPasswordPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
-                  </>
-                ) : (
-                  <>
-                    Enviar código
-                    <Mail className="ml-2 h-4 w-4" />
-                  </>
-                )}
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isLoading}
+                loadingText="Enviando..."
+              >
+                Enviar código
+                <Mail className="ml-2 h-4 w-4" />
               </Button>
             </form>
           </Form>
@@ -283,18 +279,14 @@ export default function ResetPasswordPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verificando...
-                  </>
-                ) : (
-                  <>
-                    Verificar código
-                    <ShieldCheck className="ml-2 h-4 w-4" />
-                  </>
-                )}
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isLoading}
+                loadingText="Verificando..."
+              >
+                Verificar código
+                <ShieldCheck className="ml-2 h-4 w-4" />
               </Button>
 
               <div className="flex justify-between text-sm">
@@ -354,18 +346,14 @@ export default function ResetPasswordPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Actualizando...
-                  </>
-                ) : (
-                  <>
-                    Actualizar contraseña
-                    <KeyRound className="ml-2 h-4 w-4" />
-                  </>
-                )}
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isLoading}
+                loadingText="Actualizando..."
+              >
+                Actualizar contraseña
+                <KeyRound className="ml-2 h-4 w-4" />
               </Button>
 
               <button

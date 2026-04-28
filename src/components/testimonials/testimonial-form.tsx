@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { createTestimonial } from '@/actions/testimonials/create-testimonial';
 import { updateTestimonial } from '@/actions/testimonials/update-testimonial';
 import { deleteTestimonial } from '@/actions/testimonials/delete-testimonial';
-import { Save, X, Trash2, Loader2 } from 'lucide-react';
+import { Save, X, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -153,18 +153,14 @@ export function TestimonialForm({
               <X className="mr-2 h-4 w-4" />
               Cancelar
             </Button>
-            <Button type="submit" variant="pcn" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {testimonialId ? 'Actualizando...' : 'Creando...'}
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  {testimonialId ? 'Actualizar' : 'Crear'}
-                </>
-              )}
+            <Button
+              type="submit"
+              variant="pcn"
+              loading={isSubmitting}
+              loadingText={testimonialId ? 'Actualizando...' : 'Creando...'}
+            >
+              <Save className="mr-2 h-4 w-4" />
+              {testimonialId ? 'Actualizar' : 'Crear'}
             </Button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { UserPlus, ExternalLink } from 'lucide-react';
+import { UserPlus, ExternalLink, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -87,8 +87,14 @@ export function RegisterEventButton({
       onClick={handleClick}
       disabled={!externalUrl && (buttonIsLoading || !capacityAvailable)}
     >
-      {externalUrl ? <ExternalLink className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : label ?? 'Inscribirme al evento'}
+      {buttonIsLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : externalUrl ? (
+        <ExternalLink className="h-4 w-4" />
+      ) : (
+        <UserPlus className="h-4 w-4" />
+      )}
+      {!externalUrl && buttonIsLoading ? 'Inscribiéndote...' : (label ?? 'Inscribirme al evento')}
     </Button>
   );
 }

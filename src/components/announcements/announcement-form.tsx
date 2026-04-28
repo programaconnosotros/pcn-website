@@ -22,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
 import { Announcement } from '@prisma/client';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -225,15 +224,8 @@ export function AnnouncementForm({
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              submitLabel
-            )}
+          <Button type="submit" loading={isLoading} loadingText="Guardando...">
+            {submitLabel}
           </Button>
         </div>
       </form>

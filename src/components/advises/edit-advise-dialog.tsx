@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
@@ -72,15 +71,13 @@ export const EditAdviseDialog = ({
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                'Guardar cambios'
-              )}
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="Guardando..."
+            >
+              Guardar cambios
             </Button>
           </form>
         </Form>

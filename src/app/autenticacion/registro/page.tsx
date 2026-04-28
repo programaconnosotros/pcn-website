@@ -22,7 +22,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowLeft,
   LogIn,
-  Loader2,
   SquareAsterisk,
   UserPlus,
   User,
@@ -429,18 +428,14 @@ function SignUpContent() {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creando usuario...
-                </>
-              ) : (
-                <>
-                  Crear usuario
-                  <UserPlus className="ml-2 h-4 w-4" />
-                </>
-              )}
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="Creando usuario..."
+            >
+              Crear usuario
+              <UserPlus className="ml-2 h-4 w-4" />
             </Button>
           </form>
         </Form>

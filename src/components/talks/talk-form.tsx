@@ -31,7 +31,7 @@ import { createTalk } from '@/actions/talks/create-talk';
 import { updateTalk } from '@/actions/talks/update-talk';
 import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
-import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
+import { Plus, Save, Trash2 } from 'lucide-react';
 
 type EventOption = {
   id: string;
@@ -545,18 +545,15 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
         />
 
         <div className="flex gap-4">
-          <Button type="submit" variant="pcn" className="flex-1" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                {talk ? 'Actualizar charla' : 'Crear charla'}
-              </>
-            )}
+          <Button
+            type="submit"
+            variant="pcn"
+            className="flex-1"
+            loading={isSubmitting}
+            loadingText="Guardando..."
+          >
+            <Save className="mr-2 h-4 w-4" />
+            {talk ? 'Actualizar charla' : 'Crear charla'}
           </Button>
           {onCancel && (
             <Button

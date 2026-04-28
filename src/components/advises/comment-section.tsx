@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '../ui/button';
-import { Loader2 } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
@@ -116,15 +115,12 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
             {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
             <div className="flex gap-2">
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
-                  </>
-                ) : (
-                  'Enviar respuesta'
-                )}
+              <Button
+                type="submit"
+                loading={isSubmitting}
+                loadingText="Enviando..."
+              >
+                Enviar respuesta
               </Button>
 
               <Button
@@ -156,15 +152,8 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
 
           {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              'Enviar comentario'
-            )}
+          <Button type="submit" loading={isSubmitting} loadingText="Enviando...">
+            Enviar comentario
           </Button>
         </form>
       ) : (

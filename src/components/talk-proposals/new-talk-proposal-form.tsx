@@ -24,7 +24,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createTalkProposal } from '@/actions/talk-proposals/create-talk-proposal';
-import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
+import { Plus, Save, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
@@ -368,18 +368,15 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
           </div>
 
           <div className="flex gap-4">
-            <Button type="submit" variant="pcn" className="flex-1" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Enviar propuesta
-                </>
-              )}
+            <Button
+              type="submit"
+              variant="pcn"
+              className="flex-1"
+              loading={isSubmitting}
+              loadingText="Enviando..."
+            >
+              <Save className="mr-2 h-4 w-4" />
+              Enviar propuesta
             </Button>
             <Link href={`/eventos/${eventId}`} className="flex-1">
               <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>

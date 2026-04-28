@@ -55,7 +55,8 @@ export function CancelRegistrationButton({
       size="sm"
       className="w-full"
       onClick={handleCancel}
-      disabled={isLoading}
+      loading={isLoading}
+      loadingText="Cancelando..."
     >
       <X className="mr-2 h-4 w-4" />
       Cancelar inscripción

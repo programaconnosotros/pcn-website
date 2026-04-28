@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Loader2, ShieldCheck, Mail } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState, useEffect } from 'react';
@@ -199,18 +199,15 @@ function VerifyEmailContent() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isVerifying || isResending}>
-                {isVerifying ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verificando...
-                  </>
-                ) : (
-                  <>
-                    Verificar email
-                    <Mail className="ml-2 h-4 w-4" />
-                  </>
-                )}
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isVerifying}
+                loadingText="Verificando..."
+                disabled={isVerifying || isResending}
+              >
+                Verificar email
+                <Mail className="ml-2 h-4 w-4" />
               </Button>
 
               <div className="text-center">

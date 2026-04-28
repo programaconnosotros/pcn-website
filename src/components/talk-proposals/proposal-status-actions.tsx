@@ -18,7 +18,7 @@ import { TalkProposalStatus } from '@prisma/client';
 import { updateTalkProposalStatus } from '@/actions/talk-proposals/update-talk-proposal-status';
 import { deleteTalkProposal } from '@/actions/talk-proposals/delete-talk-proposal';
 import { createTalkFromProposal } from '@/actions/talks/create-talk-from-proposal';
-import { CheckCircle, XCircle, Trash2, Mic } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, Mic, Loader2 } from 'lucide-react';
 
 type Props = {
   proposalId: string;
@@ -76,6 +76,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         size="sm"
         variant="default"
         className="gap-1 bg-green-600 hover:bg-green-700"
+        loading={isPending}
         disabled={isPending || currentStatus === 'ACCEPTED'}
         onClick={() => handleStatusChange('ACCEPTED')}
       >
@@ -87,6 +88,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         size="sm"
         variant="destructive"
         className="gap-1"
+        loading={isPending}
         disabled={isPending || currentStatus === 'REJECTED'}
         onClick={() => handleStatusChange('REJECTED')}
       >
@@ -99,6 +101,8 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
           size="sm"
           variant="outline"
           className="gap-1"
+          loading={isPending}
+          loadingText={hasTalk ? 'Charla creada' : 'Creando...'}
           disabled={isPending || !!hasTalk}
           onClick={handlePromoteToTalk}
           title={hasTalk ? 'Ya tiene una charla creada' : 'Crear charla a partir de esta propuesta'}
@@ -126,9 +130,11 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
+              disabled={isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Eliminar
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending ? 'Eliminando...' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

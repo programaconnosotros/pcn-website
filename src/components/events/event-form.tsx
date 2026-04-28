@@ -22,7 +22,6 @@ import {
   Plus,
   Trash2,
   Users,
-  Loader2,
   ExternalLink,
   Video,
 } from 'lucide-react';
@@ -534,18 +533,15 @@ export function EventForm({
 
           {/* Botones */}
           <div className="flex gap-4">
-            <Button type="submit" variant="pcn" className="flex-1" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  {submitLabel}
-                </>
-              )}
+            <Button
+              type="submit"
+              variant="pcn"
+              className="flex-1"
+              loading={isSubmitting}
+              loadingText="Guardando..."
+            >
+              <Save className="mr-2 h-4 w-4" />
+              {submitLabel}
             </Button>
             <Link href={cancelHref} className="flex-1">
               <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { PlusCircle, Loader2 } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -76,15 +76,13 @@ export const AddAdvise = () => {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Publicando...
-                </>
-              ) : (
-                'Publicar'
-              )}
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="Publicando..."
+            >
+              Publicar
             </Button>
           </form>
         </Form>

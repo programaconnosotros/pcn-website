@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus, Loader2 } from 'lucide-react';
+import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -142,18 +142,14 @@ function SignInContent() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Ingresando...
-                </>
-              ) : (
-                <>
-                  Ingresar
-                  <LogIn className="ml-2 h-4 w-4" />
-                </>
-              )}
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoading}
+              loadingText="Ingresando..."
+            >
+              Ingresar
+              <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </form>
         </Form>
