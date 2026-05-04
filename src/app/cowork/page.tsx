@@ -40,10 +40,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!nextCowork) {
     return {
-      title: 'Cowork (PCN)',
+      title: 'Cowork',
       description: 'Participá del próximo cowork de PCN.',
       openGraph: {
-        title: 'Cowork (PCN)',
+        title: 'Cowork',
         description: 'Participá del próximo cowork de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/cowork`,
@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Cowork (PCN)',
+        title: 'Cowork',
         description: 'Participá del próximo cowork de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
       },
@@ -67,13 +67,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   return {
-    title: `${nextCowork.name} (PCN)`,
+    title: nextCowork.name,
     description:
       nextCowork.description.length > 160
         ? nextCowork.description.substring(0, 157) + '...'
         : nextCowork.description,
     openGraph: {
-      title: `${nextCowork.name} - Cowork - PCN`,
+      title: `${nextCowork.name} - Cowork`,
       description:
         nextCowork.description.length > 160
           ? nextCowork.description.substring(0, 157) + '...'
@@ -85,7 +85,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${nextCowork.name} (PCN)`,
+      title: nextCowork.name,
       description:
         nextCowork.description.length > 160
           ? nextCowork.description.substring(0, 157) + '...'

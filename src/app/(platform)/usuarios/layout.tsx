@@ -6,10 +6,10 @@ import prisma from '@/lib/prisma';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Usuarios (PCN)',
+  title: 'Usuarios',
   description: 'Conocé a los miembros de programaConNosotros.',
   openGraph: {
-    title: 'Usuarios (PCN)',
+    title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/usuarios`,
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Usuarios (PCN)',
+    title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

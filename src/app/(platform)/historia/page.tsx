@@ -17,10 +17,10 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Historia de programaConNosotros (PCN)',
+  title: 'Historia de programaConNosotros',
   description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
   openGraph: {
-    title: 'Historia de programaConNosotros (PCN)',
+    title: 'Historia de programaConNosotros',
     description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/historia`,
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Historia de programaConNosotros (PCN)',
+    title: 'Historia de programaConNosotros',
     description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

@@ -19,11 +19,11 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'programaConNosotros (PCN)',
+  title: 'programaConNosotros',
   description:
     'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
   openGraph: {
-    title: 'programaConNosotros (PCN)',
+    title: 'programaConNosotros',
     description:
       'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel',
     images: [`${SITE_URL}/pcn-link-preview.png`],
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'programaConNosotros (PCN)',
+    title: 'programaConNosotros',
     description:
       'La comunidad que necesitas para llevar tu carrera en la industria del software al siguiente nivel.',
     images: [`${SITE_URL}/pcn-link-preview.png`],

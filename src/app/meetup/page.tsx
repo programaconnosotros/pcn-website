@@ -40,10 +40,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!nextMeetup) {
     return {
-      title: 'Dev Meetup (PCN)',
+      title: 'Dev Meetup',
       description: 'Participá de la próxima dev meetup de PCN.',
       openGraph: {
-        title: 'Dev Meetup (PCN)',
+        title: 'Dev Meetup',
         description: 'Participá de la próxima dev meetup de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/meetup`,
@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Dev Meetup (PCN)',
+        title: 'Dev Meetup',
         description: 'Participá de la próxima dev meetup de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
       },
@@ -67,13 +67,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   return {
-    title: `${nextMeetup.name} (PCN)`,
+    title: nextMeetup.name,
     description:
       nextMeetup.description.length > 160
         ? nextMeetup.description.substring(0, 157) + '...'
         : nextMeetup.description,
     openGraph: {
-      title: `${nextMeetup.name} - Meetup - PCN`,
+      title: `${nextMeetup.name} - Meetup`,
       description:
         nextMeetup.description.length > 160
           ? nextMeetup.description.substring(0, 157) + '...'
@@ -85,7 +85,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${nextMeetup.name} (PCN)`,
+      title: nextMeetup.name,
       description:
         nextMeetup.description.length > 160
           ? nextMeetup.description.substring(0, 157) + '...'

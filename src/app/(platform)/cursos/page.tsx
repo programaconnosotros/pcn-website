@@ -21,10 +21,10 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Cursos (PCN)',
+  title: 'Cursos',
   description: 'Descubrí cursos recomendados por la comunidad.',
   openGraph: {
-    title: 'Cursos (PCN)',
+    title: 'Cursos',
     description: 'Descubrí cursos recomendados por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/cursos`,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cursos (PCN)',
+    title: 'Cursos',
     description: 'Descubrí cursos recomendados por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

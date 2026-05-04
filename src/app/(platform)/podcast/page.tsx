@@ -15,10 +15,10 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Podcast (PCN)',
+  title: 'Podcast',
   description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
   openGraph: {
-    title: 'Podcast (PCN)',
+    title: 'Podcast',
     description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/podcast`,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Podcast (PCN)',
+    title: 'Podcast',
     description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

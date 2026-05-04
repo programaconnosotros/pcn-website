@@ -20,11 +20,11 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Eventos (PCN)',
+  title: 'Eventos',
   description:
     'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
   openGraph: {
-    title: 'Eventos (PCN)',
+    title: 'Eventos',
     description:
       'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Eventos (PCN)',
+    title: 'Eventos',
     description:
       'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
     images: [`${SITE_URL}/pcn-link-preview.png`],

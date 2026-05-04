@@ -28,11 +28,11 @@ import { GitSVG } from '@/components/logos/GitSVG';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Desarrollo del Proyecto (PCN)',
+  title: 'Desarrollo del Proyecto',
   description:
     'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
   openGraph: {
-    title: 'Desarrollo del Proyecto (PCN)',
+    title: 'Desarrollo del Proyecto',
     description:
       'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Desarrollo del Proyecto (PCN)',
+    title: 'Desarrollo del Proyecto',
     description:
       'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
     images: [`${SITE_URL}/pcn-link-preview.png`],

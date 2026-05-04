@@ -32,12 +32,12 @@ export async function generateMetadata(props: {
 
   if (!testimonial) {
     return {
-      title: 'Testimonio no encontrado (PCN)',
+      title: 'Testimonio no encontrado',
       description: 'El testimonio que buscas no existe.',
     };
   }
 
-  const title = `Testimonio de ${testimonial.user.name} (PCN)`;
+  const title = `Testimonio de ${testimonial.user.name}`;
   const description =
     testimonial.body.length > 160 ? testimonial.body.substring(0, 157) + '...' : testimonial.body;
   const pageUrl = `${SITE_URL}/testimonios/${params.id}`;

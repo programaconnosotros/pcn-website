@@ -56,12 +56,12 @@ export async function generateMetadata(props: {
 
   if (!user) {
     return {
-      title: 'Perfil no encontrado (PCN)',
+      title: 'Perfil no encontrado',
       description: 'El perfil que buscas no existe.',
     };
   }
 
-  const title = `${user.name} (PCN)`;
+  const title = user.name;
   const description = user.slogan
     ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
     : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;

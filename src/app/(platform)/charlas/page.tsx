@@ -17,10 +17,10 @@ import { CharlasAdminWrapper } from '@/components/talks/charlas-admin-wrapper';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Charlas (PCN)',
+  title: 'Charlas',
   description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
   openGraph: {
-    title: 'Charlas (PCN)',
+    title: 'Charlas',
     description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/charlas`,
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Charlas (PCN)',
+    title: 'Charlas',
     description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

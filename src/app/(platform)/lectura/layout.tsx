@@ -3,10 +3,10 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Club de lectura - PCN',
+  title: 'Club de lectura',
   description: 'Sumate al club de lectura sobre programación y tecnología',
   openGraph: {
-    title: 'Club de lectura - PCN',
+    title: 'Club de lectura',
     description: 'Sumate al club de lectura sobre programación y tecnología',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/lectura`,
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Club de lectura - PCN',
+    title: 'Club de lectura',
     description: 'Sumate al club de lectura sobre programación y tecnología',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },

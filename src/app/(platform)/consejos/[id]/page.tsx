@@ -34,12 +34,12 @@ export async function generateMetadata(props: {
 
   if (!advise) {
     return {
-      title: 'Consejo no encontrado (PCN)',
+      title: 'Consejo no encontrado',
       description: 'El consejo que buscas no existe.',
     };
   }
 
-  const title = `Consejo de ${advise.author.name} (PCN)`;
+  const title = `Consejo de ${advise.author.name}`;
   const description =
     advise.content.length > 160 ? advise.content.substring(0, 157) + '...' : advise.content;
   const pageUrl = `${SITE_URL}/consejos/${params.id}`;

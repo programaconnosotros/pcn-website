@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Galería de fotos (PCN)',
+  title: 'Galería de fotos',
   description:
     'Visitá nuestros recuerdos para conocer mejor a la comunidad, o bien recordar momentos vividos en conjunto',
   openGraph: {
-    title: 'Galería de fotos (PCN)',
+    title: 'Galería de fotos',
     description:
       'Visitá nuestros recuerdos para conocer mejor a la comunidad, o bien recordar momentos vividos en conjunto',
     images: [`${SITE_URL}/pcn-link-preview.png`],
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Galería de fotos (PCN)',
+    title: 'Galería de fotos',
     description:
       'Visitá nuestros recuerdos para conocer mejor a la comunidad, o bien recordar momentos vividos en conjunto',
     images: [`${SITE_URL}/pcn-link-preview.png`],

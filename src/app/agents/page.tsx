@@ -16,10 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!event) {
     return {
-      title: 'Eventos (PCN)',
+      title: 'Eventos',
       description: 'Participá del próximo evento de PCN.',
       openGraph: {
-        title: 'Eventos (PCN)',
+        title: 'Eventos',
         description: 'Participá del próximo evento de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/agents`,
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Eventos (PCN)',
+        title: 'Eventos',
         description: 'Participá del próximo evento de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
       },
@@ -46,10 +46,10 @@ export async function generateMetadata(): Promise<Metadata> {
       : event.description;
 
   return {
-    title: `${event.name} (PCN)`,
+    title: event.name,
     description,
     openGraph: {
-      title: `${event.name} - PCN`,
+      title: event.name,
       description,
       images: [absoluteImageUrl],
       url: `${SITE_URL}/agents`,
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${event.name} (PCN)`,
+      title: event.name,
       description,
       images: [absoluteImageUrl],
     },
