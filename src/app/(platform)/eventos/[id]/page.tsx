@@ -330,8 +330,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 </Card>
               )}
 
-              {/* Link a propuestas de charlas (solo para admins con call for talks habilitado) */}
-              {isAdmin && event.callForTalksEnabled && (
+              {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
+              {isAdmin && event.callForSpeakersEnabled && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -342,7 +342,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-muted-foreground">
-                        Call for talks habilitado para este evento.
+                        Call for speakers habilitado para este evento.
                       </p>
                       <Link href={`/eventos/${id}/propuestas-de-charlas`}>
                         <Button variant="outline" size="sm">
@@ -384,8 +384,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 </Card>
               )}
 
-              {/* Call for talks — botón para usuarios */}
-              {event.callForTalksEnabled && (
+              {/* Call for speakers — botón para usuarios */}
+              {event.callForSpeakersEnabled && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                   <CardContent className="pt-6">
                     <div className="flex flex-col gap-2 text-center">

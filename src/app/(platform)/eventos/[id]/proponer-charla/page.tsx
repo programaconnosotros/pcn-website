@@ -39,7 +39,7 @@ const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) =>
 
   const event = await fetchEvent(id);
 
-  if (!event || !event.callForTalksEnabled) {
+  if (!event || !event.callForSpeakersEnabled) {
     redirect(`/eventos/${id}`);
   }
 

@@ -62,7 +62,7 @@ export function EventForm({
       isOnline: defaultValues?.isOnline ?? false,
       streamingUrl: defaultValues?.streamingUrl ?? '',
       markedAsFull: defaultValues?.markedAsFull ?? false,
-      callForTalksEnabled: defaultValues?.callForTalksEnabled ?? false,
+      callForSpeakersEnabled: defaultValues?.callForSpeakersEnabled ?? false,
     },
   });
 
@@ -438,24 +438,24 @@ export function EventForm({
             )}
           />
 
-          {/* Call for talks */}
+          {/* Call for speakers */}
           <FormField
             control={form.control}
-            name="callForTalksEnabled"
+            name="callForSpeakersEnabled"
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center gap-3">
                   <FormControl>
                     <input
                       type="checkbox"
-                      id="callForTalksEnabled"
+                      id="callForSpeakersEnabled"
                       checked={!!field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                       className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
                     />
                   </FormControl>
-                  <FormLabel htmlFor="callForTalksEnabled" className="cursor-pointer">
-                    Habilitar call for talks
+                  <FormLabel htmlFor="callForSpeakersEnabled" className="cursor-pointer">
+                    Habilitar call for speakers
                   </FormLabel>
                 </div>
                 <FormDescription>

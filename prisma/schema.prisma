@@ -124,7 +124,7 @@ model Event {
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)
-  callForTalksEnabled     Boolean   @default(false)
+  callForSpeakersEnabled  Boolean   @default(false)
   isOnline                Boolean   @default(false)
   streamingUrl            String?
   deletedAt               DateTime? // Eliminación lógica

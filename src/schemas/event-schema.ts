@@ -99,7 +99,7 @@ export const eventSchema = z
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),
     ),
-    callForTalksEnabled: z.preprocess(
+    callForSpeakersEnabled: z.preprocess(
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),
     ),

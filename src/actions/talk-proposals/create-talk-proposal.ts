@@ -15,8 +15,8 @@ export const createTalkProposal = async (eventId: string, data: TalkProposalForm
     throw new Error('Evento no encontrado');
   }
 
-  if (!event.callForTalksEnabled) {
-    throw new Error('Este evento no tiene call for talks habilitado');
+  if (!event.callForSpeakersEnabled) {
+    throw new Error('Este evento no tiene call for speakers habilitado');
   }
 
   const sessionId = (await cookies()).get('sessionId')?.value;
