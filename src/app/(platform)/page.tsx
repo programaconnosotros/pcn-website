@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { MessageCircle } from 'lucide-react';
 import HomeClientSide from '@/app/(platform)/home-client-side';
 import { Button } from '@/components/ui/button';
 import {
@@ -75,6 +76,7 @@ const Home = async () => {
         <div className="px-4">
           <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
             <Button variant="default" size="sm" className="text-sm">
+              <MessageCircle className="h-4 w-4" />
               Unirme en WhatsApp
             </Button>
           </Link>
