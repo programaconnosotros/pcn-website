@@ -13,6 +13,7 @@ import {
   Library,
   LifeBuoy,
   Linkedin,
+  MessageCircle,
   MicVocal,
   Podcast,
   ScrollText,
@@ -146,6 +147,11 @@ const getComunidadItems = () => {
       title: 'Historia',
       url: '/historia',
       icon: ScrollText,
+    },
+    {
+      title: 'Conversaciones',
+      url: '/conversaciones',
+      icon: MessageCircle,
     },
     {
       title: 'Galería',
