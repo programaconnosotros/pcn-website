@@ -35,19 +35,9 @@
     "summary": "Marco trajo el debate sobre el alto consumo de RAM de las apps construidas con Electron como Slack, VS Code y Discord. Varios miembros criticaron el overhead de empaquetar Chromium con cada aplicación. Se mencionaron alternativas como Tauri (que usa el webview del sistema operativo), Flutter para desktop, y aplicaciones nativas. Facundo argumentó que VS Code justificaba el consumo por la extensibilidad que ofrecía. Se discutió que Tauri con Rust ofrecía bundles mucho más livianos pero requería conocer Rust para la parte del backend. La conclusión fue que Electron seguía siendo la opción pragmática para apps cross-platform a pesar del consumo de memoria."
   },
   {
-    "date": "2025-04-15",
-    "title": "NaranjaX como empleador: experiencias y cultura de la empresa",
-    "summary": "Un miembro compartió que había recibido una oferta de trabajo de NaranjaX y preguntó por experiencias de otros en la empresa. Varios participantes que habían trabajado o conocían gente en NaranjaX aportaron sus perspectivas. Se mencionó que la empresa tenía buen stack tecnológico y pagaba en pesos, lo que era un punto en contra en el contexto inflacionario. Algunos destacaron la cultura técnica del equipo de ingeniería de Córdoba. Se discutió el crecimiento de la empresa como fintech y sus planes de expansión. La recomendación general fue que era buena opción para ganar experiencia con escala real, aunque el salario en pesos era una desventaja frente a trabajos en dólares."
-  },
-  {
     "date": "2025-04-16",
     "title": "ChatGPT desktop app: contexto de pantalla y análisis visual",
     "summary": "Rodrigo compartió que había descubierto que la app de escritorio de ChatGPT podía ver el contenido de la pantalla en tiempo real cuando se le daba permiso. El grupo discutió las implicaciones de privacidad de esta funcionalidad. Facundo probó la feature y contó que ChatGPT podía responder preguntas sobre lo que aparecía en la pantalla sin necesidad de hacer capturas manuales. Se comparó con Copilot de Microsoft que tenía una funcionalidad similar en Windows. Algunos vieron el potencial para asistencia en vivo durante debugging o revisión de código, mientras otros expresaron preocupaciones sobre qué datos se enviaban a los servidores."
-  },
-  {
-    "date": "2025-04-17",
-    "title": "Take-home challenge de Uala con Golang: debate sobre el proceso de selección",
-    "summary": "Un miembro compartió que había recibido un take-home challenge de Uala implementado en Golang y preguntó si era normal que una empresa pidiera Golang cuando el candidato venía de otro stack. El grupo debatió sobre los procesos de selección de empresas fintech argentinas. Algunos argumentaron que Uala usaba Go internamente y era razonable pedir al menos conocimiento básico. Otros criticaron la práctica de pedir ejercicios en lenguajes específicos sin dar tiempo de aprendizaje. Se discutió si era conveniente hacer el challenge o declinar. Facundo comentó que había tenido una experiencia similar y que el proceso de Uala era exigente pero el nivel del equipo técnico era alto."
   },
   {
     "date": "2025-04-17",
@@ -260,11 +250,6 @@
     "summary": "Mateo Lohezic preguntó por cursos de N8N que no fueran marketing vacío sobre 'hacerse millonario sin código'. Agustín Sánchez compartió un video de YouTube y Ariel Basabe recomendó un curso de Udemy ('Curso N8N: Crea agentes de IA sin programar') con link gratuito de Telegram. La suscripción de N8N cuesta $20/mes e incluye 5 workflows activos y 2500 ejecuciones, con lo que se puede atender a un cliente pagante. La API de OpenAI funciona por créditos (aprox $5/mes para un negocio chico), haciendo el costo total de un agente de IA rondear los $50 USD mensuales o menos. Matias Gutierrez mencionó que él usaba ManyChat con un cliente inmobiliario por $15/mes: asignación automática de chats según disponibilidad de agentes inmobiliarios, detección de palabras clave y derivación. Mateo criticó que ManyChat era solo un menú de opciones predefinidas y no un agente con IA real. Se discutieron casos de uso como bots de atención para gimnasios con múltiples sucursales, filtrado de leads y creación automática de entradas en CRMs."
   },
   {
-    "title": "Bug de Uala: $8.000 dólares aparecieron en cuentas de usuarios",
-    "date": "2025-05-22",
-    "summary": "Matias Gutierrez contó que Uala sufrió un bug donde a algunos usuarios les aparecieron $8.000 dólares en sus cuentas, y que varios aprovecharon para gastar la plata antes de que la corrigieran. Josefina Japaze, que trabaja como backend dev en Uala, confirmó que 'se la mandaron' y que el impacto fue masivo: fueron trending topic en Twitter. Josefina explicó que lo más probable fue un UPDATE sin cláusula WHERE ejecutado en producción, y que ese tipo de correcciones masivas suele hacerse con procesos batch que se programan para correrse de noche cuando hay menos volumen. Matias preguntó si los usuarios que gastaron la plata podían ser demandados: Mateo Lohezic explicó que sí, porque es análogo al hurto cuando es evidente que fue un error, igual que si una tienda pone un televisor a $100. Agustín preguntó qué pasaba si el usuario simplemente se negaba a pagar, y la discusión derivó en que quedaban con saldo negativo y manchada su historia crediticia. Iñaki trajo el antecedente de un banco en EE.UU. donde gente del barrio corrió a los ATMs a retirar fondos de más y terminó con juicios y cuentas en negativo."
-  },
-  {
     "title": "NotebookLM de Google: resúmenes y podcasts con IA",
     "date": "2025-05-22",
     "summary": "Mauricio Chaile compartió NotebookLM de Google como una herramienta para hacer resúmenes e interactuar con documentos usando IA. Facundo García Martoni dijo que ya lo usaba y que su feature estrella era la generación de podcasts, y que recientemente había añadido soporte en español, lo que abría posibilidades enormes para estudiantes que no sabían inglés. Mauricio probó la generación de podcast con un libro de patrones y compartió el link de audio. Agustín Sánchez preguntó si generaba el podcast con voz y todo para ayudar a estudiar, Facundo y Mauricio confirmaron que sí, y que también podía generar mapas conceptuales. Mauricio señaló que el soporte en español todavía estaba limitado al momento. La herramienta fue especialmente recomendada para compartirla con conocidos fuera del mundo IT que estuvieran estudiando, como forma de revolucionar su manera de repasar contenido."
@@ -273,11 +258,6 @@
     "title": "Facundo García Martoni consiguió trabajo como Senior Full-Stack Engineer",
     "date": "2025-05-23",
     "summary": "Facundo García Martoni anunció con emoción que cerró un contrato como Senior Full-Stack Engineer para el proyecto Exec de la mano de Bowery, con inicio el lunes siguiente. Agradeció especialmente a Agustín Sánchez por la oportunidad de estar en el grupo, por la ayuda con el tema de system design que habían trabajado juntos, y por haber publicado la oferta laboral. También agradeció a Marcelo Nuñez por la recomendación que le hizo. La comunidad celebró con mensajes de felicitaciones de Agustín, Diego, Marcelo, Matias Gutierrez, Ariel Basabe, Mateo Lohezic, Germán Navarro y otros. Fue un momento emotivo que ejemplificó el valor concreto de la comunidad PCN para el desarrollo profesional de sus integrantes."
-  },
-  {
-    "title": "Seguridad en redes domésticas y hardware hacking con Victor Figueredo",
-    "date": "2025-05-24",
-    "summary": "Facundo García Martoni implementó una lista blanca por dirección MAC en su WiFi para controlar qué dispositivos podían conectarse, y compartió la experiencia. Marcelo Nuñez sugirió como alternativas tener una red de invitados o subnetear la red para separar visitas. Victor Figueredo, que trabaja en red team, explicó que el filtrado MAC es una buena medida pero bypasseable: en sus cursos enseñan a identificar los dispositivos en una red y suplantar su MAC. Victor reveló que construyó una WiFi Pineapple modificando el firmware de un TPLink Archer para convertirlo en herramienta de auditoría de redes. Contó que en sus cursos también armaban Rubber Ducky (pendrives que la PC detecta como teclado y ejecutan scripts, como dumpear contraseñas o abrir una reverse TCP shell), y que estaban trabajando en relojes capaces de realizar ataques a redes WiFi y Bluetooth, como alternativa casera y barata al Flipper Zero. Victor compartió el Discord de su comunidad donde transmitían workshops de Cloud Computing y Blue Team."
   },
   {
     "title": "Git merge vs rebase: diferencias y cuándo usar cada uno",
@@ -370,11 +350,6 @@
     "summary": "Agustín Sánchez preguntó al grupo qué librería recomendaban para generar PDFs con tablas en JavaScript. Matias Gutierrez recomendó HTML2PDF: la herramienta toma HTML con sus estilos tal cual y lo convierte en PDF, haciendo esencialmente un screenshot del contenido. Matias mostró un ejemplo de factura que había generado así. La solución de HTML2PDF fue bien recibida por su simplicidad: no requiere aprender una API específica de PDF sino simplemente escribir HTML y CSS normales."
   },
   {
-    "title": "Globant: cultura, sueldos, Google ARA y el rol de delivery manager",
-    "date": "2025-06-13",
-    "summary": "La discusión derivó en las experiencias reales con Globant. Agustín Sánchez contó que le habían dicho que Globant negó aumentos por falta de plata pero al mismo tiempo anunció ser sponsor de Franco Colapinto por millones, y que muchos devs de ahí quieren irse pero no pueden porque laburan con tecnologías viejas con poca demanda. Gustavo Iglesias, quien trabajó en Globant, compartió su trayectoria: hizo outsourcing para Google en el proyecto Google ARA (smartphone modular que nunca llegó al mercado), luego pasó por JP Morgan donde no llegó al tercer sprint y se fue porque ni la tecnología ni el equipo le atraían. Explicó el rol de delivery manager: alinear la PMO con los PMs, velar por el delivery de múltiples proyectos simultáneos; si se cae el delivery, se cae tu cabeza. El grupo acordó que Globant es buena para los primeros pasos pero no para hacer carrera a largo plazo."
-  },
-  {
     "title": "Experiencia demostrable en entrevistas: freelance, startups y CVs en inglés",
     "date": "2025-06-13",
     "summary": "El criterio de 'experiencia demostrable' en las ofertas de trabajo disparó un debate sobre qué significa eso en la práctica. Marcelo Nuñez señaló que ese criterio deja afuera a quienes construyeron sistemas serios en startups sin blanquear, o a emprendedores con apps propias. Agustín Sánchez respondió que lo más importante es poder hablar con convicción y sin dejar dudas, independientemente del historial formal. Mateo Lohezic recomendó que los freelancers se pongan un nombre de marca unipersonal en el CV para no decir simplemente 'freelance', y que vendan la variedad de clientes y el trato con el cliente como valor diferencial. Germán Navarro contó que en un proceso de selección le quisieron bajar el precio porque su experiencia era en startups y no era corporativa, y que encima un entrevistador le hizo chistes porque tenía el CV en inglés, diciéndole que 'tenía que hacer patria'. El grupo coincidió en que ese tipo de entrevistadores hablan más de la cultura de esa empresa que de la calidad del candidato."
@@ -435,11 +410,6 @@
     "summary": "Roman preguntó si alguien le interesaba el tema de teclados mecánicos. Facundo García Martoni se declaró fanático y mencionó que acababa de recibir un kit de lubricación; dijo que muere por un HHKB con switches Topre o un IBM Model M. Roman mostró su Corne v4 (teclado ergonómico dividido, 4 layers) y su preferido: el Lofree flow84. Germán Navarro mencionó que usa un Keychron 75% desde hace años. Al día siguiente Facundo mostró el proceso de modding de su Corsair K100: Case Foam con goma EVA, Tape Mod con cinta de papel, y lubricado de switches con Krytox 205g0 y estabilizadores con XHT BDZ. Recomendó cytinfo.com.ar para comprar lubricantes en Argentina."
   },
   {
-    "title": "Cluely: IA para entrevistas técnicas con inversión de a16z",
-    "date": "2025-06-28",
-    "summary": "Agustín Sánchez compartió cluely.com y el tweet del creador Roy Lee, estudiante de Columbia University. Exequiel De Freitas destacó lo zarpada que fue la idea. Agustín dijo que lo iba a usar en el laburo esa semana. Iñaki Fernando Lozano confirmó que había recibido inversión de Andreessen Horowitz (a16z). Marcelo Nuñez no conocía a16z y preguntó qué era; Iñaki explicó que es un venture capital que invierte en empresas y startups. La conversación fue breve pero mostró entusiasmo general por la propuesta del producto."
-  },
-  {
     "title": "Django vs FastAPI y ecosistema Python para backend",
     "date": "2025-07-01",
     "summary": "Agustín Sánchez abrió el debate preguntando qué opinaban de Django para backend. Facundo Padilla, que lo usó en su primer laburo, lo describió como 'hermoso': ORM fantástico, sistema de migraciones 'una locura', panel de admin 'un golazo', aunque lento comparado con alternativas de alta performance. Como contra señaló que es bastante lerdo si tenés que hacer algo ultra crítico en performance, aunque existían mil formas de hacerlo más performante. Marcelo Nuñez expresó preferencia por FastAPI. El punto de fricción principal fue Django REST Framework, que tanto Marcelo como Facundo describieron como 'un embole'. Facundo mencionó 'django-ninja' como alternativa. Para gestión de dependencias, Facundo y Marcelo recomendaron uv sobre Poetry: uv es más rápido (escrito en Rust), maneja versiones de Python internamente. Facundo García Martoni sumó que Ruff reemplaza a Pylance para linting."
@@ -468,11 +438,6 @@
     "title": "Vercel invierte en Nuxt y logros argentinos en el mundo del software",
     "date": "2025-07-08",
     "summary": "Exequiel De Freitas comentó que Vercel 'compró' Nuxt. Facundo Padilla aclaró que en realidad Vercel les dio financiamiento para que el equipo de Nuxt pueda dedicarse a la integración, igual que hicieron con otros proyectos. Esto derivó en una discusión sobre los logros argentinos en el mundo del software: Auth0, Vercel, Mongoose (creado por Guillermo Rauch), Muun Wallet, Godot y Aseprite. Germán Navarro confirmó que Rauch creó Mongoose e incluso Socket.IO, lo cual fue celebrado con mucho orgullo."
-  },
-  {
-    "title": "Auditoría de backend Django en proyecto legacy: deuda técnica",
-    "date": "2025-07-22",
-    "summary": "Agustín Sánchez contó que estaba haciendo una auditoría a un backend de Python/Django de un proyecto legacy que genera reportes de campañas agrícolas. Describió el sistema como gigante, sin tipado y sin ni un test automatizado. Marcelo Nuñez recomendó no tocar nada. Explicó que cuando Django escala a cálculos complejos se vuelve muy difícil de manejar. Facundo Padilla aclaró que la dificultad de Django aparece cuando intentás customizarlo más allá de sus defaults. Sin embargo, defendió el panel de admin como muy valioso para empresas."
   },
   {
     "title": "Chrome AI con Gemini Nano corriendo offline en el browser",
@@ -540,11 +505,6 @@
     "summary": "Agustín Sánchez compartió orpc.unnoq.com y un miembro venezolano del grupo dijo que ya lo estaba usando y que era 'mil veces mejor que tRPC': mucho más liviano, más rápido y con mejor sintaxis. Agustín mencionó que no lo había usado todavía pero que le apareció hacía unos días. El miembro venezolano aclaró que no le había encontrado ninguna limitación y que lo estaba usando en una app mobile también."
   },
   {
-    "title": "Anécdota de entrevista técnica con Gabriel Benmergui (Silver)",
-    "date": "2025-09-20",
-    "summary": "Facundo García Martoni reveló que tuvo el infortunio de hacer una entrevista con Benmergui. En la anécdota: Benmergui hizo el meet desde un bar con ruido de fondo, Facundo resolvió el ejercicio con una solución diferente a la propuesta (todos los unit tests en verde), y la respuesta de Benmergui fue 'mirá la verdad no estás al nivel' sin dar feedback concreto. Al insistir Facundo, le dijo 'Hubieras pasado si lo hubieses codeado en 20 minutos'. Facundo calificó la experiencia de 'surrealista'. Alejo Boga aclaró que en su propia experiencia Benmergui fue 1000 puntos y explicó el modelo de negocio: él cobra a las empresas cuando hace un placement exitoso, y las entrevistas son en realidad un primer filtro/coaching. Agustín reflexionó que un buen reclutador debería ver el potencial de los candidatos a mediano/largo plazo."
-  },
-  {
     "title": "Patrones de diseño de arquitectura: MVC, MVP y MVVM en contexto web y mobile",
     "date": "2025-09-22",
     "summary": "A partir del documento sobre el patrón MVC compartido por Leandro Contrera (diapositivas de su materia de paradigmas en la FRT hechas con LaTeX), se armó un debate técnico sobre si React usa MVC. Agustín Sánchez fue categórico: React es una librería para manejar componentes de UI y no implementa MVC por defecto. Marcelo Nuñez propuso que si bien React no lo hace, Next.js con server actions y un ORM como Prisma puede verse como una implementación de MVC: las pages serían vistas, las server actions actuarían como controladores, y el ORM como modelo. El debate derivó en MVP (Modelo-Vista-Presentador), un patrón orientado a desktop donde la vista implementa una interfaz y el presentador no conoce directamente la vista, lo que permite migrar de una vista a otra sin cambiar el presentador. También se mencionó MVVM (muy usado en mobile nativo) y el patrón VIPER. Mauricio Sánchez confirmó que MVVM y VIPER se usan en iOS."
@@ -563,11 +523,6 @@
     "title": "Resumen de charlas en Nerdearla 2025",
     "date": "2025-09-27",
     "summary": "Agustín Sánchez estuvo en Nerdearla en Buenos Aires y al día siguiente compartió un resumen detallado de las charlas que vio. Destacó la charla de cierre de Midudev, quien mostró los avances de la inteligencia artificial y herramientas nuevas, y revisó cómo desde hace 50 años la gente predice la muerte de la programación cada vez que sale algo que 'simplifica' el trabajo, sin que eso ocurra. Mencionó también una charla de Hernán Wilkinson sobre la belleza y la pasión en el desarrollo usando TDD, y otra sobre Vibe Test-Driven Development, que recomendaba commitear frecuentemente cuando se vibe-codea para poder revertir si la IA la caga. Agustín resaltó una charla de un argentino de 23 años que entró a trabajar en Cline (extensión de VS Code tipo Copilot) desde San Francisco gracias a haber colaborado en PRs open-source; el mensaje fue que con IA es más accesible que nunca contribuir a proyectos que pueden cambiar la carrera. También mencionó una charla sobre code smells comunes —nombres malos, funciones largas, falta de tests— donde la oradora dejó claro que los tests automatizados son clave para refactorizar con confianza. Por último, unos devs de Galicia mostraron cómo implementaron microfrontends en React Native. Alejo Boga preguntó de qué había sido la charla de Midu, y Agustín prometió pasar el link cuando se subiera a YouTube, lo que ocurrió el 1 de octubre."
-  },
-  {
-    "title": "Renunciar al laburo para estudiar full-time",
-    "date": "2025-09-29",
-    "summary": "Facundo Padilla preguntó qué tan arriesgado era renunciar para dedicarse a estudiar a tiempo completo, y Marcelo Nuñez respondió que lo veía como algo que vale la pena si se puede bancar económicamente, recomendando sumarle certificaciones de AWS o GCP al período para justificarlo ante recruiters. Facundo contó que en el banco donde laburaba lo tenían estancado, no le subían de seniority, y llevaba meses solo arreglando cagadas y haciendo evidencias sin tocar microservicios; además se llevaba mal con su líder. Ariel Basabe y Juan Farber sugirieron hacer la renuncia silenciosa —rendir lo mínimo y usar el tiempo extra para estudiar— mientras seguía cobrando el sueldo. Facundo reveló que tenía ahorros suficientes (plata del seguro del auto que le chocaron más el bono del laburo) para darse unos meses, y Alejo Boga le dijo que si tenía ese colchón lo recomendable era directamente lanzar una startup. Leandro Contrera apuntó que las ideas B2B son más factibles que B2C porque el mercado de usuarios es muy competitivo, y Facundo contó que un conocido había armado predik.io puro vibecoding. Alejo mencionó el libro 'Pattern Breakers' de VCs de Silicon Valley, y compartió el link de Y Combinator para ver las empresas que financian por batch como fuente de inspiración."
   },
   {
     "title": "Java y Spring: el framework inevitable del backend Java",
@@ -1193,11 +1148,6 @@
     "title": "Guía de LinkedIn y búsqueda de empleo tecnológico compartida por Alejo",
     "date": "2026-04-24",
     "summary": "Alejo compartió una guía detallada de 7 pasos para buscar trabajo en el mercado tecnológico a través de LinkedIn, especialmente orientada a conseguir posiciones en empresas del exterior. Los puntos clave incluían: armar el perfil en inglés con un buen headline con las tecnologías que manejás, nunca poner el seniority en el perfil, describir qué valor aportás en lugar de adjetivos genéricos, listar todas las experiencias con descripciones y links, hacer reposteos de contenido del nicho para aumentar visibilidad, conectar masivamente con reclutadores y CEOs, y postularse a cientos de posiciones por día. También recomendó ser honesto en las entrevistas sobre lo que no sabés y mostrar disposición para aprender. Agustín Sánchez complementó con el tip de contactar directamente a los reclutadores de las empresas que te interesan."
-  },
-  {
-    "title": "Loïk Choua se presenta: ex-Uber, ex-X, ahora co-founder de 021",
-    "date": "2026-04-24",
-    "summary": "Loïk Choua fue presentado en el grupo como software engineer tucumano con paso por MercadoLibre, Uber y X (Twitter), y actualmente co-founder y CTO de 021. Compartió que 021 construía un AI Product Manager para ayudar a builders en el proceso de ideación y discovery antes de escribir código, con un enfoque B2B. Explicó su trayectoria: MELI le sirvió de vidriera para entrar a Uber, y en X entró en 2024 a través de un ex-compañero cuando abrieron una posición remota para Argentina. Describió Uber como muy corporativo, con mucha burocracia para hacer cambios, y X como una startup con presupuesto pero con dinámicas corporativas. El stack de 021 era Next.js + Vercel + Supabase + AI SDK."
   },
   {
     "title": "Anthropic publicó bugs en Claude Code que degradaban el modelo",
