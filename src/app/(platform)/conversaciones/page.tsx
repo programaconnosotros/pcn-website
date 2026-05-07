@@ -16,6 +16,8 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { MessageCircle, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import conversations from '@/data/whatsapp-conversations.json';
 
 interface Conversation {
@@ -111,7 +113,7 @@ export default function ConversationsPage() {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-2">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -126,6 +128,18 @@ export default function ConversationsPage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+        </div>
+        <div className="px-4">
+          <Link
+            href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="pcn" size="sm" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              Unirme al grupo
+            </Button>
+          </Link>
         </div>
       </header>
 
