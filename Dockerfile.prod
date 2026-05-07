@@ -1,7 +1,7 @@
 FROM node:21.7.3
 WORKDIR /app
 COPY . .
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.4.0
 RUN pnpm install \
 		&& pnpm run build
 EXPOSE 3000
