@@ -81,6 +81,11 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
       items: eventItems.length > 0 ? eventItems : undefined,
     },
     {
+      title: 'Conversaciones',
+      url: '/conversaciones',
+      icon: MessageCircle,
+    },
+    {
       title: 'Charlas',
       url: '/charlas',
       icon: MicVocal,
@@ -147,11 +152,6 @@ const getComunidadItems = () => {
       title: 'Historia',
       url: '/historia',
       icon: ScrollText,
-    },
-    {
-      title: 'Conversaciones',
-      url: '/conversaciones',
-      icon: MessageCircle,
     },
     {
       title: 'Galería',
