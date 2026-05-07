@@ -470,9 +470,9 @@
     "summary": "Exequiel De Freitas comentó que Vercel 'compró' Nuxt. Facundo Padilla aclaró que en realidad Vercel les dio financiamiento para que el equipo de Nuxt pueda dedicarse a la integración, igual que hicieron con otros proyectos. Esto derivó en una discusión sobre los logros argentinos en el mundo del software: Auth0, Vercel, Mongoose (creado por Guillermo Rauch), Muun Wallet, Godot y Aseprite. Germán Navarro confirmó que Rauch creó Mongoose e incluso Socket.IO, lo cual fue celebrado con mucho orgullo. El hilo cerró con Facundo García Martoni bautizando a Guillermo Rauch el 'próximo Rockefeller' por comprar vendors y competidores."
   },
   {
-    "title": "Auditoría de backend Django en Cacta: deuda técnica",
+    "title": "Auditoría de backend Django en proyecto legacy: deuda técnica",
     "date": "2025-07-22",
-    "summary": "Agustín Sánchez contó que estaba haciendo una auditoría a un backend de Python/Django de la empresa Cacta (cacta.eco/), que genera reportes de campañas agrícolas. Describió el sistema como gigante, sin tipado y sin ni un test automatizado. Marcelo Nuñez reaccionó con 'Ay Dios mío te la regalo' y recomendó no tocar nada. Explicó que cuando Django escala a cálculos complejos 'se vuelve muy jodido manejarlo'. Facundo Padilla aclaró que la dificultad de Django aparece cuando intentás customizarlo más allá de sus defaults, y que toquetear internals 'es un laburo de la NASA'. Sin embargo, defendió el panel de admin como muy valioso para empresas."
+    "summary": "Agustín Sánchez contó que estaba haciendo una auditoría a un backend de Python/Django de un proyecto legacy que genera reportes de campañas agrícolas. Describió el sistema como gigante, sin tipado y sin ni un test automatizado. Marcelo Nuñez reaccionó con 'Ay Dios mío te la regalo' y recomendó no tocar nada. Explicó que cuando Django escala a cálculos complejos 'se vuelve muy jodido manejarlo'. Facundo Padilla aclaró que la dificultad de Django aparece cuando intentás customizarlo más allá de sus defaults, y que toquetear internals 'es un laburo de la NASA'. Sin embargo, defendió el panel de admin como muy valioso para empresas."
   },
   {
     "title": "Chrome AI con Gemini Nano corriendo offline en el browser",
