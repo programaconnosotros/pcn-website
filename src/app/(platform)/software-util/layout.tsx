@@ -4,10 +4,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Software útil',
-  description: 'Herramientas y software recomendado por la comunidad.',
+  description:
+    'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
   openGraph: {
-    title: 'Software útil',
-    description: 'Herramientas y software recomendado por la comunidad.',
+    title: 'Software útil | programaConNosotros',
+    description:
+      'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/software-util`,
     type: 'website',
@@ -15,8 +17,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Software útil',
-    description: 'Herramientas y software recomendado por la comunidad.',
+    title: 'Software útil | programaConNosotros',
+    description:
+      'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

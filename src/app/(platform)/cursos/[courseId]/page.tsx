@@ -17,6 +17,48 @@ import {
 } from '@/components/ui/carousel';
 import { Heading2 } from '@/components/ui/heading-2';
 import { getCourseById } from '../courses';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata(props: {
+  params: Promise<{ courseId: string }>;
+}): Promise<Metadata> {
+  const { courseId } = await props.params;
+  const course = getCourseById(courseId);
+
+  if (!course) {
+    return {
+      title: 'Curso no encontrado',
+      description: 'El curso que buscas no existe.',
+    };
+  }
+
+  const title = course.name;
+  const description =
+    course.description.length > 160
+      ? course.description.substring(0, 157) + '…'
+      : course.description;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | programaConNosotros`,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+      url: `${SITE_URL}/cursos/${courseId}`,
+      type: 'website',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | programaConNosotros`,
+      description,
+      images: [`${SITE_URL}/pcn-link-preview.png`],
+    },
+  };
+}
 
 const Course = async (props: { params: Promise<{ courseId: string }> }) => {
   const params = await props.params;

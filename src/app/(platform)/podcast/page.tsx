@@ -16,10 +16,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Podcast',
-  description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+  description:
+    'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
   openGraph: {
-    title: 'Podcast',
-    description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+    title: 'Podcast | programaConNosotros',
+    description:
+      'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/podcast`,
     type: 'website',
@@ -27,8 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Podcast',
-    description: 'Escuchá nuestros podcasts sobre ingeniería de software.',
+    title: 'Podcast | programaConNosotros',
+    description:
+      'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

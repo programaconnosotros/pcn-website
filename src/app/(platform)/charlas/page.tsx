@@ -18,10 +18,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Charlas',
-  description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
+  description:
+    'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
   openGraph: {
-    title: 'Charlas',
-    description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
+    title: 'Charlas técnicas | programaConNosotros',
+    description:
+      'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/charlas`,
     type: 'website',
@@ -29,8 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Charlas',
-    description: 'Repositorio de charlas realizadas por miembros de programaConNosotros.',
+    title: 'Charlas técnicas | programaConNosotros',
+    description:
+      'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

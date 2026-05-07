@@ -22,10 +22,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Cursos',
-  description: 'Descubrí cursos recomendados por la comunidad.',
+  description:
+    'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
   openGraph: {
-    title: 'Cursos',
-    description: 'Descubrí cursos recomendados por la comunidad.',
+    title: 'Cursos recomendados | programaConNosotros',
+    description:
+      'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/cursos`,
     type: 'website',
@@ -33,8 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cursos',
-    description: 'Descubrí cursos recomendados por la comunidad.',
+    title: 'Cursos recomendados | programaConNosotros',
+    description:
+      'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

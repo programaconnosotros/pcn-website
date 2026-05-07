@@ -12,6 +12,31 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Heading3 } from '@/components/ui/heading-3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/especialidades/table-of-contents';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Especialidades',
+  description:
+    'Una guía de las distintas especialidades dentro de la ingeniería de software para ayudarte a descubrir tu camino profesional.',
+  openGraph: {
+    title: 'Especialidades en ingeniería de software | programaConNosotros',
+    description:
+      'Una guía de las distintas especialidades dentro de la ingeniería de software para ayudarte a descubrir tu camino profesional.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/especialidades`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Especialidades en ingeniería de software | programaConNosotros',
+    description:
+      'Una guía de las distintas especialidades dentro de la ingeniería de software para ayudarte a descubrir tu camino profesional.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 import {
   Globe,
   Server,

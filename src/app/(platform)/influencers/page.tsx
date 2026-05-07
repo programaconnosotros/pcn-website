@@ -39,11 +39,13 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Influencers',
-  description: 'Influencers y creadores de contenido recomendados por la comunidad.',
+  title: 'Creadores de contenido recomendados',
+  description:
+    'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
   openGraph: {
-    title: 'Influencers',
-    description: 'Influencers y creadores de contenido recomendados por la comunidad.',
+    title: 'Creadores de contenido recomendados | programaConNosotros',
+    description:
+      'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/influencers`,
     type: 'website',
@@ -51,8 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Influencers',
-    description: 'Influencers y creadores de contenido recomendados por la comunidad',
+    title: 'Creadores de contenido recomendados | programaConNosotros',
+    description:
+      'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

@@ -18,10 +18,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Testimonios',
-  description: 'Conocé la opinión de otros miembros de la comunidad.',
+  description:
+    'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
   openGraph: {
-    title: 'Testimonios',
-    description: 'Conocé la opinión de otros miembros de la comunidad.',
+    title: 'Testimonios | programaConNosotros',
+    description:
+      'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/testimonios`,
     type: 'website',
@@ -29,8 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Testimonios',
-    description: 'Conocé la opinión de otros miembros de la comunidad.',
+    title: 'Testimonios | programaConNosotros',
+    description:
+      'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

@@ -17,11 +17,13 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Historia de programaConNosotros',
-  description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+  title: 'Historia',
+  description:
+    'Cómo nació programaConNosotros: desde un grupo de estudiantes apasionados en la UTN-FRT hasta una comunidad regional de ingeniería de software. Conocé a los fundadores y los pasos que nos trajeron hasta acá.',
   openGraph: {
-    title: 'Historia de programaConNosotros',
-    description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+    title: 'Nuestra historia | programaConNosotros',
+    description:
+      'Cómo nació programaConNosotros: desde un grupo de estudiantes apasionados en la UTN-FRT hasta una comunidad regional de ingeniería de software. Conocé a los fundadores y los pasos que nos trajeron hasta acá.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/historia`,
     type: 'website',
@@ -29,8 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Historia de programaConNosotros',
-    description: 'Conocé a los autores y todos los pasos que dimos para ser lo que somos.',
+    title: 'Nuestra historia | programaConNosotros',
+    description:
+      'Cómo nació programaConNosotros: desde un grupo de estudiantes apasionados en la UTN-FRT hasta una comunidad regional de ingeniería de software. Conocé a los fundadores y los pasos que nos trajeron hasta acá.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

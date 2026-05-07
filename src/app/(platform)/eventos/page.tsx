@@ -22,11 +22,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export const metadata: Metadata = {
   title: 'Eventos',
   description:
-    'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
+    'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
   openGraph: {
-    title: 'Eventos',
+    title: 'Eventos | programaConNosotros',
     description:
-      'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
+      'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/eventos`,
     type: 'website',
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Eventos',
+    title: 'Eventos | programaConNosotros',
     description:
-      'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
+      'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

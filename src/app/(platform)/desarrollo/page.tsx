@@ -28,13 +28,13 @@ import { GitSVG } from '@/components/logos/GitSVG';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Desarrollo del Proyecto',
+  title: 'Desarrollá el proyecto',
   description:
-    'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
+    'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
   openGraph: {
-    title: 'Desarrollo del Proyecto',
+    title: 'Desarrollá el proyecto | programaConNosotros',
     description:
-      'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
+      'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/desarrollo`,
     type: 'website',
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Desarrollo del Proyecto',
+    title: 'Desarrollá el proyecto | programaConNosotros',
     description:
-      'Aprende como contribuir al desarrollo del website de programaConNosotros. Proyecto open-source con Next.js, TypeScript y Tailwind CSS.',
+      'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };

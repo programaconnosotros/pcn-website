@@ -21,10 +21,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 
 export const metadata: Metadata = {
   title: 'Consejos',
-  description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+  description:
+    'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
   openGraph: {
-    title: 'Consejos',
-    description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+    title: 'Consejos de la comunidad | programaConNosotros',
+    description:
+      'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/consejos`,
     type: 'website',
@@ -32,8 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Consejos',
-    description: 'Compartí y descubrí consejos valiosos sobre ingeniería de software.',
+    title: 'Consejos de la comunidad | programaConNosotros',
+    description:
+      'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
     images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
