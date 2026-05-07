@@ -104,7 +104,9 @@ export default function ConversationsPage() {
       if (!groups[key]) groups[key] = [];
       groups[key].push(c);
     }
-    return groups;
+    return Object.entries(groups).sort(
+      ([, a], [, b]) => new Date(b[0].date).getTime() - new Date(a[0].date).getTime(),
+    );
   }, [filtered]);
 
   return (
@@ -172,7 +174,7 @@ export default function ConversationsPage() {
             </p>
           ) : (
             <div className="space-y-8">
-              {Object.entries(grouped).map(([monthYear, items]) => (
+              {grouped.map(([monthYear, items]) => (
                 <section key={monthYear}>
                   <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                     {monthYear}
