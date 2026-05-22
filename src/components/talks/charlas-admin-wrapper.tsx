@@ -192,8 +192,8 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                   )}
 
                   {location && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                    <div className="mt-2 flex items-start gap-2">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
                       <p className="text-sm text-muted-foreground">{location}</p>
                     </div>
                   )}
