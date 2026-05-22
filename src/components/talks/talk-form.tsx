@@ -107,10 +107,6 @@ function SpeakerFields({
                     setValue(`speakers.${index}.speakerName`, user.name, {
                       shouldValidate: true,
                     });
-                    if (user.phoneNumber)
-                      setValue(`speakers.${index}.speakerPhone`, user.phoneNumber, {
-                        shouldValidate: true,
-                      });
                     if (user.jobTitle || user.enterprise) {
                       setValue(`speakers.${index}.isProfessional`, true);
                       if (user.jobTitle) setValue(`speakers.${index}.jobTitle`, user.jobTitle);
@@ -135,36 +131,19 @@ function SpeakerFields({
         )}
       />
 
-      <div className="grid grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name={`speakers.${index}.speakerName`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre del orador</FormLabel>
-              <FormControl>
-                <Input placeholder="Ej: María García" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name={`speakers.${index}.speakerPhone`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Teléfono (WhatsApp)</FormLabel>
-              <FormControl>
-                <Input placeholder="5493815123456" {...field} />
-              </FormControl>
-              <FormDescription>Solo dígitos, con código de país.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={control}
+        name={`speakers.${index}.speakerName`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Nombre del orador</FormLabel>
+            <FormControl>
+              <Input placeholder="Ej: María García" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       <FormField
         control={control}
