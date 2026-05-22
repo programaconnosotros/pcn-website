@@ -4,6 +4,7 @@ import { updateEvent } from '@/actions/events/update-event';
 import { EventForm } from '@/components/events/event-form';
 import { EventFormData } from '@/schemas/event-schema';
 import { useEffect, useState } from 'react';
+import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
 
 type EditEventFormProps = {
@@ -30,14 +31,22 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
   }, []);
 
   const onSubmit = async (values: EventFormData) => {
-    await toast.promise(updateEvent(eventId, values), {
-      loading: 'Actualizando evento...',
-      success: 'Evento actualizado exitosamente! 🎉',
-      error: (error) => {
-        console.error('Error al actualizar el evento', error);
-        return error.message || 'Ocurrió un error al actualizar el evento';
-      },
-    });
+    const toastId = toast.loading('Actualizando evento...');
+
+    try {
+      await updateEvent(eventId, values);
+    } catch (error) {
+      if (isRedirectError(error)) {
+        toast.success('Evento actualizado exitosamente! 🎉', { id: toastId });
+        throw error;
+      }
+
+      console.error('Error al actualizar el evento', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Ocurrió un error al actualizar el evento',
+        { id: toastId },
+      );
+    }
   };
 
   if (!formDefaults) return null;

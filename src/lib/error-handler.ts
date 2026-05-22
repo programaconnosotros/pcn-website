@@ -1,4 +1,7 @@
 import { logError, logClientError } from '@/actions/errors/log-error';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
+
+export { isRedirectError };
 
 /**
  * Wrapper para server actions que captura y registra errores automáticamente
