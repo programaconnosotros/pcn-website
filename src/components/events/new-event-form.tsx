@@ -19,10 +19,9 @@ export function NewEventForm() {
       }
 
       console.error('Error al crear el evento', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Ocurrió un error al crear el evento',
-        { id: toastId },
-      );
+      toast.error(error instanceof Error ? error.message : 'Ocurrió un error al crear el evento', {
+        id: toastId,
+      });
     }
   };
 

@@ -40,10 +40,9 @@ export const DeleteEventDialog = ({
       }
 
       console.error('Error al eliminar el evento', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Error al eliminar el evento',
-        { id: toastId },
-      );
+      toast.error(error instanceof Error ? error.message : 'Error al eliminar el evento', {
+        id: toastId,
+      });
     }
   };
 

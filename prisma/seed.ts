@@ -582,7 +582,8 @@ async function main() {
       eventId: futureEvent.id,
       userId: ana.id,
       title: 'Microservicios: cuándo sí y cuándo no',
-      description: 'Lecciones aprendidas al escalar una app monolítica y cuándo conviene dividirla.',
+      description:
+        'Lecciones aprendidas al escalar una app monolítica y cuándo conviene dividirla.',
       status: TalkProposalStatus.REJECTED,
       speakers: {
         create: mapSpeakers([defaultSpeaker(ana, '5493815000003')]),
@@ -610,7 +611,8 @@ async function main() {
     data: {
       eventId: pastEvent.id,
       title: 'Pair programming en equipos remotos',
-      description: 'Herramientas, dinámicas y acuerdos de equipo para programar en pareja a distancia.',
+      description:
+        'Herramientas, dinámicas y acuerdos de equipo para programar en pareja a distancia.',
       order: 1,
       speakers: {
         create: mapSpeakers([
@@ -690,7 +692,8 @@ async function main() {
       },
       {
         title: 'Actualización de políticas de la comunidad',
-        content: 'Actualizamos las normas de convivencia y el código de conducta en eventos presenciales.',
+        content:
+          'Actualizamos las normas de convivencia y el código de conducta en eventos presenciales.',
         category: 'actualizacion',
         pinned: false,
         published: true,
@@ -698,7 +701,8 @@ async function main() {
       },
       {
         title: 'Borrador: calendario 2026',
-        content: 'Lista preliminar de fechas tentativas para meetups trimestrales (no publicar aún).',
+        content:
+          'Lista preliminar de fechas tentativas para meetups trimestrales (no publicar aún).',
         category: 'general',
         pinned: false,
         published: false,
