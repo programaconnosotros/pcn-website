@@ -120,9 +120,8 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                   <img
                     src={talk.portraitUrl}
                     alt={`Foto de la charla "${talk.title}"`}
-                    className="h-full w-full object-cover grayscale"
+                    className="h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-pcnPurple/20 mix-blend-multiply dark:bg-pcnGreen/30 dark:mix-blend-screen" />
                 </div>
               )}
 
