@@ -402,27 +402,27 @@ export default async function ProfilePage(props: ProfilePageProps) {
           <div className="lg:col-span-2">
             <Tabs defaultValue="consejos" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="consejos" className="flex items-center gap-2">
+                <TabsTrigger value="consejos" className="gap-2">
                   <Lightbulb className="h-4 w-4" />
                   Consejos
-                  <Badge className="ml-1 bg-pcnPurple/20 text-pcnPurple dark:bg-pcnGreen/20 dark:text-pcnGreen">
+                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
                     {user.advises.length}
                   </Badge>
                 </TabsTrigger>
-                <TabsTrigger value="fotos" className="flex items-center gap-2">
+                <TabsTrigger value="fotos" className="gap-2">
                   <Images className="h-4 w-4" />
                   Fotos
                 </TabsTrigger>
-                <TabsTrigger value="charlas" className="flex items-center gap-2">
+                <TabsTrigger value="charlas" className="gap-2">
                   <MicVocal className="h-4 w-4" />
                   Charlas
-                  <Badge className="ml-1 bg-pcnPurple/20 text-pcnPurple dark:bg-pcnGreen/20 dark:text-pcnGreen">
+                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
                     {userTalks.length}
                   </Badge>
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="consejos" className="mt-6">
+              <TabsContent value="consejos" className="mt-4">
                 {user.advises.length === 0 ? (
                   <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
                 ) : (
@@ -434,11 +434,11 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 )}
               </TabsContent>
 
-              <TabsContent value="fotos" className="mt-6">
+              <TabsContent value="fotos" className="mt-4">
                 <p className="text-gray-500">Las fotos estarán disponibles próximamente.</p>
               </TabsContent>
 
-              <TabsContent value="charlas" className="mt-6">
+              <TabsContent value="charlas" className="mt-4">
                 {userTalks.length === 0 ? (
                   <p className="text-gray-500">Este usuario aún no ha dado ninguna charla.</p>
                 ) : (
