@@ -1,9 +1,60 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TalkProposalStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+type SpeakerSeedData = {
+  userId?: string | null;
+  speakerName: string;
+  speakerPhone: string;
+  isProfessional?: boolean;
+  jobTitle?: string | null;
+  enterprise?: string | null;
+  isStudent?: boolean;
+  career?: string | null;
+  studyPlace?: string | null;
+  order?: number;
+};
+
+function mapSpeakers(speakers: SpeakerSeedData[]) {
+  return speakers.map((s, idx) => ({
+    userId: s.userId ?? null,
+    speakerName: s.speakerName,
+    speakerPhone: s.speakerPhone,
+    isProfessional: s.isProfessional ?? false,
+    jobTitle: s.jobTitle ?? null,
+    enterprise: s.enterprise ?? null,
+    isStudent: s.isStudent ?? false,
+    career: s.career ?? null,
+    studyPlace: s.studyPlace ?? null,
+    order: s.order ?? idx,
+  }));
+}
+
+async function clearSeedData() {
+  await prisma.talkSpeaker.deleteMany();
+  await prisma.talk.deleteMany();
+  await prisma.talkProposalSpeaker.deleteMany();
+  await prisma.talkProposal.deleteMany();
+  await prisma.announcement.deleteMany();
+  await prisma.testimonial.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.eventRegistration.deleteMany();
+  await prisma.sponsor.deleteMany();
+  await prisma.image.deleteMany();
+  await prisma.comment.deleteMany();
+  await prisma.userLanguage.deleteMany();
+  await prisma.like.deleteMany();
+  await prisma.advise.deleteMany();
+  await prisma.pageVisit.deleteMany();
+  await prisma.errorLog.deleteMany();
+  await prisma.appLog.deleteMany();
+  await prisma.jobOffers.deleteMany();
+  await prisma.event.deleteMany();
+}
+
 async function main() {
-  // Create multiple users
+  await clearSeedData();
+
   const users = await Promise.all([
     prisma.user.upsert({
       where: { email: 'user@example.com' },
@@ -59,7 +110,13 @@ async function main() {
     }),
   ]);
 
-  // Array de consejos variados
+  const john = users.find((u) => u.email === 'user@example.com')!;
+  const maria = users.find((u) => u.email === 'maria.garcia@example.com')!;
+  const juan = users.find((u) => u.email === 'juan.perez@example.com')!;
+  const ana = users.find((u) => u.email === 'ana.lopez@example.com')!;
+  const adminUser = users.find((u) => u.email === 'admin@example.com')!;
+  const regularUsers = users.filter((u) => u.role !== 'ADMIN');
+
   const adviceExamples = [
     'No te rindas si no sale a la primera, vas a terminar aprendiendo más si fallas, luego revisas por qué falló y luego construyes sobre esas nuevas bases. ¡Éxitos!',
     'No hay nada más fructífero que ver tus propios avances día a día, cosechando el conocimiento que fuiste cultivando con el tiempo.',
@@ -71,93 +128,65 @@ async function main() {
     'Al mejorar tus habilidades en inglés, ampliarás tus oportunidades laborales y estarás mejor preparado para colaborar en equipos internacionales.',
     'Aprender de los errores es fundamental para crecer en cualquier área, especialmente en tecnología.',
     'Rodéate de personas que te inspiren y te reten a ser mejor cada día.',
-    // Puedes agregar más frases aquí...
   ];
 
-  // Create 300 advises distributed among users
   const advises = await Promise.all(
     Array.from({ length: 300 }).map((_, i) =>
       prisma.advise.create({
         data: {
-          content: adviceExamples[i % adviceExamples.length], // Usar consejo variado
-          authorId: users[i % users.length].id, // Distribute advises among users
+          content: adviceExamples[i % adviceExamples.length],
+          authorId: users[i % users.length].id,
         },
       }),
     ),
   );
 
-  // Add likes to advises with different probabilities
   await Promise.all(
     advises.map(async (advise) => {
-      // Each advise has a chance to get likes from each user
       for (const user of users) {
-        // Skip if the user is the author of the advise
         if (user.id === advise.authorId) continue;
 
-        // Different probabilities for different users
         const likeProbability = Math.random();
 
-        // First user (Agustín) likes more content (60% chance)
-        if (user.email === 'js.agustin.sz@gmail.com' && likeProbability < 0.6) {
+        if (user.email === 'user@example.com' && likeProbability < 0.6) {
           await prisma.like.create({
-            data: {
-              userId: user.id,
-              adviseId: advise.id,
-            },
+            data: { userId: user.id, adviseId: advise.id },
           });
-        }
-        // Second user (María) likes moderately (40% chance)
-        else if (user.email === 'maria.garcia@example.com' && likeProbability < 0.4) {
+        } else if (user.email === 'maria.garcia@example.com' && likeProbability < 0.4) {
           await prisma.like.create({
-            data: {
-              userId: user.id,
-              adviseId: advise.id,
-            },
+            data: { userId: user.id, adviseId: advise.id },
           });
-        }
-        // Other users like less frequently (20% chance)
-        else if (likeProbability < 0.2) {
+        } else if (likeProbability < 0.2) {
           await prisma.like.create({
-            data: {
-              userId: user.id,
-              adviseId: advise.id,
-            },
+            data: { userId: user.id, adviseId: advise.id },
           });
         }
       }
     }),
   );
 
-  // Create at least 10 mocked events
-  await Promise.all(
+  const eventResults = await Promise.all(
     Array.from({ length: 10 }).map(async (_, index) => {
       try {
         const startDate = new Date();
         const endDate = new Date(startDate);
         endDate.setHours(startDate.getHours() + 4);
 
-        // Generate only for even events
         const includeImages = index % 2 === 0;
         const imageIds: string[] = [];
 
         if (includeImages) {
-          try {
-            await Promise.all(
-              Array.from({ length: 3 }).map(async () => {
-                const image = await prisma.image.create({
-                  data: {
-                    imgSrc: `/events/Lightning talks flyer.webp`,
-                  },
-                });
-                imageIds.push(image.id);
-                return image;
-              }),
-            );
-          } catch (error) {
-            console.error(`Failed to create images for event ${index + 1}:`, error);
-          }
+          await Promise.all(
+            Array.from({ length: 3 }).map(async () => {
+              const image = await prisma.image.create({
+                data: { imgSrc: '/events/Lightning talks flyer.webp' },
+              });
+              imageIds.push(image.id);
+            }),
+          );
         }
-        const event = await prisma.event.create({
+
+        return prisma.event.create({
           data: {
             name: `Titulo del evento numero ${index + 1}`,
             flyerSrc: '/events/Lightning talks flyer.webp',
@@ -174,7 +203,6 @@ async function main() {
             },
           },
         });
-        return event;
       } catch (error) {
         console.error(`Failed to create event ${index + 1}`, error);
         return null;
@@ -182,7 +210,63 @@ async function main() {
     }),
   );
 
-  // Create 10 job offers
+  const events = eventResults.filter((e): e is NonNullable<typeof e> => e !== null);
+
+  const pastDate = new Date();
+  pastDate.setDate(pastDate.getDate() - 30);
+  const pastEndDate = new Date(pastDate);
+  pastEndDate.setHours(pastEndDate.getHours() + 4);
+
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + 14);
+  const futureEndDate = new Date(futureDate);
+  futureEndDate.setHours(futureEndDate.getHours() + 4);
+
+  const [pastEvent, futureEvent, onlineEvent] = await Promise.all([
+    prisma.event.update({
+      where: { id: events[0].id },
+      data: {
+        name: 'Meetup de desarrollo - Edición pasada',
+        date: pastDate,
+        endDate: pastEndDate,
+        callForSpeakersEnabled: true,
+        capacity: 80,
+      },
+    }),
+    prisma.event.update({
+      where: { id: events[1].id },
+      data: {
+        name: 'Meetup de desarrollo - Próxima edición',
+        date: futureDate,
+        endDate: futureEndDate,
+        callForSpeakersEnabled: true,
+        capacity: 100,
+      },
+    }),
+    prisma.event.update({
+      where: { id: events[2].id },
+      data: {
+        name: 'Charla online: Buenas prácticas en Next.js',
+        date: futureDate,
+        endDate: futureEndDate,
+        isOnline: true,
+        streamingUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        city: null,
+        address: null,
+        placeName: null,
+      },
+    }),
+  ]);
+
+  for (const event of [pastEvent, futureEvent, onlineEvent]) {
+    await prisma.sponsor.createMany({
+      data: [
+        { eventId: event.id, name: 'TechCorp Argentina', website: 'https://example.com/techcorp' },
+        { eventId: event.id, name: 'UTN-FRT', website: 'https://www.frt.utn.edu.ar' },
+      ],
+    });
+  }
+
   const jobOffersData = [
     {
       title: 'Senior Frontend Developer',
@@ -286,23 +370,8 @@ async function main() {
     },
   ];
 
-  await Promise.all(
-    jobOffersData.map(async (jobOffer) => {
-      try {
-        await prisma.jobOffers.create({
-          data: jobOffer,
-        });
-      } catch (error) {
-        console.error(`Failed to create job offer: ${jobOffer.title}`, error);
-      }
-    }),
-  );
+  await prisma.jobOffers.createMany({ data: jobOffersData });
 
-  // Obtener usuarios regulares (no admin) para asociar errores y logs
-  const regularUsers = users.filter((user) => user.role !== 'ADMIN');
-  const adminUser = users.find((user) => user.role === 'ADMIN');
-
-  // Crear errores de ejemplo
   const errorMessages = [
     'Failed to fetch user data',
     'Network request failed',
@@ -329,6 +398,8 @@ async function main() {
     '/job-offers',
     '/profile',
     '/dashboard',
+    '/charlas',
+    '/testimonios',
     '/api/advises',
     '/api/events',
     '/api/users',
@@ -341,7 +412,6 @@ async function main() {
     'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15',
   ];
 
-  // Crear 50 errores distribuidos en los últimos 30 días
   const errors = await Promise.all(
     Array.from({ length: 50 }).map(async (_, i) => {
       const daysAgo = Math.floor(Math.random() * 30);
@@ -351,7 +421,7 @@ async function main() {
       createdAt.setMinutes(Math.floor(Math.random() * 60));
 
       const user = regularUsers[Math.floor(Math.random() * regularUsers.length)];
-      const isResolved = Math.random() > 0.6; // 40% resueltos
+      const isResolved = Math.random() > 0.6;
       const resolvedAt = isResolved
         ? new Date(createdAt.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000)
         : null;
@@ -364,7 +434,7 @@ async function main() {
       return prisma.errorLog.create({
         data: {
           message: errorMessages[i % errorMessages.length],
-          stack: stack,
+          stack,
           path: errorPaths[Math.floor(Math.random() * errorPaths.length)],
           userId: user.id,
           userAgent: userAgents[Math.floor(Math.random() * userAgents.length)],
@@ -375,15 +445,14 @@ async function main() {
             timestamp: createdAt.toISOString(),
           }),
           resolved: isResolved,
-          resolvedAt: resolvedAt,
+          resolvedAt,
           resolvedBy: isResolved && adminUser ? adminUser.id : null,
-          createdAt: createdAt,
+          createdAt,
         },
       });
     }),
   );
 
-  // Crear logs de aplicación de ejemplo
   const logLevels = ['info', 'warn', 'error', 'debug'];
   const logMessages = [
     'User logged in successfully',
@@ -411,9 +480,8 @@ async function main() {
     'Error: Network timeout',
   ];
 
-  // Crear 200 logs distribuidos en los últimos 7 días
   const logs = await Promise.all(
-    Array.from({ length: 200 }).map(async (_, i) => {
+    Array.from({ length: 200 }).map(async () => {
       const daysAgo = Math.floor(Math.random() * 7);
       const createdAt = new Date();
       createdAt.setDate(createdAt.getDate() - daysAgo);
@@ -423,15 +491,13 @@ async function main() {
 
       const user =
         Math.random() > 0.3 ? regularUsers[Math.floor(Math.random() * regularUsers.length)] : null;
-      const level = logLevels[Math.floor(Math.random() * logLevels.length)];
-      const message = logMessages[Math.floor(Math.random() * logMessages.length)];
 
       return prisma.appLog.create({
         data: {
-          level: level,
-          message: message,
+          level: logLevels[Math.floor(Math.random() * logLevels.length)],
+          message: logMessages[Math.floor(Math.random() * logMessages.length)],
           path: errorPaths[Math.floor(Math.random() * errorPaths.length)],
-          userId: user?.id || null,
+          userId: user?.id ?? null,
           userAgent: user ? userAgents[Math.floor(Math.random() * userAgents.length)] : null,
           ipAddress: user ? `192.168.1.${Math.floor(Math.random() * 255)}` : null,
           metadata: JSON.stringify({
@@ -439,13 +505,377 @@ async function main() {
             sessionId: `session_${Math.random().toString(36).substring(7)}`,
             additionalInfo: Math.random() > 0.5 ? { action: 'click', element: 'button' } : null,
           }),
-          createdAt: createdAt,
+          createdAt,
         },
       });
     }),
   );
 
-  console.log(`Seed data created successfully!`);
+  const defaultSpeaker = (user: (typeof users)[0], phone: string): SpeakerSeedData => ({
+    userId: user.id,
+    speakerName: user.name,
+    speakerPhone: phone,
+    isProfessional: true,
+    jobTitle: 'Desarrollador',
+    enterprise: 'programaConNosotros',
+  });
+
+  const acceptedProposal = await prisma.talkProposal.create({
+    data: {
+      eventId: pastEvent.id,
+      userId: maria.id,
+      title: 'Introducción a TypeScript en proyectos reales',
+      description:
+        'Repaso de tipos, generics y patrones útiles para migrar código JavaScript a TypeScript sin fricción.',
+      status: TalkProposalStatus.ACCEPTED,
+      speakers: {
+        create: mapSpeakers([defaultSpeaker(maria, '5493815000001')]),
+      },
+    },
+    include: { speakers: { orderBy: { order: 'asc' } } },
+  });
+
+  await prisma.talk.create({
+    data: {
+      eventId: acceptedProposal.eventId,
+      proposalId: acceptedProposal.id,
+      title: acceptedProposal.title,
+      description: acceptedProposal.description,
+      order: 0,
+      portraitUrl: '/events/Lightning talks flyer.webp',
+      slideImages: ['/events/Lightning talks flyer.webp'],
+      speakers: {
+        create: mapSpeakers(
+          acceptedProposal.speakers.map((s) => ({
+            userId: s.userId,
+            speakerName: s.speakerName,
+            speakerPhone: s.speakerPhone,
+            isProfessional: s.isProfessional,
+            jobTitle: s.jobTitle,
+            enterprise: s.enterprise,
+            isStudent: s.isStudent,
+            career: s.career,
+            studyPlace: s.studyPlace,
+            order: s.order,
+          })),
+        ),
+      },
+    },
+  });
+
+  await prisma.talkProposal.create({
+    data: {
+      eventId: futureEvent.id,
+      userId: juan.id,
+      title: 'Testing en frontend con Vitest y Testing Library',
+      description:
+        'Cómo escribir tests unitarios y de integración para componentes React de forma práctica.',
+      status: TalkProposalStatus.PENDING,
+      speakers: {
+        create: mapSpeakers([defaultSpeaker(juan, '5493815000002')]),
+      },
+    },
+  });
+
+  await prisma.talkProposal.create({
+    data: {
+      eventId: futureEvent.id,
+      userId: ana.id,
+      title: 'Microservicios: cuándo sí y cuándo no',
+      description: 'Lecciones aprendidas al escalar una app monolítica y cuándo conviene dividirla.',
+      status: TalkProposalStatus.REJECTED,
+      speakers: {
+        create: mapSpeakers([defaultSpeaker(ana, '5493815000003')]),
+      },
+    },
+  });
+
+  await prisma.talk.create({
+    data: {
+      eventId: onlineEvent.id,
+      title: 'Server Components en Next.js 15',
+      description:
+        'Diferencias entre client y server components, streaming y patrones de data fetching.',
+      order: 0,
+      portraitUrl: '/events/Lightning talks flyer.webp',
+      slidesUrl: 'https://example.com/slides/nextjs-rsc',
+      slideImages: ['/events/Lightning talks flyer.webp'],
+      speakers: {
+        create: mapSpeakers([defaultSpeaker(adminUser, '5493815000004')]),
+      },
+    },
+  });
+
+  await prisma.talk.create({
+    data: {
+      eventId: pastEvent.id,
+      title: 'Pair programming en equipos remotos',
+      description: 'Herramientas, dinámicas y acuerdos de equipo para programar en pareja a distancia.',
+      order: 1,
+      speakers: {
+        create: mapSpeakers([
+          defaultSpeaker(john, '5493815000005'),
+          {
+            speakerName: 'Carlos Mentor',
+            speakerPhone: '5493815000006',
+            isProfessional: true,
+            jobTitle: 'Tech Lead',
+            enterprise: 'RemoteDev',
+            order: 1,
+          },
+        ]),
+      },
+    },
+  });
+
+  await prisma.talk.create({
+    data: {
+      eventId: null,
+      title: 'Carrera en tecnología: primeros pasos',
+      description:
+        'Charla abierta sobre cómo empezar en programación, comunidades locales y recursos gratuitos.',
+      order: 0,
+      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      speakers: {
+        create: mapSpeakers([
+          {
+            speakerName: 'Invitado PCN',
+            speakerPhone: '5493815000007',
+            isStudent: true,
+            career: 'Ingeniería en Sistemas',
+            studyPlace: 'UTN-FRT',
+          },
+        ]),
+      },
+    },
+  });
+
+  await prisma.announcement.createMany({
+    data: [
+      {
+        title: 'Bienvenidos a programaConNosotros',
+        content:
+          'Esta es la plataforma de la comunidad. Explorá eventos, charlas, consejos y sumate a los próximos meetups.',
+        category: 'general',
+        pinned: true,
+        published: true,
+        authorId: adminUser.id,
+      },
+      {
+        title: 'Próximo meetup abierto a propuestas',
+        content:
+          'Ya podés proponer charlas para el próximo evento. Revisá los requisitos en la página del evento.',
+        category: 'evento',
+        pinned: true,
+        published: true,
+        authorId: adminUser.id,
+        eventId: futureEvent.id,
+      },
+      {
+        title: 'Nueva sección de charlas públicas',
+        content: 'Publicamos las charlas de ediciones anteriores y eventos online en /charlas.',
+        category: 'noticia',
+        pinned: false,
+        published: true,
+        authorId: adminUser.id,
+      },
+      {
+        title: 'Mantenimiento programado',
+        content:
+          'El domingo de 02:00 a 04:00 (ART) puede haber interrupciones breves por actualización de infraestructura.',
+        category: 'importante',
+        pinned: false,
+        published: true,
+        authorId: adminUser.id,
+      },
+      {
+        title: 'Actualización de políticas de la comunidad',
+        content: 'Actualizamos las normas de convivencia y el código de conducta en eventos presenciales.',
+        category: 'actualizacion',
+        pinned: false,
+        published: true,
+        authorId: adminUser.id,
+      },
+      {
+        title: 'Borrador: calendario 2026',
+        content: 'Lista preliminar de fechas tentativas para meetups trimestrales (no publicar aún).',
+        category: 'general',
+        pinned: false,
+        published: false,
+        authorId: adminUser.id,
+      },
+    ],
+  });
+
+  await prisma.testimonial.createMany({
+    data: [
+      {
+        body: 'PCN me ayudó a dar mis primeros pasos en programación y conocer gente con la misma pasión.',
+        userId: john.id,
+        featured: true,
+      },
+      {
+        body: 'Los eventos son muy accesibles y siempre aprendo algo nuevo, sea presencial u online.',
+        userId: maria.id,
+        featured: true,
+      },
+      {
+        body: 'La comunidad es un espacio seguro para preguntar y compartir experiencias sin miedo.',
+        userId: juan.id,
+        featured: true,
+      },
+      {
+        body: 'Gracias a los meetups conseguí mi primer trabajo en IT.',
+        userId: ana.id,
+        featured: false,
+      },
+    ],
+  });
+
+  await prisma.eventRegistration.createMany({
+    data: [
+      { eventId: pastEvent.id, userId: john.id },
+      { eventId: pastEvent.id, userId: maria.id },
+      { eventId: futureEvent.id, userId: juan.id },
+      { eventId: futureEvent.id, userId: ana.id },
+      { eventId: onlineEvent.id, userId: john.id },
+      {
+        eventId: futureEvent.id,
+        userId: john.id,
+        cancelledAt: new Date(),
+      },
+    ],
+  });
+
+  const commentTexts = [
+    '¡Totalmente de acuerdo!',
+    'Me pasó lo mismo el año pasado.',
+    'Gracias por compartir esto.',
+    'Muy buen consejo.',
+    'Lo voy a aplicar en mi próximo proyecto.',
+    '¿Tenés algún recurso para profundizar?',
+    'Excelente perspectiva.',
+    'Esto debería estar pinned.',
+    'Lo comparto con mi equipo.',
+    '100% real.',
+  ];
+
+  const topAdvises = advises.slice(0, 10);
+  const createdComments = await Promise.all(
+    topAdvises.map((advise, i) =>
+      prisma.comment.create({
+        data: {
+          content: commentTexts[i],
+          authorId: users[i % regularUsers.length].id,
+          adviseId: advise.id,
+        },
+      }),
+    ),
+  );
+
+  await prisma.comment.create({
+    data: {
+      content: '¡Gracias! Me alegra que te sirva.',
+      authorId: topAdvises[0].authorId,
+      adviseId: topAdvises[0].id,
+      parentCommentId: createdComments[0].id,
+    },
+  });
+
+  await prisma.userLanguage.createMany({
+    data: [
+      {
+        userId: john.id,
+        language: 'typescript',
+        color: '#0D1B2A',
+        logo: '/language-logo/typescript-icon-svgrepo-com.webp',
+      },
+      {
+        userId: john.id,
+        language: 'javascript',
+        color: '#F7DF1E',
+        logo: '/language-logo/javascript-svgrepo-com.webp',
+      },
+      {
+        userId: john.id,
+        language: 'python',
+        color: '#1C3D6B',
+        logo: '/language-logo/python-svgrepo-com.webp',
+      },
+      {
+        userId: maria.id,
+        language: 'typescript',
+        color: '#0D1B2A',
+        logo: '/language-logo/typescript-icon-svgrepo-com.webp',
+      },
+      {
+        userId: maria.id,
+        language: 'python',
+        color: '#1C3D6B',
+        logo: '/language-logo/python-svgrepo-com.webp',
+      },
+    ],
+  });
+
+  await prisma.notification.createMany({
+    data: [
+      {
+        type: 'testimonial_created',
+        title: 'Nuevo testimonio',
+        message: `${john.name} publicó un testimonio`,
+        userId: adminUser.id,
+        metadata: JSON.stringify({ userId: john.id, testimonialUserId: john.id }),
+      },
+      {
+        type: 'talk_proposal_created',
+        title: 'Nueva propuesta de charla',
+        message: `${juan.name} propuso una charla para "${futureEvent.name}"`,
+        userId: adminUser.id,
+        metadata: JSON.stringify({ eventId: futureEvent.id, eventName: futureEvent.name }),
+      },
+      {
+        type: 'event_registration_created',
+        title: 'Nueva inscripción',
+        message: `${ana.name} se inscribió a "${futureEvent.name}"`,
+        userId: adminUser.id,
+        metadata: JSON.stringify({ eventId: futureEvent.id, userId: ana.id }),
+      },
+      {
+        type: 'event_registration_cancelled',
+        title: 'Inscripción cancelada',
+        message: `${john.name} canceló su inscripción a "${futureEvent.name}"`,
+        userId: adminUser.id,
+        metadata: JSON.stringify({ eventId: futureEvent.id, userId: john.id }),
+      },
+      {
+        type: 'testimonial_updated',
+        title: 'Testimonio actualizado',
+        message: `${maria.name} actualizó su testimonio`,
+        userId: adminUser.id,
+        read: true,
+        metadata: JSON.stringify({ userId: maria.id }),
+      },
+    ],
+  });
+
+  const visitPaths = ['/charlas', '/eventos', '/testimonios', '/advises', '/job-offers'];
+  await prisma.pageVisit.createMany({
+    data: Array.from({ length: 30 }).map(() => {
+      const user =
+        Math.random() > 0.4 ? regularUsers[Math.floor(Math.random() * regularUsers.length)] : null;
+      return {
+        path: visitPaths[Math.floor(Math.random() * visitPaths.length)],
+        userId: user?.id ?? null,
+        ipAddress: `10.0.0.${Math.floor(Math.random() * 255)}`,
+        userAgent: userAgents[Math.floor(Math.random() * userAgents.length)],
+        referer: Math.random() > 0.5 ? 'https://google.com' : null,
+      };
+    }),
+  });
+
+  console.log('Seed data created successfully!');
+  console.log(`Created ${events.length} events`);
+  console.log(`Created ${advises.length} advises`);
   console.log(`Created ${errors.length} error logs`);
   console.log(`Created ${logs.length} application logs`);
 }

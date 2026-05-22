@@ -62,6 +62,16 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   pnpm populate-database
   ```
 
+  El script es idempotente: borra y recrea datos de prueba (conserva usuarios por email). Incluye usuarios, consejos, likes, eventos, sponsors, inscripciones, charlas y propuestas, anuncios, testimonios, ofertas de trabajo, comentarios, lenguajes de programación, notificaciones, visitas de página, y logs de errores/aplicación.
+
+  También podés resetear la base y volver a poblarla con:
+
+  ```bash
+  pnpm reset-database
+  ```
+
+  (aplica migraciones y corre el seed automáticamente).
+
 - Si cambias algún modelo de base de datos, tenes que hacer una migración. Para eso, ejecutá el siguiente comando:
 
   ```bash
