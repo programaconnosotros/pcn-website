@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 export const fetchPublicTalks = async () =>
   prisma.talk.findMany({
     include: {
-      event: { select: { date: true, placeName: true, city: true } },
+      event: { select: { id: true, name: true, date: true, placeName: true, city: true } },
       speakers: {
         include: { user: { select: { id: true, name: true, image: true } } },
         orderBy: { order: 'asc' },

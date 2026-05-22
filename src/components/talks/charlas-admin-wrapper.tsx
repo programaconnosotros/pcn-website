@@ -36,6 +36,7 @@ import {
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Calendar,
+  CalendarDays,
   Edit,
   FileText,
   MapPin,
@@ -157,7 +158,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                 <CardContent className="flex-1">
                   <div className="flex items-start gap-2">
                     <User className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex flex-col gap-0.5">
+                    <div className="flex min-w-0 flex-col gap-0.5">
                       {talk.speakers.map((speaker) =>
                         speaker.user ? (
                           <Link
@@ -176,10 +177,22 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                     </div>
                   </div>
 
+                  {talk.event?.id && talk.event?.name && (
+                    <div className="mt-2 flex items-start gap-2">
+                      <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
+                      <Link
+                        href={`/eventos/${talk.event.id}`}
+                        className="min-w-0 text-sm text-muted-foreground hover:underline"
+                      >
+                        {talk.event.name}
+                      </Link>
+                    </div>
+                  )}
+
                   {talk.event?.date && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="text-sm text-muted-foreground">
+                    <div className="mt-2 flex items-start gap-2">
+                      <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
+                      <p className="min-w-0 text-sm text-muted-foreground">
                         {new Date(talk.event.date)
                           .toLocaleDateString('es-ES', {
                             day: '2-digit',
@@ -194,7 +207,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                   {location && (
                     <div className="mt-2 flex items-start gap-2">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="text-sm text-muted-foreground">{location}</p>
+                      <p className="min-w-0 text-sm text-muted-foreground">{location}</p>
                     </div>
                   )}
                 </CardContent>
