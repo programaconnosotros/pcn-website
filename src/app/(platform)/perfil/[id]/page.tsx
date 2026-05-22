@@ -214,13 +214,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
             <div className="lg:sticky lg:top-4">
               <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                 <CardHeader className="flex flex-col items-center gap-4 pb-6">
-                  <Avatar className="h-32 w-32">
+                  <Avatar className="h-24 w-24">
                     <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-                    <AvatarFallback className="text-3xl">{user.name?.[0] ?? 'U'}</AvatarFallback>
+                    <AvatarFallback className="text-lg">{user.name?.[0] ?? 'U'}</AvatarFallback>
                   </Avatar>
 
                   <div className="flex flex-col items-center gap-2">
-                    <h1 className="text-center text-2xl font-semibold">{user.name}</h1>
+                    <h1 className="text-center text-lg font-semibold">{user.name}</h1>
                     {isOwnProfile && (
                       <Link href="/perfil">
                         <Button
@@ -281,7 +281,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     {user.slogan && (
                       <div className="flex items-start gap-3">
                         <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                        <p className="italic leading-relaxed text-muted-foreground">
+                        <p className="text-sm italic leading-relaxed text-muted-foreground">
                           {user.slogan}
                         </p>
                       </div>
@@ -292,9 +292,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       <div>
                         <div className="mb-2 flex items-center gap-2">
                           <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="font-semibold">Información laboral</h2>
+                          <h2 className="text-lg font-semibold">Información laboral</h2>
                         </div>
-                        <div className="space-y-1 pl-7">
+                        <div className="space-y-1 pl-7 text-sm">
                           {user.jobTitle && (
                             <p>
                               <span className="font-medium">Cargo:</span> {user.jobTitle}
@@ -314,9 +314,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       <div>
                         <div className="mb-2 flex items-center gap-2">
                           <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="font-semibold">Información académica</h2>
+                          <h2 className="text-lg font-semibold">Información académica</h2>
                         </div>
-                        <div className="space-y-1 pl-7">
+                        <div className="space-y-1 pl-7 text-sm">
                           {user.career && (
                             <p>
                               <span className="font-medium">Carrera:</span> {user.career}
@@ -336,9 +336,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       <div>
                         <div className="mb-2 flex items-center gap-2">
                           <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="font-semibold">Ubicación</h2>
+                          <h2 className="text-lg font-semibold">Ubicación</h2>
                         </div>
-                        <div className="space-y-1 pl-7">
+                        <div className="space-y-1 pl-7 text-sm">
                           {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
                           {user.province && (
                             <p className="text-sm text-muted-foreground">{user.province}</p>
@@ -352,15 +352,15 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       <div>
                         <div className="mb-2 flex items-center gap-2">
                           <Contact className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="font-semibold">Contacto</h2>
+                          <h2 className="text-lg font-semibold">Contacto</h2>
                         </div>
-                        <div className="space-y-1 pl-7">
+                        <div className="space-y-1 pl-7 text-sm">
                           {user.email && (
                             <div className="flex items-center gap-2">
                               <Mail className="h-4 w-4 text-muted-foreground" />
                               <a
                                 href={`mailto:${user.email}`}
-                                className="text-pcnPurple hover:underline dark:text-pcnGreen"
+                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
                               >
                                 {user.email}
                               </a>
@@ -371,7 +371,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                               <Phone className="h-4 w-4 text-muted-foreground" />
                               <a
                                 href={`tel:${user.phoneNumber}`}
-                                className="text-pcnPurple hover:underline dark:text-pcnGreen"
+                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
                               >
                                 {user.phoneNumber}
                               </a>
@@ -383,7 +383,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
                     {/* Lenguajes de programación */}
                     <div>
-                      <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
+                      <h2 className="mb-2 text-lg font-semibold">Lenguajes de programación</h2>
                       {userLanguages.length > 0 ? (
                         <LanguageCoinsContainer languages={userLanguages} />
                       ) : (
@@ -424,7 +424,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
               <TabsContent value="consejos" className="mt-4">
                 {user.advises.length === 0 ? (
-                  <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Este usuario aún no ha compartido ningún consejo.
+                  </p>
                 ) : (
                   <div className="space-y-4">
                     {user.advises.map((advise) => (
@@ -435,12 +437,16 @@ export default async function ProfilePage(props: ProfilePageProps) {
               </TabsContent>
 
               <TabsContent value="fotos" className="mt-4">
-                <p className="text-gray-500">Las fotos estarán disponibles próximamente.</p>
+                <p className="text-sm text-muted-foreground">
+                  Las fotos estarán disponibles próximamente.
+                </p>
               </TabsContent>
 
               <TabsContent value="charlas" className="mt-4">
                 {userTalks.length === 0 ? (
-                  <p className="text-gray-500">Este usuario aún no ha dado ninguna charla.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Este usuario aún no ha dado ninguna charla.
+                  </p>
                 ) : (
                   <div className="space-y-4">
                     {userTalks.map((talk) => {
@@ -465,7 +471,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                                 </div>
                               )}
                               <div className="flex flex-1 flex-col gap-2">
-                                <h3 className="text-xl font-semibold">{talk.title}</h3>
+                                <h3 className="text-lg font-semibold">{talk.title}</h3>
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                   <span>{talk.speakers.map((s) => s.speakerName).join(', ')}</span>
                                   {talk.event?.date && (
