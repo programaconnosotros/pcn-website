@@ -24,8 +24,6 @@ export const metadata: Metadata = {
   },
 };
 
-const SoftwareRecomendadoLayout = ({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-);
+const SoftwareRecomendadoLayout = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export default SoftwareRecomendadoLayout;
