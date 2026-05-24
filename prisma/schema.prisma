@@ -393,11 +393,14 @@ model TalkProposalSpeaker {
 }
 
 model Talk {
-  id          String  @id @default(cuid())
-  eventId     String?
-  proposalId  String? @unique
-  title       String
-  description String
+  id                  String    @id @default(cuid())
+  eventId             String?
+  proposalId          String?   @unique
+  title               String
+  description         String
+  manualEventTitle    String?
+  manualEventDate     DateTime?
+  manualEventLocation String?
 
   order       Int      @default(0)
   portraitUrl String?

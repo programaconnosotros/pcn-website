@@ -109,7 +109,13 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
       <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
         {talks.map((talk) => {
-          const location = [talk.event?.placeName, talk.event?.city].filter(Boolean).join(', ');
+          const eventTitle = talk.event?.name ?? talk.manualEventTitle;
+          const eventDate = talk.event?.date ?? talk.manualEventDate;
+          const location = talk.event
+            ? talk.event.isOnline
+              ? 'Online'
+              : [talk.event.placeName, talk.event.city].filter(Boolean).join(', ')
+            : (talk.manualEventLocation ?? '');
           return (
             <Card
               key={talk.id}
@@ -177,23 +183,27 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
                     </div>
                   </div>
 
-                  {talk.event?.id && talk.event?.name && (
+                  {eventTitle && (
                     <div className="mt-2 flex items-start gap-2">
                       <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <Link
-                        href={`/eventos/${talk.event.id}`}
-                        className="min-w-0 text-sm text-muted-foreground hover:underline"
-                      >
-                        {talk.event.name}
-                      </Link>
+                      {talk.event?.id ? (
+                        <Link
+                          href={`/eventos/${talk.event.id}`}
+                          className="min-w-0 text-sm text-muted-foreground hover:underline"
+                        >
+                          {eventTitle}
+                        </Link>
+                      ) : (
+                        <p className="min-w-0 text-sm text-muted-foreground">{eventTitle}</p>
+                      )}
                     </div>
                   )}
 
-                  {talk.event?.date && (
+                  {eventDate && (
                     <div className="mt-2 flex items-start gap-2">
                       <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
                       <p className="min-w-0 text-sm text-muted-foreground">
-                        {new Date(talk.event.date)
+                        {new Date(eventDate)
                           .toLocaleDateString('es-ES', {
                             day: '2-digit',
                             month: '2-digit',

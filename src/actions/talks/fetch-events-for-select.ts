@@ -12,6 +12,7 @@ export async function fetchEventsForSelect() {
       date: true,
       placeName: true,
       city: true,
+      isOnline: true,
     },
   });
 }

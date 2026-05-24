@@ -636,6 +636,9 @@ async function main() {
       title: 'Carrera en tecnología: primeros pasos',
       description:
         'Charla abierta sobre cómo empezar en programación, comunidades locales y recursos gratuitos.',
+      manualEventTitle: 'Charla abierta PCN',
+      manualEventDate: new Date('2026-01-15T12:00:00.000Z'),
+      manualEventLocation: 'Online',
       order: 0,
       videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       speakers: {

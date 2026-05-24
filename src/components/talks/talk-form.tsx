@@ -25,7 +25,7 @@ import { SpeakerUserPicker } from '@/components/talks/speaker-user-picker';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { createTalk } from '@/actions/talks/create-talk';
 import { updateTalk } from '@/actions/talks/update-talk';
@@ -39,6 +39,7 @@ type EventOption = {
   date: Date;
   placeName: string | null;
   city: string | null;
+  isOnline: boolean;
 };
 
 type TalkWithSpeakers = Awaited<ReturnType<typeof fetchTalks>>[number];
@@ -53,6 +54,18 @@ const EMPTY_SPEAKER: TalkFormData['speakers'][number] = {
   enterprise: '',
   career: '',
   studyPlace: '',
+};
+
+const toDateInputValue = (date?: Date | string | null) => {
+  if (!date) return '';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toISOString().slice(0, 10);
+};
+
+const getEventLocation = (event: EventOption) => {
+  if (event.isOnline) return 'Online';
+  return [event.placeName, event.city].filter(Boolean).join(', ');
 };
 
 type Props = {
@@ -271,15 +284,16 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
   const [events, setEvents] = useState<EventOption[]>([]);
 
   useEffect(() => {
-    if (eventId === undefined) {
-      fetchEventsForSelect().then(setEvents);
-    }
+    fetchEventsForSelect().then(setEvents);
   }, []);
 
   const form = useForm<TalkFormData>({
     resolver: zodResolver(talkSchema),
     defaultValues: {
       eventId: talk?.eventId ?? eventId ?? null,
+      manualEventTitle: talk?.manualEventTitle ?? '',
+      manualEventDate: toDateInputValue(talk?.manualEventDate),
+      manualEventLocation: talk?.manualEventLocation ?? '',
       title: talk?.title ?? '',
       description: talk?.description ?? '',
       speakers:
@@ -303,6 +317,24 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
       videoUrl: talk?.videoUrl ?? '',
     },
   });
+
+  const selectedEventId = useWatch({ control: form.control, name: 'eventId' });
+  const selectedEvent = useMemo(
+    () => events.find((event) => event.id === selectedEventId),
+    [events, selectedEventId],
+  );
+
+  useEffect(() => {
+    if (!selectedEvent) return;
+
+    form.setValue('manualEventTitle', selectedEvent.name, { shouldValidate: true });
+    form.setValue('manualEventDate', toDateInputValue(selectedEvent.date), {
+      shouldValidate: true,
+    });
+    form.setValue('manualEventLocation', getEventLocation(selectedEvent), {
+      shouldValidate: true,
+    });
+  }, [form, selectedEvent]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -356,7 +388,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                           month: '2-digit',
                           year: 'numeric',
                         })}{' '}
-                        &mdash; {event.placeName}
+                        &mdash; {getEventLocation(event) || 'Sin ubicación'}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -366,6 +398,65 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
             )}
           />
         )}
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="manualEventTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Título del evento</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Ej: PCN Dev Meetup"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={!!selectedEvent}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="manualEventDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fecha del evento</FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={!!selectedEvent}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="manualEventLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ubicación del evento</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Ej: Once57, San Miguel de Tucumán"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={!!selectedEvent}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}

@@ -1,5 +1,36 @@
 import { z } from 'zod';
 
+const optionalTextSchema = (fieldName: string) =>
+  z
+    .string()
+    .max(200, { message: `${fieldName} no puede exceder 200 caracteres` })
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => {
+      const trimmed = val?.trim();
+      return trimmed ? trimmed : undefined;
+    });
+
+const isValidDateInput = (val: string) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(val)) return false;
+  const [year, month, day] = val.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day, 12));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+};
+
+const dateInputSchema = z
+  .string()
+  .optional()
+  .or(z.literal(''))
+  .refine((val) => !val || isValidDateInput(val), {
+    message: 'La fecha del evento no es válida',
+  })
+  .transform((val) => (val ? new Date(`${val}T12:00:00.000Z`) : undefined));
+
 export const talkSpeakerSchema = z
   .object({
     userId: z
@@ -100,6 +131,9 @@ export const talkSpeakerSchema = z
 
 export const talkSchema = z.object({
   eventId: z.string().cuid().optional().nullable(),
+  manualEventTitle: optionalTextSchema('El título del evento'),
+  manualEventDate: dateInputSchema,
+  manualEventLocation: optionalTextSchema('La ubicación del evento'),
   title: z
     .string()
     .min(3, { message: 'El título debe tener al menos 3 caracteres' })
