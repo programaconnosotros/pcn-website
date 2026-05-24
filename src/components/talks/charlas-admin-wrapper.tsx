@@ -115,7 +115,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
             ? talk.event.isOnline
               ? 'Online'
               : [talk.event.placeName, talk.event.city].filter(Boolean).join(', ')
-            : (talk.manualEventLocation ?? '');
+            : talk.manualEventLocation ?? '';
           return (
             <Card
               key={talk.id}
