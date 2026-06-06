@@ -53,9 +53,7 @@ export function EventFlyerCarousel({
   }, [api]);
 
   const imageContainerClass =
-    variant === 'card'
-      ? 'aspect-square w-full overflow-hidden'
-      : 'w-full overflow-hidden';
+    variant === 'card' ? 'aspect-square w-full overflow-hidden' : 'w-full overflow-hidden';
 
   const imgClass =
     variant === 'card'

@@ -16,11 +16,7 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
     <Link href={`/eventos/${event.id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
         <div className="relative shrink-0 overflow-hidden">
-          <EventFlyerCarousel
-            images={event.flyerImages}
-            eventName={event.name}
-            variant="card"
-          />
+          <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
         </div>
 
         <div className="flex flex-1 flex-col">
