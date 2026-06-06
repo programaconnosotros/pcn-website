@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
+import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { fetchEvents } from '@/actions/events/fetch-events';
 import { ArrowRight, Calendar, MapPin, Video } from 'lucide-react';
 import Link from 'next/link';
@@ -14,16 +15,13 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
   return (
     <Link href={`/eventos/${event.id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-        {event.flyerSrc && (
-          <div className="relative aspect-square w-full shrink-0 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={event.flyerSrc}
-              alt={`Flyer de ${event.name}`}
-              className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-            />
-          </div>
-        )}
+        <div className="relative shrink-0 overflow-hidden">
+          <EventFlyerCarousel
+            images={event.flyerImages}
+            eventName={event.name}
+            variant="card"
+          />
+        </div>
 
         <div className="flex flex-1 flex-col">
           <CardHeader>

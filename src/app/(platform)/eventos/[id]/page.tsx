@@ -13,6 +13,7 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, MapPin, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
+import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
@@ -63,7 +64,7 @@ export async function generateMetadata(props: {
   const description =
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
-  const imageUrl = event.flyerSrc || event.images[0]?.imgSrc || '/pcn-link-preview.png';
+  const imageUrl = event.flyerImages[0] || event.images[0]?.imgSrc || '/pcn-link-preview.png';
   const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
 
@@ -263,18 +264,15 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             {/* Columna principal */}
             <div className="flex flex-1 flex-col gap-5">
               {/* Flyer del evento */}
-              {event.flyerSrc && (
-                <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-                  <div className="relative w-full overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={event.flyerSrc}
-                      alt={`Flyer de ${event.name}`}
-                      className="h-auto w-full object-cover"
-                    />
-                  </div>
-                </Card>
-              )}
+              <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <div className="relative w-full overflow-hidden">
+                  <EventFlyerCarousel
+                    images={event.flyerImages}
+                    eventName={event.name}
+                    variant="detail"
+                  />
+                </div>
+              </Card>
 
               {/* Descripción */}
               {event.description && (

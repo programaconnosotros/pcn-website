@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const imageUrl =
-    nextCowork.flyerSrc ||
+    nextCowork.flyerImages[0] ||
     (nextCowork.images.length > 0
       ? nextCowork.images[0].imgSrc
       : `${SITE_URL}/pcn-link-preview.png`);
