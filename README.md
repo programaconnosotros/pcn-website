@@ -94,6 +94,17 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
   <img src="./public/prisma-studio-screenshot.webp" alt="Screenshot del Prisma Studio"/>
 
+## 📧 Emails en desarrollo local
+
+El stack de Docker incluye [MailHog](https://github.com/mailhog/MailHog), un servidor SMTP local que captura todos los emails que envía la aplicación sin entregarlos realmente. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin necesitar credenciales de Gmail.
+
+MailHog se levanta automáticamente junto con los demás contenedores al ejecutar `docker-compose up`. Podés ver los emails capturados en:
+
+[http://localhost:18025](http://localhost:18025)
+
+> [!NOTE]
+> El puerto del servidor web de MailHog es `18025` (y no el `8025` por defecto) para evitar conflictos si ya tenés una instancia de MailHog corriendo localmente. El puerto SMTP es `11025`.
+
 ## 🛠️ Tech stack
 
 - [Docker](https://www.docker.com/) (contenedores)
