@@ -2,7 +2,7 @@
 CREATE TABLE "GalleryPhoto" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "takenAt" TIMESTAMP(3) NOT NULL,
+    "takenAt" DATE NOT NULL,
     "location" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

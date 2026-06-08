@@ -330,7 +330,7 @@ model PasswordResetToken {
 model GalleryPhoto {
   id        String    @id @default(cuid())
   title     String
-  takenAt   DateTime
+  takenAt   DateTime  @db.Date
   location  String
   imageUrl  String
   createdAt DateTime  @default(now())
