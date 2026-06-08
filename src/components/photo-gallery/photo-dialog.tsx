@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ShareDialog } from '@/components/photo-gallery/share-dialog';
 import { downloadImage } from '@/lib/download-helper';
+import { formatDate } from '@/lib/utils';
 import { GalleryPhoto } from '@prisma/client';
 
 interface PhotoDialogProps {
