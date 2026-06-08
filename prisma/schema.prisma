@@ -118,7 +118,7 @@ model Event {
   city        String? // Nombre de la ciudad
   address     String? // Dirección específica (calle, número, etc.)
   placeName   String? // Nombre del lugar (bar, universidad, etc.)
-  flyerSrc    String
+  flyerImages String[] @default([])
   latitude    Float?
   longitude   Float?
   capacity                Int? // Cupo máximo del evento (opcional)

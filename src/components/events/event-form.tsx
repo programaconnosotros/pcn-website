@@ -25,7 +25,7 @@ import {
   ExternalLink,
   Video,
 } from 'lucide-react';
-import { FileUpload } from '@/components/ui/file-upload';
+import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ export function EventForm({
       city: defaultValues?.city || '',
       address: defaultValues?.address || '',
       placeName: defaultValues?.placeName || '',
-      flyerSrc: defaultValues?.flyerSrc || '',
+      flyerImages: defaultValues?.flyerImages ?? [],
       latitude: defaultValues?.latitude || '',
       longitude: defaultValues?.longitude || '',
       sponsors: defaultValues?.sponsors || [],
@@ -335,19 +335,20 @@ export function EventForm({
           {/* Flyer del evento */}
           <FormField
             control={form.control}
-            name="flyerSrc"
+            name="flyerImages"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Flyer del evento</FormLabel>
+                <FormLabel>Flyers del evento (opcional)</FormLabel>
                 <FormControl>
-                  <FileUpload
-                    value={field.value}
+                  <MultiFileUpload
+                    value={field.value ?? []}
                     onChange={field.onChange}
                     folder="events/flyers"
                   />
                 </FormControl>
                 <FormDescription>
-                  Imagen del flyer del evento (JPEG, PNG, WebP, GIF)
+                  Podés subir uno o más flyers del evento (JPEG, PNG, WebP, GIF). Si no subís
+                  ninguno, se mostrará un placeholder con el logo de PCN.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

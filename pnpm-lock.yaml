@@ -195,6 +195,9 @@ importers:
       husky:
         specifier: ^9.0.11
         version: 9.1.4
+      portless:
+        specifier: ^0.14.0
+        version: 0.14.0
       postcss:
         specifier: ^8
         version: 8.4.41
@@ -3571,6 +3574,12 @@ packages:
   playwright@1.51.1:
     resolution: {integrity: sha512-kkx+MB2KQRkyxjYPc3a0wLZZoDczmppyGJIvQ43l+aZihkaVvmu/21kiyaHeHjiFxjxNNFnUncKmcGIyOojsaw==}
     engines: {node: '>=18'}
+    hasBin: true
+
+  portless@0.14.0:
+    resolution: {integrity: sha512-kKxmxB1DQ9gI8t+V13VhuwTXu31io5nbFubvZAE82AxzXBsvcJV7qQJbmomrQUpbVxo2UVHqs14iX4YK0BClmQ==}
+    engines: {node: '>=24'}
+    os: [darwin, linux, win32]
     hasBin: true
 
   possible-typed-array-names@1.0.0:
@@ -8243,6 +8252,8 @@ snapshots:
       playwright-core: 1.51.1
     optionalDependencies:
       fsevents: 2.3.2
+
+  portless@0.14.0: {}
 
   possible-typed-array-names@1.0.0: {}
 
