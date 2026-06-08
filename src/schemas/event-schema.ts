@@ -32,10 +32,11 @@ export const eventSchema = z
       .transform((val) => (val === '' || val === undefined ? undefined : val)),
     flyerImages: z
       .array(
-        z.string().refine(
-          (val) => val.startsWith('/') || z.string().url().safeParse(val).success,
-          { message: 'La imagen del flyer no es válida' },
-        ),
+        z
+          .string()
+          .refine((val) => val.startsWith('/') || z.string().url().safeParse(val).success, {
+            message: 'La imagen del flyer no es válida',
+          }),
       )
       .optional()
       .default([]),
