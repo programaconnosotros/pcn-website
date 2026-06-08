@@ -1,8 +1,7 @@
-'use client';
-
+import { Suspense } from 'react';
 import { Gallery } from '@/components/photo-gallery/gallery';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { getGalleryPhotos } from '@/actions/gallery/get-gallery-photos';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -14,19 +13,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
-export default function PhotoGallery() {
-  const searchParams = useSearchParams();
-  const photoId = searchParams.get('foto');
-  const [initialPhotoId, setInitialPhotoId] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (photoId) {
-      const id = Number.parseInt(photoId);
-      if (!isNaN(id)) {
-        setInitialPhotoId(id);
-      }
-    }
-  }, [photoId]);
+export default async function PhotoGallery() {
+  const [photos, session] = await Promise.all([getGalleryPhotos(), getCurrentSession()]);
 
   return (
     <>
@@ -48,7 +36,9 @@ export default function PhotoGallery() {
         </div>
       </header>
       <div className="flex flex-1 flex-col p-0">
-        <Gallery initialPhotoId={initialPhotoId} />
+        <Suspense>
+          <Gallery photos={photos} currentUser={session?.user ?? null} />
+        </Suspense>
       </div>
     </>
   );
