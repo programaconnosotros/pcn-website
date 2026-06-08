@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type React from 'react';
 import { ChevronLeft, ChevronRight, X, Share2, Download } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ShareDialog } from '@/components/photo-gallery/share-dialog';
