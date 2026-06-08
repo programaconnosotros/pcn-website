@@ -13,63 +13,63 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
   const isFull =
     event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
   return (
-    <Link href={`/eventos/${event.id}`}>
-      <Card className="group flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-        <div className="relative shrink-0 overflow-hidden">
-          <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
-        </div>
+    <Card className="group relative flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+      <div className="relative shrink-0 overflow-hidden">
+        <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
+      </div>
 
-        <div className="flex flex-1 flex-col">
-          <CardHeader>
-            <CardTitle className="flex items-start justify-between gap-2 text-lg">
-              <span>{event.name}</span>
-              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
-            </CardTitle>
-          </CardHeader>
+      <div className="flex flex-1 flex-col">
+        <CardHeader>
+          <CardTitle className="flex items-start justify-between gap-2 text-lg">
+            <Link href={`/eventos/${event.id}`} className="after:absolute after:inset-0">
+              {event.name}
+            </Link>
+            <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+          </CardTitle>
+        </CardHeader>
 
-          <CardContent className="flex-1">
-            {event.description && (
-              <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
-            )}
+        <CardContent className="flex-1">
+          {event.description && (
+            <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
+          )}
 
+          <div className="mt-2 flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+            <p className="text-sm text-muted-foreground">
+              <LocalDate date={event.date} />
+              {event.date && (
+                <>
+                  {' '}
+                  - <LocalTime date={event.date} />
+                </>
+              )}
+            </p>
+          </div>
+
+          {event.isOnline ? (
             <div className="mt-2 flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-              <p className="text-sm text-muted-foreground">
-                <LocalDate date={event.date} />
-                {event.date && (
-                  <>
-                    {' '}
-                    - <LocalTime date={event.date} />
-                  </>
-                )}
-              </p>
+              <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+              <p className="text-sm text-muted-foreground">Online</p>
             </div>
-
-            {event.isOnline ? (
-              <div className="mt-2 flex items-center gap-2">
-                <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                <p className="text-sm text-muted-foreground">Online</p>
+          ) : (
+            (event.city || event.placeName) && (
+              <div className="mt-2 flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                <p className="text-sm text-muted-foreground">
+                  {event.placeName && `${event.placeName}, `}
+                  {event.city}, Argentina
+                </p>
               </div>
-            ) : (
-              (event.city || event.placeName) && (
-                <div className="mt-2 flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                  <p className="text-sm text-muted-foreground">
-                    {event.placeName && `${event.placeName}, `}
-                    {event.city}, Argentina
-                  </p>
-                </div>
-              )
-            )}
-          </CardContent>
+            )
+          )}
+        </CardContent>
 
-          <CardFooter className="mt-auto">
-            <Button variant="pcn" className="w-full">
-              Ver evento <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardFooter>
-        </div>
-      </Card>
-    </Link>
+        <CardFooter className="mt-auto">
+          <Button variant="pcn" className="w-full">
+            Ver evento <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardFooter>
+      </div>
+    </Card>
   );
 };
