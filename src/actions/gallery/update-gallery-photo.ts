@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { updateGalleryPhotoSchema, UpdateGalleryPhotoInput } from '@/schemas/gallery-photo-schema';
 
 export async function updateGalleryPhoto(data: UpdateGalleryPhotoInput) {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     throw new Error('No autorizado');
