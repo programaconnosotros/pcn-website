@@ -189,7 +189,7 @@ async function main() {
         return prisma.event.create({
           data: {
             name: `Titulo del evento numero ${index + 1}`,
-            flyerSrc: '/events/Lightning talks flyer.webp',
+            flyerImages: ['/events/Lightning talks flyer.webp'],
             description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
             date: startDate,
             endDate: endDate,

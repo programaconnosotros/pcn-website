@@ -56,7 +56,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
     city: event.city ?? '',
     address: event.address ?? '',
     placeName: event.placeName ?? '',
-    flyerSrc: event.flyerSrc,
+    flyerImages: event.flyerImages,
     latitude: event.latitude?.toString() || '',
     longitude: event.longitude?.toString() || '',
     capacity: event.capacity?.toString() || '',

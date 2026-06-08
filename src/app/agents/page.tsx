@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const imageUrl =
-    event.flyerSrc ||
+    event.flyerImages[0] ||
     (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 

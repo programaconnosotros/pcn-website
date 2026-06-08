@@ -30,10 +30,16 @@ export const eventSchema = z
       .max(100, { message: 'El nombre del lugar no puede exceder 100 caracteres' })
       .optional()
       .transform((val) => (val === '' || val === undefined ? undefined : val)),
-    flyerSrc: z
-      .string()
-      .min(1, { message: 'Debes subir una imagen del flyer' })
-      .url({ message: 'La imagen del flyer no es válida' }),
+    flyerImages: z
+      .array(
+        z
+          .string()
+          .refine((val) => val.startsWith('/') || z.string().url().safeParse(val).success, {
+            message: 'La imagen del flyer no es válida',
+          }),
+      )
+      .optional()
+      .default([]),
     latitude: z.preprocess(
       (val) => {
         if (val === null || val === undefined) return '';
