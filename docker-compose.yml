@@ -1,4 +1,12 @@
 services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pcn-mailhog
+    restart: always
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # Web UI
+
   database:
     image: postgres:13
     container_name: pcn-db
@@ -27,6 +35,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
       - DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
@@ -35,5 +45,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_S3_BUCKET=${AWS_S3_BUCKET}
       - AWS_CLOUDFRONT_URL=${AWS_CLOUDFRONT_URL}
+      - SMTP_HOST=${SMTP_HOST:-mailhog}
+      - SMTP_PORT=${SMTP_PORT:-1025}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}

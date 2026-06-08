@@ -5,13 +5,27 @@ export const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
 export const CODE_EXPIRATION_MINUTES = 15; // 15 minutos de expiración
 
 /**
- * Crea un transporter de nodemailer para enviar emails
- * @throws Error si las credenciales SMTP no están configuradas
+ * Crea un transporter de nodemailer para enviar emails.
+ * En entorno local (SMTP_HOST definido) se conecta al servidor indicado (ej. MailHog).
+ * En producción (SMTP_HOST no definido) usa Gmail con las credenciales SMTP_USER/SMTP_PASS.
+ * @throws Error si las credenciales SMTP no están configuradas (solo en modo Gmail)
  */
 export const getEmailTransporter = () => {
+  const smtpHost = process.env.SMTP_HOST;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
 
+  // Modo local/MailHog: conecta al host configurado sin requerir credenciales
+  if (smtpHost) {
+    return nodemailer.createTransport({
+      host: smtpHost,
+      port: Number(process.env.SMTP_PORT ?? 1025),
+      secure: false,
+      ...(smtpUser && smtpPass ? { auth: { user: smtpUser, pass: smtpPass } } : {}),
+    });
+  }
+
+  // Modo producción: Gmail requiere credenciales obligatoriamente
   if (!smtpUser || !smtpPass) {
     throw new Error(
       'SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables.',
