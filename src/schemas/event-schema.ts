@@ -31,7 +31,12 @@ export const eventSchema = z
       .optional()
       .transform((val) => (val === '' || val === undefined ? undefined : val)),
     flyerImages: z
-      .array(z.string().url({ message: 'La imagen del flyer no es válida' }))
+      .array(
+        z.string().refine(
+          (val) => val.startsWith('/') || z.string().url().safeParse(val).success,
+          { message: 'La imagen del flyer no es válida' },
+        ),
+      )
       .optional()
       .default([]),
     latitude: z.preprocess(
