@@ -16,6 +16,59 @@ import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
+const lightningTalksNextGen = [
+  {
+    title: 'Cómo Construir una Carrera Exponencial en Tecnología',
+    speaker: 'Ing. Alejo Boga',
+    role: 'Senior AI Engineer en Santander Tecnología',
+  },
+  {
+    title: 'Effective Agentic Coding',
+    speaker: 'Agustín Sánchez',
+    role: 'Senior Software Engineer en Eagerworks, Director de DIZENZ y Líder de PCN',
+  },
+  {
+    title: 'Buscando el Diseño Perfecto',
+    speaker: 'Ing. Mauricio Sánchez',
+    role: 'Staff Software Engineer en PedidosYa, Co-fundador de PCN',
+  },
+  {
+    title: '5 Consejos de Supervivencia Backend',
+    speaker: 'Ing. Marcelo de Jesús Núñez',
+    role: 'Senior Software Engineer en Bowery, Co-fundador de PCN',
+  },
+  {
+    title: 'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
+    speaker: 'Ing. Franco Pérez',
+    role: 'Founder de Crisol Studio',
+  },
+  {
+    title: 'Anatomía de un Agente de IA: Qué son y cómo funcionan',
+    speaker: 'Franco Jose Espinoza',
+    role: 'Founder & Lead Developer en Section 05',
+  },
+  {
+    title: 'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
+    speaker: 'Fabio Ramos',
+    role: 'Lead Software Engineer en CAW Tech',
+  },
+  {
+    title: 'NEX OS: Ingeniería de Sistemas Operativos en la Web y Optimización Extrema',
+    speaker: 'Salvador Juárez y Yamil Cardozo',
+    role: 'Software Engineer en Bitflow · Estudiante IES',
+  },
+  {
+    title: 'El Atacante que Llegó por el npm install',
+    speaker: 'Ismael Chávez',
+    role: 'Software Developer & Pentester en Endpoint Consulting',
+  },
+  {
+    title: 'No te Reemplaza la IA, te Reemplaza el QA que la Usa',
+    speaker: 'Leo Apaza',
+    role: 'Software Development Engineer in Test en Assist-365',
+  },
+];
+
 export const metadata: Metadata = {
   title: 'Historia',
   description:
@@ -657,11 +710,11 @@ const PCNStory = () => (
             </Card>
 
             <Card
-              id="hackathons-y-nextgen"
+              id="zero-to-agent"
               className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
             >
               <CardHeader>
-                <CardTitle>Zero to Agent y NextGen Software 2026</CardTitle>
+                <CardTitle>Zero to Agent</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-base text-muted-foreground md:text-sm">
@@ -671,6 +724,25 @@ const PCNStory = () => (
                   6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
                   ingeniería de software y demostró que la comunidad está al día con lo que viene.
                 </p>
+                <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
+                    alt="Zero to Agent"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="nextgen-software-2026"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>NextGen Software 2026</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <p className="text-base text-muted-foreground md:text-sm">
                   En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
                   Sistemas de Información de la UTN-FRT, co-organizamos{' '}
@@ -679,24 +751,28 @@ const PCNStory = () => (
                   que nos dejó muy orgullosos de todo el camino recorrido desde aquel laboratorio de
                   algoritmos en 2015.
                 </p>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
-                      alt="Zero to Agent"
-                      className="max-w-full rounded-lg"
-                    />
-                  </div>
-                  <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
-                      alt="NextGen Software 2026"
-                      className="max-w-full rounded-lg"
-                    />
-                  </div>
+                <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
+                    alt="NextGen Software 2026"
+                    className="max-w-full rounded-lg"
+                  />
                 </div>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  El viernes 12 de junio, en el Aula Magna de la UTN-FRT, realizamos una sesión de{' '}
+                  <b>Lightning Talks</b> con 10 charlas de la comunidad:
+                </p>
+                <ul className="space-y-3">
+                  {lightningTalksNextGen.map((talk) => (
+                    <li key={talk.title} className="text-base text-muted-foreground md:text-sm">
+                      <b className="text-foreground">{talk.title}</b>
+                      <span className="block">
+                        {talk.speaker} · {talk.role}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           </div>
