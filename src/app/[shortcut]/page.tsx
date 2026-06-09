@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import { findNextEventByShortcut, slugToLabel } from '@/lib/event-shortcuts';
 import type { Metadata } from 'next';
+import { optimizedOgImage } from '@/lib/og-image';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,12 +39,10 @@ export async function generateMetadata({
     };
   }
 
-  const rawImageUrl =
-    event.flyerImages[0] ||
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null) ||
-    `${SITE_URL}/pcn-link-preview.png`;
-  const imageUrl = rawImageUrl.startsWith('http') ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawImage =
+    event.flyerImages[0] || ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
+  const imageUrl = rawImage ? optimizedOgImage(rawImage) : `${SITE_URL}/pcn-link-preview.png`;
 
   return {
     title: event.name,

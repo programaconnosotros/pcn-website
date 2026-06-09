@@ -26,6 +26,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
+import { optimizedOgImage } from '@/lib/og-image';
 
 type EventWithImages = Event & {
   images: Images[];
@@ -64,7 +65,8 @@ export async function generateMetadata(props: {
   const description =
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
-  const imageUrl = event.flyerImages[0] || event.images[0]?.imgSrc || '/pcn-link-preview.png';
+  const rawImage = event.flyerImages[0] || event.images[0]?.imgSrc;
+  const imageUrl = rawImage ? optimizedOgImage(rawImage) : '/pcn-link-preview.png';
   const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
 
