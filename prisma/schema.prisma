@@ -138,6 +138,8 @@ model Event {
   announcements Announcement[]
   talkProposals TalkProposal[]
   talks         Talk[]
+
+  @@index([shortcut])
 }
 
 model Image {
