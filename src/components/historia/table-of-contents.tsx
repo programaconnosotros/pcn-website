@@ -18,6 +18,10 @@ const sections = [
   { id: 'lightning-talks', title: 'Lightning Talks' },
   { id: 'pcn-global-learning', title: 'PCN & Global Learning' },
   { id: 'desarrollo-website', title: 'Empezamos a desarrollar el website' },
+  { id: 'charlas-comunidad', title: 'Compartiendo con la industria y las escuelas' },
+  { id: 'tech-in-action', title: 'Tech in Action' },
+  { id: 'era-meetups', title: 'La era de los Meetups' },
+  { id: 'hackathons-y-nextgen', title: 'Zero to Agent y NextGen Software 2026' },
 ];
 
 export function TableOfContents() {
