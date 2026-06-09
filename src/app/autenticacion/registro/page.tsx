@@ -110,12 +110,15 @@ function SignUpContent() {
       if (result.success) {
         toast.success('Usuario creado exitosamente! 🥳');
         // Redirigir a la página de verificación
-        // No deshabilitamos isSubmitting aquí para mantener el botón deshabilitado durante la redirección
+        // No llamamos setIsSubmitting(false) aquí para mantener el botón deshabilitado durante la redirección
         if (result.redirectUrl) {
           router.push(result.redirectUrl);
         }
         return;
       }
+
+      // Rehabilitar el botón solo en caso de error
+      setIsSubmitting(false);
 
       // Manejar errores específicos
       if (result.error === 'EMAIL_ALREADY_EXISTS') {
@@ -124,10 +127,8 @@ function SignUpContent() {
         toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
     } catch (error) {
-      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
-    } finally {
-      // Solo rehabilitar el botón si hubo un error
       setIsSubmitting(false);
+      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
     }
   };
 
