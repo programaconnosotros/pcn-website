@@ -41,7 +41,8 @@ export async function generateMetadata({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rawImage =
-    event.flyerImages[0] || ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
+    event.flyerImages[0] ||
+    ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
   const imageUrl = rawImage ? optimizedOgImage(rawImage) : `${SITE_URL}/pcn-link-preview.png`;
 
   return {
