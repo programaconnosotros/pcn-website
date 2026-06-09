@@ -26,7 +26,7 @@ export const RecentlyAddedEventsSection = async () => {
         </Heading2>
       </div>
 
-      <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-3">
+      <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
