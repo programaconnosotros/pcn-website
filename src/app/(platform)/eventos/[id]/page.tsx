@@ -243,7 +243,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <div className="mb-4 flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex items-center gap-3">
