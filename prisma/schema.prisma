@@ -127,6 +127,7 @@ model Event {
   callForSpeakersEnabled  Boolean   @default(false)
   isOnline                Boolean   @default(false)
   streamingUrl            String?
+  shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
   deletedAt               DateTime? // Eliminación lógica
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -137,6 +138,8 @@ model Event {
   announcements Announcement[]
   talkProposals TalkProposal[]
   talks         Talk[]
+
+  @@index([shortcut])
 }
 
 model Image {
