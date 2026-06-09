@@ -109,11 +109,16 @@ export const eventSchema = z
     ),
     shortcut: z
       .string()
-      .trim()
-      .toLowerCase()
-      .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones (sin espacios)')
-      .optional()
-      .or(z.literal('').transform(() => undefined)),
+      .transform((val) => {
+        const trimmed = val.trim();
+        return trimmed === '' ? undefined : trimmed.toLowerCase();
+      })
+      .pipe(
+        z
+          .string()
+          .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones (sin espacios)')
+          .optional(),
+      ),
     capacity: z.preprocess(
       (val) => {
         if (val === null || val === undefined) return '';

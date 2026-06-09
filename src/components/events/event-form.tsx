@@ -423,17 +423,12 @@ export function EventForm({
                   URL corta para flyers (opcional)
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="ej: cowork"
-                    {...field}
-                    value={field.value || ''}
-                  />
+                  <Input placeholder="ej: cowork" {...field} value={field.value || ''} />
                 </FormControl>
                 <FormDescription>
                   Si se completa, este evento será accesible en{' '}
-                  <strong>/{field.value || 'slug'}</strong> y redirigirá al próximo
-                  evento con ese slug. Se puede reutilizar en futuros eventos de la
-                  misma serie.
+                  <strong>/{field.value || 'slug'}</strong> y redirigirá al próximo evento con ese
+                  slug. Se puede reutilizar en futuros eventos de la misma serie.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
