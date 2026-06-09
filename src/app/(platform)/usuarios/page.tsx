@@ -1,5 +1,3 @@
-'use client';
-
 import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
@@ -11,18 +9,13 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { useState, useEffect } from 'react';
 import { Users } from 'lucide-react';
-import { getUsers, UserWithoutPassword } from '@/actions/users/get-users';
+import { getUsers } from '@/actions/users/get-users';
 import { DataTable } from '@/components/comunity/data-table';
 import { columns } from '@/components/comunity/users-columns';
 
-const CommunityPage = () => {
-  const [users, setUsers] = useState<UserWithoutPassword[]>([]);
-
-  useEffect(() => {
-    getUsers().then(setUsers);
-  }, []);
+const CommunityPage = async () => {
+  const users = await getUsers();
 
   return (
     <>

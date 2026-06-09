@@ -33,6 +33,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   },
   {
     accessorKey: 'name',
+    meta: { className: 'min-w-[220px] whitespace-nowrap' },
     header: ({ column }) => (
       <SortableHeader label="Nombre" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} />
     ),
@@ -161,6 +162,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   },
   {
     accessorKey: 'career',
+    meta: { className: 'min-w-[200px]' },
     header: 'Carrera',
     cell: ({ row }) => {
       const { career, studyPlace } = row.original;

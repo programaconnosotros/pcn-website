@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
-      pagination: { pageSize: 20 },
+      pagination: { pageSize: 100 },
     },
   });
 
@@ -159,7 +159,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             {table.getHeaderGroups().map((hg) => (
               <TableRow key={hg.id}>
                 {hg.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={(header.column.columnDef.meta as { className?: string } | undefined)?.className}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -173,7 +176,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={(cell.column.columnDef.meta as { className?: string } | undefined)?.className}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
