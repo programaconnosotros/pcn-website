@@ -75,7 +75,7 @@ const Home = async () => {
         </div>
         <div className="px-4">
           <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-            <Button variant="default" size="sm" className="text-sm">
+            <Button variant="default" size="sm" className="gap-3 text-sm">
               <MessageCircle className="h-4 w-4" />
               Unirme en WhatsApp
             </Button>
