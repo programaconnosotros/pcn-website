@@ -266,7 +266,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             {/* Columna principal */}
             <div className="flex flex-1 flex-col gap-5">
               {/* Flyer del evento */}
-              <Card className="overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className="mx-auto w-full max-w-md overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
                 <div className="relative w-full overflow-hidden">
                   <EventFlyerCarousel
                     images={event.flyerImages}
@@ -276,18 +276,6 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 </div>
               </Card>
 
-              {/* Descripción */}
-              {event.description && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-                  <CardHeader>
-                    <CardTitle>Descripción</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{event.description}</p>
-                  </CardContent>
-                </Card>
-              )}
-
               {/* Fotos */}
               {event.images && event.images.length > 0 && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
@@ -296,6 +284,45 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   </CardHeader>
                   <CardContent>
                     <EventPhotos images={event.images} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
+              {isAdmin && event.callForSpeakersEnabled && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Mic className="h-5 w-5" />
+                      Propuestas de charlas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-muted-foreground">
+                        Call for speakers habilitado para este evento.
+                      </p>
+                      <Link href={`/eventos/${id}/propuestas-de-charlas`}>
+                        <Button variant="outline" size="sm">
+                          Ver propuestas
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Columna lateral con información */}
+            <div className="flex w-full flex-col gap-5 xl:w-96">
+              {/* Descripción */}
+              {event.description && (
+                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                  <CardHeader>
+                    <CardTitle>Descripción</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{event.description}</p>
                   </CardContent>
                 </Card>
               )}
@@ -330,33 +357,6 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 </Card>
               )}
 
-              {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
-              {isAdmin && event.callForSpeakersEnabled && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Mic className="h-5 w-5" />
-                      Propuestas de charlas
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-muted-foreground">
-                        Call for speakers habilitado para este evento.
-                      </p>
-                      <Link href={`/eventos/${id}/propuestas-de-charlas`}>
-                        <Button variant="outline" size="sm">
-                          Ver propuestas
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-
-            {/* Columna lateral con información */}
-            <div className="flex w-full flex-col gap-5 xl:w-80">
               {/* Botón de registro */}
               {!hasEventPassed && (
                 <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
