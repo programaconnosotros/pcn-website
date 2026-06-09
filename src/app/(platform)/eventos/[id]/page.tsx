@@ -259,8 +259,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           </div>
 
           <div className="my-5 ml-0 flex flex-col gap-5 xl:flex-row">
-            {/* Columna principal — flyer (ancho fijo) */}
-            <div className="flex w-full flex-col gap-5 xl:w-96">
+            {/* Columna principal — flyer */}
+            <div className="flex w-full flex-col gap-5 xl:flex-1">
               {/* Flyer del evento */}
               <Card className={cn(sectionCardClassName, 'overflow-hidden')}>
                 <div className="relative w-full overflow-hidden">
@@ -309,7 +309,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               )}
             </div>
 
-            {/* Columna de información (crece para llenar el espacio) */}
+            {/* Columna de información */}
             <div className="flex w-full flex-col gap-5 xl:flex-1">
               {/* Descripción */}
               {event.description && (
