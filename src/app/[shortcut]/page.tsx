@@ -19,11 +19,11 @@ export async function generateMetadata({
 
   if (!event) {
     return {
-      title: label,
-      description: `Participá del próximo ${label} de PCN.`,
+      title: 'programaConNosotros',
+      description: 'Participá de los próximos eventos de PCN.',
       openGraph: {
-        title: label,
-        description: `Participá del próximo ${label} de PCN.`,
+        title: 'programaConNosotros',
+        description: 'Participá de los próximos eventos de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/${shortcut}`,
         type: 'website',
@@ -31,8 +31,8 @@ export async function generateMetadata({
       },
       twitter: {
         card: 'summary_large_image',
-        title: label,
-        description: `Participá del próximo ${label} de PCN.`,
+        title: 'programaConNosotros',
+        description: 'Participá de los próximos eventos de PCN.',
         images: [`${SITE_URL}/pcn-link-preview.png`],
       },
     };
@@ -45,17 +45,12 @@ export async function generateMetadata({
     `${SITE_URL}/pcn-link-preview.png`;
   const imageUrl = rawImageUrl.startsWith('http') ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
 
-  const description =
-    event.description.length > 160
-      ? event.description.substring(0, 157) + '...'
-      : event.description;
-
   return {
     title: event.name,
-    description,
+    description: event.description,
     openGraph: {
       title: `${event.name} - ${label}`,
-      description,
+      description: event.description,
       images: [imageUrl],
       url: `${SITE_URL}/${shortcut}`,
       type: 'website',
@@ -64,7 +59,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: event.name,
-      description,
+      description: event.description,
       images: [imageUrl],
     },
   };
