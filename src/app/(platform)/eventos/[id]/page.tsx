@@ -53,14 +53,6 @@ export async function generateMetadata(props: {
     };
   }
 
-  const shortDateLabel = new Intl.DateTimeFormat('es-AR', {
-    day: 'numeric',
-    month: 'short',
-    timeZone: 'America/Argentina/Buenos_Aires',
-  }).format(new Date(event.date));
-  const titleLocation = event.isOnline ? 'Online' : event.city;
-  const ogTitle = [event.name, shortDateLabel, titleLocation].filter(Boolean).join(' · ');
-
   const normalizedDesc = normalizeDescription(event.description);
   const description =
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
@@ -74,7 +66,7 @@ export async function generateMetadata(props: {
     title: event.name,
     description,
     openGraph: {
-      title: ogTitle,
+      title: { absolute: event.name },
       description,
       images: [{ url: imageUrl, alt: imageAlt }],
       url,
@@ -83,7 +75,7 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: 'summary_large_image',
-      title: ogTitle,
+      title: { absolute: event.name },
       description,
       images: [{ url: imageUrl, alt: imageAlt }],
     },
@@ -421,13 +413,32 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   <CardTitle>Información</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex flex-col">
-                      <p className="text-sm font-medium">Fecha y hora</p>
-                      <p className="text-sm text-muted-foreground">
-                        <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
-                      </p>
+                  <div className="flex items-start gap-2">
+                    <Calendar className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                    <div className="flex flex-col gap-1">
+                      {event.endDate ? (
+                        <>
+                          <p className="text-sm font-medium">Fechas</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium text-foreground">Inicio:</span>{' '}
+                              <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium text-foreground">Fin:</span>{' '}
+                              <LocalDate date={event.endDate} /> a las{' '}
+                              <LocalTime date={event.endDate} />
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-medium">Fecha y hora</p>
+                          <p className="text-sm text-muted-foreground">
+                            <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
 
