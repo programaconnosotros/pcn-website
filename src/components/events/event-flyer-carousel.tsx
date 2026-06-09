@@ -57,7 +57,7 @@ export function EventFlyerCarousel({
 
   const imgClass =
     variant === 'card'
-      ? 'h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105'
+      ? 'h-full w-full object-cover object-top transition-transform duration-300 ease-out group-hover:scale-105'
       : 'h-auto w-full object-cover';
 
   // No images → placeholder
