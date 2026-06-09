@@ -35,7 +35,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     accessorKey: 'name',
     meta: { className: 'min-w-[220px] whitespace-nowrap' },
     header: ({ column }) => (
-      <SortableHeader label="Nombre" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} />
+      <SortableHeader
+        label="Nombre"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      />
     ),
     cell: ({ row }) => {
       const { name, image } = row.original;
@@ -59,7 +62,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) => (
-      <SortableHeader label="Email" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} />
+      <SortableHeader
+        label="Email"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      />
     ),
     cell: ({ row }) => {
       const { email, emailVerified } = row.original;
@@ -67,7 +73,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
         <div className="flex flex-col gap-0.5">
           <span className="text-sm">{email}</span>
           {emailVerified ? (
-            <Badge variant="outline" className="w-fit border-green-500/40 bg-green-500/10 text-xs text-green-600 dark:text-green-400">
+            <Badge
+              variant="outline"
+              className="w-fit border-green-500/40 bg-green-500/10 text-xs text-green-600 dark:text-green-400"
+            >
               Verificado
             </Badge>
           ) : (
@@ -84,7 +93,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     header: 'Email verificado',
     cell: ({ getValue }) =>
       getValue<boolean>() ? (
-        <Badge variant="outline" className="border-green-500/40 bg-green-500/10 text-green-600 dark:text-green-400">
+        <Badge
+          variant="outline"
+          className="border-green-500/40 bg-green-500/10 text-green-600 dark:text-green-400"
+        >
           Sí
         </Badge>
       ) : (
@@ -97,7 +109,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   {
     accessorKey: 'role',
     header: ({ column }) => (
-      <SortableHeader label="Rol" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} />
+      <SortableHeader
+        label="Rol"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      />
     ),
     cell: ({ getValue }) => {
       const role = getValue<'REGULAR' | 'ADMIN'>();
@@ -121,7 +136,10 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   {
     accessorKey: 'countryOfOrigin',
     header: ({ column }) => (
-      <SortableHeader label="País" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} />
+      <SortableHeader
+        label="País"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      />
     ),
     cell: ({ getValue }) => {
       const v = getValue<string | null>();
@@ -272,7 +290,12 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     cell: ({ getValue }) => {
       const v = getValue<string | null>();
       return v ? (
-        <a href={v} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline">
+        <a
+          href={v}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-500 hover:underline"
+        >
           {v}
         </a>
       ) : (
@@ -287,7 +310,12 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     cell: ({ getValue }) => {
       const v = getValue<string | null>();
       return v ? (
-        <a href={v} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline">
+        <a
+          href={v}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-500 hover:underline"
+        >
           {v}
         </a>
       ) : (
@@ -302,7 +330,12 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     cell: ({ getValue }) => {
       const v = getValue<string | null>();
       return v ? (
-        <a href={v} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline">
+        <a
+          href={v}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-500 hover:underline"
+        >
           {v}
         </a>
       ) : (

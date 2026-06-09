@@ -673,11 +673,9 @@ const PCNStory = () => (
                 </p>
                 <p className="text-base text-muted-foreground md:text-sm">
                   En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
-                  Sistemas de Información de la UTN-FRT, co-organizamos{' '}
-                  <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes de la Ingeniería
-                  y reflexionar sobre el pasado, el presente y el futuro de la profesión. Un evento
-                  que nos dejó muy orgullosos de todo el camino recorrido desde aquel laboratorio de
-                  algoritmos en 2015.
+                  Sistemas de Información de la UTN-FRT, co-organizamos <b>NextGen Software 2026</b>
+                  , unas jornadas para celebrar el Mes de la Ingeniería y reflexionar sobre el
+                  pasado, el presente y el futuro de la profesión.{' '}
                 </p>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="flex justify-center">

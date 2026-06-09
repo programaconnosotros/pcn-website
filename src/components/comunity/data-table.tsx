@@ -161,7 +161,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 {hg.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={(header.column.columnDef.meta as { className?: string } | undefined)?.className}
+                    className={
+                      (header.column.columnDef.meta as { className?: string } | undefined)
+                        ?.className
+                    }
                   >
                     {header.isPlaceholder
                       ? null
@@ -178,7 +181,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className={(cell.column.columnDef.meta as { className?: string } | undefined)?.className}
+                      className={
+                        (cell.column.columnDef.meta as { className?: string } | undefined)
+                          ?.className
+                      }
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
@@ -187,7 +193,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   No se encontraron usuarios.
                 </TableCell>
               </TableRow>
