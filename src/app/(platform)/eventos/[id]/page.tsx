@@ -27,11 +27,15 @@ import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
+import { cn } from '@/lib/utils';
 
 type EventWithImages = Event & {
   images: Images[];
   sponsors: Sponsor[];
 };
+
+const sectionCardClassName =
+  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800';
 
 function normalizeDescription(text: string): string {
   return text
@@ -53,14 +57,6 @@ export async function generateMetadata(props: {
     };
   }
 
-  const shortDateLabel = new Intl.DateTimeFormat('es-AR', {
-    day: 'numeric',
-    month: 'short',
-    timeZone: 'America/Argentina/Buenos_Aires',
-  }).format(new Date(event.date));
-  const titleLocation = event.isOnline ? 'Online' : event.city;
-  const ogTitle = [event.name, shortDateLabel, titleLocation].filter(Boolean).join(' · ');
-
   const normalizedDesc = normalizeDescription(event.description);
   const description =
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
@@ -74,7 +70,7 @@ export async function generateMetadata(props: {
     title: event.name,
     description,
     openGraph: {
-      title: ogTitle,
+      title: { absolute: event.name },
       description,
       images: [{ url: imageUrl, alt: imageAlt }],
       url,
@@ -83,7 +79,7 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: 'summary_large_image',
-      title: ogTitle,
+      title: { absolute: event.name },
       description,
       images: [{ url: imageUrl, alt: imageAlt }],
     },
@@ -245,7 +241,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           </Breadcrumb>
         </div>
       </header>
-      <div className="mx-auto flex w-full max-w-screen-xl flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
           <div className="mb-4 flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex items-center gap-3">
@@ -263,10 +259,10 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           </div>
 
           <div className="my-5 ml-0 flex flex-col gap-5 xl:flex-row">
-            {/* Columna principal */}
-            <div className="flex flex-1 flex-col gap-5">
+            {/* Columna principal — flyer (ancho fijo) */}
+            <div className="flex w-full flex-col gap-5 xl:w-96">
               {/* Flyer del evento */}
-              <Card className="mx-auto w-full max-w-md overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className={cn(sectionCardClassName, 'overflow-hidden')}>
                 <div className="relative w-full overflow-hidden">
                   <EventFlyerCarousel
                     images={event.flyerImages}
@@ -278,7 +274,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Fotos */}
               {event.images && event.images.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle>Fotos del evento</CardTitle>
                   </CardHeader>
@@ -290,7 +286,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
               {isAdmin && event.callForSpeakersEnabled && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Mic className="h-5 w-5" />
@@ -313,23 +309,25 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               )}
             </div>
 
-            {/* Columna lateral con información */}
-            <div className="flex w-full flex-col gap-5 xl:w-96">
+            {/* Columna de información (crece para llenar el espacio) */}
+            <div className="flex w-full flex-col gap-5 xl:flex-1">
               {/* Descripción */}
               {event.description && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle>Descripción</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{event.description}</p>
+                    <p className="whitespace-pre-line text-base leading-relaxed text-muted-foreground">
+                      {event.description}
+                    </p>
                   </CardContent>
                 </Card>
               )}
 
               {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
               {isAdmin && !isExternalEvent && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5" />
@@ -359,7 +357,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Botón de registro */}
               {!hasEventPassed && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardContent className="pt-6">
                     <Suspense
                       fallback={
@@ -386,7 +384,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Call for speakers — botón para usuarios */}
               {event.callForSpeakersEnabled && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardContent className="pt-6">
                     <div className="flex flex-col gap-2 text-center">
                       <p className="text-sm font-medium">¿Querés dar una charla?</p>
@@ -416,18 +414,37 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               )}
 
               {/* Información del evento */}
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className={sectionCardClassName}>
                 <CardHeader>
                   <CardTitle>Información</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex flex-col">
-                      <p className="text-sm font-medium">Fecha y hora</p>
-                      <p className="text-sm text-muted-foreground">
-                        <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
-                      </p>
+                  <div className="flex items-start gap-2">
+                    <Calendar className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                    <div className="flex flex-col gap-1">
+                      {event.endDate ? (
+                        <>
+                          <p className="text-sm font-medium">Fechas</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium text-foreground">Inicio:</span>{' '}
+                              <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              <span className="font-medium text-foreground">Fin:</span>{' '}
+                              <LocalDate date={event.endDate} /> a las{' '}
+                              <LocalTime date={event.endDate} />
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-medium">Fecha y hora</p>
+                          <p className="text-sm text-muted-foreground">
+                            <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -463,7 +480,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Sponsors */}
               {event.sponsors && event.sponsors.length > 0 && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle>Sponsors</CardTitle>
                   </CardHeader>
@@ -493,7 +510,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Transmisión online */}
               {event.isOnline && event.streamingUrl && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle>Transmisión</CardTitle>
                   </CardHeader>
@@ -513,7 +530,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
               {/* Mapa */}
               {!event.isOnline && event.latitude && event.longitude && (
-                <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+                <Card className={sectionCardClassName}>
                   <CardHeader>
                     <CardTitle>Mapa</CardTitle>
                   </CardHeader>
