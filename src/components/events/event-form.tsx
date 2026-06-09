@@ -24,6 +24,7 @@ import {
   Users,
   ExternalLink,
   Video,
+  Link2,
 } from 'lucide-react';
 import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import Link from 'next/link';
@@ -59,6 +60,7 @@ export function EventForm({
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
       externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
+      shortcut: defaultValues?.shortcut ?? '',
       isOnline: defaultValues?.isOnline ?? false,
       streamingUrl: defaultValues?.streamingUrl ?? '',
       markedAsFull: defaultValues?.markedAsFull ?? false,
@@ -404,6 +406,34 @@ export function EventForm({
                 <FormDescription>
                   Si se completa, el botón de inscripción redirigirá a esta URL (por ejemplo, un
                   evento de Luma) en lugar de usar el sistema interno.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* URL corta para flyers */}
+          <FormField
+            control={form.control}
+            name="shortcut"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <Link2 className="mr-2 inline h-4 w-4" />
+                  URL corta para flyers (opcional)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="ej: cowork"
+                    {...field}
+                    value={field.value || ''}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Si se completa, este evento será accesible en{' '}
+                  <strong>/{field.value || 'slug'}</strong> y redirigirá al próximo
+                  evento con ese slug. Se puede reutilizar en futuros eventos de la
+                  misma serie.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

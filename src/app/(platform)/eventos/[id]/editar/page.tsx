@@ -61,6 +61,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
     longitude: event.longitude?.toString() || '',
     capacity: event.capacity?.toString() || '',
     externalRegistrationUrl: event.externalRegistrationUrl ?? '',
+    shortcut: event.shortcut ?? '',
     isOnline: event.isOnline ?? false,
     streamingUrl: event.streamingUrl ?? '',
     markedAsFull: event.markedAsFull ?? false,

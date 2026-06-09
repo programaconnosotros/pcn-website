@@ -107,6 +107,13 @@ export const eventSchema = z
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),
     ),
+    shortcut: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones (sin espacios)')
+      .optional()
+      .or(z.literal('').transform(() => undefined)),
     capacity: z.preprocess(
       (val) => {
         if (val === null || val === undefined) return '';
