@@ -11,7 +11,9 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/historia/table-of-contents';
-import { ScrollText } from 'lucide-react';
+import { ScrollText, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -773,6 +775,56 @@ const PCNStory = () => (
                     </li>
                   ))}
                 </ul>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="comunidad-whatsapp"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>La comunidad en WhatsApp</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Más allá de los eventos y las charlas presenciales, el corazón de PCN late en el{' '}
+                  <b>grupo de WhatsApp de la comunidad</b>. Ahí es donde sucede la conversación
+                  cotidiana: debates sobre herramientas como <b>Cursor, Claude Code y agentes de IA</b>
+                  , discusiones de arquitectura, recomendaciones de libros técnicos, preguntas sobre
+                  frameworks y bases de datos, y el eterno dilema de cómo cobrar en dólares desde
+                  Argentina.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Pero lo más valioso no es el contenido técnico: es el <b>networking genuino</b>.
+                  Ofertas de trabajo compartidas en el grupo que se convirtieron en empleos reales,
+                  referidos entre miembros, revisiones de CV, consejos de entrevistas, y la
+                  organización espontánea de un club de lectura técnica. Cuando Facundo García
+                  Martoni consiguió su posición como Senior Full-Stack Engineer gracias a una oferta
+                  publicada en el grupo y el acompañamiento de otros miembros, quedó claro{' '}
+                  <b>el valor concreto de pertenecer a esta comunidad</b>.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Archivamos las mejores charlas en la sección de Conversaciones para que nadie se
+                  pierda lo que se charló. Y si querés ser parte de lo que viene, el grupo está
+                  abierto.
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Link href="/conversaciones">
+                    <Button variant="outline" size="sm">
+                      Ver las conversaciones
+                    </Button>
+                  </Link>
+                  <Link
+                    href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4" />
+                      Unirme al grupo
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </div>
