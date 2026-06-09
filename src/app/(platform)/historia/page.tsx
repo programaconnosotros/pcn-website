@@ -419,12 +419,20 @@ const PCNStory = () => (
               <CardHeader>
                 <CardTitle>Lightning Talks</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-base text-muted-foreground md:text-sm">
                   Organizamos varias jornadas de Lightning Talks, donde muchos miembros de la
                   comunidad comparten su conocimiento y experiencias. Al principio eran todas
                   virtuales por Discord, y cuando se terminó la cuarentena y se pudo volver a la
                   vida de antes, organizamos varias ediciones de Lightning Talks presenciales.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  La primera edición fue en junio de 2021, de forma virtual por Discord, con charlas
+                  rápidas sobre ingeniería de software. Con la vuelta a la presencialidad, las
+                  Lightning Talks encontraron su lugar en el SUM 1 de la UTN-FRT: organizamos una
+                  edición en mayo de 2023 y otra en octubre de 2024, convocando a cada vez más
+                  miembros de la comunidad a subirse al escenario y compartir lo que estaban
+                  aprendiendo.
                 </p>
               </CardContent>
             </Card>
@@ -465,6 +473,109 @@ const PCNStory = () => (
                   Navarro, Mauricio Chaile, Matías Gutierrez, Nicolas Fuentes, Facundo Bazán, Vicky
                   Grillo, Emiliano Grillo, Carlos Spagnolo, Alejo Boga, Tobías Paz Posse, Marcelo
                   Núñez y Benjamin Cortes. El equipo fue liderado por Agustín Sánchez.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="charlas-comunidad"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>Compartiendo con la industria y las escuelas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  A medida que la comunidad fue creciendo, empezamos a salir de la universidad para
+                  llevar nuestra experiencia a otros espacios. En noviembre de 2023 organizamos{' '}
+                  <b>Una Mirada de la Industria del Software</b> en el Mercado Municipal de Tafí
+                  Viejo, donde ingenieros senior de la comunidad compartieron metodologías, técnicas
+                  y una visión honesta de cómo funciona la industria del software en la actualidad.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  En octubre de 2024 fuimos invitados a dar dos charlas de orientación vocacional.
+                  La primera, <b>Descubrí el Mundo del Desarrollo de Software</b>, se llevó a cabo
+                  en Aticana, donde recorrimos los distintos roles y caminos posibles dentro de la
+                  profesión. La segunda, <b>Introducción al Desarrollo de Software</b>, la dimos en
+                  el Instituto Nuestra Señora de Montserrat para estudiantes de secundaria que
+                  estaban dando sus primeros pasos en este mundo.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="tech-in-action"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>Tech in Action</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  En junio de 2025, en el marco del Mes de la Ingeniería, la UTN-FRT nos abrió
+                  nuevamente las puertas del SUM 1 para organizar <b>Tech in Action</b>: dos
+                  presentaciones técnicas a cargo de miembros de la comunidad que mostraron
+                  proyectos reales y herramientas que estaban usando en su trabajo cotidiano.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  El evento reunió a estudiantes, egresados y profesionales de la industria, y fue
+                  una muestra más de que PCN sigue siendo un puente entre la academia y el mundo
+                  laboral.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="era-meetups"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>La era de los Meetups</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  A partir de 2025, la comunidad adoptó un nuevo formato que se convirtió en el
+                  corazón de la actividad de PCN: los meetups mensuales. Con sedes que rotaron entre
+                  Blackbox Cowork (Yerba Buena), Once57 Cowork y Xetro AI (San Miguel de Tucumán),
+                  cada encuentro combinó charlas técnicas, networking y trabajo colaborativo en un
+                  ambiente relajado.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  También incorporamos las <b>Cowork Sessions</b>, jornadas de trabajo y estudio en
+                  comunidad donde los miembros se juntan a avanzar en sus proyectos, preparar
+                  entrevistas o simplemente programar acompañados. Estas sesiones se convirtieron en
+                  un espacio muy valorado por quienes están en modo aprendizaje intensivo.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  El cierre de 2025 fue en Blackbox Cowork con un meetup especial de fin de año:
+                  coworking, charlas y mucho networking para despedir un año muy activo para la
+                  comunidad.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="hackathons-y-nextgen"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>Zero to Agent y NextGen Software 2026</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  En abril de 2026 organizamos <b>Zero to Agent</b>, el primer hackathon de PCN
+                  dedicado al desarrollo de agentes de IA. El evento se realizó en Once57 Cowork y
+                  desafió a los participantes a construir agentes usando Vercel v0, con más de USD
+                  6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
+                  ingeniería de software y demostró que la comunidad está al día con lo que viene.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
+                  Sistemas de Información de la UTN-FRT, co-organizamos{' '}
+                  <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes de la Ingeniería
+                  y reflexionar sobre el pasado, el presente y el futuro de la profesión. Un evento
+                  que nos dejó muy orgullosos de todo el camino recorrido desde aquel laboratorio de
+                  algoritmos en 2015.
                 </p>
               </CardContent>
             </Card>
