@@ -434,6 +434,32 @@ const PCNStory = () => (
                   miembros de la comunidad a subirse al escenario y compartir lo que estaban
                   aprendiendo.
                 </p>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242335684-7df020ca-0179-422e-9084-4dbbb6ed20f1.jpeg"
+                      alt="Lightning Talks 2021"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242053412-bee91069-37b8-4d27-91cb-2fafcfdf92c9.jpeg"
+                      alt="Lightning Talks 2023"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777235792921-7d89c0da-a617-4e80-8a2b-6cc7cea2d0b8.jpeg"
+                      alt="Lightning Talks 2024"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -500,6 +526,32 @@ const PCNStory = () => (
                   el Instituto Nuestra Señora de Montserrat para estudiantes de secundaria que
                   estaban dando sus primeros pasos en este mundo.
                 </p>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241814466-2b43047c-27f0-4de7-86a2-faabca4f1ac9.jpeg"
+                      alt="Una Mirada de la Industria del Software"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236239325-19d0cf0e-4385-4e14-ac61-a2c20fb06bb0.jpeg"
+                      alt="Descubrí el Mundo del Desarrollo de Software"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241043347-93b51aef-47ba-4e88-9a9c-a4aaa997f6c2.jpeg"
+                      alt="Introducción al Desarrollo de Software"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -522,6 +574,14 @@ const PCNStory = () => (
                   una muestra más de que PCN sigue siendo un puente entre la academia y el mundo
                   laboral.
                 </p>
+                <div className="flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236349066-ae60a5c3-81d2-4cd8-bc18-85b648d4f089.jpeg"
+                    alt="Tech in Action"
+                    className="max-w-full rounded-lg"
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -551,6 +611,48 @@ const PCNStory = () => (
                   coworking, charlas y mucho networking para despedir un año muy activo para la
                   comunidad.
                 </p>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1766992051811-4f6bc2cb-ebe4-47e3-b701-dd537a0590fe.jpeg"
+                      alt="Meetup diciembre 2025"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1771359135414-cc6b3a49-722f-400c-99f2-b049d32a23ec.JPG"
+                      alt="Meetup febrero 2026"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1775498317125-414e180b-4b7c-43b0-9848-64e89c4506af.PNG"
+                      alt="Meetup abril 2026"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1776732685244-11d00b6f-78b7-460b-a1a8-11d40f0a852f.png"
+                      alt="Cowork Session"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1779314634681-9a349677-eb94-4345-b69b-6eef31325aa1.png"
+                      alt="Meetup mayo 2026"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -577,6 +679,24 @@ const PCNStory = () => (
                   que nos dejó muy orgullosos de todo el camino recorrido desde aquel laboratorio de
                   algoritmos en 2015.
                 </p>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
+                      alt="Zero to Agent"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
+                      alt="NextGen Software 2026"
+                      className="max-w-full rounded-lg"
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
