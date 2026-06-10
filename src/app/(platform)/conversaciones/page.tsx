@@ -18,13 +18,7 @@ import { Heading2 } from '@/components/ui/heading-2';
 import { MessageCircle, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import conversations from '@/data/whatsapp-conversations.json';
-
-interface Conversation {
-  title: string;
-  date: string;
-  summary: string;
-}
+import { conversations, type Conversation } from '@/data/whatsapp-conversations';
 
 const MONTHS_ES = [
   'enero',
@@ -56,7 +50,7 @@ function ConversationCard({ conversation }: { conversation: Conversation }) {
   const isLong = conversation.summary.length > 300;
 
   return (
-    <Card className="border border-neutral-200 transition-all duration-200 dark:border-neutral-800">
+    <Card className="flex h-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
       <CardHeader className="pb-2 pt-4">
         <div className="flex flex-col gap-1">
           <h3 className="text-base font-semibold leading-snug">{conversation.title}</h3>
@@ -93,10 +87,12 @@ export default function ConversationsPage() {
 
   const filtered = useMemo(() => {
     const q = searchTerm.toLowerCase().trim();
-    if (!q) return conversations as Conversation[];
-    return (conversations as Conversation[]).filter(
-      (c) => c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q),
-    );
+    const list = q
+      ? conversations.filter(
+          (c) => c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q),
+        )
+      : conversations;
+    return [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [searchTerm]);
 
   const grouped = useMemo(() => {
@@ -155,7 +151,7 @@ export default function ConversationsPage() {
               </span>
             </Heading2>
             <Badge variant="secondary" className="hidden sm:block">
-              {(conversations as Conversation[]).length} charlas
+              {conversations.length} charlas
             </Badge>
           </div>
 

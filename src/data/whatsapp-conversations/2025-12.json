@@ -1,0 +1,122 @@
+[
+  {
+    "title": "Blackbox Cowork Yerba Buena: mes gratis para PCN",
+    "date": "2025-12-03",
+    "summary": "Facundo García Martoni negoció con los dueños del coworking Blackbox (Boulevard 9 de Julio, Yerba Buena) acceso gratuito para todos los miembros de PCN durante diciembre de 13 a 18hs, aprovechando que las tardes estaban vacías. Anunció café gratis, medialunas los miércoles y frutas los lunes. La comunidad respondió con entusiasmo y Agustín Sánchez organizó la primera juntada formal para el lunes 15 de diciembre. Facundo contó que trabajar fuera de casa le subía la productividad un 1000% y que estaba molestando a los dueños para que extendieran el horario hasta las 22hs. Gonzalo Morales y Agustín Navarro ya conocían el espacio y lo elogiaron. Los dueños del Blackbox también les ofrecieron dar charlas gratis cuando quisieran, lo que el grupo tomó como una oportunidad para eventos futuros."
+  },
+  {
+    "title": "Cotización freelance: precios, contratos y estrategias",
+    "date": "2025-12-04",
+    "summary": "Fede Valle confesó haber cobrado solo USD 1.200 por un proyecto de LMS que le llevó 4 meses de trabajo, equivalente a USD 2.50 la hora, y pidió ayuda para aprender a cotizar mejor. Agustín Sánchez compartió referencias del mercado: junior entre 500 y 2.000 USD mensuales, semi-senior entre 2.000 y 4.000, senior 4.000 para arriba; dividiendo por 160 horas mensuales se obtiene el valor hora. Victor Figueredo compartió el sitio salarios.gonzalopozzo.com como referencia. Mateo Lohezic contó cómo trabaja con su socio (diseñador): cobran precio cerrado por proyecto ($600-2.000 USD una landing), usando etapas bien definidas —planificación, diseño/maquetado, desarrollo, soporte— con la cláusula de que los cambios de diseño se hacen solo en la etapa 2 y cualquier feature nueva es nuevo presupuesto. Mateo agregó que siempre incluyen un pequeño colchón en el presupuesto para poder decir que sí a pequeños pedidos del cliente sin costo adicional y quedar como generosos. Agustín destacó la importancia de definir bien la etapa de soporte para no trabajar gratis arreglando bugs post-lanzamiento."
+  },
+  {
+    "title": "AI Engineer JR en Canadá: el nuevo rol del mercado",
+    "date": "2025-12-05",
+    "summary": "Mateo Lohezic contó que recién salía de una entrevista para un puesto de AI Engineer Junior para Canadá, con salario de USD 2.000-2.500 mensuales como contractor. Mauricio Chaile y Agustín Navarro preguntaron qué hacía un AI Engineer, y Mateo respondió que en la práctica significaba saber usar la API de OpenAI. La entrevistadora le había preguntado sobre su manejo de Node.js, React y CSS. Marcelo Nuñez explicó que el concepto de AI Engineer está siendo muy manejado en la industria: en muchas empresas es un backend que sabe usar APIs de OpenAI, Ollama o LangChain, pero el rol aún no está maduro en cuanto a qué incluye exactamente. Su consejo fue mandarse ahora que está en formación y hay oportunidades. El hilo evidenció que hay una demanda real y creciente de devs con conocimiento de integración de IA, aunque el nombre del rol es todavía vago."
+  },
+  {
+    "title": "Debate: burbuja de IA y competencia entre labs",
+    "date": "2025-12-05",
+    "summary": "Alejo Boga planteó que los precios de las IAs van a subir porque las empresas están quemando capital: la inversión en IA es de 800 billones y las ganancias de 300 billones, hay un gap de 500 billones subsidiado. Facundo García Martoni discrepó, estimando que a largo plazo los precios bajarán como históricamente bajó el costo de computación, y señaló que modelos pequeños y optimizados como Gemini 2.0 Flash Lite ya abren posibilidades increíbles sin necesitar modelos de punta. Alejo aceptó que puede haber casos aislados de modelos de negocio rentables con IA, pero que el verdadero costo aún es desconocido por el subsidio. El debate se extendió a la competencia entre labs: Facundo García Martoni apostaba por Google, Cursor y Anthropic como el trío dominante. Iñaki Fernando Lozano analizó que OpenAI no está perdiendo en términos nominales pero la competencia creció mucho; Anthropic encontró su nicho en development y B2B, mientras que Google está alcanzando a ambos rápidamente. Alejo destacó que el mayor impacto de la IA hasta ahora fue mejorar la eficiencia de los desarrolladores."
+  },
+  {
+    "title": "T3 Stack, MongoDB vs relacional y refactoring de proyectos",
+    "date": "2025-12-09",
+    "summary": "Agustín Sánchez recomendó el T3 Stack (Next.js, Tailwind, TypeScript, tRPC, Drizzle, Supabase) como uno de los cinco stacks con más salida laboral y velocidad de desarrollo hoy en día, señalando que es lo que usa en Eagerworks y también en el website de PCN. Gonzalo Morales confirmó que ya lo usaba y que lo sentía cómodo y productivo, ahorrando mucho tiempo; estaba incorporando Better Auth en reemplazo de Supabase Auth. Gonzalo también tenía otro proyecto con Ionic, Angular, NestJS y MongoDB que iba a refactorizar; Agustín preguntó si tenía sentido MongoDB en ese caso y Gonzalo reconoció que no estaba bien planteada la base de datos y que una relacional hubiera sido mejor, sumándose al consenso del grupo de que la mayoría de los proyectos con MongoDB terminan con ese problema. Mauricio Chaile destacó que la IA tiene mucho código de ejemplo con el T3 Stack, lo que reduce las alucinaciones. Agustín prometió buscar cursos del stack para pasarlos en el grupo."
+  },
+  {
+    "title": "Comparativa de modelos AI: quién usa qué y para qué",
+    "date": "2025-12-11",
+    "summary": "En el contexto de la discusión sobre OpenAI perdiendo terreno frente a Anthropic, se generó un intercambio sobre qué modelos usaba cada uno. Iñaki Fernando Lozano contaba con GPT 5.1 Codex, Sonnet 4.5, Gemini 3.0 Pro y Haiku 4.5 para distintas tareas, aprovechando que tenía acceso a los tres IDEs principales. Facundo García Martoni declaró usar principalmente Opus 4.5, Gemini 3 Pro, Gemini 2.5 Flash y Flash Lite, y contó que había gastado 50 USD en créditos de Opus en una semana pero que valió la pena porque valía la pena cada línea. Iñaki señaló que Opus es inusablemente caro para uso regular y que cuando lo ofrecieron al mismo precio que Sonnet 4.5 lo aprovechó. Facundo reflexionó que para tareas que traen 10x en ganancias y ahorran 5x tiempo de debug, pagar 100 USD en créditos era una decisión obvia. La discusión mostró que la comunidad tiene un approach sofisticado de usar distintos modelos según el tipo de tarea."
+  },
+  {
+    "title": "Plataforma de cursos: video hosting con MUX",
+    "date": "2025-12-15",
+    "summary": "Gonzalo Morales tenía que construir para un cliente una plataforma de cursos donde los usuarios compraran acceso y vieran videos, similar a devtalles. La duda principal era el alojamiento de videos: había investigado Vimeo Pro pero no había descartado S3. Mateo Lohezic recomendó MUX: sale 10 USD al mes con una capa de 100 USD de crédito incluidos, es muy sencillo de integrar, y hasta permite streamings en vivo. Mateo lo había usado para una plataforma similar que ya tenía online. Fede Valle contó que en un proyecto anterior la clienta ya tenía Vimeo y simplemente usaba el ID de Vimeo para embeber los videos, funcionando bien. La conclusión del hilo fue clara: MUX es la opción más recomendada para este tipo de proyectos."
+  },
+  {
+    "title": "Claude Code como alternativa a Cursor para Python",
+    "date": "2025-12-17",
+    "summary": "Marcelo Nuñez comentó que los últimos updates de Cursor lo habían desencantado, especialmente por lo invasivo que se volvió el manejo de agentes y porque la experiencia de desarrollar Python en Cursor no lo terminaba de convencer. Estaba considerando cambiar a Claude Code como alternativa. Nicolas Fuentes, que lo usaba activamente, describió la experiencia: todo se hace desde la terminal aprovechando ventanas de contexto, ofrecen cursos para usarlo de forma óptima, pero tiene tokens diarios (que se actualizan cada 5 horas) y tokens semanales; si consumís los semanales es un bajón porque la alternativa es pagar por prompt a un precio muy alto. Agustín Sánchez confirmó conocer gente que labura con Claude sin Cursor y le gusta. Facundo García Martoni pidió que Marcelo fuera más específico sobre los problemas con Cursor para poder ayudar. El intercambio mostró que Claude Code está ganando tracción como alternativa real a los IDEs AI para devs que prefieren el flujo de terminal."
+  },
+  {
+    "title": "Club de lectura técnica de PCN",
+    "date": "2025-12-17",
+    "summary": "Santiago De Marco propuso crear un club de lectura técnica dentro de la comunidad, motivado por querer leer más libros del rubro. Juan Arismendi desarrolló la idea: proponer un libro, que todos lo lean en un mes o dos semanas, y al final debatirlo, que es como funcionan los clubes de lectura típicamente. Agustín Sánchez lo tomó con entusiasmo y propuso que Santiago y Juan lo gestionaran ellos mismos, creando un grupo de WhatsApp dentro de la comunidad para eso. Agustín creó el grupo y compartió el link. Juan anunció que armaría un Excel para cargar propuestas de libros y después votar cuál leer primero. La iniciativa quedó en manos de Santiago De Marco y Juan Arismendi para organizarla."
+  },
+  {
+    "title": "Modelo de dominio vs modelo de datos anémico",
+    "date": "2025-12-26",
+    "summary": "Germán Navarro explicó la diferencia entre el modelo de datos y el modelo de dominio según el principio SOLID: las clases del dominio deberían ser las que tienen comportamiento, mientras que en casi todos los frameworks los modelos de base de datos terminan siendo clases que solo representan datos —lo que los libros llaman 'modelo anémico'— y toda la lógica de negocio queda en clases 'service'. Alejo Boga preguntó si la solución sería usar un modelo o esquema con una clase para definir la entidad y encima ponerle un repository con la lógica de negocio. Germán aclaró que sería tener una clase tipo 'Producto' con la lógica de negocio propia y otra clase tipo DAO que represente la entidad en datos. Señaló que en proyectos no muy grandes esa separación generalmente no vale la pena y conviene más usar un ORM porque ahorra tiempo; la separación tiene sentido cuando la lógica de negocio se complica o cuando el modelo de dominio no coincide con cómo se guarda en la base de datos."
+  },
+  {
+    "title": "WiFi CSI para detectar cuerpos detrás de las paredes",
+    "date": "2025-12-26",
+    "summary": "Victor Figueredo irrumpió en el grupo para compartir que estaba replicando un proyecto que usa redes neuronales para mapear la fase y la amplitud de señales WiFi (CSI, Channel State Information) a coordenadas UV que representan la superficie del cuerpo humano, permitiendo 'ver' detrás de las paredes de forma similar a un sonar. Marcelo Nuñez se entusiasmó inmediatamente y mencionó haber visto un proyecto donde se usaba un microondas como micrófono, mostrando lo zarpado que podía ser el hardware creativo. Victor compartió el PDF del paper en arxiv.org y aclaró que primero necesitaba conseguir un router TP-Link Archer A7 AC1750 para poder hacer las pruebas. Marcelo prometió leer bien el paper el fin de semana y armar el proyecto, y Victor le pasó un drive con recursos adicionales."
+  },
+  {
+    "title": "Límite de tokens de Cursor: plan 60 USD consumido en 5 días",
+    "date": "2025-12-27",
+    "summary": "Facundo García Martoni anunció que había llegado al límite de su plan de Cursor de 60 USD en apenas 5 días, precisamente después de haber lanzado 4 o 5 features en dos días. Agustín Sánchez bromeó preguntando si era el límite del plan de 200 USD, y Facundo aclaró que por suerte era el de 60. Facundo admitió que probablemente iba a pasar al plan de 200 USD dada su cadencia de uso. El hilo derivó en una reflexión compartida sobre el momentum que estaban viviendo: Agustín dijo sentirse muy motivado y que le costaba soltar la computadora. Facundo señaló humorísticamente que el nuevo cuello de botella del desarrollo era el Code Review —que ahora era el humano, no la máquina— y que había que cambiarlo."
+  },
+  {
+    "title": "Startup vs empresa grande: dónde aprende más un junior",
+    "date": "2025-12-27",
+    "summary": "Leandro Contrera compartió una imagen con la pregunta de si se aprende más en una startup o en una empresa grande. Agustín Sánchez fue claro: startup, y convocó a Benjamin Cortes para que lo confirmara dado que había trabajado en Microsoft en Canadá. Benjamin confirmó al 100%. Agustín explicó que en empresas grandes cuando te dan lugar a resolver problemas grandes de ingeniería se aprende muchísimo, pero que a los juniors no les dan mucha cancha y terminan resolviendo cosas muy menores; en una startup aprenderían mucho más. También mencionó que empezar en consultoras haciendo sistemas desde cero con equipos chicos permite tomar más ownership en las features. Alejo, que ese año había empezado en una startup, confirmó que mejoró bastante en conocimientos por tener que aprender cosas nuevas a diario. Agustín compartió un podcast sobre el costo de oportunidad en la industria del software relacionado con esa discusión."
+  },
+  {
+    "title": "Python: tipos, flotantes, truthy/falsy y el módulo Decimal",
+    "date": "2025-12-27",
+    "summary": "Julián Vélez (Colombia) publicó un quiz de Python sobre el resultado de `math.sqrt(16) == 4` y el grupo debatió la respuesta. Facundo García Martoni apostó por False porque `sqrt` devuelve un float y al compararlo con un entero debería dar False. Marcelo Nuñez coincidió por el tema de los puntos flotantes: `0.1 + 0.2 == 0.3` también da False. Facundo Padilla aclaró que en Python no se comparan tipos sino valores y que el método `__eq__` considera que 4.0 y 4 son lo mismo. Santiago De Marco preguntó si con `parseInt` se solucionaba el problema, y la charla derivó en la diferencia entre casting y parsing. Facundo Padilla explicó que Python tiene el módulo `Decimal`, creado por un argentino llamado Facundo Batista en 2005 para resolver exactamente el problema de los puntos flotantes, y que fue adoptado en el standard de la PEP 327. Iñaki Fernando Lozano compartió un PDF de clase de errores numéricos que recordaba de la facultad, generando nostalgia en el grupo."
+  },
+  {
+    "title": "Arquitectura lógica vs física y diseño de bajo y alto nivel",
+    "date": "2025-12-28",
+    "summary": "Leandro Contrera preguntó al grupo si hacían la distinción entre diseño de bajo nivel y alto nivel, y también entre arquitectura física y arquitectura lógica, ya que le confundían las capas de abstracción. Mientras iba formulando las preguntas fue respondiéndose solo parte de ellas. Marcelo Nuñez respondió con un audio explicando la diferencia entre los 'planos' del sistema. Leandro preguntó en específico si los paquetes de dominio, persistencia y lógica de negocio se podían entender como subcapas de la arquitectura lógica (como en el modelo de arquitectura cebolla), y Marcelo confirmó que sí. La conversación también roció el tema del WSL (Windows Subsystem for Linux): Facundo Padilla explicó que permite correr un Linux dentro de Windows sin reemplazar PowerShell, y que la shell de Linux y PowerShell coexisten."
+  },
+  {
+    "title": "Dev Meetup de fin de año y sistema de inscripciones de PCN",
+    "date": "2025-12-28",
+    "summary": "Agustín Sánchez anunció una Dev Meetup especial para el 30 de diciembre para cerrar el año, con cupo limitado y como cereza del postre el estreno del sistema de inscripciones en la web de PCN (programaconnosotros.com/meetup). El grupo respondió con mucho entusiasmo: Facundo Bazán felicitó, Juan Farber deseó todos los éxitos, y Alejo lamentó estar en Buenos Aires y perdérsela. La novedad del sistema de inscripciones propio fue destacada por Agustín como un hito en el desarrollo del website de la comunidad."
+  },
+  {
+    "title": "Gestor de contraseñas: KeePassXC vs Bitwarden",
+    "date": "2025-12-29",
+    "summary": "Daniel Baltazar Escalante preguntó qué era más efectivo para seguridad: Bitwarden o KeePass. Facundo Padilla respondió que él usaba KeePassXC (la versión con interfaz más fácil de usar y open source) con la extensión del navegador para no tener que tipear claves manualmente, y destacó que la herramienta tiene certificación de la agencia nacional de seguridad francesa. Facundo García Martoni intervino desde el otro lado: lleva más de 5 años usando Bitwarden y nunca le falló; lo calificó de una ganga."
+  },
+  {
+    "title": "Mods para CS 1.6 con Pawn y Python vía socket",
+    "date": "2025-12-29",
+    "summary": "Facundo Padilla contó que se puso a aprender a crear mods para Counter-Strike 1.6 por hobbie, usando el lenguaje Pawn, y que estaba pensando en agregarle la posibilidad de correr cosas async usando Python: ya sea transpilando código Python a Pawn (que lo veía muy heavy) o pasando data desde Pawn a un script Python a través de sockets. Leandro Contrera señaló que la opción del socket podría tener latencia, y Facundo explicó que el juego corre en un solo hilo: si se bloquea, el servidor se clava hasta que termine de procesarse el script Python. La alternativa async evitaría ese problema. También mencionó una rareza del ecosistema: los códigos fuente de los mods se privatizan, y solo se distribuyen los compilados."
+  },
+  {
+    "title": "El futuro de la programación con IA y el ownership del código",
+    "date": "2025-12-29",
+    "summary": "Agustín Sánchez compartió imágenes con reflexiones sobre el futuro de la programación con IA, lo que desató un debate filosófico-técnico. Marcelo Nuñez señaló que incluso desarrollando con IA se mantiene la belleza de entender el porqué del código: la IA termina haciendo lo que le da pereza al dev, pero el dev entiende el código del laburo con profundidad. Agustín apuntó que la nueva skill es saber armar la arquitectura del proyecto de tal forma que se puedan delegar tareas de codificación a un agente sin que falle. Facundo García Martoni argumentó que el 'mastery over the craft' del que habla The Primeagen es azúcar sintáctica del clásico 'volverse irremplazable', y que el poder que daba el conocimiento profundo de los lenguajes ahora desaparece parcialmente por culpa de Claude; por lo tanto hay dos destinos: ownership sobre el outcome o dominar el nivel de abstracción nuevo que es el AI-Assisted Programming. Iñaki Fernando Lozano cuestionó si el mastery real da irremplazabilidad, citando que un artesano tiene mastery y es definitivamente prescindible. Germán Navarro preguntó si alguien sabía cómo adaptar el workflow de agentes a proyectos grandes con deuda técnica."
+  },
+  {
+    "title": "Agentes con OpenCode en proyectos con deuda técnica",
+    "date": "2025-12-29",
+    "summary": "A partir de la pregunta de Germán Navarro sobre cómo usar agentes en proyectos grandes con deuda técnica, Agustín Sánchez convocó a Esteban Sánchez, quien trabaja en ese contexto hace meses. Esteban explicó que el enfoque consiste en escribir agentes como archivos Markdown que especifican en detalle de qué es experto el agente (con ejemplos), lo que los 'entrena' con el contexto para tareas específicas sin repetirlo en cada prompt. En el día a día se abre OpenCode o Claude, se selecciona el agente adecuado y se tira el prompt tranquilo; como funcionan por consola, los agentes tienen libertad de ejecutar cualquier comando: navegar archivos, hacer commits, buildear, correr tests. La mayoría de las veces ayuda pero siempre requieren algo de interacción humana para limpiar el código o corregir algo. Agustín preguntó si usaban MCPs, y Esteban dijo no conocer el protocolo; Agustín explicó que permite comunicar agentes entre sí (por ejemplo con Figma o Stripe). Iñaki Fernando Lozano compartió que usa Git Worktrees con virtual hosts en Apache para servir varias ramas a la vez mientras los agentes van terminando."
+  },
+  {
+    "title": "LottieFiles para animaciones frontend",
+    "date": "2025-12-29",
+    "summary": "Facundo García Martoni, trabajando de noche en la landing de su producto, compartió el descubrimiento de lottiefiles.com para los apasionados del frontend: una plataforma de animaciones Lottie que permite integrar animaciones de alta calidad en webs y apps de forma muy simple. Lo mencionó como un recurso que estaba usando en ese momento para la landing de Macch.ai, junto con Framer como core del proyecto. Leandro Contrera dijo que no lo conocía y agradeció el dato."
+  },
+  {
+    "title": "Dev Meetup del 30 de diciembre: PCN cierra el año",
+    "date": "2025-12-30",
+    "summary": "El 30 de diciembre se realizó la Dev Meetup de fin de año de PCN en el coworking Blackbox en Yerba Buena. Emiliano Grillo fue documentando el evento con fotos y Mauricio Chaile destacó que fueron muchos. La juntada incluyó charlas técnicas: Facundo Gelatti mostró en vivo un sistema de bloques y referencias en JavaScript vanilla con TypeScript y el DOM, publicado en javiergelatti.xyz/self-js, donde se puede ver para cada propiedad si es enumerable, configurable y modificable. Leandro Contrera agradeció públicamente a Facundo Gelatti y Marcelo Nuñez por las charlas, y Santiago De Marco dijo que iba a frecuentar las juntadas y compartir la info del grupo con sus compañeros de facultad. La reunión se extendió hasta que los corrieron de Blackbox y después continuaron en Café Martínez hasta que los corrieron también, según contó Agustín Sánchez en su cierre de año."
+  },
+  {
+    "title": "Lanzamiento de macch.ai: la startup de Facundo García Martoni",
+    "date": "2025-12-30",
+    "summary": "Al cierre del 30 de diciembre, Facundo García Martoni lanzó la landing de Macch, su startup nacida 4 meses antes durante un evento de redes en Córdoba. Compartió el link macch.ai y pidió feedback a la comunidad. Alejo señaló que se veía muy clean en mobile aunque había un detalle de la etiqueta mes/month en inglés, y Fede Valle detectó una card con distinto tamaño en desktop. El stack usado fue Framer como core (para poder manejar un CMS y correr ads por nicho), Lottiefiles para animaciones, Photopea para la edición de logos, Nano Banana Pro para diseño de mockups de chats, Gemini 3 Pro como asistente de marketing y copy, y Figma para la Social Media Card. La comunidad celebró el lanzamiento con mucho entusiasmo. Leandro Contrera le escribió un mensaje muy emotivo valorando no solo lo técnico sino el espíritu emprendedor de Facundo. Agustín Sánchez cerró el año con un mensaje reflexivo sobre el crecimiento orgánico de la comunidad, agradeciendo que se hubiera juntado tanta gente un 30 de diciembre."
+  },
+  {
+    "title": "LM Studio y modelos locales: distilación y cuantización",
+    "date": "2025-12-31",
+    "summary": "Joaquin Sarmiento preguntó si alguien usaba LM Studio, la aplicación para correr LLMs localmente con interfaz similar a un chat de IA que usa la GPU o la RAM del sistema. Contó que había probado una versión de Claude Sonnet 4.5 de Qwen3 (14b parámetros) y no veía mucha diferencia con Claude en la web. Iñaki Fernando Lozano aclaró que en realidad era una versión de Qwen, probablemente destilada (aunque sin certeza por las restricciones legales sobre destilación de modelos cerrados). Explicó el concepto de destilación: se usa un modelo grande y capaz para entrenar a uno más chico con menos parámetros, logrando capacidades similares con menos hardware, a costa de algo de performance. Iñaki destacó que LM Studio sirve para testear límites de modelos, hasta cuánta cuantización aguantan sin perder mucha performance, y que se suele conectar con AnythingLLM como interfaz."
+  }
+]

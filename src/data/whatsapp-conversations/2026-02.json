@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Lanzamiento de Codex por OpenAI",
+    "date": "2026-02-02",
+    "summary": "OpenAI lanzó Codex, su nuevo modelo especializado en programación, y la noticia generó una discusión activa en el grupo. Varios miembros compararon Codex con Claude Code y con el modo agente de Cursor, debatiendo cuál ofrecía mejor calidad de código y comprensión de contexto en proyectos grandes. Se discutió también el modelo de precios de Codex y si resultaba competitivo frente a las alternativas existentes, con la conclusión general de que el mercado de herramientas de coding AI estaba volviéndose muy competitivo y los precios estaban bajando. Leandro Contrera mencionó que la proliferación de herramientas hacía cada vez más difícil mantenerse al día con todas las opciones, y que el verdadero diferenciador ya no era la herramienta sino la habilidad del desarrollador para integrarla efectivamente en su flujo de trabajo. La discusión concluyó con el consenso de que experimentar con múltiples herramientas y elegir la que mejor se adaptara al tipo de proyecto era la estrategia más pragmática."
+  },
+  {
+    "title": "QA manual con Claude Cowork: testing asistido por IA",
+    "date": "2026-02-11",
+    "summary": "Un miembro del grupo compartió su experiencia usando Claude para asistir en tareas de QA manual, generando casos de prueba a partir de especificaciones de producto y documentando bugs encontrados durante el testing. La iniciativa, apodada informalmente Claude Cowork, consistía en usar al modelo como copiloto durante las sesiones de QA, pidiéndole que sugiriera edge cases que el tester podría no haber considerado. Varios miembros que trabajaban en roles de QA mostraron interés en la propuesta, señalando que una de las partes más tediosas del trabajo era pensar sistemáticamente en todos los caminos posibles de un flujo de usuario. Se habló de cómo Claude podía traducir casos de prueba en lenguaje natural a scripts de Playwright o Cypress con una descripción suficientemente detallada. Nicolás Borda mencionó que había experimentado con esto en un proyecto y que los scripts generados necesitaban revisión y ajuste, pero que igualmente reducían significativamente el tiempo de escritura de tests."
+  },
+  {
+    "title": "Debate sobre programadores obsoletos: la visión de Elon Musk",
+    "date": "2026-02-12",
+    "summary": "Elon Musk hizo declaraciones públicas sugiriendo que los programadores serían obsoletos en el corto plazo debido al avance de la IA, y esta noticia generó un debate intenso en el grupo. Una parte de los miembros desestimó las declaraciones como exageración marketinera, señalando que Musk tenía incentivos económicos para promover la narrativa de IA que reemplaza humanos dado que su empresa xAI competía en ese mercado. Otros miembros tomaron las declaraciones más en serio y discutieron hasta qué punto la automatización del código podía realmente desplazar a los desarrolladores en un horizonte de 5 a 10 años. Leandro Contrera argumentó que la complejidad del software empresarial real, con todos sus requerimientos implícitos, restricciones de negocio y deuda técnica, hacía muy difícil que la IA pudiera operar sin supervisión humana en el corto plazo. Facundo García Martoni compartió su experiencia con agentes de IA en Macch, donde había visto tanto éxitos como fracasos estrepitosos del agente al tomar decisiones sin contexto suficiente. La conversación concluyó con la mayoría coincidiendo en que el rol del desarrollador estaba evolucionando hacia algo más parecido a un director técnico de agentes de IA, donde el valor estaba en saber qué construir y cómo dirigir las herramientas."
+  },
+  {
+    "title": "Full-stack vs especialización: debate sobre el perfil del desarrollador moderno",
+    "date": "2026-02-12",
+    "summary": "El grupo discutió si en el contexto actual tenía más sentido especializarse profundamente en un área (frontend, backend, infraestructura) o desarrollar un perfil full-stack amplio. Los defensores de la especialización argumentaron que la profundidad técnica era más difícil de reemplazar por la IA, y que los especialistas senior podían resolver problemas que los generalistas y las herramientas de IA no podían abordar. Los defensores del perfil full-stack señalaban que la IA ya era muy capaz en las tareas técnicas específicas, y que el valor del full-stack estaba en poder ver el sistema completo y tomar decisiones de arquitectura informadas. Nicolás Borda aportó que la distinción entre frontend y backend estaba volviéndose cada vez más difusa con frameworks como Next.js y Remix que unificaban ambas capas. Martín Esteban coincidió y agregó que los desarrolladores que entendían tanto el dominio técnico como el negocio eran los más difíciles de reemplazar. Se discutió también el mercado laboral: en Argentina, los full-stacks tenían más oportunidades laborales porque las empresas pequeñas y medianas no podían permitirse equipos especializados grandes."
+  },
+  {
+    "date": "2026-02-13",
+    "title": "Kimi 2.5: LLM chino con 'super agent', demasiado lento para uso diario",
+    "summary": "Un miembro compartió su experiencia probando Kimi 2.5, el modelo de lenguaje chino que prometía capacidades de 'super agente'. Contó que el modelo era impresionante en razonamiento pero que el límite de 3 usos por día en el plan gratuito y la latencia alta lo hacían impráctoco para trabajo diario. El grupo discutió los diferentes LLMs chinos como Kimi, DeepSeek y Qwen y su posicionamiento frente a los modelos de Anthropic y OpenAI. Facundo señaló que DeepSeek había tenido más tracción en la comunidad por su costo-efectividad en tareas de código. Se debatió la confiabilidad de usar modelos de empresas chinas para trabajo con código propietario."
+  },
+  {
+    "date": "2026-02-13",
+    "title": "Formato Harvard para CVs: evitar diseños generados por IA",
+    "summary": "El grupo discutió el formato ideal para un CV técnico orientado a empresas internacionales. Varios recomendaron el formato Harvard: una o dos páginas, tipografía simple, sin columnas ni gráficos de habilidades. Facundo fue explícito en desaconsejar los CVs generados por IA con diseños visuales recargados, señalando que los recruiters técnicos preferían la claridad de texto sobre el diseño. Se debatió si incluir foto en el CV era positivo o negativo según el mercado objetivo. Alguien mencionó que para el mercado europeo la foto era común pero que para el mercado norteamericano se desaconsejaba. Se compartieron ejemplos de buenos CVs de desarrolladores reconocidos."
+  },
+  {
+    "date": "2026-02-13",
+    "title": "Google Stitch para UI: metaprompt, generación de pantallas y flujo con Claude",
+    "summary": "Facundo Padilla compartió su flujo de trabajo con Google Stitch para diseño de interfaces: primero generaba un metaprompt detallado describiendo la app, luego usaba Stitch para generar las pantallas visuales, y finalmente pasaba el resultado a Claude Code para implementar el frontend. El grupo mostró gran interés por el workflow. Agustín probó Stitch durante la conversación y comentó que los resultados visuales eran sorprendentemente buenos para prototipos rápidos. Se discutió la comparación con v0 de Vercel y Bolt. Facundo señaló que Stitch generaba imágenes de las pantallas que luego servían como referencia visual para Claude, lo que reducía ambigüedad en el prompt."
+  },
+  {
+    "date": "2026-02-14",
+    "title": "EndeavourOS vs Linux Mint: Hyprland en Mint y distros para developers",
+    "summary": "Matías trajo un debate sobre qué distribución de Linux era más conveniente para desarrollo: EndeavourOS (basada en Arch) versus Linux Mint (basada en Ubuntu/Debian). Los defensores de EndeavourOS destacaban el acceso al AUR y el rolling release. Los de Mint señalaban la estabilidad y el menor tiempo de configuración inicial. Se discutió si Hyprland, el compositor de ventanas Wayland, era compatible con Linux Mint, ya que originalmente estaba pensado para Arch. Facundo comentó que para trabajo sin distracciones prefería una distro más estable que no requiriera mantenimiento constante. Matías terminó argumentando que EndeavourOS era un buen punto medio entre el control de Arch y la facilidad de uso."
+  },
+  {
+    "date": "2026-02-15",
+    "title": "Claude Pro vs Max: optimización de tokens con /compact y /clear",
+    "summary": "El grupo debatió las diferencias entre los planes Pro y Max de Claude y cuándo valía la pena el upgrade. Agustín explicó que había estado usando los comandos /compact y /clear en Claude Code para optimizar el uso de tokens en sesiones largas. Facundo detalló que /compact comprimía el historial de la conversación manteniendo el contexto esencial, mientras que /clear reseteaba completamente. Se discutió que el plan Max ofrecía 5 veces más uso mensual que Pro, lo que era relevante para quienes usaban Claude Code intensivamente en proyectos reales. Varios miembros preguntaron si el upgrade justificaba el costo adicional según el uso."
+  },
+  {
+    "date": "2026-02-15",
+    "title": "Claude Code: modo plan con Shift+Tab y estrategia Opus para planificación",
+    "summary": "Facundo compartió su descubrimiento del modo plan en Claude Code, activado con Shift+Tab, que hacía que el modelo planificara los cambios antes de ejecutarlos. El grupo mostró interés inmediato. Se discutió la estrategia de usar Claude Opus para la fase de planificación (donde el costo era menor por no generar tanto código) y luego Claude Sonnet para la fase de implementación. Agustín comentó que el modo plan reducía los errores de contexto en tareas que tocaban múltiples archivos. Facundo explicó que había configurado su Claude Code para usar Opus en plan mode por defecto y Sonnet para ejecución, logrando mejor calidad sin aumentar mucho el costo."
+  },
+  {
+    "date": "2026-02-17",
+    "title": "Facundo Padilla lanza salta.dev construido 100% con Claude Code y Stitch",
+    "summary": "Facundo Padilla anunció el lanzamiento de salta.dev, un sitio de la comunidad de desarrolladores de Salta construido íntegramente con Claude Code y Google Stitch sin escribir código manualmente. El grupo lo felicitó y varios lo tomaron como prueba de concepto del workflow de IA que habían estado discutiendo. Facundo explicó el proceso: diseñó las pantallas en Stitch, exportó las imágenes como referencias visuales y le pidió a Claude Code que implementara el frontend usando esas imágenes como guía. El resultado fue un sitio moderno y funcional en pocas horas. El hilo generó mucha discusión sobre la viabilidad de este workflow para proyectos de clientes."
+  },
+  {
+    "date": "2026-02-17",
+    "title": "PCN Dev Meetup: encuentro presencial en once57 cowork, Tucumán",
+    "summary": "Se anunció el PCN Dev Meetup para el 20 de febrero en once57, un espacio de coworking en Tucumán. El grupo organizó la participación con entusiasmo. Se discutieron los temas a cubrir en el encuentro: workflows con IA, experiencias con Claude Code, y proyectos de los miembros. Varios confirmaron asistencia. El meetup congregó a más de 20 personas de la comunidad. Después del evento, varios miembros compartieron fotos y comentaron que había sido una reunión muy productiva, con demos en vivo de herramientas de IA y conversaciones técnicas sobre proyectos reales."
+  },
+  {
+    "date": "2026-02-19",
+    "title": "Hack a Taxes Software Argentina: 440 bases de datos y 4.7 GB expuestos",
+    "summary": "Alguien compartió la noticia del hackeo a Taxes Software Argentina, que resultó en la exposición de 440 bases de datos y 4.7 GB de datos de contribuyentes. El grupo reaccionó con preocupación. Se discutieron las implicaciones del hackeo para los usuarios del software contable. Facundo señaló la importancia de la seguridad en aplicaciones que manejan datos fiscales sensibles. Se debatió si el ataque había sido por SQL injection, credenciales comprometidas u otro vector. La conversación derivó en prácticas de seguridad básicas que muchas aplicaciones argentinas no implementaban: cifrado en reposo, auditoría de accesos y pentesting periódico."
+  },
+  {
+    "date": "2026-02-21",
+    "title": "Mateo construye app estilo Tinder para emprendedores en menos de 12 horas",
+    "summary": "Mateo compartió que había construido una aplicación de matching para emprendedores, conceptualmente similar a Tinder, en menos de 12 horas usando Claude Code como agente principal de desarrollo. La app permitía a emprendedores encontrar co-fundadores o colaboradores con intereses complementarios mediante un sistema de swipe. El grupo quedó impresionado con la velocidad de desarrollo. Se detalló que la app había llegado a 700 usuarios en los primeros días de lanzamiento. Facundo preguntó sobre el stack y Mateo explicó que había usado Next.js con Supabase como backend. El caso fue celebrado como ejemplo concreto de las posibilidades del desarrollo asistido por IA."
+  },
+  {
+    "date": "2026-02-22",
+    "title": "Context drift en RAG y Knowledge Slots como solución para Macch",
+    "summary": "El grupo tuvo una discusión técnica profunda sobre el problema de context drift en sistemas RAG (Retrieval Augmented Generation): el fenómeno por el cual el modelo pierde coherencia cuando el contexto recuperado es contradictorio o muy extenso. Facundo García presentó la solución que estaban implementando en Macch: Knowledge Slots, un sistema de ranuras de conocimiento predefinidas que organizaban el contexto recuperado de manera estructurada antes de enviarlo al modelo. Se discutió cómo esta arquitectura reducía el ruido y mejoraba la consistencia de las respuestas. Varios miembros encontraron el concepto útil para sus propios proyectos con RAG."
+  },
+  {
+    "date": "2026-02-26",
+    "title": "Cursor Worktrees para trabajo paralelo con múltiples agentes",
+    "summary": "Alguien compartió la funcionalidad de Cursor que permitía usar git worktrees para ejecutar múltiples agentes en paralelo, cada uno trabajando en una rama diferente del repositorio. El grupo discutió los beneficios: poder tener un agente trabajando en una feature mientras otro corregía un bug, sin conflictos de archivos entre sesiones. Facundo mencionó que había empezado a usar un script que automatizaba la creación de worktrees con base de datos clonada para cada tarea. Se discutió la diferencia entre el modelo de agentes en Cursor versus Claude Code y cuál era más adecuado para trabajo paralelo."
+  },
+  {
+    "date": "2026-02-26",
+    "title": "Tips anti-distracción: Onesec, ScreenZen y Técnica Pomodoro",
+    "summary": "Rodrigo compartió su stack de herramientas para combatir las distracciones durante el trabajo: Onesec (que añade fricción al abrir apps distractoras), ScreenZen (para limitar tiempo en apps) y la técnica Pomodoro para bloques de trabajo concentrado. El grupo compartió sus propias estrategias. Matías mencionó que tenía el teléfono en modo avión durante sesiones de trabajo profundo. Facundo comentó que las notificaciones de Slack y WhatsApp eran los principales disruptores en trabajo remoto. Se discutió si las herramientas de restricción eran más efectivas que simplemente construir el hábito de no revisar el teléfono. La conversación generó varias recomendaciones prácticas."
+  },
+  {
+    "date": "2026-02-26",
+    "title": "Jack Dorsey y Block: recorte del 50% del staff por automatización con IA",
+    "summary": "Volvió al grupo la noticia de que Jack Dorsey había ejecutado recortes del 50% del staff de Block, explicando públicamente que la IA permitía a equipos más pequeños hacer el trabajo de equipos grandes. El grupo tuvo reacciones divididas. Algunos argumentaron que era una señal de lo que venía para la industria tech. Otros cuestionaron si la justificación con IA era genuina o era una narrativa para cubrir decisiones financieras. Facundo comentó que las empresas que recortaban staff 'por IA' solían hacerlo también por razones de rentabilidad y que mezclar ambas justificaciones era engañoso. Se debatió la responsabilidad ética de los CEOs que usaban la IA como justificación para reducir costos laborales."
+  }
+]
