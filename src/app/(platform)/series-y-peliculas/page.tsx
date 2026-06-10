@@ -117,6 +117,17 @@ const titles: Title[] = [
     poster: '/series-y-peliculas/silicon-valley.jpg',
   },
   {
+    id: '17',
+    title: 'Snowden',
+    director: 'Oliver Stone',
+    type: 'Película',
+    genre: 'Biográfica',
+    description:
+      'La historia de Edward Snowden, el analista de la NSA que filtró al mundo los secretos del programa de vigilancia masiva del gobierno estadounidense. Oliver Stone dirige este thriller político que plantea preguntas profundas sobre privacidad, lealtad y el precio de la verdad.',
+    year: 2016,
+    poster: '/series-y-peliculas/snowden.jpg',
+  },
+  {
     id: '8',
     title: 'Steve Jobs',
     director: 'Danny Boyle',
