@@ -115,6 +115,18 @@ export const externalCourses: Array<Course> = [
     hours: 7,
   },
   {
+    name: 'Hermes Agent',
+    id: 'hermes-agent',
+    description:
+      'Hermes Agent es uno de los agentes de IA open source más avanzados y fáciles de usar del momento: tiene memoria persistente, crea sus propias skills, se comunica por Telegram y WhatsApp y puede trabajar de forma autónoma 24/7. En este tutorial vas a aprender a instalarlo, configurarlo y usarlo de forma profesional en un servidor VPS (Hostinger): la configuración completa con OpenAI y Telegram, el Dashboard Web y el Canvas para manejar múltiples agentes, las tareas programadas con Cron Jobs, la generación de proyectos completos (frontend y backend), la integración con GitHub CLI, los perfiles personalizados y Skills, el acceso seguro desde cualquier lugar con Tailscale, y los comandos y trucos más útiles. Ideal para quienes quieren su propio asistente de IA personal que realmente aprende y trabaja por sí solo.',
+    youtubeUrls: ['https://www.youtube.com/embed/gpbEfTQ1kLU'],
+    teachedBy: 'Fazt',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
+    hours: 1,
+  },
+  {
     name: 'Cursor',
     id: 'cursor',
     description:
