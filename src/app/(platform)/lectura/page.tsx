@@ -329,6 +329,61 @@ const books: Book[] = [
     cover: '/lectura/engineering-management-rest-of-us.jpg',
     isbn: '9798986769318',
   },
+  {
+    id: '27',
+    title: 'Getting Real',
+    author: '37signals',
+    categories: ['Gestión'],
+    description:
+      'El enfoque de 37signals para construir software web exitoso: más chico, más rápido y mejor, evitando funciones, reuniones y planes innecesarios.',
+    year: 2006,
+    cover: '/lectura/getting-real.jpg',
+    isbn: '0578012812',
+  },
+  {
+    id: '28',
+    title: 'Shape Up',
+    author: 'Ryan Singer',
+    categories: ['Gestión'],
+    description:
+      'El método de 37signals para dar forma, apostar y construir producto en ciclos de seis semanas, sin estimaciones ni backlogs interminables.',
+    year: 2019,
+    cover: '/lectura/shape-up.jpg',
+    isbn: '9780578511849',
+  },
+  {
+    id: '29',
+    title: 'Remote: Office Not Required',
+    author: 'Jason Fried, David Heinemeier Hansson',
+    categories: ['Gestión'],
+    description:
+      'Argumenta por qué el trabajo remoto es el futuro y cómo hacerlo bien, derribando los mitos sobre productividad y colaboración a distancia.',
+    year: 2013,
+    cover: '/lectura/remote.jpg',
+    isbn: '0804137501',
+  },
+  {
+    id: '30',
+    title: "It Doesn't Have to Be Crazy at Work",
+    author: 'Jason Fried, David Heinemeier Hansson',
+    categories: ['Gestión'],
+    description:
+      'Un manifiesto contra la cultura del ajetreo: cómo construir una empresa tranquila, rentable y sostenible sin largas jornadas ni estrés crónico.',
+    year: 2018,
+    cover: '/lectura/it-doesnt-have-to-be-crazy-at-work.jpg',
+    isbn: '0062874780',
+  },
+  {
+    id: '31',
+    title: 'Rework',
+    author: 'Jason Fried, David Heinemeier Hansson',
+    categories: ['Gestión'],
+    description:
+      'Una visión disruptiva y directa sobre cómo trabajar y emprender, descartando las convenciones tradicionales de los negocios.',
+    year: 2010,
+    cover: '/lectura/rework.jpg',
+    isbn: '0307463745',
+  },
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
@@ -350,6 +405,8 @@ const categoryStyles: Record<string, string> = {
     'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
   Testing:
     'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
+  Producto:
+    'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
 };
 const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 
