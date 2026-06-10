@@ -260,6 +260,72 @@ const books: Book[] = [
     cover: '/lectura/designing-data-intensive.jpg',
     isbn: 'B0FWY1P6PS',
   },
+  {
+    id: '21',
+    title: 'Agile Testing',
+    author: 'Lisa Crispin, Janet Gregory',
+    category: 'Programación',
+    description:
+      'Una guía práctica para testers y equipos ágiles que muestra cómo integrar el testing en el proceso de desarrollo para entregar software de calidad.',
+    year: 2008,
+    cover: '/lectura/agile-testing.jpg',
+    isbn: '0321534468',
+  },
+  {
+    id: '22',
+    title: 'Cracking the Coding Interview',
+    author: 'Gayle Laakmann McDowell',
+    category: 'Programación',
+    description:
+      'La guía más completa para preparar entrevistas técnicas de programación, con 189 preguntas y soluciones detalladas.',
+    year: 2015,
+    cover: '/lectura/cracking-the-coding-interview.jpg',
+    isbn: '0984782850',
+  },
+  {
+    id: '23',
+    title: 'Applying UML and Patterns',
+    author: 'Craig Larman',
+    category: 'Arquitectura',
+    description:
+      'Una introducción al análisis y diseño orientado a objetos con UML y patrones de diseño aplicados al desarrollo iterativo.',
+    year: 2004,
+    cover: '/lectura/applying-uml-and-patterns.jpg',
+    isbn: '0131489062',
+  },
+  {
+    id: '24',
+    title: 'Algoritmos a Fondo',
+    author: 'Pablo Albero Sznajdleder',
+    category: 'Programación',
+    description:
+      'Un recorrido exhaustivo por las estructuras de datos y algoritmos fundamentales, con implementaciones prácticas en C y Java.',
+    year: 2013,
+    cover: '/lectura/algoritmos-a-fondo.jpg',
+    isbn: '987160937X',
+  },
+  {
+    id: '25',
+    title: 'Construcción de software con una mirada ágil',
+    author: 'Diego Fontdevila, Alfredo Fernández, Jorge Aguirre',
+    category: 'Programación',
+    description:
+      'Un enfoque ágil para la construcción de software que combina prácticas de ingeniería moderna con metodologías iterativas de desarrollo.',
+    year: 2016,
+    cover: '/lectura/construccion-software-agil.jpg',
+    isbn: 'B01M1L858Z',
+  },
+  {
+    id: '26',
+    title: 'Engineering Management for the Rest of Us',
+    author: 'Sarah Drasner',
+    category: 'Gestión',
+    description:
+      'Una guía práctica sobre gestión de ingeniería para quienes no tienen formación formal en management, cubriendo comunicación, contratación, retroalimentación y cultura de equipo.',
+    year: 2022,
+    cover: '/lectura/engineering-management-rest-of-us.jpg',
+    isbn: '9798986769318',
+  },
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
