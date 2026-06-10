@@ -11,10 +11,66 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TableOfContents } from '@/components/historia/table-of-contents';
-import { ScrollText } from 'lucide-react';
+import { HistoriaImage } from '@/components/historia/historia-image';
+import { ScrollText, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+const lightningTalksNextGen = [
+  {
+    title: 'Cómo Construir una Carrera Exponencial en Tecnología',
+    speaker: 'Ing. Alejo Boga',
+    role: 'Senior AI Engineer en Santander Tecnología',
+  },
+  {
+    title: 'Effective Agentic Coding',
+    speaker: 'Agustín Sánchez',
+    role: 'Senior Software Engineer en Eagerworks, Director de DIZENZ y Líder de PCN',
+  },
+  {
+    title: 'Buscando el Diseño Perfecto',
+    speaker: 'Ing. Mauricio Sánchez',
+    role: 'Staff Software Engineer en PedidosYa, Co-fundador de PCN',
+  },
+  {
+    title: '5 Consejos de Supervivencia Backend',
+    speaker: 'Ing. Marcelo de Jesús Núñez',
+    role: 'Senior Software Engineer en Bowery, Co-fundador de PCN',
+  },
+  {
+    title: 'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
+    speaker: 'Ing. Franco Pérez',
+    role: 'Founder de Crisol Studio',
+  },
+  {
+    title: 'Anatomía de un Agente de IA: Qué son y cómo funcionan',
+    speaker: 'Franco Jose Espinoza',
+    role: 'Founder & Lead Developer en Section 05',
+  },
+  {
+    title: 'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
+    speaker: 'Fabio Ramos',
+    role: 'Lead Software Engineer en CAW Tech',
+  },
+  {
+    title: 'NEX OS: Ingeniería de Sistemas Operativos en la Web y Optimización Extrema',
+    speaker: 'Salvador Juárez y Yamil Cardozo',
+    role: 'Software Engineer en Bitflow · Estudiante IES',
+  },
+  {
+    title: 'El Atacante que Llegó por el npm install',
+    speaker: 'Ismael Chávez',
+    role: 'Software Developer & Pentester en Endpoint Consulting',
+  },
+  {
+    title: 'No te Reemplaza la IA, te Reemplaza el QA que la Usa',
+    speaker: 'Leo Apaza',
+    role: 'Software Development Engineer in Test en Assist-365',
+  },
+];
 
 export const metadata: Metadata = {
   title: 'Historia',
@@ -65,7 +121,7 @@ const PCNStory = () => (
               <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
             </div>
             <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-              Historia de programaConNosotros
+              Historia
             </span>
           </Heading2>
         </div>
@@ -117,12 +173,7 @@ const PCNStory = () => (
                   charlas y competencias de programación.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/IMG_20230809_113640.webp"
-                    alt="Comienzos en la UTN-FRT"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/IMG_20230809_113640.webp" alt="Comienzos en la UTN-FRT" />
                 </div>
               </CardContent>
             </Card>
@@ -141,12 +192,7 @@ const PCNStory = () => (
                   eventos técnicos.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/evento_abril (173) (2).webp"
-                    alt="Voluntariado en el IEEE"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/evento_abril (173) (2).webp" alt="Voluntariado en el IEEE" />
                 </div>
                 <p className="text-base text-muted-foreground md:text-sm">
                   Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>,
@@ -187,29 +233,14 @@ const PCNStory = () => (
                   llamaron Code Warfare. Se anotaron muchos equipos y estuvo muy divertido.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/code-warfare-logo.webp"
-                    alt="Code Warfare logo"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/code-warfare-logo.webp" alt="Code Warfare logo" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/photo_2017-10-08_20-24-40.webp"
-                      alt="Code Warfare"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/photo_2017-10-08_20-24-40.webp" alt="Code Warfare" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/photo_2017-10-08_20-24-35.webp"
-                      alt="Code Warfare"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/photo_2017-10-08_20-24-35.webp" alt="Code Warfare" />
                   </div>
                 </div>
               </CardContent>
@@ -244,12 +275,7 @@ const PCNStory = () => (
                   información de la UTN-FRT.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/photo_2019-10-14_01-58-25.webp"
-                    alt="Club de Algoritmos"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/photo_2019-10-14_01-58-25.webp" alt="Club de Algoritmos" />
                 </div>
               </CardContent>
             </Card>
@@ -270,52 +296,22 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (167).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (167).webp" alt="Tucumán Hack Weekend" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (10).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (10).webp" alt="Tucumán Hack Weekend" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (118) (1).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (118) (1).webp" alt="Tucumán Hack Weekend" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (139).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (139).webp" alt="Tucumán Hack Weekend" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (142).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (142).webp" alt="Tucumán Hack Weekend" />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/historia/evento_abril (147).webp"
-                      alt="Tucumán Hack Weekend"
-                      className="max-w-full rounded-lg"
-                    />
+                    <HistoriaImage src="/historia/evento_abril (147).webp" alt="Tucumán Hack Weekend" />
                   </div>
                 </div>
                 <p className="text-base text-muted-foreground md:text-sm">
@@ -324,12 +320,7 @@ const PCNStory = () => (
                   ofensivo.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/evento_abril (64).webp"
-                    alt="Tucumán Hack Weekend"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/evento_abril (64).webp" alt="Tucumán Hack Weekend" />
                 </div>
                 {/* // TODO: Agregar fotos de los cursos de seguridad informática */}
               </CardContent>
@@ -354,12 +345,7 @@ const PCNStory = () => (
                   de las aulas se enseñaba.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/historia/IMG_1525.webp"
-                    alt="Nibble"
-                    className="max-w-full rounded-lg"
-                  />
+                  <HistoriaImage src="/historia/IMG_1525.webp" alt="Nibble" />
                 </div>
               </CardContent>
             </Card>
@@ -436,27 +422,21 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242335684-7df020ca-0179-422e-9084-4dbbb6ed20f1.jpeg"
                       alt="Lightning Talks 2021"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242053412-bee91069-37b8-4d27-91cb-2fafcfdf92c9.jpeg"
                       alt="Lightning Talks 2023"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777235792921-7d89c0da-a617-4e80-8a2b-6cc7cea2d0b8.jpeg"
                       alt="Lightning Talks 2024"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                 </div>
@@ -528,27 +508,21 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241814466-2b43047c-27f0-4de7-86a2-faabca4f1ac9.jpeg"
                       alt="Una Mirada de la Industria del Software"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236239325-19d0cf0e-4385-4e14-ac61-a2c20fb06bb0.jpeg"
                       alt="Descubrí el Mundo del Desarrollo de Software"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241043347-93b51aef-47ba-4e88-9a9c-a4aaa997f6c2.jpeg"
                       alt="Introducción al Desarrollo de Software"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                 </div>
@@ -575,11 +549,9 @@ const PCNStory = () => (
                   laboral.
                 </p>
                 <div className="flex justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <HistoriaImage
                     src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236349066-ae60a5c3-81d2-4cd8-bc18-85b648d4f089.jpeg"
                     alt="Tech in Action"
-                    className="max-w-full rounded-lg"
                   />
                 </div>
               </CardContent>
@@ -613,43 +585,33 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1766992051811-4f6bc2cb-ebe4-47e3-b701-dd537a0590fe.jpeg"
                       alt="Meetup diciembre 2025"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1771359135414-cc6b3a49-722f-400c-99f2-b049d32a23ec.JPG"
                       alt="Meetup febrero 2026"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1775498317125-414e180b-4b7c-43b0-9848-64e89c4506af.PNG"
                       alt="Meetup abril 2026"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1776732685244-11d00b6f-78b7-460b-a1a8-11d40f0a852f.png"
                       alt="Cowork Session"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                   <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <HistoriaImage
                       src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1779314634681-9a349677-eb94-4345-b69b-6eef31325aa1.png"
                       alt="Meetup mayo 2026"
-                      className="max-w-full rounded-lg"
                     />
                   </div>
                 </div>
@@ -657,11 +619,11 @@ const PCNStory = () => (
             </Card>
 
             <Card
-              id="hackathons-y-nextgen"
+              id="zero-to-agent"
               className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
             >
               <CardHeader>
-                <CardTitle>Zero to Agent y NextGen Software 2026</CardTitle>
+                <CardTitle>Zero to Agent</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-base text-muted-foreground md:text-sm">
@@ -671,6 +633,23 @@ const PCNStory = () => (
                   6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
                   ingeniería de software y demostró que la comunidad está al día con lo que viene.
                 </p>
+                <div className="flex justify-center">
+                  <HistoriaImage
+                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
+                    alt="Zero to Agent"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="nextgen-software-2026"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>NextGen Software 2026</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <p className="text-base text-muted-foreground md:text-sm">
                   En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
                   Sistemas de Información de la UTN-FRT, co-organizamos{' '}
@@ -679,23 +658,75 @@ const PCNStory = () => (
                   que nos dejó muy orgullosos de todo el camino recorrido desde aquel laboratorio de
                   algoritmos en 2015.
                 </p>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
-                      alt="Zero to Agent"
-                      className="max-w-full rounded-lg"
-                    />
-                  </div>
-                  <div className="flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
-                      alt="NextGen Software 2026"
-                      className="max-w-full rounded-lg"
-                    />
-                  </div>
+                <div className="flex justify-center">
+                  <HistoriaImage
+                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
+                    alt="NextGen Software 2026"
+                  />
+                </div>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  El viernes 12 de junio, en el Aula Magna de la UTN-FRT, realizamos una sesión de{' '}
+                  <b>Lightning Talks</b> con 10 charlas de la comunidad:
+                </p>
+                <ul className="space-y-3">
+                  {lightningTalksNextGen.map((talk) => (
+                    <li key={talk.title} className="text-base text-muted-foreground md:text-sm">
+                      <b className="text-foreground">{talk.title}</b>
+                      <span className="block">
+                        {talk.speaker} · {talk.role}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card
+              id="comunidad-whatsapp"
+              className="w-full max-w-4xl scroll-mt-24 border-0 bg-transparent shadow-none md:border md:bg-card md:shadow-sm md:transition-colors"
+            >
+              <CardHeader>
+                <CardTitle>La comunidad en WhatsApp</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Más allá de los eventos y las charlas presenciales, el corazón de PCN late en el{' '}
+                  <b>grupo de WhatsApp de la comunidad</b>. Ahí es donde sucede la conversación
+                  cotidiana: debates sobre herramientas como <b>Cursor, Claude Code y agentes de IA</b>
+                  , discusiones de arquitectura, recomendaciones de libros técnicos, preguntas sobre
+                  frameworks y bases de datos, y el eterno dilema de cómo cobrar en dólares desde
+                  Argentina.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Pero lo más valioso no es el contenido técnico: es el <b>networking genuino</b>.
+                  Ofertas de trabajo compartidas en el grupo que se convirtieron en empleos reales,
+                  referidos entre miembros, revisiones de CV, consejos de entrevistas, y la
+                  organización espontánea de un club de lectura técnica. Cuando Facundo García
+                  Martoni consiguió su posición como Senior Full-Stack Engineer gracias a una oferta
+                  publicada en el grupo y el acompañamiento de otros miembros, quedó claro{' '}
+                  <b>el valor concreto de pertenecer a esta comunidad</b>.
+                </p>
+                <p className="text-base text-muted-foreground md:text-sm">
+                  Archivamos las mejores charlas en la sección de Conversaciones para que nadie se
+                  pierda lo que se charló. Y si querés ser parte de lo que viene, el grupo está
+                  abierto.
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Link href="/conversaciones">
+                    <Button variant="outline" size="sm">
+                      Ver las conversaciones
+                    </Button>
+                  </Link>
+                  <Link
+                    href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4" />
+                      Unirme al grupo
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
