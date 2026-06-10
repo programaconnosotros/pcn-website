@@ -115,6 +115,18 @@ export const externalCourses: Array<Course> = [
     hours: 7,
   },
   {
+    name: 'Cursor',
+    id: 'cursor',
+    description:
+      'Cursor es uno de los editores de código con inteligencia artificial más potentes del momento. En este curso completo vas a aprender a usarlo desde cero hasta un nivel avanzado: qué es y en qué se diferencia de VS Code, instalación y configuración inicial, el chat inteligente y el autocompletado avanzado, el Agent Mode vs el Plan Mode, cómo crear proyectos completos solo con prompts, el uso de distintos modelos de IA (Claude, GPT, Gemini, Auto Mode), los MCPs para conectar Cursor con otras herramientas, el testing automático con IA, las reglas y comandos personalizados, y cuándo conviene pagar el plan Pro. Una guía actualizada para integrar la IA en tu flujo de trabajo, tanto si recién empezás como si ya programás.',
+    youtubeUrls: ['https://www.youtube.com/embed/bMmVZFd7HA4'],
+    teachedBy: 'Fazt',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
+    hours: 1,
+  },
+  {
     name: 'Claude Code',
     id: 'claude-code',
     description:
