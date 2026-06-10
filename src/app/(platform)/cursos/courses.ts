@@ -115,6 +115,18 @@ export const externalCourses: Array<Course> = [
     hours: 7,
   },
   {
+    name: 'Docker',
+    id: 'docker',
+    description:
+      'Docker te permite empaquetar tus aplicaciones en contenedores para que corran igual en cualquier máquina, simplificando el desarrollo y el despliegue. En este curso completo desde cero vas a aprender la teoría detrás de los contenedores, la instalación de Docker, los comandos para manejar imágenes y contenedores, cómo conectarte a los contenedores, Docker Compose para orquestar varios servicios, el uso de volúmenes para persistir datos, y la configuración de ambientes con hot reload para desarrollo. Ideal para quienes quieren incorporar Docker a su flujo de trabajo desde lo más básico hasta dejar una aplicación lista para correr.',
+    youtubeUrls: ['https://www.youtube.com/embed/4Dko5W96WHg'],
+    teachedBy: 'HolaMundo',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
+    hours: 1,
+  },
+  {
     name: 'Hermes Agent',
     id: 'hermes-agent',
     description:
