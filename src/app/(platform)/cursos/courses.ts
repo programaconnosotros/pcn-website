@@ -118,7 +118,7 @@ export const externalCourses: Array<Course> = [
     name: 'Docker',
     id: 'docker',
     description:
-      'Docker te permite empaquetar tus aplicaciones en contenedores para que corran igual en cualquier máquina, simplificando el desarrollo y el despliegue. En este curso completo desde cero vas a aprender la teoría detrás de los contenedores, la instalación de Docker, los comandos para manejar imágenes y contenedores, cómo conectarte a los contenedores, Docker Compose para orquestar varios servicios, el uso de volúmenes para persistir datos, y la configuración de ambientes con hot reload para desarrollo. Ideal para quienes quieren incorporar Docker a su flujo de trabajo desde lo más básico hasta dejar una aplicación lista para correr.',
+      'Docker te permite empaquetar tus aplicaciones en contenedores para que corran igual en cualquier máquina. En este curso desde cero vas a aprender la teoría de los contenedores, la instalación, los comandos esenciales, Docker Compose y el uso de volúmenes para dejar una aplicación lista para correr.',
     youtubeUrls: ['https://www.youtube.com/embed/4Dko5W96WHg'],
     teachedBy: 'HolaMundo',
     acceptDonations: false,
@@ -130,7 +130,7 @@ export const externalCourses: Array<Course> = [
     name: 'Hermes Agent',
     id: 'hermes-agent',
     description:
-      'Hermes Agent es uno de los agentes de IA open source más avanzados y fáciles de usar del momento: tiene memoria persistente, crea sus propias skills, se comunica por Telegram y WhatsApp y puede trabajar de forma autónoma 24/7. En este tutorial vas a aprender a instalarlo, configurarlo y usarlo de forma profesional en un servidor VPS (Hostinger): la configuración completa con OpenAI y Telegram, el Dashboard Web y el Canvas para manejar múltiples agentes, las tareas programadas con Cron Jobs, la generación de proyectos completos (frontend y backend), la integración con GitHub CLI, los perfiles personalizados y Skills, el acceso seguro desde cualquier lugar con Tailscale, y los comandos y trucos más útiles. Ideal para quienes quieren su propio asistente de IA personal que realmente aprende y trabaja por sí solo.',
+      'Hermes Agent es uno de los agentes de IA open source más avanzados y fáciles de usar: tiene memoria persistente, crea sus propias skills y trabaja de forma autónoma 24/7. En este tutorial vas a aprender a instalarlo, configurarlo y usarlo de forma profesional en un servidor VPS para tener tu propio asistente de IA personal que realmente aprende y trabaja por sí solo.',
     youtubeUrls: ['https://www.youtube.com/embed/gpbEfTQ1kLU'],
     teachedBy: 'Fazt',
     acceptDonations: false,
@@ -142,7 +142,7 @@ export const externalCourses: Array<Course> = [
     name: 'Cursor',
     id: 'cursor',
     description:
-      'Cursor es uno de los editores de código con inteligencia artificial más potentes del momento. En este curso completo vas a aprender a usarlo desde cero hasta un nivel avanzado: qué es y en qué se diferencia de VS Code, instalación y configuración inicial, el chat inteligente y el autocompletado avanzado, el Agent Mode vs el Plan Mode, cómo crear proyectos completos solo con prompts, el uso de distintos modelos de IA (Claude, GPT, Gemini, Auto Mode), los MCPs para conectar Cursor con otras herramientas, el testing automático con IA, las reglas y comandos personalizados, y cuándo conviene pagar el plan Pro. Una guía actualizada para integrar la IA en tu flujo de trabajo, tanto si recién empezás como si ya programás.',
+      'Cursor es uno de los editores de código con inteligencia artificial más potentes del momento. En este curso completo vas a aprender a usarlo desde cero hasta un nivel avanzado: el chat inteligente, el autocompletado, el Agent Mode, los distintos modelos de IA y los MCPs para integrar la IA en tu flujo de trabajo.',
     youtubeUrls: ['https://www.youtube.com/embed/bMmVZFd7HA4'],
     teachedBy: 'Fazt',
     acceptDonations: false,
@@ -154,27 +154,13 @@ export const externalCourses: Array<Course> = [
     name: 'Claude Code',
     id: 'claude-code',
     description:
-      'El curso más completo de Claude Code en español. Vas a pasar de no tener nada instalado a construir y desplegar proyectos reales con IA, sin necesidad de saber programar. Cubre el ecosistema de Claude (Chat, Cowork y Claude Code), la instalación desde cero en Mac y Windows, el setup de VS Code, el archivo CLAUDE.md, los Skills, las conexiones MCP, el manejo de contexto y tokens, los hooks, y el deploy a internet con Vercel. Todo con proyectos en vivo: dashboards, landing pages, un Ad Manager con Meta Ads y automatizaciones con n8n.',
+      'El curso más completo de Claude Code en español. Vas a pasar de no tener nada instalado a construir y desplegar proyectos reales con IA, sin necesidad de saber programar, cubriendo la instalación, el archivo CLAUDE.md, los Skills, las conexiones MCP y el deploy a internet con Vercel.',
     youtubeUrls: ['https://www.youtube.com/embed/73eFWU-edO4'],
     teachedBy: 'Benjamín Cordero',
     acceptDonations: false,
     isMadeByCommunity: false,
     date: new Date('2026-01-01'),
     hours: 3,
-  },
-  {
-    name: 'C++',
-    id: 'cpp',
-    description:
-      'C++ es uno de los lenguajes de programación más potentes y utilizados del mundo, presente en videojuegos, sistemas operativos, navegadores y aplicaciones de alto rendimiento. En este curso completo en español vas a aprender desde cero: la instalación y configuración del entorno, los tipos de datos y variables, los operadores, las estructuras de control (condicionales y bucles), las funciones, los arreglos y matrices, los punteros, la memoria dinámica, la programación orientada a objetos (clases, objetos, herencia, polimorfismo) y mucho más. Una guía ideal para quienes quieren dominar uno de los lenguajes fundamentales de la programación.',
-    youtubeUrls: [
-      'https://www.youtube.com/embed/videoseries?list=PLWtYZ2ejMVJlUu1rEHLC0i_oibctkl0Vh',
-    ],
-    teachedBy: 'Programación ATS',
-    acceptDonations: false,
-    isMadeByCommunity: false,
-    date: new Date('2026-01-01'),
-    hours: 20,
   },
 ];
 

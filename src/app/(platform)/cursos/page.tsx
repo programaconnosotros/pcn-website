@@ -59,21 +59,23 @@ const CourseCard = ({ course }: { course: Course }) => {
     <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:min-h-[320px]">
       <div>
         <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-          <CardTitle>{course.name}</CardTitle>
-
-          <div className="flex shrink-0 flex-col items-end gap-1">
+          <div className="flex items-center gap-2">
+            <CardTitle>{course.name}</CardTitle>
             {course.isMadeByCommunity && (
               <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
                 Made in PCN
               </Badge>
             )}
+          </div>
+
+          <div className="shrink-0">
             <Badge variant="outline">
               {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="flex flex-1 flex-col text-sm">{course.description}</CardContent>
+        <CardContent className="mt-2 flex flex-1 flex-col text-sm">{course.description}</CardContent>
       </div>
 
       <CardFooter className="flex flex-col items-center gap-4">
