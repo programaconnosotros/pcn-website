@@ -162,20 +162,6 @@ export const externalCourses: Array<Course> = [
     date: new Date('2026-01-01'),
     hours: 3,
   },
-  {
-    name: 'C++',
-    id: 'cpp',
-    description:
-      'C++ es uno de los lenguajes de programación más potentes y utilizados del mundo, presente en videojuegos, sistemas operativos, navegadores y aplicaciones de alto rendimiento. En este curso completo en español vas a aprender desde cero: la instalación y configuración del entorno, los tipos de datos y variables, los operadores, las estructuras de control (condicionales y bucles), las funciones, los arreglos y matrices, los punteros, la memoria dinámica, la programación orientada a objetos (clases, objetos, herencia, polimorfismo) y mucho más. Una guía ideal para quienes quieren dominar uno de los lenguajes fundamentales de la programación.',
-    youtubeUrls: [
-      'https://www.youtube.com/embed/videoseries?list=PLWtYZ2ejMVJlUu1rEHLC0i_oibctkl0Vh',
-    ],
-    teachedBy: 'Programación ATS',
-    acceptDonations: false,
-    isMadeByCommunity: false,
-    date: new Date('2026-01-01'),
-    hours: 20,
-  },
 ];
 
 export const getCourseById = (courseId: string) =>
