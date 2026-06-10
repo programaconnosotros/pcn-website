@@ -22,12 +22,15 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ArrowUpRight, Book, MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
+import { articles } from './articles';
 
 interface Book {
   id: string;
@@ -333,6 +336,11 @@ const categories = [
   ...Array.from(new Set(books.map((book) => book.category))),
 ];
 
+const articleCategories = [
+  'Todas las categorías',
+  ...Array.from(new Set(articles.map((article) => article.category))),
+];
+
 const categoryStyles: Record<string, string> = {
   Programación:
     'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-500/30',
@@ -346,6 +354,7 @@ const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
+  const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('libros');
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
@@ -360,6 +369,27 @@ const ReadingPage = () => {
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, selectedCategory]);
+
+  const filteredArticles = useMemo(() => {
+    return articles.filter((article) => {
+      const matchesSearch =
+        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory =
+        selectedCategory === 'Todas las categorías' || article.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value as 'libros' | 'articulos');
+    setSelectedCategory('Todas las categorías');
+  };
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center justify-between gap-2">
@@ -403,96 +433,172 @@ const ReadingPage = () => {
           </div>
 
           <div className="mb-6">
-            {/* Filtros */}
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
-              {/* Búsqueda */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por título, autor o descripción..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+            <Tabs value={activeTab} onValueChange={handleTabChange}>
+              <TabsList className="mb-4">
+                <TabsTrigger value="libros">Libros</TabsTrigger>
+                <TabsTrigger value="articulos">Artículos</TabsTrigger>
+              </TabsList>
+
+              {/* Filtros compartidos */}
+              <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
+                {/* Búsqueda */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar por título, autor o descripción..."
+                    className="pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filtro por categoría */}
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full md:w-[200px]">
+                    <SelectValue placeholder="Todas las categorías" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(activeTab === 'libros' ? categories : articleCategories).map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Filtro por categoría */}
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full md:w-[200px]">
-                  <SelectValue placeholder="Todas las categorías" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Grid de libros */}
-            {filteredBooks.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                {filteredBooks.map((book) => (
-                  <Card
-                    key={book.id}
-                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
-                  >
-                    {/* Cover portrait */}
-                    <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
-                      <Image
-                        src={book.cover}
-                        alt={`Portada de ${book.title}`}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="mb-2 text-lg">{book.title}</CardTitle>
-                          <CardDescription className="text-sm">
-                            {book.author}
-                            {book.year && ` (${book.year})`}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          'mt-2 w-fit',
-                          categoryStyles[book.category] ?? defaultCategoryStyle,
-                        )}
+              {/* Tab: Libros */}
+              <TabsContent value="libros">
+                {filteredBooks.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                    {filteredBooks.map((book) => (
+                      <Card
+                        key={book.id}
+                        className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
                       >
-                        {book.category}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent className="flex-1">
-                      <p className="text-sm text-muted-foreground">{book.description}</p>
-                      <p className="mt-3 text-xs text-muted-foreground">
-                        ISBN: <span className={GeistMono.className}>{book.isbn}</span>
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg text-muted-foreground">
-                  No se encontraron libros con los filtros seleccionados.
-                </p>
-              </div>
-            )}
+                        {/* Cover portrait */}
+                        <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
+                          <Image
+                            src={book.cover}
+                            alt={`Portada de ${book.title}`}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        </div>
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <CardTitle className="mb-2 text-lg">{book.title}</CardTitle>
+                              <CardDescription className="text-sm">
+                                {book.author}
+                                {book.year && ` (${book.year})`}
+                              </CardDescription>
+                            </div>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              'mt-2 w-fit',
+                              categoryStyles[book.category] ?? defaultCategoryStyle,
+                            )}
+                          >
+                            {book.category}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent className="flex-1">
+                          <p className="text-sm text-muted-foreground">{book.description}</p>
+                          <p className="mt-3 text-xs text-muted-foreground">
+                            ISBN: <span className={GeistMono.className}>{book.isbn}</span>
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <p className="text-lg text-muted-foreground">
+                      No se encontraron libros con los filtros seleccionados.
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* Tab: Artículos */}
+              <TabsContent value="articulos">
+                {filteredArticles.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                    {filteredArticles.map((article) => (
+                      <Card
+                        key={article.id}
+                        className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+                      >
+                        <CardHeader>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={article.avatar} alt={article.author} />
+                              <AvatarFallback>
+                                {article.author
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join('')
+                                  .slice(0, 2)
+                                  .toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-semibold leading-none">{article.author}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {article.source}
+                                {article.year && ` · ${article.year}`}
+                              </p>
+                            </div>
+                          </div>
+                          <CardTitle className="mt-3 text-lg">{article.title}</CardTitle>
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              'mt-1 w-fit',
+                              categoryStyles[article.category] ?? defaultCategoryStyle,
+                            )}
+                          >
+                            {article.category}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent className="flex flex-1 flex-col justify-between">
+                          <p className="text-sm text-muted-foreground">{article.description}</p>
+                          <Link
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-4 inline-block"
+                          >
+                            <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                              Leer artículo
+                              <ArrowUpRight className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <p className="text-lg text-muted-foreground">
+                      No se encontraron artículos con los filtros seleccionados.
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Banner AgusLogs */}
