@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
-import { Heading3 } from '@/components/ui/heading-3';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -17,6 +16,10 @@ import { Laptop, TvMinimalPlay } from 'lucide-react';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
 import type { Metadata } from 'next';
+
+const allCourses = [...communityCourses, ...externalCourses].sort((a, b) =>
+  a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }),
+);
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -55,12 +58,19 @@ const CourseCard = ({ course }: { course: Course }) => {
   return (
     <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:min-h-[320px]">
       <div>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
           <CardTitle>{course.name}</CardTitle>
 
-          <Badge variant="outline">
-            {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-          </Badge>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            {course.isMadeByCommunity && (
+              <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
+                Made in PCN
+              </Badge>
+            )}
+            <Badge variant="outline">
+              {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+            </Badge>
+          </div>
         </CardHeader>
 
         <CardContent className="flex flex-1 flex-col text-sm">{course.description}</CardContent>
@@ -106,16 +116,8 @@ const Courses = () => (
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {communityCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-
-        <Heading3 className="mt-12">Cursos externos recomendados</Heading3>
-
-        <div className="mb-14 mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {externalCourses.map((course) => (
+        <div className="mb-14 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {allCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
         </div>
