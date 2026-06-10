@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Badge } from '@/components/ui/badge';
 import {
   Carousel,
   CarouselContent,
@@ -15,6 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
 import { getCourseById } from '../courses';
 import type { Metadata } from 'next';
@@ -125,6 +127,28 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
               )}
             </Carousel>
           </div>
+
+          <Card className="mt-6">
+            <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
+              <div className="flex items-center gap-2">
+                <CardTitle>Descripción</CardTitle>
+                {course.isMadeByCommunity && (
+                  <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
+                    Made in PCN
+                  </Badge>
+                )}
+              </div>
+              <div className="shrink-0">
+                <Badge variant="outline">
+                  {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="text-sm">{course.description}</CardContent>
+            <CardFooter className="text-sm text-muted-foreground">
+              Dictado por {course.teachedBy}
+            </CardFooter>
+          </Card>
 
           {!course.isMadeByCommunity && (
             <p className="mt-4 text-sm text-muted-foreground">
