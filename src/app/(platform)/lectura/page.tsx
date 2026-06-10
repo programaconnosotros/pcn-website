@@ -334,9 +334,12 @@ const categories = [
 ];
 
 const categoryStyles: Record<string, string> = {
-  Programación: 'bg-pcnPurple/15 text-pcnPurple border-pcnPurple/30',
-  Arquitectura: 'bg-pcnBlue/15 text-pcnBlue border-pcnBlue/30',
-  Gestión: 'bg-pcnGreen/15 text-pcnGreen-700 border-pcnGreen/40',
+  Programación:
+    'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-500/30',
+  Arquitectura:
+    'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-500/30',
+  Gestión:
+    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
 };
 const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 
