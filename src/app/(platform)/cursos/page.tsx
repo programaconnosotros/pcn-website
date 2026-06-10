@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Laptop, TvMinimalPlay } from 'lucide-react';
+import { ExternalLink, Laptop, TvMinimalPlay } from 'lucide-react';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
 import type { Metadata } from 'next';
@@ -46,14 +46,22 @@ export const metadata: Metadata = {
 };
 
 const CourseCard = ({ course }: { course: Course }) => {
-  const ViewButton = () => (
-    <Link href={`/cursos/${course.id}`} className="w-full">
-      <Button className="flex w-full flex-row items-center gap-2">
-        Ver curso
-        <TvMinimalPlay className="h-5 w-5" />
-      </Button>
-    </Link>
-  );
+  const ViewButton = () =>
+    course.websiteUrl ? (
+      <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer" className="w-full">
+        <Button className="flex w-full flex-row items-center gap-2">
+          Ver curso
+          <ExternalLink className="h-5 w-5" />
+        </Button>
+      </a>
+    ) : (
+      <Link href={`/cursos/${course.id}`} className="w-full">
+        <Button className="flex w-full flex-row items-center gap-2">
+          Ver curso
+          <TvMinimalPlay className="h-5 w-5" />
+        </Button>
+      </Link>
+    );
 
   return (
     <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:min-h-[320px]">
@@ -69,9 +77,13 @@ const CourseCard = ({ course }: { course: Course }) => {
           </div>
 
           <div className="shrink-0">
-            <Badge variant="outline">
-              {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-            </Badge>
+            {course.websiteUrl ? (
+              <Badge variant="outline">Interactivo</Badge>
+            ) : (
+              <Badge variant="outline">
+                {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+              </Badge>
+            )}
           </div>
         </CardHeader>
 
@@ -118,7 +130,7 @@ const Courses = () => (
           </div>
         </div>
 
-        <div className="mb-14 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mb-14 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {allCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
