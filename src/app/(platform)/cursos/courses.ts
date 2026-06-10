@@ -114,6 +114,18 @@ export const externalCourses: Array<Course> = [
     date: new Date('2024-01-12'),
     hours: 7,
   },
+  {
+    name: 'Claude Code',
+    id: 'claude-code',
+    description:
+      'El curso más completo de Claude Code en español. Vas a pasar de no tener nada instalado a construir y desplegar proyectos reales con IA, sin necesidad de saber programar. Cubre el ecosistema de Claude (Chat, Cowork y Claude Code), la instalación desde cero en Mac y Windows, el setup de VS Code, el archivo CLAUDE.md, los Skills, las conexiones MCP, el manejo de contexto y tokens, los hooks, y el deploy a internet con Vercel. Todo con proyectos en vivo: dashboards, landing pages, un Ad Manager con Meta Ads y automatizaciones con n8n.',
+    youtubeUrls: ['https://www.youtube.com/embed/73eFWU-edO4'],
+    teachedBy: 'Benjamín Cordero',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
+    hours: 3,
+  },
 ];
 
 export const getCourseById = (courseId: string) =>
