@@ -38,6 +38,15 @@ interface Title {
   poster: string;
 }
 
+const featuredOrder = [
+  'Silicon Valley',
+  'Mr. Robot',
+  'The Social Network',
+  'Jobs',
+  'Snowden',
+  'The Imitation Game',
+];
+
 const titles: Title[] = [
   {
     id: '1',
@@ -226,7 +235,14 @@ const titles: Title[] = [
     year: 2022,
     poster: '/series-y-peliculas/we-crashed.jpg',
   },
-].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })) as Title[];
+].sort((a, b) => {
+  const aIndex = featuredOrder.indexOf(a.title);
+  const bIndex = featuredOrder.indexOf(b.title);
+  if (aIndex !== -1 || bIndex !== -1) {
+    return (aIndex === -1 ? Infinity : aIndex) - (bIndex === -1 ? Infinity : bIndex);
+  }
+  return a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
+}) as Title[];
 
 const genres = ['Todos los géneros', ...Array.from(new Set(titles.map((t) => t.genre)))];
 
