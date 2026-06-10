@@ -118,7 +118,7 @@ const Courses = () => (
           </div>
         </div>
 
-        <div className="mb-14 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mb-14 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {allCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
