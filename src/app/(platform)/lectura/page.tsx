@@ -26,6 +26,8 @@ import { Book, MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
+import { GeistMono } from 'geist/font/mono';
+import { cn } from '@/lib/utils';
 
 interface Book {
   id: string;
@@ -265,6 +267,13 @@ const categories = [
   ...Array.from(new Set(books.map((book) => book.category))),
 ];
 
+const categoryStyles: Record<string, string> = {
+  Programación: 'bg-pcnPurple/15 text-pcnPurple border-pcnPurple/30',
+  Arquitectura: 'bg-pcnBlue/15 text-pcnBlue border-pcnBlue/30',
+  Gestión: 'bg-pcnGreen/15 text-pcnGreen-700 border-pcnGreen/40',
+};
+const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
+
 const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
@@ -391,13 +400,21 @@ const ReadingPage = () => {
                           </CardDescription>
                         </div>
                       </div>
-                      <Badge variant="secondary" className="mt-2 w-fit">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          'mt-2 w-fit',
+                          categoryStyles[book.category] ?? defaultCategoryStyle,
+                        )}
+                      >
                         {book.category}
                       </Badge>
                     </CardHeader>
                     <CardContent className="flex-1">
                       <p className="text-sm text-muted-foreground">{book.description}</p>
-                      <p className="mt-3 text-xs text-muted-foreground">ISBN: {book.isbn}</p>
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        ISBN: <span className={GeistMono.className}>{book.isbn}</span>
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
