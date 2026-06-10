@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Book, MessageCircle, Search, X } from 'lucide-react';
+import { ArrowUpRight, Book, MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
@@ -496,6 +496,31 @@ const ReadingPage = () => {
               </div>
             )}
           </div>
+
+          {/* Banner AgusLogs */}
+          <Card className="flex flex-col gap-4 border border-pcnPurple/30 bg-pcnPurple/5 p-6 sm:flex-row sm:items-center sm:justify-between dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.3)]">
+            <div className="flex items-center gap-4">
+              <Image
+                src="/aguslogs-logo.png"
+                alt="AgusLogs"
+                width={64}
+                height={64}
+                className="rounded-lg"
+              />
+              <div>
+                <p className="font-semibold">AgusLogs</p>
+                <p className="text-sm text-muted-foreground">
+                  Aprendé y crecé como ingeniero de software.
+                </p>
+              </div>
+            </div>
+            <Link href="https://aguslogs.com/" target="_blank" rel="noopener noreferrer">
+              <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                Ir a AgusLogs
+                <ArrowUpRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
         </div>
       </div>
     </>
