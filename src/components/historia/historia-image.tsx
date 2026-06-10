@@ -9,7 +9,7 @@ interface HistoriaImageProps {
   className?: string;
 }
 
-export function HistoriaImage({ src, alt, className = 'max-w-full rounded-lg' }: HistoriaImageProps) {
+export function HistoriaImage({ src, alt, className = 'h-auto max-w-full self-center rounded-lg' }: HistoriaImageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
