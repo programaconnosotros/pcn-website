@@ -403,8 +403,6 @@ const ReadingPage = () => {
           </div>
 
           <div className="mb-6">
-            <h3 className="mb-4 text-xl font-semibold">Lecturas recomendadas</h3>
-
             {/* Filtros */}
             <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
               {/* Búsqueda */}
