@@ -108,6 +108,7 @@ const getRecursosSubItems = () => [
   { title: 'Influencers', url: '/influencers' },
   { title: 'Lectura', url: '/lectura' },
   { title: 'Cursos', url: '/cursos' },
+  { title: 'Series y Películas', url: '/series-y-peliculas' },
   { title: 'Software útil', url: '/software-util' },
   { title: 'Música', url: '/music' },
   { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
