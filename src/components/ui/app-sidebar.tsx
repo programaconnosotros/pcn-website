@@ -149,6 +149,11 @@ const socialNetworks = [
 const getComunidadItems = () => {
   return [
     {
+      title: 'Recursos',
+      icon: Library,
+      items: getRecursosSubItems(),
+    },
+    {
       title: 'Historia',
       url: '/historia',
       icon: ScrollText,
@@ -162,11 +167,6 @@ const getComunidadItems = () => {
       title: 'Redes',
       icon: Share2,
       items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
-    },
-    {
-      title: 'Recursos',
-      icon: Library,
-      items: getRecursosSubItems(),
     },
   ];
 };
