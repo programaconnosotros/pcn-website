@@ -351,6 +351,14 @@ const categoryStyles: Record<string, string> = {
 };
 const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 
+const formatArticleDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
 const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
@@ -557,8 +565,7 @@ const ReadingPage = () => {
                             <div>
                               <p className="text-sm font-semibold leading-none">{article.author}</p>
                               <p className="text-xs text-muted-foreground">
-                                {article.source}
-                                {article.year && ` · ${article.year}`}
+                                {article.source} · {formatArticleDate(article.date)}
                               </p>
                             </div>
                           </div>
