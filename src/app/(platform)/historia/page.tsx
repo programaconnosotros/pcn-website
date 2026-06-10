@@ -121,7 +121,7 @@ const PCNStory = () => (
               <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
             </div>
             <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-              Historia de programaConNosotros
+              Historia
             </span>
           </Heading2>
         </div>
