@@ -2,12 +2,13 @@ export type Course = {
   id: string;
   name: string;
   description: string;
-  youtubeUrls: Array<string>;
+  youtubeUrls?: Array<string>;
+  websiteUrl?: string;
   teachedBy: string;
   acceptDonations: boolean;
   isMadeByCommunity: boolean;
   date: Date;
-  hours: number;
+  hours?: number;
 };
 
 export const communityCourses: Array<Course> = [
@@ -161,6 +162,17 @@ export const externalCourses: Array<Course> = [
     isMadeByCommunity: false,
     date: new Date('2026-01-01'),
     hours: 3,
+  },
+  {
+    name: 'Next.js',
+    id: 'nextjs',
+    description:
+      'Aprendé Next.js, el framework de React para construir aplicaciones web full-stack. Es el curso oficial e interactivo: vas leyendo y practicando a tu propio ritmo mientras construís una aplicación real, cubriendo routing, renderizado, obtención de datos y más.',
+    websiteUrl: 'https://nextjs.org/learn',
+    teachedBy: 'Vercel',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
   },
 ];
 

@@ -9,6 +9,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -18,6 +19,7 @@ import {
 } from '@/components/ui/carousel';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heading2 } from '@/components/ui/heading-2';
+import { ExternalLink } from 'lucide-react';
 import { getCourseById } from '../courses';
 import type { Metadata } from 'next';
 
@@ -100,33 +102,44 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
             <Heading2 className="m-0">{course.name}</Heading2>
           </div>
 
-          <div className={`mt-6${course.youtubeUrls.length > 1 ? ' px-12' : ''}`}>
-            <Carousel>
-              <CarouselContent>
-                {course.youtubeUrls.map((classUrl) => (
-                  <CarouselItem key={classUrl}>
-                    <div className="w-full" style={{ aspectRatio: '16/9' }}>
-                      <iframe
-                        className="h-full w-full"
-                        src={classUrl}
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+          {course.websiteUrl ? (
+            <div className="mt-6">
+              <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
+                <Button className="flex flex-row items-center gap-2">
+                  Ir al curso
+                  <ExternalLink className="h-5 w-5" />
+                </Button>
+              </a>
+            </div>
+          ) : (
+            <div className={`mt-6${course.youtubeUrls && course.youtubeUrls.length > 1 ? ' px-12' : ''}`}>
+              <Carousel>
+                <CarouselContent>
+                  {course.youtubeUrls?.map((classUrl) => (
+                    <CarouselItem key={classUrl}>
+                      <div className="w-full" style={{ aspectRatio: '16/9' }}>
+                        <iframe
+                          className="h-full w-full"
+                          src={classUrl}
+                          title="YouTube video player"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-              {course.youtubeUrls.length > 1 && (
-                <>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </>
-              )}
-            </Carousel>
-          </div>
+                {course.youtubeUrls && course.youtubeUrls.length > 1 && (
+                  <>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </>
+                )}
+              </Carousel>
+            </div>
+          )}
 
           <Card className="mt-6">
             <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
@@ -138,11 +151,13 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
                   </Badge>
                 )}
               </div>
-              <div className="shrink-0">
-                <Badge variant="outline">
-                  {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-                </Badge>
-              </div>
+              {!course.websiteUrl && course.hours !== undefined && (
+                <div className="shrink-0">
+                  <Badge variant="outline">
+                    {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+                  </Badge>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="text-sm">{course.description}</CardContent>
             <CardFooter className="text-sm text-muted-foreground">
@@ -150,7 +165,7 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
             </CardFooter>
           </Card>
 
-          {!course.isMadeByCommunity && (
+          {!course.isMadeByCommunity && !course.websiteUrl && (
             <p className="mt-4 text-sm text-muted-foreground">
               Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
               en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
