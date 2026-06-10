@@ -24,6 +24,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Book, MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useMemo } from 'react';
 
 interface Book {
@@ -33,6 +34,8 @@ interface Book {
   category: string;
   description: string;
   year?: number;
+  cover: string;
+  isbn: string;
 }
 
 const books: Book[] = [
@@ -44,6 +47,8 @@ const books: Book[] = [
     description:
       'Un manual de artesanía de software ágil que te enseñará a escribir código limpio y mantenible.',
     year: 2008,
+    cover: '/lectura/clean-code.jpg',
+    isbn: '0132350882',
   },
   {
     id: '2',
@@ -53,6 +58,8 @@ const books: Book[] = [
     description:
       'Un enfoque práctico para convertirse en un programador más efectivo y productivo.',
     year: 1999,
+    cover: '/lectura/the-pragmatic-programmer.jpg',
+    isbn: '020161622X',
   },
   {
     id: '3',
@@ -62,6 +69,8 @@ const books: Book[] = [
     description:
       'Patrones de diseño reutilizables para resolver problemas comunes en el diseño de software.',
     year: 1994,
+    cover: '/lectura/design-patterns.jpg',
+    isbn: '0201633612',
   },
   {
     id: '4',
@@ -71,6 +80,8 @@ const books: Book[] = [
     description:
       'Mejora del diseño del código existente, mostrando cómo mejorar la estructura del código sin cambiar su comportamiento.',
     year: 1999,
+    cover: '/lectura/refactoring.jpg',
+    isbn: '0134757599',
   },
   {
     id: '5',
@@ -79,6 +90,8 @@ const books: Book[] = [
     category: 'Programación',
     description:
       'Serie de libros que profundiza en los mecanismos internos del lenguaje JavaScript.',
+    cover: '/lectura/you-dont-know-js.jpg',
+    isbn: '1491924462',
   },
   {
     id: '6',
@@ -88,6 +101,8 @@ const books: Book[] = [
     description:
       'Ensayos sobre ingeniería de software que explican por qué agregar más personas a un proyecto retrasado lo retrasa aún más.',
     year: 1975,
+    cover: '/lectura/the-mythical-man-month.jpg',
+    isbn: '0201835959',
   },
   {
     id: '7',
@@ -97,6 +112,8 @@ const books: Book[] = [
     description:
       'Una guía práctica para la construcción de software que cubre todo el proceso de desarrollo.',
     year: 1993,
+    cover: '/lectura/code-complete.jpg',
+    isbn: '0735619670',
   },
   {
     id: '8',
@@ -106,8 +123,142 @@ const books: Book[] = [
     description:
       'Un enfoque para el desarrollo de software complejo conectando la implementación a un modelo en evolución.',
     year: 2003,
+    cover: '/lectura/domain-driven-design.jpg',
+    isbn: '0321125215',
   },
-];
+  {
+    id: '9',
+    title: 'Mastering Event-Driven Microservices on AWS',
+    author: 'Sheen Brisals, Luke Hedger',
+    category: 'Arquitectura',
+    description:
+      'Una guía práctica para diseñar y construir arquitecturas de microservicios orientadas a eventos utilizando los servicios nativos de AWS.',
+    year: 2024,
+    cover: '/lectura/mastering-event-driven-microservices.jpg',
+    isbn: 'B0DF49L9QJ',
+  },
+  {
+    id: '10',
+    title: 'Mastering Serverless Computing with AWS Lambda',
+    author: 'Marcia Villalba',
+    category: 'Arquitectura',
+    description:
+      'Una guía completa para dominar el cómputo serverless con AWS Lambda, abarcando patrones, rendimiento y mejores prácticas de producción.',
+    year: 2024,
+    cover: '/lectura/mastering-serverless-computing.jpg',
+    isbn: 'B0DN6TJ323',
+  },
+  {
+    id: '11',
+    title: '97 Things Every Software Architect Should Know',
+    author: 'Richard Monson-Haefel (ed.)',
+    category: 'Arquitectura',
+    description:
+      'Una colección de consejos prácticos de los arquitectos de software más experimentados del mundo, organizados en 97 lecciones esenciales.',
+    year: 2009,
+    cover: '/lectura/97-things-software-architect.jpg',
+    isbn: '059652269X',
+  },
+  {
+    id: '12',
+    title: 'Balancing Coupling in Software Design',
+    author: 'Vladislav Khononov',
+    category: 'Arquitectura',
+    description:
+      'Un análisis profundo del acoplamiento en el diseño de software, con estrategias para balancearlo y construir sistemas más mantenibles y evolutivos.',
+    year: 2023,
+    cover: '/lectura/balancing-coupling.jpg',
+    isbn: '0137353480',
+  },
+  {
+    id: '13',
+    title: 'Patterns for API Design',
+    author: 'Olaf Zimmermann, Mirko Stocker, Daniel Lübke, Uwe Zdun, Cesare Pautasso',
+    category: 'Arquitectura',
+    description:
+      'Un catálogo de patrones probados para diseñar APIs robustas, comprensibles y evolutivas, con énfasis en comunicación entre servicios.',
+    year: 2022,
+    cover: '/lectura/patterns-of-api-design.jpg',
+    isbn: '0137670109',
+  },
+  {
+    id: '14',
+    title: 'Principles of Web API Design',
+    author: 'James Higginbotham',
+    category: 'Arquitectura',
+    description:
+      'Un enfoque sistemático para diseñar APIs web de alta calidad, cubriendo modelado de dominio, contratos y gestión del ciclo de vida.',
+    year: 2021,
+    cover: '/lectura/principles-web-api-design.jpg',
+    isbn: '0137355637',
+  },
+  {
+    id: '15',
+    title: 'Strategic Monoliths and Microservices',
+    author: 'Vaughn Vernon, Tomasz Jaskula',
+    category: 'Arquitectura',
+    description:
+      'Una guía estratégica para decidir cuándo usar monolitos o microservicios, con énfasis en Domain-Driven Design y contextos acotados.',
+    year: 2022,
+    cover: '/lectura/strategic-monoliths-microservices.jpg',
+    isbn: '0137355467',
+  },
+  {
+    id: '16',
+    title: 'Continuous Architecture in Practice',
+    author: 'Murat Erder, Pierre Pureur, Eoin Woods',
+    category: 'Arquitectura',
+    description:
+      'Un enfoque para practicar la arquitectura de software de forma continua en equipos ágiles, integrando decisiones de diseño en el flujo de desarrollo.',
+    year: 2021,
+    cover: '/lectura/continuous-architecture.jpg',
+    isbn: '0136523560',
+  },
+  {
+    id: '17',
+    title: 'Adaptive Systems with Domain-Driven Design, Wardley Mapping, and Team Topologies',
+    author: 'Michael Plöd, Christian Stettler, Alban Frei, Nick Tune',
+    category: 'Arquitectura',
+    description:
+      'Combina Domain-Driven Design, Wardley Maps y Team Topologies para construir organizaciones y sistemas de software verdaderamente adaptativos.',
+    year: 2022,
+    cover: '/lectura/adaptive-systems-ddd.jpg',
+    isbn: '0137393032',
+  },
+  {
+    id: '18',
+    title: 'Test Driven Development: By Example',
+    author: 'Kent Beck',
+    category: 'Programación',
+    description:
+      'El libro fundacional del TDD: muestra paso a paso cómo escribir tests antes que el código para producir software más limpio y con menos defectos.',
+    year: 2002,
+    cover: '/lectura/test-driven-development.jpg',
+    isbn: '0321146530',
+  },
+  {
+    id: '19',
+    title: 'Modern Software Engineering',
+    author: 'David Farley',
+    category: 'Programación',
+    description:
+      'Un manifiesto para la ingeniería de software moderna, que integra entrega continua, TDD y principios de diseño para construir software de calidad.',
+    year: 2021,
+    cover: '/lectura/modern-software-engineering.jpg',
+    isbn: '0137314914',
+  },
+  {
+    id: '20',
+    title: 'Designing Data-Intensive Applications',
+    author: 'Martin Kleppmann',
+    category: 'Arquitectura',
+    description:
+      'Una guía profunda sobre los principios y prácticas detrás de los sistemas de datos confiables, escalables y mantenibles.',
+    year: 2017,
+    cover: '/lectura/designing-data-intensive.jpg',
+    isbn: 'B0FWY1P6PS',
+  },
+].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
   'Todas las categorías',
@@ -220,6 +371,16 @@ const ReadingPage = () => {
                     key={book.id}
                     className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
                   >
+                    {/* Cover portrait */}
+                    <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
+                      <Image
+                        src={book.cover}
+                        alt={`Portada de ${book.title}`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -236,6 +397,7 @@ const ReadingPage = () => {
                     </CardHeader>
                     <CardContent className="flex-1">
                       <p className="text-sm text-muted-foreground">{book.description}</p>
+                      <p className="mt-3 text-xs text-muted-foreground">ISBN: {book.isbn}</p>
                     </CardContent>
                   </Card>
                 ))}
