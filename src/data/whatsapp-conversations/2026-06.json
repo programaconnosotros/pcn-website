@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Minimax M3 vs 2.7: relación precio-calidad y nuevos modelos",
+    "date": "2026-06-01",
+    "summary": "El grupo comentó la llegada de Minimax M3 frente al 2.7 que varios venían usando. Se destacó la excelente relación precio-calidad del 2.7 (peticiones prácticamente ilimitadas y CLI con imágenes, audio, video y research por 10 USD), mientras que el nuevo modelo subió de precio. Facundo Padilla mencionó que seguiría con el 2.7 hasta evaluar el 3.0."
+  },
+  {
+    "title": "Costos de re-reviews con bots de PR y alternativas más económicas",
+    "date": "2026-06-02",
+    "summary": "Agustín Sánchez planteó el problema de los costos mensuales del code review automatizado, sobre todo por las re-reviews que llegan de a pocos comentarios con Bugbot, encareciendo cada iteración. Facundo García Martoni recomendó combinar Bugbot, CodeRabbit y Qodo (este último con plan free de por vida y reviews de buena calidad). También se comentó Greptile como opción, el cambio de GitHub Copilot a un modelo de facturación por uso y el anuncio de Nvidia de un SoC con GPU y CPU en arquitectura ARM con memoria unificada para Windows."
+  },
+  {
+    "title": "Guardrails para chatbots: validar input, output y contexto RAG",
+    "date": "2026-06-03",
+    "summary": "Alejo contó cómo implementó seguridad en los chatbots de su plataforma con guardrails que validan el input del usuario, el output del agente y el contexto recuperado por RAG, además de bloquear temas y marcas de la competencia. El grupo recomendó OpenAI Guardrails, el enfoque de LangChain/LangGraph, expresiones regulares revisadas luego por un modelo barato para descartar falsos positivos, y la cheat sheet de prevención de prompt injection de OWASP como referencia."
+  },
+  {
+    "title": "Arquitectura multitenant para un SaaS de estudios jurídicos",
+    "date": "2026-06-04",
+    "summary": "Santino, estudiante de segundo año de ingeniería, pidió consejo para diseñar un SaaS donde cada estudio jurídico tenga su propia organización con abogados, clientes, casos, documentos y tareas. El grupo lo orientó hacia los distintos enfoques de arquitecturas multitenant según el nivel de escalado requerido, sugirió evaluar o forkear un sistema open source existente para aportar valor desde el inicio, y recomendó definir primero el objetivo (aprender vs salir a vender) antes de sobre-diseñar la infraestructura."
+  },
+  {
+    "title": "Buenas prácticas de seguridad en software y el Top 10 de OWASP",
+    "date": "2026-06-04",
+    "summary": "Marcelo Álvarez preguntó cómo garantizar que un software sea seguro. El consenso fue que ningún software es 100% seguro, pero que conviene apoyarse en el Top 10 de OWASP 2025 para cubrir las vulnerabilidades más comunes, evitar hardcodear o exponer credenciales, proteger rutas contra IDOR y path traversal, y tener especial cuidado con la instalación de dependencias de terceros."
+  },
+  {
+    "title": "Claude vs Codex para programar y Composer para implementar planes",
+    "date": "2026-06-04",
+    "summary": "Ante la consulta de Tobías Paz Posse sobre qué herramienta elegir, el consenso fue Codex si el presupuesto supera los 100 USD y Cursor en caso contrario. Para implementar planes ya definidos, Composer salió bien parado por su precio y velocidad, sobre todo en backend y cuanto más detallada sea la tarea entregada. Leandro Contrera reforzó el enfoque TDD combinado con las Matt Pocock skills para obtener código que compila y pasa los tests desde el primer intento."
+  },
+  {
+    "title": "Opus 4.8 max fast: más rápido pero olvidadizo con los detalles",
+    "date": "2026-06-05",
+    "summary": "Facundo Padilla reportó que Opus 4.8 en modo max fast se olvida detalles con facilidad y hay que corregirlo más seguido que con versiones anteriores, pese a tener una ventana de contexto de un millón de tokens. Leandro Contrera sugirió mantenerse por debajo del 50% de contexto por tarea como mitigación para que el modelo no pierda de vista los requerimientos iniciales."
+  },
+  {
+    "title": "Docling vs MarkItDown para convertir documentos a Markdown",
+    "date": "2026-06-05",
+    "summary": "Facundo Padilla comparó Docling y MarkItDown para convertir documentos a Markdown: MarkItDown resultó más rápida, mientras que Docling se conecta a Hugging Face y usa modelos de IA gratuitos para mejorar la calidad del resultado. Facundo García Martoni anotó MarkItDown de Microsoft para probarla. Ninguna de las dos terminó sirviendo para el caso de uso puntual que tenía Padilla."
+  },
+  {
+    "title": "Skills y frameworks recomendados para SDD y front-end",
+    "date": "2026-06-05",
+    "summary": "Ante la consulta de qué flujos usar para spec-driven development y proyectos de front-end, los miembros recomendaron grill-with-docs de Matt Pocock para armar PRDs, gsd para ejecutar el plan y superpowers como skill complementaria. Facundo Padilla sumó la práctica de volcar toda la documentación relevante a NotebookLM para tenerla accesible desde cualquier herramienta."
+  },
+  {
+    "title": "Finanzas personales con enfoque pro-agéntico usando Hermes",
+    "date": "2026-06-05",
+    "summary": "Facundo García Martoni describió su primer proyecto serio con Hermes: trackear sus finanzas personales con un enfoque pro-agéntico, volcando todos los gastos e ingresos como logs sin estructurarlos de antemano y dándoles forma dinámicamente al momento de querer realizar un análisis. Facundo Padilla planteó la idea de conectar Hermes a sus billeteras digitales para automatizar el seguimiento, con la seguridad y la falta de APIs públicas como principales obstáculos."
+  },
+  {
+    "title": "GUIs para PostgreSQL: DataGrip, DBeaver, pgAdmin y Beekeeper",
+    "date": "2026-06-05",
+    "summary": "Leandro Contrera preguntó qué interfaz gráfica usar para PostgreSQL y el grupo compartió sus preferencias: Iñaki Fernando Lozano recomendó DataGrip para todas las bases de datos, Facundo Padilla prefería pgAdmin, Marcelo Núñez usaba DBeaver, y Mario Radich destacó Beekeeper Studio por ser open source y multiplataforma. Jeremías Moreno Ivanoff señaló un bug de zona horaria de DBeaver al instalar drivers de Postgres desde Argentina que requería tocar archivos de la instalación manualmente."
+  }
+]
