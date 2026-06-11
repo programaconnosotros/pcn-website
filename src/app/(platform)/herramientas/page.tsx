@@ -612,6 +612,17 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     type: 'library',
   },
   {
+    name: 'AI SDK',
+    description:
+      'Kit de herramientas TypeScript de Vercel para construir aplicaciones y agentes con IA. Ofrece una API unificada para trabajar con distintos modelos de lenguaje, con soporte de streaming, tool calling y generación de objetos estructurados.',
+    logo: '/software-logos/ai-sdk.webp',
+    tags: ['IA', 'TypeScript', 'Vercel', 'LLM', 'Streaming', 'Agentes'],
+    category: 'Librería',
+    website: 'https://ai-sdk.dev',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
     name: 'Jest',
     description:
       'Framework de testing para JavaScript con foco en la simplicidad. Incluye test runner, assertions, mocks y cobertura de código integrados. Ampliamente adoptado en el ecosistema React.',
@@ -621,6 +632,31 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://jestjs.io',
     pricing: 'free',
     type: 'library',
+    usedHere: true,
+  },
+  {
+    name: 'Playwright',
+    description:
+      'Framework de testing end-to-end de Microsoft para aplicaciones web. Permite automatizar navegadores (Chromium, Firefox, WebKit) con una API moderna y confiable. Soporta múltiples lenguajes y es completamente gratuito y open source.',
+    logo: '/software-logos/playwright.webp',
+    tags: ['Testing', 'E2E', 'Automatización', 'Browser', 'Microsoft'],
+    category: 'Librería',
+    website: 'https://playwright.dev',
+    pricing: 'free',
+    type: 'library',
+    usedHere: true,
+  },
+  {
+    name: 'Portless',
+    description:
+      'Herramienta CLI que reemplaza los números de puerto con URLs nombradas en `.localhost` para el desarrollo local. Ideal para trabajar con múltiples servicios o agentes sin recordar puertos.',
+    logo: '/software-logos/portless.webp',
+    tags: ['CLI', 'Dev tools', 'HTTPS', 'Desarrollo local', 'Vercel'],
+    category: 'Librería',
+    website: 'https://portless.sh',
+    pricing: 'free',
+    type: 'library',
+    usedHere: true,
   },
   {
     name: 'Django',
