@@ -23,6 +23,7 @@ import {
   Send,
   Share2,
   Users,
+  Wrench,
   Youtube,
 } from 'lucide-react';
 import { NavMain } from '@/components/ui/nav-main';
@@ -110,11 +111,11 @@ const getRecursosItems = () => [
   { title: 'Cursos', url: '/cursos', icon: GraduationCap },
   { title: 'Lectura', url: '/lectura', icon: BookOpen },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
+  { title: 'Herramientas', url: '/herramientas', icon: Wrench },
   {
     title: 'Más recursos',
     icon: Library,
     items: [
-      { title: 'Herramientas', url: '/herramientas' },
       { title: 'Influencers', url: '/influencers' },
       { title: 'Música', url: '/music' },
       { title: 'Series y películas', url: '/series-y-peliculas' },
