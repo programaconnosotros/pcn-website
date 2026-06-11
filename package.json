@@ -11,7 +11,8 @@
     "docker:up:dettached": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "prebuild": "prisma generate",
-    "dev": "next dev",
+    "dev": "portless run next dev",
+    "dev:docker": "next dev",
     "dev:portless": "portless run next dev",
     "build": "next build",
     "start": "next start",
@@ -95,7 +96,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.60.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^20",
+    "@types/node": "^24",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -117,6 +118,9 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.22.4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a",
   "pnpm": {

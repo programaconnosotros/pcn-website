@@ -1,4 +1,4 @@
-FROM node:21.7.3
+FROM node:24.16.0
 WORKDIR /app
 COPY . .
 RUN npm install -g pnpm@9.4.0
