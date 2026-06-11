@@ -94,6 +94,54 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
   <img src="./public/prisma-studio-screenshot.webp" alt="Screenshot del Prisma Studio"/>
 
+## 🌿 Trabajo con worktrees (Claude Code)
+
+Si usás `claude -w` para abrir sesiones de Claude Code, cada worktree recibe automáticamente su propia base de datos Postgres aislada.
+
+### Cómo funciona
+
+- Al iniciar una sesión (`claude -w`), el hook `SessionStart` ejecuta `scripts/setup-worktree-db.sh` automáticamente.  
+  El script:
+  1. Deriva el nombre de la base a partir del directorio del worktree (ej. `delightful-skipping-comet` → `pcn_delightful_skipping_comet`).
+  2. Crea esa base dentro del contenedor `pcn-db` compartido.
+  3. Genera el `.env` del worktree copiando el del checkout principal y apuntando `DATABASE_URL`/`DIRECT_URL` a la nueva base.
+  4. Instala dependencias si no existen (`node_modules/`).
+  5. Aplica migraciones y ejecuta el seed con datos de prueba.
+
+- Al salir de la sesión y elegir **"remove worktree"**, el hook `WorktreeRemove` ejecuta `scripts/drop-worktree-db.sh` automáticamente y elimina la base de datos del worktree.
+
+Todo esto requiere que el contenedor `pcn-db` esté corriendo:
+
+```bash
+pnpm docker:up:dettached
+```
+
+### Comandos manuales
+
+Si necesitás provisionar o limpiar un worktree a mano:
+
+```bash
+# Crear la base, .env, migraciones y seed para el worktree actual
+pnpm setup-worktree-db
+
+# Eliminar la base del worktree actual (o de uno en particular)
+pnpm drop-worktree-db
+pnpm drop-worktree-db /ruta/al/worktree
+```
+
+### Servidor de desarrollo con múltiples worktrees
+
+Cuando corrés varios worktrees al mismo tiempo, cada uno pelea por el puerto `:3000`. Para evitarlo, usá `portless`, que ya está configurado:
+
+```bash
+pnpm dev:portless
+```
+
+Esto levanta el servidor en `https://pcn.localhost` asignando automáticamente un puerto interno libre (4000–4999). La primera vez genera un certificado local y lo agrega al sistema de confianza (requiere `sudo` en macOS/Linux).
+
+> [!NOTE]
+> El `.env` de cada worktree es generado automáticamente y **no se versiona** (está en `.gitignore`). Si el worktree no tiene `.env`, ejecutá `pnpm setup-worktree-db` o iniciá una nueva sesión de Claude Code.
+
 ## 📧 Emails en desarrollo local
 
 El stack de Docker incluye [MailHog](https://github.com/mailhog/MailHog), un servidor SMTP local que captura todos los emails que envía la aplicación sin entregarlos realmente. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin necesitar credenciales de Gmail.
