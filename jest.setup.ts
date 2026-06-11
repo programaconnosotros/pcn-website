@@ -29,10 +29,12 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-// cookies() is async in Next.js 15+; individual tests call mockCookies() from
-// src/test/cookies.ts to configure its resolved value per scenario.
+// cookies() and headers() are async in Next.js 15+; individual tests call
+// mockCookies() / mockHeaders() from src/test/cookies.ts|headers.ts to
+// configure their resolved values per scenario.
 jest.mock('next/headers', () => ({
   cookies: jest.fn(),
+  headers: jest.fn(),
 }));
 
 // ─── Reset mocks between tests ───────────────────────────────────────────────
