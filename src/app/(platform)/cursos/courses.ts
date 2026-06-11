@@ -174,6 +174,17 @@ export const externalCourses: Array<Course> = [
     isMadeByCommunity: false,
     date: new Date('2026-01-01'),
   },
+  {
+    name: 'Patterns.dev',
+    id: 'patterns-dev',
+    description:
+      'Patterns.dev es una guía gratuita sobre patrones de diseño y optimización del rendimiento para construir aplicaciones web modernas. Cubre patrones de diseño clásicos, patrones de renderizado y de rendimiento aplicados a JavaScript vanilla y React, ideal para mejorar la arquitectura de tus aplicaciones.',
+    websiteUrl: 'https://www.patterns.dev/',
+    teachedBy: 'Lydia Hallie & Addy Osmani',
+    acceptDonations: false,
+    isMadeByCommunity: false,
+    date: new Date('2026-01-01'),
+  },
 ];
 
 export const getCourseById = (courseId: string) =>
