@@ -155,4 +155,52 @@ export const articles: Article[] = [
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-01-05',
   },
+  {
+    id: '13',
+    title: 'The golden rules of agent-first product engineering',
+    author: 'Jina Yoon',
+    source: 'posthog.com',
+    category: 'Producto',
+    description:
+      'Cinco principios para construir productos donde los agentes de IA son la interfaz principal y no un agregado, basados en cómo PostHog reconstruyó su arquitectura de IA dos veces.',
+    url: 'https://newsletter.posthog.com/p/the-golden-rules-of-agent-first-product',
+    avatar: 'https://github.com/jinayoon.png?size=128',
+    date: '2026-04-08',
+  },
+  {
+    id: '14',
+    title: '24 tips for giving S-tier demos',
+    author: 'Jina Yoon',
+    source: 'posthog.com',
+    category: 'Producto',
+    description:
+      '24 consejos prácticos para dar demos memorables —estructura, narrativa, preparación y creatividad— que pueden definir si un proyecto o startup despega.',
+    url: 'https://newsletter.posthog.com/p/how-to-demo',
+    avatar: 'https://github.com/jinayoon.png?size=128',
+    date: '2026-05-28',
+  },
+  {
+    id: '15',
+    title: 'Great companies are built in hackathons',
+    author: 'Ian Vanagas',
+    source: 'posthog.com',
+    category: 'Producto',
+    description:
+      'Por qué las hackathons, bien estructuradas, son motores de innovación: separarlas del trabajo diario, incluir a todos, exigir demos y dejar enviar a producción lo que funciona.',
+    url: 'https://newsletter.posthog.com/p/great-companies-are-built-in-hackathons',
+    avatar: 'https://github.com/ivanagas.png?size=128',
+    date: '2026-04-21',
+  },
+  {
+    id: '16',
+    title: 'WTF does a product manager do? (and why engineers should care)',
+    author: 'Jina Yoon',
+    source: 'posthog.com',
+    category: 'Producto',
+    description:
+      'Tres habilidades clave de product management que todo ingeniero debería adoptar: reunir contexto, crear loops de feedback y comunicar decisiones de forma accionable.',
+    url: 'https://newsletter.posthog.com/p/an-engineers-guide-to-product-management',
+    avatar: 'https://github.com/jinayoon.png?size=128',
+    date: '2026-03-11',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));
