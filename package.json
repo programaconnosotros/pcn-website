@@ -25,6 +25,8 @@
     "populate-database": "tsx prisma/seed.ts",
     "prisma-studio": "npx prisma studio",
     "reset-database": "prisma migrate reset",
+    "setup-worktree-db": "bash scripts/setup-worktree-db.sh",
+    "drop-worktree-db": "bash scripts/drop-worktree-db.sh",
     "prepare": "husky",
     "test": "jest",
     "test:watch": "jest --watch"
