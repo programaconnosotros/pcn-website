@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
 import sanitizeHtml from 'sanitize-html';
 import { articles } from '@/app/(platform)/lectura/articles';
@@ -40,6 +39,7 @@ export async function GET(request: Request) {
     }
 
     const html = await response.text();
+    const { JSDOM } = await import('jsdom');
     const dom = new JSDOM(html, { url });
     const reader = new Readability(dom.window.document);
     const parsed = reader.parse();
