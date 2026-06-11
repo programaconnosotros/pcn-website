@@ -67,41 +67,44 @@ const CourseCard = ({ course }: { course: Course }) => {
   return (
     <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 md:min-h-[320px]">
       <div>
-        <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-          <div className="flex items-center gap-2">
-            {course.logo && (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-white p-1.5 dark:bg-neutral-100">
-                <Image
-                  src={course.logo}
-                  alt={`Logo de ${course.name}`}
-                  width={32}
-                  height={32}
-                  className="h-full w-full object-contain"
-                />
-              </div>
-            )}
-            <CardTitle>{course.name}</CardTitle>
-            {course.isMadeByCommunity && (
-              <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                Made in PCN
-              </Badge>
-            )}
-          </div>
+        <CardHeader className="flex flex-row items-start gap-4 pb-2">
+          {course.logo && (
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border bg-white p-1.5 dark:bg-neutral-100">
+              <Image
+                src={course.logo}
+                alt={`Logo de ${course.name}`}
+                width={52}
+                height={52}
+                className="h-full w-full object-contain"
+              />
+            </div>
+          )}
 
-          <div className="shrink-0">
-            {course.websiteUrl ? (
-              <Badge variant="outline">Interactivo</Badge>
-            ) : (
-              <Badge variant="outline">
-                {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-              </Badge>
-            )}
+          <div className="flex flex-1 flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <CardTitle>{course.name}</CardTitle>
+                {course.isMadeByCommunity && (
+                  <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
+                    Made in PCN
+                  </Badge>
+                )}
+              </div>
+
+              <div className="shrink-0">
+                {course.websiteUrl ? (
+                  <Badge variant="outline">Interactivo</Badge>
+                ) : (
+                  <Badge variant="outline">
+                    {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            <CardContent className="p-0 text-sm">{course.description}</CardContent>
           </div>
         </CardHeader>
-
-        <CardContent className="mt-2 flex flex-1 flex-col text-sm">
-          {course.description}
-        </CardContent>
       </div>
 
       <CardFooter className="flex flex-col items-center gap-4">
