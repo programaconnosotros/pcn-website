@@ -113,7 +113,7 @@ export const externalCourses: Array<Course> = [
   {
     name: 'SQL',
     id: 'sql',
-    logo: '/software-logos/sql.svg',
+    logo: '/software-logos/sql.jpg',
     description:
       'SQL es un lenguaje diseñado para administrar y recuperar información de sistemas de gestión de bases de datos relacionales.​',
     youtubeUrls: ['https://www.youtube.com/embed/OuJerKzV5T0?si=P_HyELgWxGfqW6hx'],
@@ -139,7 +139,7 @@ export const externalCourses: Array<Course> = [
   {
     name: 'Hermes Agent',
     id: 'hermes-agent',
-    logo: '/software-logos/hermes-agent.svg',
+    logo: '/software-logos/hermes-agent.png',
     description:
       'Hermes Agent es uno de los agentes de IA open source más avanzados y fáciles de usar: tiene memoria persistente, crea sus propias skills y trabaja de forma autónoma 24/7. En este tutorial vas a aprender a instalarlo, configurarlo y usarlo de forma profesional en un servidor VPS para tener tu propio asistente de IA personal que realmente aprende y trabaja por sí solo.',
     youtubeUrls: ['https://www.youtube.com/embed/gpbEfTQ1kLU'],
