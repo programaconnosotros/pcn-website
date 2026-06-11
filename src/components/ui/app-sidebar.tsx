@@ -3,13 +3,16 @@
 import {
   AlertTriangle,
   Bell,
+  BookOpen,
   CalendarDays,
   Code2,
   Eye,
+  GraduationCap,
   Home,
   Image,
   Instagram,
   LayoutDashboard,
+  Layers,
   Library,
   LifeBuoy,
   Linkedin,
@@ -103,15 +106,21 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
   ];
 };
 
-const getRecursosSubItems = () => [
-  { title: 'Lectura', url: '/lectura' },
-  { title: 'Cursos', url: '/cursos' },
-  { title: 'Software útil', url: '/software-util' },
-  { title: 'Especialidades', url: '/especialidades' },
-  { title: 'Influencers', url: '/influencers' },
-  { title: 'Música', url: '/music' },
-  { title: 'Series y películas', url: '/series-y-peliculas' },
-  { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
+const getRecursosItems = () => [
+  { title: 'Cursos', url: '/cursos', icon: GraduationCap },
+  { title: 'Lectura', url: '/lectura', icon: BookOpen },
+  { title: 'Especialidades', url: '/especialidades', icon: Layers },
+  {
+    title: 'Más recursos',
+    icon: Library,
+    items: [
+      { title: 'Software útil', url: '/software-util' },
+      { title: 'Influencers', url: '/influencers' },
+      { title: 'Música', url: '/music' },
+      { title: 'Series y películas', url: '/series-y-peliculas' },
+      { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
+    ],
+  },
 ];
 
 const socialNetworks = [
@@ -149,11 +158,6 @@ const socialNetworks = [
 
 const getComunidadItems = () => {
   return [
-    {
-      title: 'Recursos',
-      icon: Library,
-      items: getRecursosSubItems(),
-    },
     {
       title: 'Historia',
       url: '/historia',
@@ -250,6 +254,7 @@ export function AppSidebar(props: AppSidebarProps) {
       <SidebarContent>
         <NavMain items={getHomeItem()} />
         <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
+        <NavMain items={getRecursosItems()} label="Recursos" />
         <NavMain items={getComunidadItems()} label="Comunidad" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
