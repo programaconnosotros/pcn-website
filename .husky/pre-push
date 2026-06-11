@@ -1,3 +1,4 @@
 pnpm lint
 pnpm format
+pnpm test
 pnpm build
