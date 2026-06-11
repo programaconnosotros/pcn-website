@@ -32,8 +32,8 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.958.0",
-    "@aws-sdk/s3-request-presigner": "^3.958.0",
+    "@aws-sdk/client-s3": "^3.1066.0",
+    "@aws-sdk/s3-request-presigner": "^3.1066.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
@@ -75,9 +75,9 @@
     "jsdom": "^29.1.1",
     "lucide-react": "^0.507.0",
     "motion": "^12.4.9",
-    "next": "^16.2.4",
+    "next": "^16.2.9",
     "next-themes": "^0.4.6",
-    "nodemailer": "^7.0.3",
+    "nodemailer": "^8.0.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.54.2",
@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.60.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.17",
@@ -115,10 +115,30 @@
     "prisma": "6.2.1",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.0",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   },
   "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a",
+  "pnpm": {
+    "overrides": {
+      "fast-xml-parser": ">=5.7.0",
+      "cross-spawn": ">=7.0.6",
+      "glob@>=10.2.0 <10.5.0": ">=10.5.0",
+      "minimatch@<3.1.4": ">=3.1.4",
+      "minimatch@>=9.0.0 <9.0.7": ">=9.0.7",
+      "brace-expansion@<1.1.13": "1.1.13",
+      "brace-expansion@>=2.0.0 <2.0.3": "2.0.3",
+      "brace-expansion@>=5.0.0 <5.0.6": "5.0.6",
+      "diff@>=4.0.0 <4.0.4": ">=4.0.4",
+      "lodash": ">=4.18.1",
+      "flatted": ">=3.4.2",
+      "micromatch": ">=4.0.8",
+      "picomatch@<2.3.2": ">=2.3.2",
+      "nanoid@<3.3.8": ">=3.3.8",
+      "postcss": ">=8.5.10",
+      "yaml": ">=2.8.3"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mjs,cjs}": "prettier --write"
   }
