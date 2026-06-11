@@ -33,6 +33,7 @@ interface SoftwareRecommendation {
   pricing: PricingTier;
   type: SoftwareType;
   isPopular?: boolean;
+  usedHere?: boolean;
 }
 
 interface SoftwareRecommendationCardProps extends SoftwareRecommendation {}
@@ -61,10 +62,22 @@ function SoftwareRecommendationCard({
   website,
   pricing,
   isPopular: _isPopular = false,
+  usedHere = false,
 }: SoftwareRecommendationCardProps) {
   const badge = PRICING_BADGE[pricing];
   return (
-    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+    <Card
+      className={`relative flex flex-col overflow-hidden bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 ${
+        usedHere
+          ? 'border-2 border-pcnPurple/40 dark:border-pcnGreen/40'
+          : 'border-2 border-transparent dark:border-neutral-800'
+      }`}
+    >
+      {usedHere && (
+        <div className="absolute -right-8 top-5 z-10 rotate-45 bg-pcnPurple px-10 py-0.5 text-center text-[9px] font-bold uppercase tracking-wider text-white shadow-sm dark:bg-pcnGreen dark:text-black">
+          Usado acá
+        </div>
+      )}
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
@@ -214,6 +227,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://docker.com',
     pricing: 'freemium',
     type: 'app',
+    usedHere: true,
   },
   {
     name: 'Notion',
@@ -272,6 +286,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     pricing: 'freemium',
     type: 'app',
     isPopular: true,
+    usedHere: true,
   },
   {
     name: 'Cursor',
@@ -473,6 +488,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://aws.amazon.com',
     pricing: 'freemium',
     type: 'app',
+    usedHere: true,
   },
 
   // ── Librerías (Node.js ecosystem) ────────────────────────────────────────
@@ -487,6 +503,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     pricing: 'free',
     type: 'library',
     isPopular: true,
+    usedHere: true,
   },
   {
     name: 'Next.js',
@@ -499,6 +516,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     pricing: 'free',
     type: 'library',
     isPopular: true,
+    usedHere: true,
   },
   {
     name: 'Vue.js',
@@ -544,6 +562,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://prisma.io',
     pricing: 'free',
     type: 'library',
+    usedHere: true,
   },
   {
     name: 'Zod',
@@ -555,6 +574,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://zod.dev',
     pricing: 'free',
     type: 'library',
+    usedHere: true,
   },
   {
     name: 'Axios',
@@ -578,6 +598,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     pricing: 'free',
     type: 'library',
     isPopular: true,
+    usedHere: true,
   },
   {
     name: 'Vite',
@@ -673,6 +694,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     pricing: 'free',
     type: 'language',
     isPopular: true,
+    usedHere: true,
   },
   {
     name: 'Rust',
