@@ -54,3 +54,6 @@ node_modules/
 
 dist
 .vscode
+
+# Claude Code
+.claude/worktrees/
