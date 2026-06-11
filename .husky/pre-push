@@ -1,4 +1,4 @@
 pnpm lint
-pnpm format
+pnpm format:check
 pnpm test
 pnpm build

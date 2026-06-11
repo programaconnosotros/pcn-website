@@ -17,6 +17,7 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "postinstall": "prisma generate",
     "generate-prisma-client": "prisma generate",
     "create-migration": "prisma migrate dev --name",
@@ -104,6 +105,7 @@
     "jest": "^30.4.2",
     "jest-environment-node": "^30.4.1",
     "jest-mock-extended": "^4.0.1",
+    "lint-staged": "^17.0.7",
     "portless": "^0.14.0",
     "postcss": "^8",
     "prettier": "3.3.2",
@@ -114,5 +116,8 @@
     "tsx": "^4.19.0",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mjs,cjs}": "prettier --write"
+  }
 }
