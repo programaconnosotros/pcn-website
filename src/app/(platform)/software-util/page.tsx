@@ -15,11 +15,13 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLink, Search, SquareMousePointer, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
 type PricingTier = 'free' | 'freemium' | 'paid';
+type SoftwareType = 'app' | 'library' | 'language';
 
 interface SoftwareRecommendation {
   name: string;
@@ -29,6 +31,7 @@ interface SoftwareRecommendation {
   category: string;
   website: string;
   pricing: PricingTier;
+  type: SoftwareType;
   isPopular?: boolean;
 }
 
@@ -110,9 +113,11 @@ interface RecommendationsListProps {
 
 function RecommendationsList({ recommendations }: RecommendationsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState<SoftwareType>('app');
 
   const filteredRecommendations = recommendations
     .filter((software) => {
+      if (software.type !== activeTab) return false;
       const searchLower = searchTerm.toLowerCase();
       return (
         software.name.toLowerCase().includes(searchLower) ||
@@ -124,13 +129,19 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <>
-      {/* Search */}
+    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as SoftwareType)}>
+      <TabsList className="mb-4">
+        <TabsTrigger value="app">Apps</TabsTrigger>
+        <TabsTrigger value="library">Librerías</TabsTrigger>
+        <TabsTrigger value="language">Lenguajes</TabsTrigger>
+      </TabsList>
+
+      {/* Search — shared across all tabs */}
       <div className="mb-6 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
         <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
           <Input
-            placeholder="Buscar software, categoría o tecnología..."
+            placeholder="Buscar por nombre, categoría o tecnología..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -146,26 +157,29 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
         </div>
       </div>
 
-      {/* Software Grid or Empty State */}
-      {filteredRecommendations.length > 0 ? (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-          {filteredRecommendations.map((software, index) => (
-            <SoftwareRecommendationCard key={index} {...software} />
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          title="No se encontró software útil"
-          description="No pudimos encontrar ningún software que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
-          onRefresh={() => setSearchTerm('')}
-        />
-      )}
-    </>
+      {(['app', 'library', 'language'] as SoftwareType[]).map((tab) => (
+        <TabsContent key={tab} value={tab}>
+          {filteredRecommendations.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
+              {filteredRecommendations.map((software, index) => (
+                <SoftwareRecommendationCard key={index} {...software} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="No se encontraron resultados"
+              description="No pudimos encontrar nada que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
+              onRefresh={() => setSearchTerm('')}
+            />
+          )}
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }
 
 const softwareRecommendations: SoftwareRecommendation[] = [
-  // — Existing tools (reclassified) —
+  // ── Apps ────────────────────────────────────────────────────────────────
   {
     name: 'Visual Studio Code',
     description:
@@ -175,6 +189,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://code.visualstudio.com',
     pricing: 'free',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -186,6 +201,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Diseño',
     website: 'https://figma.com',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -197,6 +213,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'DevOps',
     website: 'https://docker.com',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Notion',
@@ -207,6 +224,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Productividad',
     website: 'https://notion.so',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -218,6 +236,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://postman.com',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Slack',
@@ -228,6 +247,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Comunicación',
     website: 'https://slack.com',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Adobe Photoshop',
@@ -238,9 +258,9 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Diseño',
     website: 'https://adobe.com/photoshop',
     pricing: 'paid',
+    type: 'app',
     isPopular: true,
   },
-  // — New tools —
   {
     name: 'GitHub',
     description:
@@ -250,6 +270,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://github.com',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -261,6 +282,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://cursor.com',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -272,6 +294,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://windsurf.com',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Claude Code',
@@ -282,6 +305,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://claude.ai/code',
     pricing: 'paid',
+    type: 'app',
   },
   {
     name: 'ChatGPT',
@@ -292,6 +316,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://chatgpt.com',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -303,6 +328,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://openai.com/codex',
     pricing: 'paid',
+    type: 'app',
   },
   {
     name: 'Antigravity',
@@ -313,6 +339,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'IA',
     website: 'https://antigravity.google',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Warp',
@@ -323,6 +350,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://warp.dev',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'DataGrip',
@@ -333,6 +361,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/datagrip',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'IntelliJ IDEA',
@@ -343,6 +372,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/idea',
     pricing: 'freemium',
+    type: 'app',
     isPopular: true,
   },
   {
@@ -354,6 +384,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/webstorm',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'RubyMine',
@@ -364,6 +395,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/ruby',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'PyCharm',
@@ -374,6 +406,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/pycharm',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'PhpStorm',
@@ -384,6 +417,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/phpstorm',
     pricing: 'paid',
+    type: 'app',
   },
   {
     name: 'GoLand',
@@ -394,6 +428,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/go',
     pricing: 'paid',
+    type: 'app',
   },
   {
     name: 'CLion',
@@ -404,6 +439,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Desarrollo',
     website: 'https://jetbrains.com/clion',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Linear',
@@ -414,6 +450,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Productividad',
     website: 'https://linear.app',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'Canva',
@@ -424,6 +461,7 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'Diseño',
     website: 'https://canva.com',
     pricing: 'freemium',
+    type: 'app',
   },
   {
     name: 'AWS',
@@ -434,6 +472,217 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     category: 'DevOps',
     website: 'https://aws.amazon.com',
     pricing: 'freemium',
+    type: 'app',
+  },
+
+  // ── Librerías (Node.js ecosystem) ────────────────────────────────────────
+  {
+    name: 'React',
+    description:
+      'Librería de JavaScript de Meta para construir interfaces de usuario declarativas. Base del ecosistema frontend moderno y compatible con React Native para apps móviles.',
+    logo: '/software-logos/react.webp',
+    tags: ['UI', 'Frontend', 'JavaScript', 'TypeScript', 'Componentes'],
+    category: 'Librería',
+    website: 'https://react.dev',
+    pricing: 'free',
+    type: 'library',
+    isPopular: true,
+  },
+  {
+    name: 'Next.js',
+    description:
+      'Framework full-stack basado en React con soporte para SSR, SSG y App Router. Desarrollado por Vercel, es el estándar para proyectos React en producción.',
+    logo: '/software-logos/nextjs.webp',
+    tags: ['React', 'SSR', 'Full-stack', 'TypeScript', 'Vercel'],
+    category: 'Librería',
+    website: 'https://nextjs.org',
+    pricing: 'free',
+    type: 'library',
+    isPopular: true,
+  },
+  {
+    name: 'Vue.js',
+    description:
+      'Framework progresivo para construir interfaces de usuario. Fácil de adoptar de forma incremental, con una API intuitiva y un ecosistema completo (Pinia, Vue Router).',
+    logo: '/software-logos/vue.webp',
+    tags: ['UI', 'Frontend', 'JavaScript', 'TypeScript', 'SPA'],
+    category: 'Librería',
+    website: 'https://vuejs.org',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Express',
+    description:
+      'Framework web minimalista y flexible para Node.js. El más utilizado para construir APIs REST y aplicaciones del lado del servidor con middleware modular.',
+    logo: '/software-logos/express.webp',
+    tags: ['Node.js', 'Backend', 'API', 'REST', 'Middleware'],
+    category: 'Librería',
+    website: 'https://expressjs.com',
+    pricing: 'free',
+    type: 'library',
+    isPopular: true,
+  },
+  {
+    name: 'NestJS',
+    description:
+      'Framework backend escalable para Node.js construido con TypeScript. Inspirado en Angular, ofrece arquitectura modular, inyección de dependencias y soporte para REST, GraphQL y WebSockets.',
+    logo: '/software-logos/nestjs.webp',
+    tags: ['Node.js', 'Backend', 'TypeScript', 'GraphQL', 'Microservicios'],
+    category: 'Librería',
+    website: 'https://nestjs.com',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Prisma',
+    description:
+      'ORM de próxima generación para TypeScript y Node.js. Ofrece un cliente type-safe auto-generado, migraciones declarativas y soporte para PostgreSQL, MySQL, SQLite y más.',
+    logo: '/software-logos/prisma.webp',
+    tags: ['ORM', 'TypeScript', 'PostgreSQL', 'MySQL', 'Base de datos'],
+    category: 'Librería',
+    website: 'https://prisma.io',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Zod',
+    description:
+      'Librería de validación de esquemas con inferencia de tipos para TypeScript. Define el esquema una sola vez y obtén validación en runtime y tipos estáticos automáticamente.',
+    logo: '/software-logos/zod.webp',
+    tags: ['TypeScript', 'Validación', 'Esquemas', 'Runtime'],
+    category: 'Librería',
+    website: 'https://zod.dev',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Axios',
+    description:
+      'Cliente HTTP basado en promesas para el navegador y Node.js. Simplifica peticiones REST con interceptores, transformadores y cancelación de requests.',
+    logo: '/software-logos/axios.webp',
+    tags: ['HTTP', 'REST', 'Promesas', 'Node.js', 'Browser'],
+    category: 'Librería',
+    website: 'https://axios-http.com',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Tailwind CSS',
+    description:
+      'Framework CSS utility-first que permite construir diseños personalizados sin salir del HTML. Altamente optimizable con PurgeCSS y con soporte oficial para dark mode y responsive.',
+    logo: '/software-logos/tailwind.webp',
+    tags: ['CSS', 'Frontend', 'Utility-first', 'Responsive', 'Dark mode'],
+    category: 'Librería',
+    website: 'https://tailwindcss.com',
+    pricing: 'free',
+    type: 'library',
+    isPopular: true,
+  },
+  {
+    name: 'Vite',
+    description:
+      'Build tool y servidor de desarrollo ultrarrápido para proyectos web modernos. Usa ES modules nativos en desarrollo y Rollup para producción. Compatible con React, Vue, Svelte y más.',
+    logo: '/software-logos/vite.webp',
+    tags: ['Build tool', 'Frontend', 'HMR', 'ESM', 'Rollup'],
+    category: 'Librería',
+    website: 'https://vitejs.dev',
+    pricing: 'free',
+    type: 'library',
+  },
+  {
+    name: 'Jest',
+    description:
+      'Framework de testing para JavaScript con foco en la simplicidad. Incluye test runner, assertions, mocks y cobertura de código integrados. Ampliamente adoptado en el ecosistema React.',
+    logo: '/software-logos/jest.webp',
+    tags: ['Testing', 'JavaScript', 'TypeScript', 'Unit tests', 'Mocks'],
+    category: 'Librería',
+    website: 'https://jestjs.io',
+    pricing: 'free',
+    type: 'library',
+  },
+
+  // ── Lenguajes ───────────────────────────────────────────────────────────
+  {
+    name: 'TypeScript',
+    description:
+      'Superset de JavaScript desarrollado por Microsoft que agrega tipado estático. Mejora la productividad, la detección temprana de errores y la experiencia en editores. Compilado a JS.',
+    logo: '/software-logos/typescript.webp',
+    tags: ['JavaScript', 'Tipado estático', 'Microsoft', 'Frontend', 'Backend'],
+    category: 'Lenguaje',
+    website: 'https://typescriptlang.org',
+    pricing: 'free',
+    type: 'language',
+    isPopular: true,
+  },
+  {
+    name: 'Rust',
+    description:
+      'Lenguaje de sistemas de alto rendimiento con garantías de seguridad de memoria en tiempo de compilación, sin garbage collector. Ideal para CLI, WebAssembly y sistemas embebidos.',
+    logo: '/software-logos/rust.webp',
+    tags: ['Sistemas', 'WebAssembly', 'Performance', 'Seguridad de memoria', 'CLI'],
+    category: 'Lenguaje',
+    website: 'https://rust-lang.org',
+    pricing: 'free',
+    type: 'language',
+    isPopular: true,
+  },
+  {
+    name: 'Go',
+    description:
+      'Lenguaje compilado de Google diseñado para simplicidad y eficiencia. Excelente para servicios backend, microservicios y herramientas CLI gracias a su concurrencia nativa con goroutines.',
+    logo: '/software-logos/go.webp',
+    tags: ['Backend', 'Microservicios', 'Concurrencia', 'CLI', 'Google'],
+    category: 'Lenguaje',
+    website: 'https://go.dev',
+    pricing: 'free',
+    type: 'language',
+    isPopular: true,
+  },
+  {
+    name: 'Python',
+    description:
+      'Lenguaje interpretado de propósito general con sintaxis legible. Líder en Data Science, Machine Learning e IA gracias a librerías como NumPy, Pandas, TensorFlow y PyTorch.',
+    logo: '/software-logos/python.webp',
+    tags: ['Data Science', 'IA', 'Machine Learning', 'Scripting', 'Backend'],
+    category: 'Lenguaje',
+    website: 'https://python.org',
+    pricing: 'free',
+    type: 'language',
+    isPopular: true,
+  },
+  {
+    name: 'Kotlin',
+    description:
+      'Lenguaje moderno de JetBrains que corre en la JVM. Es el lenguaje oficial de Android y puede compilarse también a JavaScript o código nativo con Kotlin Multiplatform.',
+    logo: '/software-logos/kotlin.webp',
+    tags: ['Android', 'JVM', 'Multiplatform', 'JetBrains', 'Backend'],
+    category: 'Lenguaje',
+    website: 'https://kotlinlang.org',
+    pricing: 'free',
+    type: 'language',
+  },
+  {
+    name: 'Swift',
+    description:
+      'Lenguaje de Apple para desarrollo de apps en iOS, macOS, watchOS y tvOS. Moderno, seguro y de alto rendimiento. También open source con soporte para desarrollo del lado del servidor.',
+    logo: '/software-logos/swift.webp',
+    tags: ['iOS', 'macOS', 'Apple', 'Mobile', 'Backend'],
+    category: 'Lenguaje',
+    website: 'https://swift.org',
+    pricing: 'free',
+    type: 'language',
+  },
+  {
+    name: 'Elixir',
+    description:
+      'Lenguaje funcional y concurrente construido sobre la Erlang VM. Diseñado para sistemas distribuidos y de alta disponibilidad. El framework Phoenix lo hace ideal para apps web en tiempo real.',
+    logo: '/software-logos/elixir.webp',
+    tags: ['Funcional', 'Concurrencia', 'Phoenix', 'Distribuido', 'Real-time'],
+    category: 'Lenguaje',
+    website: 'https://elixir-lang.org',
+    pricing: 'free',
+    type: 'language',
   },
 ];
 
