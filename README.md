@@ -132,13 +132,24 @@ pnpm drop-worktree-db /ruta/al/worktree
 
 ### Servidor de desarrollo con múltiples worktrees
 
-Cuando corrés varios worktrees al mismo tiempo, cada uno pelea por el puerto `:3000`. Para evitarlo, usá `portless`, que ya está configurado:
+`pnpm dev` ya usa portless por defecto, por lo que cada worktree obtiene su propia URL `.localhost` automáticamente — sin conflictos de puerto:
 
 ```bash
-pnpm dev:portless
+pnpm dev
 ```
 
-Esto levanta el servidor en `https://pcn.localhost` asignando automáticamente un puerto interno libre (4000–4999). La primera vez genera un certificado local y lo agrega al sistema de confianza (requiere `sudo` en macOS/Linux).
+`portless run` detecta automáticamente si estás en un worktree y asigna una URL única por rama:
+
+| Contexto                     | URL                                       |
+| ---------------------------- | ----------------------------------------- |
+| Checkout principal           | `https://pcn-website.localhost`           |
+| Worktree en rama `testing`   | `https://testing.pcn-website.localhost`   |
+| Worktree en rama `fix-login` | `https://fix-login.pcn-website.localhost` |
+
+El puerto interno se asigna automáticamente — sin conflictos, sin configuración extra. La primera vez genera un certificado local y lo agrega al sistema de confianza (requiere `sudo` en macOS/Linux).
+
+> [!NOTE]
+> portless requiere **Node 24+** (LTS "Krypton"). Si usás `nvm`, ejecutá `nvm use` en la raíz del proyecto para activar la versión correcta (`.nvmrc` ya está configurado). Si desarrollás con Docker, el contenedor sigue usando `next dev` directamente en el puerto 3000 — no necesita portless.
 
 > [!NOTE]
 > El `.env` de cada worktree es generado automáticamente y **no se versiona** (está en `.gitignore`). Si el worktree no tiene `.env`, ejecutá `pnpm setup-worktree-db` o iniciá una nueva sesión de Claude Code.
