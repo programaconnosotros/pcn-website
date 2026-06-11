@@ -114,7 +114,7 @@ const getRecursosItems = () => [
     title: 'Más recursos',
     icon: Library,
     items: [
-      { title: 'Software útil', url: '/software-util' },
+      { title: 'Herramientas', url: '/herramientas' },
       { title: 'Influencers', url: '/influencers' },
       { title: 'Música', url: '/music' },
       { title: 'Series y películas', url: '/series-y-peliculas' },
