@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     const reader = new Readability(dom.window.document);
     const parsed = reader.parse();
 
-    if (!parsed) {
+    if (!parsed || !parsed.content) {
       return NextResponse.json({ error: 'Could not extract article content' }, { status: 502 });
     }
 
