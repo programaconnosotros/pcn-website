@@ -87,7 +87,9 @@ const CourseCard = ({ course }: { course: Course }) => {
           </div>
         </CardHeader>
 
-        <CardContent className="mt-2 flex flex-1 flex-col text-sm">{course.description}</CardContent>
+        <CardContent className="mt-2 flex flex-1 flex-col text-sm">
+          {course.description}
+        </CardContent>
       </div>
 
       <CardFooter className="flex flex-col items-center gap-4">

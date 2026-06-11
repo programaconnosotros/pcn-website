@@ -257,8 +257,7 @@ const SeriesYPeliculasPage = () => {
         title.director.toLowerCase().includes(searchTerm.toLowerCase()) ||
         title.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesGenre =
-        selectedGenre === 'Todos los géneros' || title.genre === selectedGenre;
+      const matchesGenre = selectedGenre === 'Todos los géneros' || title.genre === selectedGenre;
 
       return matchesSearch && matchesGenre;
     });

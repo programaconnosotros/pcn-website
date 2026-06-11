@@ -97,10 +97,7 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className={row.original.cancelledAt ? 'opacity-60' : ''}
-                >
+                <TableRow key={row.id} className={row.original.cancelledAt ? 'opacity-60' : ''}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}

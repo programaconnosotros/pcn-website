@@ -102,6 +102,7 @@ Si usás `claude -w` para abrir sesiones de Claude Code, cada worktree recibe au
 
 - Al iniciar una sesión (`claude -w`), el hook `SessionStart` ejecuta `scripts/setup-worktree-db.sh` automáticamente.  
   El script:
+
   1. Deriva el nombre de la base a partir del directorio del worktree (ej. `delightful-skipping-comet` → `pcn_delightful_skipping_comet`).
   2. Crea esa base dentro del contenedor `pcn-db` compartido.
   3. Genera el `.env` del worktree copiando el del checkout principal y apuntando `DATABASE_URL`/`DIRECT_URL` a la nueva base.

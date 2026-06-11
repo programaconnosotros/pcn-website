@@ -41,7 +41,8 @@ const lightningTalksNextGen = [
     role: 'Senior Software Engineer en Bowery, Co-fundador de PCN',
   },
   {
-    title: 'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
+    title:
+      'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
     speaker: 'Ing. Franco Pérez',
     role: 'Founder de Crisol Studio',
   },
@@ -51,7 +52,8 @@ const lightningTalksNextGen = [
     role: 'Founder & Lead Developer en Section 05',
   },
   {
-    title: 'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
+    title:
+      'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
     speaker: 'Fabio Ramos',
     role: 'Lead Software Engineer en CAW Tech',
   },
@@ -120,9 +122,7 @@ const PCNStory = () => (
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
               <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
             </div>
-            <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-              Historia
-            </span>
+            <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Historia</span>
           </Heading2>
         </div>
         <div className="flex gap-8">
@@ -173,7 +173,10 @@ const PCNStory = () => (
                   charlas y competencias de programación.
                 </p>
                 <div className="flex justify-center">
-                  <HistoriaImage src="/historia/IMG_20230809_113640.webp" alt="Comienzos en la UTN-FRT" />
+                  <HistoriaImage
+                    src="/historia/IMG_20230809_113640.webp"
+                    alt="Comienzos en la UTN-FRT"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -192,7 +195,10 @@ const PCNStory = () => (
                   eventos técnicos.
                 </p>
                 <div className="flex justify-center">
-                  <HistoriaImage src="/historia/evento_abril (173) (2).webp" alt="Voluntariado en el IEEE" />
+                  <HistoriaImage
+                    src="/historia/evento_abril (173) (2).webp"
+                    alt="Voluntariado en el IEEE"
+                  />
                 </div>
                 <p className="text-base text-muted-foreground md:text-sm">
                   Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>,
@@ -237,10 +243,16 @@ const PCNStory = () => (
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/photo_2017-10-08_20-24-40.webp" alt="Code Warfare" />
+                    <HistoriaImage
+                      src="/historia/photo_2017-10-08_20-24-40.webp"
+                      alt="Code Warfare"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/photo_2017-10-08_20-24-35.webp" alt="Code Warfare" />
+                    <HistoriaImage
+                      src="/historia/photo_2017-10-08_20-24-35.webp"
+                      alt="Code Warfare"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -275,7 +287,10 @@ const PCNStory = () => (
                   información de la UTN-FRT.
                 </p>
                 <div className="flex justify-center">
-                  <HistoriaImage src="/historia/photo_2019-10-14_01-58-25.webp" alt="Club de Algoritmos" />
+                  <HistoriaImage
+                    src="/historia/photo_2019-10-14_01-58-25.webp"
+                    alt="Club de Algoritmos"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -296,22 +311,40 @@ const PCNStory = () => (
                 </p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (167).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (167).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (10).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (10).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (118) (1).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (118) (1).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (139).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (139).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (142).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (142).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                   <div className="flex justify-center">
-                    <HistoriaImage src="/historia/evento_abril (147).webp" alt="Tucumán Hack Weekend" />
+                    <HistoriaImage
+                      src="/historia/evento_abril (147).webp"
+                      alt="Tucumán Hack Weekend"
+                    />
                   </div>
                 </div>
                 <p className="text-base text-muted-foreground md:text-sm">
@@ -320,7 +353,10 @@ const PCNStory = () => (
                   ofensivo.
                 </p>
                 <div className="flex justify-center">
-                  <HistoriaImage src="/historia/evento_abril (64).webp" alt="Tucumán Hack Weekend" />
+                  <HistoriaImage
+                    src="/historia/evento_abril (64).webp"
+                    alt="Tucumán Hack Weekend"
+                  />
                 </div>
                 {/* // TODO: Agregar fotos de los cursos de seguridad informática */}
               </CardContent>
@@ -690,10 +726,10 @@ const PCNStory = () => (
                 <p className="text-base text-muted-foreground md:text-sm">
                   Más allá de los eventos y las charlas presenciales, el corazón de PCN late en el{' '}
                   <b>grupo de WhatsApp de la comunidad</b>. Ahí es donde sucede la conversación
-                  cotidiana: debates sobre herramientas como <b>Cursor, Claude Code y agentes de IA</b>
-                  , discusiones de arquitectura, recomendaciones de libros técnicos, preguntas sobre
-                  frameworks y bases de datos, y el eterno dilema de cómo cobrar en dólares desde
-                  Argentina.
+                  cotidiana: debates sobre herramientas como{' '}
+                  <b>Cursor, Claude Code y agentes de IA</b>, discusiones de arquitectura,
+                  recomendaciones de libros técnicos, preguntas sobre frameworks y bases de datos, y
+                  el eterno dilema de cómo cobrar en dólares desde Argentina.
                 </p>
                 <p className="text-base text-muted-foreground md:text-sm">
                   Pero lo más valioso no es el contenido técnico: es el <b>networking genuino</b>.

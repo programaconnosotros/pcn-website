@@ -9,7 +9,11 @@ interface HistoriaImageProps {
   className?: string;
 }
 
-export function HistoriaImage({ src, alt, className = 'h-auto max-w-full self-center rounded-lg' }: HistoriaImageProps) {
+export function HistoriaImage({
+  src,
+  alt,
+  className = 'h-auto max-w-full self-center rounded-lg',
+}: HistoriaImageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,7 +27,7 @@ export function HistoriaImage({ src, alt, className = 'h-auto max-w-full self-ce
       />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="w-[90vw] max-w-4xl overflow-hidden border-none p-0 [&>button]:text-white [&>button]:bg-black/50 [&>button]:rounded-full [&>button]:hover:bg-black/70 [&>button]:top-2 [&>button]:right-2">
+        <DialogContent className="w-[90vw] max-w-4xl overflow-hidden border-none p-0 [&>button]:right-2 [&>button]:top-2 [&>button]:rounded-full [&>button]:bg-black/50 [&>button]:text-white [&>button]:hover:bg-black/70">
           <DialogTitle className="sr-only">{alt}</DialogTitle>
           <div className="flex h-[85vh] items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}

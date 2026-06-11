@@ -54,7 +54,7 @@ export function ArticleReaderDialog({ article, open, onOpenChange }: ArticleRead
         {/* Header */}
         <DialogHeader className="border-b px-6 pb-4 pt-6">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex min-w-0 items-center gap-3">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={article.avatar} alt={article.author} />
                 <AvatarFallback>
@@ -71,12 +71,7 @@ export function ArticleReaderDialog({ article, open, onOpenChange }: ArticleRead
                 <p className="text-xs text-muted-foreground">{article.source}</p>
               </div>
             </div>
-            <Link
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0"
-            >
+            <Link href={article.url} target="_blank" rel="noopener noreferrer" className="shrink-0">
               <Button variant="outline" size="sm" className="flex items-center gap-1.5">
                 Leer original
                 <ArrowUpRight className="h-3.5 w-3.5" />
@@ -118,7 +113,7 @@ export function ArticleReaderDialog({ article, open, onOpenChange }: ArticleRead
 
           {data && (
             <article
-              className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-primary prose-pre:bg-muted prose-pre:text-foreground prose-code:text-foreground prose-img:rounded-md"
+              className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-semibold prose-a:text-primary prose-code:text-foreground prose-pre:bg-muted prose-pre:text-foreground prose-img:rounded-md"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
           )}

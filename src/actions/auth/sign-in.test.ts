@@ -87,7 +87,11 @@ describe('signIn', () => {
         data: expect.objectContaining({ userId: 'user-1' }),
       }),
     );
-    expect(set).toHaveBeenCalledWith('sessionId', 'session-abc', expect.objectContaining({ httpOnly: true }));
+    expect(set).toHaveBeenCalledWith(
+      'sessionId',
+      'session-abc',
+      expect.objectContaining({ httpOnly: true }),
+    );
   });
 
   it('includes the redirectTo value from input in the success response', async () => {

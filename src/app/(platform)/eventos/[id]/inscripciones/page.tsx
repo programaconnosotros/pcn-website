@@ -57,9 +57,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
 
   // Contar estudiantes y profesionales (solo inscripciones activas)
   const studentsCount = activeRegistrations.filter((r) => r.career && r.studyPlace).length;
-  const professionalsCount = activeRegistrations.filter(
-    (r) => r.jobTitle && r.enterprise,
-  ).length;
+  const professionalsCount = activeRegistrations.filter((r) => r.jobTitle && r.enterprise).length;
 
   return (
     <>
@@ -145,8 +143,8 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Inscripciones ({registrations.length} total — {activeRegistrations.length}{' '}
-                activas, {cancelledRegistrations.length} canceladas)
+                Inscripciones ({registrations.length} total — {activeRegistrations.length} activas,{' '}
+                {cancelledRegistrations.length} canceladas)
               </CardTitle>
             </CardHeader>
             <CardContent>

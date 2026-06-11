@@ -466,8 +466,7 @@ const ReadingPage = () => {
         book.description.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesCategory =
-        selectedCategory === 'Todas las categorías' ||
-        book.categories.includes(selectedCategory);
+        selectedCategory === 'Todas las categorías' || book.categories.includes(selectedCategory);
 
       return matchesSearch && matchesCategory;
     });
@@ -732,7 +731,7 @@ const ReadingPage = () => {
           />
 
           {/* Banner AgusLogs */}
-          <Card className="flex flex-col gap-4 border border-pcnPurple/30 bg-pcnPurple/5 p-6 sm:flex-row sm:items-center sm:justify-between dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.3)]">
+          <Card className="flex flex-col gap-4 border border-pcnPurple/30 bg-pcnPurple/5 p-6 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.3)] sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <Image
                 src="/aguslogs-logo.png"

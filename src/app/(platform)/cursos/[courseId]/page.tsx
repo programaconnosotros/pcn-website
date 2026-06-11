@@ -112,7 +112,9 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
               </a>
             </div>
           ) : (
-            <div className={`mt-6${course.youtubeUrls && course.youtubeUrls.length > 1 ? ' px-12' : ''}`}>
+            <div
+              className={`mt-6${course.youtubeUrls && course.youtubeUrls.length > 1 ? 'px-12' : ''}`}
+            >
               <Carousel>
                 <CarouselContent>
                   {course.youtubeUrls?.map((classUrl) => (
