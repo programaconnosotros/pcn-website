@@ -28,6 +28,8 @@
     "reset-database": "prisma migrate reset",
     "setup-worktree-db": "bash scripts/setup-worktree-db.sh",
     "drop-worktree-db": "bash scripts/drop-worktree-db.sh",
+    "screenshot": "node scripts/pr-screenshots.mjs",
+    "screenshot:publish": "bash scripts/publish-screenshots.sh",
     "prepare": "husky",
     "test": "jest",
     "test:watch": "jest --watch"
