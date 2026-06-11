@@ -416,6 +416,424 @@ const books: Book[] = [
     cover: '/lectura/how-to-design-better.jpg',
     url: 'https://www.howtodesignbetter.com/ebook',
   },
+  {
+    id: '35',
+    title: 'Better Small Talk',
+    author: 'Patrick King',
+    categories: ['Comunicación'],
+    description:
+      'Una guía práctica para mejorar las conversaciones cotidianas, reducir la incomodidad social y construir conexiones más profundas y auténticas.',
+    year: 2020,
+    cover: '/lectura/better-small-talk.jpg',
+    isbn: 'B087349Q57',
+  },
+  {
+    id: '36',
+    title: 'One Presentation Away',
+    author: 'Colin Boyd',
+    categories: ['Comunicación'],
+    description:
+      'Estrategias para convertirse en un orador irresistible que transforma presentaciones en oportunidades de negocio con confianza y claridad.',
+    year: 2025,
+    cover: '/lectura/one-presentation-away.jpg',
+    isbn: '1394324316',
+  },
+  {
+    id: '37',
+    title: 'Domain-Driven Refactoring',
+    author: 'Alessandro Colla, Alberto Acerbis',
+    categories: ['Arquitectura'],
+    description:
+      'Una guía práctica para aplicar Domain-Driven Design en la transformación de monolitos en sistemas modulares y microservicios.',
+    year: 2025,
+    cover: '/lectura/domain-driven-refactoring.jpg',
+    isbn: '1835889107',
+  },
+  {
+    id: '38',
+    title: 'The Rust Programming Language',
+    author: 'Steve Klabnik, Carol Nichols',
+    categories: ['Programación'],
+    description:
+      'El libro oficial del lenguaje Rust: cubre propiedad, tipado, concurrencia y seguridad de memoria desde los fundamentos hasta temas avanzados.',
+    year: 2023,
+    cover: '/lectura/the-rust-programming-language.jpg',
+    isbn: '1718503105',
+  },
+  {
+    id: '39',
+    title: 'The Book of Ruby',
+    author: 'Huw Collingbourne',
+    categories: ['Programación'],
+    description:
+      'Una introducción exhaustiva al lenguaje Ruby con ejemplos prácticos que van desde los conceptos básicos hasta técnicas orientadas a objetos avanzadas.',
+    year: 2011,
+    cover: '/lectura/the-book-of-ruby.jpg',
+    isbn: '1593272944',
+  },
+  {
+    id: '40',
+    title: 'The Principles of Object-Oriented JavaScript',
+    author: 'Nicholas C. Zakas',
+    categories: ['Programación'],
+    description:
+      'Explora en profundidad los mecanismos orientados a objetos de JavaScript, incluyendo prototipos, constructores, herencia y patrones de diseño.',
+    year: 2014,
+    cover: '/lectura/principles-of-object-oriented-javascript.jpg',
+    isbn: '1593275404',
+  },
+  {
+    id: '41',
+    title: 'Data Structures and Algorithms in JavaScript',
+    author: 'Federico Kereki',
+    categories: ['Programación'],
+    description:
+      'Implementación y análisis de las estructuras de datos y algoritmos más importantes utilizando JavaScript moderno.',
+    year: 2025,
+    cover: '/lectura/data-structures-and-algorithms-in-javascript.jpg',
+    isbn: '1718502621',
+  },
+  {
+    id: '42',
+    title: 'Domain-Driven Design Reference',
+    author: 'Eric Evans',
+    categories: ['Arquitectura'],
+    description:
+      'Una referencia compacta con las definiciones canónicas y resúmenes de patrones del Domain-Driven Design, ideal como guía de consulta rápida.',
+    year: 2014,
+    cover: '/lectura/domain-driven-design-reference.jpg',
+    isbn: '1457501198',
+  },
+  {
+    id: '43',
+    title: 'Coding Interview Patterns',
+    author: 'Alex Xu, Shaun Gunawardane',
+    categories: ['Programación'],
+    description:
+      'Un enfoque sistemático basado en patrones para resolver preguntas de entrevistas de programación con confianza y eficiencia.',
+    year: 2024,
+    cover: '/lectura/coding-interview-patterns.jpg',
+    isbn: '1736049135',
+  },
+  {
+    id: '44',
+    title: "System Design Interview – An Insider's Guide",
+    author: 'Alex Xu',
+    categories: ['Arquitectura'],
+    description:
+      'Una guía para superar entrevistas de diseño de sistemas, con casos de estudio detallados sobre sistemas escalables y distribuidos.',
+    year: 2020,
+    cover: '/lectura/system-design-interview.jpg',
+    isbn: 'B08CMF2CQF',
+  },
+  {
+    id: '45',
+    title: 'Start. Scale. Exit. Repeat.',
+    author: 'Colin C. Campbell',
+    categories: ['Negocios'],
+    description:
+      'Los secretos de los emprendedores en serie para crear, escalar, vender y repetir el ciclo de construcción de startups exitosas.',
+    year: 2024,
+    cover: '/lectura/start-scale-exit-repeat.jpg',
+    isbn: 'B0CYWGZ6YL',
+  },
+  {
+    id: '46',
+    title: 'Kickstart Database Management System Fundamentals',
+    author: 'Jagdish Chandra Patni, Latika Pinjarkar',
+    categories: ['Arquitectura'],
+    description:
+      'Una introducción clara y práctica a los fundamentos de los sistemas de gestión de bases de datos, incluyendo modelado, SQL y optimización.',
+    year: 2024,
+    cover: '/lectura/kickstart-database-management-systems.jpg',
+    isbn: 'B0DQLLMB5W',
+  },
+  {
+    id: '47',
+    title: "The Staff Engineer's Path",
+    author: 'Tanya Reilly',
+    categories: ['Gestión'],
+    description:
+      'Una guía para ingenieros senior que navegan el crecimiento como contribuidores individuales en roles de staff engineer y liderazgo técnico.',
+    year: 2022,
+    cover: '/lectura/the-staff-engineers-path.jpg',
+    isbn: '1098118731',
+  },
+  {
+    id: '48',
+    title: 'Monolith to Microservices',
+    author: 'Sam Newman',
+    categories: ['Arquitectura'],
+    description:
+      'Patrones evolutivos y prácticos para migrar sistemas monolíticos hacia arquitecturas de microservicios de forma gradual y segura.',
+    year: 2019,
+    cover: '/lectura/monolith-to-microservices.jpg',
+    isbn: '1492047848',
+  },
+  {
+    id: '49',
+    title: 'Foundations of Software Testing: ISTQB Certification',
+    author: 'Dorothy Graham, Rex Black, Erik van Veenendaal',
+    categories: ['Testing'],
+    description:
+      'Los fundamentos del testing de software según el currículo oficial del ISTQB, cubriendo principios, técnicas y gestión del ciclo de pruebas.',
+    year: 2019,
+    cover: '/lectura/foundations-of-software-testing.jpg',
+    isbn: '1473764793',
+  },
+  {
+    id: '50',
+    title: "The Manager's Path",
+    author: 'Camille Fournier',
+    categories: ['Gestión'],
+    description:
+      'Una hoja de ruta para líderes de ingeniería en cada etapa de su carrera: desde tech lead hasta CTO, con consejos prácticos y honestos.',
+    year: 2017,
+    cover: '/lectura/the-managers-path.jpg',
+    isbn: '1491973897',
+  },
+  {
+    id: '51',
+    title: 'Software Architecture: The Hard Parts',
+    author: 'Neal Ford, Mark Richards, Pramod Sadalage, Zhamak Dehghani',
+    categories: ['Arquitectura'],
+    description:
+      'Análisis de las difíciles decisiones arquitectónicas en sistemas distribuidos, con trade-offs entre descomposición, comunicación y gestión de datos.',
+    year: 2021,
+    cover: '/lectura/software-architecture-the-hard-parts.jpg',
+    isbn: '1492086894',
+  },
+  {
+    id: '52',
+    title: 'React Key Concepts',
+    author: 'Maximilian Schwarzmüller',
+    categories: ['Programación'],
+    description:
+      'Una guía en profundidad sobre los conceptos fundamentales de React: componentes, estado, efectos, contexto y las características del React moderno.',
+    year: 2022,
+    cover: '/lectura/react-key-concepts.jpg',
+    isbn: '183620227X',
+  },
+  {
+    id: '53',
+    title: 'Accelerate',
+    author: 'Nicole Forsgren, Jez Humble, Gene Kim',
+    categories: ['DevOps', 'Gestión'],
+    description:
+      'Investigación basada en datos sobre las prácticas de DevOps y entrega continua que distinguen a las organizaciones tecnológicas de alto rendimiento.',
+    year: 2018,
+    cover: '/lectura/accelerate.jpg',
+    isbn: '1942788339',
+  },
+  {
+    id: '54',
+    title: 'Build: Elements of an Effective Software Organization',
+    author: 'Rebecca Murphey, Otto Hilska',
+    categories: ['Gestión'],
+    description:
+      'Principios y prácticas para construir organizaciones de ingeniería de software efectivas, desde la cultura hasta los procesos técnicos.',
+    year: 2024,
+    cover: '/lectura/build-effective-software-organization.jpg',
+    isbn: 'B0CT7KLXKL',
+  },
+  {
+    id: '55',
+    title: 'Mastering Efficient Software Design Practices',
+    author: 'Paulo Cardoso',
+    categories: ['DevOps'],
+    description:
+      'Técnicas para desarrollar software escalable y de alto rendimiento aplicando metodologías ágiles, DevOps, CI/CD y herramientas modernas.',
+    year: 2025,
+    cover: '/lectura/mastering-efficient-software-design.jpg',
+    isbn: 'B0F6VJWRL4',
+  },
+  {
+    id: '56',
+    title: 'Lead With Empathy',
+    author: 'Pete Srodoski',
+    categories: ['Gestión'],
+    description:
+      'Cómo elevar las habilidades de liderazgo poniendo la empatía en el centro para construir equipos sólidos e inspirar cambios duraderos en la organización.',
+    year: 2023,
+    cover: '/lectura/lead-with-empathy.jpg',
+    isbn: 'B0CJLLN8RL',
+  },
+  {
+    id: '57',
+    title: 'Improving Agile Retrospectives',
+    author: 'Marc Loeffler',
+    categories: ['Gestión'],
+    description:
+      'Técnicas concretas para hacer retrospectivas ágiles más efectivas, dinámicas y orientadas a la mejora continua del equipo.',
+    year: 2017,
+    cover: '/lectura/improving-agile-retrospectives.jpg',
+    isbn: '0134678346',
+  },
+  {
+    id: '58',
+    title: 'Developer Testing: Building Quality into Software',
+    author: 'Alexander Tarlinder',
+    categories: ['Testing'],
+    description:
+      'Un enfoque integral sobre testing para desarrolladores, cubriendo técnicas de unit testing, mocks y TDD para construir software de calidad.',
+    year: 2016,
+    cover: '/lectura/developer-testing.jpg',
+    isbn: '0134291069',
+  },
+  {
+    id: '59',
+    title: 'Management 3.0',
+    author: 'Jurgen Appelo',
+    categories: ['Gestión'],
+    description:
+      'Un enfoque moderno y sistémico para la gestión de equipos ágiles, combinando complejidad, motivación y prácticas de liderazgo adaptativo.',
+    year: 2010,
+    cover: '/lectura/management-3-0.jpg',
+    isbn: '0321712471',
+  },
+  {
+    id: '60',
+    title: 'More Agile Testing',
+    author: 'Janet Gregory, Lisa Crispin',
+    categories: ['Testing'],
+    description:
+      'Continúa el viaje del testing ágil con nuevas técnicas, casos de estudio y reflexiones sobre la calidad en equipos modernos de desarrollo.',
+    year: 2014,
+    cover: '/lectura/more-agile-testing.jpg',
+    isbn: '0321967054',
+  },
+  {
+    id: '61',
+    title: 'Web Security for Developers',
+    author: 'Malcolm McDonald',
+    categories: ['Seguridad'],
+    description:
+      'Una guía práctica sobre las principales amenazas de seguridad web — XSS, CSRF, inyección SQL y más — con defensas concretas para desarrolladores.',
+    year: 2020,
+    cover: '/lectura/web-security-for-developers.jpg',
+    isbn: '1593279949',
+  },
+  {
+    id: '62',
+    title: 'The Site Reliability Workbook',
+    author: 'Betsy Beyer, Niall Richard Murphy, David K. Rensin, Kent Kawahara, Stephen Thorne',
+    categories: ['DevOps'],
+    description:
+      'Un compendio práctico de implementaciones reales de SRE con ejercicios y casos de uso para aplicar los principios de confiabilidad de Google.',
+    year: 2018,
+    cover: '/lectura/the-site-reliability-workbook.jpg',
+    isbn: '1492029505',
+  },
+  {
+    id: '63',
+    title: 'Chaos Engineering',
+    author: 'Casey Rosenthal, Nora Jones',
+    categories: ['DevOps'],
+    description:
+      'Principios y prácticas de la ingeniería del caos para probar y mejorar la resiliencia de sistemas distribuidos en producción.',
+    year: 2020,
+    cover: '/lectura/chaos-engineering.jpg',
+    isbn: '1492043869',
+  },
+  {
+    id: '64',
+    title: 'Observability Engineering',
+    author: 'Charity Majors, Liz Fong-Jones, George Miranda',
+    categories: ['DevOps'],
+    description:
+      'Cómo lograr excelencia en producción mediante observabilidad: trazas, métricas y logs para entender sistemas complejos en tiempo real.',
+    year: 2022,
+    cover: '/lectura/observability-engineering.jpg',
+    isbn: '1492076449',
+  },
+  {
+    id: '65',
+    title: 'Software Architecture Metrics',
+    author: 'Christian Ciceri et al.',
+    categories: ['Arquitectura'],
+    description:
+      'Casos de estudio sobre métricas de arquitectura de software para evaluar, monitorear y mejorar la calidad estructural de los sistemas.',
+    year: 2022,
+    cover: '/lectura/software-architecture-metrics.jpg',
+    isbn: '1098112237',
+  },
+  {
+    id: '66',
+    title: 'Site Reliability Engineering',
+    author: 'Betsy Beyer, Chris Jones, Jennifer Petoff, Niall Richard Murphy',
+    categories: ['DevOps'],
+    description:
+      'Cómo Google ejecuta sus sistemas de producción: principios, prácticas y herramientas de SRE para sistemas a escala global.',
+    year: 2016,
+    cover: '/lectura/site-reliability-engineering.jpg',
+    isbn: '149192912X',
+  },
+  {
+    id: '67',
+    title: 'The Pricing Roadmap',
+    author: 'Ulrik Lehrskov-Schmidt',
+    categories: ['Negocios'],
+    description:
+      'Una guía estructurada para diseñar modelos de precios B2B SaaS que maximizan el valor percibido y la satisfacción del cliente.',
+    year: 2023,
+    cover: '/lectura/the-pricing-roadmap.jpg',
+    isbn: '1544536313',
+  },
+  {
+    id: '68',
+    title: 'The SaaS Playbook',
+    author: 'Rob Walling',
+    categories: ['Negocios'],
+    description:
+      'Estrategias probadas para construir un negocio SaaS multimillonario sin capital de riesgo, aplicando principios de bootstrapping y crecimiento sostenible.',
+    year: 2023,
+    cover: '/lectura/the-saas-playbook.jpg',
+    isbn: 'B0C87KHT1L',
+  },
+  {
+    id: '69',
+    title: 'Python Crash Course',
+    author: 'Eric Matthes',
+    categories: ['Programación'],
+    description:
+      'Una introducción práctica y basada en proyectos al lenguaje Python, cubriendo fundamentos, visualización de datos, aplicaciones web y juegos.',
+    year: 2023,
+    cover: '/lectura/python-crash-course.jpg',
+    isbn: '1718502702',
+  },
+  {
+    id: '70',
+    title: 'Software Architecture Patterns for Serverless Systems',
+    author: 'John Gilbert',
+    categories: ['Arquitectura'],
+    description:
+      'Patrones de arquitectura para construir sistemas serverless modernos con microservicios orientados a eventos y micro frontends.',
+    year: 2024,
+    cover: '/lectura/software-architecture-patterns-serverless.jpg',
+    isbn: '1803235446',
+  },
+  {
+    id: '71',
+    title: 'How AI Works',
+    author: 'Ronald T. Kneusel',
+    categories: ['IA'],
+    description:
+      'Una explicación accesible y rigurosa de los fundamentos matemáticos y algorítmicos detrás de la inteligencia artificial moderna.',
+    year: 2023,
+    cover: '/lectura/how-ai-works.jpg',
+    isbn: '1718503725',
+  },
+  {
+    id: '72',
+    title: 'Serverless as a Game Changer',
+    author: 'Joseph Emison',
+    categories: ['Arquitectura'],
+    description:
+      'Cómo aprovechar al máximo el modelo serverless en la nube para transformar la forma en que se construye y opera software a escala.',
+    year: 2024,
+    cover: '/lectura/serverless-as-a-game-changer.jpg',
+    isbn: '0137392621',
+  },
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
@@ -441,6 +859,15 @@ const categoryStyles: Record<string, string> = {
     'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
   Diseño:
     'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30',
+  Negocios:
+    'bg-teal-100 text-teal-700 border-teal-300 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-500/30',
+  Comunicación:
+    'bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-500/30',
+  Seguridad:
+    'bg-red-100 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-300 dark:border-red-500/30',
+  IA: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-300 dark:bg-fuchsia-500/15 dark:text-fuchsia-300 dark:border-fuchsia-500/30',
+  DevOps:
+    'bg-cyan-100 text-cyan-700 border-cyan-300 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-500/30',
 };
 const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 
