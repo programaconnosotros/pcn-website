@@ -106,7 +106,7 @@ const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
 const getRecursosSubItems = () => [
   { title: 'Lectura', url: '/lectura' },
   { title: 'Cursos', url: '/cursos' },
-  { title: 'Software útil', url: '/software-util' },
+  { title: 'Herramientas', url: '/herramientas' },
   { title: 'Especialidades', url: '/especialidades' },
   { title: 'Influencers', url: '/influencers' },
   { title: 'Música', url: '/music' },

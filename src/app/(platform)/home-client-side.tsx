@@ -403,16 +403,16 @@ const HomeClientSide = ({
                 strokeWidth={1.0}
               />
             </div>
-            <Heading3 className="relative z-10 text-center">Software útil</Heading3>
+            <Heading3 className="relative z-10 text-center">Herramientas</Heading3>
 
             <Paragraph className="relative z-10 text-center text-muted-foreground">
               Descubrí herramientas y software recomendados por la comunidad para mejorar tu
               productividad y flujo de trabajo como desarrollador.
             </Paragraph>
 
-            <Link href="/software-util" className="relative z-10">
+            <Link href="/herramientas" className="relative z-10">
               <Button className="transition-all duration-300 group-hover:bg-pcnPurple group-hover:text-white group-hover:shadow-lg dark:group-hover:bg-pcnGreen dark:group-hover:text-black">
-                Ver software
+                Ver herramientas
               </Button>
             </Link>
           </div>

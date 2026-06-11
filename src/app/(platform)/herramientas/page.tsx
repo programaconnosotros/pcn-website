@@ -852,7 +852,7 @@ export default function SoftwareRecommendationsPage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Software útil</BreadcrumbPage>
+                <BreadcrumbPage>Herramientas</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -865,13 +865,13 @@ export default function SoftwareRecommendationsPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
                 <SquareMousePointer className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
               </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Software útil</span>
+              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Herramientas</span>
             </Heading2>
           </div>
 
           <p className="mb-6 text-muted-foreground">
-            Acá podés encontrar una lista de software útil recomendado por la comunidad de PCN. Si
-            querés sumar alguno, ¡avisanos!
+            Acá podés encontrar una lista de herramientas recomendadas por la comunidad de PCN. Si
+            querés sumar alguna, ¡avisanos!
           </p>
 
           <RecommendationsList recommendations={softwareRecommendations} />
