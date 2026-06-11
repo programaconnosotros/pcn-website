@@ -22,6 +22,7 @@ import { useState } from 'react';
 
 type PricingTier = 'free' | 'freemium' | 'paid';
 type SoftwareType = 'app' | 'library' | 'language';
+type TypingDiscipline = 'static' | 'dynamic' | 'mixed';
 
 interface SoftwareRecommendation {
   name: string;
@@ -34,6 +35,8 @@ interface SoftwareRecommendation {
   type: SoftwareType;
   isPopular?: boolean;
   usedHere?: boolean;
+  typing?: TypingDiscipline;
+  paradigms?: string[];
 }
 
 interface SoftwareRecommendationCardProps extends SoftwareRecommendation {}
@@ -53,6 +56,24 @@ const PRICING_BADGE: Record<PricingTier, { label: string; className: string }> =
   },
 };
 
+const TYPING_BADGE: Record<TypingDiscipline, { label: string; className: string }> = {
+  static: {
+    label: 'Tipado estático',
+    className: 'border-blue-500/30 bg-blue-500/20 text-blue-700 dark:text-blue-300',
+  },
+  dynamic: {
+    label: 'Tipado dinámico',
+    className: 'border-orange-500/30 bg-orange-500/20 text-orange-700 dark:text-orange-300',
+  },
+  mixed: {
+    label: 'Tipado mixto',
+    className: 'border-purple-500/30 bg-purple-500/20 text-purple-700 dark:text-purple-300',
+  },
+};
+
+const PARADIGM_BADGE_CLASS =
+  'border-pcnPurple/30 bg-pcnPurple/15 text-pcnPurple dark:border-pcnGreen/30 dark:bg-pcnGreen/15 dark:text-pcnGreen';
+
 function SoftwareRecommendationCard({
   name,
   description,
@@ -61,10 +82,14 @@ function SoftwareRecommendationCard({
   category,
   website,
   pricing,
+  type,
   isPopular: _isPopular = false,
   usedHere = false,
+  typing,
+  paradigms,
 }: SoftwareRecommendationCardProps) {
   const badge = PRICING_BADGE[pricing];
+  const isLanguage = type === 'language';
   return (
     <Card
       className={`relative flex flex-col overflow-hidden bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 ${
@@ -95,15 +120,28 @@ function SoftwareRecommendationCard({
               <p className="text-sm text-muted-foreground">{category}</p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-1">
-            <Badge className={badge.className}>{badge.label}</Badge>
-          </div>
+          {!isLanguage && (
+            <div className="flex flex-wrap gap-1">
+              <Badge className={badge.className}>{badge.label}</Badge>
+            </div>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
         <p className="mb-4 flex-1 text-sm text-muted-foreground">{description}</p>
 
         <div className="mb-4 flex flex-wrap gap-2">
+          {isLanguage && typing && (
+            <Badge className={`text-xs ${TYPING_BADGE[typing].className}`}>
+              {TYPING_BADGE[typing].label}
+            </Badge>
+          )}
+          {isLanguage &&
+            paradigms?.map((paradigm) => (
+              <Badge key={paradigm} className={`text-xs ${PARADIGM_BADGE_CLASS}`}>
+                {paradigm}
+              </Badge>
+            ))}
           {tags.map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
@@ -724,11 +762,13 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     description:
       'Superset de JavaScript desarrollado por Microsoft que agrega tipado estático. Mejora la productividad, la detección temprana de errores y la experiencia en editores. Compilado a JS.',
     logo: '/software-logos/typescript.webp',
-    tags: ['JavaScript', 'Tipado estático', 'Microsoft', 'Frontend', 'Backend'],
+    tags: ['JavaScript', 'Microsoft', 'Frontend', 'Backend'],
     category: 'Lenguaje',
     website: 'https://typescriptlang.org',
     pricing: 'free',
     type: 'language',
+    typing: 'mixed',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
     isPopular: true,
     usedHere: true,
   },
@@ -742,6 +782,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://rust-lang.org',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Imperativo', 'Funcional', 'Concurrente'],
     isPopular: true,
   },
   {
@@ -754,6 +796,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://go.dev',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Imperativo', 'Concurrente', 'Procedural'],
     isPopular: true,
   },
   {
@@ -766,6 +810,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://python.org',
     pricing: 'free',
     type: 'language',
+    typing: 'dynamic',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
     isPopular: true,
   },
   {
@@ -778,6 +824,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://kotlinlang.org',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
   },
   {
     name: 'Swift',
@@ -789,17 +837,21 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://swift.org',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
   },
   {
     name: 'Elixir',
     description:
       'Lenguaje funcional y concurrente construido sobre la Erlang VM. Diseñado para sistemas distribuidos y de alta disponibilidad. El framework Phoenix lo hace ideal para apps web en tiempo real.',
     logo: '/software-logos/elixir.webp',
-    tags: ['Funcional', 'Concurrencia', 'Phoenix', 'Distribuido', 'Real-time'],
+    tags: ['Concurrencia', 'Phoenix', 'Distribuido', 'Real-time'],
     category: 'Lenguaje',
     website: 'https://elixir-lang.org',
     pricing: 'free',
     type: 'language',
+    typing: 'dynamic',
+    paradigms: ['Funcional', 'Concurrente'],
   },
   {
     name: 'C',
@@ -811,6 +863,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://en.cppreference.com/w/c',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Imperativo', 'Procedural'],
     isPopular: true,
   },
   {
@@ -823,6 +877,8 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     website: 'https://learn.microsoft.com/dotnet/csharp',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
     isPopular: true,
   },
   {
@@ -830,11 +886,13 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     description:
       'Extensión orientada a objetos de C con gestión manual de memoria y alto rendimiento. Utilizado en motores de videojuegos, software de sistemas, simulaciones científicas y aplicaciones de tiempo real.',
     logo: '/software-logos/cpp.webp',
-    tags: ['Sistemas', 'Performance', 'Videojuegos', 'Bajo nivel', 'OOP'],
+    tags: ['Sistemas', 'Performance', 'Videojuegos', 'Bajo nivel'],
     category: 'Lenguaje',
     website: 'https://isocpp.org',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Orientado a objetos', 'Imperativo', 'Procedural'],
     isPopular: true,
   },
   {
@@ -842,22 +900,26 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     description:
       'Lenguaje de programación funcional puro con tipado estático avanzado y evaluación perezosa. Referente académico e industrial para funciones matemáticas, compiladores y sistemas confiables.',
     logo: '/software-logos/haskell.webp',
-    tags: ['Funcional', 'Tipado estático', 'Académico', 'Compiladores', 'Matemático'],
+    tags: ['Académico', 'Compiladores', 'Matemático'],
     category: 'Lenguaje',
     website: 'https://haskell.org',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Funcional', 'Declarativo'],
   },
   {
     name: 'Java',
     description:
       'Lenguaje orientado a objetos multiplataforma basado en la JVM. Estándar en el desarrollo empresarial, Android y sistemas de gran escala. Su ecosistema maduro y amplia comunidad lo mantienen vigente.',
     logo: '/software-logos/java.webp',
-    tags: ['JVM', 'Empresarial', 'Android', 'Backend', 'OOP'],
+    tags: ['JVM', 'Empresarial', 'Android', 'Backend'],
     category: 'Lenguaje',
     website: 'https://oracle.com/java',
     pricing: 'free',
     type: 'language',
+    typing: 'static',
+    paradigms: ['Orientado a objetos', 'Imperativo'],
     isPopular: true,
   },
   {
@@ -865,22 +927,26 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     description:
       'Lenguaje de programación lógica declarativa basado en reglas y hechos. Clásico en inteligencia artificial, sistemas expertos y procesamiento de lenguaje natural. Fundamento del paradigma lógico.',
     logo: '/software-logos/prolog.webp',
-    tags: ['Lógico', 'IA', 'Declarativo', 'Sistemas expertos', 'Académico'],
+    tags: ['IA', 'Sistemas expertos', 'Académico'],
     category: 'Lenguaje',
     website: 'https://swi-prolog.org',
     pricing: 'free',
     type: 'language',
+    typing: 'dynamic',
+    paradigms: ['Lógico', 'Declarativo'],
   },
   {
     name: 'Ruby',
     description:
       'Lenguaje interpretado orientado a objetos diseñado para la productividad y la elegancia. Muy popular gracias a Ruby on Rails, que lo convirtió en referente del desarrollo web ágil.',
     logo: '/software-logos/ruby.webp',
-    tags: ['Backend', 'Scripting', 'OOP', 'Rails', 'Productividad'],
+    tags: ['Backend', 'Scripting', 'Rails', 'Productividad'],
     category: 'Lenguaje',
     website: 'https://ruby-lang.org',
     pricing: 'free',
     type: 'language',
+    typing: 'dynamic',
+    paradigms: ['Orientado a objetos', 'Funcional', 'Imperativo'],
     isPopular: true,
   },
   {
@@ -888,11 +954,13 @@ const softwareRecommendations: SoftwareRecommendation[] = [
     description:
       'Lenguaje de programación orientado a objetos pionero de los años 70. Influyó en el diseño de Java, Ruby y Python. Conocido por su modelo de mensajes entre objetos y su entorno de desarrollo interactivo.',
     logo: '/software-logos/smalltalk.webp',
-    tags: ['OOP', 'Histórico', 'Mensajes', 'Dinámico', 'Académico'],
+    tags: ['Histórico', 'Mensajes', 'Académico'],
     category: 'Lenguaje',
     website: 'https://smalltalk.org',
     pricing: 'free',
     type: 'language',
+    typing: 'dynamic',
+    paradigms: ['Orientado a objetos'],
   },
 ];
 
