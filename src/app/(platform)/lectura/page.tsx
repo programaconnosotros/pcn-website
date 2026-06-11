@@ -30,7 +30,8 @@ import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
-import { articles } from './articles';
+import { articles, type Article } from './articles';
+import { ArticleReaderDialog } from './article-reader-dialog';
 
 interface Book {
   id: string;
@@ -422,6 +423,7 @@ const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
   const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('libros');
+  const [readerArticle, setReaderArticle] = useState<Article | null>(null);
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
@@ -647,17 +649,15 @@ const ReadingPage = () => {
                         </CardHeader>
                         <CardContent className="flex flex-1 flex-col justify-between">
                           <p className="text-sm text-muted-foreground">{article.description}</p>
-                          <Link
-                            href={article.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-4 inline-block"
+                          <Button
+                            variant="pcn"
+                            size="sm"
+                            className="mt-4 flex items-center gap-2"
+                            onClick={() => setReaderArticle(article)}
                           >
-                            <Button variant="pcn" size="sm" className="flex items-center gap-2">
-                              Leer artículo
-                              <ArrowUpRight className="h-4 w-4" />
-                            </Button>
-                          </Link>
+                            Leer artículo
+                            <ArrowUpRight className="h-4 w-4" />
+                          </Button>
                         </CardContent>
                       </Card>
                     ))}
@@ -672,6 +672,14 @@ const ReadingPage = () => {
               </TabsContent>
             </Tabs>
           </div>
+
+          <ArticleReaderDialog
+            article={readerArticle}
+            open={!!readerArticle}
+            onOpenChange={(open) => {
+              if (!open) setReaderArticle(null);
+            }}
+          />
 
           {/* Banner AgusLogs */}
           <Card className="flex flex-col gap-4 border border-pcnPurple/30 bg-pcnPurple/5 p-6 sm:flex-row sm:items-center sm:justify-between dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.3)]">
