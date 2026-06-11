@@ -41,3 +41,17 @@ jest.mock('next/headers', () => ({
 beforeEach(() => {
   mockReset(prismaMock);
 });
+
+// ─── Silence console.error in test output ────────────────────────────────────
+// Server actions log to console.error in catch blocks; the action tests
+// intentionally hit those paths, which otherwise floods the test output.
+// Kept as a spy (not deleted) so tests can still assert on calls if needed.
+let consoleErrorSpy: jest.SpyInstance;
+
+beforeAll(() => {
+  consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  consoleErrorSpy.mockRestore();
+});
