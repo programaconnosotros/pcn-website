@@ -12,7 +12,7 @@
     "docker:down": "docker-compose down",
     "prebuild": "prisma generate",
     "dev": "next dev",
-    "dev:portless": "portless pcn next dev",
+    "dev:portless": "portless run next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
