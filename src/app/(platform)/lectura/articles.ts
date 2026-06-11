@@ -215,4 +215,40 @@ export const articles: Article[] = [
     avatar: 'https://github.com/robhope.png?size=128',
     date: '2026-06-11',
   },
+  {
+    id: '18',
+    title: 'Micro Frontends',
+    author: 'Cam Jackson',
+    source: 'martinfowler.com',
+    category: 'Arquitectura',
+    description:
+      'Extiende las ideas de los microservicios al frontend: aplicaciones independientes y desplegables por separado que se componen en una sola interfaz, permitiendo que cada equipo trabaje de forma autónoma sin perder una experiencia de usuario cohesiva.',
+    url: 'https://martinfowler.com/articles/micro-frontends.html',
+    avatar: '/lectura/cam-jackson.jpg',
+    date: '2019-06-19',
+  },
+  {
+    id: '19',
+    title: 'Serverless Architectures',
+    author: 'Mike Roberts',
+    source: 'martinfowler.com',
+    category: 'Arquitectura',
+    description:
+      'Una guía profunda sobre arquitecturas serverless basadas en Backend as a Service (BaaS) y Functions as a Service (FaaS): sus beneficios, como menor costo operativo y escalado automático, y sus desventajas, como el vendor lock-in.',
+    url: 'https://martinfowler.com/articles/serverless.html',
+    avatar: '/lectura/mike-roberts.jpg',
+    date: '2018-05-22',
+  },
+  {
+    id: '20',
+    title: 'Feature Toggles (aka Feature Flags)',
+    author: 'Pete Hodgson',
+    source: 'martinfowler.com',
+    category: 'Programación',
+    description:
+      'Una guía completa sobre feature toggles (feature flags): cómo modificar el comportamiento del sistema sin cambiar código, las distintas categorías de toggles, técnicas de implementación y buenas prácticas para mantenerlos en el tiempo.',
+    url: 'https://martinfowler.com/articles/feature-toggles.html',
+    avatar: '/lectura/pete-hodgson.png',
+    date: '2017-10-09',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));
