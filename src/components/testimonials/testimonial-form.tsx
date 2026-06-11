@@ -91,7 +91,7 @@ export function TestimonialForm({
     try {
       await promise;
       onSuccess();
-    } catch (error) {
+    } catch {
       // Error ya manejado por toast.promise
     } finally {
       setIsDeleting(false);

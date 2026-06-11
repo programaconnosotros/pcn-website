@@ -4,7 +4,7 @@ import { FileUpload } from '@/components/ui/file-upload';
 
 type MultiFileUploadProps = {
   value: string[];
-  onChange: (urls: string[]) => void;
+  onChange: (_urls: string[]) => void;
   folder?: string;
   disabled?: boolean;
 };

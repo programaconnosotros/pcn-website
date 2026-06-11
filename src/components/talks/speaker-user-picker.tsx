@@ -13,7 +13,7 @@ import Image from 'next/image';
 
 type Props = {
   value: string | null;
-  onSelect: (user: SpeakerUserOption | null) => void;
+  onSelect: (_user: SpeakerUserOption | null) => void;
 };
 
 export function SpeakerUserPicker({ value, onSelect }: Props) {
@@ -31,6 +31,7 @@ export function SpeakerUserPicker({ value, onSelect }: Props) {
     getUserForSpeaker(value).then((user) => {
       if (user) setSelected(user);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Debounced search

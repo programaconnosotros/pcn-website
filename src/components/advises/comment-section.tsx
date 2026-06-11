@@ -60,7 +60,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
       setReplyingTo(null);
 
       toast.success('Comentario creado');
-    } catch (error) {
+    } catch {
       toast.error('Error al crear el comentario');
     } finally {
       setIsSubmitting(false);

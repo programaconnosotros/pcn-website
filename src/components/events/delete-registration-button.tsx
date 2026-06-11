@@ -44,7 +44,7 @@ export function DeleteRegistrationButton({
       });
       setOpen(false);
       router.refresh();
-    } catch (error) {
+    } catch {
       // El error ya se maneja en toast.promise
     } finally {
       setIsLoading(false);

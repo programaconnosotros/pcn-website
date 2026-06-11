@@ -28,6 +28,7 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
       date: formatDateForInput(defaultValues.date),
       endDate: defaultValues.endDate ? formatDateForInput(defaultValues.endDate) : '',
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (values: EventFormData) => {

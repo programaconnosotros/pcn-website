@@ -126,7 +126,7 @@ function SignUpContent() {
       } else {
         toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
-    } catch (error) {
+    } catch {
       setIsSubmitting(false);
       toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
     }

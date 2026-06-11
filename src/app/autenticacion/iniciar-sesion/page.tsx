@@ -86,7 +86,7 @@ function SignInContent() {
       // Error desconocido
       toast.error('No pudimos iniciar la sesión.');
       setIsLoading(false);
-    } catch (error) {
+    } catch {
       toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
       setIsLoading(false);
     }

@@ -62,7 +62,7 @@ export const signIn = async (
     const redirectTo = data.redirectTo || '/';
 
     return { success: true, redirectTo };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'INVALID_CREDENTIALS' };
   }
 };

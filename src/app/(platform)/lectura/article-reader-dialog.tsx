@@ -25,7 +25,7 @@ interface ReaderData {
 interface ArticleReaderDialogProps {
   article: Article | null;
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (_open: boolean) => void;
 }
 
 async function fetchArticleContent(url: string): Promise<ReaderData> {

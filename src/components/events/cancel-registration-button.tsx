@@ -42,7 +42,7 @@ export function CancelRegistrationButton({
         onCancel();
       }
       router.refresh();
-    } catch (error) {
+    } catch {
       // El error ya se maneja en toast.promise
     } finally {
       setIsLoading(false);

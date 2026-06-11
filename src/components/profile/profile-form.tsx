@@ -222,7 +222,7 @@ export const ProfileForm = ({
         success: 'Perfil actualizado correctamente',
         error: 'Error al actualizar el perfil',
       });
-    } catch (error) {
+    } catch {
       // Error manejado por toast
     } finally {
       setIsSubmitting(false);
