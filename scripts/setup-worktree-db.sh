@@ -52,27 +52,7 @@ DB_NAME="pcn_$(echo "$WORKTREE_BASENAME" | tr '[:upper:]' '[:lower:]' | tr -cs '
 
 echo "→ Provisioning worktree DB: $DB_NAME"
 
-# ── 5. Ensure the pcn-db container is running ─────────────────────────────────
-if ! docker ps --format '{{.Names}}' | grep -q '^pcn-db$'; then
-  echo "  Starting pcn-db container..."
-  docker compose -f "$MAIN_TREE/docker-compose.yml" up -d database
-  echo -n "  Waiting for Postgres..."
-  until docker exec pcn-db pg_isready -U "$POSTGRES_USER" -q 2>/dev/null; do
-    echo -n "."
-    sleep 1
-  done
-  echo " ready."
-fi
-
-# ── 6. Create the database (idempotent) ───────────────────────────────────────
-DB_EXISTS=$(docker exec pcn-db psql -U "$POSTGRES_USER" -tAc \
-  "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" 2>/dev/null || true)
-if [ "$DB_EXISTS" != "1" ]; then
-  echo "  Creating database..."
-  docker exec pcn-db createdb -U "$POSTGRES_USER" "$DB_NAME"
-fi
-
-# ── 7. Write .env for this worktree ──────────────────────────────────────────
+# ── 5. Write .env for this worktree ──────────────────────────────────────────
 # Replace only the database name at the end of each connection URL; preserve
 # every other variable (SMTP, AWS, etc.) verbatim from the main .env.
 NEW_DB_URL=$(echo "$DATABASE_URL" | sed "s|/[^/?]*$|/$DB_NAME|")
@@ -85,18 +65,25 @@ rm -f "$CUR/.env.bak"
 
 echo "  .env written (DATABASE_URL → $NEW_DB_URL)"
 
-# ── 8. Ensure Node dependencies are installed ─────────────────────────────────
+# Override the env vars exported by the main .env source above, so Prisma and
+# the seed script use the new worktree database, not the main one.
+export DATABASE_URL="$NEW_DB_URL"
+export DIRECT_URL="$NEW_DIRECT_URL"
+
+# ── 6. Ensure Node dependencies are installed ─────────────────────────────────
 cd "$CUR"
 if [ ! -f "node_modules/.bin/prisma" ]; then
   echo "  Running pnpm install..."
   pnpm install
 fi
 
-# ── 9. Apply all pending migrations ──────────────────────────────────────────
+# ── 7. Apply all pending migrations ──────────────────────────────────────────
+# prisma migrate deploy creates the database if it doesn't exist, then applies
+# all pending migrations non-interactively. Correct for automation.
 echo "  Applying migrations..."
 pnpm exec prisma migrate deploy
 
-# ── 10. Seed with sample data ────────────────────────────────────────────────
+# ── 8. Seed with sample data ────────────────────────────────────────────────
 echo "  Seeding database..."
 pnpm populate-database
 

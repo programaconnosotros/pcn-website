@@ -3,7 +3,7 @@
 # drop-worktree-db.sh
 #
 # Drops the per-worktree Postgres database created by setup-worktree-db.sh.
-# Idempotent (uses --if-exists); safe if the DB was never created.
+# Idempotent (uses DROP DATABASE IF EXISTS); safe if the DB was never created.
 #
 # Usage:
 #   Called automatically by the WorktreeRemove hook when you choose
@@ -48,6 +48,12 @@ DB_NAME="pcn_$(echo "$WORKTREE_BASENAME" | tr '[:upper:]' '[:lower:]' | tr -cs '
 
 # ── 3. Safety guard: never drop the main/default database ────────────────────
 MAIN_TREE=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
+
+if [ "$WORKTREE_PATH" = "$MAIN_TREE" ]; then
+  echo "⚠️  drop-worktree-db: refusing to run against the main checkout." >&2
+  exit 1
+fi
+
 if [ -f "$MAIN_TREE/.env" ]; then
   set -a
   # shellcheck source=/dev/null
@@ -59,19 +65,14 @@ if [ -f "$MAIN_TREE/.env" ]; then
   fi
 fi
 
-# Also guard against the worktree path being the main checkout itself
-if [ "$WORKTREE_PATH" = "$MAIN_TREE" ]; then
-  echo "⚠️  drop-worktree-db: refusing to run against the main checkout." >&2
-  exit 1
-fi
+: "${DATABASE_URL:?DATABASE_URL not set in main .env}"
 
-# ── 4. Ensure pcn-db is running ───────────────────────────────────────────────
-if ! docker ps --format '{{.Names}}' | grep -q '^pcn-db$'; then
-  echo "  pcn-db is not running — nothing to drop."
-  exit 0
-fi
+# ── 4. Build a maintenance connection URL ────────────────────────────────────
+# Replace the database name in DATABASE_URL with the maintenance DB (postgres).
+# psql needs an existing database to connect to before it can drop another one.
+MAINTENANCE_URL=$(echo "$DATABASE_URL" | sed "s|/[^/?]*$|/postgres|")
 
-# ── 5. Drop the database (idempotent) ────────────────────────────────────────
+# ── 5. Drop the database ─────────────────────────────────────────────────────
 echo "→ Dropping worktree DB: $DB_NAME"
-docker exec pcn-db dropdb -U "${POSTGRES_USER:-postgres}" --if-exists "$DB_NAME"
+psql "$MAINTENANCE_URL" -c "DROP DATABASE IF EXISTS \"$DB_NAME\";"
 echo "✓ Done."
