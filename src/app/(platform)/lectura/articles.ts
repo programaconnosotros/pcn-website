@@ -203,4 +203,16 @@ export const articles: Article[] = [
     avatar: 'https://github.com/jinayoon.png?size=128',
     date: '2026-03-11',
   },
+  {
+    id: '17',
+    title: 'Landing Page Hot Tips',
+    author: 'Rob Hope',
+    source: 'landingpagehottips.com',
+    category: 'Diseño',
+    description:
+      '100 tips digeribles para mejorar tus landing pages: diseño, copywriting, optimización de conversión y experiencia de usuario, con ejemplos prácticos.',
+    url: 'https://landingpagehottips.com/',
+    avatar: 'https://github.com/robhope.png?size=128',
+    date: '2026-06-11',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));

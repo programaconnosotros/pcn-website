@@ -41,7 +41,8 @@ interface Book {
   description: string;
   year?: number;
   cover: string;
-  isbn: string;
+  isbn?: string;
+  url?: string;
 }
 
 const books: Book[] = [
@@ -385,6 +386,36 @@ const books: Book[] = [
     cover: '/lectura/rework.jpg',
     isbn: '0307463745',
   },
+  {
+    id: '32',
+    title: 'Refactoring UI',
+    author: 'Adam Wathan, Steve Schoger',
+    categories: ['Diseño'],
+    description:
+      'Aprendé a diseñar interfaces hermosas con tácticas concretas y accionables en lugar de principios abstractos: jerarquía, espaciado, color, tipografía y más.',
+    cover: '/lectura/refactoring-ui.jpg',
+    url: 'https://refactoringui.com/',
+  },
+  {
+    id: '33',
+    title: 'Practical UI',
+    author: 'Adham Dannaway',
+    categories: ['Diseño'],
+    description:
+      'Más de 100 guías prácticas y basadas en lógica para crear interfaces intuitivas, accesibles y atractivas, con ejemplos visuales.',
+    cover: '/lectura/practical-ui.jpg',
+    url: 'https://www.practical-ui.com/',
+  },
+  {
+    id: '34',
+    title: 'How To Design Better',
+    author: 'UI Adrian',
+    categories: ['Diseño'],
+    description:
+      'Recurso de educación en diseño que cubre fundamentos de UI/UX, diseño de componentes y mejores prácticas, con ejemplos visuales y guías accionables.',
+    cover: '/lectura/how-to-design-better.jpg',
+    url: 'https://www.howtodesignbetter.com/ebook',
+  },
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
@@ -408,6 +439,8 @@ const categoryStyles: Record<string, string> = {
     'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
   Producto:
     'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
+  Diseño:
+    'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30',
 };
 const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
 
@@ -589,11 +622,28 @@ const ReadingPage = () => {
                             ))}
                           </div>
                         </CardHeader>
-                        <CardContent className="flex-1">
-                          <p className="text-sm text-muted-foreground">{book.description}</p>
-                          <p className="mt-3 text-xs text-muted-foreground">
-                            ISBN: <span className={GeistMono.className}>{book.isbn}</span>
-                          </p>
+                        <CardContent className="flex flex-1 flex-col justify-between">
+                          <div>
+                            <p className="text-sm text-muted-foreground">{book.description}</p>
+                            {book.isbn && (
+                              <p className="mt-3 text-xs text-muted-foreground">
+                                ISBN: <span className={GeistMono.className}>{book.isbn}</span>
+                              </p>
+                            )}
+                          </div>
+                          {book.url && (
+                            <Button
+                              asChild
+                              variant="pcn"
+                              size="sm"
+                              className="mt-4 flex w-fit items-center gap-2"
+                            >
+                              <Link href={book.url} target="_blank" rel="noopener noreferrer">
+                                Ver libro
+                                <ArrowUpRight className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                          )}
                         </CardContent>
                       </Card>
                     ))}
