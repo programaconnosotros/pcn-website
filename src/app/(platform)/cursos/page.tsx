@@ -13,6 +13,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { ExternalLink, Laptop, TvMinimalPlay } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
 import type { Metadata } from 'next';
@@ -68,6 +69,17 @@ const CourseCard = ({ course }: { course: Course }) => {
       <div>
         <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
           <div className="flex items-center gap-2">
+            {course.logo && (
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-white p-1.5 dark:bg-neutral-100">
+                <Image
+                  src={course.logo}
+                  alt={`Logo de ${course.name}`}
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            )}
             <CardTitle>{course.name}</CardTitle>
             {course.isMadeByCommunity && (
               <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
