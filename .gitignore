@@ -57,3 +57,6 @@ dist
 
 # Claude Code
 .claude/worktrees/
+
+# PR screenshots (local capture dir; PNGs are published to the pr-screenshots branch)
+.pr-screenshots/

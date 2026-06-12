@@ -145,10 +145,10 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
 
           <Card className="mt-6">
             <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle>Descripción</CardTitle>
+              <div className="flex min-w-0 items-center gap-2">
+                <CardTitle className="min-w-0">Descripción</CardTitle>
                 {course.isMadeByCommunity && (
-                  <Badge className="border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
+                  <Badge className="shrink-0 border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
                     Made in PCN
                   </Badge>
                 )}
