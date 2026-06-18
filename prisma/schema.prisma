@@ -48,6 +48,7 @@ model User {
   resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
   appLogs         AppLog[]
   announcements   Announcement[]
+  projectMemberships ProjectMember[] @relation("UserProjectMembers")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -447,4 +448,37 @@ model TalkSpeaker {
   @@index([talkId])
   @@index([userId])
   @@index([talkId, order])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  url         String
+  logoUrl     String
+  techStack   String[]
+  order       Int      @default(0)
+
+  members ProjectMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectMember {
+  id         String  @id @default(cuid())
+  projectId  String
+  userId     String?
+  memberName String
+  order      Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User?   @relation("UserProjectMembers", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([projectId, order])
 }
