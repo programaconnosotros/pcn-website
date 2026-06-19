@@ -6,6 +6,7 @@ import {
   BookOpen,
   CalendarDays,
   Code2,
+  Download,
   Eye,
   GraduationCap,
   Home,
@@ -36,7 +37,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
+import { usePwa } from '@/components/pwa-provider';
 import { User } from '@prisma/client';
 import { NavSecondary } from './nav-secondary';
 
@@ -229,6 +232,53 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   unreadNotificationsCount?: number;
 }
 
+function PwaInstallWidget() {
+  const { isInstallable, installApp } = usePwa();
+  const { isCollapsed, isMobile } = useSidebar();
+
+  if (!isInstallable) return null;
+
+  if (isCollapsed && !isMobile) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem className="flex justify-center py-2">
+          <SidebarMenuButton
+            tooltip="Instalar aplicación"
+            onClick={installApp}
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-600/10 border border-violet-500/20 text-violet-400 hover:bg-violet-600 hover:text-white transition-all duration-200"
+          >
+            <Download className="h-4 w-4 animate-pulse" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
+  return (
+    <div className="mx-2 my-2 rounded-xl border border-violet-500/20 bg-gradient-to-br from-violet-500/5 via-indigo-500/5 to-transparent p-4 transition-all duration-300 animate-in fade-in zoom-in-95 duration-200">
+      <div className="flex items-start gap-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/20 animate-bounce duration-[3000ms]">
+          <Download className="h-4 w-4" />
+        </div>
+        <div className="flex flex-col gap-1 min-w-0">
+          <h4 className="text-xs font-semibold text-zinc-200 tracking-wide">
+            App de Escritorio / Móvil
+          </h4>
+          <p className="text-[10px] leading-normal text-zinc-400">
+            Instala PCN para acceso rápido y navegación offline.
+          </p>
+          <button
+            onClick={installApp}
+            className="mt-2.5 w-full rounded-lg bg-violet-600 px-3 py-1.5 text-center text-xs font-semibold text-white shadow-md shadow-violet-600/15 hover:bg-violet-500 active:scale-95 transition-all duration-200"
+          >
+            Instalar App
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
 
@@ -260,6 +310,7 @@ export function AppSidebar(props: AppSidebarProps) {
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
+        <PwaInstallWidget />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
