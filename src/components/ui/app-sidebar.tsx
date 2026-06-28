@@ -19,6 +19,7 @@ import {
   MessageCircle,
   MicVocal,
   Podcast,
+  Rocket,
   ScrollText,
   Send,
   Share2,
@@ -112,6 +113,7 @@ const getRecursosItems = () => [
   { title: 'Lectura', url: '/lectura', icon: BookOpen },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
   { title: 'Herramientas', url: '/herramientas', icon: Wrench },
+  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
   {
     title: 'Más recursos',
     icon: Library,
