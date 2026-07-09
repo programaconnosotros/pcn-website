@@ -1,5 +1,6 @@
 import { ReactQueryProvider } from '@/components/react-query-provider';
 import { ThemeProvider } from '@/components/themes/theme-provider';
+import { PwaProvider } from '@/components/pwa-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
@@ -48,10 +49,12 @@ const RootLayout = async ({
           forcedTheme="dark"
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-right" />
-          <ScrollToTop />
-          <ScrollIndicator />
+          <PwaProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <Toaster closeButton position="top-right" />
+            <ScrollToTop />
+            <ScrollIndicator />
+          </PwaProvider>
         </ThemeProvider>
       </body>
     </html>
