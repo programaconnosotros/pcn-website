@@ -156,14 +156,52 @@ El puerto interno se asigna automáticamente — sin conflictos, sin configuraci
 
 ## 📧 Emails en desarrollo local
 
-El stack de Docker incluye [MailHog](https://github.com/mailhog/MailHog), un servidor SMTP local que captura todos los emails que envía la aplicación sin entregarlos realmente. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin necesitar credenciales de Gmail.
+[MailHog](https://github.com/mailhog/MailHog) es un servidor SMTP local que captura todos los emails que envía la aplicación **sin entregarlos realmente**. Esto te permite probar flujos de email (registro, reseteo de contraseña, códigos de verificación) sin credenciales de Gmail y sin riesgo de mandar mails reales.
 
-MailHog se levanta automáticamente junto con los demás contenedores al ejecutar `docker-compose up`. Podés ver los emails capturados en:
+### Modelo: una sola instancia compartida por todos los worktrees
 
-[http://localhost:18025](http://localhost:18025)
+El checkout principal y cada worktree corriendo `pnpm dev` usan el **mismo MailHog** en `localhost:1025`. Todos comparten una única bandeja de entrada en **[http://localhost:8025](http://localhost:8025)** — si trabajás con varios worktrees en paralelo, los correos de todos aparecen ahí (distinguilos por destinatario o asunto).
 
-> [!NOTE]
-> El puerto del servidor web de MailHog es `18025` (y no el `8025` por defecto) para evitar conflictos si ya tenés una instancia de MailHog corriendo localmente. El puerto SMTP es `11025`.
+Este modelo sigue el mismo patrón que Postgres: un servicio compartido de la máquina, uso aislado por worktree.
+
+### Requisito: tener MailHog corriendo
+
+MailHog tiene que estar corriendo en `localhost:1025` (SMTP) y `localhost:8025` (UI). Si todavía no lo tenés, levantalo con:
+
+```bash
+docker run -d --name mailhog -p 1025:1025 -p 8025:8025 mailhog/mailhog
+```
+
+Esto lo inicia en segundo plano y lo deja disponible para todos tus proyectos. No necesitás volver a ejecutarlo salvo que Docker se reinicie.
+
+### Cómo funciona la config
+
+El `.env.template` ya incluye los valores correctos para dev local:
+
+```
+SMTP_HOST=localhost
+SMTP_PORT=1025
+SMTP_USER=           # vacío — MailHog no requiere credenciales
+SMTP_PASS=           # vacío
+```
+
+Al crear un nuevo worktree, `scripts/setup-worktree-db.sh` copia el `.env` del checkout principal tal cual (excepto las URLs de la base de datos), así que cualquier worktree hereda la config de SMTP automáticamente sin hacer nada extra.
+
+En producción `SMTP_HOST` queda vacío → se usa Gmail con `SMTP_USER`/`SMTP_PASS` (secrets de Kamal). Ver `src/lib/email.ts` para la lógica de switching.
+
+### Cómo probar features de email
+
+1. Asegurate de que MailHog está corriendo: abrí **[http://localhost:8025](http://localhost:8025)** y tendrías que ver la UI.
+2. Levantá el worktree con `pnpm dev`.
+3. Disparar alguno de los flujos que manda email:
+   - **Registro** → `src/actions/auth/sign-up.ts`
+   - **Reseteo de contraseña** → `src/actions/auth/request-password-reset.ts`
+   - **Reenvío de código de verificación** → `src/actions/auth/send-verification-code.ts`
+4. Volvé a **[http://localhost:8025](http://localhost:8025)** y el email aparece capturado con asunto, HTML y código.
+
+### Alternativa: todo en Docker (`docker-compose up`)
+
+Si preferís correr toda la app en Docker (`docker-compose up`), el stack levanta su propio contenedor de MailHog. En ese caso la bandeja de entrada vive en **[http://localhost:18025](http://localhost:18025)** (el puerto está remapeado a `18025` para no chocar con una instancia personal de MailHog que ya use `8025`). Los puertos son configurables desde `.env` con `MAILHOG_UI_PORT` y `MAILHOG_SMTP_PORT`.
 
 ## 🛠️ Tech stack
 
