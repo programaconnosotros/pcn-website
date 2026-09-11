@@ -8,6 +8,7 @@ import {
   Code2,
   Eye,
   GraduationCap,
+  Handshake,
   Home,
   Image,
   Instagram,
@@ -170,6 +171,11 @@ const getComunidadItems = () => {
       title: 'Galería',
       url: '/galeria',
       icon: Image,
+    },
+    {
+      title: 'Sponsors',
+      url: '/sponsors',
+      icon: Handshake,
     },
     {
       title: 'Redes',

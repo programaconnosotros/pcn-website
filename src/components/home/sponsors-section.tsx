@@ -5,6 +5,7 @@ import { Heading2 } from '../ui/heading-2';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Building2, Handshake, MessageSquare } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const sponsors = [
   {
@@ -92,17 +93,28 @@ const sponsors = [
   },
 ];
 
-export const SponsorsSection = () => {
+interface SponsorsSectionProps {
+  /**
+   * Whether to render the section's own centered "Sponsors" heading.
+   * Kept `true` by default so the home page renders exactly as before.
+   * @default true
+   */
+  showHeading?: boolean;
+}
+
+export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) => {
   return (
-    <div className="-mx-6 w-[calc(100%+3rem)] py-10">
-      <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 mb-0 flex items-center gap-3 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-            <Handshake className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-          </div>
-          <span>Sponsors</span>
-        </Heading2>
-      </div>
+    <div className={cn('-mx-6 w-[calc(100%+3rem)]', showHeading ? 'py-10' : 'pb-10')}>
+      {showHeading && (
+        <div className="flex items-center justify-center p-6">
+          <Heading2 className="relative z-10 mb-0 flex items-center gap-3 text-center text-3xl text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)] md:text-4xl">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+              <Handshake className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
+            </div>
+            <span>Sponsors</span>
+          </Heading2>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3">
         {sponsors.map((sponsor, index) => (
