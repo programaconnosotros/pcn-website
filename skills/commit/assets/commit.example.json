@@ -1,0 +1,14 @@
+{
+  "$comment": "Copy to .eagerworks/commit.json in the target repo root. All fields optional — see skills/commit/references/config.md for the full schema.",
+  "commit": {
+    "types": ["feat", "fix", "docs", "chore"],
+    "scopes": ["api", "web", "billing"],
+    "requireScope": false,
+    "subjectMaxLength": 72,
+    "language": "en",
+    "includeUntracked": "always",
+    "maxCommitsPerRun": 5,
+    "signoff": false,
+    "trailers": []
+  }
+}
