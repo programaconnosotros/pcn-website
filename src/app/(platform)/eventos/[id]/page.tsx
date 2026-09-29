@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Heading2 } from '@/components/ui/heading-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, MapPin, Edit, Users, Globe, Video, Mic } from 'lucide-react';
+import { Calendar, CalendarPlus, MapPin, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
@@ -27,6 +27,7 @@ import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
+import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { cn } from '@/lib/utils';
 
 type EventWithImages = Event & {
@@ -447,6 +448,13 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                       )}
                     </div>
                   </div>
+
+                  <Button asChild variant="outline" className="w-full gap-2">
+                    <a href={createGoogleCalendarUrl(event)}>
+                      <CalendarPlus className="h-4 w-4" />
+                      Agregar a Google Calendar
+                    </a>
+                  </Button>
 
                   {event.isOnline ? (
                     <div className="flex items-center gap-2">
