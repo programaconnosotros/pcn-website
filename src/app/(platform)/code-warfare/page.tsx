@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Code Warfare | programaConNosotros',
     description: 'Competencias de programación de la comunidad programaConNosotros. Próximamente.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/code-warfare`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -18,7 +17,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Code Warfare | programaConNosotros',
     description: 'Competencias de programación de la comunidad programaConNosotros. Próximamente.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

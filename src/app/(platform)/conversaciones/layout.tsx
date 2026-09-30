@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     title: 'Conversaciones de la comunidad | programaConNosotros',
     description:
       'Las mejores conversaciones del WhatsApp de la comunidad: debates técnicos, anécdotas y momentos memorables entre apasionados por el software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/conversaciones`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     title: 'Conversaciones de la comunidad | programaConNosotros',
     description:
       'Las mejores conversaciones del WhatsApp de la comunidad: debates técnicos, anécdotas y momentos memorables entre apasionados por el software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     title: 'Testimonios | programaConNosotros',
     description:
       'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/testimonios`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -24,7 +23,6 @@ export const metadata: Metadata = {
     title: 'Testimonios | programaConNosotros',
     description:
       'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

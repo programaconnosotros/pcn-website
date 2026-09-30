@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     title: 'Herramientas | programaConNosotros',
     description:
       'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/herramientas`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     title: 'Herramientas | programaConNosotros',
     description:
       'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

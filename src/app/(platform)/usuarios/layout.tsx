@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/usuarios`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

@@ -17,7 +17,43 @@ interface TerminalCardProps {
   description?: string;
   /** Short facts rendered as chips in the footer, e.g. `4 horas`. */
   meta?: string[];
+  /** Square picture beside the title (a profile photo). Falls back to `initials`. */
+  avatar?: { src: string | null; initials: string };
 }
+
+const AVATAR_SIZE = 200;
+
+const Avatar = ({ src, initials }: { src: string | null; initials: string }) => (
+  <div
+    style={{
+      display: 'flex',
+      flexShrink: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: AVATAR_SIZE,
+      height: AVATAR_SIZE,
+      border: `2px solid ${GREEN}`,
+      boxShadow: '0 0 40px rgba(4,244,190,0.35)',
+      backgroundColor: 'rgba(4,244,190,0.12)',
+      color: GREEN,
+      fontSize: 84,
+      fontWeight: 700,
+    }}
+  >
+    {src ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt=""
+        width={AVATAR_SIZE - 4}
+        height={AVATAR_SIZE - 4}
+        style={{ objectFit: 'cover' }}
+      />
+    ) : (
+      initials
+    )}
+  </div>
+);
 
 // Satori has no reliable multi-line clamp, so trim long strings up front.
 const truncate = (text: string, max: number) =>
@@ -54,6 +90,7 @@ export async function renderTerminalCard({
   title,
   description,
   meta = [],
+  avatar,
 }: TerminalCardProps) {
   const { regular, bold } = await loadFonts();
   const cleanTitle = truncate(collapseWhitespace(title), 90);
@@ -106,42 +143,48 @@ export async function renderTerminalCard({
           </div>
 
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-              padding: '32px 40px 0',
-              gap: 20,
-            }}
+            style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 40, padding: '0 40px' }}
           >
-            <div style={{ display: 'flex', fontSize: 24, color: 'rgba(229,229,229,0.6)' }}>
-              <span style={{ color: 'rgba(4,244,190,0.7)', marginRight: 14 }}>$</span>
-              {command}
-            </div>
             <div
               style={{
                 display: 'flex',
-                fontSize: titleSize,
-                fontWeight: 700,
-                lineHeight: 1.15,
-                color: '#fff',
-                textShadow: '0 0 24px rgba(4,244,190,0.45)',
+                flexDirection: 'column',
+                flex: 1,
+                alignSelf: 'flex-start',
+                padding: '32px 0 0',
+                gap: 20,
               }}
             >
-              {cleanTitle}
-            </div>
-            {description && (
+              <div style={{ display: 'flex', fontSize: 24, color: 'rgba(229,229,229,0.6)' }}>
+                <span style={{ color: 'rgba(4,244,190,0.7)', marginRight: 14 }}>$</span>
+                {command}
+              </div>
               <div
                 style={{
                   display: 'flex',
-                  fontSize: 26,
-                  lineHeight: 1.45,
-                  color: 'rgba(229,229,229,0.72)',
+                  fontSize: titleSize,
+                  fontWeight: 700,
+                  lineHeight: 1.15,
+                  color: '#fff',
+                  textShadow: '0 0 24px rgba(4,244,190,0.45)',
                 }}
               >
-                {truncate(collapseWhitespace(description), 150)}
+                {cleanTitle}
               </div>
-            )}
+              {description && (
+                <div
+                  style={{
+                    display: 'flex',
+                    fontSize: 26,
+                    lineHeight: 1.45,
+                    color: 'rgba(229,229,229,0.72)',
+                  }}
+                >
+                  {truncate(collapseWhitespace(description), avatar ? 100 : 150)}
+                </div>
+              )}
+            </div>
+            {avatar && <Avatar {...avatar} />}
           </div>
 
           <div

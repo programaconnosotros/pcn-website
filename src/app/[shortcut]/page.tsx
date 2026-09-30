@@ -25,7 +25,6 @@ export async function generateMetadata({
       openGraph: {
         title: 'programaConNosotros',
         description: 'Participá de los próximos eventos de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/${shortcut}`,
         type: 'website',
         siteName: 'programaConNosotros',
@@ -34,7 +33,6 @@ export async function generateMetadata({
         card: 'summary_large_image',
         title: 'programaConNosotros',
         description: 'Participá de los próximos eventos de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
       },
     };
   }
@@ -42,7 +40,10 @@ export async function generateMetadata({
   const rawImage =
     event.flyerImages[0] ||
     ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
-  const imageUrl = rawImage ? optimizedOgImage(rawImage) : `${SITE_URL}/pcn-link-preview.png`;
+  // Events without a flyer get the generated terminal card.
+  const imageUrl = rawImage
+    ? optimizedOgImage(rawImage)
+    : `${SITE_URL}/eventos/${event.id}/og-image`;
 
   return {
     title: event.name,

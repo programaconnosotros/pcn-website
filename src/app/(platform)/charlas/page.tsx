@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     title: 'Charlas técnicas | programaConNosotros',
     description:
       'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/charlas`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -24,7 +23,6 @@ export const metadata: Metadata = {
     title: 'Charlas técnicas | programaConNosotros',
     description:
       'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

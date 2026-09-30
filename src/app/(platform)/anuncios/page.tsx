@@ -16,7 +16,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Anuncios | programaConNosotros',
     description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/anuncios`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -25,7 +24,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Anuncios | programaConNosotros',
     description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

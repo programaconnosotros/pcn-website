@@ -12,7 +12,6 @@ export const metadata: Metadata = {
     title: 'Sponsors | programaConNosotros',
     description:
       'Conocé a las empresas y organizaciones que apoyan a programaConNosotros y hacen posible el crecimiento de la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/sponsors`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -22,7 +21,6 @@ export const metadata: Metadata = {
     title: 'Sponsors | programaConNosotros',
     description:
       'Conocé a las empresas y organizaciones que apoyan a programaConNosotros y hacen posible el crecimiento de la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

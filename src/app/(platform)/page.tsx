@@ -20,7 +20,6 @@ export const metadata: Metadata = {
     title: 'programaConNosotros — Comunidad de ingeniería de software',
     description:
       'Sumate a programaConNosotros, la comunidad de apasionados por la ingeniería de software. Eventos, charlas, cursos, podcasts y mucho más para llevar tu carrera al siguiente nivel.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -30,7 +29,6 @@ export const metadata: Metadata = {
     title: 'programaConNosotros — Comunidad de ingeniería de software',
     description:
       'Sumate a programaConNosotros, la comunidad de apasionados por la ingeniería de software. Eventos, charlas, cursos, podcasts y mucho más para llevar tu carrera al siguiente nivel.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

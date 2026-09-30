@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     title: 'Proyectos de la comunidad | programaConNosotros',
     description:
       'Explorá los proyectos de software creados por miembros de la comunidad. Conocé las tecnologías utilizadas y las personas detrás de cada proyecto.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/proyectos`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -24,7 +23,6 @@ export const metadata: Metadata = {
     title: 'Proyectos de la comunidad | programaConNosotros',
     description:
       'Explorá los proyectos de software creados por miembros de la comunidad. Conocé las tecnologías utilizadas y las personas detrás de cada proyecto.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

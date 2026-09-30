@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     title: 'Galería | programaConNosotros',
     description:
       'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/galeria`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     title: 'Galería | programaConNosotros',
     description:
       'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

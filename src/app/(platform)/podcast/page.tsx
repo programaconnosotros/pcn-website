@@ -11,7 +11,6 @@ export const metadata: Metadata = {
     title: 'Podcast | programaConNosotros',
     description:
       'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/podcast`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -21,7 +20,6 @@ export const metadata: Metadata = {
     title: 'Podcast | programaConNosotros',
     description:
       'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

@@ -41,7 +41,6 @@ export const metadata: Metadata = {
     title: 'Desarrollá el proyecto | programaConNosotros',
     description:
       'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/desarrollo`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -51,7 +50,6 @@ export const metadata: Metadata = {
     title: 'Desarrollá el proyecto | programaConNosotros',
     description:
       'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

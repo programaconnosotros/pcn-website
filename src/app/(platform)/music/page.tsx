@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Música | programaConNosotros',
     description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/music`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Música | programaConNosotros',
     description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

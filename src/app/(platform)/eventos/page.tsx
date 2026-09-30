@@ -17,7 +17,6 @@ export const metadata: Metadata = {
     title: 'Eventos | programaConNosotros',
     description:
       'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/eventos`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -27,7 +26,6 @@ export const metadata: Metadata = {
     title: 'Eventos | programaConNosotros',
     description:
       'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

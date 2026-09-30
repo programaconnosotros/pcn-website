@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Videos | programaConNosotros',
     description,
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/videos`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -23,7 +22,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Videos | programaConNosotros',
     description,
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

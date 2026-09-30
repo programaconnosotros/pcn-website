@@ -36,7 +36,6 @@ export const metadata: Metadata = {
     title: 'Creadores de contenido recomendados | programaConNosotros',
     description:
       'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/influencers`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -46,7 +45,6 @@ export const metadata: Metadata = {
     title: 'Creadores de contenido recomendados | programaConNosotros',
     description:
       'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

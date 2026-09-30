@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     title: 'Cursos recomendados | programaConNosotros',
     description:
       'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/cursos`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -25,7 +24,6 @@ export const metadata: Metadata = {
     title: 'Cursos recomendados | programaConNosotros',
     description:
       'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

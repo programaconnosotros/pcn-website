@@ -25,7 +25,6 @@ export async function generateMetadata(props: {
     select: {
       name: true,
       slogan: true,
-      image: true,
     },
   });
 
@@ -40,11 +39,6 @@ export async function generateMetadata(props: {
   const description = user.slogan
     ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
     : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;
-  const imageUrl = user.image
-    ? user.image.startsWith('http')
-      ? user.image
-      : `${SITE_URL}${user.image}`
-    : `${SITE_URL}/pcn-link-preview.png`;
   const pageUrl = `${SITE_URL}/perfil/${params.id}`;
 
   return {
@@ -53,7 +47,6 @@ export async function generateMetadata(props: {
     openGraph: {
       title,
       description: description.length > 160 ? description.substring(0, 157) + '...' : description,
-      images: [imageUrl],
       url: pageUrl,
       type: 'profile',
       siteName: 'programaConNosotros',
@@ -62,7 +55,6 @@ export async function generateMetadata(props: {
       card: 'summary_large_image',
       title,
       description: description.length > 160 ? description.substring(0, 157) + '...' : description,
-      images: [imageUrl],
     },
   };
 }

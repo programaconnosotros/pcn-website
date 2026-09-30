@@ -17,7 +17,6 @@ export const metadata: Metadata = {
     title: 'Consejos de la comunidad | programaConNosotros',
     description:
       'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/consejos`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -27,7 +26,6 @@ export const metadata: Metadata = {
     title: 'Consejos de la comunidad | programaConNosotros',
     description:
       'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

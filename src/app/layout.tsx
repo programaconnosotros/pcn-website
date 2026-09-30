@@ -29,13 +29,11 @@ export const metadata: Metadata = {
     siteName: 'programaConNosotros',
     title: 'programaConNosotros',
     description: 'Comunidad de apasionados por la ingeniería de software.',
-    images: ['/pcn-link-preview.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'programaConNosotros',
     description: 'Comunidad de apasionados por la ingeniería de software.',
-    images: ['/pcn-link-preview.png'],
   },
 };
 

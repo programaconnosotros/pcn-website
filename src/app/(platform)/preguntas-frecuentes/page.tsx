@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     title: 'Preguntas frecuentes | programaConNosotros',
     description:
       'Todo lo que necesitás saber sobre programaConNosotros: cómo unirte, cómo participar y qué ofrecemos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/preguntas-frecuentes`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -23,7 +22,6 @@ export const metadata: Metadata = {
     title: 'Preguntas frecuentes | programaConNosotros',
     description:
       'Todo lo que necesitás saber sobre programaConNosotros: cómo unirte, cómo participar y qué ofrecemos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 
