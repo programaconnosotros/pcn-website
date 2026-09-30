@@ -1,17 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, Play } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { Play } from 'lucide-react';
+import { MusicPlayerDialog } from '@/components/music/music-player-dialog';
+import type { MusicSet } from '@/components/music/music-sets';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-
-export interface MusicSet {
-  /** YouTube video id. */
-  id: string;
-  title: string;
-  channel: string;
-}
 
 const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
   <div className={cn(ruledCellClassName, 'group relative flex flex-col gap-2 p-3')}>
@@ -58,41 +52,9 @@ export function MusicGrid({ sets }: { sets: MusicSet[] }) {
         ))}
       </RuledGrid>
 
-      <Dialog open={!!playing} onOpenChange={(open) => !open && setPlaying(null)}>
-        {playing && (
-          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
-            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
-              <div className="min-w-0 flex-1">
-                <DialogTitle className="truncate text-sm font-semibold">
-                  {playing.title}
-                </DialogTitle>
-                <DialogDescription className="truncate text-[11px] text-pcnGreen-600">
-                  <span className="text-pcnGreen-500">@ </span>
-                  {playing.channel}
-                </DialogDescription>
-              </div>
-              <a
-                href={`https://www.youtube.com/watch?v=${playing.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Ver en YouTube"
-                className="flex shrink-0 items-center gap-1 rounded-sm border border-pcnGreen-200 px-2 py-1 text-[11px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
-              >
-                <span className="max-sm:hidden">youtube</span>
-                <ArrowUpRight className="size-3.5" />
-              </a>
-            </header>
-            <iframe
-              key={playing.id}
-              src={`https://www.youtube-nocookie.com/embed/${playing.id}?autoplay=1&rel=0`}
-              title={playing.title}
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowFullScreen
-              className="aspect-video w-full border-0"
-            />
-          </DialogContent>
-        )}
-      </Dialog>
+      {playing && (
+        <MusicPlayerDialog set={playing} open onOpenChange={(open) => !open && setPlaying(null)} />
+      )}
     </>
   );
 }

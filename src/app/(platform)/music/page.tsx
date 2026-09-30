@@ -1,35 +1,6 @@
 import { PageTitle } from '@/components/ui/page-title';
-import { MusicGrid, type MusicSet } from './music-grid';
-
-// The community's own live radios.
-const radios: MusicSet[] = [
-  { id: '1vsUPluzAWo', title: 'Chill synthwave radio', channel: 'programaConNosotros' },
-  { id: 'SpNIOu8LAFo', title: 'Dark synthwave radio', channel: 'programaConNosotros' },
-  {
-    id: 'sd9AbVNlgi4',
-    title: 'Chill lofi & jazz hop radio',
-    channel: 'programaConNosotros',
-  },
-];
-
-// Playlists from other channels that the community recommends for focusing.
-const externalPlaylists: MusicSet[] = [
-  {
-    id: 'FejAQVk1NmU',
-    title: 'this playlist will make you dangerously focused',
-    channel: 'LOUNGE FOCUS',
-  },
-  {
-    id: 'eE28XvrG0lM',
-    title: 'this playlist will make you dangerously unstoppable',
-    channel: 'LOUNGE FOCUS',
-  },
-  {
-    id: 'MB6Fw9pp3g0',
-    title: 'this playlist will make you dangerously focused',
-    channel: 'LOUNGE FOCUS',
-  },
-];
+import { externalPlaylists, radios, type MusicSet } from '@/components/music/music-sets';
+import { MusicGrid } from './music-grid';
 
 const MusicSection = ({ label, sets }: { label: string; sets: MusicSet[] }) => (
   <section className="mb-8">
