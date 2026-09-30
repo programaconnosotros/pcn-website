@@ -10,9 +10,7 @@ export function OsWallpaper({ showHint }: { showHint: boolean }) {
       <div className="absolute inset-0 flex select-none flex-col items-center justify-center gap-5 pb-24">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.webp" alt="" className="size-24 drop-shadow-[0_0_24px_#04f4be]" />
-        <p
-          className={cn(GeistMono.className, 'text-sm uppercase tracking-[0.5em] text-pcnGreen/25')}
-        >
+        <p className={cn(GeistMono.className, 'text-sm uppercase tracking-[0.5em] text-pcnGreen')}>
           PCN_OS
         </p>
         {showHint && (
