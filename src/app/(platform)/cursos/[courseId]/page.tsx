@@ -5,7 +5,12 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
-import { getCourseById } from '../courses';
+import { communityCourses, externalCourses, getCourseById } from '../courses';
+import { articles } from '../../lectura/articles';
+import { CourseRow } from '@/components/courses/course-row';
+import { RelatedArticles } from '@/components/courses/related-articles';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { rankRelated } from '@/lib/related';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -47,6 +52,21 @@ export async function generateMetadata(props: {
   };
 }
 
+const RELATED_COURSES = 3;
+const RELATED_ARTICLES = 3;
+
+const courseText = (course: { name: string; description: string }) =>
+  `${course.name} ${course.description}`;
+
+const SectionHeading = ({ command, label }: { command: string; label: string }) => (
+  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pcnGreen-500">
+    <span className="text-pcnGreen-500/60">#</span>
+    {label}
+    <span className="normal-case tracking-normal text-muted-foreground/60">{command}</span>
+    <span className="h-px flex-1 bg-pcnGreen-200" />
+  </h2>
+);
+
 const Course = async (props: { params: Promise<{ courseId: string }> }) => {
   const params = await props.params;
 
@@ -55,6 +75,24 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
   const course = getCourseById(courseId);
 
   if (!course) return <div>El curso no existe.</div>;
+
+  // Community courses first, then the newest, so ties in relevance favor what we made.
+  const otherCourses = [...communityCourses, ...externalCourses]
+    .filter((other) => other.id !== course.id)
+    .sort(
+      (a, b) =>
+        Number(b.isMadeByCommunity) - Number(a.isMadeByCommunity) ||
+        b.date.getTime() - a.date.getTime(),
+    );
+  const relatedCourses = rankRelated(courseText(course), otherCourses, courseText).slice(
+    0,
+    RELATED_COURSES,
+  );
+  const relatedArticles = rankRelated(
+    courseText(course),
+    [...articles].sort((a, b) => b.date.localeCompare(a.date)),
+    (article) => `${article.title} ${article.description} ${article.category}`,
+  ).slice(0, RELATED_ARTICLES);
 
   const info = (
     <section className="flex gap-3 p-4">
@@ -129,6 +167,20 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
               )}
             </div>
           )}
+
+          <section className="mt-10">
+            <SectionHeading label="seguí aprendiendo" command="ls ../cursos | sort -r" />
+            <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+              {relatedCourses.map((related, index) => (
+                <CourseRow key={related.id} course={related} index={index} />
+              ))}
+            </RuledGrid>
+          </section>
+
+          <section className="mb-14 mt-8">
+            <SectionHeading label="para leer" command="cat ~/lectura/articulos" />
+            <RelatedArticles articles={relatedArticles} />
+          </section>
         </div>
       </div>
     </>
