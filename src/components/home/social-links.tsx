@@ -1,5 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { SectionHeader } from './section-header';
 
 export const socialNetworks = [
@@ -48,28 +50,33 @@ export const SocialLinks = () => (
       description="Elegí el canal que más te guste. Todo lo importante se comparte en todos."
     />
 
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
       {socialNetworks.map((network) => (
         <Link
           key={network.name}
           href={network.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 overflow-hidden rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen-300 hover:bg-pcnGreen-50"
+          className={cn(
+            ruledCellClassName,
+            'group relative flex items-center gap-3 overflow-hidden p-3',
+          )}
           style={{ ['--brand' as string]: network.color }}
         >
           <span
-            className="flex size-11 shrink-0 items-center justify-center rounded-lg transition-transform duration-300 group-hover:scale-105"
+            className="flex size-8 shrink-0 items-center justify-center rounded-sm"
             style={{ backgroundColor: `${network.color}1f` }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={network.icon} alt="" className="size-6" />
+            <img src={network.icon} alt="" className="size-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-foreground">{network.name}</p>
+            <p className="font-mono text-sm font-semibold text-foreground group-hover:text-pcnGreen">
+              {network.name.toLowerCase()}
+            </p>
             <p className="truncate text-xs text-muted-foreground">{network.description}</p>
           </div>
-          <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+          <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/50 group-hover:text-pcnGreen" />
           <span
             className="pointer-events-none absolute inset-x-0 bottom-0 h-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             style={{
@@ -78,6 +85,6 @@ export const SocialLinks = () => (
           />
         </Link>
       ))}
-    </div>
+    </RuledGrid>
   </section>
 );

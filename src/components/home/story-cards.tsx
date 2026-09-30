@@ -1,6 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { Eyebrow } from './section-header';
 
 const cards = [
@@ -24,39 +26,38 @@ const cards = [
 ];
 
 export const StoryCards = () => (
-  <section className="grid gap-4 md:grid-cols-2">
+  <RuledGrid className="md:grid-cols-2">
     {cards.map((card) => (
       <Link
         key={card.href}
         href={card.href}
-        className="group relative flex min-h-[340px] flex-col justify-end overflow-hidden rounded-lg border border-pcnGreen-200 md:min-h-[400px]"
+        className={cn(
+          ruledCellClassName,
+          'group relative flex min-h-[220px] flex-col justify-end overflow-hidden md:min-h-[260px]',
+        )}
       >
         <Image
           src={card.image}
           alt={card.title}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="object-cover opacity-70 transition-opacity duration-500 group-hover:opacity-90"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
         <div className="absolute inset-0 bg-pcnGreen/0 transition-colors duration-500 group-hover:bg-pcnGreen/[0.04]" />
 
-        <div className="relative p-7 md:p-8">
+        <div className="relative p-4 md:p-5">
           <Eyebrow>{card.eyebrow}</Eyebrow>
-          <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+          <h3 className="mt-2 font-mono text-lg font-semibold tracking-tight text-white md:text-xl">
             {card.title}
           </h3>
-          <p className="mt-2 max-w-md text-sm leading-relaxed text-white/70 md:text-base">
-            {card.description}
-          </p>
-          <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-white">
-            <span className="flex size-9 items-center justify-center rounded-full border border-pcnGreen-300 bg-white/10 backdrop-blur transition-all duration-300 group-hover:border-pcnGreen group-hover:bg-pcnGreen group-hover:text-black">
-              <ArrowUpRight className="size-4" />
-            </span>
-            {card.cta}
+          <p className="mt-1 max-w-md text-sm leading-relaxed text-white/70">{card.description}</p>
+          <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs font-medium text-pcnGreen">
+            {card.cta.toLowerCase()}
+            <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </span>
         </div>
       </Link>
     ))}
-  </section>
+  </RuledGrid>
 );

@@ -36,7 +36,7 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => (
   <div
     className={cn(
-      'mb-10 flex flex-col gap-5',
+      'mb-5 flex flex-col gap-3',
       align === 'center'
         ? 'items-center text-center'
         : 'md:flex-row md:items-end md:justify-between',
@@ -44,12 +44,12 @@ export const SectionHeader = ({
     )}
   >
     <div className="max-w-2xl">
-      {eyebrow && <Eyebrow className="mb-3">{eyebrow}</Eyebrow>}
-      <h2 className="text-balance font-mono text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+      {eyebrow && <Eyebrow className="mb-2">{eyebrow}</Eyebrow>}
+      <h2 className="text-balance font-mono text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
         {title}
       </h2>
       {description && (
-        <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p className="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
           {description}
         </p>
       )}

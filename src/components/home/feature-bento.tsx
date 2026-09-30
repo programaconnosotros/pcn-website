@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import {
   ArrowUpRight,
@@ -92,110 +93,86 @@ const features: Feature[] = [
   },
 ];
 
-const FeatureCard = ({ feature, className }: { feature: Feature; className?: string }) => (
-  <Link
-    href={feature.href}
-    className={cn(
-      'group relative flex flex-col overflow-hidden rounded-lg border border-pcnGreen-200 bg-black/60 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/60 hover:bg-pcnGreen-50 hover:shadow-[0_20px_60px_-30px_rgba(4,244,190,0.35)]',
-      className,
-    )}
-  >
-    <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-pcnGreen/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
-
-    <div className="flex items-start justify-between">
-      <span className="flex size-10 items-center justify-center rounded-sm bg-black text-pcnGreen ring-1 ring-inset ring-pcnGreen-400 group-hover:shadow-[0_0_14px_-2px_#04f4be99]">
-        <feature.icon className="size-5" strokeWidth={1.75} />
-      </span>
-      <ArrowUpRight className="size-4 text-muted-foreground/60 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+const FeatureCard = ({ feature }: { feature: Feature }) => (
+  <Link href={feature.href} className={cn(ruledCellClassName, 'group flex gap-3 p-4')}>
+    <feature.icon className="mt-0.5 size-4 shrink-0 text-pcnGreen" strokeWidth={1.75} />
+    <div className="min-w-0 flex-1">
+      <h3 className="flex items-center justify-between gap-2 font-mono text-sm font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
+        <span>
+          <span className="text-pcnGreen-500">&gt; </span>
+          {feature.title.toLowerCase()}
+        </span>
+        <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground/60 group-hover:text-pcnGreen" />
+      </h3>
+      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+        {feature.description}
+      </p>
     </div>
-
-    <h3 className="mt-5 font-mono text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-pcnGreen">
-      <span className="text-pcnGreen-500">&gt; </span>
-      {feature.title.toLowerCase()}
-    </h3>
-    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
   </Link>
 );
 
-const WhatsAppCard = () => (
-  <div className="group relative flex flex-col overflow-hidden rounded-lg border border-pcnGreen/25 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(4,244,190,0.16),transparent_55%)] p-6 transition-all duration-300 hover:border-pcnGreen/50 md:col-span-4 md:p-8">
-    <MessageCircle
-      className="pointer-events-none absolute -bottom-10 -right-10 size-56 text-pcnGreen/[0.06] transition-transform duration-700 group-hover:-rotate-6 group-hover:scale-105"
-      strokeWidth={1}
-    />
-
-    <div className="relative flex flex-1 flex-col">
-      <div className="flex items-center gap-3">
-        <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen text-black shadow-[0_0_24px_rgba(4,244,190,0.45)]">
-          <MessageCircle className="size-5" strokeWidth={2} />
-        </span>
-        <span className="rounded-sm border border-pcnGreen/30 bg-pcnGreen/10 px-2.5 py-0.5 text-[11px] font-medium text-pcnGreen">
-          El corazón de la comunidad
-        </span>
-      </div>
-
-      <h3 className="mt-5 max-w-md text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+const WhatsAppCell = () => (
+  <div
+    className={cn(
+      ruledCellClassName,
+      'flex flex-col gap-4 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(4,244,190,0.10),transparent_55%)] p-4 sm:col-span-2 md:col-span-3 md:flex-row md:items-center md:justify-between md:p-5',
+    )}
+  >
+    <div className="min-w-0">
+      <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen">
+        <MessageCircle className="size-3.5" strokeWidth={2} />
+        El corazón de la comunidad
+      </p>
+      <h3 className="mt-2 font-mono text-lg font-semibold tracking-tight text-foreground md:text-xl">
         Un grupo de WhatsApp que realmente suma.
       </h3>
-      <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground md:text-base">
+      <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
         Conversaciones técnicas de verdad, oportunidades laborales, mentores de primer nivel y gente
         de todas las áreas y niveles. Todo pasa primero acá.
       </p>
-
-      <ul className="mt-6 grid gap-2 text-sm text-foreground/80 sm:grid-cols-3">
+      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-foreground/80">
         {[
-          { icon: Briefcase, label: 'Oportunidades' },
-          { icon: Users, label: 'Contactos y mentores' },
-          { icon: Code2, label: 'Discusiones técnicas' },
+          { icon: Briefcase, label: 'oportunidades' },
+          { icon: Users, label: 'contactos y mentores' },
+          { icon: Code2, label: 'discusiones técnicas' },
         ].map((item) => (
-          <li key={item.label} className="flex items-center gap-2">
-            <item.icon className="size-4 text-pcnGreen" strokeWidth={1.75} />
+          <li key={item.label} className="flex items-center gap-1.5">
+            <item.icon className="size-3.5 text-pcnGreen" strokeWidth={1.75} />
             {item.label}
           </li>
         ))}
       </ul>
-
-      <div className="mt-auto pt-8">
-        <Button asChild className="px-6">
-          <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
-            Unirme al grupo
-            <ArrowUpRight className="ml-2 size-4" />
-          </Link>
-        </Button>
-      </div>
     </div>
+
+    <Button asChild size="sm" className="w-fit shrink-0 px-4">
+      <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
+        Unirme al grupo
+        <ArrowUpRight className="ml-2 size-4" />
+      </Link>
+    </Button>
   </div>
 );
 
-const ComingSoonCard = () => (
-  <div className="relative flex flex-col rounded-lg border border-dashed border-pcnGreen-200 bg-transparent p-6 md:col-span-2">
-    <span className="w-fit rounded-sm border border-pcnGreen-200 bg-pcnGreen-50 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-      Próximamente
-    </span>
-    <ul className="mt-5 flex flex-col gap-4">
-      {[
-        {
-          icon: MessageSquare,
-          title: 'Foro',
-          description: 'Preguntas y discusiones que quedan para siempre.',
-        },
-        {
-          icon: Monitor,
-          title: 'Setups',
-          description: 'Los espacios de trabajo de la comunidad.',
-        },
-      ].map((item) => (
-        <li key={item.title} className="flex items-start gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-pcnGreen-50 text-muted-foreground ring-1 ring-inset ring-pcnGreen-300">
-            <item.icon className="size-4" strokeWidth={1.75} />
-          </span>
-          <div>
-            <p className="text-sm font-medium text-foreground/90">{item.title}</p>
-            <p className="text-xs leading-relaxed text-muted-foreground">{item.description}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
+const comingSoon = [
+  { icon: MessageSquare, title: 'Foro', description: 'Preguntas y discusiones que quedan.' },
+  { icon: Monitor, title: 'Setups', description: 'Los espacios de trabajo de la comunidad.' },
+];
+
+const ComingSoonCell = () => (
+  <div
+    className={cn(
+      ruledCellClassName,
+      'flex flex-col gap-2 p-4 text-muted-foreground hover:bg-transparent sm:col-span-2 md:col-span-3 md:flex-row md:items-center md:gap-6',
+    )}
+  >
+    <span className="font-mono text-[11px] uppercase tracking-[0.18em]">{'// próximamente'}</span>
+    {comingSoon.map((item) => (
+      <p key={item.title} className="flex items-center gap-2 text-xs">
+        <item.icon className="size-3.5" strokeWidth={1.75} />
+        <span className="font-mono text-foreground/80">{item.title.toLowerCase()}</span>
+        <span className="hidden sm:inline">— {item.description}</span>
+      </p>
+    ))}
   </div>
 );
 
@@ -211,13 +188,12 @@ export const FeatureBento = () => (
       description="Una plataforma construida por y para la comunidad. Elegí por dónde empezar."
     />
 
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
-      <WhatsAppCard />
-      <FeatureCard feature={features[0]} className="md:col-span-2" />
-      {features.slice(1).map((feature) => (
-        <FeatureCard key={feature.title} feature={feature} className="md:col-span-2" />
+    <RuledGrid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      <WhatsAppCell />
+      {features.map((feature) => (
+        <FeatureCard key={feature.title} feature={feature} />
       ))}
-      <ComingSoonCard />
-    </div>
+      <ComingSoonCell />
+    </RuledGrid>
   </section>
 );

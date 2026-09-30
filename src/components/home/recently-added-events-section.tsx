@@ -1,5 +1,6 @@
 import { fetchRecentlyAddedEvents } from '@/actions/events/fetch-recently-added-events';
-import { EventCard } from '@/components/events/event-card';
+import { EventRow } from '@/components/events/event-row';
+import { RuledGrid } from '@/components/ui/ruled-grid';
 import { SectionHeader } from './section-header';
 
 export const RecentlyAddedEventsSection = async () => {
@@ -20,11 +21,11 @@ export const RecentlyAddedEventsSection = async () => {
         action={{ label: 'Ver todos los eventos', href: '/eventos' }}
       />
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <RuledGrid className="grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {events.map((event) => (
-          <EventCard key={event.id} event={event} />
+          <EventRow key={event.id} event={event} />
         ))}
-      </div>
+      </RuledGrid>
     </section>
   );
 };

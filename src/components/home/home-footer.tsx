@@ -35,8 +35,8 @@ const columns = [
 
 export const HomeFooter = () => (
   <footer className="border-t border-pcnGreen-200">
-    <div className="mx-auto max-w-6xl px-6 py-14 lg:px-8">
-      <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
+    <div className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
+      <div className="grid gap-6 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
             <span className="flex size-9 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-pcnGreen-300">
@@ -93,7 +93,7 @@ export const HomeFooter = () => (
         ))}
       </div>
 
-      <div className="mt-12 flex flex-col gap-3 border-t border-pcnGreen-200 pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
+      <div className="mt-6 flex flex-col gap-3 border-t border-pcnGreen-200 pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
         <p>© 2020–{new Date().getFullYear()} programaConNosotros</p>
         <p>
           Hecho con <span className="text-pcnGreen">♥</span> por la comunidad.

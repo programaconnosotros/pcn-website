@@ -30,7 +30,7 @@ const HomeClientSide = ({
     <HomeHero userName={userName} />
     <SponsorsMarquee />
 
-    <div className="mx-auto flex max-w-6xl flex-col gap-24 px-6 py-20 md:gap-32 md:py-28 lg:px-8">
+    <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-10 md:gap-16 md:py-14 lg:px-8">
       {recentlyAddedEventsSection && <Reveal>{recentlyAddedEventsSection}</Reveal>}
 
       <Reveal>

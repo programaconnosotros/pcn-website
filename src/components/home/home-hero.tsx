@@ -48,8 +48,8 @@ export const HomeHero = ({ userName }: HomeHeroProps) => {
         <div className="bg-grid-fade absolute inset-0 opacity-60" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-16 md:pb-24 md:pt-24 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16">
+      <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-10 md:pb-14 md:pt-14 lg:px-8">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
             <motion.div {...fadeUp(0)}>
               <span className="inline-flex items-center gap-2 rounded-sm border border-pcnGreen/25 bg-black/60 px-3 py-1 font-mono text-xs font-medium text-pcnGreen">
@@ -168,7 +168,7 @@ const StatsPanel = () => {
 
         <div className="grid grid-cols-2 gap-px bg-pcnGreen-200">
           {COMMUNITY_STATS.map((tile) => (
-            <div key={tile.label} className="bg-black/90 p-5 md:p-6">
+            <div key={tile.label} className="bg-black/90 p-4 md:p-5">
               <div className="text-glow flex items-baseline gap-0.5 font-mono text-3xl font-semibold tracking-tight text-pcnGreen md:text-4xl">
                 <NumberTicker value={tile.value} className="tabular-nums tracking-tight" />
                 <span className="text-pcnGreen-600">+</span>
@@ -183,7 +183,7 @@ const StatsPanel = () => {
               </p>
             </div>
           ))}
-          <div className="bg-black/90 p-5 md:p-6">
+          <div className="bg-black/90 p-4 md:p-5">
             <div className="text-glow font-mono text-3xl font-semibold tracking-tight text-pcnGreen md:text-4xl">
               2020
             </div>

@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { Eyebrow } from './section-header';
 
 export const SponsorsMarquee = () => (
-  <section className="border-y border-pcnGreen-200 bg-pcnGreen-50 py-8">
-    <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 lg:px-8">
+  <section className="border-y border-pcnGreen-200 bg-pcnGreen-50 py-5">
+    <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 lg:px-8">
       <div className="flex w-full items-center justify-between gap-4">
         <Eyebrow>Nos acompañan</Eyebrow>
         <Link
