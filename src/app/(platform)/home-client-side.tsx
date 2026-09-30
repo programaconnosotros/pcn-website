@@ -4,6 +4,7 @@ import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
 import { JoinSection } from '@/components/home/join-section';
+import { MusicSection } from '@/components/home/music-section';
 import { RecommendedWatchSection } from '@/components/home/recommended-watch-section';
 import { Reveal } from '@/components/home/reveal';
 import { SocialLinks } from '@/components/home/social-links';
@@ -42,6 +43,10 @@ const HomeClientSide = ({
 
       <Reveal>
         <RecommendedWatchSection />
+      </Reveal>
+
+      <Reveal>
+        <MusicSection />
       </Reveal>
 
       <Reveal>

@@ -1,6 +1,6 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { externalPlaylists, radios, type MusicSet } from '@/components/music/music-sets';
-import { MusicGrid } from './music-grid';
+import { MusicGrid } from '@/components/music/music-grid';
 
 const MusicSection = ({ label, sets }: { label: string; sets: MusicSet[] }) => (
   <section className="mb-8">
