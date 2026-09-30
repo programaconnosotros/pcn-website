@@ -21,7 +21,7 @@ export const Eyebrow = ({ children, className }: { children: ReactNode; classNam
       className,
     )}
   >
-    <span className="text-pcnGreen-500">// </span>
+    <span className="text-pcnGreen-500">{'// '}</span>
     {children}
   </p>
 );
