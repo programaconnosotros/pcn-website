@@ -14,6 +14,7 @@ import {
   MIN_WINDOW_WIDTH,
   OsWindow,
   type OsWindowState,
+  type ClampMode,
   type Rect,
 } from './os-window';
 import { useOsMode } from './use-os-mode';
@@ -138,12 +139,20 @@ const newWindowRect = (viewport: Viewport, openCount: number): Rect => {
   };
 };
 
-/** Keeps enough of the title bar on screen to grab the window again. */
-const clampToDesktop = (rect: Rect, viewport: Viewport): Rect => ({
-  ...rect,
-  x: Math.min(Math.max(rect.x, 120 - rect.w), viewport.w - 120),
-  y: Math.min(Math.max(rect.y, MENU_BAR_HEIGHT), viewport.h - 60),
-});
+/**
+ * Keeps the whole window inside the desktop, between the menu bar and the dock, so its title
+ * bar and controls can never end up hidden. Moving slides the window back in; resizing stops
+ * the dragged edge at the border of the desktop instead.
+ */
+const clampToDesktop = (rect: Rect, viewport: Viewport, mode: ClampMode): Rect => {
+  const area = desktopArea(viewport);
+  if (mode === 'move') return fitToDesktop(rect, viewport);
+  const left = Math.max(rect.x, area.x);
+  const top = Math.max(rect.y, area.y);
+  const right = Math.min(rect.x + rect.w, area.x + area.w);
+  const bottom = Math.min(rect.y + rect.h, area.y + area.h);
+  return fitToDesktop({ x: left, y: top, w: right - left, h: bottom - top }, viewport);
+};
 
 /** Shrinks and moves a window so it fits the desktop after the screen gets smaller. */
 const fitToDesktop = (rect: Rect, viewport: Viewport): Rect => {
@@ -288,7 +297,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                   rect={win.maximized ? desktopArea(viewport) : win}
                   zIndex={10 + state.order.indexOf(win.id)}
                   focused={win.id === focusedId}
-                  clampRect={(rect) => clampToDesktop(rect, viewport)}
+                  clampRect={(rect, mode) => clampToDesktop(rect, viewport, mode)}
                   onFocus={() => {
                     if (state.order.at(-1) !== win.id) dispatch({ type: 'focus', id: win.id });
                   }}

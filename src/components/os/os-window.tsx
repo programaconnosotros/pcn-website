@@ -26,6 +26,8 @@ export interface OsWindowState extends Rect {
 
 type ResizeDirection = 'e' | 's' | 'w' | 'se' | 'sw';
 
+export type ClampMode = 'move' | 'resize';
+
 export const MIN_WINDOW_WIDTH = 420;
 export const MIN_WINDOW_HEIGHT = 280;
 
@@ -36,8 +38,8 @@ interface OsWindowProps {
   rect: Rect;
   zIndex: number;
   focused: boolean;
-  /** Keeps the title bar reachable: returns a rect clamped to the desktop. */
-  clampRect: (rect: Rect) => Rect;
+  /** Keeps the window inside the desktop: returns a rect clamped to it. */
+  clampRect: (rect: Rect, mode: ClampMode) => Rect;
   onFocus: () => void;
   onClose: () => void;
   onMinimize: () => void;
@@ -169,7 +171,7 @@ export function OsWindow({
     onInteractionChange(true);
     trackPointer(
       event,
-      (dx, dy) => onRectChange(clampRect({ ...start, x: start.x + dx, y: start.y + dy })),
+      (dx, dy) => onRectChange(clampRect({ ...start, x: start.x + dx, y: start.y + dy }, 'move')),
       () => onInteractionChange(false),
     );
   };
@@ -190,7 +192,7 @@ export function OsWindow({
           next.x = start.x + start.w - next.w;
         }
         if (direction.includes('s')) next.h = Math.max(MIN_WINDOW_HEIGHT, start.h + dy);
-        onRectChange(clampRect(next));
+        onRectChange(clampRect(next, 'resize'));
       },
       () => onInteractionChange(false),
     );
