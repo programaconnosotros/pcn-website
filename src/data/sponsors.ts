@@ -63,6 +63,13 @@ export const sponsors: Sponsor[] = [
     location: 'Montevideo, Uruguay',
   },
   {
+    name: 'Macch',
+    url: 'https://macch.ai/',
+    logo: '/macch-white-logo.svg',
+    description: 'IA para la atención al cliente y la operación de proveedores de internet.',
+    location: 'Argentina',
+  },
+  {
     name: 'Endpoint Consulting',
     url: 'https://www.instagram.com/endpoint_ciberseguridad/',
     logo: '/endpoint-security-logo.png',
