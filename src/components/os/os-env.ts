@@ -6,7 +6,17 @@ export const OS_MESSAGE_SOURCE = 'pcn-os';
 
 export type OsMessage =
   | { source: typeof OS_MESSAGE_SOURCE; type: 'location'; path: string; title: string }
-  | { source: typeof OS_MESSAGE_SOURCE; type: 'focus' };
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'focus' }
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'open'; path: string };
+
+/**
+ * Detail pages that PCN OS opens in a window of their own instead of navigating the window the
+ * link was clicked in: user profiles and event detail pages.
+ */
+const OWN_WINDOW_PATHS = [/^\/perfil\/[^/]+$/, /^\/eventos\/(?!nuevo$)[^/]+$/];
+
+export const opensInOwnWindow = (pathname: string) =>
+  OWN_WINDOW_PATHS.some((pattern) => pattern.test(pathname));
 
 /**
  * Inline script for the root layout `<head>`. It runs before paint and marks the document as

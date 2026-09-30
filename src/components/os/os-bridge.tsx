@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { OS_MESSAGE_SOURCE, isEmbedded, type OsMessage } from './os-env';
+import { OS_MESSAGE_SOURCE, isEmbedded, opensInOwnWindow, type OsMessage } from './os-env';
 
 type OutgoingMessage = OsMessage extends infer M
   ? M extends OsMessage
@@ -16,6 +16,7 @@ const post = (message: OutgoingMessage) =>
 /**
  * Runs inside a PCN OS window. Tells the desktop host where the window navigated to and when
  * the user interacts with it, so the host can update the title bar and bring it to the front.
+ * Links to profiles and event details are handed to the host so they open in a new window.
  */
 export function OsBridge() {
   const pathname = usePathname();
@@ -38,6 +39,24 @@ export function OsBridge() {
     const onPointerDown = () => post({ type: 'focus' });
     window.addEventListener('pointerdown', onPointerDown, true);
     return () => window.removeEventListener('pointerdown', onPointerDown, true);
+  }, []);
+
+  useEffect(() => {
+    if (!isEmbedded()) return;
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = (event.target as Element | null)?.closest?.('a[href]');
+      if (!(anchor instanceof HTMLAnchorElement) || anchor.target === '_blank') return;
+      const url = new URL(anchor.href);
+      if (url.origin !== window.location.origin || !opensInOwnWindow(url.pathname)) return;
+      if (url.pathname === window.location.pathname) return;
+      event.preventDefault();
+      post({ type: 'open', path: `${url.pathname}${url.search}` });
+    };
+    // Capture phase, so this runs before Next.js' <Link> starts a client-side navigation.
+    document.addEventListener('click', onClick, true);
+    return () => document.removeEventListener('click', onClick, true);
   }, []);
 
   return null;

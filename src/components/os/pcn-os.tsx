@@ -35,6 +35,8 @@ interface OsState {
 
 type OsAction =
   | { type: 'open'; path: string; rect: Rect }
+  /** Opens a page in a new window, or brings forward the window already showing it. */
+  | { type: 'openPath'; path: string; viewport: Viewport }
   | { type: 'focus'; id: string }
   | { type: 'close'; id: string }
   | { type: 'minimize'; id: string }
@@ -72,6 +74,17 @@ const reducer = (state: OsState, action: OsAction): OsState => {
         order: [...state.order, id],
         nextId: state.nextId + 1,
       };
+    }
+    case 'openPath': {
+      const existing = [...state.order]
+        .reverse()
+        .find((id) => state.windows.find((win) => win.id === id)?.path === action.path);
+      if (existing) return reducer(state, { type: 'focus', id: existing });
+      return reducer(state, {
+        type: 'open',
+        path: action.path,
+        rect: newWindowRect(action.viewport, state.windows.length),
+      });
     }
     case 'focus':
       return {
@@ -215,10 +228,12 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
       if (event.data.type === 'focus') dispatch({ type: 'focus', id });
       if (event.data.type === 'location')
         dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
+      if (event.data.type === 'open' && viewport)
+        dispatch({ type: 'openPath', path: event.data.path, viewport });
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [isOs]);
+  }, [isOs, viewport]);
 
   const openProgram = useCallback(
     (program: OsProgram) => {
