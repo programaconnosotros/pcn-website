@@ -1,0 +1,170 @@
+export interface Video {
+  /** YouTube video id. */
+  id: string;
+  title: string;
+  /** Who presents it, when it differs from the channel that published it. */
+  speaker?: string;
+  channel: string;
+  /** Publication date on YouTube, ISO YYYY-MM-DD. */
+  date: string;
+  durationSeconds: number;
+  /** Conference talks, also listed under "externas" on /charlas. */
+  isTalk?: boolean;
+}
+
+const allVideos: Video[] = [
+  {
+    id: 'vDjW_dRyKXY',
+    title: 'Rails World 2026 Opening Keynote',
+    speaker: 'DHH',
+    channel: 'Ruby on Rails',
+    date: '2026-09-23',
+    durationSeconds: 3787,
+    isTalk: true,
+  },
+  {
+    id: 'jjheLyrTG4Y',
+    title: 'El futuro para los devs',
+    speaker: 'Miguel Ángel Durán García (midudev)',
+    channel: 'Nerdearla',
+    date: '2026-09-26',
+    durationSeconds: 2618,
+    isTalk: true,
+  },
+  {
+    id: 'AJOGzVygGcY',
+    title: "What's new in React 19",
+    speaker: 'Lydia Hallie',
+    channel: 'React Conf',
+    date: '2024-07-25',
+    durationSeconds: 1203,
+    isTalk: true,
+  },
+  {
+    id: 'SqVLqvsiAYQ',
+    title: 'Performance in React and Next.js',
+    speaker: 'Lydia Hallie',
+    channel: 'Vercel',
+    date: '2023-11-03',
+    durationSeconds: 971,
+    isTalk: true,
+  },
+  {
+    id: 'eiC58R16hb8',
+    title: 'JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue',
+    channel: 'Lydia Hallie',
+    date: '2024-04-04',
+    durationSeconds: 754,
+  },
+  {
+    id: 'hJHvdBlSxug',
+    title: 'How The Web Works - The Big Picture',
+    channel: 'Academind',
+    date: '2019-04-15',
+    durationSeconds: 745,
+  },
+  {
+    id: 'xckH5s3UuX4',
+    title: 'Understanding the V8 JavaScript Engine',
+    channel: 'freeCodeCamp Talks',
+    date: '2020-12-22',
+    durationSeconds: 644,
+  },
+  {
+    id: '6ERUGFurDHY',
+    title: 'Intent-driven development with Claude Code & Fable 5',
+    channel: 'Google Cloud Tech',
+    date: '2026-07-06',
+    durationSeconds: 2761,
+  },
+  {
+    id: 'q9Vaoz0hd0U',
+    title: '¿Qué es esto del Harness Engineering?',
+    channel: 'BettaTech',
+    date: '2026-04-29',
+    durationSeconds: 1515,
+  },
+  {
+    id: 'FhQfG-Q4wL4',
+    title: 'Yo no entendía AWS hasta ver esto',
+    channel: 'BettaTech',
+    date: '2026-09-13',
+    durationSeconds: 1239,
+  },
+  {
+    id: 'lBimeKh88OU',
+    title: 'Dame 30 minutos y te enseño a implementar un RAG con embeddings',
+    channel: 'BettaTech',
+    date: '2026-08-02',
+    durationSeconds: 1836,
+  },
+  {
+    id: '2myd3cgqe2k',
+    title: '¿Qué es esto del Graph Engineering?',
+    channel: 'BettaTech',
+    date: '2026-07-29',
+    durationSeconds: 1107,
+  },
+  {
+    id: 'RBzGXBYa0Lg',
+    title: '4 patrones agénticos que deberías conocer',
+    channel: 'BettaTech',
+    date: '2026-07-26',
+    durationSeconds: 1485,
+  },
+  {
+    id: '18FeGXyB-sI',
+    title: '¿Qué es esto del Loop Engineering?',
+    channel: 'BettaTech',
+    date: '2026-06-14',
+    durationSeconds: 577,
+  },
+  {
+    id: '2nEiIG-xca4',
+    title: 'Todo lo que necesitás saber sobre diseño de sistemas en 24 minutos',
+    channel: 'BettaTech',
+    date: '2026-06-28',
+    durationSeconds: 1423,
+  },
+  {
+    id: 'PoXC6XcVa1M',
+    title: 'Implemento el sistema de agentes de Uncle Bob, te lo muestro',
+    channel: 'BettaTech',
+    date: '2026-06-03',
+    durationSeconds: 1347,
+  },
+  {
+    id: 'ElGlTv2A_bM',
+    title: 'Esto es lo que aprendí adaptando Claude Code para SDD',
+    channel: 'BettaTech',
+    date: '2026-05-13',
+    durationSeconds: 1712,
+  },
+  {
+    id: 'UTNbLoZCOgM',
+    title: 'Todo lo que necesitás saber de DevOps en 20 minutos',
+    channel: 'BettaTech',
+    date: '2026-04-12',
+    durationSeconds: 1180,
+  },
+  {
+    id: 'Rla0IMxIlNc',
+    title: 'Todo lo que necesitás saber del desarrollo frontend en 19 minutos',
+    channel: 'BettaTech',
+    date: '2026-03-11',
+    durationSeconds: 1127,
+  },
+  {
+    id: 'l3HJsXA-Fa4',
+    title: 'Todo lo que necesitás saber del desarrollo backend en 29 minutos',
+    channel: 'BettaTech',
+    date: '2026-02-05',
+    durationSeconds: 1746,
+  },
+];
+
+/** Every video, newest first. */
+export const videos = [...allVideos].sort((a, b) => b.date.localeCompare(a.date));
+
+/** Talks from other conferences the community recommends, newest first. */
+export const externalTalks = videos.filter((video) => video.isTalk);
