@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Play } from 'lucide-react';
 import { MusicPlayerDialog } from '@/components/music/music-player-dialog';
 import type { MusicSet } from '@/components/music/music-sets';
+import { isEmbedded, postToOsHost } from '@/components/os/os-env';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 
@@ -40,21 +41,28 @@ const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
   </div>
 );
 
-/** Music sets laid out on the ruled grid; each one plays in a dialog without leaving the page. */
+/**
+ * Music sets laid out on the ruled grid; each one plays in a dialog without leaving the page.
+ * Inside a PCN OS window the desktop plays it instead, so it keeps playing in the background
+ * and can be paused from the menu bar.
+ */
 export function MusicGrid({ sets }: { sets: MusicSet[] }) {
   const [playing, setPlaying] = useState<MusicSet | null>(null);
+
+  const play = (set: MusicSet) => {
+    if (isEmbedded()) postToOsHost({ type: 'playMusic', id: set.id });
+    else setPlaying(set);
+  };
 
   return (
     <>
       <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {sets.map((set) => (
-          <MusicCell key={set.id} set={set} onPlay={() => setPlaying(set)} />
+          <MusicCell key={set.id} set={set} onPlay={() => play(set)} />
         ))}
       </RuledGrid>
 
-      {playing && (
-        <MusicPlayerDialog set={playing} open onOpenChange={(open) => !open && setPlaying(null)} />
-      )}
+      {playing && <MusicPlayerDialog set={playing} onClose={() => setPlaying(null)} />}
     </>
   );
 }
