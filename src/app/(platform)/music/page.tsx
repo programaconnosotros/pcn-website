@@ -3,13 +3,12 @@ import { MusicGrid, type MusicSet } from './music-grid';
 
 // The community's own live radios.
 const radios: MusicSet[] = [
-  { id: '1vsUPluzAWo', title: 'Chill synthwave radio', channel: 'programaConNosotros', live: true },
-  { id: 'SpNIOu8LAFo', title: 'Dark synthwave radio', channel: 'programaConNosotros', live: true },
+  { id: '1vsUPluzAWo', title: 'Chill synthwave radio', channel: 'programaConNosotros' },
+  { id: 'SpNIOu8LAFo', title: 'Dark synthwave radio', channel: 'programaConNosotros' },
   {
     id: 'sd9AbVNlgi4',
     title: 'Chill lofi & jazz hop radio',
     channel: 'programaConNosotros',
-    live: true,
   },
 ];
 

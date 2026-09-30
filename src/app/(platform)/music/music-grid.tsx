@@ -11,8 +11,6 @@ export interface MusicSet {
   id: string;
   title: string;
   channel: string;
-  /** Live radios get an "en vivo" badge on their thumbnail. */
-  live?: boolean;
 }
 
 const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
@@ -31,12 +29,6 @@ const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
           <Play className="size-4 fill-current" />
         </span>
       </span>
-      {set.live && (
-        <span className="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-black/80 px-1 font-mono text-[10px] uppercase tracking-wider text-pcnGreen">
-          <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
-          en vivo
-        </span>
-      )}
     </span>
 
     {/* The title's button stretches over the whole cell so any click plays the set. */}
