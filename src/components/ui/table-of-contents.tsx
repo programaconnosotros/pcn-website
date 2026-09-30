@@ -36,7 +36,7 @@ interface TableOfContentsProps {
  */
 const REFERENCE_POINT = 140;
 
-/** How long a jump (click or `j`/`k`) owns the active section while the smooth scroll runs. */
+/** How long a jump (click or `]`/`[`) owns the active section while the smooth scroll runs. */
 const JUMP_LOCK_MS = 900;
 
 /** Vertical offset (px) of the tree branch: the middle of a row's first line. */
@@ -61,7 +61,8 @@ type IndexedSection = TocSection & { index: number };
  * Sticky table of contents shared by long-form pages, drawn as a `tree` listing.
  *
  * The tree's branches light up as you read, a segmented bar maps every section (click one to
- * jump) and a vim-like status line shows the reading position; `j`/`k` move between sections.
+ * jump) and a vim-like status line shows the reading position; `]`/`[` move between sections
+ * (`j`/`k` scroll, see VimNavigation).
  * Small screens get a sticky prompt bar with prev/next buttons and a dropdown instead.
  * Meant to be placed as the first child of a `flex flex-col lg:flex-row` container.
  */
@@ -96,7 +97,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
 
   const handleSelect = useCallback((id: string) => {
     // Without the lock, sections passed mid-scroll would steal the highlight and make
-    // repeated `j` presses land on the same target.
+    // repeated `]` presses land on the same target.
     jumpLockUntil.current = Date.now() + JUMP_LOCK_MS;
     setActiveId(id);
     scrollToSection(id);
@@ -170,12 +171,12 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionsKey]);
 
-  // Vim-style navigation: `j` next section, `k` previous section.
+  // Vim-style section motions: `]` next section, `[` previous section.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) return;
-      if (event.key === 'j') goTo(activeIndex + 1);
-      else if (event.key === 'k') goTo(activeIndex - 1);
+      if (event.key === ']') goTo(activeIndex + 1);
+      else if (event.key === '[') goTo(activeIndex - 1);
       else return;
       event.preventDefault();
     };
@@ -445,21 +446,21 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
           <span className="flex shrink-0 items-center gap-1">
             <button
               type="button"
-              aria-label="Sección anterior (k)"
+              aria-label="Sección anterior ([)"
               disabled={activeIndex === 0}
               onClick={() => goTo(activeIndex - 1)}
               className="border border-pcnGreen-200 px-1 leading-4 text-muted-foreground transition-colors hover:border-pcnGreen hover:text-pcnGreen disabled:opacity-30"
             >
-              k
+              [
             </button>
             <button
               type="button"
-              aria-label="Sección siguiente (j)"
+              aria-label="Sección siguiente (])"
               disabled={activeIndex === sections.length - 1}
               onClick={() => goTo(activeIndex + 1)}
               className="border border-pcnGreen-200 px-1 leading-4 text-muted-foreground transition-colors hover:border-pcnGreen hover:text-pcnGreen disabled:opacity-30"
             >
-              j
+              ]
             </button>
           </span>
           <span className="w-10 shrink-0 pr-2 text-right tabular-nums text-pcnGreen">
