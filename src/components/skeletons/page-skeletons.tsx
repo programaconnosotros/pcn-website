@@ -1,24 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function PageHeaderSkeleton({ breadcrumbs = 1 }: { breadcrumbs?: number }) {
-  return (
-    <header className="flex h-16 shrink-0 items-center gap-2">
-      <div className="flex items-center gap-2 px-4">
-        <Skeleton className="h-7 w-7" />
-        <div className="mx-2 h-4 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          {Array.from({ length: breadcrumbs }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2">
-              {i > 0 && <div className="h-3 w-3 rounded-sm bg-muted" />}
-              <Skeleton className="h-4 w-20" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </header>
-  );
-}
-
 export function TitleRowSkeleton({ withAction = false }: { withAction?: boolean }) {
   return (
     <div className="mb-4 flex items-center justify-between">

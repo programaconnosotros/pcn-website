@@ -1,18 +1,8 @@
 'use server';
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { Separator as UISeparator } from '@/components/ui/separator';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -71,23 +61,6 @@ const VisitasPage = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <UISeparator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Visitas</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <PageTitle path="visitas" meta="visitas a las páginas principales" />

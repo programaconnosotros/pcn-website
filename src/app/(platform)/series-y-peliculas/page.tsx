@@ -1,16 +1,5 @@
 'use client';
 
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -23,8 +12,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Search, X } from 'lucide-react';
-import Link from 'next/link';
+import { Search, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
 
@@ -266,35 +254,6 @@ const SeriesYPeliculasPage = () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center justify-between gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Series y Películas</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <div className="px-4">
-          <Link
-            href="https://chat.whatsapp.com/FX1o4keOhJbFgB8mS1Sxem"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="pcn" size="sm" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Unirme al grupo
-            </Button>
-          </Link>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <PageTitle

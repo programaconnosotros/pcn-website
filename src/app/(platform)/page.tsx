@@ -4,15 +4,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import HomeClientSide from '@/app/(platform)/home-client-side';
-import { Button } from '@/components/ui/button';
-import {
-  BreadcrumbLink,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PageTitle } from '@/components/ui/page-title';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
@@ -62,27 +54,21 @@ const Home = async () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 -mx-1 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-pcnGreen-200 bg-background/70 backdrop-blur-xl md:-mx-6">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <div className="px-4">
-          <Button asChild size="sm" className="px-4">
-            <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
-              <MessageCircle className="mr-2 size-4" />
-              Unirme en WhatsApp
-            </Link>
-          </Button>
-        </div>
-      </header>
+      <PageTitle
+        path={[]}
+        className="mb-0 px-4 pt-3"
+        action={
+          <Link
+            href={WHATSAPP_GROUP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 text-xs text-pcnGreen-500 transition-colors hover:text-pcnGreen"
+          >
+            <MessageCircle className="size-3.5" />
+            whatsapp ↗
+          </Link>
+        }
+      />
       <HomeClientSide
         userName={session?.user?.name ?? null}
         featuredTestimonials={featuredTestimonials}

@@ -1,14 +1,4 @@
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { PageTitle } from '@/components/ui/page-title';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
 import { Plus, Handshake } from 'lucide-react';
@@ -59,23 +49,6 @@ const EventsPage = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Eventos</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">

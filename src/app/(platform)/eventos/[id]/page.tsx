@@ -1,14 +1,5 @@
 import { Suspense } from 'react';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PageTitle } from '@/components/ui/page-title';
 import { CalendarPlus, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
@@ -119,25 +110,9 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   if (!event) {
     return (
       <>
-        <header className="flex h-16 shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="mt-4">
+            <PageTitle path={[{ label: 'eventos', href: '/eventos' }, { label: '404' }]} />
             <div className="flex flex-col items-center justify-center py-12">
               <p className="text-lg text-muted-foreground">No se encontró el evento solicitado.</p>
             </div>
@@ -225,45 +200,24 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{event.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 pt-0">
-        <div className="mb-4 mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <h1 className="text-xl font-semibold tracking-tight">
-              <span className="text-pcnGreen-500">~/eventos/</span>
-              {event.name}
-            </h1>
-            <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
-          </div>
-          {isAdmin && (
-            <Link href={`/eventos/${id}/editar`}>
-              <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
-                <Edit className="h-4 w-4" />
-                Editar evento
-              </Button>
-            </Link>
-          )}
-        </div>
+        <PageTitle
+          className="mt-4"
+          path={[{ label: 'eventos', href: '/eventos' }, { label: event.name }]}
+          action={
+            <>
+              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+              {isAdmin && (
+                <Link href={`/eventos/${id}/editar`}>
+                  <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                    <Edit className="h-4 w-4" />
+                    Editar evento
+                  </Button>
+                </Link>
+              )}
+            </>
+          }
+        />
 
         <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:divide-x md:divide-y-0">
           {/* Columna principal — flyer */}

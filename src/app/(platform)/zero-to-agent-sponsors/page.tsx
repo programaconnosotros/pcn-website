@@ -1,16 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -148,27 +138,9 @@ const BulletList = ({ items }: { items: string[] }) => (
 
 const ZeroToAgentSponsors = () => (
   <>
-    <header className="sticky top-0 z-40 -mx-1 flex h-16 shrink-0 items-center gap-2 bg-background md:-mx-6">
-      <div className="flex items-center gap-2 px-4">
-        <SidebarTrigger />
-        <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Zero to Agent · Sponsors</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-    </header>
-
     <div className="mt-4 px-4 pb-16 md:px-10">
       <PageTitle
-        path="zero-to-agent/sponsors"
+        path="zero-to-agent-sponsors"
         meta="30 abr · 18:00–23:00 · +6.000 USD en premios"
       />
 

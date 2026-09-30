@@ -1,13 +1,3 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { PageTitle } from '@/components/ui/page-title';
 import { TableOfContents } from '@/components/especialidades/table-of-contents';
 import { SpecialtyCard } from '@/components/especialidades/specialty-card';
@@ -40,23 +30,6 @@ export const metadata: Metadata = {
 
 const SpecialtiesPage = () => (
   <>
-    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 bg-background">
-      <div className="flex items-center gap-2 px-4">
-        <SidebarTrigger />
-        <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Especialidades</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-    </header>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
         <PageTitle

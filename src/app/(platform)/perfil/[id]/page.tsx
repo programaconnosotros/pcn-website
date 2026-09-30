@@ -2,17 +2,8 @@ import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
 import { cn } from '@/lib/utils';
@@ -191,25 +182,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{user.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <PageTitle
+          className="mt-4"
+          path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+        />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
           <div className="lg:col-span-1">
             <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4">
