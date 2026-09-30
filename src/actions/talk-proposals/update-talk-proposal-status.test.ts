@@ -47,7 +47,7 @@ describe('updateTalkProposalStatus', () => {
   it('throws when there is no sessionId cookie', async () => {
     mockCookies();
 
-    await expect(updateTalkProposalStatus('proposal-1', 'APPROVED')).rejects.toThrow(
+    await expect(updateTalkProposalStatus('proposal-1', 'ACCEPTED')).rejects.toThrow(
       'Debes estar autenticado',
     );
 
@@ -58,7 +58,7 @@ describe('updateTalkProposalStatus', () => {
     mockCookies({ sessionId: 'ghost-session' });
     prismaMock.session.findUnique.mockResolvedValue(null);
 
-    await expect(updateTalkProposalStatus('proposal-1', 'APPROVED')).rejects.toThrow(
+    await expect(updateTalkProposalStatus('proposal-1', 'ACCEPTED')).rejects.toThrow(
       'No tenés permisos para realizar esta acción',
     );
 
@@ -69,7 +69,7 @@ describe('updateTalkProposalStatus', () => {
     mockCookies({ sessionId: 'session-regular' });
     prismaMock.session.findUnique.mockResolvedValue(regularSession as any);
 
-    await expect(updateTalkProposalStatus('proposal-1', 'APPROVED')).rejects.toThrow(
+    await expect(updateTalkProposalStatus('proposal-1', 'ACCEPTED')).rejects.toThrow(
       'No tenés permisos para realizar esta acción',
     );
 
@@ -82,15 +82,15 @@ describe('updateTalkProposalStatus', () => {
     prismaMock.talkProposal.update.mockResolvedValue({
       id: 'proposal-1',
       eventId: 'event-1',
-      status: 'APPROVED',
+      status: 'ACCEPTED',
     } as any);
 
-    const result = await updateTalkProposalStatus('proposal-1', 'APPROVED');
+    const result = await updateTalkProposalStatus('proposal-1', 'ACCEPTED');
 
     expect(result).toEqual({ success: true });
     expect(prismaMock.talkProposal.update).toHaveBeenCalledWith({
       where: { id: 'proposal-1' },
-      data: { status: 'APPROVED' },
+      data: { status: 'ACCEPTED' },
     });
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/event-1/propuestas-de-charlas');
   });

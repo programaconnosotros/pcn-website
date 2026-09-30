@@ -20,7 +20,7 @@ const mockProposals = [
     userId: 'user-2',
     title: 'Testing con Jest',
     description: 'Cómo hacer unit tests en Next.js',
-    status: 'APPROVED',
+    status: 'ACCEPTED',
     createdAt: new Date('2025-06-02'),
     updatedAt: new Date('2025-06-02'),
     talk: { id: 'talk-1' },
