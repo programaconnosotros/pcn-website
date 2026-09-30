@@ -11,24 +11,23 @@ import {
   Handshake,
   Home,
   Image,
-  Instagram,
   LayoutDashboard,
   Layers,
   Library,
   LifeBuoy,
-  Linkedin,
   MessageCircle,
+  MessageSquareHeart,
   MicVocal,
   Podcast,
   Rocket,
   ScrollText,
-  Send,
   Share2,
   Users,
   Wrench,
-  Youtube,
 } from 'lucide-react';
-import { NavMain } from '@/components/ui/nav-main';
+import { GeistMono } from 'geist/font/mono';
+import Link from 'next/link';
+import { NavMain, type NavItem } from '@/components/ui/nav-main';
 import { NavUser } from '@/components/ui/nav-user';
 import {
   Sidebar,
@@ -40,76 +39,21 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { User } from '@prisma/client';
+import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
+import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
-interface UpcomingEvent {
-  id: string;
-  name: string;
-  date: Date;
-}
+const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }];
 
-const formatEventDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    month: 'short',
-    day: 'numeric',
-  }).format(date);
-};
+const actividadesItems: NavItem[] = [
+  { title: 'Eventos', url: '/eventos', icon: CalendarDays },
+  { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
+  { title: 'Charlas', url: '/charlas', icon: MicVocal },
+  { title: 'Podcast', url: '/podcast', icon: Podcast },
+  { title: 'Desarrollo', url: '/desarrollo', icon: Code2 },
+];
 
-const getHomeItem = () => {
-  return [
-    {
-      title: 'Inicio',
-      url: '/',
-      icon: Home,
-    },
-  ];
-};
-
-const getActividadesItems = (upcomingEvents: UpcomingEvent[] = []) => {
-  const eventItems = upcomingEvents.map((event) => ({
-    title: `${formatEventDate(event.date)} - ${event.name}`,
-    url: `/eventos/${event.id}`,
-  }));
-
-  // Agregar "Ver todos" al final si hay eventos
-  if (eventItems.length > 0) {
-    eventItems.push({
-      title: 'Ver todos los eventos',
-      url: '/eventos',
-    });
-  }
-
-  return [
-    {
-      title: 'Eventos',
-      url: '/eventos',
-      icon: CalendarDays,
-      items: eventItems.length > 0 ? eventItems : undefined,
-    },
-    {
-      title: 'Conversaciones',
-      url: '/conversaciones',
-      icon: MessageCircle,
-    },
-    {
-      title: 'Charlas',
-      url: '/charlas',
-      icon: MicVocal,
-    },
-    {
-      title: 'Podcast',
-      url: '/podcast',
-      icon: Podcast,
-    },
-    {
-      title: 'Desarrollo',
-      url: '/desarrollo',
-      icon: Code2,
-    },
-  ];
-};
-
-const getRecursosItems = () => [
+const recursosItems: NavItem[] = [
   { title: 'Cursos', url: '/cursos', icon: GraduationCap },
   { title: 'Lectura', url: '/lectura', icon: BookOpen },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
@@ -128,108 +72,32 @@ const getRecursosItems = () => [
 ];
 
 const socialNetworks = [
-  {
-    name: 'WhatsApp',
-    url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh',
-    icon: Send,
-  },
-  {
-    name: 'Discord',
-    url: 'https://discord.gg/dTQexKw56S',
-    icon: Send,
-  },
-  {
-    name: 'Instagram',
-    url: 'https://www.instagram.com/programa.con.nosotros/',
-    icon: Instagram,
-  },
-  // {
-  //   name: 'X',
-  //   url: 'https://x.com/programaconnos',
-  //   icon: X,
-  // },
-  {
-    name: 'YouTube',
-    url: 'https://www.youtube.com/@programaconnosotros2689/videos',
-    icon: Youtube,
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/company/programaconnosotros/',
-    icon: Linkedin,
-  },
+  { title: 'WhatsApp', url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh' },
+  { title: 'Discord', url: 'https://discord.gg/dTQexKw56S' },
+  { title: 'Instagram', url: 'https://www.instagram.com/programa.con.nosotros/' },
+  { title: 'YouTube', url: 'https://www.youtube.com/@programaconnosotros2689/videos' },
+  { title: 'LinkedIn', url: 'https://www.linkedin.com/company/programaconnosotros/' },
 ];
 
-const getComunidadItems = () => {
-  return [
-    {
-      title: 'Historia',
-      url: '/historia',
-      icon: ScrollText,
-    },
-    {
-      title: 'Galería',
-      url: '/galeria',
-      icon: Image,
-    },
-    {
-      title: 'Sponsors',
-      url: '/sponsors',
-      icon: Handshake,
-    },
-    {
-      title: 'Redes',
-      icon: Share2,
-      items: socialNetworks.map(({ name, url }) => ({ title: name, url })),
-    },
-  ];
-};
+const comunidadItems: NavItem[] = [
+  { title: 'Historia', url: '/historia', icon: ScrollText },
+  { title: 'Galería', url: '/galeria', icon: Image },
+  { title: 'Sponsors', url: '/sponsors', icon: Handshake },
+  { title: 'Redes', icon: Share2, items: socialNetworks },
+];
 
-const getAdminItems = (unreadCount: number = 0) => {
-  return [
-    {
-      title: 'Usuarios',
-      url: '/usuarios',
-      icon: Users,
-    },
-    {
-      title: 'Analíticas',
-      url: '/analiticas',
-      icon: LayoutDashboard,
-    },
-    {
-      title: 'Visitas',
-      url: '/visitas',
-      icon: Eye,
-    },
-    {
-      title: 'Notificaciones',
-      url: '/notificaciones',
-      icon: Bell,
-      badge: unreadCount,
-    },
-    {
-      title: 'Monitoreo',
-      url: '/monitoreo',
-      icon: AlertTriangle,
-    },
-  ];
-};
+const getAdminItems = (unreadCount: number): NavItem[] => [
+  { title: 'Usuarios', url: '/usuarios', icon: Users },
+  { title: 'Analíticas', url: '/analiticas', icon: LayoutDashboard },
+  { title: 'Visitas', url: '/visitas', icon: Eye },
+  { title: 'Notificaciones', url: '/notificaciones', icon: Bell, badge: unreadCount },
+  { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
+];
 
-const data = {
-  navSecondary: [
-    {
-      title: 'Soporte',
-      url: 'https://wa.me/5493815777562',
-      icon: LifeBuoy,
-    },
-    {
-      title: 'Feedback',
-      url: 'https://wa.me/5493815777562',
-      icon: Send,
-    },
-  ],
-};
+const secondaryItems = [
+  { title: 'Soporte', url: 'https://wa.me/5493815777562', icon: LifeBuoy },
+  { title: 'Feedback', url: 'https://wa.me/5493815777562', icon: MessageSquareHeart },
+];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User | null;
@@ -241,36 +109,58 @@ export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="sidebar" {...sidebarProps}>
-      <SidebarHeader>
+    <Sidebar
+      collapsible="offcanvas"
+      variant="sidebar"
+      className="border-sidebar-border [&_[data-sidebar=sidebar]]:bg-gradient-to-b [&_[data-sidebar=sidebar]]:from-sidebar [&_[data-sidebar=sidebar]]:to-background"
+      {...sidebarProps}
+    >
+      <SidebarHeader className="px-3 pb-1 pt-3">
         <SidebarMenu>
-          <SidebarMenuItem className="-ml-2 mt-1.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:mt-3.5">
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-black p-1 text-sidebar-primary-foreground">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              asChild
+              className="h-12 rounded-xl px-2 hover:bg-sidebar-accent/70"
+            >
+              <Link href="/" className="flex items-center gap-3">
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-xl bg-black ring-1 ring-inset ring-white/10">
+                  <span className="absolute inset-0 rounded-xl bg-pcnGreen/20 blur-md" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/logo.webp" alt="programaConNosotros" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">programaConNosotros</span>
-                  <span className="text-xs text-muted-foreground">Impulsando desde 2020.</span>
-                </div>
-              </a>
+                  <img src="/logo.webp" alt="programaConNosotros" className="relative size-6" />
+                </span>
+                <span className="grid min-w-0 flex-1 text-left leading-tight">
+                  <span className="truncate text-[13px] font-semibold tracking-tight">
+                    programaConNosotros
+                  </span>
+                  <span
+                    className={cn(
+                      GeistMono.className,
+                      'truncate text-[10px] uppercase tracking-[0.1em] text-sidebar-foreground/45',
+                    )}
+                  >
+                    Comunidad · desde 2020
+                  </span>
+                </span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={getHomeItem()} />
-        <NavMain items={getActividadesItems(upcomingEvents)} label="Actividades" />
-        <NavMain items={getRecursosItems()} label="Recursos" />
-        <NavMain items={getComunidadItems()} label="Comunidad" />
+
+      <SidebarContent className="gap-0 px-1 [scrollbar-width:thin]">
+        <NavMain items={homeItems} />
+        <SidebarUpcomingEvents events={upcomingEvents} />
+        <NavMain items={actividadesItems} label="Actividades" />
+        <NavMain items={recursosItems} label="Recursos" />
+        <NavMain items={comunidadItems} label="Comunidad" />
         {user?.role === 'ADMIN' && (
           <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
         )}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+
+      <SidebarFooter className="gap-1.5 border-t border-sidebar-border/70 px-3 pb-3 pt-2">
+        <NavSecondary items={secondaryItems} className="p-0" />
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
