@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { RuledCell, RuledGrid } from '@/components/ui/ruled-grid';
 import { getCollaborationStats } from '@/lib/github-stats';
+import { getIdentityMap } from '@/lib/identity-links';
+import { getAdminUser } from '@/lib/admin';
 import { cn } from '@/lib/utils';
 
 const TOP_CONTRIBUTORS = 8;
@@ -86,7 +88,11 @@ const WeeklyActivity = ({ weeks }: { weeks: number[] }) => {
 };
 
 export const CollaborationStats = async () => {
-  const stats = await getCollaborationStats();
+  const [stats, profiles, admin] = await Promise.all([
+    getCollaborationStats(),
+    getIdentityMap('github'),
+    getAdminUser(),
+  ]);
 
   if (!stats) {
     return (
@@ -129,38 +135,48 @@ export const CollaborationStats = async () => {
         <ol className="space-y-1">
           {contributors.map((contributor, index) => {
             const bar = asciiBar(contributor.mergedPrs, maxMerged);
+            const profile = profiles[contributor.login];
             return (
-              <li key={contributor.login}>
+              <li
+                key={contributor.login}
+                className="group flex items-center gap-2 font-mono text-xs"
+              >
+                <span className="w-5 shrink-0 text-right tabular-nums text-muted-foreground/70">
+                  {index + 1}
+                </span>
+                <Image
+                  src={contributor.avatarUrl}
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="shrink-0 grayscale transition group-hover:grayscale-0"
+                />
                 <Link
                   href={contributor.htmlUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 font-mono text-xs"
+                  title={`${contributor.login} en GitHub`}
+                  className="w-32 shrink-0 truncate transition-colors hover:text-pcnGreen"
                 >
-                  <span className="w-5 shrink-0 text-right tabular-nums text-muted-foreground/70">
-                    {index + 1}
-                  </span>
-                  <Image
-                    src={contributor.avatarUrl}
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="shrink-0 grayscale transition group-hover:grayscale-0"
-                  />
-                  <span className="w-32 shrink-0 truncate transition-colors group-hover:text-pcnGreen">
-                    {contributor.login}
-                  </span>
-                  <span aria-hidden className="hidden shrink-0 tracking-tighter sm:inline">
-                    <span className="text-pcnGreen-600 group-hover:text-pcnGreen">
-                      {bar.filled}
-                    </span>
-                    <span className="text-pcnGreen-200">{bar.empty}</span>
-                  </span>
-                  <span className="ml-auto shrink-0 tabular-nums text-muted-foreground sm:ml-2">
-                    <span className="text-foreground">{contributor.mergedPrs}</span> PRs ·{' '}
-                    {numberFormat.format(contributor.commits)} commits
-                  </span>
+                  {contributor.login}
                 </Link>
+                <span aria-hidden className="hidden shrink-0 tracking-tighter sm:inline">
+                  <span className="text-pcnGreen-600 group-hover:text-pcnGreen">{bar.filled}</span>
+                  <span className="text-pcnGreen-200">{bar.empty}</span>
+                </span>
+                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground sm:ml-2">
+                  <span className="text-foreground">{contributor.mergedPrs}</span> PRs ·{' '}
+                  {numberFormat.format(contributor.commits)} commits
+                </span>
+                {profile && (
+                  <Link
+                    href={`/perfil/${profile.id}`}
+                    title={`Ver el perfil de ${profile.name} en PCN`}
+                    className="hidden shrink-0 truncate text-pcnGreen-700 transition-colors hover:text-pcnGreen md:inline md:max-w-40"
+                  >
+                    ~/{profile.name.split(' ')[0].toLowerCase()} →
+                  </Link>
+                )}
               </li>
             );
           })}
@@ -170,6 +186,14 @@ export const CollaborationStats = async () => {
       <p className="font-mono text-[11px] text-muted-foreground/70">
         repo creado {timeAgo(stats.createdAt)} · último push {timeAgo(stats.pushedAt)} · datos de la
         API de GitHub, se actualizan cada hora
+        {admin && (
+          <>
+            {' · '}
+            <Link href="/vinculos" className="text-pcnGreen-700 hover:text-pcnGreen">
+              vincular perfiles →
+            </Link>
+          </>
+        )}
       </p>
     </div>
   );

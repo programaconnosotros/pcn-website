@@ -14,43 +14,44 @@ enum Role {
 }
 
 model User {
-  id              String         @id @default(cuid())
-  name            String
-  email           String         @unique
-  password        String
-  emailVerified   Boolean        @default(false)
-  phoneNumber     String?
-  role            Role           @default(REGULAR)
-  image           String?
-  countryOfOrigin String?
-  province        String? // Provincia (opcional)
-  xAccountUrl     String?
-  linkedinUrl     String?
-  gitHubUrl       String?
-  slogan          String?
-  jobTitle        String?
-  enterprise      String?
-  career          String?
-  studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
-  sessions        Session[]
-  advises         Advise[]
-  languages       UserLanguage[]
-  comments        Comment[]
-  likes           Like[]
-  eventRegistrations EventRegistration[]
-  talkProposals            TalkProposal[]
-  speakerTalks             TalkSpeaker[]         @relation("UserTalkSpeakers")
-  talkProposalSpeakers     TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
-  pageVisits      PageVisit[]
-  testimonials    Testimonial[]
-  notifications   Notification[]
-  errorLogs       ErrorLog[]
-  resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
-  appLogs         AppLog[]
-  announcements   Announcement[]
-  projectMemberships ProjectMember[] @relation("UserProjectMembers")
-  authoredProjects   Project[]       @relation("UserAuthoredProjects")
-  contentMarks       ContentMark[]
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String                @unique
+  password             String
+  emailVerified        Boolean               @default(false)
+  phoneNumber          String?
+  role                 Role                  @default(REGULAR)
+  image                String?
+  countryOfOrigin      String?
+  province             String? // Provincia (opcional)
+  xAccountUrl          String?
+  linkedinUrl          String?
+  gitHubUrl            String?
+  slogan               String?
+  jobTitle             String?
+  enterprise           String?
+  career               String?
+  studyPlace           String? // Dónde estudia (universidad, autodidacta, etc.)
+  sessions             Session[]
+  advises              Advise[]
+  languages            UserLanguage[]
+  comments             Comment[]
+  likes                Like[]
+  eventRegistrations   EventRegistration[]
+  talkProposals        TalkProposal[]
+  speakerTalks         TalkSpeaker[]         @relation("UserTalkSpeakers")
+  talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
+  pageVisits           PageVisit[]
+  testimonials         Testimonial[]
+  notifications        Notification[]
+  errorLogs            ErrorLog[]
+  resolvedErrors       ErrorLog[]            @relation("ErrorLogResolver")
+  appLogs              AppLog[]
+  announcements        Announcement[]
+  projectMemberships   ProjectMember[]       @relation("UserProjectMembers")
+  authoredProjects     Project[]             @relation("UserAuthoredProjects")
+  contentMarks         ContentMark[]
+  identityLinks        IdentityLink[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -113,17 +114,17 @@ model UserLanguage {
 }
 
 model Event {
-  id          String    @id @default(cuid())
-  date        DateTime
-  endDate     DateTime?
-  name        String
-  description String
-  city        String? // Nombre de la ciudad
-  address     String? // Dirección específica (calle, número, etc.)
-  placeName   String? // Nombre del lugar (bar, universidad, etc.)
-  flyerImages String[] @default([])
-  latitude    Float?
-  longitude   Float?
+  id                      String    @id @default(cuid())
+  date                    DateTime
+  endDate                 DateTime?
+  name                    String
+  description             String
+  city                    String? // Nombre de la ciudad
+  address                 String? // Dirección específica (calle, número, etc.)
+  placeName               String? // Nombre del lugar (bar, universidad, etc.)
+  flyerImages             String[]  @default([])
+  latitude                Float?
+  longitude               Float?
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)
@@ -132,8 +133,8 @@ model Event {
   streamingUrl            String?
   shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
   deletedAt               DateTime? // Eliminación lógica
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   images        Image[]
   registrations EventRegistration[]
@@ -181,19 +182,19 @@ model JobOffers {
 }
 
 model Announcement {
-  id          String   @id @default(cuid())
-  title       String
-  content     String
-  category    String   // ej: "general", "evento", "noticia", "importante"
-  pinned      Boolean  @default(false) // Para destacar anuncios importantes
-  published   Boolean  @default(true)
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  eventId     String?  // Evento relacionado (solo para categoría "evento")
-  event       Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  id        String  @id @default(cuid())
+  title     String
+  content   String
+  category  String // ej: "general", "evento", "noticia", "importante"
+  pinned    Boolean @default(false) // Para destacar anuncios importantes
+  published Boolean @default(true)
+  authorId  String
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  eventId   String? // Evento relacionado (solo para categoría "evento")
+  event     Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([authorId])
   @@index([published])
@@ -202,15 +203,15 @@ model Announcement {
 }
 
 model EventRegistration {
-  id              String    @id @default(cuid())
-  eventId         String
-  userId          String    // Usuario registrado (requerido)
-  cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String // Usuario registrado (requerido)
+  cancelledAt DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
   @@index([eventId])
@@ -226,21 +227,21 @@ model Sponsor {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
 }
 
 model PageVisit {
   id        String   @id @default(cuid())
-  path      String   // Ruta de la página visitada
-  userId    String?  // Usuario que visitó (si está logueado)
-  ipAddress String?  // Dirección IP (opcional, para privacidad)
-  userAgent String?  // User agent del navegador
-  referer   String?  // Página de origen
+  path      String // Ruta de la página visitada
+  userId    String? // Usuario que visitó (si está logueado)
+  ipAddress String? // Dirección IP (opcional, para privacidad)
+  userAgent String? // User agent del navegador
+  referer   String? // Página de origen
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([path])
   @@index([userId])
@@ -250,12 +251,12 @@ model PageVisit {
 model Testimonial {
   id        String   @id @default(cuid())
   body      String
-  userId    String   // Usuario que creó el testimonio (requerido)
+  userId    String // Usuario que creó el testimonio (requerido)
   featured  Boolean  @default(false) // Si aparece en la home page
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([createdAt])
@@ -264,15 +265,15 @@ model Testimonial {
 
 model Notification {
   id        String   @id @default(cuid())
-  type      String   // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
-  title     String   // Título de la notificación
-  message   String   // Mensaje de la notificación
-  userId    String?  // Usuario destinatario (null = todos los admins)
+  type      String // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
+  title     String // Título de la notificación
+  message   String // Mensaje de la notificación
+  userId    String? // Usuario destinatario (null = todos los admins)
   read      Boolean  @default(false)
-  metadata  String?  // JSON con información adicional
+  metadata  String? // JSON con información adicional
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([read])
@@ -280,21 +281,21 @@ model Notification {
 }
 
 model ErrorLog {
-  id          String   @id @default(cuid())
-  message     String   // Mensaje del error
-  stack       String?  // Stack trace del error
-  path        String?  // Ruta donde ocurrió el error
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del error
-  resolved    Boolean  @default(false) // Si el error fue resuelto
-  resolvedAt  DateTime? // Fecha en que se resolvió
-  resolvedBy  String?  // ID del admin que lo resolvió
-  createdAt   DateTime @default(now())
+  id         String    @id @default(cuid())
+  message    String // Mensaje del error
+  stack      String? // Stack trace del error
+  path       String? // Ruta donde ocurrió el error
+  userId     String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent  String? // User agent del navegador
+  ipAddress  String? // Dirección IP
+  metadata   String? // JSON con información adicional del error
+  resolved   Boolean   @default(false) // Si el error fue resuelto
+  resolvedAt DateTime? // Fecha en que se resolvió
+  resolvedBy String? // ID del admin que lo resolvió
+  createdAt  DateTime  @default(now())
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  resolver    User?    @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  user     User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resolver User? @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -303,17 +304,17 @@ model ErrorLog {
 }
 
 model AppLog {
-  id          String   @id @default(cuid())
-  level       String   // Nivel del log: info, warn, error, debug
-  message     String   // Mensaje del log
-  path        String?  // Ruta donde ocurrió el log
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del log
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  level     String // Nivel del log: info, warn, error, debug
+  message   String // Mensaje del log
+  path      String? // Ruta donde ocurrió el log
+  userId    String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent String? // User agent del navegador
+  ipAddress String? // Dirección IP
+  metadata  String? // JSON con información adicional del log
+  createdAt DateTime @default(now())
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -324,7 +325,7 @@ model AppLog {
 model PasswordResetToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -336,7 +337,7 @@ model PasswordResetToken {
 model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -507,4 +508,23 @@ model ContentMark {
 
   @@unique([userId, contentType, contentId, mark])
   @@index([userId, contentType])
+}
+
+// Ties a name the site knows from outside the platform to a real user, set by an admin: a
+// member as named in the WhatsApp conversation summaries, or a GitHub login that contributed
+// to this website's repository.
+model IdentityLink {
+  id           String @id @default(cuid())
+  /// "whatsapp" or "github" (validated in src/actions/identity-links).
+  source       String
+  externalName String
+  userId       String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([source, externalName])
+  @@index([userId])
 }

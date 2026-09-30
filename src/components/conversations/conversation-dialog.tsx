@@ -13,6 +13,7 @@ import {
   toSentences,
 } from './conversation-utils';
 import { Highlight } from './highlight';
+import { ParticipantChip } from './participant-chip';
 
 const keyCapClassName = cn(
   'flex size-7 shrink-0 items-center justify-center rounded-sm border border-pcnGreen-200 bg-black/70 text-pcnGreen-600 transition-all',
@@ -191,22 +192,13 @@ export function ConversationDialog({
                 </p>
                 <div className="flex flex-wrap gap-1 text-[11px]">
                   {conversation.participants.map((name) => (
-                    <button
+                    <ParticipantChip
                       key={name}
-                      type="button"
+                      name={name}
+                      active={activeParticipant === name}
                       onClick={() => onParticipantClick(name)}
-                      aria-pressed={activeParticipant === name}
                       title={`Ver las conversaciones de ${name}`}
-                      className={cn(
-                        'border px-1.5 leading-5 transition-colors',
-                        activeParticipant === name
-                          ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
-                          : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
-                      )}
-                    >
-                      <span className="text-pcnGreen-600">@</span>
-                      {name}
-                    </button>
+                    />
                   ))}
                 </div>
               </div>

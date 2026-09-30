@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Link2,
   AlertTriangle,
   Bell,
   BookOpen,
@@ -97,6 +98,7 @@ const getAdminItems = (unreadCount: number): NavItem[] => [
   { title: 'Visitas', url: '/visitas', icon: Eye },
   { title: 'Notificaciones', url: '/notificaciones', icon: Bell, badge: unreadCount },
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
+  { title: 'Vínculos', url: '/vinculos', icon: Link2 },
 ];
 
 export const secondaryItems = [

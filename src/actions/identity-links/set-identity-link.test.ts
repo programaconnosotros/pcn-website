@@ -1,0 +1,63 @@
+import { prismaMock } from '@/test/prisma';
+import { mockCookies } from '@/test/cookies';
+import { setIdentityLink } from './set-identity-link';
+
+const admin = { id: 'admin-1', name: 'Admin', email: 'admin@pcn.com', role: 'ADMIN' as const };
+const regular = { ...admin, id: 'user-1', role: 'REGULAR' as const };
+
+const loginAs = (user: typeof admin | typeof regular) => {
+  mockCookies({ sessionId: `session-${user.id}` });
+  prismaMock.session.findUnique.mockResolvedValue({ id: 's', userId: user.id, user } as any);
+};
+
+describe('setIdentityLink', () => {
+  it('only lets admins link identities', async () => {
+    loginAs(regular);
+
+    await expect(
+      setIdentityLink({ source: 'github', externalName: 'octocat', userId: 'user-2' }),
+    ).rejects.toThrow('No autorizado');
+    expect(prismaMock.identityLink.upsert).not.toHaveBeenCalled();
+  });
+
+  it('links a GitHub login to a user', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+
+    await setIdentityLink({ source: 'github', externalName: 'octocat', userId: 'user-2' });
+
+    expect(prismaMock.identityLink.upsert).toHaveBeenCalledWith({
+      where: { source_externalName: { source: 'github', externalName: 'octocat' } },
+      create: { source: 'github', externalName: 'octocat', userId: 'user-2' },
+      update: { userId: 'user-2' },
+    });
+  });
+
+  it('rejects WhatsApp names that are not community members', async () => {
+    loginAs(admin);
+
+    await expect(
+      setIdentityLink({ source: 'whatsapp', externalName: 'Alguien Inventado', userId: 'user-2' }),
+    ).rejects.toThrow('Nombre desconocido');
+  });
+
+  it('rejects invalid GitHub logins', async () => {
+    loginAs(admin);
+
+    await expect(
+      setIdentityLink({ source: 'github', externalName: 'no/válido', userId: 'user-2' }),
+    ).rejects.toThrow('Nombre desconocido');
+  });
+
+  it('unlinks when no user is given', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue({ userId: 'user-2' } as any);
+
+    await setIdentityLink({ source: 'whatsapp', externalName: 'Agustín Sánchez', userId: null });
+
+    expect(prismaMock.identityLink.delete).toHaveBeenCalledWith({
+      where: { source_externalName: { source: 'whatsapp', externalName: 'Agustín Sánchez' } },
+    });
+  });
+});

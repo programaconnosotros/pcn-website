@@ -3,6 +3,7 @@ import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
 import { METER_SLOTS, isGroupThread, shortHash } from './conversation-utils';
 import { Highlight } from './highlight';
+import { ParticipantChip } from './participant-chip';
 
 const COLLAPSED_PARTICIPANTS = 3;
 
@@ -101,21 +102,12 @@ export function ConversationRow({
 
       <div className="mt-auto flex flex-wrap items-center gap-1 pt-1 font-mono text-[11px]">
         {visibleParticipants.map((name) => (
-          <button
+          <ParticipantChip
             key={name}
-            type="button"
+            name={name}
+            active={activeParticipant === name}
             onClick={() => onParticipantClick(name)}
-            aria-pressed={activeParticipant === name}
-            className={cn(
-              'border px-1.5 leading-5 transition-colors',
-              activeParticipant === name
-                ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
-                : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
-            )}
-          >
-            <span className="text-pcnGreen-600">@</span>
-            {name}
-          </button>
+          />
         ))}
         {hiddenCount > 0 && (
           <button
