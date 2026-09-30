@@ -18,11 +18,14 @@ interface HomeHeroProps {
   title?: ReactNode;
 }
 
-/** Community-wide figures; rounded down on purpose ("500+"). */
+const FOUNDING_YEAR = 2020;
+
+/** Community-wide figures; rounded down on purpose ("500+"). Its age counts itself up every year. */
 const COMMUNITY_STATS = [
   { label: 'Miembros', value: 500 },
   { label: 'Charlas', value: 50 },
   { label: 'Eventos', value: 20 },
+  { label: 'Años de comunidad', value: new Date().getFullYear() - FOUNDING_YEAR },
 ];
 
 const fadeUp = (delay: number) => ({
@@ -142,7 +145,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                   'mt-6 text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70',
                 )}
               >
-                Gratis · Sin spam · Desde 2020
+                Gratis · Sin spam · Desde {FOUNDING_YEAR}
               </motion.p>
             )}
           </div>
@@ -188,19 +191,6 @@ const StatsPanel = () => {
               </p>
             </div>
           ))}
-          <div className="bg-black/90 p-4 md:p-5">
-            <div className="text-glow font-mono text-3xl font-semibold tracking-tight text-pcnGreen md:text-4xl">
-              2020
-            </div>
-            <p
-              className={cn(
-                GeistMono.className,
-                'mt-1.5 text-[11px] uppercase tracking-[0.18em] text-muted-foreground',
-              )}
-            >
-              Impulsando desde
-            </p>
-          </div>
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-pcnGreen-200 px-5 py-3.5">
