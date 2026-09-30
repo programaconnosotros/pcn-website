@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
 import { Plus, Handshake } from 'lucide-react';
@@ -49,31 +50,33 @@ const EventsPage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-            <PageTitle
-              path="eventos"
-              meta="meetups, hackathons, coworks, etc."
-              className="mb-0 flex-1"
-            />
-            {!isAdmin && (
-              <Link
-                href="https://wa.me/5493815777562"
-                target="_blank"
-                className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
-              >
-                <Handshake className="h-3.5 w-3.5" />
-                quiero organizar algo
-              </Link>
-            )}
-            {isAdmin && (
-              <Link href="/eventos/nuevo">
-                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
-                  <Plus className="h-4 w-4" />
-                  Crear evento
-                </Button>
-              </Link>
-            )}
-          </div>
+          <StickyHeader>
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+              <PageTitle
+                path="eventos"
+                meta="meetups, hackathons, coworks, etc."
+                className="mb-0 flex-1"
+              />
+              {!isAdmin && (
+                <Link
+                  href="https://wa.me/5493815777562"
+                  target="_blank"
+                  className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                >
+                  <Handshake className="h-3.5 w-3.5" />
+                  quiero organizar algo
+                </Link>
+              )}
+              {isAdmin && (
+                <Link href="/eventos/nuevo">
+                  <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                    <Plus className="h-4 w-4" />
+                    Crear evento
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </StickyHeader>
 
           <EventsList />
         </div>

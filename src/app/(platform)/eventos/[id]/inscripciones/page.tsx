@@ -1,5 +1,6 @@
 'use server';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -51,13 +52,15 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path={[
-              { label: 'eventos', href: '/eventos' },
-              { label: event.name, href: `/eventos/${id}` },
-              { label: 'inscripciones' },
-            ]}
-          />
+          <StickyHeader>
+            <PageTitle
+              path={[
+                { label: 'eventos', href: '/eventos' },
+                { label: event.name, href: `/eventos/${id}` },
+                { label: 'inscripciones' },
+              ]}
+            />
+          </StickyHeader>
 
           <RuledGrid className="mb-4 grid-cols-1 sm:grid-cols-3">
             {[

@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ProjectForm } from './project-form';
@@ -73,24 +74,26 @@ export function ProjectsList({ projects, currentUser }: Props) {
 
   return (
     <div className="mt-4">
-      <div className="flex items-start justify-between gap-4">
-        <PageTitle
-          path="proyectos"
-          className="flex-1"
-          meta={`${projects.length} proyectos de la comunidad`}
-        />
+      <StickyHeader>
+        <div className="flex items-start justify-between gap-4">
+          <PageTitle
+            path="proyectos"
+            className="flex-1"
+            meta={`${projects.length} proyectos de la comunidad`}
+          />
 
-        {currentUser ? (
-          <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            Publicar proyecto
-          </Button>
-        ) : (
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
-          </Button>
-        )}
-      </div>
+          {currentUser ? (
+            <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+              <Plus className="mr-1 h-4 w-4" />
+              Publicar proyecto
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
+            </Button>
+          )}
+        </div>
+      </StickyHeader>
 
       {projects.length === 0 && (
         <p className="font-mono text-sm text-muted-foreground">

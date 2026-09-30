@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ArrowUpRight } from 'lucide-react';
@@ -951,55 +952,57 @@ const ReadingPage = () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path="lectura"
-            meta={`${books.length} libros · ${articles.length} artículos`}
-          />
-
           <div className="mb-4">
             <Tabs value={activeTab} onValueChange={handleTabChange}>
-              <TabsList className="mb-4">
-                <TabsTrigger value="libros">Libros</TabsTrigger>
-                <TabsTrigger value="articulos">
-                  Artículos
-                  {savedCount > 0 && (
-                    <span
-                      title={`${savedCount} en tu lista para leer`}
-                      className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
-                    >
-                      {savedCount}
-                    </span>
-                  )}
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Filtros compartidos */}
-              <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
-                {/* Búsqueda */}
-                <SearchBar
-                  searchQuery={searchTerm}
-                  setSearchQuery={setSearchTerm}
-                  placeholder="título, autor o descripción"
-                  label="Buscar por título, autor o descripción"
-                  className="max-w-none flex-1"
+              <StickyHeader>
+                <PageTitle
+                  path="lectura"
+                  meta={`${books.length} libros · ${articles.length} artículos`}
                 />
 
-                {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
-                {activeTab === 'libros' && (
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-full md:w-[200px]">
-                      <SelectValue placeholder="Todas las categorías" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </div>
+                <TabsList className="mb-4">
+                  <TabsTrigger value="libros">Libros</TabsTrigger>
+                  <TabsTrigger value="articulos">
+                    Artículos
+                    {savedCount > 0 && (
+                      <span
+                        title={`${savedCount} en tu lista para leer`}
+                        className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
+                      >
+                        {savedCount}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Filtros compartidos */}
+                <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
+                  {/* Búsqueda */}
+                  <SearchBar
+                    searchQuery={searchTerm}
+                    setSearchQuery={setSearchTerm}
+                    placeholder="título, autor o descripción"
+                    label="Buscar por título, autor o descripción"
+                    className="max-w-none flex-1"
+                  />
+
+                  {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
+                  {activeTab === 'libros' && (
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="w-full md:w-[200px]">
+                        <SelectValue placeholder="Todas las categorías" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              </StickyHeader>
 
               {/* Tab: Libros */}
               <TabsContent value="libros">

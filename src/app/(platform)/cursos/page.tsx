@@ -29,8 +29,12 @@ export const metadata: Metadata = {
 
 const Courses = () => (
   <div className="flex flex-1 flex-col p-4 pt-0">
-    <PageTitle path="cursos" className="mt-4" meta="gratis · curados por la comunidad" />
-    <CoursesBrowser courses={allCourses} />
+    <div className="mt-4">
+      <CoursesBrowser
+        header={<PageTitle path="cursos" meta="gratis · curados por la comunidad" />}
+        courses={allCourses}
+      />
+    </div>
   </div>
 );
 

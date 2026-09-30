@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import type { Metadata } from 'next';
 import {
   Database,
@@ -221,19 +222,21 @@ const DesarrolloPage = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <div className="flex items-start justify-between gap-4">
-          <PageTitle
-            path="desarrollo"
-            className="flex-1"
-            meta="open-source · cualquier persona puede contribuir"
-          />
-          <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
-            <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
-              <Github className="h-4 w-4" />
-              GitHub
-            </Button>
-          </Link>
-        </div>
+        <StickyHeader>
+          <div className="flex items-start justify-between gap-4">
+            <PageTitle
+              path="desarrollo"
+              className="flex-1"
+              meta="open-source · cualquier persona puede contribuir"
+            />
+            <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
+                <Github className="h-4 w-4" />
+                GitHub
+              </Button>
+            </Link>
+          </div>
+        </StickyHeader>
 
         <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
           <Section title="Arquitectura del proyecto">

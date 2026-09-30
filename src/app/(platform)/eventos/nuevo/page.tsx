@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { NewEventForm } from '@/components/events/new-event-form';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -28,7 +29,9 @@ const NewEventPage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle path="eventos/nuevo" />
+          <StickyHeader>
+            <PageTitle path="eventos/nuevo" />
+          </StickyHeader>
 
           <NewEventForm />
         </div>

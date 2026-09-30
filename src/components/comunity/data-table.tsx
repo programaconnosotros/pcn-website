@@ -13,7 +13,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -33,13 +33,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SearchBar } from '@/components/ui/search-bar';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  /** Page title, pinned together with the toolbar. */
+  header?: ReactNode;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, header }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -99,126 +102,131 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   };
 
   return (
-    <div className="space-y-3">
-      {/* Toolbar */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SearchBar
-          searchQuery={globalFilter}
-          setSearchQuery={setGlobalFilter}
-          placeholder="usuario"
-          label="Buscar usuario"
-          className="max-w-none flex-1"
-        />
+    <div>
+      <StickyHeader>
+        {header}
+        {/* Toolbar */}
+        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <SearchBar
+            searchQuery={globalFilter}
+            setSearchQuery={setGlobalFilter}
+            placeholder="usuario"
+            label="Buscar usuario"
+            className="max-w-none flex-1"
+          />
 
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs text-muted-foreground">
-            {table.getFilteredRowModel().rows.length} de {data.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs text-muted-foreground">
+              {table.getFilteredRowModel().rows.length} de {data.length}
+            </span>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <SlidersHorizontal className="h-4 w-4" />
-                Columnas
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>Mostrar columnas</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {table
-                .getAllColumns()
-                .filter((col) => col.getCanHide())
-                .map((col) => (
-                  <DropdownMenuCheckboxItem
-                    key={col.id}
-                    checked={col.getIsVisible()}
-                    onCheckedChange={(value) => col.toggleVisibility(!!value)}
-                  >
-                    {columnLabels[col.id] ?? col.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Columnas
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Mostrar columnas</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {table
+                  .getAllColumns()
+                  .filter((col) => col.getCanHide())
+                  .map((col) => (
+                    <DropdownMenuCheckboxItem
+                      key={col.id}
+                      checked={col.getIsVisible()}
+                      onCheckedChange={(value) => col.toggleVisibility(!!value)}
+                    >
+                      {columnLabels[col.id] ?? col.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      </StickyHeader>
 
-      {/* Table */}
-      <div className="overflow-x-auto border border-pcnGreen-200">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((hg) => (
-              <TableRow key={hg.id}>
-                {hg.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className={
-                      (header.column.columnDef.meta as { className?: string } | undefined)
-                        ?.className
-                    }
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
+      <div className="space-y-3">
+        {/* Table */}
+        <div className="overflow-x-auto border border-pcnGreen-200">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((hg) => (
+                <TableRow key={hg.id}>
+                  {hg.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
                       className={
-                        (cell.column.columnDef.meta as { className?: string } | undefined)
+                        (header.column.columnDef.meta as { className?: string } | undefined)
                           ?.className
                       }
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-muted-foreground"
-                >
-                  No se encontraron usuarios.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className={
+                          (cell.column.columnDef.meta as { className?: string } | undefined)
+                            ?.className
+                        }
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No se encontraron usuarios.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <p className="font-mono text-xs text-muted-foreground">
-          Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-        </p>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Siguiente
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        {/* Pagination */}
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-xs text-muted-foreground">
+            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Anterior
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Siguiente
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

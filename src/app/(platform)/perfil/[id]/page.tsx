@@ -3,6 +3,7 @@ import { AdviseCard } from '@/components/advises/advise-card';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
@@ -175,10 +176,11 @@ export default async function ProfilePage(props: ProfilePageProps) {
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <PageTitle
-          className="mt-4"
-          path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
-        />
+        <StickyHeader className="mt-4">
+          <PageTitle
+            path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+          />
+        </StickyHeader>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
           <div className="lg:col-span-1">

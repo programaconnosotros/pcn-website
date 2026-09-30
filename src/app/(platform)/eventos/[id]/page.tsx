@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
@@ -201,23 +202,24 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   return (
     <>
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 pt-0">
-        <PageTitle
-          className="mt-4"
-          path={[{ label: 'eventos', href: '/eventos' }, { label: event.name }]}
-          action={
-            <>
-              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
-              {isAdmin && (
-                <Link href={`/eventos/${id}/editar`}>
-                  <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
-                    <Edit className="h-4 w-4" />
-                    Editar evento
-                  </Button>
-                </Link>
-              )}
-            </>
-          }
-        />
+        <StickyHeader className="mt-4">
+          <PageTitle
+            path={[{ label: 'eventos', href: '/eventos' }, { label: event.name }]}
+            action={
+              <>
+                <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+                {isAdmin && (
+                  <Link href={`/eventos/${id}/editar`}>
+                    <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                      <Edit className="h-4 w-4" />
+                      Editar evento
+                    </Button>
+                  </Link>
+                )}
+              </>
+            }
+          />
+        </StickyHeader>
 
         <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:divide-x md:divide-y-0">
           {/* Columna principal — flyer */}

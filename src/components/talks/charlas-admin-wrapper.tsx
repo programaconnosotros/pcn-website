@@ -33,6 +33,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -93,33 +94,35 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
   return (
     <div className="mt-4">
-      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-        <PageTitle
-          path="charlas"
-          meta={`${talks.length} charlas de la comunidad · ${externalTalks.length} externas`}
-          className="mb-0 flex-1"
-        />
-        {isAdmin ? (
-          <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
-            <Plus className="mr-1.5 h-4 w-4" />
-            Nueva charla
-          </Button>
-        ) : (
-          <Link
-            href="https://wa.me/5493815777562"
-            className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
-          >
-            <MicVocal className="h-3.5 w-3.5" />
-            quiero dar una charla
-          </Link>
-        )}
-      </div>
-
       <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="comunidad">Comunidad</TabsTrigger>
-          <TabsTrigger value="externas">Externas</TabsTrigger>
-        </TabsList>
+        <StickyHeader>
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <PageTitle
+              path="charlas"
+              meta={`${talks.length} charlas de la comunidad · ${externalTalks.length} externas`}
+              className="mb-0 flex-1"
+            />
+            {isAdmin ? (
+              <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+                <Plus className="mr-1.5 h-4 w-4" />
+                Nueva charla
+              </Button>
+            ) : (
+              <Link
+                href="https://wa.me/5493815777562"
+                className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                <MicVocal className="h-3.5 w-3.5" />
+                quiero dar una charla
+              </Link>
+            )}
+          </div>
+
+          <TabsList className="mb-4">
+            <TabsTrigger value="comunidad">Comunidad</TabsTrigger>
+            <TabsTrigger value="externas">Externas</TabsTrigger>
+          </TabsList>
+        </StickyHeader>
 
         <TabsContent value="comunidad">
           <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">

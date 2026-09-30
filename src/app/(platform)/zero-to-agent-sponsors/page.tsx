@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Award, Crown, Medal, MessageSquare } from 'lucide-react';
@@ -139,10 +140,12 @@ const BulletList = ({ items }: { items: string[] }) => (
 const ZeroToAgentSponsors = () => (
   <>
     <div className="mt-4 px-4 pb-16 md:px-10">
-      <PageTitle
-        path="zero-to-agent-sponsors"
-        meta="30 abr · 18:00–23:00 · +6.000 USD en premios"
-      />
+      <StickyHeader className="md:-mx-10 md:px-10">
+        <PageTitle
+          path="zero-to-agent-sponsors"
+          meta="30 abr · 18:00–23:00 · +6.000 USD en premios"
+        />
+      </StickyHeader>
 
       <Image
         src="/zero-to-agent-card.png"

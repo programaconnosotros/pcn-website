@@ -1,5 +1,6 @@
 import { InfluencerCard } from '@/components/influencers/influencer-card';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 
 interface Platform {
@@ -400,11 +401,12 @@ export default async function InfluencersPage() {
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <PageTitle
-          path="influencers"
-          className="mt-4"
-          meta={`${influencersData.influencers.length} referentes para seguir`}
-        />
+        <StickyHeader className="mt-4">
+          <PageTitle
+            path="influencers"
+            meta={`${influencersData.influencers.length} referentes para seguir`}
+          />
+        </StickyHeader>
 
         <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
           {influencersData.influencers.map((influencer: Influencer) => (

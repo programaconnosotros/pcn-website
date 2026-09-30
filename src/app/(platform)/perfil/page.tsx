@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -48,7 +49,9 @@ const Profile = async () => {
   return (
     <>
       <div className="mt-4 px-4 md:px-10">
-        <PageTitle path="perfil" meta={user.email} />
+        <StickyHeader className="md:-mx-10 md:px-10">
+          <PageTitle path="perfil" meta={user.email} />
+        </StickyHeader>
 
         <ProfileForm user={user} languages={userLanguages} />
       </div>

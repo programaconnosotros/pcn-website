@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SponsorsSection } from '@/components/home/sponsors-section';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -29,7 +30,9 @@ const Sponsors = () => {
     <>
       <div className="-mx-1 px-6 md:-mx-6 md:px-10">
         <div className="mt-4">
-          <PageTitle path="sponsors" meta="organizaciones que apoyan a la comunidad" />
+          <StickyHeader className="-mx-6 px-6 md:-mx-10 md:px-10">
+            <PageTitle path="sponsors" meta="organizaciones que apoyan a la comunidad" />
+          </StickyHeader>
           <SponsorsSection showHeading={false} />
         </div>
       </div>

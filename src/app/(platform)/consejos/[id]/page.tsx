@@ -1,6 +1,7 @@
 import { AdviseCard } from '@/components/advises/advise-card';
 import { CommentSection } from '@/components/advises/comment-section';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
@@ -94,10 +95,12 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path={`consejos/${advise.id.slice(0, 8)}`}
-            meta={`${advise.comments.length} ${advise.comments.length === 1 ? 'comentario' : 'comentarios'}`}
-          />
+          <StickyHeader>
+            <PageTitle
+              path={`consejos/${advise.id.slice(0, 8)}`}
+              meta={`${advise.comments.length} ${advise.comments.length === 1 ? 'comentario' : 'comentarios'}`}
+            />
+          </StickyHeader>
           <div className="mb-14 border-l border-t border-pcnGreen-200">
             <AdviseCard advise={advise} session={session} className="hover:bg-transparent" />
             <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />

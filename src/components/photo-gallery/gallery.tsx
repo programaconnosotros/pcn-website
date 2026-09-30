@@ -1,6 +1,7 @@
 'use client';
 
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
 import { dateContainsString } from '@/lib/date-formatter';
@@ -67,28 +68,30 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
   return (
     <>
-      <PageTitle path="galeria" className="mt-4" meta={`${photos.length} fotos de la comunidad`} />
+      <StickyHeader className="mt-4">
+        <PageTitle path="galeria" meta={`${photos.length} fotos de la comunidad`} />
 
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="título, archivo o fecha"
-          label="Buscar fotos"
-        />
-        <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
-          {searchQuery.trim() ? (
-            <>
-              <span className="text-pcnGreen">{filteredPhotos.length}</span>/{photos.length}{' '}
-              coincidencias
-            </>
-          ) : (
-            <>
-              ls -la <span className="text-pcnGreen-600">./galeria</span>
-            </>
-          )}
-        </p>
-      </div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            placeholder="título, archivo o fecha"
+            label="Buscar fotos"
+          />
+          <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
+            {searchQuery.trim() ? (
+              <>
+                <span className="text-pcnGreen">{filteredPhotos.length}</span>/{photos.length}{' '}
+                coincidencias
+              </>
+            ) : (
+              <>
+                ls -la <span className="text-pcnGreen-600">./galeria</span>
+              </>
+            )}
+          </p>
+        </div>
+      </StickyHeader>
 
       {filteredPhotos.length === 0 ? (
         <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">

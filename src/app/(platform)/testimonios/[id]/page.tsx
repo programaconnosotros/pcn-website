@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { fetchTestimonial } from '@/actions/testimonials/fetch-testimonial';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowLeft, Star } from 'lucide-react';
@@ -88,18 +89,20 @@ const TestimonialDetailPage = async (props: { params: Promise<{ id: string }> })
     <>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
-            <PageTitle
-              path={`testimonios/${testimonial.user.name.split(' ')[0].toLowerCase()}`}
-              meta={testimonial.featured ? 'destacado' : undefined}
-              className="mb-0 flex-1"
-            />
-            <TestimonialDetailActions
-              testimonial={testimonial}
-              canEdit={isAdmin || currentUserId === testimonial.userId}
-              isAdmin={isAdmin}
-            />
-          </div>
+          <StickyHeader>
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+              <PageTitle
+                path={`testimonios/${testimonial.user.name.split(' ')[0].toLowerCase()}`}
+                meta={testimonial.featured ? 'destacado' : undefined}
+                className="mb-0 flex-1"
+              />
+              <TestimonialDetailActions
+                testimonial={testimonial}
+                canEdit={isAdmin || currentUserId === testimonial.userId}
+                isAdmin={isAdmin}
+              />
+            </div>
+          </StickyHeader>
 
           <div className="mb-14 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
             <div className="flex items-center gap-3 p-3">

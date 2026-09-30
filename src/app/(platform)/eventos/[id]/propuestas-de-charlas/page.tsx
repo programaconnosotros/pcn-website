@@ -1,6 +1,7 @@
 'use server';
 
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -66,13 +67,15 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path={[
-              { label: 'eventos', href: '/eventos' },
-              { label: event.name, href: `/eventos/${id}` },
-              { label: 'propuestas' },
-            ]}
-          />
+          <StickyHeader>
+            <PageTitle
+              path={[
+                { label: 'eventos', href: '/eventos' },
+                { label: event.name, href: `/eventos/${id}` },
+                { label: 'propuestas' },
+              ]}
+            />
+          </StickyHeader>
 
           <section className="mb-14 border border-pcnGreen-200">
             <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">

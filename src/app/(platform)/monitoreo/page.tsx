@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { fetchErrors, getErrorStats } from '@/actions/errors/fetch-errors';
 import { fetchLogs, getLogStats } from '@/actions/logs/fetch-logs';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import {
@@ -164,10 +165,12 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
     <>
       <div className="flex flex-1 flex-col overflow-visible p-4 pt-0">
         <div className="mt-4 overflow-visible">
-          <PageTitle
-            path="monitoreo"
-            meta={`${errorStats.unresolvedErrors.toLocaleString()} errores sin resolver · ${logStats.totalLogs.toLocaleString()} logs`}
-          />
+          <StickyHeader>
+            <PageTitle
+              path="monitoreo"
+              meta={`${errorStats.unresolvedErrors.toLocaleString()} errores sin resolver · ${logStats.totalLogs.toLocaleString()} logs`}
+            />
+          </StickyHeader>
 
           <StatGroup label="errores" stats={errorTiles} className="md:grid-cols-4" />
           <StatGroup label="logs" stats={logTiles} className="md:grid-cols-5" />

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
@@ -130,10 +131,44 @@ export default function ConversationsPage() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <PageTitle
-          path="conversaciones"
-          meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
-        />
+        <StickyHeader>
+          <PageTitle
+            path="conversaciones"
+            meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
+          />
+
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <SearchBar
+              searchQuery={searchTerm}
+              setSearchQuery={setSearchTerm}
+              placeholder="conversaciones, temas o personas"
+              label="Buscar conversaciones"
+            />
+            <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
+              --grupales
+            </Flag>
+            {participant && (
+              <button
+                type="button"
+                onClick={() => setParticipant(null)}
+                className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
+              >
+                --author=&quot;{participant}&quot;
+                <X className="size-3.5" />
+                <span className="sr-only">Quitar filtro de persona</span>
+              </button>
+            )}
+            <p
+              className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
+              aria-live="polite"
+            >
+              <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
+                {filtered.length}
+              </span>
+              /{conversations.length} resultados
+            </p>
+          </div>
+        </StickyHeader>
 
         <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
           <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
@@ -142,38 +177,6 @@ export default function ConversationsPage() {
             ))}
           </RuledGrid>
           <ActivityGraph months={activity} />
-        </div>
-
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <SearchBar
-            searchQuery={searchTerm}
-            setSearchQuery={setSearchTerm}
-            placeholder="conversaciones, temas o personas"
-            label="Buscar conversaciones"
-          />
-          <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
-            --grupales
-          </Flag>
-          {participant && (
-            <button
-              type="button"
-              onClick={() => setParticipant(null)}
-              className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
-            >
-              --author=&quot;{participant}&quot;
-              <X className="size-3.5" />
-              <span className="sr-only">Quitar filtro de persona</span>
-            </button>
-          )}
-          <p
-            className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
-            aria-live="polite"
-          >
-            <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
-              {filtered.length}
-            </span>
-            /{conversations.length} resultados
-          </p>
         </div>
 
         <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">

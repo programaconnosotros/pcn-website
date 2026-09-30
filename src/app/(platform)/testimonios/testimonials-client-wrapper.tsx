@@ -2,6 +2,7 @@
 
 import { useRef, useMemo } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { TestimonialActionButton } from '@/components/testimonials/testimonial-action-button';
 import { TestimonialsClient, TestimonialsClientRef } from './testimonials-client';
 import { Testimonial } from '@prisma/client';
@@ -44,19 +45,21 @@ export function TestimonialsClientWrapper({
 
   return (
     <>
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <PageTitle
-          path="testimonios"
-          meta={`${testimonials.length} testimonios de la comunidad`}
-          className="mb-0 flex-1"
-        />
-        {currentUserId && (
-          <TestimonialActionButton
-            hasUserTestimonial={hasUserTestimonial || false}
-            onClick={handleButtonClick}
+      <StickyHeader>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <PageTitle
+            path="testimonios"
+            meta={`${testimonials.length} testimonios de la comunidad`}
+            className="mb-0 flex-1"
           />
-        )}
-      </div>
+          {currentUserId && (
+            <TestimonialActionButton
+              hasUserTestimonial={hasUserTestimonial || false}
+              onClick={handleButtonClick}
+            />
+          )}
+        </div>
+      </StickyHeader>
 
       <TestimonialsClient
         ref={clientRef}

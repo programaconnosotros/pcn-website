@@ -1,6 +1,7 @@
 'use server';
 
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import prisma from '@/lib/prisma';
@@ -64,7 +65,9 @@ const VisitasPage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle path="visitas" meta="visitas a las páginas principales" />
+          <StickyHeader>
+            <PageTitle path="visitas" meta="visitas a las páginas principales" />
+          </StickyHeader>
 
           <RuledGrid className="mb-4 grid-cols-2 lg:grid-cols-4">
             {[

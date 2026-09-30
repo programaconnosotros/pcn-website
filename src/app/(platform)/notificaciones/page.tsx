@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
@@ -35,10 +36,12 @@ const NotificacionesPage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path="notificaciones"
-            meta={`${notifications.length} en total · ${unreadCount} sin leer`}
-          />
+          <StickyHeader>
+            <PageTitle
+              path="notificaciones"
+              meta={`${notifications.length} en total · ${unreadCount} sin leer`}
+            />
+          </StickyHeader>
 
           <NotificationsClient notifications={notifications} />
         </div>

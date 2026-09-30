@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import type { Metadata } from 'next';
 
@@ -58,14 +59,16 @@ const AdvicePage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <PageTitle
-              path="consejos"
-              meta={`${advises.length} consejos de la comunidad`}
-              className="mb-0 flex-1"
-            />
-            {session && <AddAdvise />}
-          </div>
+          <StickyHeader>
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <PageTitle
+                path="consejos"
+                meta={`${advises.length} consejos de la comunidad`}
+                className="mb-0 flex-1"
+              />
+              {session && <AddAdvise />}
+            </div>
+          </StickyHeader>
 
           {advises.length === 0 ? (
             <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">

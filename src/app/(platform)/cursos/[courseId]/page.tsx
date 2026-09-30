@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CoursePlayer } from '@/components/courses/course-player';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 import { getCourseById } from '../courses';
@@ -96,15 +97,17 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path={`cursos/${course.id}`}
-            meta={[
-              course.websiteUrl ? 'interactivo' : `${course.hours}h`,
-              course.isMadeByCommunity && 'hecho en pcn',
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-          />
+          <StickyHeader>
+            <PageTitle
+              path={`cursos/${course.id}`}
+              meta={[
+                course.websiteUrl ? 'interactivo' : `${course.hours}h`,
+                course.isMadeByCommunity && 'hecho en pcn',
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            />
+          </StickyHeader>
 
           {course.youtubeUrls && course.youtubeUrls.length > 0 ? (
             <CoursePlayer videoUrls={course.youtubeUrls}>

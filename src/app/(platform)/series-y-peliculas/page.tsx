@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -255,39 +256,41 @@ const SeriesYPeliculasPage = () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path="series-y-peliculas"
-            meta={`${titles.filter((t) => t.type === 'Serie').length} series · ${
-              titles.filter((t) => t.type === 'Película').length
-            } películas`}
-          />
-
           <div className="mb-14">
-            {/* Filtros */}
-            <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
-              {/* Búsqueda */}
-              <SearchBar
-                searchQuery={searchTerm}
-                setSearchQuery={setSearchTerm}
-                placeholder="título, director o descripción"
-                label="Buscar por título, director o descripción"
-                className="max-w-none flex-1"
+            <StickyHeader>
+              <PageTitle
+                path="series-y-peliculas"
+                meta={`${titles.filter((t) => t.type === 'Serie').length} series · ${
+                  titles.filter((t) => t.type === 'Película').length
+                } películas`}
               />
 
-              {/* Filtro por género */}
-              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
-                <SelectTrigger className="w-full md:w-[200px]">
-                  <SelectValue placeholder="Todos los géneros" />
-                </SelectTrigger>
-                <SelectContent>
-                  {genres.map((genre) => (
-                    <SelectItem key={genre} value={genre}>
-                      {genre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              {/* Filtros */}
+              <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
+                {/* Búsqueda */}
+                <SearchBar
+                  searchQuery={searchTerm}
+                  setSearchQuery={setSearchTerm}
+                  placeholder="título, director o descripción"
+                  label="Buscar por título, director o descripción"
+                  className="max-w-none flex-1"
+                />
+
+                {/* Filtro por género */}
+                <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+                  <SelectTrigger className="w-full md:w-[200px]">
+                    <SelectValue placeholder="Todos los géneros" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {genres.map((genre) => (
+                      <SelectItem key={genre} value={genre}>
+                        {genre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </StickyHeader>
 
             {/* Grid de títulos */}
             {filteredTitles.length > 0 ? (

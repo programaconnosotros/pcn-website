@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import type { ReactNode } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import {
   Users,
@@ -295,11 +296,12 @@ const AnaliticasPage = async () => {
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <PageTitle
-          path="analiticas"
-          className="mt-4"
-          meta={`${totalUsers} usuarios · ${totalAdvises} consejos · ${upcomingEvents} eventos próximos`}
-        />
+        <StickyHeader className="mt-4">
+          <PageTitle
+            path="analiticas"
+            meta={`${totalUsers} usuarios · ${totalAdvises} consejos · ${upcomingEvents} eventos próximos`}
+          />
+        </StickyHeader>
 
         <RuledGrid className="grid-cols-2 md:grid-cols-4">
           {stats.map((stat) => {

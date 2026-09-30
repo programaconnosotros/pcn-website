@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
@@ -73,7 +74,9 @@ const FAQPage = async () => {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle path="preguntas-frecuentes" meta={`${faqs.length} preguntas`} />
+          <StickyHeader>
+            <PageTitle path="preguntas-frecuentes" meta={`${faqs.length} preguntas`} />
+          </StickyHeader>
 
           <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2">
             {faqs.map((faq, index) => (

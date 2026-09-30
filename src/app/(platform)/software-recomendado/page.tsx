@@ -6,8 +6,9 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { SearchBar } from '@/components/ui/search-bar';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface SoftwareRecommendation {
   name: string;
@@ -71,10 +72,11 @@ function SoftwareRecommendationCard({
 }
 
 interface RecommendationsListProps {
+  header: ReactNode;
   recommendations: SoftwareRecommendation[];
 }
 
-function RecommendationsList({ recommendations }: RecommendationsListProps) {
+function RecommendationsList({ header, recommendations }: RecommendationsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredRecommendations = recommendations.filter((software) => {
@@ -90,15 +92,18 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
   return (
     <>
-      {/* Search */}
-      <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-        <SearchBar
-          searchQuery={searchTerm}
-          setSearchQuery={setSearchTerm}
-          placeholder="software, categoría o tecnología"
-          label="Buscar software, categoría o tecnología"
-        />
-      </div>
+      <StickyHeader>
+        {header}
+        {/* Search */}
+        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+          <SearchBar
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
+            placeholder="software, categoría o tecnología"
+            label="Buscar software, categoría o tecnología"
+          />
+        </div>
+      </StickyHeader>
 
       {/* Software Grid or Empty State */}
       {filteredRecommendations.length > 0 ? (
@@ -200,12 +205,15 @@ export default function SoftwareRecommendationsPage() {
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitle
-            path="software-recomendado"
-            meta={`${softwareRecommendations.length} apps recomendadas por la comunidad`}
+          <RecommendationsList
+            header={
+              <PageTitle
+                path="software-recomendado"
+                meta={`${softwareRecommendations.length} apps recomendadas por la comunidad`}
+              />
+            }
+            recommendations={softwareRecommendations}
           />
-
-          <RecommendationsList recommendations={softwareRecommendations} />
         </div>
       </div>
     </>

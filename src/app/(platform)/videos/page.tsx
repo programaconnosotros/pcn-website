@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { videos } from '@/components/videos/videos';
 
@@ -28,7 +29,9 @@ export const metadata: Metadata = {
 const VideosPage = () => (
   <div className="flex flex-1 flex-col p-4 pt-0">
     <div className="mb-14 mt-4">
-      <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
+      <StickyHeader>
+        <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
+      </StickyHeader>
       <VideoGrid videos={videos} />
     </div>
   </div>
