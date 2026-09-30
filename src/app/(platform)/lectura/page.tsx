@@ -844,26 +844,35 @@ const formatArticleDate = (iso: string) =>
 const BookRow = ({ book }: { book: Book }) => {
   const content = (
     <>
-      <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-sm bg-muted">
-        <Image
-          src={book.cover}
-          alt={`Portada de ${book.title}`}
-          fill
-          className="object-cover"
-          sizes="40px"
-        />
+      {/* Cover shown as a physical book: a lit spine, page edge and a tilt towards the reader
+          on hover, framed by HUD corner ticks. */}
+      <div className="relative shrink-0 [perspective:600px]">
+        <div className="relative h-32 w-[5.5rem] overflow-hidden rounded-[2px] bg-muted shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)_scale(1.04)] sm:h-36 sm:w-24">
+          <Image
+            src={book.cover}
+            alt={`Portada de ${book.title}`}
+            fill
+            className="object-cover"
+            sizes="(min-width: 640px) 96px, 88px"
+          />
+          <span className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/60 via-white/10 to-transparent" />
+          <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/0 to-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        </div>
+        <span className="pointer-events-none absolute -left-1 -top-1 size-2 border-l border-t border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
+        <span className="pointer-events-none absolute -bottom-1 -right-1 size-2 border-b border-r border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-center gap-2 font-mono text-sm">
-          <h2 className="truncate font-semibold group-hover:text-pcnGreen">{book.title}</h2>
-          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+        <div className="flex items-start gap-2 font-mono text-sm">
+          {/* Long titles wrap on phones instead of being cut off. */}
+          <h2 className="font-semibold group-hover:text-pcnGreen md:truncate">{book.title}</h2>
+          <span className="ml-auto flex shrink-0 items-center gap-1 pt-0.5 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
             {book.year}
             {book.url && <ArrowUpRight className="h-3 w-3" />}
           </span>
         </div>
 
-        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+        <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
           {book.description}
         </p>
 
@@ -878,7 +887,7 @@ const BookRow = ({ book }: { book: Book }) => {
     </>
   );
 
-  const className = cn(ruledCellClassName, 'group flex gap-3 p-3');
+  const className = cn(ruledCellClassName, 'group flex gap-4 p-3');
 
   return book.url ? (
     <Link href={book.url} target="_blank" rel="noopener noreferrer" className={className}>
