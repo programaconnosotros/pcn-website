@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type React from 'react';
 import { ChevronLeft, ChevronRight, X, Share2, Download } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ShareDialog } from '@/components/photo-gallery/share-dialog';
@@ -93,6 +93,7 @@ export function PhotoDialog({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
           className="w-[90vw] max-w-4xl overflow-hidden border-none p-0 [&>button]:hidden"
+          aria-describedby={undefined}
           onKeyDown={handleKeyDown}
           tabIndex={0}
         >
@@ -184,10 +185,7 @@ export function PhotoDialog({
           </div>
 
           <div className="p-4 text-center">
-            {/* <DialogTitle className="text-lg font-medium">{currentPhoto.title}</DialogTitle>
-            {currentPhoto.date && (
-              <p className="mt-1 text-sm text-gray-500">{formatDate(currentPhoto.date)}</p>
-            )} */}
+            <DialogTitle className="sr-only">{currentPhoto.title}</DialogTitle>
           </div>
         </DialogContent>
       </Dialog>
