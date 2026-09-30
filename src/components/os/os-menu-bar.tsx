@@ -63,6 +63,7 @@ const formatClock = (date: Date) =>
     month: 'short',
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
   }).format(date);
 
 /** Rendered only on the client so the server and client markup never disagree about the time. */
