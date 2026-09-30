@@ -845,21 +845,23 @@ const BookRow = ({ book }: { book: Book }) => {
   const content = (
     <>
       {/* Cover shown as a physical book: a lit spine, page edge and a tilt towards the reader
-          on hover, framed by HUD corner ticks. */}
-      <div className="relative shrink-0 [perspective:600px]">
-        <div className="relative h-32 w-[5.5rem] overflow-hidden rounded-[2px] bg-muted shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)_scale(1.04)] sm:h-36 sm:w-24">
+          on hover, framed by HUD corner ticks. Covers come in different proportions, so the book
+          hugs the whole image inside a fixed slot that keeps every row's text aligned. */}
+      <div className="flex h-32 w-[6.5rem] shrink-0 items-start justify-center [perspective:600px] sm:h-36 sm:w-[7.5rem]">
+        <div className="relative max-h-full max-w-full rounded-[2px] shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)_scale(1.04)]">
           <Image
             src={book.cover}
             alt={`Portada de ${book.title}`}
-            fill
-            className="object-cover"
-            sizes="(min-width: 640px) 96px, 88px"
+            width={240}
+            height={360}
+            className="block h-auto max-h-32 w-auto max-w-[6.5rem] rounded-[2px] bg-muted sm:max-h-36 sm:max-w-[7.5rem]"
+            sizes="120px"
           />
           <span className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/60 via-white/10 to-transparent" />
           <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/0 to-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <span className="pointer-events-none absolute -left-1 -top-1 size-2 border-l border-t border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
+          <span className="pointer-events-none absolute -bottom-1 -right-1 size-2 border-b border-r border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-        <span className="pointer-events-none absolute -left-1 -top-1 size-2 border-l border-t border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
-        <span className="pointer-events-none absolute -bottom-1 -right-1 size-2 border-b border-r border-pcnGreen-500 opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
