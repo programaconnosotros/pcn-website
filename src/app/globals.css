@@ -282,6 +282,24 @@
     }
   }
 
+  /* A scan line that sweeps down a row while it is hovered (articles on /lectura). */
+  .group:hover .article-scan {
+    animation: article-scan 1.6s ease-in-out infinite;
+  }
+  @keyframes article-scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(600%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover .article-scan {
+      animation: none;
+    }
+  }
+
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
     background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),

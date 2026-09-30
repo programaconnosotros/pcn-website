@@ -11,14 +11,14 @@ import {
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { ArrowUpRight, ChevronRight, Search, X } from 'lucide-react';
+import { ArrowUpRight, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { articles, type Article } from './articles';
 import { ArticleReaderDialog } from './article-reader-dialog';
+import { ArticlesPanel } from './articles-panel';
 
 interface Book {
   id: string;
@@ -828,19 +828,6 @@ const categories = [
   ...Array.from(new Set(books.flatMap((book) => book.categories))),
 ];
 
-const articleCategories = [
-  'Todas las categorías',
-  ...Array.from(new Set(articles.map((article) => article.category))),
-];
-
-const formatArticleDate = (iso: string) =>
-  new Date(iso).toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
-
 const BookRow = ({ book }: { book: Book }) => {
   const content = (
     <>
@@ -976,19 +963,21 @@ const ReadingPage = () => {
                   )}
                 </div>
 
-                {/* Filtro por categoría */}
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full md:w-[200px]">
-                    <SelectValue placeholder="Todas las categorías" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(activeTab === 'libros' ? categories : articleCategories).map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
+                {activeTab === 'libros' && (
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="w-full md:w-[200px]">
+                      <SelectValue placeholder="Todas las categorías" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               {/* Tab: Libros */}
@@ -1008,57 +997,13 @@ const ReadingPage = () => {
 
               {/* Tab: Artículos */}
               <TabsContent value="articulos">
-                {filteredArticles.length > 0 ? (
-                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-                    {filteredArticles.map((article) => (
-                      <button
-                        key={article.id}
-                        type="button"
-                        onClick={() => setReaderArticle(article)}
-                        className={cn(ruledCellClassName, 'group flex gap-3 p-3 text-left')}
-                      >
-                        <Avatar className="h-9 w-9 shrink-0 rounded-sm">
-                          <AvatarImage src={article.avatar} alt={article.author} />
-                          <AvatarFallback className="rounded-sm font-mono text-xs">
-                            {article.author
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-
-                        <div className="flex min-w-0 flex-1 flex-col gap-1">
-                          <div className="flex items-center gap-2 font-mono text-sm">
-                            <h2 className="truncate font-semibold group-hover:text-pcnGreen">
-                              {article.title}
-                            </h2>
-                            <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
-                              {formatArticleDate(article.date)}
-                              <ChevronRight className="h-3 w-3" />
-                            </span>
-                          </div>
-
-                          <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                            {article.description}
-                          </p>
-
-                          <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-                            <span className="text-pcnGreen-500">@ </span>
-                            {article.author} · {article.source}
-                            <span className="text-pcnGreen-500"> # </span>
-                            {article.category}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                  </RuledGrid>
-                ) : (
-                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
-                    No se encontraron artículos con los filtros seleccionados.
-                  </p>
-                )}
+                <ArticlesPanel
+                  articles={articles}
+                  filteredArticles={filteredArticles}
+                  category={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                  onOpen={setReaderArticle}
+                />
               </TabsContent>
             </Tabs>
           </div>
