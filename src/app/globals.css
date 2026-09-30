@@ -282,6 +282,150 @@
     }
   }
 
+  /* Dialogs (see components/ui/dialog-surface.ts). The backdrop dims the page behind faint
+     scanlines and a vignette; the panel switches on like a CRT (a bright line that stretches
+     across, then snaps open vertically), a scan beam sweeps down it once and its contents
+     fade in last. Closing collapses it back to a line that shrinks to a dot. */
+  .dialog-overlay {
+    background: repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.025) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.94) 100%);
+  }
+  .dialog-overlay[data-state='open'] {
+    animation: dialog-fade-in 0.25s ease-out both;
+  }
+  .dialog-overlay[data-state='closed'] {
+    animation: dialog-fade-out 0.22s ease-in both;
+  }
+  .dialog-surface {
+    --dialog-corner: #04f4be;
+    background-color: rgba(0, 0, 0, 0.92);
+    /* Four lit corner brackets and scanlines. Backgrounds stay fixed to the panel's box, so
+       they don't scroll away with long content the way positioned elements would. */
+    background-image: linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.03) 0 1px, transparent 1px 3px);
+    background-size:
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      auto;
+    background-position:
+      top left,
+      top left,
+      top right,
+      top right,
+      bottom left,
+      bottom left,
+      bottom right,
+      bottom right,
+      0 0;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+      no-repeat, repeat;
+  }
+  .dialog-surface::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    opacity: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 44%,
+        rgba(4, 244, 190, 0.08) 49%,
+        rgba(4, 244, 190, 0.5) 50%,
+        transparent 50.5%
+      )
+      0 0 / 100% 300% no-repeat;
+  }
+  .dialog-surface[data-state='open'] {
+    animation: dialog-boot 0.45s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+  .dialog-surface[data-state='open']::after {
+    animation: dialog-beam 0.9s ease-in-out 0.3s both;
+  }
+  .dialog-surface[data-state='open'] > * {
+    animation: dialog-fade-in 0.3s ease-out 0.25s both;
+  }
+  .dialog-surface[data-state='closed'] {
+    animation: dialog-off 0.22s ease-in both;
+  }
+  @keyframes dialog-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes dialog-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes dialog-boot {
+    0% {
+      opacity: 0;
+      scale: 0.15 0.006;
+      filter: brightness(3);
+    }
+    35% {
+      opacity: 1;
+      scale: 1 0.006;
+      filter: brightness(3);
+    }
+    70% {
+      scale: 1 1.015;
+      filter: brightness(1.4);
+    }
+    100% {
+      opacity: 1;
+      scale: 1 1;
+      filter: none;
+    }
+  }
+  @keyframes dialog-beam {
+    0% {
+      opacity: 1;
+      background-position: 0 100%;
+    }
+    100% {
+      opacity: 1;
+      background-position: 0 0;
+    }
+  }
+  @keyframes dialog-off {
+    0% {
+      scale: 1 1;
+    }
+    55% {
+      opacity: 1;
+      scale: 1 0.006;
+      filter: brightness(3);
+    }
+    100% {
+      opacity: 0;
+      scale: 0 0.006;
+      filter: brightness(3);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dialog-overlay[data-state],
+    .dialog-surface[data-state],
+    .dialog-surface[data-state]::after,
+    .dialog-surface[data-state] > * {
+      animation: none;
+    }
+  }
+
   /* A scan line that sweeps down a row while it is hovered (articles on /lectura). */
   .group:hover .article-scan {
     animation: article-scan 1.6s ease-in-out infinite;
