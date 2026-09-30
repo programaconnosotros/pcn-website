@@ -36,7 +36,7 @@ export const ScrollHudButton = ({
     exit={{ opacity: 0, scale: 0.85, filter: 'blur(4px)' }}
     transition={{ duration: 0.18, ease: 'easeOut' }}
     className={cn(
-      'fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-50 embedded:bottom-4 md:bottom-6 md:right-6',
+      'fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-40 embedded:bottom-4 md:bottom-6 md:right-6',
       className,
     )}
   >

@@ -75,7 +75,15 @@ export function ConversationDialog({
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 p-0 [&>button:last-child]:hidden"
+        className={cn(
+          'flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 p-0 [&>button:last-child]:hidden',
+          // The phone tab bar (h-16 + safe area, z-60) sits above dialogs, so center the reader
+          // in the space above it and cap its height to that space instead of the full viewport.
+          'max-md:top-[calc((100dvh+env(safe-area-inset-top)-4rem-env(safe-area-inset-bottom))/2)]',
+          'max-md:max-h-[calc(100dvh-env(safe-area-inset-top)-4rem-env(safe-area-inset-bottom)-1.5rem)]',
+          // Inside a PCN OS window there is no tab bar.
+          'embedded:max-md:top-1/2 embedded:max-md:max-h-[calc(100dvh-2rem)]',
+        )}
         aria-describedby={undefined}
         onKeyDown={handleKeyDown}
       >

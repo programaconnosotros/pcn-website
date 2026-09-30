@@ -42,7 +42,6 @@ export const ScrollIndicator = () => {
           onClick={scrollDown}
           label="Bajar"
           code="DN"
-          className="z-40"
           icon={
             <motion.span
               className="block motion-reduce:!transform-none"
