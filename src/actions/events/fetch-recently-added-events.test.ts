@@ -27,11 +27,11 @@ describe('fetchRecentlyAddedEvents', () => {
     expect(result).toEqual([]);
   });
 
-  it('fetches at most 3 events', async () => {
+  it('fetches at most 4 events', async () => {
     prismaMock.event.findMany.mockResolvedValue([]);
 
     await fetchRecentlyAddedEvents();
 
-    expect(prismaMock.event.findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 3 }));
+    expect(prismaMock.event.findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 4 }));
   });
 });
