@@ -53,7 +53,6 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
             memberName: m.memberName,
           }))
         : [],
-      order: project?.order ?? 0,
     },
   });
 
@@ -239,28 +238,6 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
             </FormItem>
           )}
         />
-
-        {currentUser.isAdmin && (
-          <FormField
-            control={form.control}
-            name="order"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Orden</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min={0}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormDescription>Número menor aparece primero.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
 
         <div className="flex gap-4">
           <Button

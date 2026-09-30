@@ -34,7 +34,6 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
         url: projectData.url,
         logoUrl: projectData.logoUrl ?? existing.logoUrl,
         techStack: projectData.techStack,
-        order: user.role === 'ADMIN' ? projectData.order : existing.order,
       },
     }),
     prisma.projectMember.deleteMany({ where: { projectId: id } }),

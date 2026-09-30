@@ -3,6 +3,7 @@ import { mockCookies } from '@/test/cookies';
 import { createProject } from './create-project';
 import { updateProject } from './update-project';
 import { deleteProject } from './delete-project';
+import { reorderProjects } from './reorder-projects';
 
 const baseUser = {
   id: 'cm0000000000000000author01',
@@ -35,7 +36,6 @@ const validInput = {
     { userId: collaboratorId, memberName: 'Compañero' },
     { userId: null, memberName: 'Sin cuenta' },
   ],
-  order: 5,
 };
 
 const existingProject = {
@@ -52,6 +52,10 @@ const existingProject = {
 };
 
 describe('createProject', () => {
+  beforeEach(() => {
+    prismaMock.project.aggregate.mockResolvedValue({ _max: { order: null } } as any);
+  });
+
   it('requires a logged-in user', async () => {
     mockCookies();
 
@@ -61,14 +65,15 @@ describe('createProject', () => {
 
   it('lets a regular user publish a project and sets them as the author', async () => {
     loginAs(baseUser);
+    prismaMock.project.aggregate.mockResolvedValue({ _max: { order: 7 } } as any);
     prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
 
     await createProject(validInput);
 
     const { data } = prismaMock.project.create.mock.calls[0][0];
     expect(data.authorId).toBe(baseUser.id);
-    // Los usuarios comunes no pueden elegir el orden
-    expect(data.order).toBe(0);
+    // Los proyectos nuevos van al final de la lista
+    expect(data.order).toBe(8);
     expect(data.members).toEqual({
       create: [
         { userId: collaboratorId, memberName: 'Compañero', order: 0 },
@@ -96,20 +101,20 @@ describe('createProject', () => {
     });
   });
 
-  it('lets admins set the order', async () => {
+  it('puts the first project at the top', async () => {
     loginAs(adminUser);
     prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
 
     await createProject(validInput);
 
     const { data } = prismaMock.project.create.mock.calls[0][0];
-    expect(data.order).toBe(5);
+    expect(data.order).toBe(0);
     expect(data.authorId).toBe(adminUser.id);
   });
 });
 
 describe('updateProject', () => {
-  it('lets the author edit their project without changing the order', async () => {
+  it('lets the author edit their project without changing its position', async () => {
     loginAs(baseUser);
     prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
     prismaMock.$transaction.mockResolvedValue([] as any);
@@ -117,7 +122,7 @@ describe('updateProject', () => {
     await updateProject(existingProject.id, validInput);
 
     const { data } = prismaMock.project.update.mock.calls[0][0];
-    expect(data.order).toBe(existingProject.order);
+    expect(data).not.toHaveProperty('order');
     expect(data).not.toHaveProperty('authorId');
   });
 
@@ -165,5 +170,42 @@ describe('deleteProject', () => {
     prismaMock.project.findUnique.mockResolvedValue({ ...existingProject, authorId: null } as any);
 
     await expect(deleteProject(existingProject.id)).rejects.toThrow('No tenés permisos');
+  });
+});
+
+describe('reorderProjects', () => {
+  it('only lets admins reorder the list', async () => {
+    loginAs(baseUser);
+
+    await expect(reorderProjects(['project-1', 'project-2'])).rejects.toThrow('Solo los admins');
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('saves each project at its position in the list', async () => {
+    loginAs(adminUser);
+    prismaMock.project.findMany.mockResolvedValue([
+      { id: 'project-1' },
+      { id: 'project-2' },
+    ] as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await reorderProjects(['project-2', 'project-1']);
+
+    expect(prismaMock.project.update.mock.calls.map(([args]) => args)).toEqual([
+      { where: { id: 'project-2' }, data: { order: 0 } },
+      { where: { id: 'project-1' }, data: { order: 1 } },
+    ]);
+  });
+
+  it('rejects a list that no longer matches the projects', async () => {
+    loginAs(adminUser);
+    prismaMock.project.findMany.mockResolvedValue([
+      { id: 'project-1' },
+      { id: 'project-2' },
+    ] as any);
+
+    await expect(reorderProjects(['project-1'])).rejects.toThrow('La lista cambió');
+    await expect(reorderProjects(['project-1', 'project-1'])).rejects.toThrow('Orden inválido');
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
 });

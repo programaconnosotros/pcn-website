@@ -23,7 +23,7 @@ export const keywords = (text: string) =>
  * Ranks `items` by how many keywords they share with `source`, most related first. Ties keep
  * the original order, so callers can pre-sort by their own fallback (newest, curated, ...).
  */
-export const rankRelated = <T>(source: string, items: T[], text: (item: T) => string): T[] => {
+export const rankRelated = <T>(source: string, items: T[], text: (_item: T) => string): T[] => {
   const sourceWords = keywords(source);
   return items
     .map((item, index) => {

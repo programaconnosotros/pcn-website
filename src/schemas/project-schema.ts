@@ -34,7 +34,6 @@ export const projectSchema = z.object({
     .array(projectMemberSchema)
     .max(30, { message: 'Podés agregar hasta 30 compañeros' })
     .default([]),
-  order: z.number().int().min(0).default(0),
 });
 
 export type ProjectMemberFormData = z.input<typeof projectMemberSchema>;

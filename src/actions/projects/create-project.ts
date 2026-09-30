@@ -16,6 +16,9 @@ export const createProject = async (data: ProjectFormData) => {
 
   const projectData = parsed.data;
 
+  // Los proyectos nuevos van al final; solo un admin los reordena desde la lista.
+  const last = await prisma.project.aggregate({ _max: { order: true } });
+
   const project = await prisma.project.create({
     data: {
       title: projectData.title,
@@ -23,8 +26,7 @@ export const createProject = async (data: ProjectFormData) => {
       url: projectData.url,
       logoUrl: projectData.logoUrl ?? '',
       techStack: projectData.techStack,
-      // Solo los admins deciden el orden de la lista.
-      order: user.role === 'ADMIN' ? projectData.order : 0,
+      order: (last._max.order ?? -1) + 1,
       // El autor es siempre quien carga el proyecto, nunca un valor enviado por el cliente.
       authorId: user.id,
       members: {

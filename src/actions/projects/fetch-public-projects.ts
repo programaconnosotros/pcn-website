@@ -11,6 +11,6 @@ export const fetchPublicProjects = async () => {
         orderBy: { order: 'asc' },
       },
     },
-    orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+    orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
   });
 };
