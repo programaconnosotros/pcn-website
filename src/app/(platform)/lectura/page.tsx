@@ -848,7 +848,7 @@ const BookRow = ({ book }: { book: Book }) => {
           on hover, framed by HUD corner ticks. Covers come in different proportions, so the book
           hugs the whole image inside a fixed slot that keeps every row's text aligned. */}
       <div className="flex h-32 w-[6.5rem] shrink-0 items-start justify-center [perspective:600px] sm:h-36 sm:w-[7.5rem]">
-        <div className="relative max-h-full max-w-full rounded-[2px] shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)_scale(1.04)]">
+        <div className="relative max-h-full max-w-full rounded-[2px] shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)]">
           <Image
             src={book.cover}
             alt={`Portada de ${book.title}`}
@@ -889,7 +889,8 @@ const BookRow = ({ book }: { book: Book }) => {
     </>
   );
 
-  const className = cn(ruledCellClassName, 'group flex gap-4 p-3');
+  // The tilted cover and its glow are clipped so they never spill past the row's hairlines.
+  const className = cn(ruledCellClassName, 'group flex gap-4 overflow-hidden p-3');
 
   return book.url ? (
     <Link href={book.url} target="_blank" rel="noopener noreferrer" className={className}>
