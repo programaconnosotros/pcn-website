@@ -3,20 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Search } from 'lucide-react';
-import { AppIcon } from './app-icon';
-import { OS_APP_GROUPS, type OsApp } from './apps';
+import { ProgramIcon } from './program-icon';
+import { OS_PROGRAM_GROUPS, type OsProgram } from './programs';
 
 interface OsLauncherProps {
   open: boolean;
-  apps: OsApp[];
-  onOpenApp: (app: OsApp) => void;
+  programs: OsProgram[];
+  onOpenProgram: (program: OsProgram) => void;
   onClose: () => void;
 }
 
 const normalize = (text: string) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-/** Full-screen grid with every app, grouped like the classic sidebar and searchable. */
-export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) {
+/** Full-screen grid with every program, grouped like the classic sidebar and searchable. */
+export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLauncherProps) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,14 +34,16 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
     };
   }, [open, onClose]);
 
-  const matches = apps.filter((app) => normalize(app.name).includes(normalize(query.trim())));
+  const matches = programs.filter((program) =>
+    normalize(program.name).includes(normalize(query.trim())),
+  );
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
           role="dialog"
-          aria-label="Todas las apps"
+          aria-label="Todos los programas"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -67,16 +69,16 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && matches[0]) onOpenApp(matches[0]);
+                  if (e.key === 'Enter' && matches[0]) onOpenProgram(matches[0]);
                 }}
-                placeholder="buscar apps…"
+                placeholder="buscar programas…"
                 className="w-full bg-transparent outline-none placeholder:text-pcnGreen-500"
               />
             </label>
 
-            {OS_APP_GROUPS.map((group) => {
-              const groupApps = matches.filter((app) => app.group === group);
-              if (groupApps.length === 0) return null;
+            {OS_PROGRAM_GROUPS.map((group) => {
+              const groupPrograms = matches.filter((program) => program.group === group);
+              if (groupPrograms.length === 0) return null;
               return (
                 <section key={group} className="flex flex-col gap-4">
                   <h2 className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-pcnGreen-600">
@@ -85,19 +87,19 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
                     <span aria-hidden className="h-px flex-1 bg-pcnGreen-200" />
                   </h2>
                   <div className="grid grid-cols-6 gap-y-6">
-                    {groupApps.map((app) => (
+                    {groupPrograms.map((program) => (
                       <button
-                        key={app.id}
+                        key={program.id}
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onOpenApp(app);
+                          onOpenProgram(program);
                         }}
                         className="group flex flex-col items-center gap-2 rounded-md p-2 outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
                       >
-                        <AppIcon app={app} className="size-16" />
+                        <ProgramIcon program={program} className="size-16" />
                         <span className="text-center text-xs lowercase text-pcnGreen-700 transition-colors group-hover:text-pcnGreen">
-                          {app.name}
+                          {program.name}
                         </span>
                       </button>
                     ))}
@@ -108,7 +110,8 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
 
             {matches.length === 0 && (
               <p className="text-center text-sm text-pcnGreen-600">
-                <span className="text-red-400">error:</span> no hay apps que coincidan con “{query}
+                <span className="text-red-400">error:</span> no hay programas que coincidan con “
+                {query}
                 ”.
               </p>
             )}

@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { OS_APPS, type OsApp } from './apps';
+import { OS_PROGRAMS, type OsProgram } from './programs';
 
 export interface OsUser {
   name: string;
@@ -36,9 +36,9 @@ interface WindowActions {
 
 interface OsMenuBarProps {
   user: OsUser | null;
-  focusedApp: OsApp | null;
+  focusedProgram: OsProgram | null;
   windowActions: WindowActions | null;
-  onOpenApp: (app: OsApp) => void;
+  onOpenProgram: (program: OsProgram) => void;
   onOpenLauncher: () => void;
 }
 
@@ -46,7 +46,7 @@ const menuContentClassName = 'z-[7000] min-w-52';
 const menuTriggerClassName =
   'rounded-sm px-2 py-0.5 outline-none transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen data-[state=open]:bg-pcnGreen data-[state=open]:text-black';
 
-const appById = (id: string) => OS_APPS.find((app) => app.id === id)!;
+const programById = (id: string) => OS_PROGRAMS.find((program) => program.id === id)!;
 
 const initials = (name: string) =>
   name
@@ -77,12 +77,12 @@ const Clock = () => {
   return <span className="tabular-nums text-pcnGreen-800">{now ? formatClock(now) : ''}</span>;
 };
 
-/** Top bar of the desktop: PCN menu, the focused app's window menu, the clock and the user. */
+/** Top bar of the desktop: PCN menu, the focused program's window menu, the clock and the user. */
 export function OsMenuBar({
   user,
-  focusedApp,
+  focusedProgram,
   windowActions,
-  onOpenApp,
+  onOpenProgram,
   onOpenLauncher,
 }: OsMenuBarProps) {
   return (
@@ -94,10 +94,10 @@ export function OsMenuBar({
           <span className="text-glow font-semibold text-pcnGreen">PCN_OS</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className={menuContentClassName}>
-          <DropdownMenuItem onSelect={() => onOpenApp(appById('historia'))}>
+          <DropdownMenuItem onSelect={() => onOpenProgram(programById('historia'))}>
             Acerca de programaConNosotros
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onOpenLauncher}>Todas las apps</DropdownMenuItem>
+          <DropdownMenuItem onSelect={onOpenLauncher}>Todos los programas</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Redes</DropdownMenuSubTrigger>
@@ -121,7 +121,9 @@ export function OsMenuBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {focusedApp && <span className="px-2 text-pcnGreen">~/{focusedApp.name.toLowerCase()}</span>}
+      {focusedProgram && (
+        <span className="px-2 text-pcnGreen">~/{focusedProgram.name.toLowerCase()}</span>
+      )}
 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger className={menuTriggerClassName} disabled={!windowActions}>
@@ -163,7 +165,10 @@ export function OsMenuBar({
                 <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2" onSelect={() => onOpenApp(appById('perfil'))}>
+              <DropdownMenuItem
+                className="gap-2"
+                onSelect={() => onOpenProgram(programById('perfil'))}
+              >
                 <UserRound className="size-4" /> Mi cuenta
               </DropdownMenuItem>
               <DropdownMenuItem

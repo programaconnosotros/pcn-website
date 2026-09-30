@@ -1,20 +1,20 @@
 import { cn } from '@/lib/utils';
-import type { OsApp } from './apps';
+import type { OsProgram } from './programs';
 
 /**
  * Terminal-style tile: black glass, green phosphor glyph, corner brackets on hover.
  * Used in the dock and the launcher; hover effects follow the closest `group` parent.
  */
-export function AppIcon({
-  app,
+export function ProgramIcon({
+  program,
   running = false,
   className,
 }: {
-  app: Pick<OsApp, 'icon'>;
+  program: Pick<OsProgram, 'icon'>;
   running?: boolean;
   className?: string;
 }) {
-  const Icon = app.icon;
+  const Icon = program.icon;
   return (
     <span
       className={cn(

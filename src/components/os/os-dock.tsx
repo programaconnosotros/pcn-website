@@ -2,27 +2,27 @@
 
 import { LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AppIcon } from './app-icon';
-import type { OsApp } from './apps';
+import { ProgramIcon } from './program-icon';
+import type { OsProgram } from './programs';
 
 const DockItem = ({
-  app,
+  program,
   running,
   onClick,
 }: {
-  app: Pick<OsApp, 'name' | 'icon'>;
+  program: Pick<OsProgram, 'name' | 'icon'>;
   running: boolean;
   onClick: () => void;
 }) => (
   <button
     type="button"
     onClick={onClick}
-    title={app.name}
+    title={program.name}
     className="group relative flex w-[56px] shrink-0 flex-col items-center gap-1 rounded-md pt-1 outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen xl:w-[70px]"
   >
-    <AppIcon app={app} running={running} className="size-11" />
+    <ProgramIcon program={program} running={running} className="size-11" />
     <span className="w-full truncate text-center font-mono text-[10px] lowercase leading-tight text-pcnGreen-600 transition-colors group-hover:text-pcnGreen">
-      {app.name}
+      {program.name}
     </span>
     <span
       aria-hidden
@@ -41,23 +41,23 @@ const Divider = () => (
 );
 
 interface OsDockProps {
-  apps: OsApp[];
-  runningApps: OsApp[];
-  runningAppIds: Set<string>;
-  onOpenApp: (app: OsApp) => void;
+  programs: OsProgram[];
+  runningPrograms: OsProgram[];
+  runningProgramIds: Set<string>;
+  onOpenProgram: (program: OsProgram) => void;
   onOpenLauncher: () => void;
 }
 
-/** Dock pinned to the bottom of the desktop. Every app shows its name under the icon. */
+/** Dock pinned to the bottom of the desktop. Every program shows its name under the icon. */
 export function OsDock({
-  apps,
-  runningApps,
-  runningAppIds,
-  onOpenApp,
+  programs,
+  runningPrograms,
+  runningProgramIds,
+  onOpenProgram,
   onOpenLauncher,
 }: OsDockProps) {
-  const pinned = apps.filter((app) => app.pinned);
-  const unpinnedRunning = runningApps.filter((app) => !app.pinned);
+  const pinned = programs.filter((program) => program.pinned);
+  const unpinnedRunning = runningPrograms.filter((program) => !program.pinned);
 
   return (
     <nav
@@ -71,21 +71,26 @@ export function OsDock({
         ~/pcn $
       </span>
       <div className="flex items-end gap-0.5 overflow-x-auto rounded-md border border-pcnGreen-300 bg-black/85 px-2 pb-1 pt-2 shadow-[0_0_30px_-8px_#04f4be66,0_20px_60px_-10px_rgba(0,0,0,0.9)] backdrop-blur-xl [scrollbar-width:none]">
-        {pinned.map((app) => (
+        {pinned.map((program) => (
           <DockItem
-            key={app.id}
-            app={app}
-            running={runningAppIds.has(app.id)}
-            onClick={() => onOpenApp(app)}
+            key={program.id}
+            program={program}
+            running={runningProgramIds.has(program.id)}
+            onClick={() => onOpenProgram(program)}
           />
         ))}
         {unpinnedRunning.length > 0 && <Divider />}
-        {unpinnedRunning.map((app) => (
-          <DockItem key={app.id} app={app} running onClick={() => onOpenApp(app)} />
+        {unpinnedRunning.map((program) => (
+          <DockItem
+            key={program.id}
+            program={program}
+            running
+            onClick={() => onOpenProgram(program)}
+          />
         ))}
         <Divider />
         <DockItem
-          app={{ name: 'Apps', icon: LayoutGrid }}
+          program={{ name: 'Programas', icon: LayoutGrid }}
           running={false}
           onClick={onOpenLauncher}
         />

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { findAppForPath, visibleApps, type OsApp } from './apps';
+import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { isOsMessage } from './os-env';
 import { OsDock } from './os-dock';
 import { OsLauncher } from './os-launcher';
@@ -165,7 +165,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const iframes = useRef(new Map<string, HTMLIFrameElement>());
   const opened = useRef(false);
 
-  const apps = useMemo(() => visibleApps(isAdmin), [isAdmin]);
+  const programs = useMemo(() => visiblePrograms(isAdmin), [isAdmin]);
 
   useEffect(() => {
     if (!isOs) return;
@@ -194,17 +194,17 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     .reverse()
     .find((id) => !state.windows.find((win) => win.id === id)?.minimized);
   const focusedWindow = state.windows.find((win) => win.id === focusedId) ?? null;
-  const focusedApp = focusedWindow ? findAppForPath(focusedWindow.path) : null;
+  const focusedProgram = focusedWindow ? findProgramForPath(focusedWindow.path) : null;
 
   // Keep the address bar and tab title in sync with the focused window so links can be shared.
   const focusedPath = focusedWindow?.path;
-  const focusedAppName = focusedApp?.name;
+  const focusedProgramName = focusedProgram?.name;
   useEffect(() => {
     if (!isOs || !focusedPath) return;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== focusedPath) window.history.replaceState(null, '', focusedPath);
-    document.title = `${focusedAppName} - PCN OS`;
-  }, [isOs, focusedPath, focusedAppName]);
+    document.title = `${focusedProgramName} - PCN OS`;
+  }, [isOs, focusedPath, focusedProgramName]);
 
   useEffect(() => {
     if (!isOs) return;
@@ -220,13 +220,13 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     return () => window.removeEventListener('message', onMessage);
   }, [isOs]);
 
-  const openApp = useCallback(
-    (app: OsApp) => {
+  const openProgram = useCallback(
+    (program: OsProgram) => {
       if (!viewport) return;
       const topmostFirst = [...state.order].reverse();
       const existing = topmostFirst.find((id) => {
         const win = state.windows.find((w) => w.id === id);
-        return win && findAppForPath(win.path).id === app.id;
+        return win && findProgramForPath(win.path).id === program.id;
       });
       if (existing) {
         dispatch({ type: 'focus', id: existing });
@@ -234,17 +234,17 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
       }
       dispatch({
         type: 'open',
-        path: app.url,
+        path: program.url,
         rect: newWindowRect(viewport, state.windows.length),
       });
     },
     [viewport, state.order, state.windows],
   );
 
-  const runningAppIds = new Set(state.windows.map((win) => findAppForPath(win.path).id));
-  const runningApps = state.windows
-    .map((win) => findAppForPath(win.path))
-    .filter((app, index, all) => all.findIndex((a) => a.id === app.id) === index);
+  const runningProgramIds = new Set(state.windows.map((win) => findProgramForPath(win.path).id));
+  const runningPrograms = state.windows
+    .map((win) => findProgramForPath(win.path))
+    .filter((program, index, all) => all.findIndex((a) => a.id === program.id) === index);
 
   const windowActions = focusedWindow
     ? {
@@ -269,12 +269,12 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         {isOs && viewport && (
           <AnimatePresence>
             {state.windows.map((win) => {
-              const app = findAppForPath(win.path);
+              const program = findProgramForPath(win.path);
               return (
                 <OsWindow
                   key={win.id}
                   win={win}
-                  app={app}
+                  program={program}
                   rect={win.maximized ? desktopArea(viewport) : win}
                   zIndex={10 + state.order.indexOf(win.id)}
                   focused={win.id === focusedId}
@@ -315,26 +315,26 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
 
         <OsMenuBar
           user={user}
-          focusedApp={focusedApp}
+          focusedProgram={focusedProgram}
           windowActions={windowActions}
-          onOpenApp={openApp}
+          onOpenProgram={openProgram}
           onOpenLauncher={() => setLauncherOpen(true)}
         />
 
         <OsDock
-          apps={apps}
-          runningApps={runningApps}
-          runningAppIds={runningAppIds}
-          onOpenApp={openApp}
+          programs={programs}
+          runningPrograms={runningPrograms}
+          runningProgramIds={runningProgramIds}
+          onOpenProgram={openProgram}
           onOpenLauncher={() => setLauncherOpen(true)}
         />
 
         <OsLauncher
           open={launcherOpen}
-          apps={apps}
-          onOpenApp={(app) => {
+          programs={programs}
+          onOpenProgram={(program) => {
             setLauncherOpen(false);
-            openApp(app);
+            openProgram(program);
           }}
           onClose={() => setLauncherOpen(false)}
         />

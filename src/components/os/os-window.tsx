@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { OsApp } from './apps';
+import type { OsProgram } from './programs';
 
 export interface Rect {
   x: number;
@@ -31,7 +31,7 @@ export const MIN_WINDOW_HEIGHT = 280;
 
 interface OsWindowProps {
   win: OsWindowState;
-  app: OsApp;
+  program: OsProgram;
   /** Where the window is drawn. Differs from the stored rect when the window is maximized. */
   rect: Rect;
   zIndex: number;
@@ -130,7 +130,7 @@ const resizeHandles: { direction: ResizeDirection; className: string }[] = [
 
 export function OsWindow({
   win,
-  app,
+  program,
   rect,
   zIndex,
   focused,
@@ -146,9 +146,9 @@ export function OsWindow({
 }: OsWindowProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [loaded, setLoaded] = useState(false);
-  const Icon = app.icon;
+  const Icon = program.icon;
   const pageTitle = cleanTitle(win.title);
-  const subtitle = pageTitle && pageTitle !== app.name ? pageTitle : null;
+  const subtitle = pageTitle && pageTitle !== program.name ? pageTitle : null;
 
   const startDrag = (event: React.PointerEvent) => {
     if (event.button !== 0) return;
@@ -191,7 +191,7 @@ export function OsWindow({
   return (
     <motion.section
       role="dialog"
-      aria-label={app.name}
+      aria-label={program.name}
       data-focused={focused}
       initial={{ opacity: 0, scale: 0.94, y: 16 }}
       animate={
@@ -238,7 +238,7 @@ export function OsWindow({
           <span
             className={cn('truncate', focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-500')}
           >
-            ~/{app.name.toLowerCase()}
+            ~/{program.name.toLowerCase()}
             {subtitle && <span className="text-pcnGreen-500"> — {subtitle}</span>}
           </span>
         </div>
@@ -275,7 +275,7 @@ export function OsWindow({
             registerIframe(iframe);
           }}
           src={win.src}
-          title={app.name}
+          title={program.name}
           onLoad={() => {
             setLoaded(true);
             onIframeLoad();
@@ -286,7 +286,7 @@ export function OsWindow({
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background">
             <Icon className="size-8 animate-pulse text-pcnGreen drop-shadow-[0_0_8px_#04f4be]" />
             <span className="cursor-blink text-xs text-pcnGreen-700">
-              $ open {app.name.toLowerCase()}
+              $ open {program.name.toLowerCase()}
             </span>
           </div>
         )}

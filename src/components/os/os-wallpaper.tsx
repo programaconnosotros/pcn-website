@@ -15,7 +15,7 @@ export function OsWallpaper({ showHint }: { showHint: boolean }) {
         </p>
         {showHint && (
           <p className="cursor-blink text-sm text-pcnGreen-600">
-            &gt; abrí una app desde el dock para empezar
+            &gt; abrí un programa desde el dock para empezar
           </p>
         )}
       </div>

@@ -30,25 +30,25 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-export type OsAppGroup = 'Inicio' | 'Actividades' | 'Recursos' | 'Comunidad' | 'Administración';
+export type OsProgramGroup = 'Inicio' | 'Actividades' | 'Recursos' | 'Comunidad' | 'Administración';
 
-export interface OsApp {
+export interface OsProgram {
   id: string;
   /** Short name shown under the dock icon and in the window title bar. */
   name: string;
   url: string;
   icon: LucideIcon;
-  /** Tailwind gradient classes for the app icon tile. */
+  /** Tailwind gradient classes for the program icon tile. */
   color: string;
-  group: OsAppGroup;
-  /** Pinned apps always show in the dock. The rest live in the launcher. */
+  group: OsProgramGroup;
+  /** Pinned programs always show in the dock. The rest live in the launcher. */
   pinned?: boolean;
   adminOnly?: boolean;
-  /** Hidden apps never show in the dock or launcher; they only name windows. */
+  /** Hidden programs never show in the dock or launcher; they only name windows. */
   hidden?: boolean;
 }
 
-export const OS_APPS: OsApp[] = [
+export const OS_PROGRAMS: OsProgram[] = [
   {
     id: 'inicio',
     name: 'Inicio',
@@ -290,8 +290,8 @@ export const OS_APPS: OsApp[] = [
   },
 ];
 
-/** Fallback for routes that are not registered as an app. */
-export const GENERIC_APP: OsApp = {
+/** Fallback for routes that are not registered as a program. */
+export const GENERIC_PROGRAM: OsProgram = {
   id: 'navegador',
   name: 'PCN',
   url: '/',
@@ -301,7 +301,7 @@ export const GENERIC_APP: OsApp = {
   hidden: true,
 };
 
-export const OS_APP_GROUPS: OsAppGroup[] = [
+export const OS_PROGRAM_GROUPS: OsProgramGroup[] = [
   'Inicio',
   'Actividades',
   'Recursos',
@@ -311,19 +311,19 @@ export const OS_APP_GROUPS: OsAppGroup[] = [
 
 const pathnameOf = (path: string) => path.split(/[?#]/)[0] || '/';
 
-/** The app that owns a path: the registered app with the longest matching route prefix. */
-export const findAppForPath = (path: string): OsApp => {
+/** The program that owns a path: the registered program with the longest matching route prefix. */
+export const findProgramForPath = (path: string): OsProgram => {
   const pathname = pathnameOf(path);
-  let match: OsApp | undefined;
-  for (const app of OS_APPS) {
+  let match: OsProgram | undefined;
+  for (const program of OS_PROGRAMS) {
     const owns =
-      app.url === '/'
+      program.url === '/'
         ? pathname === '/'
-        : pathname === app.url || pathname.startsWith(`${app.url}/`);
-    if (owns && (!match || app.url.length > match.url.length)) match = app;
+        : pathname === program.url || pathname.startsWith(`${program.url}/`);
+    if (owns && (!match || program.url.length > match.url.length)) match = program;
   }
-  return match ?? GENERIC_APP;
+  return match ?? GENERIC_PROGRAM;
 };
 
-export const visibleApps = (isAdmin: boolean) =>
-  OS_APPS.filter((app) => !app.hidden && (!app.adminOnly || isAdmin));
+export const visiblePrograms = (isAdmin: boolean) =>
+  OS_PROGRAMS.filter((program) => !program.hidden && (!program.adminOnly || isAdmin));
