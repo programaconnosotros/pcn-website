@@ -110,6 +110,7 @@ const people: Person[] = [
     company: 'DIZENZ',
     imageUrl: '/colaborators/vicky.webp',
     linkedinUrl: 'https://www.linkedin.com/in/maria-victoria-grillo/',
+    githubUrl: 'https://github.com/vickygrillo',
   },
   {
     name: 'Lean',
