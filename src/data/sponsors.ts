@@ -10,8 +10,8 @@ export interface Sponsor {
   whiteBg?: boolean;
   /** Logo needs a black plate to be legible. */
   blackBg?: boolean;
-  /** Logo is dark and needs to be inverted on dark backgrounds. */
-  invertOnDark?: boolean;
+  /** Dark logo on a transparent canvas; rendered as a white mark when no plate is used. */
+  monochromeOnDark?: boolean;
 }
 
 export const sponsors: Sponsor[] = [
@@ -22,7 +22,6 @@ export const sponsors: Sponsor[] = [
     description: 'Modern Software Studio.',
     location: 'Tucumán, Argentina',
     showName: true,
-    whiteBg: true,
   },
   {
     name: 'Xetro',
@@ -48,10 +47,10 @@ export const sponsors: Sponsor[] = [
   {
     name: 'Blackbox Cowork',
     url: 'https://www.instagram.com/blackboxcowork/',
-    logo: '/blackbox-cowork-logo.jpeg',
+    logo: '/blackbox-cowork-logo.png',
     description: 'Espacio de coworking adaptable.',
     location: 'Tucumán, Argentina',
-    invertOnDark: true,
+    monochromeOnDark: true,
   },
   {
     name: 'Bowery',
@@ -85,6 +84,7 @@ export const sponsors: Sponsor[] = [
       'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
     location: 'IEEE CS Región Latinoamérica',
     whiteBg: true,
+    monochromeOnDark: true,
   },
 ];
 

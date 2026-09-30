@@ -8,8 +8,9 @@ const logoHeight: Record<string, string> = {
   Once57: 'h-14',
   Xetro: 'h-12',
   'UTN-FRT': 'h-11',
-  'Blackbox Cowork': 'h-11',
   Eagerworks: 'h-6',
+  DIZENZ: 'h-11',
+  'Blackbox Cowork': 'h-9',
 };
 
 export const SponsorsMarquee = () => (
@@ -34,12 +35,7 @@ export const SponsorsMarquee = () => (
               target="_blank"
               rel="noopener noreferrer"
               title={sponsor.name}
-              className={cn(
-                'flex h-16 shrink-0 items-center justify-center opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0',
-                (sponsor.whiteBg || sponsor.blackBg) && 'rounded-lg px-3',
-                sponsor.whiteBg && 'bg-white',
-                sponsor.blackBg && 'bg-black ring-1 ring-inset ring-white/10',
-              )}
+              className="flex h-16 shrink-0 items-center justify-center opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -48,7 +44,8 @@ export const SponsorsMarquee = () => (
                 className={cn(
                   'w-auto max-w-[150px] object-contain',
                   logoHeight[sponsor.name] ?? 'h-8',
-                  sponsor.invertOnDark && 'invert',
+                  // Dark-on-transparent logos: render as a white mark.
+                  sponsor.monochromeOnDark && 'brightness-0 invert',
                 )}
               />
             </Link>

@@ -11,7 +11,7 @@ const logoSize: Record<string, string> = {
   Once57: 'max-h-36',
   Xetro: 'max-h-28',
   'UTN-FRT': 'max-h-24',
-  'Blackbox Cowork': 'max-h-24',
+  'Blackbox Cowork': 'max-h-14',
   Eagerworks: 'max-h-8',
   DIZENZ: 'max-h-16',
 };
@@ -61,7 +61,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
                 className={cn(
                   'w-auto max-w-[80%] object-contain',
                   logoSize[sponsor.name] ?? 'max-h-14',
-                  sponsor.invertOnDark && 'invert',
+                  sponsor.monochromeOnDark && !sponsor.whiteBg && 'brightness-0 invert',
                 )}
               />
             </div>
