@@ -185,7 +185,7 @@ const PCNStory = () => (
                     {founders.map((name) => (
                       <li
                         key={name}
-                        className="rounded-full border bg-background px-3 py-1 text-sm font-medium"
+                        className="rounded-sm border bg-background px-3 py-1 text-sm font-medium"
                       >
                         {name}
                       </li>

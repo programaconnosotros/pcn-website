@@ -29,7 +29,7 @@ export const StoryCards = () => (
       <Link
         key={card.href}
         href={card.href}
-        className="group relative flex min-h-[340px] flex-col justify-end overflow-hidden rounded-lg border border-white/[0.06] md:min-h-[400px]"
+        className="group relative flex min-h-[340px] flex-col justify-end overflow-hidden rounded-lg border border-pcnGreen-200 md:min-h-[400px]"
       >
         <Image
           src={card.image}
@@ -50,7 +50,7 @@ export const StoryCards = () => (
             {card.description}
           </p>
           <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-white">
-            <span className="flex size-9 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur transition-all duration-300 group-hover:border-pcnGreen group-hover:bg-pcnGreen group-hover:text-black">
+            <span className="flex size-9 items-center justify-center rounded-full border border-pcnGreen-300 bg-white/10 backdrop-blur transition-all duration-300 group-hover:border-pcnGreen group-hover:bg-pcnGreen group-hover:text-black">
               <ArrowUpRight className="size-4" />
             </span>
             {card.cta}

@@ -67,7 +67,7 @@ export const SidebarUpcomingEvents = ({
               key={event.id}
               href={`/eventos/${event.id}`}
               className={cn(
-                'group flex items-center gap-2.5 rounded-lg border border-sidebar-border/70 bg-white/[0.015] p-2 transition-colors hover:border-pcnGreen/35 hover:bg-pcnGreen/[0.05]',
+                'group flex items-center gap-2.5 rounded-lg border border-sidebar-border/70 bg-pcnGreen-50 p-2 transition-colors hover:border-pcnGreen/35 hover:bg-pcnGreen/[0.05]',
                 isActive && 'border-pcnGreen/40 bg-pcnGreen/[0.07]',
               )}
             >

@@ -21,6 +21,7 @@ export const Eyebrow = ({ children, className }: { children: ReactNode; classNam
       className,
     )}
   >
+    <span className="text-pcnGreen-500">// </span>
     {children}
   </p>
 );
@@ -44,7 +45,7 @@ export const SectionHeader = ({
   >
     <div className="max-w-2xl">
       {eyebrow && <Eyebrow className="mb-3">{eyebrow}</Eyebrow>}
-      <h2 className="text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+      <h2 className="text-balance font-mono text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
         {title}
       </h2>
       {description && (
@@ -57,7 +58,7 @@ export const SectionHeader = ({
     {action && (
       <Link
         href={action.href}
-        className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-pcnGreen"
+        className="group inline-flex shrink-0 items-center gap-1.5 font-mono text-sm font-medium text-pcnGreen-700 transition-colors hover:text-pcnGreen"
       >
         {action.label}
         <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

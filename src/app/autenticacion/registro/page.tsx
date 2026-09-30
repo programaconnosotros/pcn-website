@@ -162,7 +162,7 @@ function SignUpContent() {
             className="space-y-6"
           >
             {/* Sección: Información de cuenta */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
                 <User className="h-5 w-5" />
                 Datos principales
@@ -314,7 +314,7 @@ function SignUpContent() {
             </div>
 
             {/* Sección: Información profesional */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Briefcase className="h-5 w-5" />
                 Información profesional
@@ -356,7 +356,7 @@ function SignUpContent() {
             </div>
 
             {/* Sección: Información académica */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <GraduationCap className="h-5 w-5" />
                 Información académica
@@ -401,7 +401,7 @@ function SignUpContent() {
             </div>
 
             {/* Sección: Foto de perfil */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Camera className="h-5 w-5" />
                 Foto de perfil

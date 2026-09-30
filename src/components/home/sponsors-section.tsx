@@ -36,7 +36,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
             href={sponsor.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex h-full flex-col items-center rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04]"
+            className="group flex h-full flex-col items-center rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-pcnGreen-50"
           >
             <div className="mb-6 flex h-28 w-full items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -77,7 +77,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
           <p className="mb-5 text-sm text-muted-foreground">
             Sumate y ayudanos a impulsar personas apasionadas por el software.
           </p>
-          <Button className="rounded-full">
+          <Button>
             <MessageSquare className="mr-2 h-4 w-4" />
             Contactanos
           </Button>

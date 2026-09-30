@@ -62,7 +62,7 @@ const Home = async () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 -mx-1 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/[0.06] bg-background/70 backdrop-blur-xl md:-mx-6">
+      <header className="sticky top-0 z-40 -mx-1 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-pcnGreen-200 bg-background/70 backdrop-blur-xl md:-mx-6">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -75,7 +75,7 @@ const Home = async () => {
           </Breadcrumb>
         </div>
         <div className="px-4">
-          <Button asChild size="sm" className="rounded-full px-4">
+          <Button asChild size="sm" className="px-4">
             <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
               <MessageCircle className="mr-2 size-4" />
               Unirme en WhatsApp

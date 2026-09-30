@@ -34,12 +34,12 @@ const columns = [
 ];
 
 export const HomeFooter = () => (
-  <footer className="border-t border-white/[0.06]">
+  <footer className="border-t border-pcnGreen-200">
     <div className="mx-auto max-w-6xl px-6 py-14 lg:px-8">
       <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-white/10">
+            <span className="flex size-9 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-pcnGreen-300">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.webp" alt="programaConNosotros" className="size-6" />
             </span>
@@ -57,7 +57,7 @@ export const HomeFooter = () => (
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={network.name}
-                  className="flex size-9 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.02] opacity-70 transition-all hover:border-white/15 hover:opacity-100"
+                  className="flex size-9 items-center justify-center rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 opacity-70 transition-all hover:border-pcnGreen-300 hover:opacity-100"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={network.icon} alt="" className="size-4" />
@@ -93,7 +93,7 @@ export const HomeFooter = () => (
         ))}
       </div>
 
-      <div className="mt-12 flex flex-col gap-3 border-t border-white/[0.06] pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
+      <div className="mt-12 flex flex-col gap-3 border-t border-pcnGreen-200 pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
         <p>© 2020–{new Date().getFullYear()} programaConNosotros</p>
         <p>
           Hecho con <span className="text-pcnGreen">♥</span> por la comunidad.

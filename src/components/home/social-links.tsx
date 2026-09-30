@@ -55,7 +55,7 @@ export const SocialLinks = () => (
           href={network.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.04]"
+          className="group relative flex items-center gap-3 overflow-hidden rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen-300 hover:bg-pcnGreen-50"
           style={{ ['--brand' as string]: network.color }}
         >
           <span

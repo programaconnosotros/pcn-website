@@ -96,20 +96,23 @@ const FeatureCard = ({ feature, className }: { feature: Feature; className?: str
   <Link
     href={feature.href}
     className={cn(
-      'group relative flex flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-30px_rgba(4,244,190,0.35)]',
+      'group relative flex flex-col overflow-hidden rounded-lg border border-pcnGreen-200 bg-black/60 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/60 hover:bg-pcnGreen-50 hover:shadow-[0_20px_60px_-30px_rgba(4,244,190,0.35)]',
       className,
     )}
   >
     <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-pcnGreen/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
     <div className="flex items-start justify-between">
-      <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/20">
+      <span className="flex size-10 items-center justify-center rounded-sm bg-black text-pcnGreen ring-1 ring-inset ring-pcnGreen-400 group-hover:shadow-[0_0_14px_-2px_#04f4be99]">
         <feature.icon className="size-5" strokeWidth={1.75} />
       </span>
       <ArrowUpRight className="size-4 text-muted-foreground/60 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
     </div>
 
-    <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">{feature.title}</h3>
+    <h3 className="mt-5 font-mono text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-pcnGreen">
+      <span className="text-pcnGreen-500">&gt; </span>
+      {feature.title.toLowerCase()}
+    </h3>
     <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
   </Link>
 );
@@ -126,7 +129,7 @@ const WhatsAppCard = () => (
         <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen text-black shadow-[0_0_24px_rgba(4,244,190,0.45)]">
           <MessageCircle className="size-5" strokeWidth={2} />
         </span>
-        <span className="rounded-full border border-pcnGreen/30 bg-pcnGreen/10 px-2.5 py-0.5 text-[11px] font-medium text-pcnGreen">
+        <span className="rounded-sm border border-pcnGreen/30 bg-pcnGreen/10 px-2.5 py-0.5 text-[11px] font-medium text-pcnGreen">
           El corazón de la comunidad
         </span>
       </div>
@@ -153,7 +156,7 @@ const WhatsAppCard = () => (
       </ul>
 
       <div className="mt-auto pt-8">
-        <Button asChild className="rounded-full px-6">
+        <Button asChild className="px-6">
           <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
             Unirme al grupo
             <ArrowUpRight className="ml-2 size-4" />
@@ -165,8 +168,8 @@ const WhatsAppCard = () => (
 );
 
 const ComingSoonCard = () => (
-  <div className="relative flex flex-col rounded-lg border border-dashed border-white/10 bg-transparent p-6 md:col-span-2">
-    <span className="w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+  <div className="relative flex flex-col rounded-lg border border-dashed border-pcnGreen-200 bg-transparent p-6 md:col-span-2">
+    <span className="w-fit rounded-sm border border-pcnGreen-200 bg-pcnGreen-50 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
       Próximamente
     </span>
     <ul className="mt-5 flex flex-col gap-4">
@@ -183,7 +186,7 @@ const ComingSoonCard = () => (
         },
       ].map((item) => (
         <li key={item.title} className="flex items-start gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] text-muted-foreground ring-1 ring-inset ring-white/10">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-pcnGreen-50 text-muted-foreground ring-1 ring-inset ring-pcnGreen-300">
             <item.icon className="size-4" strokeWidth={1.75} />
           </span>
           <div>

@@ -66,7 +66,7 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 text-white hover:bg-black/50"
+              className="bg-black/30 text-white hover:bg-black/50"
               onClick={handleDownloadClick}
               disabled={isDownloading}
             >
@@ -76,7 +76,7 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 text-white hover:bg-black/50"
+              className="bg-black/30 text-white hover:bg-black/50"
               onClick={handleShareClick}
             >
               <Share2 className="h-5 w-5" />
@@ -85,7 +85,7 @@ export function PhotoCard({ photo, getShareUrl, onCardClick }: PhotoCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 text-white hover:bg-black/50"
+              className="bg-black/30 text-white hover:bg-black/50"
               onClick={onCardClick}
             >
               <Maximize2 className="h-5 w-5" />

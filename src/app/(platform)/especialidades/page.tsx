@@ -86,7 +86,7 @@ const SpecialtiesPage = () => (
                   <div className="mb-5">
                     <div className="flex items-center gap-3">
                       <h2 className="text-lg font-semibold tracking-tight">{group.title}</h2>
-                      <span className="rounded-full border px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground">
+                      <span className="rounded-sm border px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground">
                         {group.specialties.length}
                       </span>
                       <div className="h-px flex-1 bg-border" />

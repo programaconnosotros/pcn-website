@@ -40,7 +40,7 @@ export function HistoriaSection({ id, title, period, children }: HistoriaSection
       </span>
       <header className="mb-4 flex flex-col items-start gap-2">
         {period && (
-          <span className="rounded-full border border-pcnPurple/30 bg-pcnPurple/10 px-2.5 py-0.5 text-xs font-medium tabular-nums text-pcnPurple dark:border-pcnGreen/30 dark:bg-pcnGreen/10 dark:text-pcnGreen">
+          <span className="rounded-sm border border-pcnPurple/30 bg-pcnPurple/10 px-2.5 py-0.5 text-xs font-medium tabular-nums text-pcnPurple dark:border-pcnGreen/30 dark:bg-pcnGreen/10 dark:text-pcnGreen">
             {period}
           </span>
         )}

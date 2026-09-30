@@ -104,7 +104,7 @@ export function PhotoDialog({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full bg-black/50 text-white hover:bg-black/70"
+                      className="bg-black/50 text-white hover:bg-black/70"
                       onClick={handleDownload}
                       disabled={isDownloading}
                     >
@@ -124,7 +124,7 @@ export function PhotoDialog({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full bg-black/50 text-white hover:bg-black/70"
+                      className="bg-black/50 text-white hover:bg-black/70"
                       onClick={handleShare}
                     >
                       <Share2 className="h-5 w-5" />
@@ -140,7 +140,7 @@ export function PhotoDialog({
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full bg-black/50 text-white hover:bg-black/70"
+                className="bg-black/50 text-white hover:bg-black/70"
                 onClick={onClose}
               >
                 <X className="h-5 w-5" />
@@ -152,7 +152,7 @@ export function PhotoDialog({
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full bg-black/50 text-white hover:bg-black/70"
+                className="bg-black/50 text-white hover:bg-black/70"
                 onClick={handlePrevious}
               >
                 <ChevronLeft className="h-6 w-6" />
@@ -164,7 +164,7 @@ export function PhotoDialog({
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full bg-black/50 text-white hover:bg-black/70"
+                className="bg-black/50 text-white hover:bg-black/70"
                 onClick={handleNext}
               >
                 <ChevronRight className="h-6 w-6" />

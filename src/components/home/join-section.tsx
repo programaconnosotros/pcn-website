@@ -37,7 +37,7 @@ const Card = ({
 }) => (
   <div
     className={cn(
-      'group relative flex flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 transition-colors hover:border-pcnGreen/30 md:p-7',
+      'group relative flex flex-col overflow-hidden rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 p-6 transition-colors hover:border-pcnGreen/30 md:p-7',
       className,
     )}
   >
@@ -68,7 +68,7 @@ export const JoinSection = () => (
         title="Sé referente en tu ciudad o universidad"
         description="Si compartís los valores de PCN y donde estás todavía no hay muchos miembros, armamos un plan juntos para que la comunidad crezca ahí."
       >
-        <Button asChild variant="outline" className="rounded-full">
+        <Button asChild variant="outline">
           <Link href={CONTACT_URL} target="_blank" rel="noreferrer">
             <MessageSquare className="mr-2 size-4" />
             Contactanos
@@ -82,7 +82,7 @@ export const JoinSection = () => (
         title="Proponé una iniciativa"
         description="¿Una idea buena para la comunidad? ¿Ganas de organizar un evento o dar una charla? Contanos y vemos la forma de llevarla a cabo."
       >
-        <Button asChild variant="outline" className="rounded-full">
+        <Button asChild variant="outline">
           <Link href={CONTACT_URL} target="_blank" rel="noreferrer">
             <MessageSquare className="mr-2 size-4" />
             Proponer algo
@@ -102,7 +102,7 @@ export const JoinSection = () => (
               <li
                 key={name}
                 title={name}
-                className="flex size-9 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-inset ring-white/10 [&_svg]:size-5"
+                className="flex size-9 items-center justify-center rounded-lg bg-pcnGreen-50 ring-1 ring-inset ring-pcnGreen-300 [&_svg]:size-5"
               >
                 <Logo className="size-5" />
               </li>
@@ -111,7 +111,7 @@ export const JoinSection = () => (
               + Prisma
             </li>
           </ul>
-          <Button asChild className="w-fit rounded-full">
+          <Button asChild className="w-fit">
             <Link href={REPO_URL} target="_blank" rel="noreferrer">
               Ver repositorio
               <ArrowUpRight className="ml-2 size-4" />
