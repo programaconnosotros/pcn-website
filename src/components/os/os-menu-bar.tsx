@@ -88,10 +88,18 @@ export function OsMenuBar({
   return (
     <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
-        <DropdownMenuTrigger className={cn(menuTriggerClassName, 'flex items-center gap-1.5')}>
+        <DropdownMenuTrigger
+          className={cn(menuTriggerClassName, 'group flex items-center gap-1.5')}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.webp" alt="" className="size-4" />
-          <span className="text-glow font-semibold text-pcnGreen">PCN_OS</span>
+          <img
+            src="/logo.webp"
+            alt=""
+            className="size-4 shrink-0 object-contain group-data-[state=open]:brightness-0"
+          />
+          <span className="text-glow font-semibold text-pcnGreen group-data-[state=open]:text-black group-data-[state=open]:[text-shadow:none]">
+            PCN_OS
+          </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className={menuContentClassName}>
           <DropdownMenuItem onSelect={() => onOpenProgram(programById('historia'))}>
