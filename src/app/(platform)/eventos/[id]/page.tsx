@@ -219,7 +219,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           }
         />
 
-        <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:divide-x md:divide-y-0">
+        <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:divide-x md:divide-y-0">
           {/* Columna principal — flyer */}
           <div className="flex flex-col divide-y divide-pcnGreen-200">
             <div className="relative w-full overflow-hidden">
