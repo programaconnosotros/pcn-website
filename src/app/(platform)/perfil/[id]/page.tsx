@@ -5,10 +5,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, Images, Lightbulb, MicVocal, Pencil } from 'lucide-react';
+import { ArrowUpRight, Pencil } from 'lucide-react';
+import { conversations as allConversations } from '@/data/whatsapp-conversations';
+import { getCollaborationStats } from '@/lib/github-stats';
+import { getUserIdentities } from '@/lib/identity-links';
+import {
+  ContributionStats,
+  ConversationRows,
+  EmptyLine,
+  ProfileStat,
+  ProfileTabs,
+  ProjectRows,
+  SectionHeading,
+  isProfileTab,
+  type ProfileProject,
+  type ProfileTab,
+} from '@/components/profile/profile-sections';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -64,7 +78,77 @@ interface ProfilePageProps {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ tab?: string }>;
 }
+
+// How many items of each section the overview shows before "ver todo".
+const PREVIEW = 2;
+const CONVERSATIONS_PREVIEW = 4;
+
+type ProfileTalk = {
+  id: string;
+  title: string;
+  portraitUrl: string | null;
+  videoUrl: string | null;
+  event: { date: Date; placeName: string | null; city: string | null } | null;
+  speakers: { speakerName: string }[];
+};
+
+const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
+  <RuledGrid className="grid-cols-1">
+    {talks.map((talk) => {
+      const location = [talk.event?.placeName, talk.event?.city].filter(Boolean).join(', ');
+      const meta = [
+        talk.event?.date &&
+          new Date(talk.event.date).toLocaleDateString('es-AR', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }),
+        location,
+      ]
+        .filter(Boolean)
+        .join(' · ');
+      return (
+        <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+          {talk.portraitUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={talk.portraitUrl}
+              alt={`Foto de la charla "${talk.title}"`}
+              className="h-16 w-16 shrink-0 object-cover"
+            />
+          )}
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex items-center gap-2 font-mono text-sm">
+              <h3 className="truncate font-semibold">{talk.title}</h3>
+              {talk.videoUrl && (
+                <a
+                  href={talk.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground hover:text-pcnGreen"
+                >
+                  youtube
+                  <ArrowUpRight className="h-3 w-3" />
+                </a>
+              )}
+            </div>
+            <p className="truncate text-xs text-muted-foreground">
+              {talk.speakers.map((speaker) => speaker.speakerName).join(', ')}
+            </p>
+            {meta && (
+              <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                <span className="text-pcnGreen-500">@ </span>
+                {meta}
+              </p>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </RuledGrid>
+);
 
 async function getUser(id: string) {
   try {
@@ -134,6 +218,8 @@ async function getUser(id: string) {
 
 export default async function ProfilePage(props: ProfilePageProps) {
   const params = await props.params;
+  const { tab: requestedTab } = await props.searchParams;
+  const tab: ProfileTab = isProfileTab(requestedTab) ? requestedTab : 'resumen';
   const user = await getUser(params.id);
   const session = await getCurrentSession();
 
@@ -164,14 +250,65 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
-  const userTalks = await prisma.talk.findMany({
-    where: { speakers: { some: { userId: user.id } } },
-    include: {
-      event: { select: { date: true, placeName: true, city: true } },
-      speakers: { orderBy: { order: 'asc' } },
-    },
-    orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-  });
+  const [userTalks, projects, identities] = await Promise.all([
+    prisma.talk.findMany({
+      where: { speakers: { some: { userId: user.id } } },
+      include: {
+        event: { select: { date: true, placeName: true, city: true } },
+        speakers: { orderBy: { order: 'asc' } },
+      },
+      orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
+    }),
+    prisma.project.findMany({
+      where: { OR: [{ authorId: user.id }, { members: { some: { userId: user.id } } }] },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        logoUrl: true,
+        techStack: true,
+        authorId: true,
+      },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+    }),
+    getUserIdentities(user.id),
+  ]);
+
+  const userProjects: ProfileProject[] = projects.map((project) => ({
+    ...project,
+    role: project.authorId === user.id ? 'autor' : 'colaborador',
+  }));
+
+  // Conversations where any of the WhatsApp names an admin linked to this user took part.
+  const whatsappNames = new Set(identities.whatsapp);
+  const userConversations = allConversations
+    .filter((conversation) => conversation.participants.some((name) => whatsappNames.has(name)))
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  // Contributions to this website's repo, from the GitHub logins linked to this user.
+  const githubStats = identities.github.length > 0 ? await getCollaborationStats() : null;
+  const contributions =
+    githubStats?.topContributors.filter((contributor) =>
+      identities.github.includes(contributor.login),
+    ) ?? [];
+  const mergedPrs = contributions.reduce((sum, contributor) => sum + contributor.mergedPrs, 0);
+
+  const counts: Partial<Record<ProfileTab, number>> = {
+    proyectos: userProjects.length,
+    consejos: user.advises.length,
+    charlas: userTalks.length,
+    conversaciones: userConversations.length,
+    ...(contributions.length > 0 && { contribuciones: mergedPrs }),
+  };
+  const tabHref = (id: ProfileTab) => `/perfil/${user.id}?tab=${id}`;
+  const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
+  const hasActivity =
+    userProjects.length +
+      user.advises.length +
+      userTalks.length +
+      userConversations.length +
+      contributions.length >
+    0;
 
   return (
     <>
@@ -276,114 +413,179 @@ export default async function ProfilePage(props: ProfilePageProps) {
             </div>
           </div>
 
-          {/* Columna derecha: Tabs con Consejos, Fotos y Charlas */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="consejos" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="consejos" className="gap-2">
-                  <Lightbulb className="h-4 w-4" />
-                  Consejos
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    [{user.advises.length}]
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="fotos" className="gap-2">
-                  <Images className="h-4 w-4" />
-                  Fotos
-                </TabsTrigger>
-                <TabsTrigger value="charlas" className="gap-2">
-                  <MicVocal className="h-4 w-4" />
-                  Charlas
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    [{userTalks.length}]
-                  </span>
-                </TabsTrigger>
-              </TabsList>
+          {/* Columna derecha: resumen de todo lo que hizo, y una pestaña para ver cada sección */}
+          <div className="min-w-0 lg:col-span-2">
+            <ProfileTabs userId={user.id} active={tab} counts={counts} />
 
-              <TabsContent value="consejos" className="mt-4">
-                {user.advises.length === 0 ? (
-                  <p className="font-mono text-xs text-muted-foreground">
-                    Este usuario aún no ha compartido ningún consejo.
-                  </p>
+            {tab === 'resumen' && (
+              <div className="mb-14 space-y-8">
+                <RuledGrid className="grid-cols-2 sm:grid-cols-4">
+                  <ProfileStat
+                    label="proyectos"
+                    value={userProjects.length}
+                    href={tabHref('proyectos')}
+                  />
+                  <ProfileStat
+                    label="consejos"
+                    value={user.advises.length}
+                    href={tabHref('consejos')}
+                  />
+                  <ProfileStat label="charlas" value={userTalks.length} href={tabHref('charlas')} />
+                  {contributions.length > 0 ? (
+                    <ProfileStat
+                      label="PRs a pcn"
+                      value={mergedPrs}
+                      href={tabHref('contribuciones')}
+                    />
+                  ) : (
+                    <ProfileStat
+                      label="conversaciones"
+                      value={userConversations.length}
+                      href={tabHref('conversaciones')}
+                    />
+                  )}
+                </RuledGrid>
+
+                {!hasActivity && (
+                  <EmptyLine>{firstName} todavía no tiene actividad en la comunidad.</EmptyLine>
+                )}
+
+                {userProjects.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="proyectos"
+                      count={userProjects.length}
+                      href={userProjects.length > PREVIEW ? tabHref('proyectos') : undefined}
+                    />
+                    <ProjectRows projects={userProjects.slice(0, PREVIEW)} />
+                  </section>
+                )}
+
+                {contributions.length > 0 && (
+                  <section>
+                    <SectionHeading label="contribuciones a pcn" href={tabHref('contribuciones')} />
+                    <ContributionStats
+                      contributions={contributions}
+                      totals={{
+                        mergedPrs: githubStats?.mergedPrs ?? 0,
+                        commits: githubStats?.commits ?? 0,
+                      }}
+                    />
+                  </section>
+                )}
+
+                {user.advises.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="consejos"
+                      count={user.advises.length}
+                      href={user.advises.length > PREVIEW ? tabHref('consejos') : undefined}
+                    />
+                    <RuledGrid className="grid-cols-1">
+                      {user.advises.slice(0, PREVIEW).map((advise) => (
+                        <AdviseCard key={advise.id} session={session} advise={advise} />
+                      ))}
+                    </RuledGrid>
+                  </section>
+                )}
+
+                {userTalks.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="charlas"
+                      count={userTalks.length}
+                      href={userTalks.length > PREVIEW ? tabHref('charlas') : undefined}
+                    />
+                    <TalkRows talks={userTalks.slice(0, PREVIEW)} />
+                  </section>
+                )}
+
+                {userConversations.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="conversaciones"
+                      count={userConversations.length}
+                      href={
+                        userConversations.length > CONVERSATIONS_PREVIEW
+                          ? tabHref('conversaciones')
+                          : undefined
+                      }
+                    />
+                    <ConversationRows
+                      conversations={userConversations.slice(0, CONVERSATIONS_PREVIEW)}
+                    />
+                  </section>
+                )}
+              </div>
+            )}
+
+            {tab === 'proyectos' && (
+              <div className="mb-14">
+                {userProjects.length > 0 ? (
+                  <ProjectRows projects={userProjects} />
                 ) : (
+                  <EmptyLine>{firstName} todavía no participó en ningún proyecto.</EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'consejos' && (
+              <div className="mb-14">
+                {user.advises.length > 0 ? (
                   <RuledGrid className="grid-cols-1">
                     {user.advises.map((advise) => (
                       <AdviseCard key={advise.id} session={session} advise={advise} />
                     ))}
                   </RuledGrid>
-                )}
-              </TabsContent>
-
-              <TabsContent value="fotos" className="mt-4">
-                <p className="font-mono text-xs text-muted-foreground">
-                  Las fotos estarán disponibles próximamente.
-                </p>
-              </TabsContent>
-
-              <TabsContent value="charlas" className="mt-4">
-                {userTalks.length === 0 ? (
-                  <p className="font-mono text-xs text-muted-foreground">
-                    Este usuario aún no ha dado ninguna charla.
-                  </p>
                 ) : (
-                  <RuledGrid className="grid-cols-1">
-                    {userTalks.map((talk) => {
-                      const location = [talk.event?.placeName, talk.event?.city]
-                        .filter(Boolean)
-                        .join(', ');
-                      const meta = [
-                        talk.event?.date &&
-                          new Date(talk.event.date).toLocaleDateString('es-AR', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          }),
-                        location,
-                      ]
-                        .filter(Boolean)
-                        .join(' · ');
-                      return (
-                        <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
-                          {talk.portraitUrl && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={talk.portraitUrl}
-                              alt={`Foto de la charla "${talk.title}"`}
-                              className="h-16 w-16 shrink-0 object-cover"
-                            />
-                          )}
-                          <div className="flex min-w-0 flex-1 flex-col gap-1">
-                            <div className="flex items-center gap-2 font-mono text-sm">
-                              <h3 className="truncate font-semibold">{talk.title}</h3>
-                              {talk.videoUrl && (
-                                <a
-                                  href={talk.videoUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground hover:text-pcnGreen"
-                                >
-                                  youtube
-                                  <ArrowUpRight className="h-3 w-3" />
-                                </a>
-                              )}
-                            </div>
-                            <p className="truncate text-xs text-muted-foreground">
-                              {talk.speakers.map((speaker) => speaker.speakerName).join(', ')}
-                            </p>
-                            {meta && (
-                              <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-                                <span className="text-pcnGreen-500">@ </span>
-                                {meta}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </RuledGrid>
+                  <EmptyLine>{firstName} todavía no compartió ningún consejo.</EmptyLine>
                 )}
-              </TabsContent>
-            </Tabs>
+              </div>
+            )}
+
+            {tab === 'charlas' && (
+              <div className="mb-14">
+                {userTalks.length > 0 ? (
+                  <TalkRows talks={userTalks} />
+                ) : (
+                  <EmptyLine>{firstName} todavía no dio ninguna charla.</EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'conversaciones' && (
+              <div className="mb-14">
+                {userConversations.length > 0 ? (
+                  <ConversationRows conversations={userConversations} />
+                ) : (
+                  <EmptyLine>
+                    {identities.whatsapp.length > 0
+                      ? `${firstName} no aparece en las conversaciones destacadas.`
+                      : 'Todavía no vinculamos este perfil con el grupo de WhatsApp.'}
+                  </EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'contribuciones' && (
+              <div className="mb-14">
+                {contributions.length > 0 ? (
+                  <ContributionStats
+                    contributions={contributions}
+                    totals={{
+                      mergedPrs: githubStats?.mergedPrs ?? 0,
+                      commits: githubStats?.commits ?? 0,
+                    }}
+                  />
+                ) : (
+                  <EmptyLine>
+                    {identities.github.length > 0
+                      ? 'No pudimos traer las contribuciones de GitHub, probá más tarde.'
+                      : `Todavía no vinculamos a ${firstName} con una cuenta que contribuyó al sitio.`}
+                  </EmptyLine>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
