@@ -215,7 +215,7 @@ export function OsWindow({
         onPointerDown={startDrag}
         onDoubleClick={onToggleMaximize}
         className={cn(
-          'relative flex h-9 shrink-0 cursor-default touch-none select-none items-center border-b bg-black px-2 font-mono',
+          'relative flex h-7 shrink-0 cursor-default touch-none select-none items-center border-b bg-black px-1.5 font-mono',
           focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',
         )}
       >
@@ -250,9 +250,9 @@ export function OsWindow({
             aria-label="Recargar"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => iframeRef.current?.contentWindow?.location.reload()}
-            className="flex size-7 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
+            className="flex size-6 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
           >
-            <RotateCw className="size-3.5" />
+            <RotateCw className="size-3" />
           </button>
           <a
             href={win.path}
@@ -261,9 +261,9 @@ export function OsWindow({
             title="Abrir en una pestaña nueva"
             aria-label="Abrir en una pestaña nueva"
             onPointerDown={(e) => e.stopPropagation()}
-            className="flex size-7 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
+            className="flex size-6 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
           >
-            <ExternalLink className="size-3.5" />
+            <ExternalLink className="size-3" />
           </a>
         </div>
       </header>
