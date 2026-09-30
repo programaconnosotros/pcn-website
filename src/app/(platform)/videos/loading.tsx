@@ -6,10 +6,7 @@ export default function Loading() {
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <PageTitleSkeleton />
-          <RuledGridSkeleton
-            count={10}
-            className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
-          />
+          <RuledGridSkeleton count={10} className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" />
         </div>
       </div>
     </>
