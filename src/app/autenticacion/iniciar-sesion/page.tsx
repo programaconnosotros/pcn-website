@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
@@ -28,7 +27,6 @@ const formSchema = z.object({
 function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { resolvedTheme } = useTheme();
   const emailParam = searchParams.get('email') || '';
   const passwordParam = searchParams.get('password') || '';
   const redirectTo = searchParams.get('redirect') || '';
@@ -94,17 +92,15 @@ function SignInContent() {
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[425px]">
+      <div className="relative w-full max-w-[425px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
         <div className="flex flex-col items-center gap-6">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
-            alt="Logo"
-            className="w-20"
-          />
+          <img src="/logo.webp" alt="Logo" className="w-20" />
 
           <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Iniciar sesión</h1>
+            <h1 className="text-glow mb-8 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
+              Iniciar sesión
+            </h1>
           </div>
         </div>
 
@@ -154,7 +150,7 @@ function SignInContent() {
           </form>
         </Form>
 
-        <div className="mt-4 flex flex-row gap-4">
+        <div className="mt-4 flex flex-col gap-2">
           <Link
             href={
               redirectTo

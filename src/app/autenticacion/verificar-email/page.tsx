@@ -134,11 +134,13 @@ function VerifyEmailContent() {
   if (!email) {
     return (
       <div className="container flex min-h-screen items-center justify-center py-12">
-        <div className="w-full max-w-[425px] text-center">
+        <div className="relative w-full max-w-[425px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 text-center shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
           <div className="flex flex-col items-center gap-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.webp" alt="Logo" className="w-10" />
-            <h1 className="text-2xl font-semibold tracking-tight">Verificación de email</h1>
+            <h1 className="text-glow font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
+              Verificación de email
+            </h1>
             <p className="text-muted-foreground">No se especificó un email para verificar.</p>
             <Link href="/autenticacion/iniciar-sesion">
               <Button>Ir a iniciar sesión</Button>
@@ -151,13 +153,13 @@ function VerifyEmailContent() {
 
   return (
     <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[425px]">
+      <div className="relative w-full max-w-[425px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
         <div className="flex flex-col items-center gap-6">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.webp" alt="Logo" className="w-10" />
 
           <div className="space-y-2 text-center">
-            <h1 className="mb-4 text-2xl font-semibold tracking-tight">
+            <h1 className="text-glow mb-4 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
               {isVerified ? '¡Email verificado!' : 'Verificá tu email'}
             </h1>
           </div>
