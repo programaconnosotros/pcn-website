@@ -9,6 +9,7 @@ import { OsLauncher } from './os-launcher';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
 import { OsProcesses } from './os-processes';
 import { OsWallpaper } from './os-wallpaper';
+import { OsPhotos } from './os-photos';
 import {
   MIN_WINDOW_HEIGHT,
   MIN_WINDOW_WIDTH,
@@ -274,6 +275,9 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     .map((win) => findProgramForPath(win.path))
     .filter((program, index, all) => all.findIndex((a) => a.id === program.id) === index);
 
+  // A maximized window hides the desktop, so its background widgets can pause.
+  const covered = state.windows.some((win) => win.maximized && !win.minimized);
+
   return (
     <div className="hidden os:block">
       <div
@@ -284,8 +288,12 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         }
       >
         <OsWallpaper showHint={isOs && viewport !== null && state.windows.length === 0} />
-        {isOs && (
-          <OsProcesses covered={state.windows.some((win) => win.maximized && !win.minimized)} />
+        {isOs && <OsProcesses covered={covered} />}
+        {isOs && viewport && (
+          <OsPhotos
+            covered={covered}
+            onOpen={(path) => dispatch({ type: 'openPath', path, viewport })}
+          />
         )}
 
         {isOs && viewport && (

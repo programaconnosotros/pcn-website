@@ -21,7 +21,7 @@ const clock = (offsetMs = 0) =>
   new Date(Date.now() - offsetMs).toLocaleTimeString('es-AR', { hour12: false });
 
 /** Whether the background animations should run right now. */
-function useBackgroundActive(covered: boolean) {
+export function useBackgroundActive(covered: boolean) {
   const [visible, setVisible] = useState(true);
   const [idle, setIdle] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
