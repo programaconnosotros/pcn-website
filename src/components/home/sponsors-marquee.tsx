@@ -4,15 +4,6 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Eyebrow } from './section-header';
 
-const logoHeight: Record<string, string> = {
-  Once57: 'h-14',
-  Xetro: 'h-12',
-  'UTN-FRT': 'h-11',
-  Eagerworks: 'h-6',
-  DIZENZ: 'h-11',
-  'Blackbox Cowork': 'h-9',
-};
-
 export const SponsorsMarquee = () => (
   <section className="border-y border-white/[0.06] bg-white/[0.015] py-8">
     <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 lg:px-8">
@@ -42,8 +33,8 @@ export const SponsorsMarquee = () => (
                 src={sponsor.logo}
                 alt={sponsor.name}
                 className={cn(
-                  'w-auto max-w-[150px] object-contain',
-                  logoHeight[sponsor.name] ?? 'h-8',
+                  // Same bounding box for every logo so none looks more prominent.
+                  'h-9 w-32 object-contain',
                   // Dark-on-transparent logos: render as a white mark.
                   sponsor.monochromeOnDark && 'brightness-0 invert',
                 )}

@@ -7,15 +7,6 @@ import { Building2, Handshake, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SPONSOR_CONTACT_URL, sponsors } from '@/data/sponsors';
 
-const logoSize: Record<string, string> = {
-  Once57: 'max-h-36',
-  Xetro: 'max-h-28',
-  'UTN-FRT': 'max-h-24',
-  'Blackbox Cowork': 'max-h-14',
-  Eagerworks: 'max-h-8',
-  DIZENZ: 'max-h-24',
-};
-
 interface SponsorsSectionProps {
   /**
    * Whether to render the section's own centered "Sponsors" heading.
@@ -47,14 +38,14 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
             rel="noopener noreferrer"
             className="group flex h-full flex-col items-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04]"
           >
-            <div className="mb-5 flex h-36 w-full items-center justify-center">
+            <div className="mb-6 flex h-28 w-full items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={sponsor.logo}
                 alt={sponsor.name}
                 className={cn(
-                  'w-auto max-w-[80%] object-contain',
-                  logoSize[sponsor.name] ?? 'max-h-14',
+                  // Same bounding box for every logo so none looks more prominent.
+                  'h-14 w-44 object-contain',
                   sponsor.monochromeOnDark && 'brightness-0 invert',
                 )}
               />
