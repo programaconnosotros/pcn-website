@@ -4,9 +4,12 @@ import { useState, useMemo } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { X } from 'lucide-react';
 import { conversations, type Conversation } from '@/data/whatsapp-conversations';
 import { SearchBar } from '@/components/ui/search-bar';
+import { ActivityGraph, type MonthActivity } from '@/components/conversations/activity-graph';
+import { ConversationRow, GROUP_THREAD_MIN } from '@/components/conversations/conversation-row';
+import { normalize } from '@/components/conversations/highlight';
 
 const MONTHS_ES = [
   'enero',
@@ -23,132 +26,241 @@ const MONTHS_ES = [
   'diciembre',
 ];
 
-function formatDate(dateStr: string): string {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  return `${day} de ${MONTHS_ES[month - 1]} de ${year}`;
-}
+const TOP_VOICES = 8;
 
-function getMonthYear(dateStr: string): string {
-  const [year, month] = dateStr.split('-').map(Number);
-  return `${MONTHS_ES[month - 1].charAt(0).toUpperCase() + MONTHS_ES[month - 1].slice(1)} ${year}`;
-}
+const monthKey = (date: string) => date.slice(0, 7);
 
-function formatShortDate(dateStr: string): string {
-  const [year, month, day] = dateStr.split('-');
-  return `${year}-${month}-${day}`;
-}
+const monthName = (key: string) => MONTHS_ES[Number(key.slice(5, 7)) - 1];
 
-function ConversationCard({ conversation }: { conversation: Conversation }) {
-  const [expanded, setExpanded] = useState(false);
-  const isLong = conversation.summary.length > 200;
+const isGroupThread = (conversation: Conversation) =>
+  conversation.participants.length >= GROUP_THREAD_MIN;
 
+const sortedConversations = [...conversations].sort((a, b) => b.date.localeCompare(a.date));
+
+const allMonthKeys = Array.from(new Set(sortedConversations.map((c) => monthKey(c.date)))).sort();
+
+const participantCounts = (() => {
+  const counts = new Map<string, number>();
+  for (const { participants } of conversations)
+    for (const name of participants) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+})();
+
+const stats = [
+  { label: 'charlas', value: conversations.length },
+  { label: 'meses', value: allMonthKeys.length },
+  { label: 'voces', value: participantCounts.length },
+  { label: 'hilos grupales', value: conversations.filter(isGroupThread).length, lit: true },
+];
+
+function Stat({ label, value, lit }: { label: string; value: number; lit?: boolean }) {
   return (
-    <div className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3')}>
-      <div className="flex items-baseline gap-2 font-mono">
-        <h3 className="text-sm font-semibold leading-snug">{conversation.title}</h3>
-        <time
-          dateTime={conversation.date}
-          title={formatDate(conversation.date)}
-          className="ml-auto shrink-0 text-[11px] text-muted-foreground"
-        >
-          {formatShortDate(conversation.date)}
-        </time>
-      </div>
-      <p
+    <div className={cn(ruledCellClassName, 'flex flex-col gap-0.5 px-3 py-2 font-mono')}>
+      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
+      <span
         className={cn(
-          'text-xs leading-relaxed text-muted-foreground',
-          !expanded && isLong && 'line-clamp-3',
+          'text-2xl font-semibold tabular-nums leading-none',
+          lit ? 'text-pcnGreen [text-shadow:0_0_14px_rgba(4,244,190,0.6)]' : 'text-foreground',
         )}
       >
-        {conversation.summary}
-      </p>
-      {isLong && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex w-fit items-center gap-1 font-mono text-[11px] text-pcnGreen-700 hover:text-pcnGreen"
-        >
-          {expanded ? (
-            <>
-              <ChevronUp className="h-3 w-3" /> menos
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-3 w-3" /> más
-            </>
-          )}
-        </button>
-      )}
+        {value}
+      </span>
     </div>
+  );
+}
+
+function Flag({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        'flex h-9 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-xs transition-all',
+        active
+          ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]'
+          : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+      )}
+    >
+      <span className="text-pcnGreen-600">[{active ? 'x' : ' '}]</span>
+      {children}
+    </button>
   );
 }
 
 export default function ConversationsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [groupOnly, setGroupOnly] = useState(false);
+  const [participant, setParticipant] = useState<string | null>(null);
+
+  const toggleParticipant = (name: string) =>
+    setParticipant((current) => (current === name ? null : name));
 
   const filtered = useMemo(() => {
-    const q = searchTerm.toLowerCase().trim();
-    const list = q
-      ? conversations.filter(
-          (c) => c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q),
-        )
-      : conversations;
-    return [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [searchTerm]);
+    const query = normalize(searchTerm.trim());
+    return sortedConversations.filter(
+      (c) =>
+        (!groupOnly || isGroupThread(c)) &&
+        (!participant || c.participants.includes(participant)) &&
+        (!query ||
+          normalize(c.title).includes(query) ||
+          normalize(c.summary).includes(query) ||
+          c.participants.some((name) => normalize(name).includes(query))),
+    );
+  }, [searchTerm, groupOnly, participant]);
 
   const grouped = useMemo(() => {
-    const groups: Record<string, Conversation[]> = {};
+    const groups = new Map<string, Conversation[]>();
     for (const c of filtered) {
-      const key = getMonthYear(c.date);
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(c);
+      const key = monthKey(c.date);
+      groups.set(key, [...(groups.get(key) ?? []), c]);
     }
-    return Object.entries(groups).sort(
-      ([, a], [, b]) => new Date(b[0].date).getTime() - new Date(a[0].date).getTime(),
-    );
+    return [...groups.entries()];
   }, [filtered]);
 
-  return (
-    <>
-      <div className="flex flex-1 flex-col p-4 pt-0">
-        <div className="mt-4">
-          <PageTitle
-            path="conversaciones"
-            meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
-          />
+  const activity = useMemo<MonthActivity[]>(
+    () =>
+      allMonthKeys.map((key) => ({
+        key,
+        total: conversations.filter((c) => monthKey(c.date) === key).length,
+        matches: filtered.filter((c) => monthKey(c.date) === key).length,
+      })),
+    [filtered],
+  );
 
+  const isFiltering = Boolean(searchTerm.trim() || groupOnly || participant);
+
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        <PageTitle
+          path="conversaciones"
+          meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
+        />
+
+        <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+          <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
+            {stats.map((stat) => (
+              <Stat key={stat.label} {...stat} />
+            ))}
+          </RuledGrid>
+          <ActivityGraph months={activity} />
+        </div>
+
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           <SearchBar
             searchQuery={searchTerm}
             setSearchQuery={setSearchTerm}
-            placeholder="conversaciones"
+            placeholder="conversaciones, temas o personas"
             label="Buscar conversaciones"
-            className="mb-4"
           />
+          <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
+            --grupales
+          </Flag>
+          {participant && (
+            <button
+              type="button"
+              onClick={() => setParticipant(null)}
+              className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
+            >
+              --author=&quot;{participant}&quot;
+              <X className="size-3.5" />
+              <span className="sr-only">Quitar filtro de persona</span>
+            </button>
+          )}
+          <p
+            className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
+            aria-live="polite"
+          >
+            <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
+              {filtered.length}
+            </span>
+            /{conversations.length} resultados
+          </p>
+        </div>
 
-          {filtered.length === 0 ? (
-            <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-              <span className="text-pcnGreen-500">$ </span>
-              No se encontraron conversaciones para &quot;{searchTerm}&quot;.
-            </p>
-          ) : (
-            <div className="mb-14 space-y-4">
-              {grouped.map(([monthYear, items]) => (
-                <section key={monthYear}>
-                  <h2 className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    <span className="text-pcnGreen-500">{'// '}</span>
-                    {monthYear}
-                    <span className="ml-2 text-muted-foreground/60">[{items.length}]</span>
+        <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">
+          <span className="mr-1 text-muted-foreground">
+            <span className="text-pcnGreen-600">{'// '}</span>voces frecuentes:
+          </span>
+          {participantCounts.slice(0, TOP_VOICES).map(([name, count]) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => toggleParticipant(name)}
+              aria-pressed={participant === name}
+              className={cn(
+                'border px-1.5 leading-5 transition-colors',
+                participant === name
+                  ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
+                  : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+              )}
+            >
+              <span className="text-pcnGreen-600">@</span>
+              {name}
+              <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
+            </button>
+          ))}
+        </div>
+
+        {filtered.length === 0 ? (
+          <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+            <span className="text-pcnGreen-500">$ </span>0 resultados
+            {searchTerm.trim() && (
+              <>
+                {' '}
+                para <span className="text-pcnGreen">&quot;{searchTerm}&quot;</span>
+              </>
+            )}
+          </p>
+        ) : (
+          <div className="mb-14 space-y-6">
+            {grouped.map(([key, items]) => {
+              const groupCount = items.filter(isGroupThread).length;
+              return (
+                <section key={key} id={`m-${key}`} className="scroll-mt-4">
+                  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-pcnGreen">{'>'}</span>
+                    <span className="text-foreground">{key}</span>
+                    <span>{monthName(key)}</span>
+                    <span
+                      aria-hidden
+                      className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                    />
+                    <span className="tabular-nums">
+                      [{items.length}]
+                      {groupCount > 0 && (
+                        <span className="ml-2 text-pcnGreen">
+                          {groupCount} {groupCount === 1 ? 'grupal' : 'grupales'}
+                        </span>
+                      )}
+                    </span>
                   </h2>
                   <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-                    {items.map((c, i) => (
-                      <ConversationCard key={`${c.date}-${i}`} conversation={c} />
+                    {items.map((c) => (
+                      <ConversationRow
+                        key={`${c.date}-${c.title}`}
+                        conversation={c}
+                        query={searchTerm}
+                        activeParticipant={participant}
+                        onParticipantClick={toggleParticipant}
+                      />
                     ))}
                   </RuledGrid>
                 </section>
-              ))}
-            </div>
-          )}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }
