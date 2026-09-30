@@ -41,7 +41,7 @@ const features: Feature[] = [
   {
     title: 'Charlas',
     description:
-      'El historial de charlas de la comunidad, con diapositivas y grabaciones para volver a verlas.',
+      'El historial de charlas de la comunidad con diapositivas y grabaciones, y charlas externas que recomendamos ver.',
     href: '/charlas',
     icon: MicVocal,
   },
