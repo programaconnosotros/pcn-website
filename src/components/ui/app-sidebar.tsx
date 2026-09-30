@@ -37,7 +37,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
+import { MobileNav } from '@/components/ui/mobile-nav';
 import { User } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
@@ -107,6 +109,23 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
+  const { isMobile } = useSidebar();
+
+  if (isMobile)
+    return (
+      <MobileNav
+        user={user}
+        footerItems={secondaryItems}
+        sections={[
+          { label: 'Actividades', items: actividadesItems },
+          { label: 'Recursos', items: recursosItems },
+          { label: 'Comunidad', items: comunidadItems },
+          ...(user?.role === 'ADMIN'
+            ? [{ label: 'Administración', items: getAdminItems(unreadNotificationsCount) }]
+            : []),
+        ]}
+      />
+    );
 
   return (
     <Sidebar

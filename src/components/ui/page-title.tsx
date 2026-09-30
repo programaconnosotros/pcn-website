@@ -36,7 +36,7 @@ export const PageTitle = ({ path, meta, action, className }: PageTitleProps) => 
       )}
     >
       <div className="flex min-w-0 items-center gap-2">
-        <SidebarTrigger className="-ml-1 size-7 shrink-0 text-muted-foreground hover:text-pcnGreen" />
+        <SidebarTrigger className="-ml-1 size-7 shrink-0 text-muted-foreground hover:text-pcnGreen max-md:hidden" />
         <nav aria-label="breadcrumb" className="min-w-0">
           <h1 className="flex min-w-0 items-center text-xl font-semibold tracking-tight">
             <Link href="/" className={crumbLinkClassName}>
