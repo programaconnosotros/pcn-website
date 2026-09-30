@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MoreVertical, Edit, Trash2, Pin, Calendar, User as UserIcon } from 'lucide-react';
+import { MoreVertical, Edit, Trash2, Pin, User as UserIcon } from 'lucide-react';
 import { Announcement, User } from '@prisma/client';
 import { AnnouncementForm } from './announcement-form';
 import { DeleteAnnouncementDialog } from './delete-announcement-dialog';
@@ -45,11 +45,11 @@ interface AnnouncementCardProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  general: 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20',
-  evento: 'bg-purple-500/10 text-purple-500 dark:bg-purple-500/20',
-  noticia: 'bg-green-500/10 text-green-500 dark:bg-green-500/20',
-  importante: 'bg-red-500/10 text-red-500 dark:bg-red-500/20',
-  actualizacion: 'bg-orange-500/10 text-orange-500 dark:bg-orange-500/20',
+  general: 'text-blue-400',
+  evento: 'text-purple-400',
+  noticia: 'text-pcnGreen',
+  importante: 'text-red-400',
+  actualizacion: 'text-orange-400',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -82,82 +82,82 @@ export function AnnouncementCard({
     }
   };
 
-  const categoryColor = CATEGORY_COLORS[announcement.category] || CATEGORY_COLORS.general;
   const categoryLabel = CATEGORY_LABELS[announcement.category] || announcement.category;
 
   return (
     <>
-      <Card
-        className={`flex h-full w-full flex-col border-2 bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.015] hover:shadow-xl dark:from-black dark:to-[#04130f] ${announcement.pinned ? 'border-pcnPurple dark:border-pcnGreen' : 'border-transparent dark:border-pcnGreen-200'} ${!announcement.published ? 'opacity-60' : ''}`}
+      <div
+        className={cn(
+          ruledCellClassName,
+          'flex flex-col gap-1.5 p-3',
+          announcement.pinned && 'bg-pcnGreen-50 shadow-[inset_2px_0_0_0_#04f4be]',
+          !announcement.published && 'opacity-60',
+        )}
       >
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className={`${categoryColor} border-0`}>{categoryLabel}</Badge>
-              {announcement.pinned && (
-                <Badge variant="outline" className="gap-1">
-                  <Pin className="h-3 w-3" />
-                  Destacado
-                </Badge>
-              )}
-              {!announcement.published && <Badge variant="secondary">Borrador</Badge>}
-            </div>
-            {isAdmin && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Editar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setIsDeleteOpen(true)}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Eliminar
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-          <h3 className="text-xl font-semibold leading-tight">{announcement.title}</h3>
-        </CardHeader>
-        <CardContent className="flex flex-1 flex-col">
-          <p className="mb-4 flex-1 whitespace-pre-wrap text-sm text-muted-foreground">
-            {announcement.content}
-          </p>
+        <div className="flex items-center gap-2 font-mono text-[11px]">
+          <span className={CATEGORY_COLORS[announcement.category] || CATEGORY_COLORS.general}>
+            [{categoryLabel.toLowerCase()}]
+          </span>
+          {announcement.pinned && (
+            <span className="flex items-center gap-1 text-pcnGreen">
+              <Pin className="h-3 w-3" />
+              destacado
+            </span>
+          )}
+          {!announcement.published && <span className="text-muted-foreground">borrador</span>}
+          <span className="ml-auto shrink-0 text-muted-foreground">
+            {formatDistanceToNow(new Date(announcement.createdAt), {
+              addSuffix: true,
+              locale: es,
+            })}
+          </span>
+          {isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0">
+                  <MoreVertical className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setIsDeleteOpen(true)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Eliminar
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
 
-          <div className="mt-auto flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                {announcement.author.image ? (
-                  <AvatarImage src={announcement.author.image} alt={announcement.author.name} />
-                ) : null}
-                <AvatarFallback className="text-xs">
-                  {announcement.author.name?.charAt(0).toUpperCase() || (
-                    <UserIcon className="h-3 w-3" />
-                  )}
-                </AvatarFallback>
-              </Avatar>
-              <span>{announcement.author.name}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>
-                {formatDistanceToNow(new Date(announcement.createdAt), {
-                  addSuffix: true,
-                  locale: es,
-                })}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        <h3 className="font-mono text-sm font-semibold leading-snug">{announcement.title}</h3>
+
+        <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+          {announcement.content}
+        </p>
+
+        <div className="mt-auto flex items-center gap-1.5 pt-1 font-mono text-[11px] text-muted-foreground/70">
+          <Avatar className="h-4 w-4 rounded-sm">
+            {announcement.author.image ? (
+              <AvatarImage src={announcement.author.image} alt={announcement.author.name} />
+            ) : null}
+            <AvatarFallback className="rounded-sm text-[8px]">
+              {announcement.author.name?.charAt(0).toUpperCase() || (
+                <UserIcon className="h-2.5 w-2.5" />
+              )}
+            </AvatarFallback>
+          </Avatar>
+          <span className="truncate">
+            <span className="text-pcnGreen-500">@ </span>
+            {announcement.author.name}
+          </span>
+        </div>
+      </div>
 
       {/* Dialog de edición */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

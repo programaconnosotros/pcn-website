@@ -9,12 +9,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { MessageCircle, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -45,40 +45,52 @@ function getMonthYear(dateStr: string): string {
   return `${MONTHS_ES[month - 1].charAt(0).toUpperCase() + MONTHS_ES[month - 1].slice(1)} ${year}`;
 }
 
+function formatShortDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-');
+  return `${year}-${month}-${day}`;
+}
+
 function ConversationCard({ conversation }: { conversation: Conversation }) {
   const [expanded, setExpanded] = useState(false);
-  const isLong = conversation.summary.length > 300;
+  const isLong = conversation.summary.length > 200;
 
   return (
-    <Card className="flex h-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
-      <CardHeader className="pb-2 pt-4">
-        <div className="flex flex-col gap-1">
-          <h3 className="text-base font-semibold leading-snug">{conversation.title}</h3>
-          <span className="text-xs text-muted-foreground">{formatDate(conversation.date)}</span>
-        </div>
-      </CardHeader>
-      <CardContent className="pb-4">
-        <p className={`text-sm text-muted-foreground ${!expanded && isLong ? 'line-clamp-4' : ''}`}>
-          {conversation.summary}
-        </p>
-        {isLong && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="mt-2 flex items-center gap-1 text-xs text-pcnPurple hover:underline dark:text-pcnGreen"
-          >
-            {expanded ? (
-              <>
-                <ChevronUp className="h-3 w-3" /> Ver menos
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-3 w-3" /> Ver más
-              </>
-            )}
-          </button>
+    <div className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3')}>
+      <div className="flex items-baseline gap-2 font-mono">
+        <h3 className="text-sm font-semibold leading-snug">{conversation.title}</h3>
+        <time
+          dateTime={conversation.date}
+          title={formatDate(conversation.date)}
+          className="ml-auto shrink-0 text-[11px] text-muted-foreground"
+        >
+          {formatShortDate(conversation.date)}
+        </time>
+      </div>
+      <p
+        className={cn(
+          'text-xs leading-relaxed text-muted-foreground',
+          !expanded && isLong && 'line-clamp-3',
         )}
-      </CardContent>
-    </Card>
+      >
+        {conversation.summary}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex w-fit items-center gap-1 font-mono text-[11px] text-pcnGreen-700 hover:text-pcnGreen"
+        >
+          {expanded ? (
+            <>
+              <ChevronUp className="h-3 w-3" /> menos
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-3 w-3" /> más
+            </>
+          )}
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -139,28 +151,14 @@ export default function ConversationsPage() {
         </div>
       </header>
 
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex w-full flex-row items-center justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <MessageCircle className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-                Conversaciones
-              </span>
-            </Heading2>
-            <Badge variant="secondary" className="hidden sm:block">
-              {conversations.length} charlas
-            </Badge>
-          </div>
+          <PageTitle
+            path="conversaciones"
+            meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
+          />
 
-          <p className="mb-6 text-sm text-muted-foreground">
-            Lo más interesante que se charló en el grupo de WhatsApp de PCN. Debates técnicos,
-            recomendaciones de herramientas, consejos de carrera y más.
-          </p>
-
-          <div className="relative mb-6 max-w-md">
+          <div className="relative mb-4 max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Buscar conversaciones..."
@@ -179,21 +177,24 @@ export default function ConversationsPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
+              <span className="text-pcnGreen-500">$ </span>
               No se encontraron conversaciones para &quot;{searchTerm}&quot;.
             </p>
           ) : (
-            <div className="space-y-8">
+            <div className="mb-14 space-y-4">
               {grouped.map(([monthYear, items]) => (
                 <section key={monthYear}>
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h2 className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-pcnGreen-500">{'// '}</span>
                     {monthYear}
+                    <span className="ml-2 text-muted-foreground/60">[{items.length}]</span>
                   </h2>
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
                     {items.map((c, i) => (
                       <ConversationCard key={`${c.date}-${i}`} conversation={c} />
                     ))}
-                  </div>
+                  </RuledGrid>
                 </section>
               ))}
             </div>

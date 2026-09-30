@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -12,7 +12,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
-import { Badge } from '@/components/ui/badge';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
 
@@ -54,21 +53,12 @@ const NotificacionesPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <Heading2 className="m-0">Notificaciones</Heading2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Gestiona tus notificaciones del sistema
-              </p>
-            </div>
-            {unreadCount > 0 && (
-              <Badge variant="default" className="px-3 py-1 text-sm">
-                {unreadCount} sin leer
-              </Badge>
-            )}
-          </div>
+          <PageTitle
+            path="notificaciones"
+            meta={`${notifications.length} en total · ${unreadCount} sin leer`}
+          />
 
           <NotificationsClient notifications={notifications} />
         </div>

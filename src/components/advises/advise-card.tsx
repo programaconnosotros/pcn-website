@@ -3,14 +3,14 @@
 import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { Advise, Session, User, Like } from '@prisma/client';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
@@ -21,7 +21,9 @@ import { EditAdviseDialog } from './edit-advise-dialog';
 export const AdviseCard = ({
   advise,
   session,
+  className,
 }: {
+  className?: string;
   advise: Advise & {
     author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
     likes: Like[];
@@ -78,26 +80,11 @@ export const AdviseCard = ({
     }
   };
 
-  const Author = (
-    <div className="flex items-center gap-3">
-      <Avatar className="h-10 w-10">
-        <AvatarImage src={advise.author.image ?? undefined} alt={advise.author.name ?? undefined} />
-        <AvatarFallback>{advise.author?.name?.charAt(0)}</AvatarFallback>
-      </Avatar>
-
-      <div className="flex flex-col">
-        <Link href={`/perfil/${advise.author.id}`} className="hover:underline">
-          <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
-        </Link>
-      </div>
-    </div>
-  );
-
   const Options = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="h-6 w-6">
+          <MoreVertical className="h-3.5 w-3.5" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -116,29 +103,54 @@ export const AdviseCard = ({
   );
 
   return (
-    <Card
-      key={advise.id}
-      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
-    >
-      <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
-        {Author}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}
+    <div className={cn(ruledCellClassName, 'flex flex-col gap-2 p-3', className)}>
+      <div className="flex items-center gap-2">
+        <Avatar className="h-7 w-7 rounded-sm">
+          <AvatarImage
+            src={advise.author.image ?? undefined}
+            alt={advise.author.name ?? undefined}
+          />
+          <AvatarFallback className="rounded-sm text-[10px]">
+            {advise.author?.name?.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+
+        <Link
+          href={`/perfil/${advise.author.id}`}
+          className="truncate font-mono text-sm font-semibold transition-colors hover:text-pcnGreen"
+        >
+          {advise.author.name}
+        </Link>
+
+        <span
+          className="hidden shrink-0 font-mono text-[11px] text-muted-foreground sm:inline"
+          suppressHydrationWarning
+        >
+          {formatDate(advise.createdAt)}
+        </span>
+
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            className={cn(
+              'flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-[11px] transition-colors',
+              isLiked
+                ? 'text-red-500 hover:text-red-600'
+                : 'text-muted-foreground hover:text-red-500',
+            )}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               handleLike();
             }}
           >
-            <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
+            <Heart className="h-3.5 w-3.5" fill={isLiked ? 'currentColor' : 'none'} />
+            {optimisticLikes.length}
             <span className="sr-only">Me gusta</span>
-          </Button>
+          </button>
           {canEditOrDelete && Options}
         </div>
-      </CardHeader>
+      </div>
 
       <DeleteAdviseDialog
         adviseId={advise.id}
@@ -153,19 +165,13 @@ export const AdviseCard = ({
         onOpenChange={setIsEditDialogOpen}
       />
 
-      <Link href={`/consejos/${advise.id}`} className="block">
-        <CardContent className="px-4 pb-6 pt-2">
-          <p>{advise.content}</p>
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-gray-500" suppressHydrationWarning>
-              {formatDate(advise.createdAt)}
-            </p>
-            <p className="text-xs text-gray-500">
-              {optimisticLikes.length} {optimisticLikes.length === 1 ? 'like' : 'likes'}
-            </p>
-          </div>
-        </CardContent>
+      <Link
+        href={`/consejos/${advise.id}`}
+        className="text-sm leading-relaxed text-foreground/90 transition-colors hover:text-foreground"
+      >
+        <span className="font-mono text-pcnGreen-500">&gt; </span>
+        {advise.content}
       </Link>
-    </Card>
+    </div>
   );
 };

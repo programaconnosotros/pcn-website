@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid } from '@/components/ui/ruled-grid';
 import {
   Dialog,
   DialogContent,
@@ -57,19 +58,22 @@ export function AnnouncementsWrapper({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <Heading2 className="m-0">Anuncios</Heading2>
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <PageTitle
+          path="anuncios"
+          meta={`${announcements.length} anuncios de la comunidad`}
+          className="mb-0 flex-1"
+        />
         {isAdmin && (
-          <Button onClick={() => setIsCreateOpen(true)}>
+          <Button size="sm" onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Nuevo anuncio
           </Button>
         )}
       </div>
 
-      {/* Announcements list */}
       {announcements.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
           {announcements.map((announcement) => (
             <AnnouncementCard
               key={announcement.id}
@@ -78,9 +82,10 @@ export function AnnouncementsWrapper({
               isAdmin={isAdmin}
             />
           ))}
-        </div>
+        </RuledGrid>
       ) : (
-        <p className="py-12 text-center text-muted-foreground">
+        <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>
           Aún no se han publicado anuncios en la comunidad.
         </p>
       )}

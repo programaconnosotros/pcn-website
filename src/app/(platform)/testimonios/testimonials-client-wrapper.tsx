@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Quote } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
 import { TestimonialActionButton } from '@/components/testimonials/testimonial-action-button';
 import { TestimonialsClient, TestimonialsClientRef } from './testimonials-client';
 import { Testimonial } from '@prisma/client';
@@ -45,13 +44,12 @@ export function TestimonialsClientWrapper({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <Heading2 className="m-0 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-            <Quote className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-          </div>
-          <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Testimonios</span>
-        </Heading2>
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <PageTitle
+          path="testimonios"
+          meta={`${testimonials.length} testimonios de la comunidad`}
+          className="mb-0 flex-1"
+        />
         {currentUserId && (
           <TestimonialActionButton
             hasUserTestimonial={hasUserTestimonial || false}

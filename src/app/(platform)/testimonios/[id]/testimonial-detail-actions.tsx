@@ -93,6 +93,7 @@ export function TestimonialDetailActions({
         {isAdmin && (
           <Button
             variant="outline"
+            size="sm"
             onClick={handleToggleFeatured}
             disabled={isToggling}
             className={testimonial.featured ? 'border-yellow-500 text-yellow-500' : ''}
@@ -107,13 +108,13 @@ export function TestimonialDetailActions({
         )}
         {canEdit && (
           <>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
+            <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
               <Edit className="mr-2 h-4 w-4" />
               Editar
             </Button>
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">
+                <Button variant="destructive" size="sm">
                   <Trash2 className="mr-2 h-4 w-4" />
                   Eliminar
                 </Button>

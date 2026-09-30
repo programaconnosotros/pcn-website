@@ -13,7 +13,7 @@ export function TestimonialActionButton({
   onClick,
 }: TestimonialActionButtonProps) {
   return (
-    <Button variant="pcn" onClick={onClick}>
+    <Button variant="pcn" size="sm" onClick={onClick}>
       {hasUserTestimonial ? (
         <>
           <Edit className="mr-2 h-4 w-4" />

@@ -1,5 +1,6 @@
 import { AdviseCard } from '@/components/advises/advise-card';
 import { CommentSection } from '@/components/advises/comment-section';
+import { PageTitle } from '@/components/ui/page-title';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -124,10 +125,16 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <AdviseCard advise={advise} session={session} />
-          <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
+          <PageTitle
+            path={`consejos/${advise.id.slice(0, 8)}`}
+            meta={`${advise.comments.length} ${advise.comments.length === 1 ? 'comentario' : 'comentarios'}`}
+          />
+          <div className="mb-14 border-l border-t border-pcnGreen-200">
+            <AdviseCard advise={advise} session={session} className="hover:bg-transparent" />
+            <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
+          </div>
         </div>
       </div>
     </>

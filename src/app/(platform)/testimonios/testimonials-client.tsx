@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Card, CardContent } from '@/components/ui/card';
+import { RuledGrid } from '@/components/ui/ruled-grid';
 import { Testimonial } from '@prisma/client';
 
 type TestimonialWithUser = Testimonial & {
@@ -89,17 +89,12 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
     return (
       <>
         {sortedTestimonials.length === 0 ? (
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
-            <CardContent className="pt-6">
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">
-                  Aún no hay testimonios. Sé el primero en compartir tu experiencia.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
+            <span className="text-pcnGreen-500">$ </span>
+            Aún no hay testimonios. Sé el primero en compartir tu experiencia.
+          </p>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+          <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
             {sortedTestimonials.map((testimonial) => (
               <TestimonialCard
                 key={testimonial.id}
@@ -109,7 +104,7 @@ export const TestimonialsClient = forwardRef<TestimonialsClientRef, Testimonials
                 onEdit={handleEdit}
               />
             ))}
-          </div>
+          </RuledGrid>
         )}
 
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>

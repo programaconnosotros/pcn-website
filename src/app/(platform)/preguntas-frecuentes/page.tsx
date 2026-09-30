@@ -1,4 +1,6 @@
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,8 +11,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { HelpCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -100,36 +100,21 @@ const FAQPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                  <HelpCircle className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-                </div>
-                <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-                  Preguntas frecuentes
-                </span>
-              </Heading2>
-            </div>
-          </div>
+          <PageTitle path="preguntas-frecuentes" meta={`${faqs.length} preguntas`} />
 
-          <div className="mb-14 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2">
             {faqs.map((faq, index) => (
-              <Card
-                key={index}
-                className="transition-colors hover:border-pcnPurple/40 dark:hover:border-pcnGreen/40"
-              >
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base font-semibold">{faq.question}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-                </CardContent>
-              </Card>
+              <div key={index} className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3')}>
+                <h2 className="font-mono text-sm font-semibold">
+                  <span className="text-pcnGreen-500">{String(index + 1).padStart(2, '0')} </span>
+                  {faq.question}
+                </h2>
+                <p className="text-xs leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </div>
             ))}
-          </div>
+          </RuledGrid>
         </div>
       </div>
     </>

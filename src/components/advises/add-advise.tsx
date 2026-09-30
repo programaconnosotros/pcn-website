@@ -49,7 +49,7 @@ export const AddAdvise = () => {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="pcn">
+        <Button variant="pcn" size="sm">
           <PlusCircle className="mr-2 h-4 w-4" />
           Publicar un consejo
         </Button>
