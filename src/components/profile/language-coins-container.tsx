@@ -23,7 +23,7 @@ export function LanguageCoinsContainer({
   }
 
   return (
-    <div className="mt-2 flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-2">
       {languages.map((language) => (
         <LanguageCoin
           key={language.languageId}

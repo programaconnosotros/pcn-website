@@ -121,7 +121,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="font-mono text-xs text-muted-foreground">
             {table.getFilteredRowModel().rows.length} de {data.length}
           </span>
 
@@ -153,7 +153,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-md border">
+      <div className="overflow-x-auto border border-pcnGreen-200">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
@@ -207,7 +207,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-xs text-muted-foreground">
           Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </p>
         <div className="flex items-center gap-2">

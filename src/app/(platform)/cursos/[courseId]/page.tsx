@@ -17,8 +17,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 import { getCourseById } from '../courses';
 import type { Metadata } from 'next';
@@ -96,85 +96,101 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0">{course.name}</Heading2>
-          </div>
+          <PageTitle
+            path={`cursos/${course.id}`}
+            meta={[
+              course.websiteUrl ? 'interactivo' : `${course.hours}h`,
+              course.isMadeByCommunity && 'hecho en pcn',
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          />
 
-          {course.websiteUrl ? (
-            <div className="mt-6">
-              <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
-                <Button className="flex flex-row items-center gap-2">
-                  Ir al curso
-                  <ExternalLink className="h-5 w-5" />
-                </Button>
-              </a>
-            </div>
-          ) : (
-            <div
-              className={`mt-6${course.youtubeUrls && course.youtubeUrls.length > 1 ? 'px-12' : ''}`}
-            >
-              <Carousel>
-                <CarouselContent>
-                  {course.youtubeUrls?.map((classUrl) => (
-                    <CarouselItem key={classUrl}>
-                      <div className="w-full" style={{ aspectRatio: '16/9' }}>
-                        <iframe
-                          className="h-full w-full"
-                          src={classUrl}
-                          title="YouTube video player"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
+          <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+            {!course.websiteUrl && (
+              <div
+                className={
+                  course.youtubeUrls && course.youtubeUrls.length > 1 ? 'px-12 py-4' : 'p-4'
+                }
+              >
+                <Carousel>
+                  <CarouselContent>
+                    {course.youtubeUrls?.map((classUrl) => (
+                      <CarouselItem key={classUrl}>
+                        <div className="w-full" style={{ aspectRatio: '16/9' }}>
+                          <iframe
+                            className="h-full w-full"
+                            src={classUrl}
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
 
-                {course.youtubeUrls && course.youtubeUrls.length > 1 && (
-                  <>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </>
-                )}
-              </Carousel>
-            </div>
-          )}
-
-          <Card className="mt-6">
-            <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-              <div className="flex min-w-0 items-center gap-2">
-                <CardTitle className="min-w-0">Descripción</CardTitle>
-                {course.isMadeByCommunity && (
-                  <Badge className="shrink-0 border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                    Made in PCN
-                  </Badge>
-                )}
+                  {course.youtubeUrls && course.youtubeUrls.length > 1 && (
+                    <>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </>
+                  )}
+                </Carousel>
               </div>
-              {!course.websiteUrl && course.hours !== undefined && (
-                <div className="shrink-0">
-                  <Badge variant="outline">
-                    {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-                  </Badge>
+            )}
+
+            <section className="flex gap-3 p-4">
+              {course.logo && (
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+                  <Image
+                    src={course.logo}
+                    alt={`Logo de ${course.name}`}
+                    width={28}
+                    height={28}
+                    className="h-full w-full object-contain"
+                  />
                 </div>
               )}
-            </CardHeader>
-            <CardContent className="text-sm">{course.description}</CardContent>
-            <CardFooter className="text-sm text-muted-foreground">
-              Dictado por {course.teachedBy}
-            </CardFooter>
-          </Card>
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex items-center gap-2 font-mono text-sm">
+                  <h2 className="font-semibold">{course.name}</h2>
+                  {course.isMadeByCommunity && (
+                    <Badge className="px-1.5 py-0 text-[10px]">pcn</Badge>
+                  )}
+                </div>
+                <p className="text-sm leading-6 text-muted-foreground">{course.description}</p>
+                <p className="font-mono text-[11px] text-muted-foreground/70">
+                  <span className="text-pcnGreen-500">@ </span>
+                  {course.teachedBy}
+                </p>
+              </div>
+            </section>
 
-          {!course.isMadeByCommunity && !course.websiteUrl && (
-            <p className="mt-4 text-sm text-muted-foreground">
-              Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
-              en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
-              el curso aquí para que las ganancias y estadísticas de ver el video, sean para el
-              autor original del curso.
-            </p>
-          )}
+            {course.websiteUrl && (
+              <div className="p-4">
+                <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" className="flex flex-row items-center gap-2">
+                    Ir al curso
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </a>
+              </div>
+            )}
+
+            {!course.isMadeByCommunity && !course.websiteUrl && (
+              <p className="p-4 font-mono text-[11px] leading-relaxed text-muted-foreground">
+                <span className="text-pcnGreen-500"># </span>
+                Este curso no fue creado por un miembro de la comunidad, fue publicado gratuitamente
+                en YouTube y nos parece de muy buena calidad, por lo cual lo recomendamos. Embebemos
+                el curso aquí para que las ganancias y estadísticas de ver el video, sean para el
+                autor original del curso.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </>

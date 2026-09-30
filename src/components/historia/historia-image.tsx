@@ -31,7 +31,7 @@ export function HistoriaImage({ src, alt, aspect = 'auto', className }: Historia
         onClick={() => setIsOpen(true)}
         aria-label={`Ampliar imagen: ${alt}`}
         className={cn(
-          'group relative block w-full overflow-hidden rounded-lg border bg-muted/30 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnPurple dark:focus-visible:ring-pcnGreen',
+          'group relative block w-full overflow-hidden border border-pcnGreen-200 bg-muted/30 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnPurple dark:focus-visible:ring-pcnGreen',
           aspectClasses[aspect],
           className,
         )}
@@ -41,10 +41,7 @@ export function HistoriaImage({ src, alt, aspect = 'auto', className }: Historia
           src={src}
           alt={alt}
           loading="lazy"
-          className={cn(
-            'w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]',
-            aspect === 'auto' ? 'h-auto' : 'h-full object-cover',
-          )}
+          className={cn('w-full', aspect === 'auto' ? 'h-auto' : 'h-full object-cover')}
         />
         <span
           aria-hidden
@@ -52,7 +49,7 @@ export function HistoriaImage({ src, alt, aspect = 'auto', className }: Historia
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute bottom-2 right-2 rounded-md bg-black/60 p-1.5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute bottom-2 right-2 rounded-sm bg-black/60 p-1.5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         >
           <Maximize2 className="h-3.5 w-3.5" />
         </span>
@@ -87,7 +84,7 @@ export function HistoriaGallery({ images, aspect = 'photo', className }: Histori
   return (
     <div
       className={cn(
-        'grid gap-3',
+        'grid gap-2',
         images.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2 sm:grid-cols-3',
         className,
       )}

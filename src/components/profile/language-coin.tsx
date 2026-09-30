@@ -14,16 +14,16 @@ export function LanguageCoin({ language, editable = false, onRemove }: LanguageC
 
   return (
     <div className="group relative" title={languageInfo?.name}>
-      <div className="language-coin flex items-center justify-center overflow-hidden rounded-full border-2 border-gray-700 transition-all duration-200 hover:border-gray-500">
+      <div className="language-coin flex items-center justify-center overflow-hidden rounded-sm border border-pcnGreen-200 transition-colors duration-200 hover:border-pcnGreen">
         <div
-          className="relative flex h-12 w-12 items-center justify-center p-2"
+          className="relative flex h-9 w-9 items-center justify-center p-1.5"
           style={{ backgroundColor: language.color || languageInfo?.color || '#333' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={language.logo || languageInfo?.logo || '/placeholder.svg'}
             alt={languageInfo?.name || language.languageId}
-            className="h-8 w-8 object-contain p-1"
+            className="h-6 w-6 object-contain"
           />
         </div>
       </div>

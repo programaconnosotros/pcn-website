@@ -2,9 +2,7 @@ import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -17,22 +15,8 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/prisma';
-import {
-  Github,
-  Linkedin,
-  Pencil,
-  Twitter,
-  Briefcase,
-  GraduationCap,
-  MapPin,
-  Quote,
-  Lightbulb,
-  Images,
-  MicVocal,
-  Phone,
-  Mail,
-  Contact,
-} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ArrowUpRight, Images, Lightbulb, MicVocal, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -179,6 +163,23 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   const isOwnProfile = session?.user?.id === params.id;
 
+  const profileFacts: { label: string; value: string; href?: string }[] = [
+    { label: 'cargo', value: user.jobTitle },
+    { label: 'empresa', value: user.enterprise },
+    { label: 'carrera', value: user.career },
+    { label: 'institución', value: user.studyPlace },
+    {
+      label: 'ubicación',
+      value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
+    },
+    { label: 'email', value: user.email, href: user.email ? `mailto:${user.email}` : undefined },
+    {
+      label: 'teléfono',
+      value: user.phoneNumber,
+      href: user.phoneNumber ? `tel:${user.phoneNumber}` : undefined,
+    },
+  ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
+
   const userTalks = await prisma.talk.findMany({
     where: { speakers: { some: { userId: user.id } } },
     include: {
@@ -207,194 +208,99 @@ export default async function ProfilePage(props: ProfilePageProps) {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
           <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-4">
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
-                <CardHeader className="flex flex-col items-center gap-4 pb-6">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-                    <AvatarFallback className="text-lg">{user.name?.[0] ?? 'U'}</AvatarFallback>
-                  </Avatar>
+            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4">
+              <div className="flex items-center gap-3 p-4">
+                <Avatar className="h-12 w-12 rounded-sm">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                  <AvatarFallback className="rounded-sm">{user.name?.[0] ?? 'U'}</AvatarFallback>
+                </Avatar>
 
-                  <div className="flex flex-col items-center gap-2">
-                    <h1 className="text-center text-lg font-semibold">{user.name}</h1>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
+                  <div className="flex flex-wrap items-center gap-x-3 font-mono text-[11px] text-muted-foreground">
+                    {user.xAccountUrl && (
+                      <a
+                        href={user.xAccountUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-pcnGreen"
+                        aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
+                      >
+                        x↗
+                      </a>
+                    )}
+                    {user.linkedinUrl && (
+                      <a
+                        href={user.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-pcnGreen"
+                        aria-label={`Perfil de LinkedIn de ${user.name}`}
+                      >
+                        linkedin↗
+                      </a>
+                    )}
+                    {user.gitHubUrl && (
+                      <a
+                        href={user.gitHubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-pcnGreen"
+                        aria-label={`Perfil de GitHub de ${user.name}`}
+                      >
+                        github↗
+                      </a>
+                    )}
                     {isOwnProfile && (
-                      <Link href="/perfil">
-                        <Button
-                          variant="link"
-                          className="flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
-                        >
-                          <Pencil className="h-3 w-3" />
-                          <span>Editar perfil</span>
-                        </Button>
+                      <Link href="/perfil" className="flex items-center gap-1 hover:text-pcnGreen">
+                        <Pencil className="h-3 w-3" />
+                        editar
                       </Link>
                     )}
                   </div>
+                </div>
+              </div>
 
-                  {(user.xAccountUrl || user.linkedinUrl || user.gitHubUrl) && (
-                    <div className="flex items-center gap-3">
-                      {user.xAccountUrl && (
-                        <a
-                          href={user.xAccountUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-                        >
-                          <Twitter className="h-5 w-5" />
-                        </a>
-                      )}
+              {user.slogan && (
+                <p className="p-4 text-sm italic leading-relaxed text-muted-foreground">
+                  <span className="not-italic text-pcnGreen-500">&gt; </span>
+                  {user.slogan}
+                </p>
+              )}
 
-                      {user.linkedinUrl && (
-                        <a
-                          href={user.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de LinkedIn de ${user.name}`}
-                        >
-                          <Linkedin className="h-5 w-5" />
-                        </a>
-                      )}
-
-                      {user.gitHubUrl && (
-                        <a
-                          href={user.gitHubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de GitHub de ${user.name}`}
-                        >
-                          <Github className="h-5 w-5" />
-                        </a>
-                      )}
+              {profileFacts.length > 0 && (
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">
+                  {profileFacts.map((fact) => (
+                    <div key={fact.label} className="contents">
+                      <dt className="font-mono text-pcnGreen-500">{fact.label}</dt>
+                      <dd className="min-w-0 break-words">
+                        {fact.href ? (
+                          <a href={fact.href} className="text-pcnGreen hover:underline">
+                            {fact.value}
+                          </a>
+                        ) : (
+                          fact.value
+                        )}
+                      </dd>
                     </div>
-                  )}
-                </CardHeader>
+                  ))}
+                </dl>
+              )}
 
-                <CardContent>
-                  <div className="grid grid-cols-1 gap-6">
-                    {/* Slogan */}
-                    {user.slogan && (
-                      <div className="flex items-start gap-3">
-                        <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                        <p className="text-sm italic leading-relaxed text-muted-foreground">
-                          {user.slogan}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Información laboral */}
-                    {(user.jobTitle || user.enterprise) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Información laboral</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.jobTitle && (
-                            <p>
-                              <span className="font-medium">Cargo:</span> {user.jobTitle}
-                            </p>
-                          )}
-                          {user.enterprise && (
-                            <p>
-                              <span className="font-medium">Empresa:</span> {user.enterprise}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Información académica */}
-                    {(user.career || user.studyPlace) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Información académica</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.career && (
-                            <p>
-                              <span className="font-medium">Carrera:</span> {user.career}
-                            </p>
-                          )}
-                          {user.studyPlace && (
-                            <p>
-                              <span className="font-medium">Institución:</span> {user.studyPlace}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Ubicación */}
-                    {(user.countryOfOrigin || user.province) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Ubicación</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
-                          {user.province && (
-                            <p className="text-sm text-muted-foreground">{user.province}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contacto */}
-                    {(user.email || user.phoneNumber) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <Contact className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Contacto</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.email && (
-                            <div className="flex items-center gap-2">
-                              <Mail className="h-4 w-4 text-muted-foreground" />
-                              <a
-                                href={`mailto:${user.email}`}
-                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
-                              >
-                                {user.email}
-                              </a>
-                            </div>
-                          )}
-                          {user.phoneNumber && (
-                            <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-muted-foreground" />
-                              <a
-                                href={`tel:${user.phoneNumber}`}
-                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
-                              >
-                                {user.phoneNumber}
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Lenguajes de programación */}
-                    <div>
-                      <h2 className="mb-2 text-lg font-semibold">Lenguajes de programación</h2>
-                      {userLanguages.length > 0 ? (
-                        <LanguageCoinsContainer languages={userLanguages} />
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          No hay lenguajes registrados
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="p-4">
+                <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                  <span className="text-pcnGreen-500">## </span>lenguajes
+                </h2>
+                {userLanguages.length > 0 ? (
+                  <LanguageCoinsContainer languages={userLanguages} />
+                ) : (
+                  <p className="text-xs text-muted-foreground">No hay lenguajes registrados</p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -405,9 +311,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 <TabsTrigger value="consejos" className="gap-2">
                   <Lightbulb className="h-4 w-4" />
                   Consejos
-                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                    {user.advises.length}
-                  </Badge>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    [{user.advises.length}]
+                  </span>
                 </TabsTrigger>
                 <TabsTrigger value="fotos" className="gap-2">
                   <Images className="h-4 w-4" />
@@ -416,92 +322,93 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 <TabsTrigger value="charlas" className="gap-2">
                   <MicVocal className="h-4 w-4" />
                   Charlas
-                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                    {userTalks.length}
-                  </Badge>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    [{userTalks.length}]
+                  </span>
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="consejos" className="mt-4">
                 {user.advises.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-mono text-xs text-muted-foreground">
                     Este usuario aún no ha compartido ningún consejo.
                   </p>
                 ) : (
-                  <div className="space-y-4">
+                  <RuledGrid className="grid-cols-1">
                     {user.advises.map((advise) => (
                       <AdviseCard key={advise.id} session={session} advise={advise} />
                     ))}
-                  </div>
+                  </RuledGrid>
                 )}
               </TabsContent>
 
               <TabsContent value="fotos" className="mt-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="font-mono text-xs text-muted-foreground">
                   Las fotos estarán disponibles próximamente.
                 </p>
               </TabsContent>
 
               <TabsContent value="charlas" className="mt-4">
                 {userTalks.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-mono text-xs text-muted-foreground">
                     Este usuario aún no ha dado ninguna charla.
                   </p>
                 ) : (
-                  <div className="space-y-4">
+                  <RuledGrid className="grid-cols-1">
                     {userTalks.map((talk) => {
                       const location = [talk.event?.placeName, talk.event?.city]
                         .filter(Boolean)
                         .join(', ');
+                      const meta = [
+                        talk.event?.date &&
+                          new Date(talk.event.date).toLocaleDateString('es-AR', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          }),
+                        location,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ');
                       return (
-                        <Card
-                          key={talk.id}
-                          className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
-                        >
-                          <CardContent className="p-6">
-                            <div className="flex flex-col gap-4 md:flex-row">
-                              {talk.portraitUrl && (
-                                <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={talk.portraitUrl}
-                                    alt={`Foto de la charla "${talk.title}"`}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
+                        <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+                          {talk.portraitUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={talk.portraitUrl}
+                              alt={`Foto de la charla "${talk.title}"`}
+                              className="h-16 w-16 shrink-0 object-cover"
+                            />
+                          )}
+                          <div className="flex min-w-0 flex-1 flex-col gap-1">
+                            <div className="flex items-center gap-2 font-mono text-sm">
+                              <h3 className="truncate font-semibold">{talk.title}</h3>
+                              {talk.videoUrl && (
+                                <a
+                                  href={talk.videoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground hover:text-pcnGreen"
+                                >
+                                  youtube
+                                  <ArrowUpRight className="h-3 w-3" />
+                                </a>
                               )}
-                              <div className="flex flex-1 flex-col gap-2">
-                                <h3 className="text-lg font-semibold">{talk.title}</h3>
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                                  <span>{talk.speakers.map((s) => s.speakerName).join(', ')}</span>
-                                  {talk.event?.date && (
-                                    <span>
-                                      {new Date(talk.event.date).toLocaleDateString('es-AR', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                      })}
-                                    </span>
-                                  )}
-                                  {location && <span>{location}</span>}
-                                </div>
-                                {talk.videoUrl && (
-                                  <a
-                                    href={talk.videoUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-2 inline-flex items-center gap-2 text-pcnPurple hover:underline dark:text-pcnGreen"
-                                  >
-                                    Ver en YouTube
-                                  </a>
-                                )}
-                              </div>
                             </div>
-                          </CardContent>
-                        </Card>
+                            <p className="truncate text-xs text-muted-foreground">
+                              {talk.speakers.map((speaker) => speaker.speakerName).join(', ')}
+                            </p>
+                            {meta && (
+                              <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                                <span className="text-pcnGreen-500">@ </span>
+                                {meta}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       );
                     })}
-                  </div>
+                  </RuledGrid>
                 )}
               </TabsContent>
             </Tabs>

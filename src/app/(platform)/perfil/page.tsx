@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
-import { Heading2 } from '@components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -75,10 +75,8 @@ const Profile = async () => {
         </div>
       </header>
 
-      <div className="mt-4 px-6 md:px-20">
-        <div className="mb-4">
-          <Heading2>Mi perfil</Heading2>
-        </div>
+      <div className="mt-4 px-4 md:px-10">
+        <PageTitle path="perfil" meta={user.email} />
 
         <ProfileForm user={user} languages={userLanguages} />
       </div>

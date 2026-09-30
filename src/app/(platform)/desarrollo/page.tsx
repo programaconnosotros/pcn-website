@@ -1,8 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Heading3 } from '@/components/ui/heading-3';
+import { PageTitle } from '@/components/ui/page-title';
 import type { Metadata } from 'next';
 import {
   Breadcrumb,
@@ -15,13 +12,10 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
-  CheckCircle2,
-  Code2,
   Database,
-  FlaskConical,
-  Github,
   GitBranch,
   GitPullRequest,
+  Github,
   Globe,
   Layers,
   Package,
@@ -29,9 +23,9 @@ import {
   Server,
   ShieldCheck,
   Sparkles,
-  Terminal,
   Wrench,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Team } from '@/components/landing/team';
 import { NextJsSVG } from '@/components/logos/NextJsSVG';
@@ -193,14 +187,43 @@ const benefits = [
   'Ayudá a otros desarrolladores a crecer en su carrera',
 ];
 
-const CARD_CLASS =
-  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]';
+const Code = ({ children }: { children: ReactNode }) => (
+  <code className="bg-pcnGreen-100 px-1 font-mono text-pcnGreen">{children}</code>
+);
 
-const LAYER_ITEM_CLASS =
-  'flex items-start gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-pcnGreen-300 dark:bg-black';
+const Section = ({ title, children }: { title: string; children: ReactNode }) => (
+  <section className="p-4">
+    <h2 className="mb-3 font-mono text-sm font-semibold">
+      <span className="text-pcnGreen-500">## </span>
+      {title}
+    </h2>
+    {children}
+  </section>
+);
 
-const ICON_CHIP_CLASS =
-  'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10';
+const DefinitionList = ({ items }: { items: { term: string; detail: string }[] }) => (
+  <dl className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[200px_1fr]">
+    {items.map((item) => (
+      <div key={item.term} className="contents">
+        <dt className="font-mono text-pcnGreen">{item.term}</dt>
+        <dd className="leading-relaxed text-muted-foreground">{item.detail}</dd>
+      </div>
+    ))}
+  </dl>
+);
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <ul className="grid gap-x-6 gap-y-1 md:grid-cols-2">
+    {items.map((item) => (
+      <li key={item} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+        <span className="shrink-0 font-mono text-pcnGreen-500">›</span>
+        {item}
+      </li>
+    ))}
+  </ul>
+);
+
+const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
 
 const DesarrolloPage = () => (
   <>
@@ -222,275 +245,127 @@ const DesarrolloPage = () => (
       </div>
     </header>
 
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        {/* Title row */}
-        <div className="mb-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Code2 className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Desarrollo</span>
-            </Heading2>
+        <div className="flex items-start justify-between gap-4">
+          <PageTitle
+            path="desarrollo"
+            className="flex-1"
+            meta="open-source · cualquier persona puede contribuir"
+          />
+          <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+            <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
+              <Github className="h-4 w-4" />
+              GitHub
+            </Button>
+          </Link>
+        </div>
 
-            <Link
-              href="https://github.com/programaconnosotros/pcn-website"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="pcn" className="flex flex-row items-center gap-2">
-                Ver repositorio en GitHub
-                <Github className="h-5 w-5" />
+        <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+          <Section title="Arquitectura del proyecto">
+            <DefinitionList
+              items={architectureLayers.map((layer) => ({
+                term: layer.area,
+                detail: layer.description,
+              }))}
+            />
+          </Section>
+
+          <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-pcnGreen-200">
+            <Section title="Tecnologías que usamos">
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-sm">
+                {technologies.map((tech) => (
+                  <li key={tech.name} className="flex items-center gap-2">
+                    <tech.icon className="h-4 w-4 text-pcnGreen" />
+                    {tech.name}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs text-muted-foreground">
+                También usamos shadcn/ui para los componentes de interfaz.
+              </p>
+            </Section>
+
+            <div className="border-t border-pcnGreen-200 lg:border-t-0">
+              <Section title="Cómo contribuir">
+                <ol className="space-y-1">
+                  {contributionSteps.map((step, index) => (
+                    <li key={step} className="flex items-start gap-2 text-sm leading-6">
+                      <span className="shrink-0 font-mono text-pcnGreen-500">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-muted-foreground">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </Section>
+            </div>
+          </div>
+
+          <Section title="Herramientas de desarrollo">
+            <DefinitionList
+              items={toolchain.map((group) => ({
+                term: group.category,
+                detail: group.tools.join(' · '),
+              }))}
+            />
+            <p className="mt-3 text-xs text-muted-foreground">
+              ¿Querés conocer más herramientas del ecosistema?{' '}
+              <Link
+                href="/herramientas"
+                className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+              >
+                ~/herramientas →
+              </Link>
+            </p>
+          </Section>
+
+          <Section title="Convenciones de contribución">
+            <DefinitionList
+              items={conventions.map((item) => ({ term: item.title, detail: item.detail }))}
+            />
+          </Section>
+
+          <Section title="Testing y calidad">
+            <dl className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[200px_1fr]">
+              <dt className="font-mono text-pcnGreen">Tests unitarios (Jest)</dt>
+              <dd className="leading-relaxed text-muted-foreground">
+                Más de 70 tests colocalizados junto a los server actions (<Code>*.test.ts</Code>).
+                Se ejecutan con <Code>pnpm test</Code> o en modo watch con{' '}
+                <Code>pnpm test:watch</Code>.
+              </dd>
+              <dt className="font-mono text-pcnGreen">Tests E2E (Playwright)</dt>
+              <dd className="leading-relaxed text-muted-foreground">
+                Tests end-to-end en <Code>tests/</Code> que corren en Chromium, Firefox y WebKit. Se
+                ejecutan con <Code>npx playwright test</Code>.
+              </dd>
+              <dt className="font-mono text-pcnGreen">Calidad automatizada</dt>
+              <dd className="leading-relaxed text-muted-foreground">
+                El hook pre-push de Husky ejecuta lint, format check, tests y build antes de cada
+                push. No se puede pushear código que rompa alguno de estos checks.
+              </dd>
+            </dl>
+          </Section>
+
+          <Section title="Por qué contribuir">
+            <BulletList items={benefits} />
+          </Section>
+
+          <div className="flex flex-col items-start justify-between gap-3 p-4 sm:flex-row sm:items-center">
+            <p className="font-mono text-sm">
+              <span className="text-pcnGreen-500">$ </span>
+              ¿Listo para empezar? Elegí un issue o proponé una mejora.
+            </p>
+            <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                <Github className="h-4 w-4" />
+                Ir al repositorio
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* Intro */}
-        <p className="mb-6 max-w-3xl text-lg text-muted-foreground">
-          Este sitio web es un proyecto open-source y cualquier persona puede contribuir al
-          desarrollo. En esta página encontrás todo lo que necesitás saber: el stack tecnológico, la
-          arquitectura del proyecto, las convenciones de trabajo y cómo empezar.
-        </p>
-
-        {/* Arquitectura del proyecto */}
-        <Card className={`mb-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Arquitectura del proyecto
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-sm text-muted-foreground">
-              El proyecto sigue las convenciones del App Router de Next.js. Cada capa tiene una
-              responsabilidad clara:
-            </p>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {architectureLayers.map((layer) => (
-                <div key={layer.area} className={LAYER_ITEM_CLASS}>
-                  <div className={ICON_CHIP_CLASS}>
-                    <layer.icon className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{layer.area}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{layer.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Tech stack + setup steps (2-col) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className={CARD_CLASS}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Terminal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                Tecnologías que usamos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {technologies.map((tech) => (
-                  <div
-                    key={tech.name}
-                    className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-pcnGreen-300 dark:bg-black"
-                  >
-                    <tech.icon className="h-6 w-6 text-pcnPurple dark:text-pcnGreen" />
-                    <span className="font-medium">{tech.name}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                También usamos shadcn/ui para los componentes de interfaz.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className={CARD_CLASS}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <GitBranch className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                Cómo contribuir
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ol className="space-y-2">
-                {contributionSteps.map((step, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pcnPurple/10 text-xs font-medium text-pcnPurple dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                      {index + 1}
-                    </span>
-                    <span className="text-sm text-muted-foreground">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Herramientas de desarrollo */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wrench className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Herramientas de desarrollo
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {toolchain.map((group) => (
-                <div key={group.category}>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    {group.category}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {group.tools.map((tool) => (
-                      <Badge
-                        key={tool}
-                        variant="secondary"
-                        className="border border-pcnPurple/20 bg-pcnPurple/5 text-pcnPurple dark:border-pcnGreen/20 dark:bg-pcnGreen/5 dark:text-pcnGreen"
-                      >
-                        {tool}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-5 text-sm text-muted-foreground">
-              ¿Querés conocer más herramientas del ecosistema?{' '}
-              <Link
-                href="/herramientas"
-                className="font-medium text-pcnPurple underline-offset-4 hover:underline dark:text-pcnGreen"
-              >
-                Explorá el catálogo completo →
-              </Link>
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Convenciones de contribución */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Convenciones de contribución
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {conventions.map((item) => (
-                <div key={item.title} className={LAYER_ITEM_CLASS}>
-                  <div className={ICON_CHIP_CLASS}>
-                    <item.icon className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{item.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Testing y calidad */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FlaskConical className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Testing y calidad
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
-                <p className="text-sm font-semibold">Tests unitarios (Jest)</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Más de 70 tests colocalizados junto a los server actions (
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
-                    *.test.ts
-                  </code>
-                  ). Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
-                    pnpm test
-                  </code>{' '}
-                  o en modo watch con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
-                    pnpm test:watch
-                  </code>
-                  .
-                </p>
-              </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
-                <p className="text-sm font-semibold">Tests E2E (Playwright)</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Tests end-to-end en{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
-                    tests/
-                  </code>{' '}
-                  que corren en Chromium, Firefox y WebKit. Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
-                    npx playwright test
-                  </code>
-                  .
-                </p>
-              </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
-                <p className="text-sm font-semibold">Calidad automatizada</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  El hook pre-push de Husky ejecuta lint, format check, tests y build antes de cada
-                  push. No se puede pushear código que rompa alguno de estos checks.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Por qué contribuir */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Por qué contribuir
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {benefits.map((benefit, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                  <span className="text-muted-foreground">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-
         <Team />
-
-        {/* CTA */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-pcnPurple/30 bg-pcnPurple/5 p-8 dark:border-pcnGreen/30 dark:bg-pcnGreen/5">
-          <Heading3 className="m-0 text-center">¿Listo para empezar?</Heading3>
-          <p className="max-w-md text-center text-muted-foreground">
-            Revisá el repositorio, elegí un issue que te interese, o proponé una mejora. Toda
-            contribución es bienvenida.
-          </p>
-          <Link
-            href="https://github.com/programaconnosotros/pcn-website"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="pcn" size="lg" className="flex items-center gap-2">
-              <Github className="h-5 w-5" />
-              Ir al repositorio
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   </>

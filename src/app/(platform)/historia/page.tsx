@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
 import { TableOfContents } from '@/components/historia/table-of-contents';
 import { HistoriaImage, HistoriaGallery } from '@/components/historia/historia-image';
 import {
@@ -16,7 +16,7 @@ import {
   HistoriaSection,
   HistoriaTimeline,
 } from '@/components/historia/historia-section';
-import { ScrollText, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { Metadata } from 'next';
@@ -128,37 +128,26 @@ const PCNStory = () => (
         </Breadcrumb>
       </div>
     </header>
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <div className="mb-6 flex flex-col gap-3">
-          <Heading2 className="m-0 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-              <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-            </div>
-            <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Historia</span>
-          </Heading2>
-          <p className="max-w-3xl text-muted-foreground">
-            Cómo un grupo de estudiantes apasionados por la programación se convirtió en una
-            comunidad de ingeniería de software sin fronteras. Más de una década de charlas,
-            torneos, meetups y amistades, contada paso a paso.
-          </p>
-        </div>
+        <PageTitle
+          path="historia"
+          meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
+        />
 
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <TableOfContents />
 
           <div className="min-w-0 flex-1">
-            <div className="mx-auto max-w-3xl space-y-14">
+            <div className="mx-auto max-w-3xl border border-pcnGreen-200">
               <section
                 id="introduccion"
-                className="relative scroll-mt-32 overflow-hidden rounded-lg border bg-card p-6 sm:p-8 lg:scroll-mt-28"
+                className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-28"
               >
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-pcnPurple/15 blur-3xl dark:bg-pcnGreen/10"
-                />
-                <h2 className="text-2xl font-semibold tracking-tight">Introducción</h2>
-                <HistoriaProse className="mt-4">
+                <h2 className="font-mono text-base font-semibold tracking-tight">
+                  <span className="text-pcnGreen-500">## </span>Introducción
+                </h2>
+                <HistoriaProse className="mt-3">
                   <p>
                     Hola! Gracias por visitar la historia de la comunidad, esperamos te sirva para
                     entender el contexto y los valores de lo que creamos, y también motivarte a
@@ -177,21 +166,10 @@ const PCNStory = () => (
                     toda la historia.
                   </p>
                 </HistoriaProse>
-                <div className="mt-6 border-t pt-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Co-fundadores
-                  </p>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {founders.map((name) => (
-                      <li
-                        key={name}
-                        className="rounded-sm border bg-background px-3 py-1 text-sm font-medium"
-                      >
-                        {name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <p className="mt-4 border-t border-dashed border-pcnGreen-200 pt-3 font-mono text-xs text-muted-foreground">
+                  <span className="text-pcnGreen">co-fundadores: </span>
+                  {founders.join(' · ')}
+                </p>
               </section>
 
               <HistoriaTimeline>

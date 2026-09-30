@@ -231,106 +231,81 @@ export const ProfileForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <UserIcon className="h-5 w-5" />
-            Información personal
-          </h3>
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Foto de perfil</FormLabel>
-                  <FormControl>
-                    <FileUpload
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                      folder="profiles"
-                      maxSize={5 * 1024 * 1024} // 5MB
-                      variant="profile"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="space-y-2">
-              <Label htmlFor="name">Nombre</Label>
-              <Input id="name" {...form.register('name')} />
-              <FormError error={form.formState.errors.name} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Correo electrónico</Label>
-              <Input id="email" type="email" {...form.register('email')} />
-              <FormError error={form.formState.errors.email} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Celular</Label>
-              <Input
-                id="phoneNumber"
-                type="tel"
-                placeholder="+54 9 11 1234-5678"
-                {...form.register('phoneNumber')}
-              />
-              <FormError error={form.formState.errors.phoneNumber} />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="countryOfOrigin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>País</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      if (value !== 'Argentina') {
-                        form.setValue('province', '');
-                      }
-                    }}
-                    value={field.value || ''}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu país" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {watchCountry === 'Argentina' && (
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-6">
+        <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+          <div className="space-y-3 p-4">
+            <h3 className="mb-3 flex items-center gap-2 font-mono text-sm font-semibold">
+              <UserIcon className="h-4 w-4 text-pcnGreen" />
+              Información personal
+            </h3>
+            <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="province"
+                name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provincia</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                    <FormLabel>Foto de perfil</FormLabel>
+                    <FormControl>
+                      <FileUpload
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        folder="profiles"
+                        maxSize={5 * 1024 * 1024} // 5MB
+                        variant="profile"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="space-y-2">
+                <Label htmlFor="name">Nombre</Label>
+                <Input id="name" {...form.register('name')} />
+                <FormError error={form.formState.errors.name} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Correo electrónico</Label>
+                <Input id="email" type="email" {...form.register('email')} />
+                <FormError error={form.formState.errors.email} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Celular</Label>
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="+54 9 11 1234-5678"
+                  {...form.register('phoneNumber')}
+                />
+                <FormError error={form.formState.errors.phoneNumber} />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="countryOfOrigin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>País</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        if (value !== 'Argentina') {
+                          form.setValue('province', '');
+                        }
+                      }}
+                      value={field.value || ''}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona tu provincia" />
+                          <SelectValue placeholder="Selecciona tu país" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {ARGENTINA_PROVINCES.map((province) => (
-                          <SelectItem key={province} value={province}>
-                            {province}
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country} value={country}>
+                            {country}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -339,155 +314,182 @@ export const ProfileForm = ({
                   </FormItem>
                 )}
               />
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="slogan">Slogan o frase personal</Label>
-              <Textarea
-                id="slogan"
-                placeholder="Ej: Desarrollador apasionado por el código"
-                {...form.register('slogan')}
-                rows={3}
-              />
-              <FormError error={form.formState.errors.slogan} />
+              {watchCountry === 'Argentina' && (
+                <FormField
+                  control={form.control}
+                  name="province"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Provincia</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona tu provincia" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {ARGENTINA_PROVINCES.map((province) => (
+                            <SelectItem key={province} value={province}>
+                              {province}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="slogan">Slogan o frase personal</Label>
+                <Textarea
+                  id="slogan"
+                  placeholder="Ej: Desarrollador apasionado por el código"
+                  {...form.register('slogan')}
+                  rows={3}
+                />
+                <FormError error={form.formState.errors.slogan} />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-          <h3 className="flex items-center gap-2 text-lg font-semibold">
-            <Briefcase className="h-5 w-5" />
-            Información profesional
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-2">
-            <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
-            <Input
-              id="jobTitle"
-              placeholder="Ej: Desarrollador Frontend"
-              {...form.register('jobTitle')}
-            />
-            <FormError error={form.formState.errors.jobTitle} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
-            <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
-            <FormError error={form.formState.errors.enterprise} />
-          </div>
-        </div>
-
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-          <h3 className="flex items-center gap-2 text-lg font-semibold">
-            <GraduationCap className="h-5 w-5" />
-            Información académica
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-2">
-            <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
-            <Input
-              id="career"
-              placeholder="Ej: Ingeniería en Sistemas"
-              {...form.register('career')}
-            />
-            <FormError error={form.formState.errors.career} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
-            <Input
-              id="studyPlace"
-              placeholder="Ej: Universidad Nacional de Tucumán / Autodidacta"
-              {...form.register('studyPlace')}
-            />
-            <FormError error={form.formState.errors.studyPlace} />
-          </div>
-        </div>
-
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <Link2 className="h-5 w-5" />
-            Enlaces
-            <Badge variant="secondary" className="text-xs font-normal">
-              opcional
-            </Badge>
-          </h3>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de X
-              </Label>
-              <Input
-                id="xAccountUrl"
-                type="url"
-                placeholder="https://x.com/tu-usuario"
-                {...form.register('xAccountUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('xAccountUrl') || ''}
-              />
-              <FormError error={form.formState.errors.xAccountUrl} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de LinkedIn
-              </Label>
-              <Input
-                id="linkedinUrl"
-                type="url"
-                placeholder="https://linkedin.com/in/tu-usuario"
-                {...form.register('linkedinUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('linkedinUrl') || ''}
-              />
-              <FormError error={form.formState.errors.linkedinUrl} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                URL de cuenta de GitHub
-              </Label>
-              <Input
-                id="gitHubUrl"
-                type="url"
-                placeholder="https://github.com/tu-usuario"
-                {...form.register('gitHubUrl', {
-                  setValueAs: (v) => (v === '' ? null : v),
-                })}
-                value={form.watch('gitHubUrl') || ''}
-              />
-              <FormError error={form.formState.errors.gitHubUrl} />
-            </div>
-          </div>
-        </div>
-
-        {/* Section for adding programming languages */}
-        <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-          <div className="mb-4 flex items-center justify-between gap-6">
-            <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Code className="h-5 w-5" />
-              Lenguajes de programación
+          <div className="space-y-3 p-4">
+            <h3 className="flex items-center gap-2 font-mono text-sm font-semibold">
+              <Briefcase className="h-4 w-4 text-pcnGreen" />
+              Información profesional
+              <Badge variant="secondary" className="text-xs font-normal">
+                opcional
+              </Badge>
             </h3>
-            <LanguageDialog
-              currentLanguage={currentLanguage}
-              setCurrentLanguage={setCurrentLanguage}
-              addLanguage={addLanguage}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
+              <Input
+                id="jobTitle"
+                placeholder="Ej: Desarrollador Frontend"
+                {...form.register('jobTitle')}
+              />
+              <FormError error={form.formState.errors.jobTitle} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
+              <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
+              <FormError error={form.formState.errors.enterprise} />
+            </div>
           </div>
 
-          {/* View of added languages using the LanguageCoinsContainer */}
-          <LanguageCoinsContainer
-            languages={userLanguages}
-            editable={true}
-            onRemoveLanguage={removeLanguage}
-          />
+          <div className="space-y-3 p-4">
+            <h3 className="flex items-center gap-2 font-mono text-sm font-semibold">
+              <GraduationCap className="h-4 w-4 text-pcnGreen" />
+              Información académica
+              <Badge variant="secondary" className="text-xs font-normal">
+                opcional
+              </Badge>
+            </h3>
+            <div className="space-y-2">
+              <Label htmlFor="career">¿Qué estudias o estudiaste?</Label>
+              <Input
+                id="career"
+                placeholder="Ej: Ingeniería en Sistemas"
+                {...form.register('career')}
+              />
+              <FormError error={form.formState.errors.career} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="studyPlace">¿Dónde o cómo estudias/estudiaste?</Label>
+              <Input
+                id="studyPlace"
+                placeholder="Ej: Universidad Nacional de Tucumán / Autodidacta"
+                {...form.register('studyPlace')}
+              />
+              <FormError error={form.formState.errors.studyPlace} />
+            </div>
+          </div>
+
+          <div className="space-y-3 p-4">
+            <h3 className="mb-3 flex items-center gap-2 font-mono text-sm font-semibold">
+              <Link2 className="h-4 w-4 text-pcnGreen" />
+              Enlaces
+              <Badge variant="secondary" className="text-xs font-normal">
+                opcional
+              </Badge>
+            </h3>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="xAccountUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de X
+                </Label>
+                <Input
+                  id="xAccountUrl"
+                  type="url"
+                  placeholder="https://x.com/tu-usuario"
+                  {...form.register('xAccountUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('xAccountUrl') || ''}
+                />
+                <FormError error={form.formState.errors.xAccountUrl} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="linkedinUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de LinkedIn
+                </Label>
+                <Input
+                  id="linkedinUrl"
+                  type="url"
+                  placeholder="https://linkedin.com/in/tu-usuario"
+                  {...form.register('linkedinUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('linkedinUrl') || ''}
+                />
+                <FormError error={form.formState.errors.linkedinUrl} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="gitHubUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de GitHub
+                </Label>
+                <Input
+                  id="gitHubUrl"
+                  type="url"
+                  placeholder="https://github.com/tu-usuario"
+                  {...form.register('gitHubUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('gitHubUrl') || ''}
+                />
+                <FormError error={form.formState.errors.gitHubUrl} />
+              </div>
+            </div>
+          </div>
+
+          {/* Section for adding programming languages */}
+          <div className="space-y-3 p-4">
+            <div className="mb-3 flex items-center justify-between gap-6">
+              <h3 className="flex items-center gap-2 font-mono text-sm font-semibold">
+                <Code className="h-4 w-4 text-pcnGreen" />
+                Lenguajes de programación
+              </h3>
+              <LanguageDialog
+                currentLanguage={currentLanguage}
+                setCurrentLanguage={setCurrentLanguage}
+                addLanguage={addLanguage}
+              />
+            </div>
+
+            {/* View of added languages using the LanguageCoinsContainer */}
+            <LanguageCoinsContainer
+              languages={userLanguages}
+              editable={true}
+              onRemoveLanguage={removeLanguage}
+            />
+          </div>
         </div>
 
         <div className="mb-8 pb-4">
