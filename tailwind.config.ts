@@ -144,11 +144,20 @@ const config = {
             transform: 'translateX(200px)',
           },
         },
+        blink: {
+          '0%, 49%': {
+            opacity: '1',
+          },
+          '50%, 100%': {
+            opacity: '0',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         move: 'move 5s linear infinite',
+        blink: 'blink 1s step-end infinite',
       },
     },
   },

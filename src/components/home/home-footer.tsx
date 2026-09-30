@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import Link from 'next/link';
+import { SocialIcon } from './social-icon';
 import { socialNetworks } from './social-links';
 
 const columns = [
@@ -57,10 +58,9 @@ export const HomeFooter = () => (
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={network.name}
-                  className="flex size-9 items-center justify-center rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 opacity-70 transition-all hover:border-pcnGreen-300 hover:opacity-100"
+                  className="flex size-9 items-center justify-center rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 text-pcnGreen-700 transition-all hover:border-pcnGreen-500 hover:text-pcnGreen hover:shadow-[0_0_12px_-2px_rgb(4_244_190/0.5)]"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={network.icon} alt="" className="size-4" />
+                  <SocialIcon name={network.name} className="size-4" />
                 </Link>
               </li>
             ))}
