@@ -13,7 +13,7 @@ const logoSize: Record<string, string> = {
   'UTN-FRT': 'max-h-24',
   'Blackbox Cowork': 'max-h-14',
   Eagerworks: 'max-h-8',
-  DIZENZ: 'max-h-16',
+  DIZENZ: 'max-h-24',
 };
 
 interface SponsorsSectionProps {
@@ -47,13 +47,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
             rel="noopener noreferrer"
             className="group flex h-full flex-col items-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04]"
           >
-            <div
-              className={cn(
-                'mb-5 flex h-36 w-full items-center justify-center rounded-xl',
-                sponsor.whiteBg && 'bg-white',
-                sponsor.blackBg && 'bg-black ring-1 ring-inset ring-white/10',
-              )}
-            >
+            <div className="mb-5 flex h-36 w-full items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={sponsor.logo}
@@ -61,7 +55,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
                 className={cn(
                   'w-auto max-w-[80%] object-contain',
                   logoSize[sponsor.name] ?? 'max-h-14',
-                  sponsor.monochromeOnDark && !sponsor.whiteBg && 'brightness-0 invert',
+                  sponsor.monochromeOnDark && 'brightness-0 invert',
                 )}
               />
             </div>

@@ -6,11 +6,7 @@ export interface Sponsor {
   location: string;
   /** Show the sponsor name under the logo. */
   showName?: boolean;
-  /** Logo needs a white plate to be legible. */
-  whiteBg?: boolean;
-  /** Logo needs a black plate to be legible. */
-  blackBg?: boolean;
-  /** Dark logo on a transparent canvas; rendered as a white mark when no plate is used. */
+  /** Dark logo on a transparent canvas; rendered as a white mark on the dark theme. */
   monochromeOnDark?: boolean;
 }
 
@@ -58,7 +54,6 @@ export const sponsors: Sponsor[] = [
     logo: '/bowery-logo-light.svg',
     description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
     location: 'Buenos Aires, Argentina',
-    blackBg: true,
   },
   {
     name: 'Eagerworks',
@@ -66,7 +61,6 @@ export const sponsors: Sponsor[] = [
     logo: '/eagerworks-white-logo.svg',
     description: 'Agencia de diseño y desarrollo de software.',
     location: 'Montevideo, Uruguay',
-    blackBg: true,
   },
   {
     name: 'Endpoint Consulting',
@@ -74,7 +68,6 @@ export const sponsors: Sponsor[] = [
     logo: '/endpoint-security-logo.png',
     description: 'Expertos en seguridad informática y consultoría tecnológica.',
     location: 'Tucumán, Argentina',
-    blackBg: true,
   },
   {
     name: 'IEEE Computer Society',
@@ -83,7 +76,6 @@ export const sponsors: Sponsor[] = [
     description:
       'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
     location: 'IEEE CS Región Latinoamérica',
-    whiteBg: true,
     monochromeOnDark: true,
   },
 ];
