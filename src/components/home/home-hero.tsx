@@ -65,7 +65,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
 
             <motion.h1
               {...fadeUp(0.08)}
-              className="text-balance font-mono text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground md:mt-6 md:text-6xl lg:text-7xl"
+              className="text-balance font-mono text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground md:mt-5 md:text-5xl"
             >
               {firstName ? (
                 <>
@@ -84,7 +84,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
 
             <motion.p
               {...fadeUp(0.16)}
-              className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground md:text-xl"
+              className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
             >
               {firstName
                 ? 'Gracias por ser parte de la comunidad. Hay eventos, charlas y recursos nuevos esperándote.'
