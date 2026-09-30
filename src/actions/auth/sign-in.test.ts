@@ -45,7 +45,7 @@ describe('signIn', () => {
 
   it('returns INVALID_CREDENTIALS when password is wrong', async () => {
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(false);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(false);
 
     const result = await signIn(validInput);
 
@@ -55,7 +55,7 @@ describe('signIn', () => {
 
   it('returns EMAIL_NOT_VERIFIED when email is not yet verified', async () => {
     prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, emailVerified: false } as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
 
     const result = await signIn(validInput);
 
@@ -70,7 +70,7 @@ describe('signIn', () => {
   it('creates a session, sets the cookie, and returns success', async () => {
     const { set } = mockCookies();
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
     prismaMock.session.create.mockResolvedValue({
       id: 'session-abc',
       userId: 'user-1',
@@ -97,7 +97,7 @@ describe('signIn', () => {
   it('includes the redirectTo value from input in the success response', async () => {
     mockCookies();
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
     prismaMock.session.create.mockResolvedValue({
       id: 'session-xyz',
       userId: 'user-1',

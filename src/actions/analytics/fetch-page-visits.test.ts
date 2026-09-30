@@ -73,7 +73,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(80) // visitsThisWeek
       .mockResolvedValueOnce(300); // visitsThisMonth
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/home', _count: { path: 200 } },
         { path: '/about', _count: { path: 100 } },
@@ -111,7 +111,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(5)
       .mockResolvedValueOnce(8);
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/a', _count: { path: 1 } },
         { path: '/b', _count: { path: 2 } },
@@ -134,7 +134,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);
@@ -155,7 +155,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);

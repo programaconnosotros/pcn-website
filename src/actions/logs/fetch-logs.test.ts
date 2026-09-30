@@ -90,7 +90,7 @@ describe('getLogStats', () => {
       .mockResolvedValueOnce(100) // totalLogs
       .mockResolvedValueOnce(5) // logsToday
       .mockResolvedValueOnce(20); // logsThisWeek
-    prismaMock.appLog.groupBy.mockResolvedValue([
+    (prismaMock.appLog.groupBy as jest.Mock).mockResolvedValue([
       { level: 'info', _count: { level: 50 } },
       { level: 'error', _count: { level: 30 } },
       { level: 'warn', _count: { level: 15 } },
@@ -112,7 +112,9 @@ describe('getLogStats', () => {
       .mockResolvedValueOnce(10)
       .mockResolvedValueOnce(2)
       .mockResolvedValueOnce(8);
-    prismaMock.appLog.groupBy.mockResolvedValue([{ level: 'info', _count: { level: 10 } }] as any);
+    (prismaMock.appLog.groupBy as jest.Mock).mockResolvedValue([
+      { level: 'info', _count: { level: 10 } },
+    ] as any);
 
     const result = await getLogStats();
 
