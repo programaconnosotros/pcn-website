@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { getEventRegistrations } from './get-event-registrations';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const mockUser = {
   id: 'user-1',
@@ -48,5 +52,13 @@ describe('getEventRegistrations', () => {
     const result = await getEventRegistrations('event-1');
 
     expect(result).toEqual([]);
+  });
+});
+
+describe('getEventRegistrations access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(getEventRegistrations('event-1')).rejects.toThrow('No autorizado');
   });
 });

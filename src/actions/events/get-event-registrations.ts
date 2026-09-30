@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
 export type EventRegistrationRow = {
   id: string;
@@ -15,6 +16,8 @@ export type EventRegistrationRow = {
 };
 
 export async function getEventRegistrations(eventId: string): Promise<EventRegistrationRow[]> {
+  await requireAdmin();
+
   const registrations = await prisma.eventRegistration.findMany({
     where: { eventId },
     include: { user: true },

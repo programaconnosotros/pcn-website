@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { requireAdminPage } from '@/lib/admin';
 import type { ReactNode } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -32,6 +33,8 @@ const SectionLabel = ({ children }: { children: ReactNode }) => (
 );
 
 const AnaliticasPage = async () => {
+  await requireAdminPage();
+
   // Obtener estadísticas
   const now = new Date();
   const oneMonthAgo = new Date(now);

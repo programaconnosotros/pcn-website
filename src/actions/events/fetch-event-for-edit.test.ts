@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchEventForEdit } from './fetch-event-for-edit';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const mockEvent = {
   id: 'event-1',
@@ -26,5 +30,13 @@ describe('fetchEventForEdit', () => {
     const result = await fetchEventForEdit('non-existent');
 
     expect(result).toBeNull();
+  });
+});
+
+describe('fetchEventForEdit access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchEventForEdit('event-1')).rejects.toThrow('No autorizado');
   });
 });

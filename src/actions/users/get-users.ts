@@ -1,5 +1,6 @@
 'use server';
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
 export type UserWithoutPassword = {
   id: string;
@@ -29,6 +30,8 @@ export type UserWithoutPassword = {
 };
 
 export const getUsers = async (): Promise<UserWithoutPassword[]> => {
+  await requireAdmin();
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
