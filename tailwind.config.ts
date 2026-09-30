@@ -23,9 +23,9 @@ const config = {
       screens: {
         '3xl': '1920px',
       },
-      // Terminal look: every family resolves to Geist Mono.
+      // Body copy stays in Geist Sans; Geist Mono carries the terminal chrome.
       fontFamily: {
-        sans: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
         mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
       },
       colors: {

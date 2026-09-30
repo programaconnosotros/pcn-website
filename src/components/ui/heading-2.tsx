@@ -2,17 +2,20 @@ import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-const heading2Variants = cva('scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0', {
-  variants: {
-    variant: {
-      default: '',
-      gradient: 'text-pcnGreen text-glow',
+const heading2Variants = cva(
+  'scroll-m-20 pb-2 font-mono text-3xl font-semibold tracking-tight first:mt-0',
+  {
+    variants: {
+      variant: {
+        default: '',
+        gradient: 'text-pcnGreen text-glow',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
     },
   },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
+);
 
 export interface Heading2Props extends VariantProps<typeof heading2Variants> {
   children: ReactNode;
