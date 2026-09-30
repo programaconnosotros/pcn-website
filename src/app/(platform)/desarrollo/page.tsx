@@ -15,9 +15,13 @@ import {
   Sparkles,
   Wrench,
 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Team, teamSize } from '@/components/landing/team';
+import {
+  CollaborationStats,
+  CollaborationStatsSkeleton,
+} from '@/components/desarrollo/collaboration-stats';
 import { NextJsSVG } from '@/components/logos/NextJsSVG';
 import { ReactSVG } from '@/components/logos/ReactSVG';
 import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
@@ -317,6 +321,12 @@ const DesarrolloPage = () => (
                 push. No se puede pushear código que rompa alguno de estos checks.
               </dd>
             </dl>
+          </Section>
+
+          <Section title="Estadísticas de colaboración">
+            <Suspense fallback={<CollaborationStatsSkeleton />}>
+              <CollaborationStats />
+            </Suspense>
           </Section>
 
           <Section title={`Team de desarrollo (${teamSize})`}>
