@@ -56,7 +56,7 @@ const Home = async () => {
     <>
       <PageTitle
         path={[]}
-        className="mb-0 px-4 pt-3"
+        className="mb-4 px-4 pt-3 md:mb-0"
         action={
           <Link
             href={WHATSAPP_GROUP_URL}
