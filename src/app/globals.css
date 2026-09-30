@@ -202,6 +202,86 @@
     }
   }
 
+  /* Menus and dropdowns (see components/ui/menu-surface.ts): the panel boots open like a CRT,
+     sweeping down with a brightness flash, and its items stream in one after another. */
+  .menu-surface[data-state='open'] {
+    animation: menu-boot 0.3s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+  .menu-surface[data-state='closed'] {
+    animation: menu-off 0.12s ease-in both;
+  }
+  .menu-surface [role='menuitem'],
+  .menu-surface [role='menuitemcheckbox'],
+  .menu-surface [role='menuitemradio'],
+  .menu-surface [role='option'] {
+    animation: menu-item-in 0.28s ease-out both;
+    animation-delay: calc(var(--menu-i, 10) * 22ms + 60ms);
+  }
+  .menu-surface :nth-child(1) {
+    --menu-i: 1;
+  }
+  .menu-surface :nth-child(2) {
+    --menu-i: 2;
+  }
+  .menu-surface :nth-child(3) {
+    --menu-i: 3;
+  }
+  .menu-surface :nth-child(4) {
+    --menu-i: 4;
+  }
+  .menu-surface :nth-child(5) {
+    --menu-i: 5;
+  }
+  .menu-surface :nth-child(6) {
+    --menu-i: 6;
+  }
+  .menu-surface :nth-child(7) {
+    --menu-i: 7;
+  }
+  .menu-surface :nth-child(8) {
+    --menu-i: 8;
+  }
+  .menu-surface :nth-child(9) {
+    --menu-i: 9;
+  }
+  @keyframes menu-boot {
+    0% {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      filter: brightness(2.2) saturate(1.6);
+      transform: translateY(-4px) scaleX(0.97);
+    }
+    55% {
+      opacity: 1;
+      filter: brightness(1.5);
+    }
+    100% {
+      opacity: 1;
+      clip-path: inset(-48px);
+      filter: none;
+      transform: none;
+    }
+  }
+  @keyframes menu-off {
+    to {
+      opacity: 0;
+      transform: scaleY(0.96);
+      filter: brightness(1.8);
+    }
+  }
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-surface[data-state],
+    .menu-surface [role] {
+      animation: none;
+    }
+  }
+
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
     background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),

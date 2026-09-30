@@ -88,6 +88,14 @@ export function OsMenuBar({ user, focusedProgram, onOpenProgram, onOpenLauncher 
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className={menuContentClassName}>
+          <DropdownMenuLabel className="flex items-center justify-between gap-4 text-[10px] font-normal uppercase tracking-[0.18em] text-pcnGreen-600">
+            <span>{'// pcn_os'}</span>
+            <span className="flex items-center gap-1.5">
+              <span className="size-1.5 animate-pulse rounded-full bg-pcnGreen shadow-[0_0_6px_rgba(4,244,190,0.9)]" />
+              online
+            </span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => onOpenProgram(programById('historia'))}>
             Acerca de programaConNosotros
           </DropdownMenuItem>
