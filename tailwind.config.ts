@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss';
-import defaultTheme from 'tailwindcss/defaultTheme';
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 
 const config = {
@@ -23,10 +22,13 @@ const config = {
       screens: {
         '3xl': '1920px',
       },
-      // Body copy stays in Geist Sans; Geist Mono carries the terminal chrome.
+      // Geist is the only typeface on the site: body copy in Geist Sans, terminal
+      // chrome in Geist Mono. `serif` is remapped to Geist Sans so `font-serif`
+      // can never pull in another family.
       fontFamily: {
-        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+        sans: ['var(--font-geist-sans)', 'sans-serif'],
+        serif: ['var(--font-geist-sans)', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
       },
       colors: {
         border: 'hsl(var(--border))',

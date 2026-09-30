@@ -37,10 +37,7 @@ export const TestimonialsSection = ({ testimonials }: { testimonials: FeaturedTe
             key={testimonial.id}
             className="relative flex flex-col rounded-lg border border-pcnGreen-200 bg-pcnGreen-50 p-6 transition-colors hover:border-pcnGreen-200"
           >
-            <span
-              aria-hidden
-              className="font-serif text-6xl leading-none text-pcnGreen/70 [font-family:Georgia,serif]"
-            >
+            <span aria-hidden className="font-sans text-6xl leading-none text-pcnGreen/70">
               “
             </span>
             <blockquote className="-mt-4 flex-1 text-[15px] leading-relaxed text-foreground/85">
