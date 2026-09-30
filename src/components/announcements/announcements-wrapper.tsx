@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Rss } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import {
@@ -64,6 +64,14 @@ export function AnnouncementsWrapper({
           meta={`${announcements.length} anuncios de la comunidad`}
           className="mb-0 flex-1"
         />
+        <a
+          href="/feed.xml"
+          title="Suscribite a las novedades con tu lector de RSS"
+          className="inline-flex shrink-0 items-center gap-1.5 self-center font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+        >
+          <Rss className="h-3.5 w-3.5" />
+          rss
+        </a>
         {isAdmin && (
           <Button size="sm" onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />

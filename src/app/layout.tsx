@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   },
   description: 'Comunidad de apasionados por la ingeniería de software.',
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  alternates: {
+    types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'programaConNosotros' }] },
+  },
   openGraph: {
     type: 'website',
     locale: 'es_AR',
