@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OsProgram } from './programs';
+import { PcnLoader } from '@/components/ui/pcn-loader';
 
 export interface Rect {
   x: number;
@@ -302,11 +303,8 @@ export function OsWindow({
           className="size-full border-0 bg-background"
         />
         {!loaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background">
-            <Icon className="size-8 animate-pulse text-pcnGreen drop-shadow-[0_0_8px_#04f4be]" />
-            <span className="cursor-blink text-xs text-pcnGreen-700">
-              $ open {program.name.toLowerCase()}
-            </span>
+          <div className="absolute inset-0 flex items-center justify-center bg-background">
+            <PcnLoader label={program.name.toLowerCase()} />
           </div>
         )}
       </div>

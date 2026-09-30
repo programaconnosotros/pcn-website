@@ -767,3 +767,253 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
     transform: translate(var(--dx), var(--dy)) rotate(var(--spin)) scale(0.6);
   }
 }
+
+/* PCN loader: the logo booting up while a page loads (see components/ui/pcn-loader.tsx). */
+.pcn-loader {
+  --pcn-loader-cycle: 2.4s;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 8rem;
+  height: 8rem;
+}
+.pcn-loader > * {
+  position: absolute;
+}
+.pcn-loader-core {
+  inset: 22%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(4, 244, 190, 0.55), transparent 70%);
+  filter: blur(10px);
+  animation: pcn-loader-core var(--pcn-loader-cycle) ease-out infinite;
+}
+.pcn-loader-ring {
+  inset: 0;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 55%,
+    rgba(4, 244, 190, 0.15) 70%,
+    #04f4be 99%,
+    transparent 100%
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 1.5px)
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  filter: drop-shadow(0 0 6px #04f4be);
+  animation: pcn-loader-spin 1.1s linear infinite;
+}
+.pcn-loader-ticks {
+  inset: -9%;
+  width: 118%;
+  height: 118%;
+  fill: none;
+  stroke: rgba(4, 244, 190, 0.35);
+  stroke-width: 0.6;
+  stroke-dasharray: 1 4.9;
+  animation: pcn-loader-spin 9s linear infinite reverse;
+}
+.pcn-loader-orbit {
+  inset: -4%;
+  animation: pcn-loader-spin 1.6s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+}
+.pcn-loader-orbit > span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #04f4be;
+  box-shadow: 0 0 8px 1px #04f4be;
+}
+.pcn-loader-orbit--reverse {
+  inset: 10%;
+  animation-duration: 2.3s;
+  animation-direction: reverse;
+}
+.pcn-loader-orbit--reverse > span {
+  width: 3px;
+  height: 3px;
+  background: #8b7cf0;
+  box-shadow: 0 0 8px 1px #5038bd;
+}
+.pcn-loader-logo {
+  inset: 24%;
+  /* On the wrapper: a filter on the clipped halves would be clipped too, drawing a seam. */
+  filter: drop-shadow(0 0 10px rgba(4, 244, 190, 0.6));
+}
+.pcn-loader-logo > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pcn-loader-half--left {
+  clip-path: inset(0 50% 0 0);
+  animation: pcn-loader-split-left var(--pcn-loader-cycle) cubic-bezier(0.7, 0, 0.2, 1) infinite;
+}
+.pcn-loader-half--right {
+  clip-path: inset(0 0 0 50%);
+  animation: pcn-loader-split-right var(--pcn-loader-cycle) cubic-bezier(0.7, 0, 0.2, 1) infinite;
+}
+.pcn-loader-ghost {
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+.pcn-loader-ghost--a {
+  filter: hue-rotate(150deg) saturate(2.5);
+  animation: pcn-loader-glitch-a var(--pcn-loader-cycle) steps(1) infinite;
+}
+.pcn-loader-ghost--b {
+  filter: hue-rotate(-140deg) saturate(2.5);
+  animation: pcn-loader-glitch-b var(--pcn-loader-cycle) steps(1) infinite;
+}
+.pcn-loader-beam {
+  left: -30%;
+  right: -30%;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #04f4be 30%, #fff 50%, #04f4be 70%, transparent);
+  box-shadow: 0 0 12px 2px rgba(4, 244, 190, 0.7);
+  mix-blend-mode: screen;
+  animation: pcn-loader-beam var(--pcn-loader-cycle) ease-in-out infinite;
+}
+@keyframes pcn-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pcn-loader-core {
+  0%,
+  55% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+@keyframes pcn-loader-split-left {
+  0%,
+  28% {
+    transform: translateX(0) rotate(0deg);
+  }
+  42%,
+  52% {
+    transform: translateX(-22%) rotate(-8deg);
+  }
+  60% {
+    transform: translateX(4%) rotate(1deg);
+  }
+  66%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+@keyframes pcn-loader-split-right {
+  0%,
+  28% {
+    transform: translateX(0) rotate(0deg);
+  }
+  42%,
+  52% {
+    transform: translateX(22%) rotate(8deg);
+  }
+  60% {
+    transform: translateX(-4%) rotate(-1deg);
+  }
+  66%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+@keyframes pcn-loader-glitch-a {
+  0%,
+  54% {
+    opacity: 0;
+  }
+  56% {
+    opacity: 0.9;
+    clip-path: inset(12% 0 64% 0);
+    transform: translate(-9%, 0);
+  }
+  58% {
+    clip-path: inset(58% 0 18% 0);
+    transform: translate(7%, 0);
+  }
+  60% {
+    clip-path: inset(34% 0 44% 0);
+    transform: translate(-5%, 0);
+  }
+  62% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(-3%, 0);
+    opacity: 0.6;
+  }
+  64%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pcn-loader-glitch-b {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  57% {
+    opacity: 0.9;
+    clip-path: inset(66% 0 8% 0);
+    transform: translate(8%, 0);
+  }
+  59% {
+    clip-path: inset(20% 0 55% 0);
+    transform: translate(-7%, 0);
+  }
+  61% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(3%, 0);
+    opacity: 0.6;
+  }
+  63%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pcn-loader-beam {
+  0%,
+  20% {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(calc(8rem * 0.52));
+  }
+  55%,
+  100% {
+    opacity: 0;
+    transform: translateY(calc(8rem * 0.52));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcn-loader *,
+  .pcn-loader-ghost,
+  .pcn-loader-beam {
+    animation: none !important;
+  }
+  .pcn-loader-ghost,
+  .pcn-loader-beam {
+    display: none;
+  }
+}
