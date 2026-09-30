@@ -129,6 +129,7 @@ export const OS_PROGRAMS: OsProgram[] = [
     icon: Youtube,
     color: 'from-rose-400 to-red-700',
     group: 'Recursos',
+    pinned: true,
   },
   {
     id: 'especialidades',
