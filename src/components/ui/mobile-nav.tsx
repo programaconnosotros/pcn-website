@@ -409,7 +409,7 @@ export function MobileNav({
       <nav
         ref={tabBarRef}
         aria-label="Navegación principal"
-        className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] border-t border-pcnGreen-200 bg-black/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
+        className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] border-t border-pcnGreen-200 bg-black/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md embedded:hidden md:hidden"
       >
         <div className="flex h-16 items-stretch">
           {tabItems.map((item) => {

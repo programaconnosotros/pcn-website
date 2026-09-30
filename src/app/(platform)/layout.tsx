@@ -58,7 +58,7 @@ const PlatformLayout = async ({
               unreadNotificationsCount={unreadNotificationsCount}
             />
             <ConsoleInterceptor>
-              <SidebarInset className="min-w-0 px-1 pb-[calc(5rem+env(safe-area-inset-bottom))] md:px-6 md:pb-0">
+              <SidebarInset className="min-w-0 px-1 pb-[calc(5rem+env(safe-area-inset-bottom))] embedded:pb-0 md:px-6 md:pb-0">
                 {children}
               </SidebarInset>
             </ConsoleInterceptor>
