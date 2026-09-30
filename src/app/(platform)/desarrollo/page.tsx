@@ -31,6 +31,9 @@ import { PrismaSVG } from '@/components/logos/PrismaSVG';
 import { PostgresqlSVG } from '@/components/logos/PostgresqlSVG';
 import { DockerSVG } from '@/components/logos/DockerSVG';
 import { GitSVG } from '@/components/logos/GitSVG';
+import { GitHubMarkSVG } from '@/components/logos/GitHubMarkSVG';
+import { AwsSVG } from '@/components/logos/AwsSVG';
+import { KamalSVG } from '@/components/logos/KamalSVG';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -62,7 +65,10 @@ const technologies = [
   { name: 'Prisma', icon: PrismaSVG },
   { name: 'PostgreSQL', icon: PostgresqlSVG },
   { name: 'Docker', icon: DockerSVG },
+  { name: 'Kamal', icon: KamalSVG },
+  { name: 'AWS', icon: AwsSVG },
   { name: 'Git', icon: GitSVG },
+  { name: 'GitHub', icon: GitHubMarkSVG },
 ];
 
 const architectureLayers = [
