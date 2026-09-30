@@ -9,6 +9,8 @@ type HeaderState = 'rest' | 'shown' | 'hidden';
 // of the way; a quick flick up means "take me back to the controls".
 const REVEAL_SPEED = 0.5;
 const HIDE_DISTANCE = 8;
+// Scroll events further apart than this (ms) start a new gesture.
+const GESTURE_GAP = 100;
 
 // Desktop only: medium screens and pages rendered inside a PCN OS window.
 const isDesktop = () =>
@@ -54,10 +56,13 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
       const now = performance.now();
       const y = window.scrollY;
       const dy = y - lastY;
-      const dt = Math.max(now - lastTime, 1);
+      const elapsed = now - lastTime;
       lastY = y;
       lastTime = now;
-      speed = speed * 0.5 + (dy / dt) * 0.5;
+      // After a pause, the first jump counts on its own instead of being averaged over the idle
+      // time before it (which would make every flick look slow).
+      if (elapsed > GESTURE_GAP) speed = dy / GESTURE_GAP;
+      else speed = speed * 0.5 + (dy / Math.max(elapsed, 1)) * 0.5;
 
       const top = sentinel.getBoundingClientRect().top;
       const height = header.offsetHeight;
