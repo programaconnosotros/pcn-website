@@ -26,6 +26,14 @@ export interface OsWindowState extends Rect {
 
 type ResizeDirection = 'e' | 's' | 'w' | 'se' | 'sw';
 
+const resizeCursors: Record<ResizeDirection, string> = {
+  e: 'ew-resize',
+  w: 'ew-resize',
+  s: 'ns-resize',
+  se: 'nwse-resize',
+  sw: 'nesw-resize',
+};
+
 export type ClampMode = 'move' | 'resize';
 
 export const MIN_WINDOW_WIDTH = 420;
@@ -45,7 +53,8 @@ interface OsWindowProps {
   onMinimize: () => void;
   onToggleMaximize: () => void;
   onRectChange: (rect: Rect) => void;
-  onInteractionChange: (interacting: boolean) => void;
+  /** Called with the cursor to show while moving or resizing, and with null when done. */
+  onInteractionChange: (cursor: string | null) => void;
   registerIframe: (iframe: HTMLIFrameElement | null) => void;
   onIframeLoad: () => void;
 }
@@ -168,11 +177,11 @@ export function OsWindow({
     const start: Rect = win.maximized
       ? { ...win, x: Math.round(event.clientX - win.w * ratio), y: rect.y }
       : rect;
-    onInteractionChange(true);
+    onInteractionChange('default');
     trackPointer(
       event,
       (dx, dy) => onRectChange(clampRect({ ...start, x: start.x + dx, y: start.y + dy }, 'move')),
-      () => onInteractionChange(false),
+      () => onInteractionChange(null),
     );
   };
 
@@ -181,7 +190,7 @@ export function OsWindow({
     event.stopPropagation();
     onFocus();
     const start = rect;
-    onInteractionChange(true);
+    onInteractionChange(resizeCursors[direction]);
     trackPointer(
       event,
       (dx, dy) => {
@@ -194,7 +203,7 @@ export function OsWindow({
         if (direction.includes('s')) next.h = Math.max(MIN_WINDOW_HEIGHT, start.h + dy);
         onRectChange(clampRect(next, 'resize'));
       },
-      () => onInteractionChange(false),
+      () => onInteractionChange(null),
     );
   };
 

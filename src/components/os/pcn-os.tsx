@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { isOsMessage } from './os-env';
 import { OsDock } from './os-dock';
@@ -187,7 +188,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const isOs = useOsMode();
   const [state, dispatch] = useReducer(reducer, { windows: [], order: [], nextId: 1 });
   const [viewport, setViewport] = useState<Viewport | null>(null);
-  const [interacting, setInteracting] = useState(false);
+  /** Cursor to show while a window is being moved or resized; null when idle. */
+  const [interactionCursor, setInteractionCursor] = useState<string | null>(null);
   const [launcherOpen, setLauncherOpen] = useState(false);
   const iframes = useRef(new Map<string, HTMLIFrameElement>());
   const opened = useRef(false);
@@ -280,13 +282,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
 
   return (
     <div className="hidden os:block">
-      <div
-        className={
-          interacting
-            ? 'fixed inset-0 select-none overflow-hidden [&_iframe]:pointer-events-none'
-            : 'fixed inset-0 overflow-hidden'
-        }
-      >
+      <div className={cn('fixed inset-0 overflow-hidden', interactionCursor && 'select-none')}>
         <OsWallpaper showHint={isOs && viewport !== null && state.windows.length === 0} />
         {isOs && <OsProcesses covered={covered} />}
         {isOs && viewport && (
@@ -316,7 +312,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                   onMinimize={() => dispatch({ type: 'minimize', id: win.id })}
                   onToggleMaximize={() => dispatch({ type: 'toggleMaximize', id: win.id })}
                   onRectChange={(rect) => dispatch({ type: 'rect', id: win.id, rect })}
-                  onInteractionChange={setInteracting}
+                  onInteractionChange={setInteractionCursor}
                   registerIframe={(iframe) => {
                     if (iframe) iframes.current.set(win.id, iframe);
                     else iframes.current.delete(win.id);
@@ -341,6 +337,17 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
               );
             })}
           </AnimatePresence>
+        )}
+
+        {/* While a window is moved or resized, this shield sits over every iframe so the pointer
+            never gets swallowed by one. Toggling pointer-events on the iframes themselves instead
+            leaves Safari unable to scroll them afterwards. */}
+        {interactionCursor && (
+          <div
+            aria-hidden
+            className="absolute inset-0 z-[2147483647]"
+            style={{ cursor: interactionCursor }}
+          />
         )}
 
         <OsMenuBar
