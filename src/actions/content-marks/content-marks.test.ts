@@ -88,6 +88,18 @@ describe('setContentMark', () => {
     });
   });
 
+  it('marks videos as watched but not as read', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(session as any);
+
+    await setContentMark('video', 'SlGRN8jh2RI', 'watched', true);
+    await expect(setContentMark('video', 'SlGRN8jh2RI', 'read', true)).rejects.toThrow(
+      'Marca inválida',
+    );
+
+    expect(prismaMock.contentMark.upsert).toHaveBeenCalledTimes(1);
+  });
+
   it('removes the mark when turning it off', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(session as any);

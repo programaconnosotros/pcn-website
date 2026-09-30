@@ -1,6 +1,8 @@
 // The personal marks users can leave on each kind of static content, e.g. `article → read`.
 export const CONTENT_MARKS = {
   article: ['read', 'saved'],
+  // YouTube videos, including the external talks on /charlas, keyed by video id.
+  video: ['watched'],
 } as const;
 
 export type ContentType = keyof typeof CONTENT_MARKS;
