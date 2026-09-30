@@ -18,6 +18,13 @@ import {
 } from 'lucide-react';
 import { MonitoringClient } from './monitoring-client';
 import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+
+// Admin-only page: keep it out of search results.
+export const metadata: Metadata = {
+  title: 'Monitoreo',
+  robots: { index: false, follow: false },
+};
 
 type StatTile = {
   label: string;

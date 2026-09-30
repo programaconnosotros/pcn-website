@@ -1,6 +1,28 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { externalPlaylists, radios, type MusicSet } from '@/components/music/music-sets';
 import { MusicGrid } from '@/components/music/music-grid';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Música',
+  description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
+  openGraph: {
+    title: 'Música | programaConNosotros',
+    description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/music`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Música | programaConNosotros',
+    description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const MusicSection = ({ label, sets }: { label: string; sets: MusicSet[] }) => (
   <section className="mb-8">

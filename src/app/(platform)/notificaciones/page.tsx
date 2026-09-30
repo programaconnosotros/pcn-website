@@ -4,6 +4,13 @@ import { PageTitle } from '@/components/ui/page-title';
 import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+
+// Admin-only page: keep it out of search results.
+export const metadata: Metadata = {
+  title: 'Notificaciones',
+  robots: { index: false, follow: false },
+};
 
 const NotificacionesPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;

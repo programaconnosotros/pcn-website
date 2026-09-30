@@ -15,6 +15,13 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
+import type { Metadata } from 'next';
+
+// Admin-only page: keep it out of search results.
+export const metadata: Metadata = {
+  title: 'Analíticas',
+  robots: { index: false, follow: false },
+};
 
 const SectionLabel = ({ children }: { children: ReactNode }) => (
   <p className="mb-2 mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen">

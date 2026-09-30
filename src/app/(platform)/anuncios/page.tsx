@@ -6,6 +6,28 @@ import {
   fetchAllAnnouncements,
 } from '@/actions/announcements/get-announcements';
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
+import type { Metadata } from 'next';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Anuncios',
+  description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+  openGraph: {
+    title: 'Anuncios | programaConNosotros',
+    description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+    url: `${SITE_URL}/anuncios`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Anuncios | programaConNosotros',
+    description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+    images: [`${SITE_URL}/pcn-link-preview.png`],
+  },
+};
 
 const AnunciosPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
