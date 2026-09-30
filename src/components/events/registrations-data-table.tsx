@@ -9,13 +9,12 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 import { EventRegistrationRow } from '@/actions/events/get-event-registrations';
 import { registrationColumns } from '@/components/events/registrations-columns';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -24,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { SearchBar } from '@/components/ui/search-bar';
 
 interface RegistrationsDataTableProps {
   data: EventRegistrationRow[];
@@ -50,23 +50,13 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
     <div className="space-y-3">
       {/* Toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Buscar inscripción..."
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-9"
-          />
-          {globalFilter && (
-            <button
-              onClick={() => setGlobalFilter('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        <SearchBar
+          searchQuery={globalFilter}
+          setSearchQuery={setGlobalFilter}
+          placeholder="inscripción"
+          label="Buscar inscripción"
+          className="max-w-none flex-1"
+        />
         <span className="shrink-0 text-sm text-muted-foreground">
           {table.getFilteredRowModel().rows.length} de {data.length}
         </span>

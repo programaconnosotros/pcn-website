@@ -1,14 +1,14 @@
 'use client';
 import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
 
 type PricingTier = 'free' | 'freemium' | 'paid';
 type SoftwareType = 'app' | 'library' | 'language';
@@ -131,23 +131,12 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
       {/* Search — shared across all tabs */}
       <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nombre, categoría o tecnología..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        <SearchBar
+          searchQuery={searchTerm}
+          setSearchQuery={setSearchTerm}
+          placeholder="nombre, categoría o tecnología"
+          label="Buscar por nombre, categoría o tecnología"
+        />
       </div>
 
       {(['app', 'library', 'language'] as SoftwareType[]).map((tab) => (

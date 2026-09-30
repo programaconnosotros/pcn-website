@@ -2,6 +2,7 @@
 
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { SearchBar } from '@/components/ui/search-bar';
 import { dateContainsString } from '@/lib/date-formatter';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,6 @@ import { PhotoCard } from './photo-card';
 import { PhotoDialog } from './photo-dialog';
 import type { Photo } from './photo-utils';
 import { photos } from './photos';
-import { SearchBar } from './search-bar';
 import { ShareDialog } from './share-dialog';
 
 // Lowercase without accents, so `tafi` finds `Tafí`.
@@ -74,6 +74,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           placeholder="título, archivo o fecha"
+          label="Buscar fotos"
         />
         <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
           {searchQuery.trim() ? (

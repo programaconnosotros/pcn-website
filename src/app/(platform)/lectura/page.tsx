@@ -1,6 +1,5 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -11,7 +10,7 @@ import {
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
@@ -20,6 +19,7 @@ import { articles, type Article } from './articles';
 import { ArticleReaderDialog } from './article-reader-dialog';
 import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
 import { useContentMarks } from '@/hooks/use-content-marks';
+import { SearchBar } from '@/components/ui/search-bar';
 
 interface Book {
   id: string;
@@ -976,23 +976,13 @@ const ReadingPage = () => {
               {/* Filtros compartidos */}
               <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
                 {/* Búsqueda */}
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                  <Input
-                    placeholder="Buscar por título, autor o descripción..."
-                    className="pl-10"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
+                <SearchBar
+                  searchQuery={searchTerm}
+                  setSearchQuery={setSearchTerm}
+                  placeholder="título, autor o descripción"
+                  label="Buscar por título, autor o descripción"
+                  className="max-w-none flex-1"
+                />
 
                 {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
                 {activeTab === 'libros' && (

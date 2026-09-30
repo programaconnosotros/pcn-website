@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Input } from '@/components/ui/input';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { conversations, type Conversation } from '@/data/whatsapp-conversations';
+import { SearchBar } from '@/components/ui/search-bar';
 
 const MONTHS_ES = [
   'enero',
@@ -116,23 +116,13 @@ export default function ConversationsPage() {
             meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
           />
 
-          <div className="relative mb-4 max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Buscar conversaciones..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+          <SearchBar
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
+            placeholder="conversaciones"
+            label="Buscar conversaciones"
+            className="mb-4"
+          />
 
           {filtered.length === 0 ? (
             <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">

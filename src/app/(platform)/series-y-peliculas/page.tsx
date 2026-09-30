@@ -1,6 +1,5 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -12,9 +11,9 @@ import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Search, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
 
 interface Title {
   id: string;
@@ -267,23 +266,13 @@ const SeriesYPeliculasPage = () => {
             {/* Filtros */}
             <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
               {/* Búsqueda */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por título, director o descripción..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
+              <SearchBar
+                searchQuery={searchTerm}
+                setSearchQuery={setSearchTerm}
+                placeholder="título, director o descripción"
+                label="Buscar por título, director o descripción"
+                className="max-w-none flex-1"
+              />
 
               {/* Filtro por género */}
               <Select value={selectedGenre} onValueChange={setSelectedGenre}>

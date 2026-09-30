@@ -1,12 +1,16 @@
 'use client';
 
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (_query: string) => void;
   placeholder?: string;
+  /** Accessible name for the input, since the visible prompt is decorative. */
+  label?: string;
+  className?: string;
 }
 
 const isTypingTarget = (target: EventTarget | null) =>
@@ -18,7 +22,9 @@ const isTypingTarget = (target: EventTarget | null) =>
 export function SearchBar({
   searchQuery,
   setSearchQuery,
-  placeholder = 'Buscar fotos...',
+  placeholder = 'buscar',
+  label = 'Buscar',
+  className,
 }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,7 +39,12 @@ export function SearchBar({
   }, []);
 
   return (
-    <label className="flex h-9 w-full max-w-md cursor-text items-center gap-2 rounded-sm border border-pcnGreen-200 bg-black/40 px-3 font-mono text-sm transition-all focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]">
+    <label
+      className={cn(
+        'flex h-9 w-full max-w-md cursor-text items-center gap-2 rounded-sm border border-pcnGreen-200 bg-black/40 px-3 font-mono text-sm transition-all focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]',
+        className,
+      )}
+    >
       <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
         $ grep -i
       </span>
@@ -44,7 +55,7 @@ export function SearchBar({
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={(e) => e.key === 'Escape' && setSearchQuery('')}
         placeholder={placeholder}
-        aria-label="Buscar fotos"
+        aria-label={label}
         spellCheck={false}
         autoComplete="off"
         className="min-w-0 flex-1 bg-transparent text-pcnGreen caret-pcnGreen outline-none placeholder:text-muted-foreground/60"
