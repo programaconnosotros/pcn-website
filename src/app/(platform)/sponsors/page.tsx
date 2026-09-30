@@ -31,7 +31,7 @@ const Sponsors = () => {
     <>
       <div className="-mx-1 px-6 md:-mx-6 md:px-10">
         <div className="mt-4">
-          <PageTitle path="sponsors" meta="empresas que apoyan a la comunidad" />
+          <PageTitle path="sponsors" meta="organizaciones que apoyan a la comunidad" />
           <SponsorsSection showHeading={false} />
         </div>
       </div>
