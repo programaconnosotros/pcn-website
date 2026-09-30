@@ -9,6 +9,7 @@ type Person = {
   githubUrl?: string;
 };
 
+// Ordered by commits merged into the website (ties broken by lines changed).
 const people: Person[] = [
   {
     name: 'Agus',
@@ -17,52 +18,6 @@ const people: Person[] = [
     imageUrl: '/colaborators/agus.webp',
     linkedinUrl: 'https://www.linkedin.com/in/agustinsanc/',
     githubUrl: 'https://github.com/agustin-sanc',
-  },
-  {
-    name: 'Chelo',
-    role: 'Sr. Backend (Python & Java)',
-    company: 'Bowery',
-    imageUrl: '/colaborators/chelo.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
-    githubUrl: 'https://github.com/Chelo154',
-  },
-  {
-    name: 'Germán',
-    role: 'Sr. Backend (JS/TS)',
-    company: 'Entropy',
-    imageUrl: '/colaborators/german.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
-    githubUrl: 'https://github.com/gmanavarro',
-  },
-  {
-    name: 'Carlos',
-    role: 'Sr. Frontend (JS/TS)',
-    company: 'WebExport',
-    imageUrl: '/colaborators/carlos.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/carlos-spagnolo-andres/',
-    githubUrl: 'https://github.com/SpagnoloCarlos',
-  },
-  {
-    name: 'Benja',
-    role: 'Sr. Full-Stack Engineer',
-    imageUrl: '/colaborators/benja.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
-    githubUrl: 'https://github.com/cortesjpb',
-  },
-  {
-    name: 'Alejo',
-    role: 'Sr. Full-Stack (TS/Python)',
-    company: 'Pendo.io',
-    imageUrl: '/colaborators/alejo.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/alejoboga/',
-    githubUrl: 'https://github.com/Alejoboga20',
-  },
-  {
-    name: 'Facu M.',
-    role: 'Sr. Full-Stack & AI Engineer',
-    imageUrl: 'https://avatars.githubusercontent.com/u/43690718?v=4',
-    linkedinUrl: 'https://www.linkedin.com/in/facundo-garcia-martoni/',
-    githubUrl: 'https://github.com/facmartoni',
   },
   {
     name: 'Facu',
@@ -81,6 +36,22 @@ const people: Person[] = [
     githubUrl: 'https://github.com/MauriJC',
   },
   {
+    name: 'Mati',
+    role: 'Jr. Engineer',
+    company: 'Eagerworks',
+    imageUrl: '/colaborators/mati.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/matias-daniel-gutierrez/',
+    githubUrl: 'https://github.com/MatiasDG539',
+  },
+  {
+    name: 'Germán',
+    role: 'Sr. Backend (JS/TS)',
+    company: 'Entropy',
+    imageUrl: '/colaborators/german.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
+    githubUrl: 'https://github.com/gmanavarro',
+  },
+  {
     name: 'Nico',
     role: 'Ssr. Frontend (JS/TS)',
     company: 'Dizenz',
@@ -89,12 +60,27 @@ const people: Person[] = [
     githubUrl: 'https://github.com/nicofuentesg',
   },
   {
-    name: 'Mati',
-    role: 'Jr. Engineer',
-    company: 'Eagerworks',
-    imageUrl: '/colaborators/mati.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/matias-daniel-gutierrez/',
-    githubUrl: 'https://github.com/MatiasDG539',
+    name: 'Carlos',
+    role: 'Sr. Frontend (JS/TS)',
+    company: 'WebExport',
+    imageUrl: '/colaborators/carlos.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/carlos-spagnolo-andres/',
+    githubUrl: 'https://github.com/SpagnoloCarlos',
+  },
+  {
+    name: 'Lean',
+    role: 'Contributor',
+    imageUrl: 'https://avatars.githubusercontent.com/u/92434825?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/contrera-lean',
+    githubUrl: 'https://github.com/contrera-lean',
+  },
+  {
+    name: 'Alejo',
+    role: 'Sr. Full-Stack (TS/Python)',
+    company: 'Pendo.io',
+    imageUrl: '/colaborators/alejo.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/alejoboga/',
+    githubUrl: 'https://github.com/Alejoboga20',
   },
   {
     name: 'Lemi',
@@ -105,26 +91,41 @@ const people: Person[] = [
     githubUrl: 'https://github.com/emilianogsh',
   },
   {
+    name: 'Maxi',
+    role: 'Contributor',
+    imageUrl: 'https://avatars.githubusercontent.com/u/55162138?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/maxi-rebolo/',
+    githubUrl: 'https://github.com/MaxiR23',
+  },
+  {
+    name: 'Facu M.',
+    role: 'Sr. Full-Stack & AI Engineer',
+    imageUrl: 'https://avatars.githubusercontent.com/u/43690718?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/facundo-garcia-martoni/',
+    githubUrl: 'https://github.com/facmartoni',
+  },
+  {
+    name: 'Chelo',
+    role: 'Sr. Backend (Python & Java)',
+    company: 'Bowery',
+    imageUrl: '/colaborators/chelo.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
+    githubUrl: 'https://github.com/Chelo154',
+  },
+  {
+    name: 'Benja',
+    role: 'Sr. Full-Stack Engineer',
+    imageUrl: '/colaborators/benja.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
+    githubUrl: 'https://github.com/cortesjpb',
+  },
+  {
     name: 'Vicky',
     role: 'Ssr. QA Engineer',
     company: 'Dizenz',
     imageUrl: '/colaborators/vicky.webp',
     linkedinUrl: 'https://www.linkedin.com/in/maria-victoria-grillo/',
     githubUrl: 'https://github.com/vickygrillo',
-  },
-  {
-    name: 'Lean',
-    role: 'Contributor',
-    imageUrl: 'https://avatars.githubusercontent.com/u/92434825?v=4',
-    linkedinUrl: 'https://www.linkedin.com/in/contrera-lean',
-    githubUrl: 'https://github.com/contrera-lean',
-  },
-  {
-    name: 'Maxi',
-    role: 'Contributor',
-    imageUrl: 'https://avatars.githubusercontent.com/u/55162138?v=4',
-    linkedinUrl: 'https://www.linkedin.com/in/maxi-rebolo/',
-    githubUrl: 'https://github.com/MaxiR23',
   },
 ];
 
