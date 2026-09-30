@@ -104,6 +104,7 @@ const PCNStory = () => (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
         <PageTitle
+          sticky
           path="historia"
           meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
         />

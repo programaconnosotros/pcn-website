@@ -33,6 +33,7 @@ const SpecialtiesPage = () => (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
         <PageTitle
+          sticky
           path="especialidades"
           meta={`${specialties.length} especialidades · ${specialtyGroups.length} áreas`}
         />
