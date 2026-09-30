@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { SubPageTitle } from '@/components/events/sub-page-title';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,10 +9,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
 import { NewEventForm } from '@/components/events/new-event-form';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -60,16 +57,9 @@ const NewEventPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center gap-4">
-            <Link href="/eventos">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Heading2 className="m-0">Crear nuevo evento</Heading2>
-          </div>
+          <SubPageTitle backHref="/eventos" path="eventos/" title="nuevo" />
 
           <NewEventForm />
         </div>

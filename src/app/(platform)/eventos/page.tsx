@@ -1,4 +1,3 @@
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -7,11 +6,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { PageTitle } from '@/components/ui/page-title';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Plus, Handshake } from 'lucide-react';
+import { Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
@@ -76,32 +76,27 @@ const EventsPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex flex-col gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:flex-row sm:items-center sm:justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <CalendarDays className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Eventos</span>
-            </Heading2>
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <PageTitle
+              path="eventos"
+              meta="meetups, coworks, lightning talks y zero to agent"
+              className="mb-0 flex-1"
+            />
             {!isAdmin && (
-              <Link href="https://wa.me/5493815777562" target="_blank" className="w-full sm:w-auto">
-                <Button
-                  variant="pcn"
-                  className="flex w-full items-center justify-center gap-2 sm:w-auto"
-                >
-                  Quiero organizar algo
-                  <Handshake className="h-4 w-4" />
-                </Button>
+              <Link
+                href="https://wa.me/5493815777562"
+                target="_blank"
+                className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                <Handshake className="h-3.5 w-3.5" />
+                quiero organizar algo
               </Link>
             )}
             {isAdmin && (
-              <Link href="/eventos/nuevo" className="w-full sm:w-auto">
-                <Button
-                  variant="pcn"
-                  className="flex w-full items-center justify-center gap-2 sm:w-auto"
-                >
+              <Link href="/eventos/nuevo">
+                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                   <Plus className="h-4 w-4" />
                   Crear evento
                 </Button>

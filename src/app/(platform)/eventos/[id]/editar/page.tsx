@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { SubPageTitle } from '@/components/events/sub-page-title';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,9 +9,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -100,19 +97,14 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Link href={`/eventos/${id}`}>
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Heading2 className="m-0">Editar evento</Heading2>
-            </div>
-            <DeleteEventButton eventId={id} eventName={event.name} />
-          </div>
+          <SubPageTitle
+            backHref={`/eventos/${id}`}
+            path="eventos/"
+            title="editar"
+            action={<DeleteEventButton eventId={id} eventName={event.name} />}
+          />
 
           <EditEventForm eventId={id} defaultValues={defaultValues} />
         </div>

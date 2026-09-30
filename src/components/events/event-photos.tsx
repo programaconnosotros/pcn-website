@@ -29,11 +29,11 @@ export const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
       {images.map((image, index) => (
         <Dialog key={index}>
           <DialogTrigger asChild>
-            <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg">
+            <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image.imgSrc}

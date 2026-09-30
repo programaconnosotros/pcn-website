@@ -2,24 +2,25 @@
 
 import React from 'react';
 import { fetchEvents } from '@/actions/events/fetch-events';
-import { EventCard } from './event-card';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { EventRow } from './event-row';
 
 export const EventsList: React.FC = async () => {
   const events = await fetchEvents();
 
   if (events.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-lg text-muted-foreground">No hay eventos aún.</p>
-      </div>
+      <p className="border border-pcnGreen-200 p-4 font-mono text-sm text-muted-foreground">
+        <span className="text-pcnGreen-500">$ </span>no hay eventos aún.
+      </p>
     );
   }
 
   return (
-    <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
       {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <EventRow key={event.id} event={event} />
       ))}
-    </div>
+    </RuledGrid>
   );
 };

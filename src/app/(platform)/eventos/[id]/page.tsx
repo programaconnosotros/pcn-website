@@ -9,9 +9,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, CalendarPlus, MapPin, Edit, Users, Globe, Video, Mic } from 'lucide-react';
+import { CalendarPlus, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
@@ -28,15 +26,21 @@ import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
-import { cn } from '@/lib/utils';
 
 type EventWithImages = Event & {
   images: Images[];
   sponsors: Sponsor[];
 };
 
-const sectionCardClassName =
-  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]';
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <section className="p-3">
+    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <span className="text-pcnGreen-500">{'// '}</span>
+      {title}
+    </h2>
+    {children}
+  </section>
+);
 
 function normalizeDescription(text: string): string {
   return text
@@ -242,325 +246,245 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
           </Breadcrumb>
         </div>
       </header>
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-4 flex items-center justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex items-center gap-3">
-              <Heading2 className="m-0">{event.name}</Heading2>
-              <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 pt-0">
+        <div className="mb-4 mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <h1 className="text-xl font-semibold tracking-tight">
+              <span className="text-pcnGreen-500">~/eventos/</span>
+              {event.name}
+            </h1>
+            <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+          </div>
+          {isAdmin && (
+            <Link href={`/eventos/${id}/editar`}>
+              <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                <Edit className="h-4 w-4" />
+                Editar evento
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:divide-x md:divide-y-0">
+          {/* Columna principal — flyer */}
+          <div className="flex flex-col divide-y divide-pcnGreen-200">
+            <div className="relative w-full overflow-hidden">
+              <EventFlyerCarousel
+                images={event.flyerImages}
+                eventName={event.name}
+                variant="detail"
+              />
             </div>
-            {isAdmin && (
-              <Link href={`/eventos/${id}/editar`}>
-                <Button variant="pcn" className="flex items-center gap-2">
-                  <Edit className="h-4 w-4" />
-                  Editar evento
-                </Button>
-              </Link>
+
+            {event.images && event.images.length > 0 && (
+              <Section title="fotos">
+                <EventPhotos images={event.images} />
+              </Section>
+            )}
+
+            {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
+            {isAdmin && event.callForSpeakersEnabled && (
+              <Section title="propuestas de charlas">
+                <Link
+                  href={`/eventos/${id}/propuestas-de-charlas`}
+                  className="flex items-center justify-between gap-2 text-sm text-muted-foreground hover:text-pcnGreen"
+                >
+                  <span className="flex items-center gap-2">
+                    <Mic className="h-4 w-4" />
+                    Call for speakers habilitado.
+                  </span>
+                  <span className="font-mono text-xs">ver propuestas →</span>
+                </Link>
+              </Section>
             )}
           </div>
 
-          <div className="my-5 ml-0 flex flex-col gap-5 xl:flex-row">
-            {/* Columna principal — flyer */}
-            <div className="flex w-full flex-col gap-5 xl:flex-1">
-              {/* Flyer del evento */}
-              <Card className={cn(sectionCardClassName, 'overflow-hidden')}>
-                <div className="relative w-full overflow-hidden">
-                  <EventFlyerCarousel
-                    images={event.flyerImages}
+          {/* Columna de información */}
+          <div className="flex flex-col divide-y divide-pcnGreen-200">
+            {/* Botón de registro */}
+            {!hasEventPassed && (
+              <div className="p-3">
+                <Suspense
+                  fallback={
+                    <Button variant="pcn" className="w-full" disabled>
+                      Cargando...
+                    </Button>
+                  }
+                >
+                  <EventDetailClient
+                    eventId={id}
                     eventName={event.name}
-                    variant="detail"
+                    isAuthenticated={!!sessionId}
+                    isRegistered={isRegistered}
+                    registrationId={registrationId}
+                    capacityAvailable={capacityInfo?.available ?? true}
+                    capacityInfo={capacityInfo}
+                    externalRegistrationUrl={event.externalRegistrationUrl}
+                    isFull={isFull}
                   />
-                </div>
-              </Card>
+                </Suspense>
+              </div>
+            )}
 
-              {/* Fotos */}
-              {event.images && event.images.length > 0 && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle>Fotos del evento</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <EventPhotos images={event.images} />
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
-              {isAdmin && event.callForSpeakersEnabled && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Mic className="h-5 w-5" />
-                      Propuestas de charlas
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-muted-foreground">
-                        Call for speakers habilitado para este evento.
-                      </p>
-                      <Link href={`/eventos/${id}/propuestas-de-charlas`}>
-                        <Button variant="outline" size="sm">
-                          Ver propuestas
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-
-            {/* Columna de información */}
-            <div className="flex w-full flex-col gap-5 xl:flex-1">
-              {/* Descripción */}
-              {event.description && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle>Descripción</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="whitespace-pre-line text-base leading-relaxed text-muted-foreground">
-                      {event.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
-              {isAdmin && !isExternalEvent && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5" />
-                      Inscripciones
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">
-                          {registrations.filter((r) => r.cancelledAt === null).length} inscripciones
-                          activas
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {registrations.length} total (incluyendo canceladas)
-                        </p>
-                      </div>
-                      <Link href={`/eventos/${id}/inscripciones`}>
-                        <Button variant="outline" size="sm">
-                          Ver todas
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Botón de registro */}
-              {!hasEventPassed && (
-                <Card className={sectionCardClassName}>
-                  <CardContent className="pt-6">
-                    <Suspense
-                      fallback={
-                        <Button variant="pcn" className="w-full" disabled>
-                          Cargando...
-                        </Button>
-                      }
-                    >
-                      <EventDetailClient
-                        eventId={id}
-                        eventName={event.name}
-                        isAuthenticated={!!sessionId}
-                        isRegistered={isRegistered}
-                        registrationId={registrationId}
-                        capacityAvailable={capacityInfo?.available ?? true}
-                        capacityInfo={capacityInfo}
-                        externalRegistrationUrl={event.externalRegistrationUrl}
-                        isFull={isFull}
-                      />
-                    </Suspense>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Call for speakers — botón para usuarios */}
-              {event.callForSpeakersEnabled && (
-                <Card className={sectionCardClassName}>
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col gap-2 text-center">
-                      <p className="text-sm font-medium">¿Querés dar una charla?</p>
-                      <p className="text-xs text-muted-foreground">
-                        Este evento acepta propuestas de charlas de la comunidad.
-                      </p>
-                      <Link
-                        href={
-                          sessionId
-                            ? `/eventos/${id}/proponer-charla`
-                            : `/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
-                        }
+            {/* Información del evento */}
+            <Section title="info">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
+                {event.endDate ? (
+                  <>
+                    <dt className="text-muted-foreground">inicio</dt>
+                    <dd>
+                      <LocalDate date={event.date} /> <LocalTime date={event.date} />
+                    </dd>
+                    <dt className="text-muted-foreground">fin</dt>
+                    <dd>
+                      <LocalDate date={event.endDate} /> <LocalTime date={event.endDate} />
+                    </dd>
+                  </>
+                ) : (
+                  <>
+                    <dt className="text-muted-foreground">fecha</dt>
+                    <dd>
+                      <LocalDate date={event.date} /> <LocalTime date={event.date} />
+                    </dd>
+                  </>
+                )}
+                {event.isOnline ? (
+                  <>
+                    <dt className="text-muted-foreground">modo</dt>
+                    <dd>online</dd>
+                  </>
+                ) : (
+                  (event.city || event.placeName || event.address) && (
+                    <>
+                      <dt className="text-muted-foreground">lugar</dt>
+                      <dd>
+                        {[event.placeName, event.address, event.city && `${event.city}, Argentina`]
+                          .filter(Boolean)
+                          .join(' · ')}
+                      </dd>
+                    </>
+                  )
+                )}
+                {event.isOnline && event.streamingUrl && (
+                  <>
+                    <dt className="text-muted-foreground">stream</dt>
+                    <dd>
+                      <a
+                        href={event.streamingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-pcnGreen hover:underline"
                       >
-                        <Button variant="pcn" className="mt-1 w-full gap-2">
-                          <Mic className="h-4 w-4" />
-                          Proponer una charla
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                        <Video className="h-3 w-3" />
+                        ver transmisión
+                      </a>
+                    </dd>
+                  </>
+                )}
+              </dl>
+              <a
+                href={createGoogleCalendarUrl(event)}
+                className="mt-2 inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                <CalendarPlus className="h-3.5 w-3.5" />
+                agregar a google calendar
+              </a>
+            </Section>
 
-              {/* Anuncios del evento */}
-              {eventAnnouncements.length > 0 && (
+            {/* Descripción */}
+            {event.description && (
+              <Section title="descripción">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  {event.description}
+                </p>
+              </Section>
+            )}
+
+            {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
+            {isAdmin && !isExternalEvent && (
+              <Section title="inscripciones">
+                <Link
+                  href={`/eventos/${id}/inscripciones`}
+                  className="flex items-center justify-between gap-2 font-mono text-xs hover:text-pcnGreen"
+                >
+                  <span className="flex items-center gap-2">
+                    <Users className="h-3.5 w-3.5" />
+                    {registrations.filter((r) => r.cancelledAt === null).length} activas ·{' '}
+                    {registrations.length} total
+                  </span>
+                  <span>ver todas →</span>
+                </Link>
+              </Section>
+            )}
+
+            {/* Call for speakers — botón para usuarios */}
+            {event.callForSpeakersEnabled && (
+              <Section title="call for speakers">
+                <Link
+                  href={
+                    sessionId
+                      ? `/eventos/${id}/proponer-charla`
+                      : `/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
+                  }
+                  className="flex items-center justify-between gap-2 text-sm text-muted-foreground hover:text-pcnGreen"
+                >
+                  <span>Este evento acepta propuestas de charlas de la comunidad.</span>
+                  <span className="flex shrink-0 items-center gap-1 font-mono text-xs text-pcnGreen">
+                    <Mic className="h-3.5 w-3.5" />
+                    proponer →
+                  </span>
+                </Link>
+              </Section>
+            )}
+
+            {/* Anuncios del evento */}
+            {eventAnnouncements.length > 0 && (
+              <div className="p-3">
                 <EventAnnouncements announcements={eventAnnouncements} />
-              )}
+              </div>
+            )}
 
-              {/* Información del evento */}
-              <Card className={sectionCardClassName}>
-                <CardHeader>
-                  <CardTitle>Información</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start gap-2">
-                    <Calendar className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex flex-col gap-1">
-                      {event.endDate ? (
-                        <>
-                          <p className="text-sm font-medium">Fechas</p>
-                          <div className="flex flex-col gap-0.5">
-                            <p className="text-sm text-muted-foreground">
-                              <span className="font-medium text-foreground">Inicio:</span>{' '}
-                              <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              <span className="font-medium text-foreground">Fin:</span>{' '}
-                              <LocalDate date={event.endDate} /> a las{' '}
-                              <LocalTime date={event.endDate} />
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-sm font-medium">Fecha y hora</p>
-                          <p className="text-sm text-muted-foreground">
-                            <LocalDate date={event.date} /> a las <LocalTime date={event.date} />
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <Button asChild variant="outline" className="w-full gap-2">
-                    <a href={createGoogleCalendarUrl(event)}>
-                      <CalendarPlus className="h-4 w-4" />
-                      Agregar a Google Calendar
-                    </a>
-                  </Button>
-
-                  {event.isOnline ? (
-                    <div className="flex items-center gap-2">
-                      <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                      <div className="flex flex-col">
-                        <p className="text-sm font-medium">Modalidad</p>
-                        <p className="text-sm text-muted-foreground">Online</p>
-                      </div>
-                    </div>
-                  ) : (
-                    (event.city || event.placeName || event.address) && (
-                      <div className="flex items-start gap-2">
-                        <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                        <div className="flex flex-col">
-                          <p className="text-sm font-medium">Ubicación</p>
-                          {event.placeName && (
-                            <p className="text-sm text-muted-foreground">{event.placeName}</p>
-                          )}
-                          {event.address && (
-                            <p className="text-sm text-muted-foreground">{event.address}</p>
-                          )}
-                          {event.city && (
-                            <p className="text-sm text-muted-foreground">{event.city}, Argentina</p>
-                          )}
-                        </div>
-                      </div>
-                    )
+            {/* Sponsors */}
+            {event.sponsors && event.sponsors.length > 0 && (
+              <Section title="sponsors">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+                  {event.sponsors.map((sponsor) =>
+                    sponsor.website ? (
+                      <a
+                        key={sponsor.id}
+                        href={sponsor.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-pcnGreen hover:underline"
+                      >
+                        <Globe className="h-3 w-3" />
+                        {sponsor.name}
+                      </a>
+                    ) : (
+                      <span key={sponsor.id}>{sponsor.name}</span>
+                    ),
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </Section>
+            )}
 
-              {/* Sponsors */}
-              {event.sponsors && event.sponsors.length > 0 && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle>Sponsors</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col gap-3">
-                      {event.sponsors.map((sponsor) => (
-                        <div key={sponsor.id} className="flex items-center gap-2">
-                          {sponsor.website ? (
-                            <a
-                              href={sponsor.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-sm font-medium text-pcnPurple hover:underline dark:text-pcnGreen"
-                            >
-                              <Globe className="h-4 w-4" />
-                              {sponsor.name}
-                            </a>
-                          ) : (
-                            <span className="text-sm font-medium">{sponsor.name}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Transmisión online */}
-              {event.isOnline && event.streamingUrl && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle>Transmisión</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <a
-                      href={event.streamingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-medium text-pcnPurple hover:underline dark:text-pcnGreen"
-                    >
-                      <Video className="h-4 w-4" />
-                      Ver transmisión
-                    </a>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Mapa */}
-              {!event.isOnline && event.latitude && event.longitude && (
-                <Card className={sectionCardClassName}>
-                  <CardHeader>
-                    <CardTitle>Mapa</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                      <iframe
-                        src={`https://www.google.com/maps?q=${Number(event.latitude).toFixed(6)},${Number(event.longitude).toFixed(6)}&z=15&output=embed`}
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Ubicación del evento"
-                        sandbox="allow-scripts allow-same-origin"
-                        className="absolute inset-0"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+            {/* Mapa */}
+            {!event.isOnline && event.latitude && event.longitude && (
+              <div className="relative h-56 w-full overflow-hidden">
+                <iframe
+                  src={`https://www.google.com/maps?q=${Number(event.latitude).toFixed(6)},${Number(event.longitude).toFixed(6)}&z=15&output=embed`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación del evento"
+                  sandbox="allow-scripts allow-same-origin"
+                  className="absolute inset-0"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

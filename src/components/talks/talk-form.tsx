@@ -89,7 +89,7 @@ function SpeakerFields({
   const isStudent = !!useWatch({ control, name: `speakers.${index}.isStudent` });
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
+    <div className="space-y-4 border border-pcnGreen-200 p-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">Orador {index + 1}</h3>
         {canRemove && (

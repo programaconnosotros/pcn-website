@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -33,18 +32,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Heading2 } from '@/components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import {
-  Calendar,
-  CalendarDays,
+  ArrowUpRight,
   Edit,
   FileText,
-  MapPin,
   MicVocal,
   MoreVertical,
   Plus,
   Trash2,
-  User,
   Youtube,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -80,205 +78,208 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
     }
   };
 
+  const linkClass =
+    'inline-flex items-center gap-1 font-mono text-[11px] text-pcnGreen-700 hover:text-pcnGreen';
+
   return (
     <div className="mt-4">
-      <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex w-full flex-row items-center justify-between">
-          <Heading2 className="m-0 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-              <MicVocal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-            </div>
-            <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Charlas</span>
-          </Heading2>
-
-          {isAdmin ? (
-            <Button variant="pcn" onClick={() => setShowCreate(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Nueva charla
-            </Button>
-          ) : (
-            <Link href="https://wa.me/5493815777562">
-              <Button variant="pcn" className="flex flex-row items-center gap-2">
-                Quiero dar una charla
-                <MicVocal className="h-5 w-5" />
-              </Button>
-            </Link>
-          )}
-        </div>
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+        <PageTitle
+          path="charlas"
+          meta={`${talks.length} charlas dadas por la comunidad`}
+          className="mb-0 flex-1"
+        />
+        {isAdmin ? (
+          <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+            <Plus className="mr-1.5 h-4 w-4" />
+            Nueva charla
+          </Button>
+        ) : (
+          <Link
+            href="https://wa.me/5493815777562"
+            className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+          >
+            <MicVocal className="h-3.5 w-3.5" />
+            quiero dar una charla
+          </Link>
+        )}
       </div>
 
-      <div className="my-5 ml-0 grid grid-cols-1 gap-5 xl:grid-cols-2">
+      <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
         {talks.map((talk) => {
           const eventTitle = talk.event?.name ?? talk.manualEventTitle;
           const eventDate = talk.event?.date ?? talk.manualEventDate;
           const location = talk.event
             ? talk.event.isOnline
-              ? 'Online'
+              ? 'online'
               : [talk.event.placeName, talk.event.city].filter(Boolean).join(', ')
             : talk.manualEventLocation ?? '';
+          const eventMeta = [
+            eventDate &&
+              new Date(eventDate).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              }),
+            location,
+          ]
+            .filter(Boolean)
+            .join(' · ');
+
           return (
-            <Card
-              key={talk.id}
-              className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f] md:flex-row"
-            >
-              {talk.portraitUrl && (
-                <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={talk.portraitUrl}
-                    alt={`Foto de la charla "${talk.title}"`}
-                    className="h-full w-full object-cover"
-                  />
+            <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm border border-pcnGreen-200 bg-black">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={talk.portraitUrl ?? '/logo.webp'}
+                  alt={`Foto de la charla "${talk.title}"`}
+                  className={cn(
+                    'h-full w-full object-cover',
+                    !talk.portraitUrl && 'p-3 opacity-30',
+                  )}
+                />
+              </div>
+
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex items-start gap-2">
+                  <h2 className="line-clamp-2 flex-1 font-mono text-sm font-semibold">
+                    {talk.title}
+                  </h2>
+                  {isAdmin && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="-mr-1 -mt-1 h-6 w-6 shrink-0"
+                        >
+                          <MoreVertical className="h-3.5 w-3.5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setEditingTalk(talk)}>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setDeletingTalk(talk)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Eliminar
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
-              )}
 
-              <div className="flex flex-1 flex-col">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg">{talk.title}</CardTitle>
-                    {isAdmin && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingTalk(talk)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => setDeletingTalk(talk)}
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-                </CardHeader>
-
-                <CardContent className="flex-1">
-                  <div className="flex items-start gap-2">
-                    <User className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                    <div className="flex min-w-0 flex-col gap-0.5">
-                      {talk.speakers.map((speaker) =>
-                        speaker.user ? (
+                {talk.speakers.length > 0 && (
+                  <p className="truncate font-mono text-[11px] text-muted-foreground">
+                    <span className="text-pcnGreen-500">@ </span>
+                    {talk.speakers.map((speaker, index) => (
+                      <span key={speaker.id}>
+                        {index > 0 && ', '}
+                        {speaker.user ? (
                           <Link
-                            key={speaker.id}
                             href={`/perfil/${speaker.user.id}`}
-                            className="text-sm text-muted-foreground hover:underline"
+                            className="hover:text-pcnGreen hover:underline"
                           >
                             {speaker.speakerName}
                           </Link>
                         ) : (
-                          <p key={speaker.id} className="text-sm text-muted-foreground">
-                            {speaker.speakerName}
-                          </p>
-                        ),
-                      )}
-                    </div>
-                  </div>
+                          speaker.speakerName
+                        )}
+                      </span>
+                    ))}
+                  </p>
+                )}
 
-                  {eventTitle && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      {talk.event?.id ? (
+                {(eventTitle || eventMeta) && (
+                  <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                    <span className="text-pcnGreen-500">$ </span>
+                    {eventTitle &&
+                      (talk.event?.id ? (
                         <Link
                           href={`/eventos/${talk.event.id}`}
-                          className="min-w-0 text-sm text-muted-foreground hover:underline"
+                          className="hover:text-pcnGreen hover:underline"
                         >
                           {eventTitle}
                         </Link>
                       ) : (
-                        <p className="min-w-0 text-sm text-muted-foreground">{eventTitle}</p>
-                      )}
-                    </div>
-                  )}
+                        eventTitle
+                      ))}
+                    {eventTitle && eventMeta && ' · '}
+                    {eventMeta}
+                  </p>
+                )}
 
-                  {eventDate && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="min-w-0 text-sm text-muted-foreground">
-                        {new Date(eventDate)
-                          .toLocaleDateString('es-ES', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          })
-                          .replace(/\//g, '/')}
-                      </p>
-                    </div>
-                  )}
+                {(talk.videoUrl || talk.slideImages.length > 0 || talk.slidesUrl) && (
+                  <div className="mt-auto flex gap-3 pt-1">
+                    {talk.videoUrl && (
+                      <Link
+                        href={talk.videoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={linkClass}
+                      >
+                        <Youtube className="h-3 w-3" />
+                        video
+                        <ArrowUpRight className="h-3 w-3" />
+                      </Link>
+                    )}
 
-                  {location && (
-                    <div className="mt-2 flex items-start gap-2">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                      <p className="min-w-0 text-sm text-muted-foreground">{location}</p>
-                    </div>
-                  )}
-                </CardContent>
+                    {talk.slideImages.length > 0 ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button type="button" className={linkClass}>
+                            <FileText className="h-3 w-3" />
+                            slides
+                          </button>
+                        </DialogTrigger>
 
-                <CardFooter className="mt-auto flex flex-col items-start gap-2">
-                  {talk.videoUrl && (
-                    <Link href={talk.videoUrl} target="_blank" rel="noopener noreferrer">
-                      <Button className="flex items-center gap-2" variant="youtube">
-                        Ver en YouTube
-                        <Youtube className="h-4 w-4 text-white" />
-                      </Button>
-                    </Link>
-                  )}
+                        <DialogContent className="max-w-4xl px-16">
+                          <DialogHeader>
+                            <DialogTitle>{talk.title}</DialogTitle>
+                          </DialogHeader>
 
-                  {talk.slideImages.length > 0 ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button className="flex items-center gap-2" variant="outline">
-                          Ver slides
-                          <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                        </Button>
-                      </DialogTrigger>
+                          <Carousel>
+                            <CarouselContent>
+                              {talk.slideImages.map((slide, index) => (
+                                <CarouselItem key={index}>
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={slide}
+                                    alt={`Slide ${index + 1}`}
+                                    className="h-auto w-full"
+                                  />
+                                </CarouselItem>
+                              ))}
+                            </CarouselContent>
 
-                      <DialogContent className="max-w-4xl px-16">
-                        <DialogHeader>
-                          <DialogTitle>{talk.title}</DialogTitle>
-                        </DialogHeader>
-
-                        <Carousel>
-                          <CarouselContent>
-                            {talk.slideImages.map((slide, index) => (
-                              <CarouselItem key={index}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={slide}
-                                  alt={`Slide ${index + 1}`}
-                                  className="h-auto w-full"
-                                />
-                              </CarouselItem>
-                            ))}
-                          </CarouselContent>
-
-                          <CarouselPrevious />
-                          <CarouselNext />
-                        </Carousel>
-                      </DialogContent>
-                    </Dialog>
-                  ) : talk.slidesUrl ? (
-                    <Link href={talk.slidesUrl} target="_blank" rel="noopener noreferrer">
-                      <Button className="flex items-center gap-2" variant="outline">
-                        Ver slides
-                        <FileText className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                      </Button>
-                    </Link>
-                  ) : null}
-                </CardFooter>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                          </Carousel>
+                        </DialogContent>
+                      </Dialog>
+                    ) : talk.slidesUrl ? (
+                      <Link
+                        href={talk.slidesUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={linkClass}
+                      >
+                        <FileText className="h-3 w-3" />
+                        slides
+                        <ArrowUpRight className="h-3 w-3" />
+                      </Link>
+                    ) : null}
+                  </div>
+                )}
               </div>
-            </Card>
+            </div>
           );
         })}
-      </div>
+      </RuledGrid>
 
       {/* Create dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>

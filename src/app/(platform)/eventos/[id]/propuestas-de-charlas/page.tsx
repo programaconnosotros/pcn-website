@@ -10,10 +10,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft, Mic } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { SubPageTitle } from '@/components/events/sub-page-title';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -28,7 +25,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LocalDateTime } from '@/components/ui/local-date-time';
 import { WhatsappSpeakerButton } from '@/components/talk-proposals/whatsapp-speaker-button';
 import { ProposalStatusActions } from '@/components/talk-proposals/proposal-status-actions';
@@ -103,27 +99,22 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center gap-4">
-            <Link href={`/eventos/${id}`}>
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Heading2 className="m-0">Propuestas de charlas — {event.name}</Heading2>
-          </div>
+          <SubPageTitle
+            backHref={`/eventos/${id}`}
+            path="eventos/propuestas · "
+            title={event.name}
+          />
 
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mic className="h-5 w-5" />
-                Propuestas ({proposals.length} total)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          <section className="mb-14 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              propuestas · {proposals.length} total
+            </h2>
+            <div className="p-3">
               {proposals.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">
+                <p className="py-4 font-mono text-sm text-muted-foreground">
                   Aún no hay propuestas de charlas para este evento.
                 </p>
               ) : (
@@ -238,8 +229,8 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
                   </Table>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </section>
         </div>
       </div>
     </>
