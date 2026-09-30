@@ -51,7 +51,7 @@ export const HomeHero = ({ userName }: HomeHeroProps) => {
       <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-10 md:pb-14 md:pt-14 lg:px-8">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
-            <motion.div {...fadeUp(0)}>
+            <motion.div {...fadeUp(0)} className="hidden md:block">
               <span className="inline-flex items-center gap-2 rounded-sm border border-pcnGreen/25 bg-black/60 px-3 py-1 font-mono text-xs font-medium text-pcnGreen">
                 <span className="text-pcnGreen-600">$</span>
                 Comunidad de ingeniería de software · Sin fronteras
@@ -60,7 +60,7 @@ export const HomeHero = ({ userName }: HomeHeroProps) => {
 
             <motion.h1
               {...fadeUp(0.08)}
-              className="mt-6 text-balance font-mono text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground md:text-6xl lg:text-7xl"
+              className="text-balance font-mono text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground md:mt-6 md:text-6xl lg:text-7xl"
             >
               {firstName ? (
                 <>
