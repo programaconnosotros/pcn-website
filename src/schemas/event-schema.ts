@@ -107,10 +107,12 @@ export const eventSchema = z
       (val) => (val === undefined || val === null ? false : val),
       z.boolean().default(false),
     ),
+    // Optional because the server re-parses the client-side output, where '' is already undefined.
     shortcut: z
       .string()
+      .optional()
       .transform((val) => {
-        const trimmed = val.trim();
+        const trimmed = val?.trim() ?? '';
         return trimmed === '' ? undefined : trimmed.toLowerCase();
       })
       .pipe(
