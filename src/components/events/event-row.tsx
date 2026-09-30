@@ -34,12 +34,15 @@ export const EventRow: React.FC<{ event: EventWithCount; className?: string }> =
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-center gap-2 font-mono text-sm">
-          <h2 className="truncate font-semibold group-hover:text-pcnGreen">{event.name}</h2>
-          <span className="ml-auto flex shrink-0 items-center gap-1">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-sm">
+          <h2 className="min-w-0 flex-1 basis-0 truncate font-semibold group-hover:text-pcnGreen">
+            {event.name}
+          </h2>
+          {/* On mobile the badge drops below the title so it never truncates it. */}
+          <span className="order-last flex basis-full empty:hidden sm:order-none sm:basis-auto">
             <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
-            <ChevronRight className="h-3 w-3 text-muted-foreground group-hover:text-pcnGreen" />
           </span>
+          <ChevronRight className="h-3 w-3 shrink-0 text-muted-foreground group-hover:text-pcnGreen" />
         </div>
 
         {event.description && (
