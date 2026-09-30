@@ -50,6 +50,7 @@ model User {
   announcements   Announcement[]
   projectMemberships ProjectMember[] @relation("UserProjectMembers")
   authoredProjects   Project[]       @relation("UserAuthoredProjects")
+  contentMarks       ContentMark[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -489,4 +490,21 @@ model ProjectMember {
   @@index([projectId])
   @@index([userId])
   @@index([projectId, order])
+}
+
+// A personal mark a user leaves on static content listed on the site, like an article they
+// already read. `contentType`/`mark` pairs are validated in src/actions/content-marks.
+model ContentMark {
+  id          String @id @default(cuid())
+  userId      String
+  contentType String
+  contentId   String
+  mark        String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, contentType, contentId, mark])
+  @@index([userId, contentType])
 }

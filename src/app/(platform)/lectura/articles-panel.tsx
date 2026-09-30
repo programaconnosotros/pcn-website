@@ -3,7 +3,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { MarkToggle } from '@/components/ui/mark-toggle';
+import { useContentMarks } from '@/hooks/use-content-marks';
+import { Check, CheckCheck, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 import type { Article } from './articles';
 
 export const ALL_ARTICLE_CATEGORIES = 'Todas las categorías';
@@ -28,6 +31,14 @@ const bar = (value: number, max: number, width = 10) => {
   const filled = max > 0 ? Math.max(1, Math.round((value / max) * width)) : 0;
   return { filled: '█'.repeat(filled), empty: '░'.repeat(width - filled) };
 };
+
+const READ_STATUSES = [
+  { value: 'todos', label: 'todos' },
+  { value: 'pendientes', label: 'sin leer' },
+  { value: 'leidos', label: 'leídos' },
+] as const;
+
+type ReadStatus = (typeof READ_STATUSES)[number]['value'];
 
 interface ArticlesPanelProps {
   /** Every article, used for the stats and the category histogram. */
@@ -100,10 +111,14 @@ const ArticleRow = ({
   article,
   index,
   onOpen,
+  read,
+  onToggleRead,
 }: {
   article: Article;
   index: number;
   onOpen: () => void;
+  read: boolean;
+  onToggleRead: () => void;
 }) => {
   const isNew = Date.now() - new Date(article.date).getTime() < NEW_ARTICLE_MS;
 
@@ -113,7 +128,12 @@ const ArticleRow = ({
       <span className="pointer-events-none absolute inset-y-0 left-0 w-px origin-top scale-y-0 bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.9)] transition-transform duration-300 group-hover:scale-y-100" />
       <span className="article-scan pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-transparent via-pcnGreen/[0.08] to-transparent opacity-0 group-hover:opacity-100" />
 
-      <div className="flex shrink-0 flex-col items-center gap-1.5">
+      <div className="relative flex shrink-0 flex-col items-center gap-1.5">
+        {read && (
+          <span className="absolute -right-1 -top-1 z-10 flex size-4 items-center justify-center bg-pcnGreen text-black shadow-[0_0_8px_rgba(4,244,190,0.8)]">
+            <Check className="size-3" strokeWidth={3} />
+          </span>
+        )}
         <Avatar className="size-10 rounded-sm ring-1 ring-pcnGreen-200 transition-[filter,box-shadow] duration-300 [filter:grayscale(0.7)] group-hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.6)] group-hover:ring-pcnGreen-500 group-hover:[filter:none]">
           <AvatarImage src={article.avatar} alt={article.author} />
           <AvatarFallback className="rounded-sm font-mono text-xs">
@@ -125,7 +145,12 @@ const ArticleRow = ({
         </span>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div
+        className={cn(
+          'flex min-w-0 flex-1 flex-col gap-1 transition-opacity',
+          read && 'opacity-60 group-hover:opacity-100',
+        )}
+      >
         <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
           <span className="border border-pcnGreen-300 px-1 text-pcnGreen-700">
             {article.category}
@@ -162,10 +187,17 @@ const ArticleRow = ({
             <span className="text-pcnGreen-500"> ~ </span>
             {article.source}
           </span>
-          <span className="ml-auto flex shrink-0 items-center gap-0.5 text-pcnGreen-600 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:opacity-100">
+          <span className="ml-auto flex shrink-0 items-center gap-0.5 text-pcnGreen-600 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:opacity-100 max-sm:hidden">
             leer
             <ChevronRight className="size-3" />
           </span>
+          <MarkToggle
+            active={read}
+            onToggle={onToggleRead}
+            icon={CheckCheck}
+            label="leído"
+            title={read ? 'Desmarcar como leído' : 'Marcar como leído'}
+          />
         </div>
       </div>
     </article>
@@ -180,6 +212,19 @@ export function ArticlesPanel({
   onCategoryChange,
   onOpen,
 }: ArticlesPanelProps) {
+  const marks = useContentMarks('article');
+  const [status, setStatus] = useState<ReadStatus>('todos');
+  const readIds = marks.ids('read');
+  const readCount = articles.filter((article) => readIds.has(article.id)).length;
+  const progress = bar(readCount, articles.length, 16);
+  const visibleArticles = filteredArticles.filter((article) =>
+    status === 'todos'
+      ? true
+      : status === 'leidos'
+        ? readIds.has(article.id)
+        : !readIds.has(article.id),
+  );
+
   const sources = new Set(articles.map((article) => article.source)).size;
   const authors = new Set(articles.map((article) => article.author)).size;
   const years = articles.map((article) => Number(article.date.slice(0, 4)));
@@ -205,9 +250,7 @@ export function ArticlesPanel({
           </span>
           <span className="flex gap-4 text-muted-foreground">
             <span>
-              <span className="text-glow tabular-nums text-pcnGreen">
-                {filteredArticles.length}
-              </span>
+              <span className="text-glow tabular-nums text-pcnGreen">{visibleArticles.length}</span>
               /{articles.length} artículos
             </span>
             <span>
@@ -218,6 +261,50 @@ export function ArticlesPanel({
             </span>
           </span>
         </div>
+        {/* Reading progress and the read/unread filter. */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-pcnGreen-200 px-3 py-2 text-[11px]">
+          <span className="flex items-center gap-2 text-muted-foreground">
+            progreso
+            <span aria-hidden className="tracking-[-0.05em]">
+              <span className="text-glow text-pcnGreen">
+                {readCount > 0 ? progress.filled : ''}
+              </span>
+              <span className="text-pcnGreen-200">
+                {readCount > 0 ? progress.empty : '░'.repeat(16)}
+              </span>
+            </span>
+            <span className="tabular-nums text-pcnGreen">
+              {readCount}/{articles.length}
+            </span>
+            {!marks.isAuthenticated && !marks.isLoading && (
+              <span className="text-muted-foreground/70 max-sm:hidden">
+                · iniciá sesión para guardar lo que leés
+              </span>
+            )}
+          </span>
+          <span
+            className="ml-auto flex border border-pcnGreen-200"
+            role="group"
+            aria-label="Filtrar por estado"
+          >
+            {READ_STATUSES.map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={status === value}
+                onClick={() => setStatus(value)}
+                className={cn(
+                  'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                  status === value
+                    ? 'bg-pcnGreen text-black'
+                    : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </span>
+        </div>
       </div>
 
       <CategoryHistogram
@@ -226,14 +313,16 @@ export function ArticlesPanel({
         onCategoryChange={onCategoryChange}
       />
 
-      {filteredArticles.length > 0 ? (
+      {visibleArticles.length > 0 ? (
         <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-          {filteredArticles.map((article) => (
+          {visibleArticles.map((article) => (
             <ArticleRow
               key={article.id}
               article={article}
               index={articles.indexOf(article)}
               onOpen={() => onOpen(article)}
+              read={readIds.has(article.id)}
+              onToggleRead={() => marks.toggle(article.id, 'read')}
             />
           ))}
         </RuledGrid>
