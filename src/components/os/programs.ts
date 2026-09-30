@@ -173,6 +173,7 @@ export const OS_PROGRAMS: OsProgram[] = [
     icon: Music,
     color: 'from-red-400 to-pink-600',
     group: 'Recursos',
+    pinned: true,
   },
   {
     id: 'series-y-peliculas',
