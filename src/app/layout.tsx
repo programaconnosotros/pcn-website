@@ -58,6 +58,13 @@ const RootLayout = async ({
         <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
       </head>
       <body className={GeistSans.className}>
+        {/* Opaque strip under the iOS status bar. With `viewport-fit=cover` the page scrolls
+            behind it, and Safari 26 tints the status bar from whatever fixed element touches
+            the top edge, so page content would otherwise show above the first row. */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[max(env(safe-area-inset-top),1px)] bg-background embedded:hidden md:hidden"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

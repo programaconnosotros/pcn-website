@@ -84,6 +84,11 @@
   * {
     @apply border-border;
   }
+  /* Explicit root background: Safari 26 ignores theme-color and tints its translucent
+     status bar / toolbar from the page, so the canvas behind them must never be transparent. */
+  html {
+    @apply bg-background;
+  }
   body {
     @apply bg-background text-foreground;
     caret-color: #04f4be;

@@ -409,9 +409,13 @@ export function MobileNav({
       <nav
         ref={tabBarRef}
         aria-label="Navegación principal"
-        className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] border-t border-pcnGreen-200 bg-black/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md embedded:hidden md:hidden"
+        // Safari 26 tints its floating toolbar by sampling fixed bottom containers, and a
+        // translucent or blurred one makes it bleed page content or turn white. Keep the root
+        // transparent and paint an opaque fill in an absolute child instead.
+        className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"
       >
-        <div className="flex h-16 items-stretch">
+        <div aria-hidden className="absolute inset-0 border-t border-pcnGreen-200 bg-black" />
+        <div className="relative flex h-16 items-stretch">
           {tabItems.map((item) => {
             const active = !openMobile && isActivePath(pathname, item.url);
             return (
