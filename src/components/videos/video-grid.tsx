@@ -41,7 +41,7 @@ const VideoCell = ({ video, onPlay }: { video: Video; onPlay: () => void }) => (
       />
       <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.18)_0_1px,transparent_1px_3px)]" />
       <span className="absolute inset-0 flex items-center justify-center">
-        <span className="flex size-11 items-center justify-center rounded-sm border border-pcnGreen-500 bg-black/70 text-pcnGreen opacity-0 shadow-[0_0_18px_-4px_rgba(4,244,190,0.8)] transition-opacity duration-200 group-hover:opacity-100">
+        <span className="flex size-9 items-center justify-center rounded-sm border border-pcnGreen-500 bg-black/70 text-pcnGreen opacity-0 shadow-[0_0_18px_-4px_rgba(4,244,190,0.8)] transition-opacity duration-200 group-hover:opacity-100">
           <Play className="size-4 fill-current" />
         </span>
       </span>
@@ -50,11 +50,11 @@ const VideoCell = ({ video, onPlay }: { video: Video; onPlay: () => void }) => (
       </span>
     </span>
 
-    <span className="flex items-start gap-2 font-mono text-sm">
-      <span className="line-clamp-2 flex-1 font-semibold group-hover:text-pcnGreen">
+    <span className="flex items-start gap-2 font-mono text-xs">
+      <span className="line-clamp-2 flex-1 font-semibold leading-snug group-hover:text-pcnGreen">
         {video.title}
       </span>
-      <span className="shrink-0 pt-0.5 text-[11px] tabular-nums text-muted-foreground">
+      <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground max-sm:hidden">
         {formatDate(video.date)}
       </span>
     </span>
@@ -71,7 +71,7 @@ export function VideoGrid({ videos }: { videos: Video[] }) {
 
   return (
     <>
-      <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+      <RuledGrid className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
         {videos.map((video) => (
           <VideoCell key={video.id} video={video} onPlay={() => setPlaying(video)} />
         ))}
