@@ -53,28 +53,28 @@ const Home = async () => {
   const featuredTestimonials = await fetchFeaturedTestimonials();
 
   return (
-    <>
-      <PageTitle
-        path={[]}
-        className="mb-4 px-4 pt-3 md:mb-0"
-        action={
-          <Link
-            href={WHATSAPP_GROUP_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 text-xs text-pcnGreen-500 transition-colors hover:text-pcnGreen"
-          >
-            <MessageCircle className="size-3.5" />
-            whatsapp ↗
-          </Link>
-        }
-      />
-      <HomeClientSide
-        userName={session?.user?.name ?? null}
-        featuredTestimonials={featuredTestimonials}
-        recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
-      />
-    </>
+    <HomeClientSide
+      userName={session?.user?.name ?? null}
+      title={
+        <PageTitle
+          path={[]}
+          className="mb-0"
+          action={
+            <Link
+              href={WHATSAPP_GROUP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 text-xs text-pcnGreen-500 transition-colors hover:text-pcnGreen"
+            >
+              <MessageCircle className="size-3.5" />
+              whatsapp ↗
+            </Link>
+          }
+        />
+      }
+      featuredTestimonials={featuredTestimonials}
+      recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
+    />
   );
 };
 

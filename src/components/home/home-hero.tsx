@@ -8,11 +8,14 @@ import { ArrowRight, CalendarDays, LogIn, MessageCircle, UserPlus } from 'lucide
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 export const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh';
 
 interface HomeHeroProps {
   userName: string | null;
+  /** Page title rendered over the hero backdrop, aligned with its content. */
+  title?: ReactNode;
 }
 
 /** Community-wide figures; rounded down on purpose ("500+"). */
@@ -28,7 +31,7 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-export const HomeHero = ({ userName }: HomeHeroProps) => {
+export const HomeHero = ({ userName, title }: HomeHeroProps) => {
   const firstName = userName?.split(' ')[0] ?? null;
 
   return (
@@ -49,8 +52,9 @@ export const HomeHero = ({ userName }: HomeHeroProps) => {
         <div className="bg-grid-fade absolute inset-0 opacity-60" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-10 md:pb-14 md:pt-14 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
+      <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-3 md:pb-14 lg:px-8">
+        {title}
+        <div className="grid items-center gap-8 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
             <motion.div {...fadeUp(0)} className="hidden md:block">
               <span className="inline-flex items-center gap-2 rounded-sm border border-pcnGreen/25 bg-black/60 px-3 py-1 font-mono text-xs font-medium text-pcnGreen">

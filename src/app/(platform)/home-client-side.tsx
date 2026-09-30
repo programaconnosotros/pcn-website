@@ -16,18 +16,20 @@ import React from 'react';
 
 interface HomeClientSideProps {
   userName: string | null;
+  title: React.ReactNode;
   featuredTestimonials: FeaturedTestimonial[];
   recentlyAddedEventsSection: React.ReactNode;
 }
 
 const HomeClientSide = ({
   userName,
+  title,
   featuredTestimonials,
   recentlyAddedEventsSection,
 }: HomeClientSideProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
-    <HomeHero userName={userName} />
+    <HomeHero userName={userName} title={title} />
     <SponsorsMarquee />
 
     <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-10 md:gap-16 md:py-14 lg:px-8">
