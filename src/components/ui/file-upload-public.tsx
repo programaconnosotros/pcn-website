@@ -116,11 +116,11 @@ export function FileUploadPublic({
 
       {preview ? (
         <div className="relative inline-block">
-          <div className="relative h-32 w-32 overflow-hidden rounded-xl border bg-muted">
+          <div className="relative h-32 w-32 overflow-hidden rounded-lg border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               </div>
             )}
@@ -144,7 +144,7 @@ export function FileUploadPublic({
           onClick={() => inputRef.current?.click()}
           disabled={disabled || isUploading}
           className={cn(
-            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
             disabled && 'cursor-not-allowed opacity-50',
             isUploading && 'cursor-wait',
           )}

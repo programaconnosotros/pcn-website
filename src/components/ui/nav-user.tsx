@@ -42,7 +42,7 @@ export function NavUser({ user }: { user: User | null }) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <div className="rounded-xl border border-sidebar-border/80 bg-white/[0.02] p-2">
+          <div className="rounded-lg border border-sidebar-border/80 bg-white/[0.02] p-2">
             <div className="flex flex-col gap-1">
               <Button asChild size="sm" className="w-full rounded-lg">
                 <Link href="/autenticacion/iniciar-sesion">
@@ -84,7 +84,7 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`h-14 rounded-xl border border-sidebar-border/80 bg-white/[0.02] px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen/30 data-[state=open]:bg-sidebar-accent ${
+              className={`h-14 rounded-lg border border-sidebar-border/80 bg-white/[0.02] px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen/30 data-[state=open]:bg-sidebar-accent ${
                 iconOnly ? 'justify-center p-2' : ''
               }`}
             >
@@ -114,7 +114,7 @@ export function NavUser({ user }: { user: User | null }) {
           </DropdownMenuTrigger>
           {!iconOnly && (
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
               side={isMobile ? 'bottom' : 'right'}
               align="end"
               sideOffset={8}

@@ -121,11 +121,11 @@ export function AppSidebar(props: AppSidebarProps) {
             <SidebarMenuButton
               size="lg"
               asChild
-              className="h-12 rounded-xl px-2 hover:bg-sidebar-accent/70"
+              className="h-12 rounded-lg px-2 hover:bg-sidebar-accent/70"
             >
               <Link href="/" className="flex items-center gap-3">
-                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-xl bg-black ring-1 ring-inset ring-white/10">
-                  <span className="absolute inset-0 rounded-xl bg-pcnGreen/20 blur-md" />
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-white/10">
+                  <span className="absolute inset-0 rounded-lg bg-pcnGreen/20 blur-md" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.webp" alt="programaConNosotros" className="relative size-6" />
                 </span>

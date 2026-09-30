@@ -47,7 +47,7 @@ function SoftwareRecommendationCard({
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border bg-white p-2 dark:bg-neutral-800">
+            <div className="flex h-14 w-14 items-center justify-center rounded-lg border bg-white p-2 dark:bg-neutral-800">
               <Image
                 src={logo || '/placeholder.svg?height=48&width=48'}
                 alt={`${name} logo`}

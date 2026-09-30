@@ -55,11 +55,11 @@ export const SocialLinks = () => (
           href={network.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.04]"
+          className="group relative flex items-center gap-3 overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.04]"
           style={{ ['--brand' as string]: network.color }}
         >
           <span
-            className="flex size-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105"
+            className="flex size-11 shrink-0 items-center justify-center rounded-lg transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundColor: `${network.color}1f` }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}

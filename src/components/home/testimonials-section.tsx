@@ -35,7 +35,7 @@ export const TestimonialsSection = ({ testimonials }: { testimonials: FeaturedTe
         {testimonials.map((testimonial) => (
           <figure
             key={testimonial.id}
-            className="relative flex flex-col rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 transition-colors hover:border-white/10"
+            className="relative flex flex-col rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 transition-colors hover:border-white/10"
           >
             <span
               aria-hidden

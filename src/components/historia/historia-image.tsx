@@ -31,7 +31,7 @@ export function HistoriaImage({ src, alt, aspect = 'auto', className }: Historia
         onClick={() => setIsOpen(true)}
         aria-label={`Ampliar imagen: ${alt}`}
         className={cn(
-          'group relative block w-full overflow-hidden rounded-xl border bg-muted/30 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnPurple dark:focus-visible:ring-pcnGreen',
+          'group relative block w-full overflow-hidden rounded-lg border bg-muted/30 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnPurple dark:focus-visible:ring-pcnGreen',
           aspectClasses[aspect],
           className,
         )}

@@ -164,7 +164,7 @@ const StatsPanel = () => {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute -inset-px rounded-[1.6rem] bg-gradient-to-br from-pcnGreen/30 via-transparent to-transparent opacity-70 blur-sm" />
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background/70 shadow-2xl shadow-black/40 backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-lg border border-white/10 bg-background/70 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
           <span className="size-2.5 rounded-full bg-white/15" />
           <span className="size-2.5 rounded-full bg-white/15" />

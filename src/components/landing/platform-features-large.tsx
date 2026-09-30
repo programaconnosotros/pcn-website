@@ -60,7 +60,7 @@ export const PlatformFeaturesLarge = () => (
         <img
           alt=""
           src="/discord-demo.webp"
-          className="w-[48rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
+          className="w-[48rem] max-w-none rounded-lg bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
         />
       </div>
 

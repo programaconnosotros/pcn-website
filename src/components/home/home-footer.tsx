@@ -39,7 +39,7 @@ export const HomeFooter = () => (
       <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-black ring-1 ring-inset ring-white/10">
+            <span className="flex size-9 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-white/10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.webp" alt="programaConNosotros" className="size-6" />
             </span>

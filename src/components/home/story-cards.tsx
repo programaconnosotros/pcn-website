@@ -29,7 +29,7 @@ export const StoryCards = () => (
       <Link
         key={card.href}
         href={card.href}
-        className="group relative flex min-h-[340px] flex-col justify-end overflow-hidden rounded-3xl border border-white/[0.06] md:min-h-[400px]"
+        className="group relative flex min-h-[340px] flex-col justify-end overflow-hidden rounded-lg border border-white/[0.06] md:min-h-[400px]"
       >
         <Image
           src={card.image}

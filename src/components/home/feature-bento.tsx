@@ -96,14 +96,14 @@ const FeatureCard = ({ feature, className }: { feature: Feature; className?: str
   <Link
     href={feature.href}
     className={cn(
-      'group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-30px_rgba(4,244,190,0.35)]',
+      'group relative flex flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-30px_rgba(4,244,190,0.35)]',
       className,
     )}
   >
     <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-pcnGreen/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
 
     <div className="flex items-start justify-between">
-      <span className="flex size-10 items-center justify-center rounded-xl bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/20">
+      <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/20">
         <feature.icon className="size-5" strokeWidth={1.75} />
       </span>
       <ArrowUpRight className="size-4 text-muted-foreground/60 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
@@ -115,7 +115,7 @@ const FeatureCard = ({ feature, className }: { feature: Feature; className?: str
 );
 
 const WhatsAppCard = () => (
-  <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-pcnGreen/25 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(4,244,190,0.16),transparent_55%)] p-6 transition-all duration-300 hover:border-pcnGreen/50 md:col-span-4 md:p-8">
+  <div className="group relative flex flex-col overflow-hidden rounded-lg border border-pcnGreen/25 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(4,244,190,0.16),transparent_55%)] p-6 transition-all duration-300 hover:border-pcnGreen/50 md:col-span-4 md:p-8">
     <MessageCircle
       className="pointer-events-none absolute -bottom-10 -right-10 size-56 text-pcnGreen/[0.06] transition-transform duration-700 group-hover:-rotate-6 group-hover:scale-105"
       strokeWidth={1}
@@ -123,7 +123,7 @@ const WhatsAppCard = () => (
 
     <div className="relative flex flex-1 flex-col">
       <div className="flex items-center gap-3">
-        <span className="flex size-10 items-center justify-center rounded-xl bg-pcnGreen text-black shadow-[0_0_24px_rgba(4,244,190,0.45)]">
+        <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen text-black shadow-[0_0_24px_rgba(4,244,190,0.45)]">
           <MessageCircle className="size-5" strokeWidth={2} />
         </span>
         <span className="rounded-full border border-pcnGreen/30 bg-pcnGreen/10 px-2.5 py-0.5 text-[11px] font-medium text-pcnGreen">
@@ -165,7 +165,7 @@ const WhatsAppCard = () => (
 );
 
 const ComingSoonCard = () => (
-  <div className="relative flex flex-col rounded-2xl border border-dashed border-white/10 bg-transparent p-6 md:col-span-2">
+  <div className="relative flex flex-col rounded-lg border border-dashed border-white/10 bg-transparent p-6 md:col-span-2">
     <span className="w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
       Próximamente
     </span>

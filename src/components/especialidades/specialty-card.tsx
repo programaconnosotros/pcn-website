@@ -10,10 +10,10 @@ export function SpecialtyCard({ specialty }: { specialty: Specialty }) {
   return (
     <article
       id={specialty.id}
-      className="scroll-mt-32 rounded-2xl border bg-card p-5 transition-colors hover:border-pcnPurple/40 dark:hover:border-pcnGreen/40 sm:p-7 lg:scroll-mt-28"
+      className="scroll-mt-32 rounded-lg border bg-card p-5 transition-colors hover:border-pcnPurple/40 dark:hover:border-pcnGreen/40 sm:p-7 lg:scroll-mt-28"
     >
       <header className="flex items-start gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/40 dark:bg-pcnGreen/10 dark:shadow-[0_0_12px_rgba(4,244,190,0.25)]">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/40 dark:bg-pcnGreen/10 dark:shadow-[0_0_12px_rgba(4,244,190,0.25)]">
           <Icon className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
         </div>
         <div className="min-w-0">
@@ -55,7 +55,7 @@ export function SpecialtyCard({ specialty }: { specialty: Specialty }) {
         })}
       </div>
 
-      <div className="mt-6 flex gap-3 rounded-xl border border-pcnPurple/20 bg-pcnPurple/5 p-4 dark:border-pcnGreen/20 dark:bg-pcnGreen/5">
+      <div className="mt-6 flex gap-3 rounded-lg border border-pcnPurple/20 bg-pcnPurple/5 p-4 dark:border-pcnGreen/20 dark:bg-pcnGreen/5">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
         <div>
           <p className="text-sm font-semibold">¿Para quién es ideal?</p>

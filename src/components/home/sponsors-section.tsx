@@ -36,7 +36,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
             href={sponsor.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex h-full flex-col items-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04]"
+            className="group flex h-full flex-col items-center rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-pcnGreen/40 hover:bg-white/[0.04]"
           >
             <div className="mb-6 flex h-28 w-full items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -65,7 +65,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
           href={SPONSOR_CONTACT_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex h-full flex-col items-center justify-center rounded-2xl border border-dashed border-pcnGreen/40 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(4,244,190,0.10),transparent_60%)] p-6 text-center transition-colors hover:border-pcnGreen/70"
+          className="group flex h-full flex-col items-center justify-center rounded-lg border border-dashed border-pcnGreen/40 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(4,244,190,0.10),transparent_60%)] p-6 text-center transition-colors hover:border-pcnGreen/70"
         >
           <div className="mb-4 flex items-center justify-center gap-3 text-pcnGreen">
             <Building2 className="h-7 w-7" strokeWidth={1.5} />

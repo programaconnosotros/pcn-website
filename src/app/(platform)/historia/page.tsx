@@ -132,7 +132,7 @@ const PCNStory = () => (
       <div className="mt-4">
         <div className="mb-6 flex flex-col gap-3">
           <Heading2 className="m-0 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
               <ScrollText className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
             </div>
             <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Historia</span>
@@ -151,7 +151,7 @@ const PCNStory = () => (
             <div className="mx-auto max-w-3xl space-y-14">
               <section
                 id="introduccion"
-                className="relative scroll-mt-32 overflow-hidden rounded-2xl border bg-card p-6 sm:p-8 lg:scroll-mt-28"
+                className="relative scroll-mt-32 overflow-hidden rounded-lg border bg-card p-6 sm:p-8 lg:scroll-mt-28"
               >
                 <div
                   aria-hidden
@@ -591,7 +591,7 @@ const PCNStory = () => (
                     El viernes 12 de junio, en el Aula Magna de la UTN-FRT, realizamos una sesión de{' '}
                     <b>Lightning Talks</b> con 10 charlas de la comunidad:
                   </p>
-                  <ol className="divide-y overflow-hidden rounded-xl border bg-card">
+                  <ol className="divide-y overflow-hidden rounded-lg border bg-card">
                     {lightningTalksNextGen.map((talk, index) => (
                       <li key={talk.title} className="flex gap-4 px-4 py-3">
                         <span className="mt-0.5 w-6 shrink-0 text-right text-xs font-semibold tabular-nums text-pcnPurple dark:text-pcnGreen">

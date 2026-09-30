@@ -37,12 +37,12 @@ const Card = ({
 }) => (
   <div
     className={cn(
-      'group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 transition-colors hover:border-pcnGreen/30 md:p-7',
+      'group relative flex flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] p-6 transition-colors hover:border-pcnGreen/30 md:p-7',
       className,
     )}
   >
     <div className="flex items-start justify-between">
-      <span className="flex size-10 items-center justify-center rounded-xl bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/20">
+      <span className="flex size-10 items-center justify-center rounded-lg bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/20">
         {icon}
       </span>
       <span className={cn(GeistMono.className, 'text-xs text-muted-foreground/50')}>{index}</span>
