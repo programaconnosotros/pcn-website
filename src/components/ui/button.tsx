@@ -29,10 +29,10 @@ const buttonVariants = cva(
           'bg-[#F5B56A] text-black shadow-[0_0_15px_rgba(245,181,106,0.4)] hover:bg-[#F5B56A] hover:shadow-[0_0_20px_rgba(245,181,106,0.7)] disabled:bg-[#F5B56A]/50 disabled:text-black/70 disabled:shadow-none',
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-sm px-3',
-        lg: 'h-11 rounded-sm px-8',
-        icon: 'h-10 w-10',
+        default: 'h-9 px-4',
+        sm: 'h-8 px-3 text-xs',
+        lg: 'h-10 px-5',
+        icon: 'h-9 w-9',
       },
     },
     defaultVariants: {
