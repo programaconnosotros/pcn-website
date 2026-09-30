@@ -5,8 +5,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { useContentMarks } from '@/hooks/use-content-marks';
-import { Check, CheckCheck, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { Bookmark, Check, CheckCheck, ChevronRight } from 'lucide-react';
 import type { Article } from './articles';
 
 export const ALL_ARTICLE_CATEGORIES = 'Todas las categorías';
@@ -36,9 +35,13 @@ const READ_STATUSES = [
   { value: 'todos', label: 'todos' },
   { value: 'pendientes', label: 'sin leer' },
   { value: 'leidos', label: 'leídos' },
+  { value: 'para-leer', label: 'para leer' },
 ] as const;
 
-type ReadStatus = (typeof READ_STATUSES)[number]['value'];
+export type ReadStatus = (typeof READ_STATUSES)[number]['value'];
+
+export const isReadStatus = (value: string | null): value is ReadStatus =>
+  READ_STATUSES.some((status) => status.value === value);
 
 interface ArticlesPanelProps {
   /** Every article, used for the stats and the category histogram. */
@@ -48,6 +51,8 @@ interface ArticlesPanelProps {
   category: string;
   onCategoryChange: (_category: string) => void;
   onOpen: (_article: Article) => void;
+  status: ReadStatus;
+  onStatusChange: (_status: ReadStatus) => void;
 }
 
 const CategoryHistogram = ({
@@ -113,12 +118,16 @@ const ArticleRow = ({
   onOpen,
   read,
   onToggleRead,
+  saved,
+  onToggleSaved,
 }: {
   article: Article;
   index: number;
   onOpen: () => void;
   read: boolean;
   onToggleRead: () => void;
+  saved: boolean;
+  onToggleSaved: () => void;
 }) => {
   const isNew = Date.now() - new Date(article.date).getTime() < NEW_ARTICLE_MS;
 
@@ -191,6 +200,15 @@ const ArticleRow = ({
             leer
             <ChevronRight className="size-3" />
           </span>
+          {!read && (
+            <MarkToggle
+              active={saved}
+              onToggle={onToggleSaved}
+              icon={Bookmark}
+              label="para leer"
+              title={saved ? 'Quitar de mi lista para leer' : 'Guardar en mi lista para leer'}
+            />
+          )}
           <MarkToggle
             active={read}
             onToggle={onToggleRead}
@@ -211,10 +229,12 @@ export function ArticlesPanel({
   category,
   onCategoryChange,
   onOpen,
+  status,
+  onStatusChange,
 }: ArticlesPanelProps) {
   const marks = useContentMarks('article');
-  const [status, setStatus] = useState<ReadStatus>('todos');
   const readIds = marks.ids('read');
+  const savedIds = marks.ids('saved');
   const readCount = articles.filter((article) => readIds.has(article.id)).length;
   const progress = bar(readCount, articles.length, 16);
   const visibleArticles = filteredArticles.filter((article) =>
@@ -222,8 +242,21 @@ export function ArticlesPanel({
       ? true
       : status === 'leidos'
         ? readIds.has(article.id)
-        : !readIds.has(article.id),
+        : status === 'para-leer'
+          ? savedIds.has(article.id)
+          : !readIds.has(article.id),
   );
+
+  // Reading an article takes it off the "to read" list.
+  const toggleRead = (id: string) =>
+    marks.set(
+      readIds.has(id)
+        ? [{ contentId: id, mark: 'read', value: false }]
+        : [
+            { contentId: id, mark: 'read', value: true },
+            ...(savedIds.has(id) ? [{ contentId: id, mark: 'saved' as const, value: false }] : []),
+          ],
+    );
 
   const sources = new Set(articles.map((article) => article.source)).size;
   const authors = new Set(articles.map((article) => article.author)).size;
@@ -292,7 +325,7 @@ export function ArticlesPanel({
                 key={value}
                 type="button"
                 aria-pressed={status === value}
-                onClick={() => setStatus(value)}
+                onClick={() => onStatusChange(value)}
                 className={cn(
                   'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
                   status === value
@@ -301,6 +334,9 @@ export function ArticlesPanel({
                 )}
               >
                 {label}
+                {value === 'para-leer' && savedIds.size > 0 && (
+                  <span className="ml-1 tabular-nums">[{savedIds.size}]</span>
+                )}
               </button>
             ))}
           </span>
@@ -322,13 +358,18 @@ export function ArticlesPanel({
               index={articles.indexOf(article)}
               onOpen={() => onOpen(article)}
               read={readIds.has(article.id)}
-              onToggleRead={() => marks.toggle(article.id, 'read')}
+              onToggleRead={() => toggleRead(article.id)}
+              saved={savedIds.has(article.id)}
+              onToggleSaved={() => marks.toggle(article.id, 'saved')}
             />
           ))}
         </RuledGrid>
       ) : (
         <p className="border border-dashed border-pcnGreen-200 py-8 text-center font-mono text-sm text-muted-foreground">
-          <span className="text-pcnGreen">404</span> · no hay artículos con esos filtros
+          <span className="text-pcnGreen">404</span> ·{' '}
+          {status === 'para-leer'
+            ? 'tu lista está vacía: guardá artículos con “para leer”'
+            : 'no hay artículos con esos filtros'}
           <span className="ml-0.5 animate-blink text-pcnGreen">_</span>
         </p>
       )}

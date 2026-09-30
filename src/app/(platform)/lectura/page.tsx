@@ -14,11 +14,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ArrowUpRight, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { articles, type Article } from './articles';
 import { ArticleReaderDialog } from './article-reader-dialog';
-import { ArticlesPanel } from './articles-panel';
+import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
+import { useContentMarks } from '@/hooks/use-content-marks';
 
 interface Book {
   id: string;
@@ -891,6 +892,26 @@ const ReadingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
   const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('libros');
   const [readerArticle, setReaderArticle] = useState<Article | null>(null);
+  const [readStatus, setReadStatus] = useState<ReadStatus>('todos');
+  const savedCount = useContentMarks('article').ids('saved').size;
+
+  // `/lectura?lista=para-leer` opens straight into the user's reading list (and any other
+  // status filter), so it can be bookmarked or linked from elsewhere.
+  useEffect(() => {
+    const lista = new URLSearchParams(window.location.search).get('lista');
+    if (isReadStatus(lista)) {
+      setActiveTab('articulos');
+      setReadStatus(lista);
+    }
+  }, []);
+
+  const handleReadStatusChange = (status: ReadStatus) => {
+    setReadStatus(status);
+    const url = new URL(window.location.href);
+    if (status === 'todos') url.searchParams.delete('lista');
+    else url.searchParams.set('lista', status);
+    window.history.replaceState(null, '', url);
+  };
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
@@ -939,7 +960,17 @@ const ReadingPage = () => {
             <Tabs value={activeTab} onValueChange={handleTabChange}>
               <TabsList className="mb-4">
                 <TabsTrigger value="libros">Libros</TabsTrigger>
-                <TabsTrigger value="articulos">Artículos</TabsTrigger>
+                <TabsTrigger value="articulos">
+                  Artículos
+                  {savedCount > 0 && (
+                    <span
+                      title={`${savedCount} en tu lista para leer`}
+                      className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
+                    >
+                      {savedCount}
+                    </span>
+                  )}
+                </TabsTrigger>
               </TabsList>
 
               {/* Filtros compartidos */}
@@ -1003,6 +1034,8 @@ const ReadingPage = () => {
                   category={selectedCategory}
                   onCategoryChange={setSelectedCategory}
                   onOpen={setReaderArticle}
+                  status={readStatus}
+                  onStatusChange={handleReadStatusChange}
                 />
               </TabsContent>
             </Tabs>

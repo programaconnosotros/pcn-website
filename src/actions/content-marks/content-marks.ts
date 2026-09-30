@@ -1,6 +1,6 @@
 // The personal marks users can leave on each kind of static content, e.g. `article → read`.
 export const CONTENT_MARKS = {
-  article: ['read'],
+  article: ['read', 'saved'],
 } as const;
 
 export type ContentType = keyof typeof CONTENT_MARKS;

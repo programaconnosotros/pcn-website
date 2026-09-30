@@ -74,6 +74,20 @@ describe('setContentMark', () => {
     });
   });
 
+  it('saves articles to the reading list', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(session as any);
+
+    await setContentMark('article', '7', 'saved', true);
+
+    const saved = { ...key, mark: 'saved' };
+    expect(prismaMock.contentMark.upsert).toHaveBeenCalledWith({
+      where: { userId_contentType_contentId_mark: saved },
+      create: saved,
+      update: {},
+    });
+  });
+
   it('removes the mark when turning it off', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(session as any);
