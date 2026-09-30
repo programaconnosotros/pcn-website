@@ -37,6 +37,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import {
   ArrowUpRight,
+  Construction,
   Edit,
   FileText,
   MicVocal,
@@ -105,7 +106,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
         )}
       </div>
 
-      <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+      <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
         {talks.map((talk) => {
           const eventTitle = talk.event?.name ?? talk.manualEventTitle;
           const eventDate = talk.event?.date ?? talk.manualEventDate;
@@ -280,6 +281,19 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
           );
         })}
       </RuledGrid>
+
+      <div
+        role="status"
+        className="mb-14 flex items-start gap-3 border border-t-0 border-dashed border-pcnGreen-200 px-3 py-2.5 font-mono text-xs text-muted-foreground"
+      >
+        <Construction className="mt-px h-3.5 w-3.5 shrink-0 text-pcnGreen" />
+        <p>
+          <span className="text-pcnGreen">[mantenimiento]</span> Estamos cargando todo el historial
+          de charlas de la comunidad. Todavía faltan algunas, así que si no encontrás la tuya,
+          probablemente esté en camino
+          <span className="ml-0.5 animate-blink text-pcnGreen">_</span>
+        </p>
+      </div>
 
       {/* Create dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
