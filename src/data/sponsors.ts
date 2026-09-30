@@ -67,7 +67,7 @@ export const sponsors: Sponsor[] = [
     url: 'https://macch.ai/',
     logo: '/macch-white-logo.svg',
     description: 'IA para la atención al cliente y la operación de proveedores de internet.',
-    location: 'Argentina',
+    location: 'Tucumán, Argentina',
   },
   {
     name: 'Endpoint Consulting',
