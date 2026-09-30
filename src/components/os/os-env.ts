@@ -7,7 +7,19 @@ export const OS_MESSAGE_SOURCE = 'pcn-os';
 export type OsMessage =
   | { source: typeof OS_MESSAGE_SOURCE; type: 'location'; path: string; title: string }
   | { source: typeof OS_MESSAGE_SOURCE; type: 'focus' }
-  | { source: typeof OS_MESSAGE_SOURCE; type: 'open'; path: string };
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'open'; path: string }
+  /** Plays a music set in the desktop's player, so it keeps playing when the window closes. */
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'playMusic'; id: string };
+
+type OutgoingOsMessage = OsMessage extends infer M
+  ? M extends OsMessage
+    ? Omit<M, 'source'>
+    : never
+  : never;
+
+/** Sends a message from a PCN OS window to the desktop host. */
+export const postToOsHost = (message: OutgoingOsMessage) =>
+  window.parent.postMessage({ source: OS_MESSAGE_SOURCE, ...message }, window.location.origin);
 
 /**
  * Detail pages that PCN OS opens in a window of their own instead of navigating the window the

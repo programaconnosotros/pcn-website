@@ -2,16 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { OS_MESSAGE_SOURCE, isEmbedded, opensInOwnWindow, type OsMessage } from './os-env';
-
-type OutgoingMessage = OsMessage extends infer M
-  ? M extends OsMessage
-    ? Omit<M, 'source'>
-    : never
-  : never;
-
-const post = (message: OutgoingMessage) =>
-  window.parent.postMessage({ source: OS_MESSAGE_SOURCE, ...message }, window.location.origin);
+import { isEmbedded, opensInOwnWindow, postToOsHost as post } from './os-env';
 
 /**
  * Runs inside a PCN OS window. Tells the desktop host where the window navigated to and when

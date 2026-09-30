@@ -158,6 +158,10 @@ const config = {
           '0%': { transform: 'translateX(-120%) skewX(-20deg)' },
           '55%, 100%': { transform: 'translateX(420%) skewX(-20deg)' },
         },
+        equalizer: {
+          '0%, 100%': { transform: 'scaleY(0.3)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
         blink: {
           '0%, 49%': {
             opacity: '1',
@@ -172,6 +176,7 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         move: 'move 5s linear infinite',
         blink: 'blink 1s step-end infinite',
+        equalizer: 'equalizer 0.9s ease-in-out infinite',
         'cta-shine': 'cta-shine 3.6s ease-in-out infinite',
         'cta-pulse': 'cta-pulse 2.4s ease-in-out infinite',
       },

@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
+import { BackgroundMusicPlayer } from '@/components/music/music-player-dialog';
+import { findMusicSet } from '@/components/music/music-sets';
+import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { isOsMessage } from './os-env';
@@ -191,6 +194,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   /** Cursor to show while a window is being moved or resized; null when idle. */
   const [interactionCursor, setInteractionCursor] = useState<string | null>(null);
   const [launcherOpen, setLauncherOpen] = useState(false);
+  const musicPlayer = useMusicPlayer();
+  const { play: playMusic } = musicPlayer;
   const iframes = useRef(new Map<string, HTMLIFrameElement>());
   const opened = useRef(false);
 
@@ -246,10 +251,14 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
       if (event.data.type === 'open' && viewport)
         dispatch({ type: 'openPath', path: event.data.path, viewport });
+      if (event.data.type === 'playMusic') {
+        const set = findMusicSet(event.data.id);
+        if (set) playMusic(set);
+      }
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [isOs, viewport]);
+  }, [isOs, viewport, playMusic]);
 
   const openProgram = useCallback(
     (program: OsProgram) => {
@@ -353,6 +362,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         <OsMenuBar
           user={user}
           focusedProgram={focusedProgram}
+          musicPlayer={musicPlayer}
           onOpenProgram={openProgram}
           onOpenLauncher={() => setLauncherOpen(true)}
         />
@@ -374,6 +384,16 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           }}
           onClose={() => setLauncherOpen(false)}
         />
+
+        {isOs && musicPlayer.current && (
+          <BackgroundMusicPlayer
+            set={musicPlayer.current}
+            open={musicPlayer.open}
+            onClose={musicPlayer.hide}
+            iframeRef={musicPlayer.iframeRef}
+            onIframeLoad={musicPlayer.onIframeLoad}
+          />
+        )}
       </div>
     </div>
   );

@@ -19,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import type { MusicPlayer } from '@/components/music/use-music-player';
+import { OsMusicControl } from './os-music-control';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
 export interface OsUser {
@@ -30,6 +32,7 @@ export interface OsUser {
 interface OsMenuBarProps {
   user: OsUser | null;
   focusedProgram: OsProgram | null;
+  musicPlayer: MusicPlayer;
   onOpenProgram: (program: OsProgram) => void;
   onOpenLauncher: () => void;
 }
@@ -69,8 +72,17 @@ const Clock = () => {
   return <span className="tabular-nums text-pcnGreen-800">{now ? formatClock(now) : ''}</span>;
 };
 
-/** Top bar of the desktop: PCN menu, the focused program's path, the clock and the user. */
-export function OsMenuBar({ user, focusedProgram, onOpenProgram, onOpenLauncher }: OsMenuBarProps) {
+/**
+ * Top bar of the desktop: PCN menu, the focused program's path, the music player, the clock and
+ * the user.
+ */
+export function OsMenuBar({
+  user,
+  focusedProgram,
+  musicPlayer,
+  onOpenProgram,
+  onOpenLauncher,
+}: OsMenuBarProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
@@ -128,6 +140,11 @@ export function OsMenuBar({ user, focusedProgram, onOpenProgram, onOpenLauncher 
       )}
 
       <div className="ml-auto flex items-center gap-3 pr-1">
+        <OsMusicControl
+          player={musicPlayer}
+          menuTriggerClassName={menuTriggerClassName}
+          menuContentClassName={menuContentClassName}
+        />
         <Clock />
         {user ? (
           <DropdownMenu modal={false}>
