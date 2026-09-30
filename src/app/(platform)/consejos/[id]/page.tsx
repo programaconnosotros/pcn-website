@@ -41,7 +41,6 @@ export async function generateMetadata(props: {
     openGraph: {
       title,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
       url: pageUrl,
       type: 'article',
       siteName: 'programaConNosotros',
@@ -50,7 +49,6 @@ export async function generateMetadata(props: {
       card: 'summary_large_image',
       title,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
     },
   };
 }

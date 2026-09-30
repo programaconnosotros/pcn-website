@@ -58,7 +58,7 @@ export async function generateMetadata(props: {
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
   const rawImage = event.flyerImages[0] || event.images[0]?.imgSrc;
-  const imageUrl = rawImage ? optimizedOgImage(rawImage) : '/pcn-link-preview.png';
+  const imageUrl = rawImage ? optimizedOgImage(rawImage) : `/eventos/${event.id}/og-image`;
   const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
 
