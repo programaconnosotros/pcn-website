@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
-import Link from 'next/link';
+import { LogIn } from 'lucide-react';
+import { AuthLinks, AuthShell } from '@/components/auth/auth-shell';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -90,98 +90,76 @@ function SignInContent() {
     }
   };
 
+  const signUpHref = redirectTo
+    ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+    : '/autenticacion/registro';
+
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="relative w-full max-w-[425px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
-        <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.webp" alt="Logo" className="w-20" />
+    <AuthShell command="login" title="Iniciar sesión" description="Qué bueno verte de nuevo.">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Correo electrónico</FormLabel>
 
-          <div className="space-y-2 text-center">
-            <h1 className="text-glow mb-8 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
-              Iniciar sesión
-            </h1>
-          </div>
-        </div>
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    placeholder="correo@ejemplo.com"
+                    {...field}
+                  />
+                </FormControl>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                  <FormControl>
-                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                  </FormControl>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormControl>
+                  <Input
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="••••••"
+                    {...field}
+                  />
+                </FormControl>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                  <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              loading={isLoading}
-              loadingText="Ingresando..."
-            >
-              Ingresar
-              <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-        </Form>
-
-        <div className="mt-4 flex flex-col gap-2">
-          <Link
-            href={
-              redirectTo
-                ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-                : '/autenticacion/registro'
-            }
+          <Button
+            type="submit"
+            size="lg"
             className="w-full"
+            loading={isLoading}
+            loadingText="Ingresando..."
           >
-            <Button variant="outline" className="w-full">
-              Crear cuenta
-              <UserPlus className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            Ingresar
+            <LogIn className="ml-2 h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
 
-          <Link href="/autenticacion/recuperar-clave" className="w-full">
-            <Button variant="outline" className="w-full">
-              Cambiar contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
-      </div>
-    </div>
+      <AuthLinks
+        links={[
+          { href: signUpHref, label: '¿No tenés cuenta? Creá una' },
+          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+        ]}
+      />
+    </AuthShell>
   );
 }
 

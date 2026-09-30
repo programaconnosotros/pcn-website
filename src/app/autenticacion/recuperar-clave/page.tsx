@@ -14,7 +14,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, Mail, KeyRound, ShieldCheck, UserPlus } from 'lucide-react';
+import { LogIn, Mail, KeyRound, ShieldCheck } from 'lucide-react';
+import { AuthLinks, AuthShell, AuthStatus, codeInputClassName } from '@/components/auth/auth-shell';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -44,6 +45,12 @@ const passwordSchema = z
   });
 
 type Step = 'email' | 'code' | 'password' | 'success';
+
+const STEPS: { id: Step; label: string }[] = [
+  { id: 'email', label: 'email' },
+  { id: 'code', label: 'código' },
+  { id: 'password', label: 'clave' },
+];
 
 export default function ResetPasswordPage() {
   const [step, setStep] = useState<Step>('email');
@@ -163,252 +170,206 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="relative w-full max-w-[425px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
-        <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.webp" alt="Logo" className="w-20" />
-
-          <div className="space-y-2 text-center">
-            <h1 className="text-glow mb-4 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
-              {step === 'email' && 'Restablecer contraseña'}
-              {step === 'code' && 'Verificar código'}
-              {step === 'password' && 'Nueva contraseña'}
-              {step === 'success' && '¡Contraseña actualizada!'}
-            </h1>
-
-            {/* Indicador de pasos */}
-            {step !== 'success' && (
-              <div className="flex items-center justify-center gap-2">
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
-                    step === 'email'
-                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
+    <AuthShell
+      command="passwd"
+      title={
+        step === 'email'
+          ? 'Restablecer contraseña'
+          : step === 'code'
+            ? 'Verificar código'
+            : step === 'password'
+              ? 'Nueva contraseña'
+              : '¡Contraseña actualizada!'
+      }
+      description={
+        step !== 'success' && (
+          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
+            {STEPS.map((item, index) => (
+              <li key={item.id} className="flex items-center gap-2">
+                {index > 0 && <span className="text-pcnGreen-200">──</span>}
+                <span
+                  className={
+                    item.id === step
+                      ? 'text-pcnGreen'
+                      : STEPS.findIndex((other) => other.id === step) > index
+                        ? 'text-pcnGreen-600'
+                        : 'text-muted-foreground/60'
+                  }
                 >
-                  1
-                </div>
-                <div className="h-0.5 w-8 bg-muted" />
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
-                    step === 'code'
-                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  2
-                </div>
-                <div className="h-0.5 w-8 bg-muted" />
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
-                    step === 'password'
-                      ? 'bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  3
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+                  [{index + 1}] {item.label}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+    >
+      {/* Paso 1: Email */}
+      {step === 'email' && (
+        <Form {...emailForm}>
+          <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
+            <FormField
+              control={emailForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Correo electrónico</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Paso 1: Email */}
-        {step === 'email' && (
-          <Form {...emailForm}>
-            <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="mt-6 space-y-4">
-              <FormField
-                control={emailForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Correo electrónico</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Button type="submit" className="w-full" loading={isLoading} loadingText="Enviando...">
+              Enviar código
+              <Mail className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
+        </Form>
+      )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                loading={isLoading}
-                loadingText="Enviando..."
-              >
-                Enviar código
-                <Mail className="ml-2 h-4 w-4" />
-              </Button>
-            </form>
-          </Form>
-        )}
+      {/* Paso 2: Código */}
+      {step === 'code' && (
+        <Form {...codeForm}>
+          <form onSubmit={codeForm.handleSubmit(onCodeSubmit)} className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Enviamos un código de 6 dígitos a{' '}
+              <span className="break-all font-mono text-foreground">{email}</span>
+            </p>
 
-        {/* Paso 2: Código */}
-        {step === 'code' && (
-          <Form {...codeForm}>
-            <form onSubmit={codeForm.handleSubmit(onCodeSubmit)} className="mt-6 space-y-4">
-              <p className="text-center text-sm text-muted-foreground">
-                Enviamos un código de 6 dígitos a <strong>{email}</strong>
-              </p>
+            <FormField
+              control={codeForm.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Código de verificación</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="000000"
+                      maxLength={6}
+                      className={codeInputClassName}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={codeForm.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Código de verificación</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="000000"
-                        maxLength={6}
-                        className="text-center text-2xl tracking-widest"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoading}
+              loadingText="Verificando..."
+            >
+              Verificar código
+              <ShieldCheck className="ml-2 h-4 w-4" />
+            </Button>
 
-              <Button
-                type="submit"
-                className="w-full"
-                loading={isLoading}
-                loadingText="Verificando..."
-              >
-                Verificar código
-                <ShieldCheck className="ml-2 h-4 w-4" />
-              </Button>
-
-              <div className="flex justify-between text-sm">
-                <button
-                  type="button"
-                  onClick={goBack}
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  ← Cambiar email
-                </button>
-                <button
-                  type="button"
-                  onClick={resendCode}
-                  disabled={isResending || resendCooldown > 0}
-                  className="text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isResending
-                    ? 'Enviando...'
-                    : resendCooldown > 0
-                      ? `Reenviar en ${resendCooldown}s`
-                      : 'Reenviar código'}
-                </button>
-              </div>
-            </form>
-          </Form>
-        )}
-
-        {/* Paso 3: Nueva contraseña */}
-        {step === 'password' && (
-          <Form {...passwordForm}>
-            <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="mt-6 space-y-4">
-              <FormField
-                control={passwordForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nueva contraseña</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={passwordForm.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar contraseña</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                className="w-full"
-                loading={isLoading}
-                loadingText="Actualizando..."
-              >
-                Actualizar contraseña
-                <KeyRound className="ml-2 h-4 w-4" />
-              </Button>
-
+            <div className="flex flex-wrap justify-between gap-2 font-mono text-xs">
               <button
                 type="button"
                 onClick={goBack}
-                className="w-full text-center text-sm text-muted-foreground hover:text-primary"
+                className="text-muted-foreground hover:text-pcnGreen"
               >
-                ← Volver al código
+                ← Cambiar email
               </button>
-            </form>
-          </Form>
-        )}
-
-        {/* Éxito */}
-        {step === 'success' && (
-          <div className="mt-6 space-y-4 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-pcnPurple/10 dark:bg-pcnGreen/10">
-              <ShieldCheck className="h-8 w-8 text-pcnPurple dark:text-pcnGreen" />
+              <button
+                type="button"
+                onClick={resendCode}
+                disabled={isResending || resendCooldown > 0}
+                className="text-muted-foreground hover:text-pcnGreen disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isResending
+                  ? 'Enviando...'
+                  : resendCooldown > 0
+                    ? `Reenviar en ${resendCooldown}s`
+                    : 'Reenviar código'}
+              </button>
             </div>
-            <p className="text-muted-foreground">
-              Tu contraseña fue actualizada con éxito. Ya podés iniciar sesión con tu nueva
-              contraseña.
-            </p>
-            <Link href="/autenticacion/iniciar-sesion" className="mt-4 block">
-              <Button className="w-full">
-                Iniciar sesión
-                <LogIn className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        )}
+          </form>
+        </Form>
+      )}
 
-        {/* Enlaces adicionales */}
-        {step !== 'success' && (
-          <>
-            <div className="mt-4 flex flex-row gap-4">
-              <Link href="/autenticacion/iniciar-sesion" className="w-full">
-                <Button variant="outline" className="w-full">
-                  Iniciar sesión
-                  <LogIn className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+      {/* Paso 3: Nueva contraseña */}
+      {step === 'password' && (
+        <Form {...passwordForm}>
+          <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+            <FormField
+              control={passwordForm.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nueva contraseña</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <Link href="/autenticacion/registro" className="w-full">
-                <Button variant="outline" className="w-full">
-                  Crear cuenta
-                  <UserPlus className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
+            <FormField
+              control={passwordForm.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar contraseña</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <Link
-              href="/"
-              className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoading}
+              loadingText="Actualizando..."
             >
-              <ArrowLeft className="h-4 w-4" />
-              Volver a la página principal
+              Actualizar contraseña
+              <KeyRound className="ml-2 h-4 w-4" />
+            </Button>
+
+            <button
+              type="button"
+              onClick={goBack}
+              className="font-mono text-xs text-muted-foreground hover:text-pcnGreen"
+            >
+              ← Volver al código
+            </button>
+          </form>
+        </Form>
+      )}
+
+      {/* Éxito */}
+      {step === 'success' && (
+        <div className="space-y-4">
+          <AuthStatus>
+            Tu contraseña fue actualizada. Ya podés iniciar sesión con la nueva.
+          </AuthStatus>
+          <Button asChild size="lg" className="w-full">
+            <Link href="/autenticacion/iniciar-sesion">
+              Iniciar sesión
+              <LogIn className="ml-2 h-4 w-4" />
             </Link>
-          </>
-        )}
-      </div>
-    </div>
+          </Button>
+        </div>
+      )}
+
+      {step !== 'success' && (
+        <AuthLinks
+          links={[
+            { href: '/autenticacion/iniciar-sesion', label: 'Volver a iniciar sesión' },
+            { href: '/autenticacion/registro', label: '¿No tenés cuenta? Creá una' },
+          ]}
+        />
+      )}
+    </AuthShell>
   );
 }

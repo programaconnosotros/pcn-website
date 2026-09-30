@@ -19,20 +19,9 @@ import {
 } from '@/components/ui/select';
 import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  ArrowLeft,
-  LogIn,
-  SquareAsterisk,
-  UserPlus,
-  User,
-  Briefcase,
-  GraduationCap,
-  Camera,
-  Phone,
-} from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { FileUploadPublic } from '@/components/ui/file-upload-public';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
+import { AuthLinks, AuthSection, AuthShell } from '@/components/auth/auth-shell';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Suspense, useState } from 'react';
@@ -131,53 +120,42 @@ function SignUpContent() {
   };
 
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="relative w-full max-w-[500px] rounded-md border border-pcnGreen-400 bg-black/80 p-6 shadow-[0_0_40px_-12px_#04f4be80] backdrop-blur before:absolute before:-top-2 before:left-4 before:bg-black before:px-1.5 before:font-mono before:text-[10px] before:tracking-widest before:text-pcnGreen-600 before:content-['~/pcn/auth_$'] sm:p-8">
-        <div className="flex flex-col items-center gap-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.webp" alt="Logo" className="w-20" />
+    <AuthShell
+      command="signup"
+      title="Crear cuenta"
+      description="Sumate a la comunidad. Solo los datos principales son obligatorios."
+      wide
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            // Mostrar toast cuando hay errores de validación
+            const firstError = Object.values(errors)[0];
+            if (firstError?.message) {
+              toast.error(firstError.message);
+            } else {
+              toast.error('Por favor, completa todos los campos requeridos correctamente');
+            }
+          })}
+          className="space-y-6"
+        >
+          {/* Sección: Información de cuenta */}
+          <AuthSection title="Datos principales">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre completo</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Lionel Messi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2 text-center">
-            <h1 className="text-glow mb-8 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
-              Crear cuenta
-            </h1>
-          </div>
-        </div>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit, (errors) => {
-              // Mostrar toast cuando hay errores de validación
-              const firstError = Object.values(errors)[0];
-              if (firstError?.message) {
-                toast.error(firstError.message);
-              } else {
-                toast.error('Por favor, completa todos los campos requeridos correctamente');
-              }
-            })}
-            className="space-y-6"
-          >
-            {/* Sección: Información de cuenta */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                <User className="h-5 w-5" />
-                Datos principales
-              </h3>
-
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre completo</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Lionel Messi" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="email"
@@ -197,10 +175,7 @@ function SignUpContent() {
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
-                      Celular
-                    </FormLabel>
+                    <FormLabel>Celular</FormLabel>
                     <FormControl>
                       <Input type="tel" placeholder="+54 9 11 1234-5678" {...field} />
                     </FormControl>
@@ -208,7 +183,9 @@ function SignUpContent() {
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="password"
@@ -216,7 +193,12 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>Contraseña</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="********"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -230,13 +212,20 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>Confirmar contraseña</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="********"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="country"
@@ -308,17 +297,11 @@ function SignUpContent() {
                 />
               )}
             </div>
+          </AuthSection>
 
-            {/* Sección: Información profesional */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Briefcase className="h-5 w-5" />
-                Información profesional
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
-
+          {/* Sección: Información profesional */}
+          <AuthSection title="Información profesional" optional>
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="profession"
@@ -326,10 +309,7 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>¿De qué trabajás?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Desarrollador Full Stack, Diseñador UX, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Desarrollador Full Stack" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -343,24 +323,18 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>¿En qué empresa trabajás?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: Google, Microsoft, etc." {...field} />
+                      <Input placeholder="Ej: Google" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+          </AuthSection>
 
-            {/* Sección: Información académica */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <GraduationCap className="h-5 w-5" />
-                Información académica
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
-
+          {/* Sección: Información académica */}
+          <AuthSection title="Información académica" optional>
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="studyField"
@@ -368,10 +342,7 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>¿Qué estudiás o estudiaste?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Ingeniería en Sistemas, Desarrollo Web, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Ingeniería en Sistemas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -385,90 +356,61 @@ function SignUpContent() {
                   <FormItem>
                     <FormLabel>¿Dónde o cómo estudiás/estudiaste?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Universidad, autodidacta" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+          </AuthSection>
 
-            {/* Sección: Foto de perfil */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-pcnGreen-300 dark:hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.45)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Camera className="h-5 w-5" />
-                Foto de perfil
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
+          {/* Sección: Foto de perfil */}
+          <AuthSection title="Foto de perfil" optional>
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subí una foto para tu perfil</FormLabel>
+                  <FormControl>
+                    <FileUploadPublic
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      maxSize={10 * 1024 * 1024}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </AuthSection>
 
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subí una foto para tu perfil</FormLabel>
-                    <FormControl>
-                      <FileUploadPublic
-                        value={field.value || ''}
-                        onChange={field.onChange}
-                        maxSize={10 * 1024 * 1024}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              loading={isSubmitting}
-              loadingText="Creando usuario..."
-            >
-              Crear usuario
-              <UserPlus className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-        </Form>
-
-        <div className="mt-4 flex flex-row gap-4">
-          <Link
-            href={
-              redirectTo
-                ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-                : '/autenticacion/iniciar-sesion'
-            }
+          <Button
+            type="submit"
+            size="lg"
             className="w-full"
+            loading={isSubmitting}
+            loadingText="Creando usuario..."
           >
-            <Button variant="outline" className="w-full">
-              Iniciar sesión
-              <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            Crear cuenta
+            <UserPlus className="ml-2 h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
 
-          <Link href="/autenticacion/recuperar-clave" className="w-full">
-            <Button variant="outline" className="w-full">
-              Recuperar contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
-      </div>
-    </div>
+      <AuthLinks
+        links={[
+          {
+            href: redirectTo
+              ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+              : '/autenticacion/iniciar-sesion',
+            label: '¿Ya tenés cuenta? Iniciá sesión',
+          },
+          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+        ]}
+      />
+    </AuthShell>
   );
 }
 
