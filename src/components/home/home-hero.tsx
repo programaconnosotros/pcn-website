@@ -94,13 +94,13 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
             <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-wrap items-center gap-3">
               {firstName ? (
                 <>
-                  <Button asChild>
+                  <Button asChild size="lg">
                     <Link href="/eventos">
                       <CalendarDays className="mr-2 size-4" />
                       Ver próximos eventos
                     </Link>
                   </Button>
-                  <Button asChild variant="outline">
+                  <Button asChild variant="outline" size="lg">
                     <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
                       <MessageCircle className="mr-2 size-4" />
                       Ir al grupo de WhatsApp
@@ -109,13 +109,13 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                 </>
               ) : (
                 <>
-                  <Button asChild>
+                  <Button asChild size="lg">
                     <Link href="/autenticacion/registro">
                       Crear cuenta
                       <UserPlus className="ml-2 size-4" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline">
+                  <Button asChild variant="outline" size="lg">
                     <Link href="/autenticacion/iniciar-sesion">
                       Iniciar sesión
                       <LogIn className="ml-2 size-4" />

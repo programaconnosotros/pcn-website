@@ -144,6 +144,20 @@ const config = {
             transform: 'translateX(200px)',
           },
         },
+        'cta-pulse': {
+          '0%, 100%': {
+            boxShadow:
+              '0 0 0 1px rgba(4,244,190,0.35), 0 0 18px -6px rgba(4,244,190,0.7), inset 0 1px 0 rgba(255,255,255,0.5)',
+          },
+          '50%': {
+            boxShadow:
+              '0 0 0 3px rgba(4,244,190,0.12), 0 0 34px -4px rgba(4,244,190,0.95), inset 0 1px 0 rgba(255,255,255,0.5)',
+          },
+        },
+        'cta-shine': {
+          '0%': { transform: 'translateX(-120%) skewX(-20deg)' },
+          '55%, 100%': { transform: 'translateX(420%) skewX(-20deg)' },
+        },
         blink: {
           '0%, 49%': {
             opacity: '1',
@@ -158,6 +172,8 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         move: 'move 5s linear infinite',
         blink: 'blink 1s step-end infinite',
+        'cta-shine': 'cta-shine 3.6s ease-in-out infinite',
+        'cta-pulse': 'cta-pulse 2.4s ease-in-out infinite',
       },
     },
   },
