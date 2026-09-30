@@ -85,7 +85,7 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
         {projects.map((project) => (
           <Card
             key={project.id}
-            className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
+            className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
           >
             <div className="flex flex-col md:flex-row">
               {/* Logo */}

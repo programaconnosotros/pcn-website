@@ -194,10 +194,10 @@ const benefits = [
 ];
 
 const CARD_CLASS =
-  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800';
+  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800';
 
 const LAYER_ITEM_CLASS =
-  'flex items-start gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800';
+  'flex items-start gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-pcnGreen-300 dark:bg-black';
 
 const ICON_CHIP_CLASS =
   'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10';
@@ -297,7 +297,7 @@ const DesarrolloPage = () => (
                 {technologies.map((tech) => (
                   <div
                     key={tech.name}
-                    className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800"
+                    className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-pcnGreen-300 dark:bg-black"
                   >
                     <tech.icon className="h-6 w-6 text-pcnPurple dark:text-pcnGreen" />
                     <span className="font-medium">{tech.name}</span>
@@ -408,7 +408,7 @@ const DesarrolloPage = () => (
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
                 <p className="text-sm font-semibold">Tests unitarios (Jest)</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Más de 70 tests colocalizados junto a los server actions (
@@ -424,7 +424,7 @@ const DesarrolloPage = () => (
                   .
                 </p>
               </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
                 <p className="text-sm font-semibold">Tests E2E (Playwright)</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Tests end-to-end en{' '}
@@ -436,7 +436,7 @@ const DesarrolloPage = () => (
                   .
                 </p>
               </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-pcnGreen-300 dark:bg-black">
                 <p className="text-sm font-semibold">Calidad automatizada</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   El hook pre-push de Husky ejecuta lint, format check, tests y build antes de cada

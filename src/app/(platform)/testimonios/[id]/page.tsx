@@ -139,7 +139,7 @@ const TestimonialDetailPage = async (props: { params: Promise<{ id: string }> })
             />
           </div>
 
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">

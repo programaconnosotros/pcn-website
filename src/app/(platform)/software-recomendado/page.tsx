@@ -43,11 +43,11 @@ function SoftwareRecommendationCard({
   isPopular = false,
 }: SoftwareRecommendationCardProps) {
   return (
-    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-lg border bg-white p-2 dark:bg-neutral-800">
+            <div className="flex h-14 w-14 items-center justify-center rounded-lg border bg-white p-2 dark:bg-black">
               <Image
                 src={logo || '/placeholder.svg?height=48&width=48'}
                 alt={`${name} logo`}
