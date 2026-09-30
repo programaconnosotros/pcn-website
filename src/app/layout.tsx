@@ -5,7 +5,7 @@ import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
 import './globals.css';
 
@@ -34,6 +34,13 @@ export const metadata: Metadata = {
     description: 'Comunidad de apasionados por la ingeniería de software.',
     images: ['/pcn-link-preview.png'],
   },
+};
+
+// `cover` lets fixed bottom UI (the mobile tab bar) extend under the iOS home indicator /
+// Safari toolbar; without it `env(safe-area-inset-*)` is always 0.
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+  themeColor: '#000000',
 };
 
 const RootLayout = async ({
