@@ -12,9 +12,6 @@ const randomIndex = (except: number) => {
   return next >= except ? next + 1 : next;
 };
 
-const formatDate = (date: Date) =>
-  date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
 /**
  * Desktop widget that flips through random community photos. Clicking the current photo opens
  * it large in the gallery. Pauses with the other background processes.
@@ -55,8 +52,7 @@ export function OsPhotos({
       type="button"
       disabled={!photo}
       onClick={() => photo && onOpen(`/galeria?foto=${photo.id}`)}
-      aria-label={photo ? `Ver en la galería: ${photo.title}` : 'Fotos de la comunidad'}
-      title={photo?.title}
+      aria-label={photo ? 'Ver foto en la galería' : 'Fotos de la comunidad'}
       className="group absolute right-6 top-1/2 hidden w-[300px] -translate-y-1/2 select-none flex-col overflow-hidden border border-pcnGreen-200 bg-black/70 text-left font-mono text-[10px] leading-[1.45] text-pcnGreen-700 opacity-80 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] outline-none transition-[opacity,border-color,box-shadow] duration-200 hover:border-pcnGreen-500 hover:opacity-100 hover:shadow-[0_0_40px_-10px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:opacity-100 [@media(min-height:760px)]:flex"
     >
       <span className="flex items-center gap-2 border-b border-pcnGreen-200 px-2 py-1 text-pcnGreen-600">
@@ -95,11 +91,6 @@ export function OsPhotos({
         <span className="absolute bottom-1.5 left-2 bg-black/70 px-1 text-pcnGreen opacity-0 transition-opacity group-hover:opacity-100">
           ↵ abrir en galería
         </span>
-      </span>
-
-      <span className="flex items-center gap-2 border-t border-pcnGreen-200 px-2 py-1">
-        <span className="min-w-0 flex-1 truncate text-pcnGreen-600">{photo?.title ?? '...'}</span>
-        {photo && <span className="shrink-0 tabular-nums">{formatDate(photo.date)}</span>}
       </span>
     </button>
   );
