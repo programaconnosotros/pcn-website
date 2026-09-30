@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
-import { CalendarPlus, Edit, Users, Globe, Video, Mic } from 'lucide-react';
+import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
@@ -337,13 +337,24 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 )}
               </dl>
               {!hasEventPassed && (
-                <a
-                  href={createGoogleCalendarUrl(event)}
-                  className="mt-2 inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
-                >
-                  <CalendarPlus className="h-3.5 w-3.5" />
-                  agregar a google calendar
-                </a>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  <a
+                    href={createGoogleCalendarUrl(event)}
+                    className="inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                  >
+                    <CalendarPlus className="h-3.5 w-3.5" />
+                    agregar a google calendar
+                  </a>
+                  <a
+                    href={`/eventos/${event.id}/calendario.ics`}
+                    download
+                    title="Para Apple Calendar, Outlook y otros calendarios"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    descargar .ics
+                  </a>
+                </div>
               )}
             </Section>
 
