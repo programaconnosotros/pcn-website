@@ -1,0 +1,198 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { LogOut, UserRound } from 'lucide-react';
+import { toast } from 'sonner';
+import { signOut } from '@/actions/auth/sign-out';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { secondaryItems, socialNetworks } from '@/components/ui/app-sidebar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { OS_APPS, type OsApp } from './apps';
+
+export interface OsUser {
+  name: string;
+  email: string;
+  image: string | null;
+}
+
+interface WindowActions {
+  close: () => void;
+  minimize: () => void;
+  toggleMaximize: () => void;
+  path: string;
+}
+
+interface OsMenuBarProps {
+  user: OsUser | null;
+  focusedApp: OsApp | null;
+  windowActions: WindowActions | null;
+  onOpenApp: (app: OsApp) => void;
+  onOpenLauncher: () => void;
+}
+
+const menuContentClassName = 'z-[7000] min-w-52 rounded-lg';
+const menuTriggerClassName =
+  'rounded px-2 py-0.5 outline-none transition-colors hover:bg-white/10 data-[state=open]:bg-white/15';
+
+const appById = (id: string) => OS_APPS.find((app) => app.id === id)!;
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
+
+const formatClock = (date: Date) =>
+  new Intl.DateTimeFormat('es-AR', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+
+/** Rendered only on the client so the server and client markup never disagree about the time. */
+const Clock = () => {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const interval = window.setInterval(() => setNow(new Date()), 15_000);
+    return () => window.clearInterval(interval);
+  }, []);
+  return <span className="tabular-nums text-white/85">{now ? formatClock(now) : ''}</span>;
+};
+
+/** Top bar of the desktop: PCN menu, the focused app's window menu, the clock and the user. */
+export function OsMenuBar({
+  user,
+  focusedApp,
+  windowActions,
+  onOpenApp,
+  onOpenLauncher,
+}: OsMenuBarProps) {
+  return (
+    <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-white/[0.06] bg-black/45 px-2 text-[13px] text-white/90 backdrop-blur-2xl">
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger className={cn(menuTriggerClassName, 'flex items-center gap-1.5')}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.webp" alt="" className="size-4" />
+          <span className="font-semibold">PCN OS</span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className={menuContentClassName}>
+          <DropdownMenuItem onSelect={() => onOpenApp(appById('historia'))}>
+            Acerca de programaConNosotros
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={onOpenLauncher}>Todas las apps</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Redes</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className={menuContentClassName}>
+              {socialNetworks.map((network) => (
+                <DropdownMenuItem key={network.title} asChild>
+                  <a href={network.url} target="_blank" rel="noopener noreferrer">
+                    {network.title}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          {secondaryItems.map((item) => (
+            <DropdownMenuItem key={item.title} asChild>
+              <a href={item.url} target="_blank" rel="noopener noreferrer">
+                {item.title}
+              </a>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {focusedApp && <span className="px-2 font-semibold">{focusedApp.name}</span>}
+
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger className={menuTriggerClassName} disabled={!windowActions}>
+          Ventana
+        </DropdownMenuTrigger>
+        {windowActions && (
+          <DropdownMenuContent align="start" className={menuContentClassName}>
+            <DropdownMenuItem onSelect={windowActions.minimize}>Minimizar</DropdownMenuItem>
+            <DropdownMenuItem onSelect={windowActions.toggleMaximize}>
+              Maximizar / restaurar
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a href={windowActions.path} target="_blank" rel="noopener noreferrer">
+                Abrir en una pestaña nueva
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={windowActions.close}>Cerrar ventana</DropdownMenuItem>
+          </DropdownMenuContent>
+        )}
+      </DropdownMenu>
+
+      <div className="ml-auto flex items-center gap-3 pr-1">
+        <Clock />
+        {user ? (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger className={cn(menuTriggerClassName, 'flex items-center gap-1.5')}>
+              <Avatar className="size-5">
+                <AvatarImage src={user.image ?? undefined} alt={user.name} />
+                <AvatarFallback className="bg-pcnGreen/15 text-[9px] font-semibold text-pcnGreen">
+                  {initials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="max-w-40 truncate">{user.name}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className={menuContentClassName}>
+              <DropdownMenuLabel className="font-normal">
+                <span className="block truncate font-semibold">{user.name}</span>
+                <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="gap-2" onSelect={() => onOpenApp(appById('perfil'))}>
+                <UserRound className="size-4" /> Mi cuenta
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="gap-2"
+                onSelect={() =>
+                  toast.promise(signOut(), {
+                    loading: 'Cerrando sesión...',
+                    success: 'Sesión cerrada correctamente',
+                    error: 'Error al cerrar sesión',
+                  })
+                }
+              >
+                <LogOut className="size-4" /> Cerrar sesión
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex items-center gap-1">
+            <Link href="/autenticacion/iniciar-sesion" className={menuTriggerClassName}>
+              Iniciar sesión
+            </Link>
+            <Link
+              href="/autenticacion/registro"
+              className="rounded bg-pcnGreen px-2 py-0.5 font-medium text-black transition-opacity hover:opacity-90"
+            >
+              Crear cuenta
+            </Link>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}

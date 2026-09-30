@@ -71,7 +71,7 @@ const recursosItems: NavItem[] = [
   },
 ];
 
-const socialNetworks = [
+export const socialNetworks = [
   { title: 'WhatsApp', url: 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh' },
   { title: 'Discord', url: 'https://discord.gg/dTQexKw56S' },
   { title: 'Instagram', url: 'https://www.instagram.com/programa.con.nosotros/' },
@@ -94,7 +94,7 @@ const getAdminItems = (unreadCount: number): NavItem[] => [
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
 ];
 
-const secondaryItems = [
+export const secondaryItems = [
   { title: 'Soporte', url: 'https://wa.me/5493815777562', icon: LifeBuoy },
   { title: 'Feedback', url: 'https://wa.me/5493815777562', icon: MessageSquareHeart },
 ];

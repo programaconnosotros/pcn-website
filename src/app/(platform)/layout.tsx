@@ -8,6 +8,8 @@ import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
 import { getUnreadNotificationsCount } from '@/actions/notifications/get-unread-count';
 import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
 import { OsBridge } from '@/components/os/os-bridge';
+import { OsGate } from '@/components/os/os-gate';
+import { PcnOs } from '@/components/os/pcn-os';
 
 const PlatformLayout = async ({
   children,
@@ -38,18 +40,30 @@ const PlatformLayout = async ({
   const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar
-        user={user}
-        upcomingEvents={upcomingEvents}
-        unreadNotificationsCount={unreadNotificationsCount}
+    <>
+      {/* Pantallas grandes: PCN OS, un escritorio con dock y ventanas movibles. */}
+      <PcnOs
+        user={user ? { name: user.name, email: user.email, image: user.image } : null}
+        isAdmin={user?.role === 'ADMIN'}
       />
       <PageVisitTracker />
       <OsBridge />
-      <ConsoleInterceptor>
-        <SidebarInset className="min-w-0 px-1 md:px-6">{children}</SidebarInset>
-      </ConsoleInterceptor>
-    </SidebarProvider>
+      {/* Resto de pantallas (y páginas dentro de una ventana): sidebar + página. */}
+      <div className="os:hidden">
+        <OsGate>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar
+              user={user}
+              upcomingEvents={upcomingEvents}
+              unreadNotificationsCount={unreadNotificationsCount}
+            />
+            <ConsoleInterceptor>
+              <SidebarInset className="min-w-0 px-1 md:px-6">{children}</SidebarInset>
+            </ConsoleInterceptor>
+          </SidebarProvider>
+        </OsGate>
+      </div>
+    </>
   );
 };
 
