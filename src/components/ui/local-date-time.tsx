@@ -53,3 +53,32 @@ export function LocalDateTime({ date }: { date: Date | string }) {
     </time>
   );
 }
+
+// Human-friendly `jue 25 jun · 19:00`; the year is only shown when it isn't the current one.
+export function LocalEventDate({ date }: { date: Date | string }) {
+  const d = new Date(date);
+  const timeZone = tz();
+  const sameYear =
+    new Intl.DateTimeFormat('es-AR', { year: 'numeric', timeZone }).format(d) ===
+    new Intl.DateTimeFormat('es-AR', { year: 'numeric', timeZone }).format(new Date());
+  const day = new Intl.DateTimeFormat('es-AR', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: sameYear ? undefined : 'numeric',
+    timeZone,
+  })
+    .format(d)
+    .replace(/[,.]/g, '');
+  const time = new Intl.DateTimeFormat('es-AR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone,
+  }).format(d);
+  return (
+    <time dateTime={d.toISOString()} suppressHydrationWarning>
+      {day} · {time}
+    </time>
+  );
+}
