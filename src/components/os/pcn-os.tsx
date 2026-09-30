@@ -7,6 +7,7 @@ import { findMusicSet } from '@/components/music/music-sets';
 import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
+import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
 import { isOsMessage } from './os-env';
 import { OsDock } from './os-dock';
 import { OsLauncher } from './os-launcher';
@@ -251,6 +252,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
       if (event.data.type === 'open' && viewport)
         dispatch({ type: 'openPath', path: event.data.path, viewport });
+      if (event.data.type === 'search') openGlobalSearch(event.data.query);
       if (event.data.type === 'playMusic') {
         const set = findMusicSet(event.data.id);
         if (set) playMusic(set);
@@ -384,6 +386,14 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           }}
           onClose={() => setLauncherOpen(false)}
         />
+
+        {isOs && viewport && (
+          <GlobalSearch
+            // Above the windows, the dock, the menu bar and the launcher.
+            layerClassName="z-[6500]"
+            onNavigate={(path) => dispatch({ type: 'openPath', path, viewport })}
+          />
+        )}
 
         {isOs && musicPlayer.current && (
           <BackgroundMusicPlayer

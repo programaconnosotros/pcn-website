@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { LogOut, UserRound } from 'lucide-react';
+import { LogOut, Search, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import type { MusicPlayer } from '@/components/music/use-music-player';
+import { openGlobalSearch, useSearchShortcutLabel } from '@/components/search/global-search';
 import { OsMusicControl } from './os-music-control';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
@@ -83,6 +84,8 @@ export function OsMenuBar({
   onOpenProgram,
   onOpenLauncher,
 }: OsMenuBarProps) {
+  const shortcutLabel = useSearchShortcutLabel();
+
   return (
     <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
@@ -112,6 +115,7 @@ export function OsMenuBar({
             Acerca de programaConNosotros
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={onOpenLauncher}>Todos los programas</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => openGlobalSearch()}>Buscar…</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Redes</DropdownMenuSubTrigger>
@@ -140,6 +144,15 @@ export function OsMenuBar({
       )}
 
       <div className="ml-auto flex items-center gap-3 pr-1">
+        <button
+          type="button"
+          onClick={() => openGlobalSearch()}
+          title="Buscar en todo el sitio"
+          className={cn(menuTriggerClassName, 'flex items-center gap-1.5')}
+        >
+          <Search className="size-3.5" />
+          <span className="text-pcnGreen-600">{shortcutLabel}</span>
+        </button>
         <OsMusicControl
           player={musicPlayer}
           menuTriggerClassName={menuTriggerClassName}

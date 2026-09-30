@@ -28,6 +28,13 @@ export function SearchBar({
 }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Global search links here with `?q=`, so prefill the filter from the URL once on mount.
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search).get('q');
+    if (query) setSearchQuery(query);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;

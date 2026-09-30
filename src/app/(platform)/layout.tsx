@@ -10,6 +10,7 @@ import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
 import { OsBridge } from '@/components/os/os-bridge';
 import { OsGate } from '@/components/os/os-gate';
 import { PcnOs } from '@/components/os/pcn-os';
+import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
 
 const PlatformLayout = async ({
   children,
@@ -63,6 +64,7 @@ const PlatformLayout = async ({
               </SidebarInset>
             </ConsoleInterceptor>
           </SidebarProvider>
+          <ClassicGlobalSearch />
         </OsGate>
       </div>
     </>

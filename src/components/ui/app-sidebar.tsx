@@ -44,6 +44,7 @@ import { MobileNav } from '@/components/ui/mobile-nav';
 import { User } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
+import { SearchTrigger } from '@/components/search/search-trigger';
 import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
 const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }];
@@ -167,6 +168,7 @@ export function AppSidebar(props: AppSidebarProps) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SearchTrigger className="mt-2" />
       </SidebarHeader>
 
       <SidebarContent className="gap-0 px-1 [scrollbar-width:thin]">

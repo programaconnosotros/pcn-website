@@ -10,6 +10,7 @@ import {
   GraduationCap,
   Home,
   Rocket,
+  Search,
   SquareTerminal,
   X,
 } from 'lucide-react';
@@ -20,6 +21,7 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { NavUser } from '@/components/ui/nav-user';
 import type { NavItem } from '@/components/ui/nav-main';
 import { cn } from '@/lib/utils';
+import { openGlobalSearch } from '@/components/search/global-search';
 
 export interface NavSection {
   label?: string;
@@ -315,6 +317,31 @@ const MenuPanel = ({
       </header>
 
       <div className="relative flex-1 overflow-y-auto overscroll-contain px-4 pb-6">
+        {/* The prompt above only filters sections; this hands the query to the site-wide search. */}
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            openGlobalSearch(query.trim());
+          }}
+          className="mt-4 flex w-full items-center gap-2 rounded-sm border border-dashed border-pcnGreen-300 px-3 py-2.5 text-left font-mono text-[13px] active:bg-pcnGreen/10"
+        >
+          <Search className="size-4 shrink-0 text-pcnGreen" />
+          <span className="min-w-0 flex-1 truncate">
+            {query.trim() ? (
+              <>
+                <span className="text-foreground/50">find ~ -iname </span>
+                <span className="text-pcnGreen">&quot;{query.trim()}&quot;</span>
+              </>
+            ) : (
+              <span className="text-foreground/70">buscar en todo el sitio</span>
+            )}
+          </span>
+          <span className="shrink-0 text-[10px] text-pcnGreen-500">
+            eventos · cursos · charlas…
+          </span>
+        </button>
+
         {filtered.length === 0 ? (
           <div className="mt-6 font-mono text-[13px] leading-relaxed">
             <p className="text-red-400/90">

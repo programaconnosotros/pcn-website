@@ -9,7 +9,9 @@ export type OsMessage =
   | { source: typeof OS_MESSAGE_SOURCE; type: 'focus' }
   | { source: typeof OS_MESSAGE_SOURCE; type: 'open'; path: string }
   /** Plays a music set in the desktop's player, so it keeps playing when the window closes. */
-  | { source: typeof OS_MESSAGE_SOURCE; type: 'playMusic'; id: string };
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'playMusic'; id: string }
+  /** Opens the desktop's global search (⌘K pressed inside a window). */
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'search'; query: string };
 
 type OutgoingOsMessage = OsMessage extends infer M
   ? M extends OsMessage
