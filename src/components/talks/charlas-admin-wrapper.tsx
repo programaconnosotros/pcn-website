@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Carousel,
@@ -67,6 +67,12 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
   const [editingTalk, setEditingTalk] = useState<TalkWithEvent | null>(null);
   const [deletingTalk, setDeletingTalk] = useState<TalkWithEvent | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [tab, setTab] = useState('comunidad');
+
+  // `/charlas?tab=externas` (linked from the home) opens the recommended external talks.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('tab') === 'externas') setTab('externas');
+  }, []);
 
   const handleDelete = async () => {
     if (!deletingTalk) return;
@@ -109,7 +115,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
         )}
       </div>
 
-      <Tabs defaultValue="comunidad">
+      <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="mb-4">
           <TabsTrigger value="comunidad">Comunidad</TabsTrigger>
           <TabsTrigger value="externas">Externas</TabsTrigger>

@@ -105,7 +105,14 @@ const VideoCell = ({
 );
 
 /** YouTube videos laid out on the ruled grid; each one plays in a dialog without leaving the page. */
-export function VideoGrid({ videos }: { videos: Video[] }) {
+export function VideoGrid({
+  videos,
+  toolbar = true,
+}: {
+  videos: Video[];
+  /** Shows the watch progress and the watched/unwatched filter above the grid. */
+  toolbar?: boolean;
+}) {
   const [playing, setPlaying] = useState<Video | null>(null);
   const [filter, setFilter] = useState<WatchFilter>('todos');
   const marks = useContentMarks('video');
@@ -120,45 +127,47 @@ export function VideoGrid({ videos }: { videos: Video[] }) {
   return (
     <>
       {/* Watch progress and the watched/unwatched filter. */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px]">
-        <span className="flex items-center gap-2 text-muted-foreground">
-          vistos
-          <span aria-hidden className="tracking-[-0.05em]">
-            <span className="text-glow text-pcnGreen">{'█'.repeat(filled)}</span>
-            <span className="text-pcnGreen-200">{'░'.repeat(barWidth - filled)}</span>
-          </span>
-          <span className="tabular-nums text-pcnGreen">
-            {watchedCount}/{videos.length}
-          </span>
-          {!marks.isAuthenticated && !marks.isLoading && (
-            <span className="text-muted-foreground/70 max-sm:hidden">
-              · iniciá sesión para guardar lo que ves
+      {toolbar && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px]">
+          <span className="flex items-center gap-2 text-muted-foreground">
+            vistos
+            <span aria-hidden className="tracking-[-0.05em]">
+              <span className="text-glow text-pcnGreen">{'█'.repeat(filled)}</span>
+              <span className="text-pcnGreen-200">{'░'.repeat(barWidth - filled)}</span>
             </span>
-          )}
-        </span>
-        <span
-          className="ml-auto flex border border-pcnGreen-200"
-          role="group"
-          aria-label="Filtrar por estado"
-        >
-          {WATCH_FILTERS.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={filter === value}
-              onClick={() => setFilter(value)}
-              className={cn(
-                'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
-                filter === value
-                  ? 'bg-pcnGreen text-black'
-                  : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </span>
-      </div>
+            <span className="tabular-nums text-pcnGreen">
+              {watchedCount}/{videos.length}
+            </span>
+            {!marks.isAuthenticated && !marks.isLoading && (
+              <span className="text-muted-foreground/70 max-sm:hidden">
+                · iniciá sesión para guardar lo que ves
+              </span>
+            )}
+          </span>
+          <span
+            className="ml-auto flex border border-pcnGreen-200"
+            role="group"
+            aria-label="Filtrar por estado"
+          >
+            {WATCH_FILTERS.map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={filter === value}
+                onClick={() => setFilter(value)}
+                className={cn(
+                  'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                  filter === value
+                    ? 'bg-pcnGreen text-black'
+                    : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </span>
+        </div>
+      )}
 
       {visibleVideos.length === 0 && (
         <p className="border border-dashed border-pcnGreen-200 py-8 text-center font-mono text-sm text-muted-foreground">

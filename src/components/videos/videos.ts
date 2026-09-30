@@ -213,3 +213,6 @@ export const videos = [...allVideos].sort((a, b) => b.date.localeCompare(a.date)
 
 /** Talks from other conferences the community recommends, newest first. */
 export const externalTalks = videos.filter((video) => video.isTalk);
+
+/** Videos that are not conference talks, so they never repeat what `externalTalks` lists. */
+export const otherVideos = videos.filter((video) => !video.isTalk);
