@@ -8,32 +8,14 @@ import { X } from 'lucide-react';
 import { conversations, type Conversation } from '@/data/whatsapp-conversations';
 import { SearchBar } from '@/components/ui/search-bar';
 import { ActivityGraph, type MonthActivity } from '@/components/conversations/activity-graph';
-import { ConversationRow, GROUP_THREAD_MIN } from '@/components/conversations/conversation-row';
+import { ConversationRow } from '@/components/conversations/conversation-row';
+import { ConversationDialog } from '@/components/conversations/conversation-dialog';
+import { isGroupThread, monthName } from '@/components/conversations/conversation-utils';
 import { normalize } from '@/components/conversations/highlight';
-
-const MONTHS_ES = [
-  'enero',
-  'febrero',
-  'marzo',
-  'abril',
-  'mayo',
-  'junio',
-  'julio',
-  'agosto',
-  'septiembre',
-  'octubre',
-  'noviembre',
-  'diciembre',
-];
 
 const TOP_VOICES = 8;
 
 const monthKey = (date: string) => date.slice(0, 7);
-
-const monthName = (key: string) => MONTHS_ES[Number(key.slice(5, 7)) - 1];
-
-const isGroupThread = (conversation: Conversation) =>
-  conversation.participants.length >= GROUP_THREAD_MIN;
 
 const sortedConversations = [...conversations].sort((a, b) => b.date.localeCompare(a.date));
 
@@ -100,9 +82,16 @@ export default function ConversationsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [groupOnly, setGroupOnly] = useState(false);
   const [participant, setParticipant] = useState<string | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleParticipant = (name: string) =>
     setParticipant((current) => (current === name ? null : name));
+
+  // Filtering from inside the dialog changes the list under it, so close it first.
+  const filterFromDialog = (name: string) => {
+    setOpenIndex(null);
+    toggleParticipant(name);
+  };
 
   const filtered = useMemo(() => {
     const query = normalize(searchTerm.trim());
@@ -252,6 +241,7 @@ export default function ConversationsPage() {
                         query={searchTerm}
                         activeParticipant={participant}
                         onParticipantClick={toggleParticipant}
+                        onOpen={() => setOpenIndex(filtered.indexOf(c))}
                       />
                     ))}
                   </RuledGrid>
@@ -261,6 +251,16 @@ export default function ConversationsPage() {
           </div>
         )}
       </div>
+
+      <ConversationDialog
+        conversations={filtered}
+        index={openIndex}
+        query={searchTerm}
+        activeParticipant={participant}
+        onNavigate={setOpenIndex}
+        onClose={() => setOpenIndex(null)}
+        onParticipantClick={filterFromDialog}
+      />
     </div>
   );
 }
