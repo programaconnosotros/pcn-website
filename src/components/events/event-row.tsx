@@ -8,7 +8,10 @@ import Link from 'next/link';
 
 type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
 
-export const EventRow: React.FC<{ event: EventWithCount }> = ({ event }) => {
+export const EventRow: React.FC<{ event: EventWithCount; className?: string }> = ({
+  event,
+  className,
+}) => {
   const isFull =
     event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
   const flyer = event.flyerImages[0];
@@ -17,7 +20,10 @@ export const EventRow: React.FC<{ event: EventWithCount }> = ({ event }) => {
     : [event.placeName, event.city].filter(Boolean).join(', ');
 
   return (
-    <Link href={`/eventos/${event.id}`} className={cn(ruledCellClassName, 'group flex gap-3 p-3')}>
+    <Link
+      href={`/eventos/${event.id}`}
+      className={cn(ruledCellClassName, 'group flex gap-3 p-3', className)}
+    >
       <div className="h-16 w-16 shrink-0 overflow-hidden rounded-sm border border-pcnGreen-200 bg-black">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

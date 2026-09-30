@@ -6,7 +6,7 @@ export const fetchRecentlyAddedEvents = async () =>
   prisma.event.findMany({
     where: { deletedAt: null },
     orderBy: { date: 'desc' },
-    take: 3,
+    take: 4,
     include: {
       _count: {
         select: {

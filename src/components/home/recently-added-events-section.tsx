@@ -21,9 +21,13 @@ export const RecentlyAddedEventsSection = async () => {
         action={{ label: 'Ver todos los eventos', href: '/eventos' }}
       />
 
-      <RuledGrid className="grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-        {events.map((event) => (
-          <EventRow key={event.id} event={event} />
+      <RuledGrid className="grid-cols-1 md:grid-cols-2">
+        {events.map((event, index) => (
+          <EventRow
+            key={event.id}
+            event={event}
+            className={index === 3 ? 'max-md:hidden' : undefined}
+          />
         ))}
       </RuledGrid>
     </section>
