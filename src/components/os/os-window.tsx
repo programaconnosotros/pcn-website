@@ -72,14 +72,14 @@ const trackPointer = (
   window.addEventListener('pointercancel', up);
 };
 
-const TrafficLight = ({
+const WindowButton = ({
   label,
   className,
   glyph,
   onClick,
 }: {
   label: string;
-  className: string;
+  className?: string;
   glyph: string;
   onClick: () => void;
 }) => (
@@ -90,7 +90,7 @@ const TrafficLight = ({
     onPointerDown={(e) => e.stopPropagation()}
     onClick={onClick}
     className={cn(
-      "relative flex size-3 items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/0 ring-1 ring-inset ring-black/20 transition-colors before:absolute before:-inset-1 before:content-[''] group-hover/lights:text-black/60",
+      'flex h-5 min-w-5 items-center justify-center rounded-sm px-1 text-xs leading-none text-pcnGreen-600 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen',
       className,
     )}
   >
@@ -182,8 +182,10 @@ export function OsWindow({
       onPointerDownCapture={onFocus}
       style={{ left: rect.x, top: rect.y, width: rect.w, height: rect.h, zIndex }}
       className={cn(
-        'absolute flex flex-col overflow-hidden rounded-xl border bg-background shadow-[0_30px_80px_-20px_rgba(0,0,0,0.85)]',
-        focused ? 'border-white/15' : 'border-white/[0.07]',
+        'absolute flex flex-col overflow-hidden rounded-md border bg-background shadow-[0_30px_80px_-20px_rgba(0,0,0,0.85)]',
+        focused
+          ? 'border-pcnGreen-500 shadow-[0_0_40px_-12px_#04f4be80,0_30px_80px_-20px_rgba(0,0,0,0.85)]'
+          : 'border-pcnGreen-200',
         win.maximized && 'rounded-none border-x-0',
         win.minimized && 'pointer-events-none',
       )}
@@ -192,45 +194,35 @@ export function OsWindow({
         onPointerDown={startDrag}
         onDoubleClick={onToggleMaximize}
         className={cn(
-          'relative flex h-10 shrink-0 cursor-default touch-none select-none items-center border-b px-3',
-          focused ? 'border-white/10 bg-zinc-900' : 'border-white/[0.06] bg-zinc-950',
+          'relative flex h-9 shrink-0 cursor-default touch-none select-none items-center border-b bg-black px-2 font-mono',
+          focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',
         )}
       >
-        <div className="group/lights flex items-center gap-2">
-          <TrafficLight
+        <div className="flex items-center gap-0.5">
+          <WindowButton
             label="Cerrar"
-            glyph="×"
+            glyph="[x]"
             onClick={onClose}
-            className={focused ? 'bg-[#ff5f57]' : 'bg-zinc-700'}
+            className="hover:bg-red-500/20 hover:text-red-400"
           />
-          <TrafficLight
-            label="Minimizar"
-            glyph="−"
-            onClick={onMinimize}
-            className={focused ? 'bg-[#febc2e]' : 'bg-zinc-700'}
-          />
-          <TrafficLight
+          <WindowButton label="Minimizar" glyph="[_]" onClick={onMinimize} />
+          <WindowButton
             label={win.maximized ? 'Restaurar' : 'Maximizar'}
-            glyph="+"
+            glyph={win.maximized ? '[=]' : '[□]'}
             onClick={onToggleMaximize}
-            className={focused ? 'bg-[#28c840]' : 'bg-zinc-700'}
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-28 flex items-center justify-center gap-2 text-[13px]">
+        <div className="pointer-events-none absolute inset-x-28 flex items-center justify-center gap-2 text-xs">
+          <Icon
+            className={cn('size-3.5 shrink-0', focused ? 'text-pcnGreen' : 'text-pcnGreen-500')}
+            strokeWidth={2}
+          />
           <span
-            className={cn(
-              'flex size-5 shrink-0 items-center justify-center rounded-md bg-gradient-to-br',
-              app.color,
-            )}
+            className={cn('truncate', focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-500')}
           >
-            <Icon className="size-3 text-white" strokeWidth={2.4} />
-          </span>
-          <span
-            className={cn('truncate font-semibold', focused ? 'text-white/90' : 'text-white/45')}
-          >
-            {app.name}
-            {subtitle && <span className="font-normal text-white/40"> — {subtitle}</span>}
+            ~/{app.name.toLowerCase()}
+            {subtitle && <span className="text-pcnGreen-500"> — {subtitle}</span>}
           </span>
         </div>
 
@@ -241,7 +233,7 @@ export function OsWindow({
             aria-label="Recargar"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => iframeRef.current?.contentWindow?.location.reload()}
-            className="flex size-7 items-center justify-center rounded-md text-white/40 transition-colors hover:bg-white/10 hover:text-white/80"
+            className="flex size-7 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
           >
             <RotateCw className="size-3.5" />
           </button>
@@ -252,7 +244,7 @@ export function OsWindow({
             title="Abrir en una pestaña nueva"
             aria-label="Abrir en una pestaña nueva"
             onPointerDown={(e) => e.stopPropagation()}
-            className="flex size-7 items-center justify-center rounded-md text-white/40 transition-colors hover:bg-white/10 hover:text-white/80"
+            className="flex size-7 items-center justify-center rounded-sm text-pcnGreen-500 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen"
           >
             <ExternalLink className="size-3.5" />
           </a>
@@ -275,15 +267,10 @@ export function OsWindow({
         />
         {!loaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background">
-            <span
-              className={cn(
-                'flex size-16 animate-pulse items-center justify-center rounded-2xl bg-gradient-to-br shadow-lg',
-                app.color,
-              )}
-            >
-              <Icon className="size-8 text-white" />
+            <Icon className="size-8 animate-pulse text-pcnGreen drop-shadow-[0_0_8px_#04f4be]" />
+            <span className="cursor-blink text-xs text-pcnGreen-700">
+              $ open {app.name.toLowerCase()}
             </span>
-            <span className="text-xs text-white/40">Abriendo {app.name}…</span>
           </div>
         )}
       </div>

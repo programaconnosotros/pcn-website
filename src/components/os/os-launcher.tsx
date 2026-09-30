@@ -47,7 +47,7 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
           onClick={onClose}
-          className="fixed inset-0 z-[6000] overflow-y-auto bg-black/55 px-10 pb-32 pt-16 backdrop-blur-2xl"
+          className="fixed inset-0 z-[6000] overflow-y-auto bg-black/80 px-10 pb-32 pt-16 font-mono backdrop-blur-xl"
         >
           <motion.div
             initial={{ scale: 1.04 }}
@@ -58,9 +58,10 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
           >
             <label
               onClick={(e) => e.stopPropagation()}
-              className="mx-auto flex w-full max-w-xs items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/80"
+              className="mx-auto flex w-full max-w-sm items-center gap-2 rounded-sm border border-pcnGreen-400 bg-black/80 px-3 py-1.5 text-sm text-pcnGreen shadow-[0_0_24px_-8px_#04f4be99] focus-within:border-pcnGreen"
             >
-              <Search className="size-4 text-white/50" />
+              <span className="select-none text-pcnGreen-700">$</span>
+              <Search className="size-4 text-pcnGreen-600" />
               <input
                 ref={inputRef}
                 value={query}
@@ -68,8 +69,8 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && matches[0]) onOpenApp(matches[0]);
                 }}
-                placeholder="Buscar apps"
-                className="w-full bg-transparent outline-none placeholder:text-white/40"
+                placeholder="buscar apps…"
+                className="w-full bg-transparent outline-none placeholder:text-pcnGreen-500"
               />
             </label>
 
@@ -78,8 +79,10 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
               if (groupApps.length === 0) return null;
               return (
                 <section key={group} className="flex flex-col gap-4">
-                  <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+                  <h2 className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-pcnGreen-600">
+                    <span className="text-pcnGreen-400">##</span>
                     {group}
+                    <span aria-hidden className="h-px flex-1 bg-pcnGreen-200" />
                   </h2>
                   <div className="grid grid-cols-6 gap-y-6">
                     {groupApps.map((app) => (
@@ -90,13 +93,10 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
                           e.stopPropagation();
                           onOpenApp(app);
                         }}
-                        className="group flex flex-col items-center gap-2 rounded-xl p-2 outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen/60"
+                        className="group flex flex-col items-center gap-2 rounded-md p-2 outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
                       >
-                        <AppIcon
-                          app={app}
-                          className="size-16 transition-transform group-hover:scale-105 group-active:scale-95"
-                        />
-                        <span className="text-center text-xs font-medium text-white/85">
+                        <AppIcon app={app} className="size-16" />
+                        <span className="text-center text-xs lowercase text-pcnGreen-700 transition-colors group-hover:text-pcnGreen">
                           {app.name}
                         </span>
                       </button>
@@ -107,8 +107,9 @@ export function OsLauncher({ open, apps, onOpenApp, onClose }: OsLauncherProps) 
             })}
 
             {matches.length === 0 && (
-              <p className="text-center text-sm text-white/50">
-                No hay apps que coincidan con “{query}”.
+              <p className="text-center text-sm text-pcnGreen-600">
+                <span className="text-red-400">error:</span> no hay apps que coincidan con “{query}
+                ”.
               </p>
             )}
           </motion.div>

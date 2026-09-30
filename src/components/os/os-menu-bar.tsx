@@ -42,9 +42,9 @@ interface OsMenuBarProps {
   onOpenLauncher: () => void;
 }
 
-const menuContentClassName = 'z-[7000] min-w-52 rounded-lg';
+const menuContentClassName = 'z-[7000] min-w-52';
 const menuTriggerClassName =
-  'rounded px-2 py-0.5 outline-none transition-colors hover:bg-white/10 data-[state=open]:bg-white/15';
+  'rounded-sm px-2 py-0.5 outline-none transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen data-[state=open]:bg-pcnGreen data-[state=open]:text-black';
 
 const appById = (id: string) => OS_APPS.find((app) => app.id === id)!;
 
@@ -73,7 +73,7 @@ const Clock = () => {
     const interval = window.setInterval(() => setNow(new Date()), 15_000);
     return () => window.clearInterval(interval);
   }, []);
-  return <span className="tabular-nums text-white/85">{now ? formatClock(now) : ''}</span>;
+  return <span className="tabular-nums text-pcnGreen-800">{now ? formatClock(now) : ''}</span>;
 };
 
 /** Top bar of the desktop: PCN menu, the focused app's window menu, the clock and the user. */
@@ -85,12 +85,12 @@ export function OsMenuBar({
   onOpenLauncher,
 }: OsMenuBarProps) {
   return (
-    <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-white/[0.06] bg-black/45 px-2 text-[13px] text-white/90 backdrop-blur-2xl">
+    <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger className={cn(menuTriggerClassName, 'flex items-center gap-1.5')}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.webp" alt="" className="size-4" />
-          <span className="font-semibold">PCN OS</span>
+          <span className="text-glow font-semibold text-pcnGreen">PCN_OS</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className={menuContentClassName}>
           <DropdownMenuItem onSelect={() => onOpenApp(appById('historia'))}>
@@ -120,7 +120,7 @@ export function OsMenuBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {focusedApp && <span className="px-2 font-semibold">{focusedApp.name}</span>}
+      {focusedApp && <span className="px-2 text-pcnGreen">~/{focusedApp.name.toLowerCase()}</span>}
 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger className={menuTriggerClassName} disabled={!windowActions}>
@@ -186,7 +186,7 @@ export function OsMenuBar({
             </Link>
             <Link
               href="/autenticacion/registro"
-              className="rounded bg-pcnGreen px-2 py-0.5 font-medium text-black transition-opacity hover:opacity-90"
+              className="rounded-sm bg-pcnGreen px-2 py-0.5 font-medium text-black transition-shadow hover:shadow-[0_0_12px_#04f4be]"
             >
               Crear cuenta
             </Link>
