@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { ProgramIcon } from './program-icon';
 import { OS_PROGRAM_GROUPS, type OsProgram } from './programs';
 
@@ -51,6 +51,17 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
           onClick={onClose}
           className="fixed inset-0 z-[6000] overflow-y-auto bg-black/80 px-10 pb-32 pt-16 font-mono backdrop-blur-xl"
         >
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Salir"
+            className="group fixed right-4 top-10 z-10 flex items-center gap-2 border border-pcnGreen-300 bg-black/80 px-2.5 py-1 text-xs text-pcnGreen-700 outline-none transition-all duration-200 [clip-path:polygon(0_0,calc(100%-6px)_0,100%_6px,100%_100%,6px_100%,0_calc(100%-6px))] hover:border-red-500 hover:bg-red-500 hover:text-black hover:shadow-[0_0_14px_#ef4444] focus-visible:border-pcnGreen"
+          >
+            <span className="text-pcnGreen-500 group-hover:text-black">[esc]</span>
+            salir
+            <X className="size-3.5 transition-transform duration-200 group-hover:rotate-90" />
+          </button>
+
           <motion.div
             initial={{ scale: 1.04 }}
             animate={{ scale: 1 }}
