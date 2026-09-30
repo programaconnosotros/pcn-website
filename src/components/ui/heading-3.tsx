@@ -5,8 +5,7 @@ const heading3Variants = cva('scroll-m-20 text-2xl font-semibold tracking-tight'
   variants: {
     variant: {
       default: '',
-      gradient:
-        'bg-gradient-to-r from-pcnGreen via-teal-500 to-pcnGreen bg-clip-text text-transparent',
+      gradient: 'text-pcnGreen text-glow',
     },
   },
   defaultVariants: {

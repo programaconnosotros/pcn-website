@@ -6,30 +6,32 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-sm font-mono text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
         default:
-          'bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:shadow-[0_0_15px_rgba(4,244,190,0.5)] dark:hover:bg-pcnGreen dark:hover:shadow-[0_0_20px_rgba(4,244,190,0.7)] disabled:bg-pcnPurple/50 disabled:text-white/70 dark:disabled:bg-pcnGreen/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
-        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'border border-pcnGreen bg-pcnGreen text-black hover:shadow-[0_0_18px_-2px_rgba(4,244,190,0.7)] active:translate-y-px disabled:bg-pcnGreen/50 disabled:shadow-none',
+        destructive:
+          'border border-red-500/60 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 hover:shadow-[0_0_16px_-4px_rgba(239,68,68,0.7)]',
         outline:
-          'border border-input bg-background hover:bg-accent/80 dark:shadow-[0_0_10px_rgba(0,0,0,0.4)] dark:hover:shadow-[0_0_15px_rgba(0,0,0,0.6)] dark:hover:bg-accent/60 dark:text-shadow-[0_0_8px_rgba(255,255,255,0.5)] dark:[&_svg]:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] hover:text-pcnPurple hover:border-pcnPurple hover:[&_svg]:text-pcnPurple dark:hover:!border-pcnGreen dark:hover:!text-pcnGreen dark:hover:[&_svg]:!text-pcnGreen dark:hover:shadow-[0_0_15px_rgba(4,244,190,0.4)] dark:hover:text-shadow-[0_0_12px_rgba(4,244,190,0.8)] dark:hover:[&_svg]:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
-        youtube: 'bg-red-600 text-white hover:bg-red-600/90',
-        pcn: 'bg-pcnPurple text-white hover:bg-pcnPurple/90 dark:bg-pcnGreen dark:text-black dark:hover:bg-pcnGreen/90 disabled:bg-pcnPurple/50 disabled:text-white/70 dark:disabled:bg-pcnGreen/50 dark:disabled:text-black/70',
-        gold: 'bg-[#FFE066] text-black hover:bg-[#FFE066]/90 dark:bg-[#FFE066] dark:text-black dark:shadow-[0_0_15px_rgba(255,224,102,0.5)] dark:hover:bg-[#FFE066] dark:hover:shadow-[0_0_20px_rgba(255,224,102,0.7)] disabled:bg-[#FFE066]/50 disabled:text-black/70 dark:disabled:bg-[#FFE066]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
+          'border border-pcnGreen-400 bg-black/40 text-pcnGreen-900 hover:border-pcnGreen hover:bg-pcnGreen-100 hover:text-pcnGreen hover:shadow-[0_0_14px_-4px_rgba(4,244,190,0.6)] [&_svg]:text-current',
+        secondary:
+          'border border-pcnGreen-200 bg-secondary text-secondary-foreground hover:border-pcnGreen-500 hover:text-pcnGreen',
+        ghost: 'text-foreground/80 hover:bg-pcnGreen-100 hover:text-pcnGreen',
+        link: 'text-pcnGreen underline-offset-4 hover:underline',
+        youtube: 'border border-red-500/60 bg-red-600 text-white hover:bg-red-600/90',
+        pcn: 'border border-pcnGreen bg-pcnGreen text-black hover:shadow-[0_0_18px_-2px_rgba(4,244,190,0.7)] disabled:bg-pcnGreen/50',
+        gold: 'bg-[#FFE066] text-black shadow-[0_0_15px_rgba(255,224,102,0.4)] hover:bg-[#FFE066] hover:shadow-[0_0_20px_rgba(255,224,102,0.7)] disabled:bg-[#FFE066]/50 disabled:text-black/70 disabled:shadow-none',
         silver:
-          'bg-[#E8E8E8] text-black hover:bg-[#E8E8E8]/90 dark:bg-[#E8E8E8] dark:text-black dark:shadow-[0_0_15px_rgba(232,232,232,0.5)] dark:hover:bg-[#E8E8E8] dark:hover:shadow-[0_0_20px_rgba(232,232,232,0.7)] disabled:bg-[#E8E8E8]/50 disabled:text-black/70 dark:disabled:bg-[#E8E8E8]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
+          'bg-[#E8E8E8] text-black shadow-[0_0_15px_rgba(232,232,232,0.4)] hover:bg-[#E8E8E8] hover:shadow-[0_0_20px_rgba(232,232,232,0.7)] disabled:bg-[#E8E8E8]/50 disabled:text-black/70 disabled:shadow-none',
         bronze:
-          'bg-[#F5B56A] text-black hover:bg-[#F5B56A]/90 dark:bg-[#F5B56A] dark:text-black dark:shadow-[0_0_15px_rgba(245,181,106,0.5)] dark:hover:bg-[#F5B56A] dark:hover:shadow-[0_0_20px_rgba(245,181,106,0.7)] disabled:bg-[#F5B56A]/50 disabled:text-black/70 dark:disabled:bg-[#F5B56A]/50 dark:disabled:text-black/70 dark:disabled:shadow-none',
+          'bg-[#F5B56A] text-black shadow-[0_0_15px_rgba(245,181,106,0.4)] hover:bg-[#F5B56A] hover:shadow-[0_0_20px_rgba(245,181,106,0.7)] disabled:bg-[#F5B56A]/50 disabled:text-black/70 disabled:shadow-none',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        sm: 'h-9 rounded-sm px-3',
+        lg: 'h-11 rounded-sm px-8',
         icon: 'h-10 w-10',
       },
     },
