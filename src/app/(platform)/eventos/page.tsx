@@ -54,7 +54,7 @@ const EventsPage = async () => {
           <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
             <PageTitle
               path="eventos"
-              meta="meetups, coworks, lightning talks y zero to agent"
+              meta="meetups, hackathons, coworks, etc."
               className="mb-0 flex-1"
             />
             {!isAdmin && (
