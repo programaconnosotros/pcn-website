@@ -50,7 +50,7 @@ function ConversationCard({ conversation }: { conversation: Conversation }) {
   const isLong = conversation.summary.length > 300;
 
   return (
-    <Card className="flex h-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800">
+    <Card className="flex h-full flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
       <CardHeader className="pb-2 pt-4">
         <div className="flex flex-col gap-1">
           <h3 className="text-base font-semibold leading-snug">{conversation.title}</h3>

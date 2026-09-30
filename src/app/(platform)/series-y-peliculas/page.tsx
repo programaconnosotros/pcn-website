@@ -352,7 +352,7 @@ const SeriesYPeliculasPage = () => {
                 {filteredTitles.map((item) => (
                   <Card
                     key={item.id}
-                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
+                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
                   >
                     {/* Poster */}
                     <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">

@@ -212,7 +212,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-4">
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800">
+              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
                 <CardHeader className="flex flex-col items-center gap-4 pb-6">
                   <Avatar className="h-24 w-24">
                     <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
@@ -456,7 +456,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       return (
                         <Card
                           key={talk.id}
-                          className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
+                          className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
                         >
                           <CardContent className="p-6">
                             <div className="flex flex-col gap-4 md:flex-row">

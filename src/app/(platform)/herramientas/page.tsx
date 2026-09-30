@@ -92,7 +92,7 @@ function SoftwareRecommendationCard({
   const isLanguage = type === 'language';
   return (
     <Card
-      className={`relative flex flex-col overflow-hidden bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 ${
+      className={`relative flex flex-col overflow-hidden bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:from-black dark:to-[#04130f] ${
         usedHere
           ? 'border-2 border-pcnPurple/40 dark:border-pcnGreen/40'
           : 'border-2 border-transparent dark:border-pcnGreen-200'

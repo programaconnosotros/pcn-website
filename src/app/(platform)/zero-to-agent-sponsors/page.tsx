@@ -200,7 +200,7 @@ const ZeroToAgentSponsors = () => (
         {organizers.map((org) => (
           <Card
             key={org.name}
-            className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-neutral-950"
+            className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-black"
           >
             <CardContent className="p-6">
               <h4 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white">
@@ -227,7 +227,7 @@ const ZeroToAgentSponsors = () => (
 
       {/* Fecha y lugar */}
       <Heading3 className="mb-4 mt-10">Fecha y lugar</Heading3>
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-neutral-950">
+      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-black">
         <CardContent className="flex flex-col gap-4 p-6">
           <div className="flex items-center gap-3">
             <Calendar className="h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
@@ -276,7 +276,7 @@ const ZeroToAgentSponsors = () => (
           return (
             <Card
               key={tier.name}
-              className="flex min-w-0 flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-neutral-950"
+              className="flex min-w-0 flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 dark:border-pcnGreen-200 dark:from-black dark:to-black"
             >
               <CardContent className="flex flex-1 flex-col p-6">
                 {/* Tier header */}

@@ -194,7 +194,7 @@ const benefits = [
 ];
 
 const CARD_CLASS =
-  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800';
+  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]';
 
 const LAYER_ITEM_CLASS =
   'flex items-start gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-pcnGreen-300 dark:bg-black';
@@ -412,13 +412,15 @@ const DesarrolloPage = () => (
                 <p className="text-sm font-semibold">Tests unitarios (Jest)</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Más de 70 tests colocalizados junto a los server actions (
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">*.test.ts</code>
+                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
+                    *.test.ts
+                  </code>
                   ). Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
                     pnpm test
                   </code>{' '}
                   o en modo watch con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
                     pnpm test:watch
                   </code>
                   .
@@ -428,9 +430,11 @@ const DesarrolloPage = () => (
                 <p className="text-sm font-semibold">Tests E2E (Playwright)</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Tests end-to-end en{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">tests/</code>{' '}
+                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
+                    tests/
+                  </code>{' '}
                   que corren en Chromium, Firefox y WebKit. Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                  <code className="rounded bg-neutral-200 px-1 dark:bg-pcnGreen-100 dark:text-pcnGreen">
                     npx playwright test
                   </code>
                   .

@@ -181,7 +181,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
 
   if (logs.length === 0) {
     return (
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800">
+      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
         <CardContent className="pt-6">
           <div className="py-8 text-center">
             <Info className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
@@ -257,7 +257,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.error.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-neutral-900 dark:to-red-950/20 dark:hover:border-red-800"
+                className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-black dark:to-red-950/20 dark:hover:border-red-800"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -325,7 +325,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.warn.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-yellow-500/50 bg-gradient-to-br from-white to-yellow-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-yellow-500 hover:shadow-xl dark:border-yellow-900/50 dark:from-neutral-900 dark:to-yellow-950/20 dark:hover:border-yellow-800"
+                className="border-2 border-yellow-500/50 bg-gradient-to-br from-white to-yellow-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-yellow-500 hover:shadow-xl dark:border-yellow-900/50 dark:from-black dark:to-yellow-950/20 dark:hover:border-yellow-800"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -393,7 +393,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.info.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -461,7 +461,7 @@ export function LogsClient({ logs, pagination, logLevel }: LogsClientProps) {
             {logsByLevel.debug.map((log) => (
               <Card
                 key={log.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
+                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">

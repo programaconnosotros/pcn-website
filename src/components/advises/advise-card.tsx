@@ -118,7 +118,7 @@ export const AdviseCard = ({
   return (
     <Card
       key={advise.id}
-      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800"
+      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
     >
       <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
         {Author}

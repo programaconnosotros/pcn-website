@@ -119,7 +119,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
           return (
             <Card
               key={talk.id}
-              className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-neutral-900 dark:to-neutral-800 md:flex-row"
+              className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f] md:flex-row"
             >
               {talk.portraitUrl && (
                 <div className="relative aspect-square w-full shrink-0 md:aspect-auto md:h-auto md:w-64">
