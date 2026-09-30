@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ExternalLink, RotateCw } from 'lucide-react';
+import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OsApp } from './apps';
 
@@ -72,15 +72,21 @@ const trackPointer = (
   window.addEventListener('pointercancel', up);
 };
 
+/**
+ * Square "traffic lights": small outlined LEDs that reveal their glyph when the
+ * pointer is over the control group, like a desktop OS but on the terminal palette.
+ */
 const WindowButton = ({
   label,
-  className,
-  glyph,
+  icon: Icon,
+  focused,
+  danger,
   onClick,
 }: {
   label: string;
-  className?: string;
-  glyph: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  focused: boolean;
+  danger?: boolean;
   onClick: () => void;
 }) => (
   <button
@@ -88,13 +94,28 @@ const WindowButton = ({
     aria-label={label}
     title={label}
     onPointerDown={(e) => e.stopPropagation()}
+    onDoubleClick={(e) => e.stopPropagation()}
     onClick={onClick}
-    className={cn(
-      'flex h-5 min-w-5 items-center justify-center rounded-sm px-1 text-xs leading-none text-pcnGreen-600 transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen',
-      className,
-    )}
+    className="group/btn flex size-6 items-center justify-center rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
   >
-    {glyph}
+    <span
+      className={cn(
+        'flex size-3.5 items-center justify-center rounded-[3px] border transition-colors',
+        focused ? 'border-pcnGreen-500 bg-pcnGreen-100' : 'border-pcnGreen-300 bg-transparent',
+        'group-hover/controls:border-pcnGreen group-hover/controls:bg-pcnGreen-200',
+        danger
+          ? 'group-hover/btn:!border-red-400 group-hover/btn:!bg-red-500/25'
+          : 'group-hover/btn:!bg-pcnGreen-300',
+      )}
+    >
+      <Icon
+        strokeWidth={3}
+        className={cn(
+          'size-2.5 opacity-0 transition-opacity group-hover/controls:opacity-100 group-focus-visible/btn:opacity-100',
+          danger ? 'text-red-400' : 'text-pcnGreen',
+        )}
+      />
+    </span>
   </button>
 );
 
@@ -198,17 +219,13 @@ export function OsWindow({
           focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',
         )}
       >
-        <div className="flex items-center gap-0.5">
-          <WindowButton
-            label="Cerrar"
-            glyph="[x]"
-            onClick={onClose}
-            className="hover:bg-red-500/20 hover:text-red-400"
-          />
-          <WindowButton label="Minimizar" glyph="[_]" onClick={onMinimize} />
+        <div className="group/controls flex items-center">
+          <WindowButton label="Cerrar" icon={X} focused={focused} danger onClick={onClose} />
+          <WindowButton label="Minimizar" icon={Minus} focused={focused} onClick={onMinimize} />
           <WindowButton
             label={win.maximized ? 'Restaurar' : 'Maximizar'}
-            glyph={win.maximized ? '[=]' : '[□]'}
+            icon={win.maximized ? Copy : Square}
+            focused={focused}
             onClick={onToggleMaximize}
           />
         </div>
