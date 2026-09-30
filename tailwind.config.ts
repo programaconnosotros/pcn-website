@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 
 const config = {
@@ -21,6 +22,11 @@ const config = {
     extend: {
       screens: {
         '3xl': '1920px',
+      },
+      // Terminal look: every family resolves to Geist Mono.
+      fontFamily: {
+        sans: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+        mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
       },
       colors: {
         border: 'hsl(var(--border))',

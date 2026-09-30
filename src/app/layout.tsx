@@ -3,7 +3,7 @@ import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
-import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';
 import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
 import './globals.css';
@@ -41,11 +41,11 @@ const RootLayout = async ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" className={GeistMono.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
       </head>
-      <body className={GeistSans.className}>
+      <body className={GeistMono.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

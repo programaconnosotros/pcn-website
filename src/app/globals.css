@@ -23,7 +23,7 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
-    --radius: 0.3rem;
+    --radius: 0.25rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -39,38 +39,39 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* Terminal palette: near-black phosphor screen, PCN green as the only accent. */
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 72% 50%;
+    --background: 160 30% 2.5%;
+    --foreground: 150 25% 88%;
+    --card: 160 30% 3.5%;
+    --card-foreground: 150 25% 88%;
+    --popover: 160 30% 3.5%;
+    --popover-foreground: 150 25% 88%;
+    --primary: 166 97% 49%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 166 40% 9%;
+    --secondary-foreground: 166 80% 70%;
+    --muted: 166 30% 8%;
+    --muted-foreground: 160 12% 58%;
+    --accent: 166 60% 10%;
+    --accent-foreground: 166 97% 55%;
+    --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 8% 5.5%;
-    --sidebar-foreground: 240 4.8% 95.9%;
+    --border: 166 55% 14%;
+    --input: 166 55% 16%;
+    --ring: 166 97% 49%;
+    --chart-1: 166 97% 49%;
+    --chart-2: 190 90% 50%;
+    --chart-3: 45 95% 55%;
+    --chart-4: 280 70% 65%;
+    --chart-5: 340 80% 60%;
+    --sidebar-background: 160 30% 2%;
+    --sidebar-foreground: 150 20% 80%;
     --sidebar-primary: 166 97% 49%;
     --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 240 5% 11%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 5% 12%;
+    --sidebar-accent: 166 60% 9%;
+    --sidebar-accent-foreground: 166 97% 55%;
+    --sidebar-border: 166 55% 12%;
     --sidebar-ring: 166 97% 49%;
   }
   .theme {
@@ -85,6 +86,45 @@
   }
   body {
     @apply bg-background text-foreground;
+    caret-color: #04f4be;
+  }
+  ::selection {
+    background: #04f4be;
+    color: #000;
+  }
+  /* Thin phosphor scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #04f4be4d transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #04f4be4d;
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #04f4be99;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  /* CRT scanlines over the whole screen, barely visible. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(4, 244, 190, 0.025) 2px,
+      rgba(4, 244, 190, 0.025) 3px
+    );
   }
 }
 
@@ -115,10 +155,29 @@
     animation: marquee-vertical var(--duration) linear infinite;
   }
 
+  /* Terminal helpers. */
+  .text-glow {
+    text-shadow: 0 0 8px rgba(4, 244, 190, 0.55);
+  }
+  .box-glow {
+    box-shadow: 0 0 18px -4px rgba(4, 244, 190, 0.45);
+  }
+  .cursor-blink::after {
+    content: '_';
+    margin-left: 0.1em;
+    color: #04f4be;
+    animation: cursor-blink 1s steps(1) infinite;
+  }
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(4, 244, 190, 0.06) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
