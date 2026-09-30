@@ -261,15 +261,6 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     .map((win) => findProgramForPath(win.path))
     .filter((program, index, all) => all.findIndex((a) => a.id === program.id) === index);
 
-  const windowActions = focusedWindow
-    ? {
-        close: () => dispatch({ type: 'close', id: focusedWindow.id }),
-        minimize: () => dispatch({ type: 'minimize', id: focusedWindow.id }),
-        toggleMaximize: () => dispatch({ type: 'toggleMaximize', id: focusedWindow.id }),
-        path: focusedWindow.path,
-      }
-    : null;
-
   return (
     <div className="hidden os:block">
       <div
@@ -331,7 +322,6 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         <OsMenuBar
           user={user}
           focusedProgram={focusedProgram}
-          windowActions={windowActions}
           onOpenProgram={openProgram}
           onOpenLauncher={() => setLauncherOpen(true)}
         />

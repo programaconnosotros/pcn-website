@@ -27,17 +27,9 @@ export interface OsUser {
   image: string | null;
 }
 
-interface WindowActions {
-  close: () => void;
-  minimize: () => void;
-  toggleMaximize: () => void;
-  path: string;
-}
-
 interface OsMenuBarProps {
   user: OsUser | null;
   focusedProgram: OsProgram | null;
-  windowActions: WindowActions | null;
   onOpenProgram: (program: OsProgram) => void;
   onOpenLauncher: () => void;
 }
@@ -77,14 +69,8 @@ const Clock = () => {
   return <span className="tabular-nums text-pcnGreen-800">{now ? formatClock(now) : ''}</span>;
 };
 
-/** Top bar of the desktop: PCN menu, the focused program's window menu, the clock and the user. */
-export function OsMenuBar({
-  user,
-  focusedProgram,
-  windowActions,
-  onOpenProgram,
-  onOpenLauncher,
-}: OsMenuBarProps) {
+/** Top bar of the desktop: PCN menu, the focused program's path, the clock and the user. */
+export function OsMenuBar({ user, focusedProgram, onOpenProgram, onOpenLauncher }: OsMenuBarProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
@@ -132,27 +118,6 @@ export function OsMenuBar({
       {focusedProgram && (
         <span className="px-2 text-pcnGreen">~/{focusedProgram.name.toLowerCase()}</span>
       )}
-
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger className={menuTriggerClassName} disabled={!windowActions}>
-          Ventana
-        </DropdownMenuTrigger>
-        {windowActions && (
-          <DropdownMenuContent align="start" className={menuContentClassName}>
-            <DropdownMenuItem onSelect={windowActions.minimize}>Minimizar</DropdownMenuItem>
-            <DropdownMenuItem onSelect={windowActions.toggleMaximize}>
-              Maximizar / restaurar
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <a href={windowActions.path} target="_blank" rel="noopener noreferrer">
-                Abrir en una pestaña nueva
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={windowActions.close}>Cerrar ventana</DropdownMenuItem>
-          </DropdownMenuContent>
-        )}
-      </DropdownMenu>
 
       <div className="ml-auto flex items-center gap-3 pr-1">
         <Clock />
