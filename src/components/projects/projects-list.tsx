@@ -32,12 +32,26 @@ import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
+type ProjectPerson = { id: string; name: string } | null;
+
 interface Props {
   projects: ProjectWithMembers[];
-  isAdmin: boolean;
+  currentUser: { id: string; name: string; isAdmin: boolean } | null;
 }
 
-export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
+function ProfileLink({ user, name }: { user: ProjectPerson; name: string }) {
+  if (!user) return <>{name}</>;
+  return (
+    <Link href={`/perfil/${user.id}`} className="hover:text-pcnGreen hover:underline">
+      {name}
+    </Link>
+  );
+}
+
+export function ProjectsList({ projects, currentUser }: Props) {
+  const canManage = (project: ProjectWithMembers) =>
+    !!currentUser && (currentUser.isAdmin || project.authorId === currentUser.id);
+
   const [showCreate, setShowCreate] = useState(false);
   const [editingProject, setEditingProject] = useState<ProjectWithMembers | null>(null);
   const [deletingProject, setDeletingProject] = useState<ProjectWithMembers | null>(null);
@@ -66,10 +80,14 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
           meta={`${projects.length} proyectos de la comunidad`}
         />
 
-        {isAdmin && (
+        {currentUser ? (
           <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
             <Plus className="mr-1 h-4 w-4" />
-            Nuevo
+            Publicar proyecto
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
           </Button>
         )}
       </div>
@@ -107,7 +125,7 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
                   <ArrowUpRight className="h-3 w-3 shrink-0 text-muted-foreground" />
                 </Link>
 
-                {isAdmin && (
+                {canManage(project) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="ml-auto h-6 w-6 shrink-0">
@@ -142,22 +160,19 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
                 </p>
               )}
 
-              {project.members.length > 0 && (
+              {(project.author || project.members.length > 0) && (
                 <p className="font-mono text-[11px] text-muted-foreground/70">
                   <span className="text-pcnGreen-500">@ </span>
+                  {project.author && (
+                    <span className="text-muted-foreground">
+                      <ProfileLink user={project.author} name={project.author.name} />
+                    </span>
+                  )}
+                  {project.author && project.members.length > 0 && ' con '}
                   {project.members.map((member, index) => (
                     <span key={member.id}>
                       {index > 0 && ', '}
-                      {member.user ? (
-                        <Link
-                          href={`/perfil/${member.user.id}`}
-                          className="hover:text-pcnGreen hover:underline"
-                        >
-                          {member.memberName}
-                        </Link>
-                      ) : (
-                        member.memberName
-                      )}
+                      <ProfileLink user={member.user} name={member.memberName} />
                     </span>
                   ))}
                 </p>
@@ -173,10 +188,13 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
           <DialogHeader>
             <DialogTitle>Nuevo proyecto</DialogTitle>
           </DialogHeader>
-          <ProjectForm
-            onSuccess={() => setShowCreate(false)}
-            onCancel={() => setShowCreate(false)}
-          />
+          {currentUser && (
+            <ProjectForm
+              currentUser={currentUser}
+              onSuccess={() => setShowCreate(false)}
+              onCancel={() => setShowCreate(false)}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
@@ -186,9 +204,10 @@ export function ProyectosAdminWrapper({ projects, isAdmin }: Props) {
           <DialogHeader>
             <DialogTitle>Editar proyecto</DialogTitle>
           </DialogHeader>
-          {editingProject && (
+          {editingProject && currentUser && (
             <ProjectForm
               project={editingProject}
+              currentUser={currentUser}
               onSuccess={() => setEditingProject(null)}
               onCancel={() => setEditingProject(null)}
             />

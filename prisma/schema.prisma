@@ -49,6 +49,7 @@ model User {
   appLogs         AppLog[]
   announcements   Announcement[]
   projectMemberships ProjectMember[] @relation("UserProjectMembers")
+  authoredProjects   Project[]       @relation("UserAuthoredProjects")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -459,10 +460,17 @@ model Project {
   techStack   String[]
   order       Int      @default(0)
 
+  // Usuario que cargó el proyecto. Null solo en proyectos cargados por admins antes de que
+  // los usuarios pudieran publicar los suyos.
+  authorId String?
+  author   User?   @relation("UserAuthoredProjects", fields: [authorId], references: [id], onDelete: Cascade)
+
   members ProjectMember[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([authorId])
 }
 
 model ProjectMember {

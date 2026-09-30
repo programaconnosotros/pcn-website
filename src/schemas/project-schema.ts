@@ -30,7 +30,10 @@ export const projectSchema = z.object({
     .or(z.literal(''))
     .transform((val) => (val === '' ? undefined : val)),
   techStack: z.array(z.string().min(1).max(50)).default([]),
-  members: z.array(projectMemberSchema).default([]),
+  members: z
+    .array(projectMemberSchema)
+    .max(30, { message: 'Podés agregar hasta 30 compañeros' })
+    .default([]),
   order: z.number().int().min(0).default(0),
 });
 

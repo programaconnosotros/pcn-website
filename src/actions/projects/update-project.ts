@@ -2,23 +2,12 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
+import { canManageProject, requireSessionUser } from './get-session-user';
+import { buildProjectMembers } from './build-project-members';
 
 export const updateProject = async (id: string, data: ProjectFormData) => {
-  const sessionId = (await cookies()).get('sessionId')?.value;
-  if (!sessionId) {
-    throw new Error('Debes estar autenticado');
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('No tenés permisos para realizar esta acción');
-  }
+  const user = await requireSessionUser();
 
   const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
@@ -32,6 +21,10 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
     throw new Error('Proyecto no encontrado');
   }
 
+  if (!canManageProject(user, existing)) {
+    throw new Error('No tenés permisos para realizar esta acción');
+  }
+
   await prisma.$transaction([
     prisma.project.update({
       where: { id },
@@ -41,16 +34,14 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
         url: projectData.url,
         logoUrl: projectData.logoUrl ?? existing.logoUrl,
         techStack: projectData.techStack,
-        order: projectData.order,
+        order: user.role === 'ADMIN' ? projectData.order : existing.order,
       },
     }),
     prisma.projectMember.deleteMany({ where: { projectId: id } }),
     prisma.projectMember.createMany({
-      data: projectData.members.map((m, idx) => ({
+      data: buildProjectMembers(projectData.members, existing.authorId).map((member) => ({
+        ...member,
         projectId: id,
-        userId: m.userId ?? null,
-        memberName: m.memberName,
-        order: idx,
       })),
     }),
   ]);

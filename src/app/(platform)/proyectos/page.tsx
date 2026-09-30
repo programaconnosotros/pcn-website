@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
-import { ProyectosAdminWrapper } from '@/components/projects/proyectos-admin-wrapper';
+import { ProjectsList } from '@/components/projects/projects-list';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -38,12 +38,14 @@ const Proyectos = async () => {
     ? await prisma.session.findUnique({ where: { id: sessionId }, include: { user: true } })
     : null;
 
-  const isAdmin = session?.user.role === 'ADMIN';
+  const currentUser = session
+    ? { id: session.user.id, name: session.user.name, isAdmin: session.user.role === 'ADMIN' }
+    : null;
 
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <ProyectosAdminWrapper projects={projects} isAdmin={isAdmin} />
+        <ProjectsList projects={projects} currentUser={currentUser} />
       </div>
     </>
   );

@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
 
 type GetPresignedUrlParams = {
   fileName: string;
@@ -32,9 +33,9 @@ export async function getPresignedUrl({
     throw new Error('No autorizado');
   }
 
-  // Permitir subir archivos si es ADMIN o si es para perfil de usuario
-  const isProfileUpload = folder === 'profiles';
-  if (!isProfileUpload && session.user.role !== 'ADMIN') {
+  // Permitir subir archivos si es ADMIN, o si es para el perfil o un proyecto del usuario
+  const isUserUpload = USER_UPLOAD_FOLDERS.includes(folder);
+  if (!isUserUpload && session.user.role !== 'ADMIN') {
     throw new Error('No tienes permisos para subir archivos');
   }
 

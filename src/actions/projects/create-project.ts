@@ -2,23 +2,12 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
+import { requireSessionUser } from './get-session-user';
+import { buildProjectMembers } from './build-project-members';
 
 export const createProject = async (data: ProjectFormData) => {
-  const sessionId = (await cookies()).get('sessionId')?.value;
-  if (!sessionId) {
-    throw new Error('Debes estar autenticado');
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('No tenés permisos para realizar esta acción');
-  }
+  const user = await requireSessionUser();
 
   const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
@@ -34,13 +23,12 @@ export const createProject = async (data: ProjectFormData) => {
       url: projectData.url,
       logoUrl: projectData.logoUrl ?? '',
       techStack: projectData.techStack,
-      order: projectData.order,
+      // Solo los admins deciden el orden de la lista.
+      order: user.role === 'ADMIN' ? projectData.order : 0,
+      // El autor es siempre quien carga el proyecto, nunca un valor enviado por el cliente.
+      authorId: user.id,
       members: {
-        create: projectData.members.map((m, idx) => ({
-          userId: m.userId ?? null,
-          memberName: m.memberName,
-          order: idx,
-        })),
+        create: buildProjectMembers(projectData.members, user.id),
       },
     },
   });

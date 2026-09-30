@@ -94,6 +94,19 @@ describe('getPresignedUrl', () => {
     expect(getPresignedUploadUrl).toHaveBeenCalledWith('avatar.jpg', 'image/jpeg', 'profiles');
   });
 
+  it('allows a regular user to upload a project logo', async () => {
+    mockCookies({ sessionId: regularSession.id });
+    prismaMock.session.findUnique.mockResolvedValue(regularSession as any);
+
+    await getPresignedUrl({
+      fileName: 'logo.png',
+      contentType: 'image/png',
+      folder: 'project-logos',
+    });
+
+    expect(getPresignedUploadUrl).toHaveBeenCalledWith('logo.png', 'image/png', 'project-logos');
+  });
+
   it('allows an admin user to upload to any folder', async () => {
     mockCookies({ sessionId: adminSession.id });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
