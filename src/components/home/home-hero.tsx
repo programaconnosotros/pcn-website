@@ -33,13 +33,14 @@ export const HomeHero = ({ userName }: HomeHeroProps) => {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Backdrop: photo + gradients + grid */}
+      {/* Backdrop: animated gif + gradients + grid */}
       <div className="pointer-events-none absolute inset-0">
         <Image
-          src="/IMG_9069.webp"
+          src="/home.GIF"
           alt=""
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover object-center opacity-[0.22]"
         />
