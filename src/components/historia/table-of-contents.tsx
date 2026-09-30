@@ -4,5 +4,5 @@ import { TableOfContents as SharedTableOfContents } from '@/components/ui/table-
 import { historiaSections } from '@/components/historia/sections';
 
 export function TableOfContents() {
-  return <SharedTableOfContents sections={historiaSections} />;
+  return <SharedTableOfContents sections={historiaSections} path="historia" />;
 }

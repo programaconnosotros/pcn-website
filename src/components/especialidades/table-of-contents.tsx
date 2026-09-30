@@ -16,5 +16,5 @@ const sections: TocSection[] = specialtyGroups.flatMap((group) =>
 );
 
 export function TableOfContents() {
-  return <SharedTableOfContents sections={sections} />;
+  return <SharedTableOfContents sections={sections} path="especialidades" />;
 }
