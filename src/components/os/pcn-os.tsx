@@ -7,6 +7,7 @@ import { isOsMessage } from './os-env';
 import { OsDock } from './os-dock';
 import { OsLauncher } from './os-launcher';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
+import { OsProcesses } from './os-processes';
 import { OsWallpaper } from './os-wallpaper';
 import {
   MIN_WINDOW_HEIGHT,
@@ -271,6 +272,9 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         }
       >
         <OsWallpaper showHint={isOs && viewport !== null && state.windows.length === 0} />
+        {isOs && (
+          <OsProcesses covered={state.windows.some((win) => win.maximized && !win.minimized)} />
+        )}
 
         {isOs && viewport && (
           <AnimatePresence>
