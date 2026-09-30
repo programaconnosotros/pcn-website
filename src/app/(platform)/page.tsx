@@ -14,7 +14,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
-import { fetchCommunityStats } from '@/actions/home/fetch-community-stats';
 import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
@@ -59,10 +58,7 @@ const Home = async () => {
     });
   }
 
-  const [featuredTestimonials, stats] = await Promise.all([
-    fetchFeaturedTestimonials(),
-    fetchCommunityStats(),
-  ]);
+  const featuredTestimonials = await fetchFeaturedTestimonials();
 
   return (
     <>
@@ -89,7 +85,6 @@ const Home = async () => {
       </header>
       <HomeClientSide
         userName={session?.user?.name ?? null}
-        stats={stats}
         featuredTestimonials={featuredTestimonials}
         recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
       />

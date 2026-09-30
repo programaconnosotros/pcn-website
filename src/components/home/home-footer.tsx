@@ -46,8 +46,8 @@ export const HomeFooter = () => (
             <span className="text-sm font-semibold tracking-tight">programaConNosotros</span>
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Comunidad de apasionados por la ingeniería de software. Nacida en Tucumán, abierta a
-            todo el mundo.
+            Comunidad de apasionados por la ingeniería de software. Sin fronteras, abierta a todo el
+            mundo.
           </p>
           <ul className="mt-5 flex items-center gap-2">
             {socialNetworks.map((network) => (
@@ -96,7 +96,7 @@ export const HomeFooter = () => (
       <div className="mt-12 flex flex-col gap-3 border-t border-white/[0.06] pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
         <p>© 2020–{new Date().getFullYear()} programaConNosotros</p>
         <p>
-          Hecho con <span className="text-pcnGreen">♥</span> en Tucumán, Argentina.
+          Hecho con <span className="text-pcnGreen">♥</span> por la comunidad.
         </p>
       </div>
     </div>

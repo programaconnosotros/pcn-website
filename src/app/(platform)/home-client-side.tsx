@@ -1,6 +1,5 @@
 'use client';
 
-import type { CommunityStats } from '@/actions/home/fetch-community-stats';
 import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
@@ -17,20 +16,18 @@ import React from 'react';
 
 interface HomeClientSideProps {
   userName: string | null;
-  stats: CommunityStats;
   featuredTestimonials: FeaturedTestimonial[];
   recentlyAddedEventsSection: React.ReactNode;
 }
 
 const HomeClientSide = ({
   userName,
-  stats,
   featuredTestimonials,
   recentlyAddedEventsSection,
 }: HomeClientSideProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
-    <HomeHero userName={userName} stats={stats} />
+    <HomeHero userName={userName} />
     <SponsorsMarquee />
 
     <div className="mx-auto flex max-w-6xl flex-col gap-24 px-6 py-20 md:gap-32 md:py-28 lg:px-8">

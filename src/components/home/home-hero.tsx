@@ -1,6 +1,5 @@
 'use client';
 
-import type { CommunityStats } from '@/actions/home/fetch-community-stats';
 import { NumberTicker } from '@/components/magicui/number-ticker';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -14,8 +13,14 @@ export const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfH
 
 interface HomeHeroProps {
   userName: string | null;
-  stats: CommunityStats;
 }
+
+/** Community-wide figures; rounded down on purpose ("500+"). */
+const COMMUNITY_STATS = [
+  { label: 'Miembros', value: 500 },
+  { label: 'Charlas', value: 50 },
+  { label: 'Eventos', value: 20 },
+];
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 18 },
@@ -23,7 +28,7 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-export const HomeHero = ({ userName, stats }: HomeHeroProps) => {
+export const HomeHero = ({ userName }: HomeHeroProps) => {
   const firstName = userName?.split(' ')[0] ?? null;
 
   return (
@@ -52,7 +57,7 @@ export const HomeHero = ({ userName, stats }: HomeHeroProps) => {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-pcnGreen opacity-75" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-pcnGreen" />
                 </span>
-                Comunidad de ingeniería de software · Tucumán → LATAM
+                Comunidad de ingeniería de software · Sin fronteras
               </span>
             </motion.div>
 
@@ -147,7 +152,7 @@ export const HomeHero = ({ userName, stats }: HomeHeroProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <StatsPanel stats={stats} />
+            <StatsPanel />
           </motion.div>
         </div>
       </div>
@@ -155,13 +160,7 @@ export const HomeHero = ({ userName, stats }: HomeHeroProps) => {
   );
 };
 
-const StatsPanel = ({ stats }: { stats: CommunityStats }) => {
-  const tiles = [
-    { label: 'Miembros', value: stats.members, suffix: '+' },
-    { label: 'Eventos', value: stats.events, suffix: '' },
-    { label: 'Charlas', value: stats.talks, suffix: '' },
-  ];
-
+const StatsPanel = () => {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute -inset-px rounded-[1.6rem] bg-gradient-to-br from-pcnGreen/30 via-transparent to-transparent opacity-70 blur-sm" />
@@ -181,11 +180,11 @@ const StatsPanel = ({ stats }: { stats: CommunityStats }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-px bg-white/[0.06]">
-          {tiles.map((tile) => (
+          {COMMUNITY_STATS.map((tile) => (
             <div key={tile.label} className="bg-background/80 p-5 md:p-6">
               <div className="flex items-baseline gap-0.5 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
                 <NumberTicker value={tile.value} className="tabular-nums tracking-tight" />
-                {tile.suffix && <span className="text-pcnGreen">{tile.suffix}</span>}
+                <span className="text-pcnGreen">+</span>
               </div>
               <p
                 className={cn(
@@ -213,9 +212,7 @@ const StatsPanel = ({ stats }: { stats: CommunityStats }) => {
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-white/[0.06] px-5 py-3.5">
-          <p className="text-xs text-muted-foreground">
-            Presencial en Tucumán y online para todos.
-          </p>
+          <p className="text-xs text-muted-foreground">Presencial y online. Para todo el mundo.</p>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-pcnGreen/10 px-2 py-0.5 text-[11px] font-medium text-pcnGreen">
             <span className="size-1.5 rounded-full bg-pcnGreen" />
             Activa

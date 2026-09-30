@@ -16,7 +16,7 @@ export const RecentlyAddedEventsSection = async () => {
             Publicados <span className="text-pcnGreen">recientemente</span>
           </>
         }
-        description="Presenciales en Tucumán y online para todo el mundo. Sumate al próximo."
+        description="Presenciales y online, para todo el mundo. Sumate al próximo."
         action={{ label: 'Ver todos los eventos', href: '/eventos' }}
       />
 
