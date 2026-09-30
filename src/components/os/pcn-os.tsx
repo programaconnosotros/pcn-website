@@ -130,12 +130,15 @@ const newWindowRect = (viewport: Viewport, openCount: number): Rect => {
   const area = desktopArea(viewport);
   const w = Math.max(MIN_WINDOW_WIDTH, Math.min(1180, Math.round(area.w * 0.78)));
   const h = Math.max(MIN_WINDOW_HEIGHT, Math.min(880, area.h - 40));
-  const offset = (openCount % 6) * 28;
+  // Each new window cascades from the previous one, with a shallow vertical step so it stays
+  // close to the top of the desktop.
+  const step = openCount % 6;
+  const y = area.y + 20 + step * 16;
   return {
-    x: Math.max(0, Math.round((area.w - w) / 2) + offset),
-    y: area.y + 20 + offset,
+    x: Math.max(0, Math.round((area.w - w) / 2) + step * 28),
+    y,
     w,
-    h: Math.min(h, area.y + area.h - (area.y + 20 + offset)),
+    h: Math.min(h, area.y + area.h - y),
   };
 };
 
