@@ -1,19 +1,16 @@
 import { PageTitle } from '@/components/ui/page-title';
-import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import { cn } from '@/lib/utils';
-
-interface MusicSet {
-  /** YouTube video id. */
-  id: string;
-  title: string;
-  channel: string;
-}
+import { MusicGrid, type MusicSet } from './music-grid';
 
 // The community's own live radios.
 const radios: MusicSet[] = [
-  { id: '1vsUPluzAWo', title: 'Chill synthwave radio', channel: 'programaConNosotros' },
-  { id: 'SpNIOu8LAFo', title: 'Dark synthwave radio', channel: 'programaConNosotros' },
-  { id: 'sd9AbVNlgi4', title: 'Chill lofi & jazz hop radio', channel: 'programaConNosotros' },
+  { id: '1vsUPluzAWo', title: 'Chill synthwave radio', channel: 'programaConNosotros', live: true },
+  { id: 'SpNIOu8LAFo', title: 'Dark synthwave radio', channel: 'programaConNosotros', live: true },
+  {
+    id: 'sd9AbVNlgi4',
+    title: 'Chill lofi & jazz hop radio',
+    channel: 'programaConNosotros',
+    live: true,
+  },
 ];
 
 // Playlists from other channels that the community recommends for focusing.
@@ -41,27 +38,7 @@ const MusicSection = ({ label, sets }: { label: string; sets: MusicSet[] }) => (
       <span className="text-pcnGreen-500">{'// '}</span>
       {label}
     </h2>
-    <RuledGrid className="grid-cols-1 md:grid-cols-3">
-      {sets.map((set) => (
-        <div key={set.id} className={cn(ruledCellClassName, 'flex flex-col gap-2 p-2')}>
-          <div className="aspect-video w-full overflow-hidden">
-            <iframe
-              className="h-full w-full"
-              src={`https://www.youtube-nocookie.com/embed/${set.id}`}
-              title={set.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-          <p className="truncate px-1 font-mono text-xs font-semibold">{set.title}</p>
-          <p className="-mt-1.5 truncate px-1 font-mono text-[11px] text-muted-foreground/70">
-            <span className="text-pcnGreen-500">@ </span>
-            {set.channel}
-          </p>
-        </div>
-      ))}
-    </RuledGrid>
+    <MusicGrid sets={sets} />
   </section>
 );
 
