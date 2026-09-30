@@ -50,7 +50,12 @@ export const HomeFooter = () => {
 
   return (
     <footer
-      className={cn(GeistMono.className, 'relative overflow-hidden border-t border-pcnGreen-200')}
+      className={cn(
+        GeistMono.className,
+        // On phones the layout pads the page for the fixed tab bar; pull the footer
+        // into that padding so its backdrop runs under the bar instead of stopping short.
+        'relative -mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden border-t border-pcnGreen-200 pb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 md:pb-0',
+      )}
     >
       {/* Backdrop: grid + green haze rising from the bottom */}
       <div className="pointer-events-none absolute inset-0">
@@ -177,8 +182,11 @@ export const HomeFooter = () => {
       </div>
 
       {/* Oversized wordmark bleeding off the bottom edge */}
-      <div aria-hidden="true" className="relative mx-auto max-w-6xl select-none px-6 lg:px-8">
-        <p className="-mb-[0.28em] mt-6 whitespace-nowrap bg-[linear-gradient(180deg,rgba(4,244,190,0.55),rgba(4,244,190,0.04)_85%)] bg-clip-text text-center text-[clamp(1.75rem,7.4vw,5.75rem)] font-bold leading-none tracking-[-0.06em] text-transparent [filter:drop-shadow(0_0_24px_rgba(4,244,190,0.25))]">
+      <div
+        aria-hidden="true"
+        className="relative mx-auto max-w-6xl select-none overflow-hidden px-6 pt-6 lg:px-8"
+      >
+        <p className="-mb-[0.28em] whitespace-nowrap bg-[linear-gradient(180deg,rgba(4,244,190,0.55),rgba(4,244,190,0.04)_85%)] bg-clip-text text-center text-[clamp(1.75rem,7.4vw,5.75rem)] font-bold leading-none tracking-[-0.06em] text-transparent [filter:drop-shadow(0_0_24px_rgba(4,244,190,0.25))]">
           programaConNosotros
         </p>
       </div>
