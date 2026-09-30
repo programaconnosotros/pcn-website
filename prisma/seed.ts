@@ -50,6 +50,8 @@ async function clearSeedData() {
   await prisma.appLog.deleteMany();
   await prisma.jobOffers.deleteMany();
   await prisma.event.deleteMany();
+  await prisma.projectMember.deleteMany();
+  await prisma.project.deleteMany();
 }
 
 async function main() {
@@ -864,6 +866,65 @@ async function main() {
       },
     ],
   });
+
+  // Projects, in the order an admin curated them; the last ones have collaborators without
+  // an account.
+  const projectsData = [
+    {
+      title: 'PCN Website',
+      description:
+        'El sitio de la comunidad: eventos, charlas, cursos, lecturas y PCN OS, un escritorio en el navegador.',
+      url: 'https://github.com/programaconnosotros/pcn-website',
+      logoUrl: '/software-logos/github.webp',
+      techStack: ['Next.js', 'TypeScript', 'Prisma', 'Tailwind'],
+      author: adminUser,
+      members: [regularUsers[0], regularUsers[1]],
+    },
+    {
+      title: 'Turnos UTN',
+      description:
+        'Reservá turnos de consulta con docentes sin grupos de WhatsApp: calendario, avisos por mail y lista de espera.',
+      url: 'https://example.com',
+      logoUrl: '/software-logos/vim.svg',
+      techStack: ['React', 'Node.js', 'PostgreSQL'],
+      author: regularUsers[1],
+      members: [regularUsers[2]],
+    },
+    {
+      title: 'Bot de ofertas laborales',
+      description:
+        'Un bot que junta ofertas de trabajo IT de varias fuentes, las filtra por seniority y las publica en el grupo.',
+      url: 'https://github.com/programaconnosotros',
+      logoUrl: '',
+      techStack: ['Python', 'PostgreSQL'],
+      author: regularUsers[2],
+      members: [],
+    },
+  ];
+
+  for (const [order, project] of projectsData.entries()) {
+    await prisma.project.create({
+      data: {
+        title: project.title,
+        description: project.description,
+        url: project.url,
+        logoUrl: project.logoUrl,
+        techStack: project.techStack,
+        order,
+        authorId: project.author.id,
+        members: {
+          create: [
+            ...project.members.map((member, index) => ({
+              userId: member.id,
+              memberName: member.name,
+              order: index,
+            })),
+            { memberName: 'Invitada sin cuenta', order: project.members.length },
+          ],
+        },
+      },
+    });
+  }
 
   const visitPaths = ['/charlas', '/eventos', '/testimonios', '/advises', '/job-offers'];
   await prisma.pageVisit.createMany({

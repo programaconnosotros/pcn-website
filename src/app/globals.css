@@ -510,6 +510,90 @@
     }
   }
 
+  /* /proyectos: a project's title splits into RGB ghosts for a moment when its row is hovered.
+     The ghosts are ::before/::after copies of the text from the title's data-text attribute. */
+  .project-glitch {
+    position: relative;
+  }
+  .project-glitch::before,
+  .project-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .project-glitch::before {
+    color: rgb(255 0 90);
+  }
+  .project-glitch::after {
+    color: rgb(4 244 190);
+  }
+  .group:hover .project-glitch::before {
+    animation: project-glitch-a 0.5s steps(2) 1;
+  }
+  .group:hover .project-glitch::after {
+    animation: project-glitch-b 0.5s steps(2) 1;
+  }
+  @keyframes project-glitch-a {
+    0% {
+      opacity: 0.8;
+      transform: translate(-3px, -1px);
+      clip-path: inset(0 0 60% 0);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translate(2px, 1px);
+      clip-path: inset(40% 0 20% 0);
+    }
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  @keyframes project-glitch-b {
+    0% {
+      opacity: 0.8;
+      transform: translate(3px, 1px);
+      clip-path: inset(50% 0 0 0);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translate(-2px, 0);
+      clip-path: inset(10% 0 55% 0);
+    }
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  /* /proyectos: rows boot in one after another, like lines printed by a command. */
+  .project-boot {
+    animation: project-boot 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes project-boot {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: brightness(2.5) saturate(0);
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      clip-path: inset(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover .project-glitch::before,
+    .group:hover .project-glitch::after,
+    .project-boot {
+      animation: none;
+    }
+  }
+
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
     background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),

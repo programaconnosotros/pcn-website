@@ -1,11 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { ArrowUpRight, Edit, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpRight,
+  Check,
+  Edit,
+  GripVertical,
+  MoreVertical,
+  Plus,
+  Terminal,
+  Trash2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   DropdownMenu,
@@ -25,38 +37,243 @@ import {
 } from '@/components/ui/alert-dialog';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
+import { SearchBar } from '@/components/ui/search-bar';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { WebReaderDialog } from '@/components/web-reader/web-reader-dialog';
 import { cn } from '@/lib/utils';
 import { ProjectForm } from './project-form';
 import { deleteProject } from '@/actions/projects/delete-project';
+import { reorderProjects } from '@/actions/projects/reorder-projects';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
-type ProjectPerson = { id: string; name: string } | null;
+type Person = { key: string; name: string; user: { id: string; image: string | null } | null };
 
 interface Props {
   projects: ProjectWithMembers[];
   currentUser: { id: string; name: string; isAdmin: boolean } | null;
 }
 
-function ProfileLink({ user, name }: { user: ProjectPerson; name: string }) {
-  if (!user) return <>{name}</>;
+const TOP_STACK = 8;
+const MAX_AVATARS = 5;
+
+const relativeFormat = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+
+const timeAgo = (date: Date) => {
+  const days = Math.round((new Date(date).getTime() - Date.now()) / 86_400_000);
+  if (Math.abs(days) >= 365) return relativeFormat.format(Math.round(days / 365), 'year');
+  if (Math.abs(days) >= 30) return relativeFormat.format(Math.round(days / 30), 'month');
+  return relativeFormat.format(days, 'day');
+};
+
+const hex = (index: number) => `0x${(index + 1).toString(16).padStart(2, '0')}`;
+
+const displayUrl = (url: string) => {
+  try {
+    const { host, pathname } = new URL(url);
+    return `${host.replace(/^www\./, '')}${pathname === '/' ? '' : pathname.replace(/\/$/, '')}`;
+  } catch {
+    return url;
+  }
+};
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
+// Author first, then the collaborators, as one list of people.
+const peopleOf = (project: ProjectWithMembers): Person[] => [
+  ...(project.author
+    ? [{ key: project.author.id, name: project.author.name, user: project.author }]
+    : []),
+  ...project.members.map((member) => ({
+    key: member.id,
+    name: member.memberName,
+    user: member.user,
+  })),
+];
+
+const Stat = ({ label, value, hint }: { label: string; value: string | number; hint: string }) => (
+  <div className={cn(ruledCellClassName, 'relative overflow-hidden px-3 py-2.5')}>
+    <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
+    <p className="text-glow font-mono text-2xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+    <p className="truncate font-mono text-[11px] text-muted-foreground/70">{hint}</p>
+  </div>
+);
+
+const Flag = ({
+  active,
+  onClick,
+  children,
+  count,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  count?: number;
+}) => (
+  <button
+    type="button"
+    aria-pressed={active}
+    onClick={onClick}
+    className={cn(
+      'flex h-8 shrink-0 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-xs transition-colors',
+      active
+        ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen'
+        : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-400 hover:text-foreground',
+    )}
+  >
+    {children}
+    {count !== undefined && <span className="text-[10px] tabular-nums opacity-60">{count}</span>}
+  </button>
+);
+
+const People = ({ people }: { people: Person[] }) => {
+  if (people.length === 0) return null;
+  const shown = people.slice(0, MAX_AVATARS);
   return (
-    <Link href={`/perfil/${user.id}`} className="hover:text-pcnGreen hover:underline">
-      {name}
-    </Link>
+    <div className="flex min-w-0 items-center gap-2">
+      <div className="flex shrink-0 -space-x-1.5">
+        {shown.map((person) => {
+          const avatar = (
+            <Avatar className="size-6 rounded-sm ring-2 ring-background transition-transform hover:z-10 hover:-translate-y-0.5">
+              <AvatarImage src={person.user?.image ?? undefined} alt={person.name} />
+              <AvatarFallback className="rounded-sm bg-pcnGreen-100 text-[9px] text-pcnGreen">
+                {initials(person.name)}
+              </AvatarFallback>
+            </Avatar>
+          );
+          return person.user ? (
+            <Link key={person.key} href={`/perfil/${person.user.id}`} title={person.name}>
+              {avatar}
+            </Link>
+          ) : (
+            <span key={person.key} title={person.name}>
+              {avatar}
+            </span>
+          );
+        })}
+      </div>
+      <p className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">
+        <span className="text-pcnGreen-500">@</span>
+        {people[0].user ? (
+          <Link href={`/perfil/${people[0].user.id}`} className="hover:text-pcnGreen">
+            {people[0].name}
+          </Link>
+        ) : (
+          people[0].name
+        )}
+        {people.length > 1 && (
+          <span className="text-muted-foreground/60"> +{people.length - 1}</span>
+        )}
+      </p>
+    </div>
   );
-}
+};
 
 export function ProjectsList({ projects, currentUser }: Props) {
+  const isAdmin = !!currentUser?.isAdmin;
   const canManage = (project: ProjectWithMembers) =>
     !!currentUser && (currentUser.isAdmin || project.authorId === currentUser.id);
 
+  const [items, setItems] = useState(projects);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [stack, setStack] = useState<string | null>(null);
+  const [reordering, setReordering] = useState(false);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const orderBeforeDrag = useRef<ProjectWithMembers[] | null>(null);
+
+  const [reading, setReading] = useState<ProjectWithMembers | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [editingProject, setEditingProject] = useState<ProjectWithMembers | null>(null);
   const [deletingProject, setDeletingProject] = useState<ProjectWithMembers | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Follow the server list after a create, edit or delete, unless an admin is mid-drag.
+  useEffect(() => {
+    if (!draggingId) setItems(projects);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects]);
+
+  const stats = useMemo(() => {
+    const people = new Set(
+      projects.flatMap((project) =>
+        peopleOf(project).map((person) => person.user?.id ?? person.name.toLowerCase()),
+      ),
+    );
+    const stackCounts = new Map<string, number>();
+    for (const project of projects) {
+      for (const tech of project.techStack) {
+        stackCounts.set(tech, (stackCounts.get(tech) ?? 0) + 1);
+      }
+    }
+    const newest = projects.reduce<Date | null>(
+      (latest, project) =>
+        !latest || new Date(project.createdAt) > latest ? new Date(project.createdAt) : latest,
+      null,
+    );
+    return {
+      people: people.size,
+      stack: [...stackCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])),
+      newest,
+    };
+  }, [projects]);
+
+  const query = searchQuery.trim().toLowerCase();
+  const visible = reordering
+    ? items
+    : items.filter((project) => {
+        if (stack && !project.techStack.includes(stack)) return false;
+        if (!query) return true;
+        return [
+          project.title,
+          project.description,
+          project.url,
+          ...project.techStack,
+          ...peopleOf(project).map((person) => person.name),
+        ].some((text) => text.toLowerCase().includes(query));
+      });
+
+  const saveOrder = async (next: ProjectWithMembers[], previous: ProjectWithMembers[]) => {
+    if (next.every((project, index) => project.id === previous[index]?.id)) return;
+    setSavingOrder(true);
+    try {
+      await reorderProjects(next.map((project) => project.id));
+      toast.success('Orden guardado');
+    } catch (error: any) {
+      setItems(previous);
+      toast.error(error.message || 'No se pudo guardar el orden');
+    } finally {
+      setSavingOrder(false);
+    }
+  };
+
+  const moveTo = (id: string, targetIndex: number) =>
+    setItems((current) => {
+      const from = current.findIndex((project) => project.id === id);
+      if (from === -1 || from === targetIndex) return current;
+      const next = [...current];
+      const [moved] = next.splice(from, 1);
+      next.splice(targetIndex, 0, moved);
+      return next;
+    });
+
+  // Keyboard-friendly alternative to dragging: nudge one step up or down and save right away.
+  const nudge = (id: string, direction: -1 | 1) => {
+    const from = items.findIndex((project) => project.id === id);
+    const to = from + direction;
+    if (from === -1 || to < 0 || to >= items.length) return;
+    const next = [...items];
+    [next[from], next[to]] = [next[to], next[from]];
+    setItems(next);
+    void saveOrder(next, items);
+  };
 
   const handleDelete = async () => {
     if (!deletingProject) return;
@@ -75,64 +292,200 @@ export function ProjectsList({ projects, currentUser }: Props) {
   return (
     <div className="mt-4">
       <StickyHeader>
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
           <PageTitle
             path="proyectos"
             className="flex-1"
-            meta={`${projects.length} proyectos de la comunidad`}
+            meta={`${projects.length} proyectos construidos por la comunidad`}
           />
 
-          {currentUser ? (
-            <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
-              <Plus className="mr-1 h-4 w-4" />
-              Publicar proyecto
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button
+                variant={reordering ? 'pcn' : 'outline'}
+                size="sm"
+                onClick={() => setReordering((value) => !value)}
+                disabled={savingOrder}
+                className="font-mono"
+              >
+                {reordering ? (
+                  <Check className="mr-1 h-4 w-4" />
+                ) : (
+                  <GripVertical className="mr-1 h-4 w-4" />
+                )}
+                {reordering ? 'listo' : 'ordenar'}
+              </Button>
+            )}
+            {currentUser ? (
+              <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+                <Plus className="mr-1 h-4 w-4" />
+                Publicar proyecto
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
+              </Button>
+            )}
+          </div>
         </div>
+
+        {reordering ? (
+          <p className="mb-4 flex items-center gap-2 border border-dashed border-pcnGreen-600 bg-pcnGreen/5 px-3 py-2 font-mono text-xs text-pcnGreen">
+            <GripVertical className="size-3.5 shrink-0" />
+            arrastrá los proyectos (o usá las flechas) para cambiar el orden · se guarda solo
+            {savingOrder && <span className="cursor-blink ml-auto">guardando</span>}
+          </p>
+        ) : (
+          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center">
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="proyecto, stack o persona"
+              label="Buscar proyectos"
+            />
+            <div
+              aria-label="Filtrar por tecnología"
+              className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
+            >
+              {stats.stack.slice(0, TOP_STACK).map(([tech, count]) => (
+                <Flag
+                  key={tech}
+                  active={stack === tech}
+                  onClick={() => setStack(stack === tech ? null : tech)}
+                  count={count}
+                >
+                  --{tech.toLowerCase()}
+                </Flag>
+              ))}
+            </div>
+          </div>
+        )}
       </StickyHeader>
 
+      <div className="relative mb-6">
+        <div aria-hidden className="bg-grid-fade pointer-events-none absolute inset-0 -z-10" />
+        <p className="mb-2 font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">pcn@comunidad</span>:
+          <span className="text-foreground/80">~/proyectos</span>$ ls -la --sort=curado
+        </p>
+        <RuledGrid className="grid-cols-2 lg:grid-cols-4">
+          <Stat label="proyectos" value={projects.length} hint="en producción o en camino" />
+          <Stat label="builders" value={stats.people} hint="personas detrás del código" />
+          <Stat
+            label="tecnologías"
+            value={stats.stack.length}
+            hint={
+              stats.stack
+                .slice(0, 3)
+                .map(([tech]) => tech)
+                .join(' · ') || '—'
+            }
+          />
+          <Stat
+            label="último push"
+            value={stats.newest ? timeAgo(stats.newest) : '—'}
+            hint="proyecto más reciente"
+          />
+        </RuledGrid>
+      </div>
+
       {projects.length === 0 && (
-        <p className="font-mono text-sm text-muted-foreground">
-          Todavía no hay proyectos publicados.
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>todavía no hay proyectos publicados
         </p>
       )}
 
-      <RuledGrid className="mb-14 grid-cols-1 xl:grid-cols-2">
-        {projects.map((project) => (
-          <div key={project.id} className={cn(ruledCellClassName, 'group flex gap-3 p-3')}>
-            {project.logoUrl && (
-              <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-sm bg-white">
-                <Image
-                  src={project.logoUrl}
-                  alt={`Logo de ${project.title}`}
-                  fill
-                  className="object-contain p-1"
-                  sizes="36px"
-                />
-              </div>
-            )}
+      {projects.length > 0 && visible.length === 0 && (
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>grep: 0 proyectos
+          {query && (
+            <>
+              {' '}
+              para <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
+            </>
+          )}
+          {stack && <> con --{stack.toLowerCase()}</>}
+        </p>
+      )}
 
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <div className="flex items-center gap-2 font-mono text-sm">
-                <Link
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex min-w-0 items-center gap-1 font-semibold hover:text-pcnGreen"
-                >
-                  <h2 className="truncate">{project.title}</h2>
-                  <ArrowUpRight className="h-3 w-3 shrink-0 text-muted-foreground" />
-                </Link>
+      <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+        {visible.map((project, index) => {
+          const people = peopleOf(project);
+          const isDragging = draggingId === project.id;
+          return (
+            <article
+              key={project.id}
+              draggable={reordering}
+              onDragStart={(event) => {
+                if (!reordering) return;
+                event.dataTransfer.effectAllowed = 'move';
+                orderBeforeDrag.current = items;
+                setDraggingId(project.id);
+              }}
+              onDragOver={(event) => {
+                if (!reordering || !draggingId) return;
+                event.preventDefault();
+                if (draggingId !== project.id) moveTo(draggingId, index);
+              }}
+              onDrop={(event) => event.preventDefault()}
+              onDragEnd={() => {
+                const previous = orderBeforeDrag.current;
+                setDraggingId(null);
+                orderBeforeDrag.current = null;
+                if (previous) void saveOrder(items, previous);
+              }}
+              style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
+              className={cn(
+                ruledCellClassName,
+                'project-boot group relative flex flex-col gap-3 overflow-hidden p-4',
+                'hover:shadow-[inset_2px_0_0_#04f4be]',
+                reordering && 'cursor-grab select-none active:cursor-grabbing',
+                isDragging && 'bg-pcnGreen/10 opacity-60 outline-dashed outline-1 outline-pcnGreen',
+              )}
+            >
+              {/* Scan line sweeping down the row while hovered. */}
+              <span
+                aria-hidden
+                className="article-scan pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-transparent via-pcnGreen/[0.07] to-transparent opacity-0 group-hover:opacity-100"
+              />
 
-                {canManage(project) && (
+              <header className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
+                {reordering && (
+                  <span className="flex items-center gap-0.5 text-pcnGreen">
+                    <GripVertical className="size-4" />
+                    <button
+                      type="button"
+                      onClick={() => nudge(project.id, -1)}
+                      disabled={index === 0 || savingOrder}
+                      aria-label={`Subir ${project.title}`}
+                      className="rounded-sm p-0.5 hover:bg-pcnGreen/10 disabled:opacity-30"
+                    >
+                      <ArrowUp className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudge(project.id, 1)}
+                      disabled={index === visible.length - 1 || savingOrder}
+                      aria-label={`Bajar ${project.title}`}
+                      className="rounded-sm p-0.5 hover:bg-pcnGreen/10 disabled:opacity-30"
+                    >
+                      <ArrowDown className="size-3.5" />
+                    </button>
+                  </span>
+                )}
+                <span className="tabular-nums text-pcnGreen-600">{hex(index)}</span>
+                <span className="relative flex size-1.5">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-pcnGreen opacity-60" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-pcnGreen" />
+                </span>
+                <span className="min-w-0 truncate">{displayUrl(project.url)}</span>
+
+                {canManage(project) && !reordering && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="ml-auto h-6 w-6 shrink-0">
                         <MoreVertical className="h-3.5 w-3.5" />
+                        <span className="sr-only">Acciones de {project.title}</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -150,40 +503,121 @@ export function ProjectsList({ projects, currentUser }: Props) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-              </div>
+              </header>
 
-              <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                {project.description}
-              </p>
-
-              {project.techStack.length > 0 && (
-                <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-                  <span className="text-pcnGreen-500"># </span>
-                  {project.techStack.join(' · ')}
-                </p>
-              )}
-
-              {(project.author || project.members.length > 0) && (
-                <p className="font-mono text-[11px] text-muted-foreground/70">
-                  <span className="text-pcnGreen-500">@ </span>
-                  {project.author && (
-                    <span className="text-muted-foreground">
-                      <ProfileLink user={project.author} name={project.author.name} />
+              <div className="flex items-start gap-3">
+                <div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white p-1.5 ring-1 ring-pcnGreen-200 transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)] group-hover:ring-pcnGreen-600">
+                  {project.logoUrl ? (
+                    <Image
+                      src={project.logoUrl}
+                      alt={`Logo de ${project.title}`}
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <span className="font-mono text-lg font-bold text-black">
+                      {initials(project.title)}
                     </span>
                   )}
-                  {project.author && project.members.length > 0 && ' con '}
-                  {project.members.map((member, index) => (
-                    <span key={member.id}>
-                      {index > 0 && ', '}
-                      <ProfileLink user={member.user} name={member.memberName} />
-                    </span>
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <h2>
+                    <button
+                      type="button"
+                      onClick={() => !reordering && setReading(project)}
+                      disabled={reordering}
+                      className="project-glitch text-left font-mono text-base font-semibold leading-snug transition-colors disabled:pointer-events-none group-hover:text-pcnGreen"
+                      data-text={project.title}
+                    >
+                      {project.title}
+                    </button>
+                  </h2>
+                  <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+                    {project.description}
+                  </p>
+                </div>
+              </div>
+
+              {project.techStack.length > 0 && (
+                <ul className="flex flex-wrap gap-1 font-mono text-[10px]">
+                  {project.techStack.map((tech) => (
+                    <li key={tech}>
+                      <button
+                        type="button"
+                        onClick={() => !reordering && setStack(stack === tech ? null : tech)}
+                        className={cn(
+                          'rounded-sm border px-1.5 leading-5 transition-colors',
+                          stack === tech
+                            ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
+                            : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+                        )}
+                      >
+                        {tech}
+                      </button>
+                    </li>
                   ))}
-                </p>
+                </ul>
               )}
-            </div>
-          </div>
-        ))}
+
+              <footer className="mt-auto flex items-center gap-3 border-t border-dashed border-pcnGreen-200 pt-3">
+                <People people={people} />
+                <div className="ml-auto flex shrink-0 items-center gap-1.5 font-mono text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setReading(project)}
+                    disabled={reordering}
+                    className="flex items-center gap-1 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2 py-1 text-pcnGreen transition-[box-shadow,background-color] hover:bg-pcnGreen/20 hover:shadow-[0_0_14px_-3px_rgba(4,244,190,0.8)] disabled:opacity-40"
+                  >
+                    <Terminal className="size-3" />
+                    ./run
+                  </button>
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Abrir en una pestaña nueva"
+                    className="flex items-center rounded-sm border border-pcnGreen-200 p-1 text-muted-foreground transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+                  >
+                    <ArrowUpRight className="size-3.5" />
+                    <span className="sr-only">Abrir {project.title} en una pestaña nueva</span>
+                  </a>
+                </div>
+              </footer>
+            </article>
+          );
+        })}
       </RuledGrid>
+
+      <WebReaderDialog
+        open={!!reading}
+        onOpenChange={(open) => !open && setReading(null)}
+        page={
+          reading && {
+            url: reading.url,
+            title: reading.title,
+            subtitle: peopleOf(reading)[0]?.name,
+            embedCheckUrl: `/api/proyectos/embed?id=${reading.id}`,
+            icon: (
+              <div className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white p-0.5">
+                {reading.logoUrl ? (
+                  <Image
+                    src={reading.logoUrl}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="h-full w-full object-contain"
+                  />
+                ) : (
+                  <span className="font-mono text-[10px] font-bold text-black">
+                    {initials(reading.title)}
+                  </span>
+                )}
+              </div>
+            ),
+          }
+        }
+      />
 
       {/* Create dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
