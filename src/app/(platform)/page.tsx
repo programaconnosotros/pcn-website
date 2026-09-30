@@ -14,7 +14,9 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
+import { fetchCommunityStats } from '@/actions/home/fetch-community-stats';
 import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
+import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -57,11 +59,14 @@ const Home = async () => {
     });
   }
 
-  const featuredTestimonials = await fetchFeaturedTestimonials();
+  const [featuredTestimonials, stats] = await Promise.all([
+    fetchFeaturedTestimonials(),
+    fetchCommunityStats(),
+  ]);
 
   return (
     <>
-      <header className="sticky top-0 z-40 -mx-1 flex h-16 shrink-0 items-center justify-between gap-2 bg-background md:-mx-6">
+      <header className="sticky top-0 z-40 -mx-1 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/[0.06] bg-background/70 backdrop-blur-xl md:-mx-6">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -74,16 +79,17 @@ const Home = async () => {
           </Breadcrumb>
         </div>
         <div className="px-4">
-          <Link href="https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh" target="_blank">
-            <Button variant="default" size="sm" className="gap-3 text-sm">
-              <MessageCircle className="h-4 w-4" />
+          <Button asChild size="sm" className="rounded-full px-4">
+            <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
+              <MessageCircle className="mr-2 size-4" />
               Unirme en WhatsApp
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </header>
       <HomeClientSide
-        session={session}
+        userName={session?.user?.name ?? null}
+        stats={stats}
         featuredTestimonials={featuredTestimonials}
         recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
       />

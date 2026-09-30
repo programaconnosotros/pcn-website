@@ -1,0 +1,91 @@
+export interface Sponsor {
+  name: string;
+  url: string;
+  logo: string;
+  description: string;
+  location: string;
+  /** Show the sponsor name under the logo. */
+  showName?: boolean;
+  /** Logo needs a white plate to be legible. */
+  whiteBg?: boolean;
+  /** Logo needs a black plate to be legible. */
+  blackBg?: boolean;
+  /** Logo is dark and needs to be inverted on dark backgrounds. */
+  invertOnDark?: boolean;
+}
+
+export const sponsors: Sponsor[] = [
+  {
+    name: 'DIZENZ',
+    url: 'https://dizenz.com',
+    logo: '/dizenz-logo.webp',
+    description: 'Modern Software Studio.',
+    location: 'Tucumán, Argentina',
+    showName: true,
+    whiteBg: true,
+  },
+  {
+    name: 'Xetro',
+    url: 'https://xetro.ai',
+    logo: '/xetro-logo.png',
+    description: 'AI Software Factory.',
+    location: 'Tucumán, Argentina',
+  },
+  {
+    name: 'Once57',
+    url: 'https://once57.com.ar',
+    logo: '/once57-logo.PNG',
+    description: 'Espacio de coworking moderno.',
+    location: 'Tucumán, Argentina',
+  },
+  {
+    name: 'UTN-FRT',
+    url: 'https://www.frt.utn.edu.ar/',
+    logo: '/utn-frt-logo.png',
+    description: 'Universidad de ingeniería.',
+    location: 'Tucumán, Argentina',
+  },
+  {
+    name: 'Blackbox Cowork',
+    url: 'https://www.instagram.com/blackboxcowork/',
+    logo: '/blackbox-cowork-logo.jpeg',
+    description: 'Espacio de coworking adaptable.',
+    location: 'Tucumán, Argentina',
+    invertOnDark: true,
+  },
+  {
+    name: 'Bowery',
+    url: 'https://bowerystudio.co/en/',
+    logo: '/bowery-logo-light.svg',
+    description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
+    location: 'Buenos Aires, Argentina',
+    blackBg: true,
+  },
+  {
+    name: 'Eagerworks',
+    url: 'https://eagerworks.com/',
+    logo: '/eagerworks-white-logo.svg',
+    description: 'Agencia de diseño y desarrollo de software.',
+    location: 'Montevideo, Uruguay',
+    blackBg: true,
+  },
+  {
+    name: 'Endpoint Consulting',
+    url: 'https://www.instagram.com/endpoint_ciberseguridad/',
+    logo: '/endpoint-security-logo.png',
+    description: 'Expertos en seguridad informática y consultoría tecnológica.',
+    location: 'Tucumán, Argentina',
+    blackBg: true,
+  },
+  {
+    name: 'IEEE Computer Society',
+    url: 'https://www.computer.org/',
+    logo: '/ieee-computer-society-logo.png',
+    description:
+      'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
+    location: 'IEEE CS Región Latinoamérica',
+    whiteBg: true,
+  },
+];
+
+export const SPONSOR_CONTACT_URL = 'https://wa.me/5493815777562';

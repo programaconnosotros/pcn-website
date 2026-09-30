@@ -1,9 +1,6 @@
 import { fetchRecentlyAddedEvents } from '@/actions/events/fetch-recently-added-events';
-import { ArrowRight, CalendarDays } from 'lucide-react';
 import { EventCard } from '@/components/events/event-card';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { SectionHeader } from './section-header';
 
 export const RecentlyAddedEventsSection = async () => {
   const events = await fetchRecentlyAddedEvents();
@@ -11,34 +8,23 @@ export const RecentlyAddedEventsSection = async () => {
   if (events.length === 0) return null;
 
   return (
-    <div className="mb-6 mt-6">
-      <div className="flex items-center justify-center p-6">
-        <Heading2 className="relative z-10 mb-6 flex items-center gap-3 text-center md:text-left">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-            <CalendarDays className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-          </div>
-          <span>
-            Eventos publicados{' '}
-            <span className="text-pcnPurple drop-shadow-[0_0_15px_rgba(80,56,189,0.4)] dark:text-pcnGreen dark:drop-shadow-[0_0_15px_rgba(4,244,190,0.8)]">
-              recientemente
-            </span>
-          </span>
-        </Heading2>
-      </div>
+    <section>
+      <SectionHeader
+        eyebrow="Eventos"
+        title={
+          <>
+            Publicados <span className="text-pcnGreen">recientemente</span>
+          </>
+        }
+        description="Presenciales en Tucumán y online para todo el mundo. Sumate al próximo."
+        action={{ label: 'Ver todos los eventos', href: '/eventos' }}
+      />
 
-      <div className="my-5 ml-0 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>
-
-      <div className="mb-6 flex justify-center">
-        <Link href="/eventos">
-          <Button variant="outline">
-            Ver todos los eventos <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
-    </div>
+    </section>
   );
 };
