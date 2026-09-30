@@ -190,7 +190,7 @@ export function VideoGrid({
 
       <Dialog open={!!playing} onOpenChange={(open) => !open && setPlaying(null)}>
         {playing && (
-          <DialogContent className="flex w-[94vw] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
+          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
             <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
               <div className="min-w-0 flex-1">
                 <DialogTitle className="truncate text-sm font-semibold">
