@@ -7,6 +7,7 @@ import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
 import { getUnreadNotificationsCount } from '@/actions/notifications/get-unread-count';
 import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
+import { OsBridge } from '@/components/os/os-bridge';
 
 const PlatformLayout = async ({
   children,
@@ -44,6 +45,7 @@ const PlatformLayout = async ({
         unreadNotificationsCount={unreadNotificationsCount}
       />
       <PageVisitTracker />
+      <OsBridge />
       <ConsoleInterceptor>
         <SidebarInset className="min-w-0 px-1 md:px-6">{children}</SidebarInset>
       </ConsoleInterceptor>

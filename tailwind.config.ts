@@ -148,6 +148,7 @@ const config = {
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
     addVariablesForColors,
+    addPcnOsVariants,
   ],
 } satisfies Config;
 
@@ -162,6 +163,15 @@ function addVariablesForColors({ addBase, theme }: any) {
   addBase({
     ':root': newVars,
   });
+}
+
+// PCN OS variants:
+// - `os:` applies on large screens when the page is the desktop host (not inside a window).
+// - `embedded:` applies when the page is rendered inside a PCN OS window (an iframe).
+// The `data-embedded` attribute is set before paint by the script in the root layout.
+function addPcnOsVariants({ addVariant }: any) {
+  addVariant('os', '@media (min-width: 1024px) { html:not([data-embedded]) & }');
+  addVariant('embedded', 'html[data-embedded] &');
 }
 
 export default config;

@@ -124,3 +124,10 @@
     -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
   }
 }
+
+/* PCN OS: pages rendered inside a desktop window drop the sidebar chrome. */
+html[data-embedded] .peer[data-side],
+html[data-embedded] [data-sidebar='trigger'],
+html[data-embedded] [data-sidebar='trigger'] + [data-orientation='vertical'] {
+  display: none;
+}

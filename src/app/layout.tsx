@@ -5,6 +5,7 @@ import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
+import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -41,6 +42,9 @@ const RootLayout = async ({
 }>) => {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
+      </head>
       <body className={GeistSans.className}>
         <ThemeProvider
           attribute="class"
