@@ -1,19 +1,33 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, CheckCircle2, User, Globe, Check } from 'lucide-react';
-import { markErrorAsResolved } from '@/actions/errors/mark-as-resolved';
-import { toast } from 'sonner';
-import { useState } from 'react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Pagination } from '@/components/ui/pagination';
+import { Fragment, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { Check } from 'lucide-react';
+import { markErrorAsResolved } from '@/actions/errors/mark-as-resolved';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableTag,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import {
+  type PaginationInfo,
+  formatDate,
+  prettyJson,
+  TimeCell,
+  ExpandButton,
+  DetailBlock,
+  FlagGroup,
+  Pager,
+  AsciiBar,
+  SectionBar,
+  hasSelection,
+} from './table-parts';
 
 type ErrorLog = {
   id: string;
@@ -39,81 +53,34 @@ type ErrorLog = {
   } | null;
 };
 
-type PaginationInfo = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-};
-
 type ErrorsClientProps = {
   errors: ErrorLog[];
   pagination: PaginationInfo;
 };
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(date);
-};
+type Filter = 'sin-resolver' | 'resueltos';
 
-const formatRelativeTime = (date: Date) => {
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return 'hace menos de un minuto';
-  if (minutes < 60) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
-  if (hours < 24) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
-  return `hace ${days} día${days > 1 ? 's' : ''}`;
-};
-
-const TruncatedText = ({ text, maxLength = 100 }: { text: string; maxLength?: number }) => {
-  const isTruncated = text.length > maxLength;
-  const displayText = isTruncated ? `${text.substring(0, maxLength)}...` : text;
-
-  if (!isTruncated) {
-    return <span className="break-words">{text}</span>;
-  }
-
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="cursor-help break-words">{displayText}</span>
-        </TooltipTrigger>
-        <TooltipContent className="max-w-md break-words">
-          <p className="whitespace-pre-wrap">{text}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
+const COLUMNS = 7;
 
 export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [markingAsResolved, setMarkingAsResolved] = useState<string | null>(null);
   const [expandedErrors, setExpandedErrors] = useState<Set<string>>(new Set());
-  const [activeTab, setActiveTab] = useState<string>(
-    errors.filter((e) => !e.resolved).length > 0 ? 'unresolved' : 'resolved',
+
+  const unresolvedErrors = errors.filter((e) => !e.resolved);
+  const resolvedErrors = errors.filter((e) => e.resolved);
+
+  const [filter, setFilter] = useState<Filter>(
+    unresolvedErrors.length > 0 ? 'sin-resolver' : 'resueltos',
   );
+  const visible = filter === 'sin-resolver' ? unresolvedErrors : resolvedErrors;
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('errorPage', page.toString());
     router.push(`/monitoreo?${params.toString()}`);
   };
-
-  const unresolvedErrors = errors.filter((e) => !e.resolved);
-  const resolvedErrors = errors.filter((e) => e.resolved);
 
   const handleMarkAsResolved = async (errorId: string) => {
     setMarkingAsResolved(errorId);
@@ -129,225 +96,181 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
   };
 
   const toggleExpand = (errorId: string) => {
-    const newExpanded = new Set(expandedErrors);
-    if (newExpanded.has(errorId)) {
-      newExpanded.delete(errorId);
-    } else {
-      newExpanded.add(errorId);
-    }
-    setExpandedErrors(newExpanded);
+    setExpandedErrors((current) => {
+      const next = new Set(current);
+      if (next.has(errorId)) next.delete(errorId);
+      else next.add(errorId);
+      return next;
+    });
   };
 
-  if (errors.length === 0) {
-    return (
-      <div className="border border-pcnGreen-200 px-4 py-6 text-center">
-        <CheckCircle2 className="mx-auto mb-2 h-6 w-6 text-green-500" />
-        <p className="text-muted-foreground">No hay errores registrados</p>
-      </div>
-    );
-  }
-
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="mb-4 grid w-full grid-cols-2">
-        {unresolvedErrors.length > 0 && (
-          <TabsTrigger value="unresolved" className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-            Sin resolver ({unresolvedErrors.length})
-          </TabsTrigger>
-        )}
-        {resolvedErrors.length > 0 && (
-          <TabsTrigger value="resolved" className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-            Resueltos ({resolvedErrors.length})
-          </TabsTrigger>
-        )}
-      </TabsList>
+    <section className="min-w-0 border border-pcnGreen-200">
+      <SectionBar title="errores" command="tail -n 50 error.log">
+        <AsciiBar value={resolvedErrors.length} total={errors.length} />
+        <span>
+          <span className="text-pcnGreen">{resolvedErrors.length}</span>/{errors.length} resueltos
+        </span>
+      </SectionBar>
 
-      {unresolvedErrors.length > 0 && (
-        <TabsContent value="unresolved" className="mt-0">
-          <RuledGrid className="grid-cols-1">
-            {unresolvedErrors.map((error) => (
-              <div key={error.id} className={cn(ruledCellClassName, 'bg-red-500/[0.03] p-3')}>
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 flex-shrink-0 text-destructive" />
-                      <h3 className="m-0 min-w-0 flex-1 font-mono text-sm font-medium">
-                        <TruncatedText text={error.message} maxLength={120} />
-                      </h3>
-                      <Badge variant="destructive" className="flex-shrink-0">
-                        Sin resolver
-                      </Badge>
-                    </div>
-                    <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
-                      {error.path && (
-                        <div className="flex items-center gap-1">
-                          <Globe className="h-3.5 w-3.5" />
-                          <span>{error.path}</span>
-                        </div>
-                      )}
-                      {error.user && (
-                        <div className="flex items-center gap-1">
-                          <User className="h-3.5 w-3.5" />
-                          <span>{error.user.name}</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
-                    </p>
-                    {(error.stack || error.metadata) && (
-                      <Collapsible
-                        open={expandedErrors.has(error.id)}
-                        onOpenChange={() => toggleExpand(error.id)}
-                      >
-                        <CollapsibleTrigger asChild>
-                          <Button variant="ghost" size="sm" className="mt-1 h-7 px-2 text-xs">
-                            <ChevronDown
-                              className={`mr-2 h-4 w-4 transition-transform ${
-                                expandedErrors.has(error.id) ? 'rotate-180' : ''
-                              }`}
-                            />
-                            {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
-                          </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-2">
-                          <div className="space-y-2 text-sm">
-                            {error.stack && (
-                              <div>
-                                <p className="mb-1 font-semibold">Stack trace:</p>
-                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                  {error.stack}
-                                </pre>
-                              </div>
-                            )}
-                            {error.metadata && (
-                              <div>
-                                <p className="mb-1 font-semibold">Metadata:</p>
-                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                  {JSON.stringify(JSON.parse(error.metadata), null, 2)}
-                                </pre>
-                              </div>
-                            )}
-                          </div>
-                        </CollapsibleContent>
-                      </Collapsible>
-                    )}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleMarkAsResolved(error.id)}
-                    disabled={markingAsResolved === error.id}
-                    className="ml-4"
-                  >
-                    <Check className="mr-2 h-4 w-4" />
-                    Marcar como resuelto
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </RuledGrid>
-        </TabsContent>
-      )}
-
-      {resolvedErrors.length > 0 && (
-        <TabsContent value="resolved" className="mt-0">
-          <RuledGrid className="grid-cols-1">
-            {resolvedErrors.map((error) => (
-              <div key={error.id} className={cn(ruledCellClassName, 'p-3 opacity-75')}>
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500" />
-                      <h3 className="m-0 min-w-0 flex-1 font-mono text-sm font-medium">
-                        <TruncatedText text={error.message} maxLength={120} />
-                      </h3>
-                      <Badge variant="default" className="flex-shrink-0 bg-green-500">
-                        Resuelto
-                      </Badge>
-                    </div>
-                    <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
-                      {error.path && (
-                        <div className="flex items-center gap-1">
-                          <Globe className="h-3.5 w-3.5" />
-                          <span>{error.path}</span>
-                        </div>
-                      )}
-                      {error.user && (
-                        <div className="flex items-center gap-1">
-                          <User className="h-3.5 w-3.5" />
-                          <span>{error.user.name}</span>
-                        </div>
-                      )}
-                      {error.resolver && (
-                        <div className="flex items-center gap-1">
-                          <span>Resuelto por: {error.resolver.name}</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
-                      {error.resolvedAt && <> • Resuelto: {formatDate(error.resolvedAt)}</>}
-                    </p>
-                    {(error.stack || error.metadata) && (
-                      <Collapsible
-                        open={expandedErrors.has(error.id)}
-                        onOpenChange={() => toggleExpand(error.id)}
-                      >
-                        <CollapsibleTrigger asChild>
-                          <Button variant="ghost" size="sm" className="mt-1 h-7 px-2 text-xs">
-                            <ChevronDown
-                              className={`mr-2 h-4 w-4 transition-transform ${
-                                expandedErrors.has(error.id) ? 'rotate-180' : ''
-                              }`}
-                            />
-                            {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
-                          </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-2">
-                          <div className="space-y-2 text-sm">
-                            {error.stack && (
-                              <div>
-                                <p className="mb-1 font-semibold">Stack trace:</p>
-                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                  {error.stack}
-                                </pre>
-                              </div>
-                            )}
-                            {error.metadata && (
-                              <div>
-                                <p className="mb-1 font-semibold">Metadata:</p>
-                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                  {JSON.stringify(JSON.parse(error.metadata), null, 2)}
-                                </pre>
-                              </div>
-                            )}
-                          </div>
-                        </CollapsibleContent>
-                      </Collapsible>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </RuledGrid>
-        </TabsContent>
-      )}
-
-      <div className="mt-4">
-        <Pagination
-          currentPage={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={handlePageChange}
+      <div className="flex flex-wrap items-center gap-2 border-b border-pcnGreen-200 px-3 py-2">
+        <FlagGroup<Filter>
+          label="Filtrar por estado"
+          value={filter}
+          onChange={setFilter}
+          options={[
+            { value: 'sin-resolver', count: unresolvedErrors.length },
+            { value: 'resueltos', count: resolvedErrors.length },
+          ]}
         />
-        <p className="mt-2 text-center font-mono text-xs text-muted-foreground">
-          Mostrando {(pagination.page - 1) * pagination.limit + 1} -{' '}
-          {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total}{' '}
-          errores
-        </p>
       </div>
-    </Tabs>
+
+      <Table className="min-w-[760px] table-fixed font-mono">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8 px-2">
+              <span className="sr-only">Detalles</span>
+            </TableHead>
+            <TableHead className="w-24">cuándo</TableHead>
+            <TableHead className="w-28">estado</TableHead>
+            <TableHead>mensaje</TableHead>
+            <TableHead className="w-40">ruta</TableHead>
+            <TableHead className="w-32">usuario</TableHead>
+            <TableHead className="w-10 px-2">
+              <span className="sr-only">Acciones</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visible.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={COLUMNS} className="h-16 text-center text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>
+                {errors.length === 0
+                  ? 'no hay errores registrados'
+                  : filter === 'sin-resolver'
+                    ? 'nada sin resolver en esta página'
+                    : 'nada resuelto en esta página'}
+              </TableCell>
+            </TableRow>
+          )}
+          {visible.map((error) => {
+            const expanded = expandedErrors.has(error.id);
+            const detailsId = `error-details-${error.id}`;
+            const pending = markingAsResolved === error.id;
+            return (
+              <Fragment key={error.id}>
+                <TableRow
+                  onClick={() => !hasSelection() && toggleExpand(error.id)}
+                  data-state={expanded ? 'selected' : undefined}
+                  className={cn(
+                    'group cursor-pointer',
+                    error.resolved && 'text-muted-foreground',
+                    pending && 'animate-pulse',
+                  )}
+                >
+                  <TableCell className="px-2">
+                    <ExpandButton
+                      expanded={expanded}
+                      controls={detailsId}
+                      label={error.message}
+                      onToggle={() => toggleExpand(error.id)}
+                    />
+                  </TableCell>
+                  <TimeCell date={error.createdAt} />
+                  <TableCell>
+                    {error.resolved ? (
+                      <TableTag tone="green">resuelto</TableTag>
+                    ) : (
+                      <TableTag tone="danger">sin resolver</TableTag>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      title={error.message}
+                      className={cn('block truncate', !error.resolved && 'text-foreground')}
+                    >
+                      {error.message}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    <span title={error.path ?? undefined} className="block truncate">
+                      {error.path ?? '—'}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    <span title={error.user?.email} className="block truncate">
+                      {error.user?.name ?? '—'}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-2 text-right">
+                    {!error.resolved && (
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleMarkAsResolved(error.id);
+                        }}
+                        disabled={markingAsResolved !== null}
+                        title="Marcar como resuelto"
+                        className="rounded-sm p-1 text-muted-foreground opacity-0 transition hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen disabled:opacity-30 group-focus-within:opacity-100 group-hover:opacity-100"
+                      >
+                        <Check className="size-3.5" />
+                        <span className="sr-only">Marcar como resuelto: {error.message}</span>
+                      </button>
+                    )}
+                  </TableCell>
+                </TableRow>
+                {expanded && (
+                  // Plain <tr>: the detail sub-row shouldn't get zebra/hover chrome of its own.
+                  <tr id={detailsId} className="border-b border-pcnGreen-200/60 !bg-black/40">
+                    <td colSpan={COLUMNS} className="px-3 py-2">
+                      <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+                        <span>
+                          <span className="text-pcnGreen-600">fecha:</span>{' '}
+                          {formatDate(error.createdAt)}
+                        </span>
+                        {error.user && (
+                          <span>
+                            <span className="text-pcnGreen-600">usuario:</span> {error.user.name}{' '}
+                            &lt;{error.user.email}&gt;
+                          </span>
+                        )}
+                        {error.ipAddress && (
+                          <span>
+                            <span className="text-pcnGreen-600">ip:</span> {error.ipAddress}
+                          </span>
+                        )}
+                        {error.resolved && (
+                          <span>
+                            <span className="text-pcnGreen-600">resuelto:</span>{' '}
+                            {error.resolvedAt ? formatDate(error.resolvedAt) : '—'}
+                            {error.resolver && <> por {error.resolver.name}</>}
+                          </span>
+                        )}
+                        {error.userAgent && (
+                          <span className="min-w-0 basis-full truncate" title={error.userAgent}>
+                            <span className="text-pcnGreen-600">ua:</span> {error.userAgent}
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid gap-2">
+                        <DetailBlock label="mensaje">{error.message}</DetailBlock>
+                        {error.stack && <DetailBlock label="stack">{error.stack}</DetailBlock>}
+                        {error.metadata && (
+                          <DetailBlock label="metadata">{prettyJson(error.metadata)}</DetailBlock>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            );
+          })}
+        </TableBody>
+      </Table>
+
+      <Pager pagination={pagination} noun="errores" onPageChange={handlePageChange} />
+    </section>
   );
 }

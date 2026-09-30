@@ -12,7 +12,9 @@ import {
   CalendarCheck,
   Heart,
   MessageCircle,
-  Briefcase,
+  MicVocal,
+  Rocket,
+  Ticket,
   Code,
   TrendingUp,
 } from 'lucide-react';
@@ -51,9 +53,9 @@ const AnaliticasPage = async () => {
     newLikesLastMonth,
     totalComments,
     newCommentsLastMonth,
-    totalJobOffers,
-    availableJobOffers,
-    newJobOffersLastMonth,
+    totalProjects,
+    totalTalks,
+    activeRegistrations,
     activeUsers,
     nextEvent,
     topLanguages,
@@ -108,19 +110,9 @@ const AnaliticasPage = async () => {
         },
       },
     }),
-    prisma.jobOffers.count(),
-    prisma.jobOffers.count({
-      where: {
-        available: true,
-      },
-    }),
-    prisma.jobOffers.count({
-      where: {
-        createdAt: {
-          gte: oneMonthAgo,
-        },
-      },
-    }),
+    prisma.project.count(),
+    prisma.talk.count(),
+    prisma.eventRegistration.count({ where: { cancelledAt: null } }),
     prisma.user.count({
       where: {
         sessions: {
@@ -260,22 +252,22 @@ const AnaliticasPage = async () => {
       description: 'Interacción promedio',
     },
     {
-      title: 'Total de Ofertas',
-      value: totalJobOffers,
-      icon: Briefcase,
-      description: 'Ofertas de trabajo',
+      title: 'Proyectos',
+      value: totalProjects,
+      icon: Rocket,
+      description: 'Publicados en /proyectos',
     },
     {
-      title: 'Ofertas Disponibles',
-      value: availableJobOffers,
-      icon: Briefcase,
-      description: 'Ofertas activas',
+      title: 'Charlas',
+      value: totalTalks,
+      icon: MicVocal,
+      description: 'Dadas en eventos',
     },
     {
-      title: 'Ofertas Nuevas',
-      value: newJobOffersLastMonth,
-      icon: Briefcase,
-      description: 'Último mes',
+      title: 'Inscripciones',
+      value: activeRegistrations,
+      icon: Ticket,
+      description: 'Activas en eventos',
     },
     {
       title: 'Eventos Pasados',

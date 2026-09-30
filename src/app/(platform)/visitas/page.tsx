@@ -95,12 +95,27 @@ const VisitasPage = async () => {
             <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
               <span className="text-pcnGreen-500">{'// '}</span>páginas más visitadas
             </h2>
-            <ol className="divide-y divide-pcnGreen-200 font-mono text-sm">
+            <ol className="divide-y divide-pcnGreen-200/60 font-mono text-xs">
               {stats.topPages.map((page, index) => (
-                <li key={page.path} className="flex items-center gap-3 px-3 py-1.5">
-                  <span className="w-6 text-xs text-muted-foreground">{index + 1}</span>
-                  <span className="flex-1 truncate">{page.path}</span>
-                  <span className="text-xs text-pcnGreen">{page.count.toLocaleString()}</span>
+                <li
+                  key={page.path}
+                  className="flex items-center gap-3 px-3 py-1 transition-colors hover:bg-pcnGreen/[0.05]"
+                >
+                  <span className="w-5 tabular-nums text-muted-foreground/60">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="w-40 shrink-0 truncate sm:w-56" title={page.path}>
+                    {page.path}
+                  </span>
+                  <span aria-hidden className="h-1.5 flex-1 bg-pcnGreen-100">
+                    <span
+                      className="block h-full bg-pcnGreen-600"
+                      style={{ width: `${(page.count / (stats.topPages[0]?.count || 1)) * 100}%` }}
+                    />
+                  </span>
+                  <span className="w-12 text-right tabular-nums text-pcnGreen">
+                    {page.count.toLocaleString()}
+                  </span>
                 </li>
               ))}
             </ol>
@@ -118,30 +133,32 @@ const VisitasPage = async () => {
               <Table className="text-xs">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="h-8">Ruta</TableHead>
-                    <TableHead className="h-8">Usuario</TableHead>
-                    <TableHead className="h-8">Fecha</TableHead>
-                    <TableHead className="h-8">Origen</TableHead>
+                    <TableHead>ruta</TableHead>
+                    <TableHead>usuario</TableHead>
+                    <TableHead>fecha</TableHead>
+                    <TableHead>origen</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {visits.map((visit) => (
                     <TableRow key={visit.id}>
-                      <TableCell className="py-1.5 font-mono">{visit.path}</TableCell>
-                      <TableCell className="py-1.5">
+                      <TableCell className="font-mono">{visit.path}</TableCell>
+                      <TableCell>
                         {visit.user ? (
                           <span title={visit.user.email}>{visit.user.name}</span>
                         ) : (
-                          <span className="text-muted-foreground">anónimo</span>
+                          <span className="font-mono text-[11px] text-muted-foreground/60">
+                            anónimo
+                          </span>
                         )}
                       </TableCell>
-                      <TableCell className="whitespace-nowrap py-1.5">
+                      <TableCell className="whitespace-nowrap font-mono text-[11px] tabular-nums">
                         {formatDate(visit.createdAt)}
                         <span className="ml-2 text-muted-foreground">
                           {formatRelativeTime(visit.createdAt)}
                         </span>
                       </TableCell>
-                      <TableCell className="max-w-[200px] truncate py-1.5 text-muted-foreground">
+                      <TableCell className="max-w-[200px] truncate font-mono text-[11px] text-muted-foreground">
                         {visit.referer ?? 'directo'}
                       </TableCell>
                     </TableRow>

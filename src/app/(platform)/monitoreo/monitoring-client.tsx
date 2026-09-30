@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ErrorsClient } from './errors-client';
-import { LogsClient } from './logs-client';
+import type { PaginationInfo } from './table-parts';
+import { LogsClient, type LogCounts } from './logs-client';
 
 type ErrorLog = {
   id: string;
@@ -46,19 +48,14 @@ type AppLog = {
   } | null;
 };
 
-type PaginationInfo = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-};
-
 type MonitoringClientProps = {
   errors: ErrorLog[];
   errorsPagination: PaginationInfo;
   logs: AppLog[];
   logsPagination: PaginationInfo;
   logLevel?: string;
+  logCounts: LogCounts;
+  unresolvedErrors: number;
 };
 
 export function MonitoringClient({
@@ -67,20 +64,41 @@ export function MonitoringClient({
   logs,
   logsPagination,
   logLevel,
+  logCounts,
+  unresolvedErrors,
 }: MonitoringClientProps) {
-  const [activeTab, setActiveTab] = useState('errors');
+  const searchParams = useSearchParams();
+  // A reload on a filtered or paged log view should land back on the logs tab.
+  const [activeTab, setActiveTab] = useState(() =>
+    searchParams.has('logLevel') || searchParams.has('logPage') ? 'logs' : 'errors',
+  );
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="errors">Errores</TabsTrigger>
-        <TabsTrigger value="logs">Logs</TabsTrigger>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full min-w-0">
+      <TabsList aria-label="Vista de monitoreo">
+        <TabsTrigger value="errors">
+          errores
+          <span className="tabular-nums text-muted-foreground/70">
+            ({unresolvedErrors.toLocaleString()})
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="logs">
+          logs
+          <span className="tabular-nums text-muted-foreground/70">
+            ({logCounts.total.toLocaleString()})
+          </span>
+        </TabsTrigger>
       </TabsList>
-      <TabsContent value="errors" className="mt-4 overflow-visible">
+      <TabsContent value="errors" className="mt-3">
         <ErrorsClient errors={errors} pagination={errorsPagination} />
       </TabsContent>
-      <TabsContent value="logs" className="mt-4 overflow-visible">
-        <LogsClient logs={logs} pagination={logsPagination} logLevel={logLevel} />
+      <TabsContent value="logs" className="mt-3">
+        <LogsClient
+          logs={logs}
+          pagination={logsPagination}
+          logLevel={logLevel}
+          counts={logCounts}
+        />
       </TabsContent>
     </Tabs>
   );

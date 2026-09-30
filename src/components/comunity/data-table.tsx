@@ -15,7 +15,6 @@ import {
 import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -40,14 +39,24 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   /** Page title, pinned together with the toolbar. */
   header?: ReactNode;
+  /** Shown between the pinned header and the table, e.g. a row of stats. */
+  intro?: ReactNode;
 }
 
-export function DataTable<TData, TValue>({ columns, data, header }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  header,
+  intro,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     id: false,
+    emailVerified: false,
     province: false,
+    enterprise: false,
+    studyPlace: false,
     updatedAt: false,
     xAccountUrl: false,
     linkedinUrl: false,
@@ -85,18 +94,18 @@ export function DataTable<TData, TValue>({ columns, data, header }: DataTablePro
     phoneNumber: 'Teléfono',
     role: 'Rol',
     image: 'Avatar',
-    countryOfOrigin: 'País',
+    countryOfOrigin: 'Ubicación',
     province: 'Provincia',
     languages: 'Lenguajes',
     linkedinUrl: 'LinkedIn',
     xAccountUrl: 'X / Twitter',
     gitHubUrl: 'GitHub',
     slogan: 'Slogan',
-    jobTitle: 'Cargo',
+    jobTitle: 'Trabajo',
     enterprise: 'Empresa',
-    career: 'Carrera',
+    career: 'Estudios',
     studyPlace: 'Lugar de estudio',
-    createdAt: 'Miembro desde',
+    createdAt: 'Alta',
     updatedAt: 'Actualizado',
     id: 'ID',
   };
@@ -116,16 +125,26 @@ export function DataTable<TData, TValue>({ columns, data, header }: DataTablePro
           />
 
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-muted-foreground">
-              {table.getFilteredRowModel().rows.length} de {data.length}
+            <span
+              className="font-mono text-xs tabular-nums text-muted-foreground"
+              aria-live="polite"
+            >
+              <span className="text-pcnGreen">{table.getFilteredRowModel().rows.length}</span>/
+              {data.length}
             </span>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Columnas
-                </Button>
+                <button
+                  type="button"
+                  className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2.5 font-mono text-xs text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen data-[state=open]:border-pcnGreen-600 data-[state=open]:text-pcnGreen"
+                >
+                  <SlidersHorizontal className="size-3.5" />
+                  --columnas
+                  <span className="text-[10px] tabular-nums opacity-60">
+                    {table.getVisibleLeafColumns().length}
+                  </span>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel>Mostrar columnas</DropdownMenuLabel>
@@ -148,9 +167,11 @@ export function DataTable<TData, TValue>({ columns, data, header }: DataTablePro
         </div>
       </StickyHeader>
 
-      <div className="space-y-3">
+      {intro}
+
+      <div className="mb-14 space-y-2">
         {/* Table */}
-        <div className="overflow-x-auto border border-pcnGreen-200">
+        <div className="max-h-[calc(100dvh-12rem)] overflow-auto border border-pcnGreen-200 [scrollbar-width:thin]">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((hg) => (
@@ -192,9 +213,9 @@ export function DataTable<TData, TValue>({ columns, data, header }: DataTablePro
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center text-muted-foreground"
+                    className="h-24 text-center font-mono text-muted-foreground"
                   >
-                    No se encontraron usuarios.
+                    <span className="text-pcnGreen-500">$ </span>grep: 0 usuarios
                   </TableCell>
                 </TableRow>
               )}
@@ -202,32 +223,34 @@ export function DataTable<TData, TValue>({ columns, data, header }: DataTablePro
           </Table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between">
-          <p className="font-mono text-xs text-muted-foreground">
-            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+        {/* Pagination: hidden while everything fits on one page. */}
+        {table.getPageCount() > 1 && (
+          <div className="flex items-center justify-end gap-2 font-mono text-xs text-muted-foreground">
+            <button
+              type="button"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
+              aria-label="Página anterior"
+              className="rounded-sm border border-pcnGreen-200 p-1 transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen disabled:opacity-30"
             >
-              <ChevronLeft className="h-4 w-4" />
-              Anterior
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
+              <ChevronLeft className="size-3.5" />
+            </button>
+            <span className="tabular-nums">
+              página{' '}
+              <span className="text-pcnGreen">{table.getState().pagination.pageIndex + 1}</span>/
+              {table.getPageCount()}
+            </span>
+            <button
+              type="button"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
+              aria-label="Página siguiente"
+              className="rounded-sm border border-pcnGreen-200 p-1 transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen disabled:opacity-30"
             >
-              Siguiente
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+              <ChevronRight className="size-3.5" />
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

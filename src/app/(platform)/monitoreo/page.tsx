@@ -181,6 +181,8 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
             logs={logsData.logs}
             logsPagination={logsData.pagination}
             logLevel={logLevel}
+            logCounts={{ total: logStats.totalLogs, ...logStats.logsByLevel }}
+            unresolvedErrors={errorStats.unresolvedErrors}
           />
         </div>
       </div>
