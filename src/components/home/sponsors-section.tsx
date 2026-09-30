@@ -11,10 +11,11 @@ const sponsors = [
   {
     name: 'DIZENZ',
     url: 'https://dizenz.com',
-    logo: '/asz-software-logo-2.webp',
+    logo: '/dizenz-logo.webp',
     description: 'Modern Software Studio.',
     location: 'Tucumán, Argentina',
     hasLogo: true,
+    whiteBg: true,
   },
   {
     name: 'Xetro',
@@ -129,7 +130,7 @@ export const SponsorsSection = ({ showHeading = true }: SponsorsSectionProps) =>
               <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                 {sponsor.hasLogo ? (
                   <div
-                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' ? 'h-48' : sponsor.name === 'Xetro' ? 'h-40' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'DIZENZ' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
+                    className={`mb-4 flex w-full items-center justify-center ${sponsor.name === 'Once57' ? 'h-48' : sponsor.name === 'Xetro' ? 'h-40' : sponsor.name === 'UTN-FRT' || sponsor.name === 'Blackbox Cowork' ? 'h-32' : sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' || sponsor.name === 'DIZENZ' || sponsor.name === 'IEEE Computer Society' || sponsor.name === 'Endpoint Consulting' ? 'h-24' : 'h-16'} ${sponsor.name === 'Eagerworks' || sponsor.name === 'Bowery' ? 'rounded-lg bg-black p-2' : ''} ${'whiteBg' in sponsor && sponsor.whiteBg ? 'rounded-lg bg-white p-2' : ''} ${'blackBg' in sponsor && sponsor.blackBg ? 'rounded-lg bg-black p-2' : ''}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
