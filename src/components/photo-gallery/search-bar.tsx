@@ -1,8 +1,7 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -10,40 +9,63 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
+const isTypingTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+
+// A shell prompt (`$ grep`) instead of a boxed input. `/` focuses it from anywhere on the page
+// and Escape clears it.
 export function SearchBar({
   searchQuery,
   setSearchQuery,
   placeholder = 'Buscar fotos...',
 }: SearchBarProps) {
-  const handleClearSearch = () => {
-    setSearchQuery('');
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;
+      e.preventDefault();
+      inputRef.current?.focus();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
-    <div className="relative w-full max-w-md">
-      <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-        <Search className="h-4 w-4 text-gray-400" />
-      </div>
-
-      <Input
+    <label className="flex h-9 w-full max-w-md cursor-text items-center gap-2 rounded-sm border border-pcnGreen-200 bg-black/40 px-3 font-mono text-sm transition-all focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]">
+      <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
+        $ grep -i
+      </span>
+      <input
+        ref={inputRef}
         type="text"
-        placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full py-2 pl-10 pr-10"
+        onKeyDown={(e) => e.key === 'Escape' && setSearchQuery('')}
+        placeholder={placeholder}
+        aria-label="Buscar fotos"
+        spellCheck={false}
+        autoComplete="off"
+        className="min-w-0 flex-1 bg-transparent text-pcnGreen caret-pcnGreen outline-none placeholder:text-muted-foreground/60"
       />
-
-      {searchQuery && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute inset-y-0 right-0 flex items-center pr-3"
-          onClick={handleClearSearch}
+      {searchQuery ? (
+        <button
+          type="button"
+          onClick={() => {
+            setSearchQuery('');
+            inputRef.current?.focus();
+          }}
+          className="shrink-0 text-muted-foreground transition-colors hover:text-pcnGreen"
         >
-          <X className="h-4 w-4 text-gray-400" />
+          <X className="size-4" />
           <span className="sr-only">Limpiar búsqueda</span>
-        </Button>
+        </button>
+      ) : (
+        <kbd className="shrink-0 rounded-sm border border-pcnGreen-200 px-1.5 text-[10px] leading-4 text-muted-foreground max-sm:hidden">
+          /
+        </kbd>
       )}
-    </div>
+    </label>
   );
 }

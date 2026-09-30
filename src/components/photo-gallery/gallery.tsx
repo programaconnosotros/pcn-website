@@ -8,8 +8,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
 import { PhotoDialog } from './photo-dialog';
+import type { Photo } from './photo-utils';
 import { photos } from './photos';
 import { SearchBar } from './search-bar';
+import { ShareDialog } from './share-dialog';
+
+// Lowercase without accents, so `tafi` finds `Tafí`.
+const normalize = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 interface GalleryProps {
   initialPhotoId?: number | null;
@@ -17,57 +26,41 @@ interface GalleryProps {
 
 export function Gallery({ initialPhotoId }: GalleryProps) {
   const router = useRouter();
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
+  const [sharedPhoto, setSharedPhoto] = useState<Photo | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const isDialogOpen = selectedPhotoIndex !== -1;
 
-  // Filter photos based on search query
   const filteredPhotos = useMemo(() => {
-    if (!searchQuery.trim()) return [...photos];
+    const query = normalize(searchQuery.trim());
+    if (!query) return photos;
 
-    const query = searchQuery.toLowerCase().trim();
     return photos.filter(
       (photo) =>
-        photo.title.toLowerCase().includes(query) ||
+        normalize(photo.title).includes(query) ||
+        photo.image.toLowerCase().includes(query) ||
         (photo.date && dateContainsString(photo.date, query)),
     );
   }, [searchQuery]);
 
-  // Use filtered photos
-  const sortedPhotos = filteredPhotos;
+  // Tracked by id rather than index so searching doesn't swap the open photo.
+  const selectedPhotoIndex = filteredPhotos.findIndex((photo) => photo.id === selectedPhotoId);
 
-  // Open photo dialog when initialPhotoId is provided
+  // Open the photo linked from `?foto=<id>`.
   useEffect(() => {
-    if (initialPhotoId) {
-      const photoIndex = sortedPhotos.findIndex((photo) => photo.id === initialPhotoId);
-      if (photoIndex !== -1) {
-        setSelectedPhotoIndex(photoIndex);
-      }
-    }
-  }, [initialPhotoId, sortedPhotos]);
+    if (initialPhotoId) setSelectedPhotoId(initialPhotoId);
+  }, [initialPhotoId]);
 
-  const handlePhotoClick = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with photo ID
+  const openPhoto = (photo: Photo) => {
     router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
+    setSelectedPhotoId(photo.id);
   };
 
   const handleCloseDialog = () => {
-    // Remove photo ID from URL
     router.push('/galeria', { scroll: false });
-    setSelectedPhotoIndex(-1);
-  };
-
-  const handleNavigate = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with new photo ID
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
+    setSelectedPhotoId(null);
   };
 
   const getShareUrl = (photoId: number) => {
-    // Create absolute URL for sharing
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
     return `${baseUrl}/galeria?foto=${photoId}`;
   };
@@ -76,40 +69,64 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
     <>
       <PageTitle path="galeria" className="mt-4" meta={`${photos.length} fotos de la comunidad`} />
 
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          placeholder="Buscar por título o fecha..."
+          placeholder="título, archivo o fecha"
         />
+        <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
+          {searchQuery.trim() ? (
+            <>
+              <span className="text-pcnGreen">{filteredPhotos.length}</span>/{photos.length}{' '}
+              coincidencias
+            </>
+          ) : (
+            <>
+              ls -la <span className="text-pcnGreen-600">./galeria</span>
+            </>
+          )}
+        </p>
       </div>
 
-      {sortedPhotos.length === 0 ? (
-        <p className="py-8 text-center font-mono text-sm text-muted-foreground">
-          No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
+      {filteredPhotos.length === 0 ? (
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          grep: sin coincidencias para{' '}
+          <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
         </p>
       ) : (
-        <RuledGrid className="mb-14 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className={cn(ruledCellClassName, 'cursor-pointer p-1')}>
+        <RuledGrid className="mb-14 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {filteredPhotos.map((photo, index) => (
+            <div key={photo.id} className={cn(ruledCellClassName, 'p-1')}>
               <PhotoCard
                 photo={photo}
-                getShareUrl={getShareUrl}
-                onCardClick={() => handlePhotoClick(index)}
+                index={index}
+                total={filteredPhotos.length}
+                onOpen={() => openPhoto(photo)}
+                onShare={() => setSharedPhoto(photo)}
               />
             </div>
           ))}
         </RuledGrid>
       )}
 
-      {isDialogOpen && (
+      {selectedPhotoIndex !== -1 && (
         <PhotoDialog
-          photos={sortedPhotos}
+          photos={filteredPhotos}
           currentPhotoIndex={selectedPhotoIndex}
-          isOpen={isDialogOpen}
+          isOpen
           onClose={handleCloseDialog}
-          onNavigate={handleNavigate}
-          getShareUrl={getShareUrl}
+          onNavigate={(index) => openPhoto(filteredPhotos[index])}
+          onShare={setSharedPhoto}
+        />
+      )}
+
+      {sharedPhoto && (
+        <ShareDialog
+          isOpen
+          onClose={() => setSharedPhoto(null)}
+          url={getShareUrl(sharedPhoto.id)}
+          title={sharedPhoto.title}
         />
       )}
     </>

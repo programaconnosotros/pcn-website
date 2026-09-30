@@ -1,4 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 
 export function TitleRowSkeleton({ withAction = false }: { withAction?: boolean }) {
   return (
@@ -202,15 +204,16 @@ export function AccordionSkeleton({ rows = 6 }: { rows?: number }) {
 
 export function GalleryGridSkeleton({ tiles = 12 }: { tiles?: number }) {
   return (
-    <div className="columns-2 gap-4 md:columns-3 lg:columns-4">
-      {Array.from({ length: tiles }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className="mb-4 w-full rounded-lg"
-          style={{ height: `${120 + (i % 3) * 60}px` }}
-        />
-      ))}
-    </div>
+    <>
+      <Skeleton className="mb-4 h-9 w-full max-w-md rounded-sm" />
+      <RuledGrid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        {Array.from({ length: tiles }).map((_, i) => (
+          <div key={i} className={cn(ruledCellClassName, 'p-1')}>
+            <Skeleton className="aspect-square w-full rounded-none" />
+          </div>
+        ))}
+      </RuledGrid>
+    </>
   );
 }
 

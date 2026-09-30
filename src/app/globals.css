@@ -426,6 +426,47 @@
     }
   }
 
+  /* The gallery viewer's photo resolves with a short RGB-split glitch once it has loaded. */
+  .photo-glitch-in {
+    animation: photo-glitch-in 0.45s ease-out both;
+  }
+  @keyframes photo-glitch-in {
+    0% {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      filter: brightness(2.2) saturate(0);
+    }
+    25% {
+      opacity: 1;
+      clip-path: inset(0 0 45% 0);
+      transform: translateX(-6px);
+      filter: drop-shadow(4px 0 0 rgba(255, 0, 90, 0.7))
+        drop-shadow(-4px 0 0 rgba(4, 244, 190, 0.7));
+    }
+    45% {
+      clip-path: inset(30% 0 0 0);
+      transform: translateX(4px);
+      filter: drop-shadow(-3px 0 0 rgba(255, 0, 90, 0.6))
+        drop-shadow(3px 0 0 rgba(4, 244, 190, 0.6));
+    }
+    65% {
+      clip-path: inset(0);
+      transform: translateX(-1px);
+      filter: brightness(1.2);
+    }
+    100% {
+      opacity: 1;
+      clip-path: inset(0);
+      transform: none;
+      filter: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-glitch-in {
+      animation: none;
+    }
+  }
+
   /* A scan line that sweeps down a row while it is hovered (articles on /lectura). */
   .group:hover .article-scan {
     animation: article-scan 1.6s ease-in-out infinite;

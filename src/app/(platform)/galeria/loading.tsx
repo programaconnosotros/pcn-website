@@ -6,7 +6,7 @@ export default function Loading() {
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <PageTitleSkeleton />
-          <GalleryGridSkeleton tiles={12} />
+          <GalleryGridSkeleton tiles={18} />
         </div>
       </div>
     </>
