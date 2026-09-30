@@ -1,6 +1,8 @@
 'use client';
 
+import { useRef } from 'react';
 import { Download, Share2 } from 'lucide-react';
+import { useParallax } from './use-parallax';
 import {
   formatPhotoDate,
   keyCapClassName,
@@ -22,26 +24,39 @@ const cornerClassName =
   'pointer-events-none absolute size-3 border-pcnGreen opacity-0 transition-all duration-300 group-hover:opacity-100 group-focus-within:opacity-100';
 
 // A dimmed, scanlined thumbnail that powers up on hover: full colour, lit corner brackets and a
-// file-name caption sliding up from the bottom.
+// file-name caption sliding up from the bottom. The photo is taller than its frame and drifts
+// against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
+const parallaxStyle = {
+  transform:
+    'translate3d(calc(var(--px, 0) * -6px), calc(var(--parallax, 0) * 8% + var(--py, 0) * -6px), 0)',
+};
 export function PhotoCard({ photo, index, total, onOpen, onShare }: PhotoCardProps) {
   const { download, isDownloading } = usePhotoDownload();
+  const frameRef = useRef<HTMLDivElement>(null);
+  useParallax(frameRef);
 
   return (
-    <div className="group relative aspect-square w-full overflow-hidden bg-black">
+    <div ref={frameRef} className="group relative aspect-square w-full overflow-hidden bg-black">
       <button
         type="button"
         onClick={onOpen}
         className="absolute inset-0 focus-visible:outline-none"
         aria-label={`Ver foto: ${photo.title}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={photo.image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-focus-within:brightness-100 group-focus-within:saturate-100 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100"
-        />
+        <span
+          aria-hidden
+          style={parallaxStyle}
+          className="absolute inset-x-0 -top-[12%] block h-[124%] transition-transform duration-150 ease-out will-change-transform"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo.image}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-focus-within:brightness-100 group-focus-within:saturate-100 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100"
+          />
+        </span>
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.22)_0_1px,transparent_1px_3px)] transition-opacity duration-500 group-hover:opacity-0"
