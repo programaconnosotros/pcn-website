@@ -336,13 +336,15 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   </>
                 )}
               </dl>
-              <a
-                href={createGoogleCalendarUrl(event)}
-                className="mt-2 inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
-              >
-                <CalendarPlus className="h-3.5 w-3.5" />
-                agregar a google calendar
-              </a>
+              {!hasEventPassed && (
+                <a
+                  href={createGoogleCalendarUrl(event)}
+                  className="mt-2 inline-flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                >
+                  <CalendarPlus className="h-3.5 w-3.5" />
+                  agregar a google calendar
+                </a>
+              )}
             </Section>
 
             {/* Descripción */}
