@@ -1,6 +1,6 @@
 import { InfluencerCard } from '@/components/influencers/influencer-card';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Users } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid } from '@/components/ui/ruled-grid';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -428,30 +428,18 @@ export default async function InfluencersPage() {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Users className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Influencers</span>
-            </Heading2>
-          </div>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <PageTitle
+          path="influencers"
+          className="mt-4"
+          meta={`${influencersData.influencers.length} referentes para seguir`}
+        />
 
-          <div className="mb-6">
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Acá te mostramos algunas personas o grupos que consideramos referentes en el mundo del
-              software y que creemos que pueden aportar mucho a tu crecimiento profesional.
-            </p>
-          </div>
-
-          <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {influencersData.influencers.map((influencer: Influencer) => (
-              <InfluencerCard key={influencer.id} influencer={influencer} />
-            ))}
-          </div>
-        </div>
+        <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+          {influencersData.influencers.map((influencer: Influencer) => (
+            <InfluencerCard key={influencer.id} influencer={influencer} />
+          ))}
+        </RuledGrid>
       </div>
     </>
   );

@@ -1,6 +1,5 @@
 'use client';
 
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -20,9 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Clapperboard, MessageCircle, Search, X } from 'lucide-react';
+import { MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
@@ -294,24 +295,18 @@ const SeriesYPeliculasPage = () => {
           </Link>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Clapperboard className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-                Series y Películas
-              </span>
-            </Heading2>
-          </div>
+          <PageTitle
+            path="series-y-peliculas"
+            meta={`${titles.filter((t) => t.type === 'Serie').length} series · ${
+              titles.filter((t) => t.type === 'Película').length
+            } películas`}
+          />
 
-          <div className="mb-6">
-            <h3 className="mb-4 text-xl font-semibold">Series y películas recomendadas</h3>
-
+          <div className="mb-14">
             {/* Filtros */}
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
               {/* Búsqueda */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
@@ -348,56 +343,48 @@ const SeriesYPeliculasPage = () => {
 
             {/* Grid de títulos */}
             {filteredTitles.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
                 {filteredTitles.map((item) => (
-                  <Card
-                    key={item.id}
-                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
-                  >
-                    {/* Poster */}
-                    <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
+                  <div key={item.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+                    <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-sm bg-muted">
                       <Image
                         src={item.poster}
                         alt={`Póster de ${item.title}`}
                         fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                        sizes="40px"
                       />
                     </div>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="mb-2 text-lg">{item.title}</CardTitle>
-                          <CardDescription className="text-sm">
-                            {item.director}
-                            {item.year && ` (${item.year})`}
-                          </CardDescription>
-                        </div>
+
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <div className="flex items-center gap-2 font-mono text-sm">
+                        <h2 className="truncate font-semibold">{item.title}</h2>
+                        {item.type === 'Serie' && (
+                          <Badge className="px-1.5 py-0 text-[10px]">serie</Badge>
+                        )}
+                        <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">
+                          {item.year}
+                        </span>
                       </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        <Badge
-                          variant={item.type === 'Serie' ? 'default' : 'secondary'}
-                          className="w-fit"
-                        >
-                          {item.type}
-                        </Badge>
-                        <Badge variant="outline" className="w-fit">
-                          {item.genre}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="flex-1">
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                    </CardContent>
-                  </Card>
+
+                      <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                        {item.description}
+                      </p>
+
+                      <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                        <span className="text-pcnGreen-500">@ </span>
+                        {item.director}
+                        <span className="text-pcnGreen-500"> # </span>
+                        {item.genre.toLowerCase()}
+                      </p>
+                    </div>
+                  </div>
                 ))}
-              </div>
+              </RuledGrid>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg text-muted-foreground">
-                  No se encontraron títulos con los filtros seleccionados.
-                </p>
-              </div>
+              <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+                No se encontraron títulos con los filtros seleccionados.
+              </p>
             )}
           </div>
         </div>

@@ -8,8 +8,15 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Music as MusicIcon } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
+
+const videos = [
+  'https://www.youtube.com/embed/1vsUPluzAWo?si=wCi5gplz67f6BAFY',
+  'https://www.youtube.com/embed/SpNIOu8LAFo?si=brY8Or-NwelEx4Uf',
+  'https://www.youtube.com/embed/sd9AbVNlgi4?si=qNVfuSwqjNSpk22-',
+];
 
 const Music = () => (
   <>
@@ -30,54 +37,25 @@ const Music = () => (
         </Breadcrumb>
       </div>
     </header>
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="mt-4">
-        <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex w-full flex-row items-center justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <MusicIcon className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Música</span>
-            </Heading2>
-          </div>
-        </div>
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <PageTitle path="musica" className="mt-4" meta={`${videos.length} sets para programar`} />
 
-        <div className="mb-14 flex flex-col gap-6">
-          <div className="aspect-video w-full overflow-hidden rounded-lg">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/1vsUPluzAWo?si=wCi5gplz67f6BAFY"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
+      <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-3">
+        {videos.map((src) => (
+          <div key={src} className={cn(ruledCellClassName, 'p-2')}>
+            <div className="aspect-video w-full overflow-hidden">
+              <iframe
+                className="h-full w-full"
+                src={src}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
           </div>
-
-          <div className="aspect-video w-full overflow-hidden rounded-lg">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/SpNIOu8LAFo?si=brY8Or-NwelEx4Uf"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-
-          <div className="aspect-video w-full overflow-hidden rounded-lg">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/sd9AbVNlgi4?si=qNVfuSwqjNSpk22-"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      </div>
+        ))}
+      </RuledGrid>
     </div>
   </>
 );

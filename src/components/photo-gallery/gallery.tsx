@@ -1,6 +1,9 @@
 'use client';
 
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { dateContainsString } from '@/lib/date-formatter';
+import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
@@ -637,7 +640,9 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
   return (
     <>
-      <div className="mb-6 flex justify-center">
+      <PageTitle path="galeria" className="mt-4" meta={`${photos.length} fotos de la comunidad`} />
+
+      <div className="mb-4">
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -646,15 +651,13 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
       </div>
 
       {sortedPhotos.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">
-            No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
-          </p>
-        </div>
+        <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+          No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
+        </p>
       ) : (
-        <div className="grid grid-cols-2 gap-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <RuledGrid className="mb-14 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className="cursor-pointer">
+            <div key={photo.id} className={cn(ruledCellClassName, 'cursor-pointer p-1')}>
               <PhotoCard
                 photo={photo}
                 getShareUrl={getShareUrl}
@@ -662,7 +665,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
               />
             </div>
           ))}
-        </div>
+        </RuledGrid>
       )}
 
       {isDialogOpen && (

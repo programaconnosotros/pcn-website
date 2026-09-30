@@ -1,6 +1,5 @@
 'use client';
 
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -20,15 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { ArrowUpRight, Book, MessageCircle, Search, X } from 'lucide-react';
+import { ArrowUpRight, ChevronRight, MessageCircle, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
-import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 import { articles, type Article } from './articles';
 import { ArticleReaderDialog } from './article-reader-dialog';
@@ -846,31 +844,6 @@ const articleCategories = [
   ...Array.from(new Set(articles.map((article) => article.category))),
 ];
 
-const categoryStyles: Record<string, string> = {
-  Programación:
-    'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-500/15 dark:text-violet-300 dark:border-violet-500/30',
-  Arquitectura:
-    'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-500/30',
-  Gestión:
-    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
-  Testing:
-    'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
-  Producto:
-    'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
-  Diseño:
-    'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30',
-  Negocios:
-    'bg-teal-100 text-teal-700 border-teal-300 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-500/30',
-  Comunicación:
-    'bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-500/30',
-  Seguridad:
-    'bg-red-100 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-300 dark:border-red-500/30',
-  IA: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-300 dark:bg-fuchsia-500/15 dark:text-fuchsia-300 dark:border-fuchsia-500/30',
-  DevOps:
-    'bg-cyan-100 text-cyan-700 border-cyan-300 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-500/30',
-};
-const defaultCategoryStyle = 'bg-secondary text-secondary-foreground';
-
 const formatArticleDate = (iso: string) =>
   new Date(iso).toLocaleDateString('es-ES', {
     day: 'numeric',
@@ -878,6 +851,54 @@ const formatArticleDate = (iso: string) =>
     year: 'numeric',
     timeZone: 'UTC',
   });
+
+const BookRow = ({ book }: { book: Book }) => {
+  const content = (
+    <>
+      <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-sm bg-muted">
+        <Image
+          src={book.cover}
+          alt={`Portada de ${book.title}`}
+          fill
+          className="object-cover"
+          sizes="40px"
+        />
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h2 className="truncate font-semibold group-hover:text-pcnGreen">{book.title}</h2>
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+            {book.year}
+            {book.url && <ArrowUpRight className="h-3 w-3" />}
+          </span>
+        </div>
+
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {book.description}
+        </p>
+
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500">@ </span>
+          {book.author}
+          <span className="text-pcnGreen-500"> # </span>
+          {book.categories.join(' · ')}
+          {book.isbn && ` · isbn ${book.isbn}`}
+        </p>
+      </div>
+    </>
+  );
+
+  const className = cn(ruledCellClassName, 'group flex gap-3 p-3');
+
+  return book.url ? (
+    <Link href={book.url} target="_blank" rel="noopener noreferrer" className={className}>
+      {content}
+    </Link>
+  ) : (
+    <div className={className}>{content}</div>
+  );
+};
 
 const ReadingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -950,18 +971,14 @@ const ReadingPage = () => {
           </Link>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Book className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Lectura</span>
-            </Heading2>
-          </div>
+          <PageTitle
+            path="lectura"
+            meta={`${books.length} libros · ${articles.length} artículos`}
+          />
 
-          <div className="mb-6">
+          <div className="mb-4">
             <Tabs value={activeTab} onValueChange={handleTabChange}>
               <TabsList className="mb-4">
                 <TabsTrigger value="libros">Libros</TabsTrigger>
@@ -969,7 +986,7 @@ const ReadingPage = () => {
               </TabsList>
 
               {/* Filtros compartidos */}
-              <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
+              <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
                 {/* Búsqueda */}
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
@@ -1007,143 +1024,70 @@ const ReadingPage = () => {
               {/* Tab: Libros */}
               <TabsContent value="libros">
                 {filteredBooks.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
                     {filteredBooks.map((book) => (
-                      <Card
-                        key={book.id}
-                        className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
-                      >
-                        {/* Cover portrait */}
-                        <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
-                          <Image
-                            src={book.cover}
-                            alt={`Portada de ${book.title}`}
-                            fill
-                            className="object-contain"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          />
-                        </div>
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <CardTitle className="mb-2 text-lg">{book.title}</CardTitle>
-                              <CardDescription className="text-sm">
-                                {book.author}
-                                {book.year && ` (${book.year})`}
-                              </CardDescription>
-                            </div>
-                          </div>
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {book.categories.map((category) => (
-                              <Badge
-                                key={category}
-                                variant="outline"
-                                className={cn(
-                                  'w-fit',
-                                  categoryStyles[category] ?? defaultCategoryStyle,
-                                )}
-                              >
-                                {category}
-                              </Badge>
-                            ))}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="flex flex-1 flex-col justify-between">
-                          <div>
-                            <p className="text-sm text-muted-foreground">{book.description}</p>
-                            {book.isbn && (
-                              <p className="mt-3 text-xs text-muted-foreground">
-                                ISBN: <span className={GeistMono.className}>{book.isbn}</span>
-                              </p>
-                            )}
-                          </div>
-                          {book.url && (
-                            <Button
-                              asChild
-                              variant="pcn"
-                              size="sm"
-                              className="mt-4 flex w-fit items-center gap-2"
-                            >
-                              <Link href={book.url} target="_blank" rel="noopener noreferrer">
-                                Ver libro
-                                <ArrowUpRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          )}
-                        </CardContent>
-                      </Card>
+                      <BookRow key={book.id} book={book} />
                     ))}
-                  </div>
+                  </RuledGrid>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <p className="text-lg text-muted-foreground">
-                      No se encontraron libros con los filtros seleccionados.
-                    </p>
-                  </div>
+                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+                    No se encontraron libros con los filtros seleccionados.
+                  </p>
                 )}
               </TabsContent>
 
               {/* Tab: Artículos */}
               <TabsContent value="articulos">
                 {filteredArticles.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
                     {filteredArticles.map((article) => (
-                      <Card
+                      <button
                         key={article.id}
-                        className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
+                        type="button"
+                        onClick={() => setReaderArticle(article)}
+                        className={cn(ruledCellClassName, 'group flex gap-3 p-3 text-left')}
                       >
-                        <CardHeader>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage src={article.avatar} alt={article.author} />
-                              <AvatarFallback>
-                                {article.author
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join('')
-                                  .slice(0, 2)
-                                  .toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="text-sm font-semibold leading-none">{article.author}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {article.source} · {formatArticleDate(article.date)}
-                              </p>
-                            </div>
+                        <Avatar className="h-9 w-9 shrink-0 rounded-sm">
+                          <AvatarImage src={article.avatar} alt={article.author} />
+                          <AvatarFallback className="rounded-sm font-mono text-xs">
+                            {article.author
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <div className="flex min-w-0 flex-1 flex-col gap-1">
+                          <div className="flex items-center gap-2 font-mono text-sm">
+                            <h2 className="truncate font-semibold group-hover:text-pcnGreen">
+                              {article.title}
+                            </h2>
+                            <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+                              {formatArticleDate(article.date)}
+                              <ChevronRight className="h-3 w-3" />
+                            </span>
                           </div>
-                          <CardTitle className="mt-3 text-lg">{article.title}</CardTitle>
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              'mt-1 w-fit',
-                              categoryStyles[article.category] ?? defaultCategoryStyle,
-                            )}
-                          >
+
+                          <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                            {article.description}
+                          </p>
+
+                          <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                            <span className="text-pcnGreen-500">@ </span>
+                            {article.author} · {article.source}
+                            <span className="text-pcnGreen-500"> # </span>
                             {article.category}
-                          </Badge>
-                        </CardHeader>
-                        <CardContent className="flex flex-1 flex-col justify-between">
-                          <p className="text-sm text-muted-foreground">{article.description}</p>
-                          <Button
-                            variant="pcn"
-                            size="sm"
-                            className="mt-4 flex items-center gap-2"
-                            onClick={() => setReaderArticle(article)}
-                          >
-                            Leer artículo
-                            <ArrowUpRight className="h-4 w-4" />
-                          </Button>
-                        </CardContent>
-                      </Card>
+                          </p>
+                        </div>
+                      </button>
                     ))}
-                  </div>
+                  </RuledGrid>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <p className="text-lg text-muted-foreground">
-                      No se encontraron artículos con los filtros seleccionados.
-                    </p>
-                  </div>
+                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+                    No se encontraron artículos con los filtros seleccionados.
+                  </p>
                 )}
               </TabsContent>
             </Tabs>
@@ -1158,29 +1102,34 @@ const ReadingPage = () => {
           />
 
           {/* Banner AgusLogs */}
-          <Card className="flex flex-col gap-4 border border-pcnPurple/30 bg-pcnPurple/5 p-6 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.3)] sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
+          <RuledGrid className="mb-14 grid-cols-1">
+            <Link
+              href="https://aguslogs.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(ruledCellClassName, 'group flex items-center gap-3 p-3')}
+            >
               <Image
                 src="/aguslogs-logo.png"
                 alt="AgusLogs"
-                width={64}
-                height={64}
-                className="rounded-lg"
+                width={36}
+                height={36}
+                className="h-9 w-9 shrink-0 rounded-sm"
               />
-              <div>
-                <p className="font-semibold">AgusLogs</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-sm font-semibold group-hover:text-pcnGreen">
+                  AgusLogs
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
                   Aprendé y crecé como ingeniero de software.
                 </p>
               </div>
-            </div>
-            <Link href="https://aguslogs.com/" target="_blank" rel="noopener noreferrer">
-              <Button variant="pcn" size="sm" className="flex items-center gap-2">
-                Ir a AgusLogs
-                <ArrowUpRight className="h-4 w-4" />
-              </Button>
+              <span className="flex shrink-0 items-center gap-1 font-mono text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+                aguslogs.com
+                <ArrowUpRight className="h-3 w-3" />
+              </span>
             </Link>
-          </Card>
+          </RuledGrid>
         </div>
       </div>
     </>

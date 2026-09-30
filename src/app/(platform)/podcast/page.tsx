@@ -1,4 +1,3 @@
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -7,9 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { PageTitle } from '@/components/ui/page-title';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Podcast } from 'lucide-react';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -56,23 +55,13 @@ const PodcastPage = async () => {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex w-full flex-row items-center justify-between">
-              <Heading2 className="m-0 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                  <Podcast className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-                </div>
-                <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Podcast</span>
-              </Heading2>
-            </div>
-          </div>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <PageTitle path="podcast" className="mt-4" meta="0 episodios" />
 
-          <div className="flex items-center justify-center py-12">
-            <p className="text-center text-lg text-muted-foreground">Próximamente.</p>
-          </div>
-        </div>
+        <p className="border border-pcnGreen-200 p-3 font-mono text-sm text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>
+          próximamente...
+        </p>
       </div>
     </>
   );

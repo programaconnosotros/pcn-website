@@ -47,7 +47,7 @@ export default function PhotoGallery() {
           </Breadcrumb>
         </div>
       </header>
-      <div className="flex flex-1 flex-col p-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <Gallery initialPhotoId={initialPhotoId} />
       </div>
     </>
