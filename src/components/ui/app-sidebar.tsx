@@ -112,7 +112,7 @@ export function AppSidebar(props: AppSidebarProps) {
     <Sidebar
       collapsible="offcanvas"
       variant="sidebar"
-      className="border-sidebar-border [&_[data-sidebar=sidebar]]:bg-gradient-to-b [&_[data-sidebar=sidebar]]:from-sidebar [&_[data-sidebar=sidebar]]:to-background"
+      className="border-pcnGreen-200 [&_[data-sidebar=sidebar]]:bg-black"
       {...sidebarProps}
     >
       <SidebarHeader className="px-3 pb-1 pt-3">
@@ -121,22 +121,22 @@ export function AppSidebar(props: AppSidebarProps) {
             <SidebarMenuButton
               size="lg"
               asChild
-              className="h-12 rounded-lg px-2 hover:bg-sidebar-accent/70"
+              className="h-12 rounded-sm px-2 hover:bg-sidebar-accent/70"
             >
               <Link href="/" className="flex items-center gap-3">
-                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-lg bg-black ring-1 ring-inset ring-white/10">
-                  <span className="absolute inset-0 rounded-lg bg-pcnGreen/20 blur-md" />
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-sm bg-black ring-1 ring-inset ring-pcnGreen-400">
+                  <span className="absolute inset-0 rounded-sm bg-pcnGreen/20 blur-md" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.webp" alt="programaConNosotros" className="relative size-6" />
                 </span>
                 <span className="grid min-w-0 flex-1 text-left leading-tight">
-                  <span className="truncate text-[13px] font-semibold tracking-tight">
+                  <span className="text-glow truncate font-mono text-[13px] font-semibold tracking-tight text-pcnGreen">
                     programaConNosotros
                   </span>
                   <span
                     className={cn(
                       GeistMono.className,
-                      'truncate text-[10px] uppercase tracking-[0.1em] text-sidebar-foreground/45',
+                      'truncate text-[10px] uppercase tracking-[0.1em] text-pcnGreen-500',
                     )}
                   >
                     Comunidad · desde 2020
@@ -159,7 +159,7 @@ export function AppSidebar(props: AppSidebarProps) {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="gap-1.5 border-t border-sidebar-border/70 px-3 pb-3 pt-2">
+      <SidebarFooter className="gap-1.5 border-t border-pcnGreen-200 px-3 pb-3 pt-2">
         <NavSecondary items={secondaryItems} className="p-0" />
         <NavUser user={user} />
       </SidebarFooter>

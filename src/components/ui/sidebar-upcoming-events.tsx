@@ -71,7 +71,7 @@ export const SidebarUpcomingEvents = ({
                 isActive && 'border-pcnGreen/40 bg-pcnGreen/[0.07]',
               )}
             >
-              <div className="flex size-9 shrink-0 flex-col items-center justify-center rounded-md bg-pcnGreen/10 text-pcnGreen ring-1 ring-inset ring-pcnGreen/15">
+              <div className="flex size-9 shrink-0 flex-col items-center justify-center rounded-sm bg-black text-pcnGreen ring-1 ring-inset ring-pcnGreen-400">
                 <span
                   className={cn(
                     GeistMono.className,
@@ -102,7 +102,7 @@ export const SidebarUpcomingEvents = ({
 
         <Link
           href="/eventos"
-          className="group mt-0.5 flex items-center gap-1.5 px-2 py-1 text-[12px] font-medium text-sidebar-foreground/50 transition-colors hover:text-pcnGreen"
+          className="group mt-0.5 flex items-center gap-1.5 px-2 py-1 font-mono text-[11px] font-medium text-pcnGreen-600 transition-colors hover:text-pcnGreen"
         >
           <CalendarDays className="size-3.5" />
           Ver todos los eventos

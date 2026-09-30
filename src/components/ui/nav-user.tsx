@@ -42,9 +42,9 @@ export function NavUser({ user }: { user: User | null }) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <div className="rounded-lg border border-sidebar-border/80 bg-white/[0.02] p-2">
+          <div className="rounded-sm border border-pcnGreen-200 bg-black/60 p-2">
             <div className="flex flex-col gap-1">
-              <Button asChild size="sm" className="w-full rounded-lg">
+              <Button asChild size="sm" className="w-full">
                 <Link href="/autenticacion/iniciar-sesion">
                   {iconOnly ? (
                     <LogIn className="size-4" />
@@ -59,7 +59,7 @@ export function NavUser({ user }: { user: User | null }) {
                 asChild
                 size="sm"
                 variant="ghost"
-                className="w-full rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                className="w-full text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
                 <Link href="/autenticacion/registro">
                   {iconOnly ? (
@@ -84,7 +84,7 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`h-14 rounded-lg border border-sidebar-border/80 bg-white/[0.02] px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen/30 data-[state=open]:bg-sidebar-accent ${
+              className={`h-14 rounded-sm border border-pcnGreen-200 bg-black/60 px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen-500 data-[state=open]:bg-sidebar-accent ${
                 iconOnly ? 'justify-center p-2' : ''
               }`}
             >
@@ -99,12 +99,14 @@ export function NavUser({ user }: { user: User | null }) {
                   <span className="flex items-center gap-1.5 truncate font-semibold">
                     <span className="truncate">{user.name}</span>
                     {user.role === 'ADMIN' && (
-                      <span className="shrink-0 rounded-full bg-pcnGreen/15 px-1.5 py-px text-[9px] font-semibold uppercase tracking-wider text-pcnGreen">
+                      <span className="shrink-0 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 px-1.5 py-px font-mono text-[9px] font-semibold uppercase tracking-wider text-pcnGreen">
                         Admin
                       </span>
                     )}
                   </span>
-                  <span className="truncate text-xs text-sidebar-foreground/55">{user.email}</span>
+                  <span className="truncate font-mono text-[11px] text-pcnGreen-600">
+                    {user.email}
+                  </span>
                 </div>
               )}
               {!iconOnly && (
@@ -114,7 +116,7 @@ export function NavUser({ user }: { user: User | null }) {
           </DropdownMenuTrigger>
           {!iconOnly && (
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
               side={isMobile ? 'bottom' : 'right'}
               align="end"
               sideOffset={8}

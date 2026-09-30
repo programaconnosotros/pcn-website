@@ -24,7 +24,7 @@ export function NavSecondary({
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-sidebar-border/70 text-[12px] font-medium text-sidebar-foreground/55 transition-colors hover:border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-sm border border-pcnGreen-200 font-mono text-[11px] font-medium text-sidebar-foreground/55 transition-colors hover:border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <item.icon className="size-3.5" strokeWidth={1.75} />
             <span>{item.title}</span>
