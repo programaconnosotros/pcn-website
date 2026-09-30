@@ -257,3 +257,35 @@ export function DashboardSkeleton() {
     </div>
   );
 }
+
+export function RuledGridSkeleton({
+  count = 6,
+  className = 'grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3',
+}: {
+  count?: number;
+  className?: string;
+}) {
+  return (
+    <div className={`grid border-l border-t border-pcnGreen-200 ${className}`}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="flex gap-3 border-b border-r border-pcnGreen-200 p-3">
+          <Skeleton className="h-9 w-9 shrink-0 rounded-sm" />
+          <div className="flex flex-1 flex-col gap-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function PageTitleSkeleton() {
+  return (
+    <div className="mb-4 flex items-center justify-between">
+      <Skeleton className="h-6 w-32" />
+      <Skeleton className="h-3 w-40" />
+    </div>
+  );
+}

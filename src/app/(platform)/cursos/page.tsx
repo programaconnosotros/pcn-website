@@ -1,7 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -10,9 +7,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ExternalLink, Laptop, TvMinimalPlay } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { communityCourses, Course, externalCourses } from './courses';
@@ -46,74 +46,63 @@ export const metadata: Metadata = {
   },
 };
 
-const CourseCard = ({ course }: { course: Course }) => {
-  const ViewButton = () =>
-    course.websiteUrl ? (
-      <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer" className="w-full">
-        <Button className="flex w-full flex-row items-center gap-2">
-          Ver curso
-          <ExternalLink className="h-5 w-5" />
-        </Button>
-      </a>
-    ) : (
-      <Link href={`/cursos/${course.id}`} className="w-full">
-        <Button className="flex w-full flex-row items-center gap-2">
-          Ver curso
-          <TvMinimalPlay className="h-5 w-5" />
-        </Button>
-      </Link>
-    );
+const formatHours = (hours?: number) => (hours ? `${hours}h` : '');
 
-  return (
-    <Card className="flex flex-col justify-between border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f] md:min-h-[320px]">
-      <div>
-        <CardHeader className="flex flex-row items-start gap-4 pb-2">
-          {course.logo && (
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border bg-white p-1.5 dark:bg-neutral-100">
-              <Image
-                src={course.logo}
-                alt={`Logo de ${course.name}`}
-                width={52}
-                height={52}
-                className="h-full w-full object-contain"
-              />
-            </div>
-          )}
+const CourseRow = ({ course }: { course: Course }) => {
+  const content = (
+    <>
+      {course.logo && (
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+          <Image
+            src={course.logo}
+            alt={`Logo de ${course.name}`}
+            width={28}
+            height={28}
+            className="h-full w-full object-contain"
+          />
+        </div>
+      )}
 
-          <div className="flex flex-1 flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex min-w-0 items-center gap-2">
-                <CardTitle className="min-w-0">{course.name}</CardTitle>
-                {course.isMadeByCommunity && (
-                  <Badge className="shrink-0 border-pcnPurple/30 bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                    Made in PCN
-                  </Badge>
-                )}
-              </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h2 className="truncate font-semibold group-hover:text-pcnGreen">{course.name}</h2>
+          {course.isMadeByCommunity && <Badge className="px-1.5 py-0 text-[10px]">pcn</Badge>}
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+            {course.websiteUrl ? 'web' : formatHours(course.hours)}
+            {course.websiteUrl ? (
+              <ArrowUpRight className="h-3 w-3" />
+            ) : (
+              <ChevronRight className="h-3 w-3" />
+            )}
+          </span>
+        </div>
 
-              <div className="shrink-0">
-                {course.websiteUrl ? (
-                  <Badge variant="outline">Interactivo</Badge>
-                ) : (
-                  <Badge variant="outline">
-                    {course.hours} {course.hours === 1 ? 'hora' : 'horas'}
-                  </Badge>
-                )}
-              </div>
-            </div>
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {course.description}
+        </p>
 
-            <CardContent className="p-0 text-sm">{course.description}</CardContent>
-          </div>
-        </CardHeader>
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500">@ </span>
+          {course.teachedBy}
+        </p>
       </div>
+    </>
+  );
 
-      <CardFooter className="flex flex-col items-center gap-4">
-        <ViewButton />
-        <p className="text-xs text-muted-foreground">Curso dictado por {course.teachedBy}.</p>
-      </CardFooter>
-    </Card>
+  const className = cn(ruledCellClassName, 'group flex gap-3 p-3');
+
+  return course.websiteUrl ? (
+    <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer" className={className}>
+      {content}
+    </a>
+  ) : (
+    <Link href={`/cursos/${course.id}`} className={className}>
+      {content}
+    </Link>
   );
 };
+
+const communityCount = allCourses.filter((course) => course.isMadeByCommunity).length;
 
 const Courses = () => (
   <>
@@ -134,25 +123,18 @@ const Courses = () => (
         </Breadcrumb>
       </div>
     </header>
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="mt-4">
-        <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex w-full flex-row items-center justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border border-pcnGreen/50 bg-black/60 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Laptop className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Cursos</span>
-            </Heading2>
-          </div>
-        </div>
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <PageTitle
+        path="cursos"
+        className="mt-4"
+        meta={`${allCourses.length} cursos · ${communityCount} hechos en pcn`}
+      />
 
-        <div className="mb-14 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-          {allCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-      </div>
+      <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+        {allCourses.map((course) => (
+          <CourseRow key={course.id} course={course} />
+        ))}
+      </RuledGrid>
     </div>
   </>
 );
