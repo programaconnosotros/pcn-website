@@ -1,26 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import { ArrowUpRight, Loader2, AlertCircle } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import { ArrowUpRight, Loader2, ShieldAlert } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Article } from './articles';
-
-interface ReaderData {
-  title: string;
-  byline: string | null;
-  siteName: string | null;
-  content: string;
-  length: number;
-}
 
 interface ArticleReaderDialogProps {
   article: Article | null;
@@ -28,94 +14,106 @@ interface ArticleReaderDialogProps {
   onOpenChange: (_open: boolean) => void;
 }
 
-async function fetchArticleContent(url: string): Promise<ReaderData> {
-  const res = await fetch(`/api/lectura/reader?url=${encodeURIComponent(url)}`);
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as { error?: string }).error ?? `Error ${res.status}`);
-  }
-  return res.json() as Promise<ReaderData>;
+async function fetchEmbeddable(url: string): Promise<boolean> {
+  const res = await fetch(`/api/lectura/embed?url=${encodeURIComponent(url)}`);
+  if (!res.ok) return false;
+  const body = (await res.json()) as { embeddable?: boolean };
+  return body.embeddable === true;
 }
 
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
+/**
+ * Shows an article on its original website, framed like a browser window. Sites that refuse to
+ * be embedded get a notice with a link to read it in a new tab instead.
+ */
 export function ArticleReaderDialog({ article, open, onOpenChange }: ArticleReaderDialogProps) {
-  const { data, isLoading, isError, error } = useQuery<ReaderData, Error>({
-    queryKey: ['article-reader', article?.url],
-    queryFn: () => fetchArticleContent(article!.url),
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
+  const { data: embeddable, isLoading } = useQuery({
+    queryKey: ['article-embeddable', article?.url],
+    queryFn: () => fetchEmbeddable(article!.url),
     enabled: open && !!article,
-    staleTime: 24 * 60 * 60 * 1000, // 24h — article content is static
+    staleTime: 24 * 60 * 60 * 1000,
     retry: 1,
   });
 
   if (!article) return null;
 
+  const frameLoaded = loadedUrl === article.url;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex w-[90vw] max-w-3xl flex-col gap-0 overflow-hidden border-none p-0">
-        {/* Header */}
-        <DialogHeader className="border-b px-6 pb-4 pt-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <Avatar className="h-9 w-9 shrink-0">
-                <AvatarImage src={article.avatar} alt={article.author} />
-                <AvatarFallback>
-                  {article.author
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold leading-none">{article.author}</p>
-                <p className="text-xs text-muted-foreground">{article.source}</p>
-              </div>
-            </div>
-            <Link href={article.url} target="_blank" rel="noopener noreferrer" className="shrink-0">
-              <Button variant="outline" size="sm" className="flex items-center gap-1.5">
-                Leer original
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Button>
-            </Link>
+      <DialogContent className="flex h-[88dvh] w-[94vw] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
+        <header className="flex shrink-0 items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
+          <Avatar className="size-7 shrink-0 rounded-sm">
+            <AvatarImage src={article.avatar} alt={article.author} />
+            <AvatarFallback className="rounded-sm text-[10px]">
+              {initials(article.author)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <DialogTitle className="truncate text-sm font-semibold">{article.title}</DialogTitle>
+            <DialogDescription className="truncate text-[11px] text-pcnGreen-600">
+              <span className="text-pcnGreen-500">@ </span>
+              {article.author} · {new URL(article.url).host}
+            </DialogDescription>
           </div>
-          <DialogTitle className="mt-3 text-xl leading-snug">{article.title}</DialogTitle>
-          <DialogDescription className="sr-only">
-            Artículo de {article.author} en {article.source}
-          </DialogDescription>
-        </DialogHeader>
+          <a
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Abrir en una pestaña nueva"
+            className="flex shrink-0 items-center gap-1 rounded-sm border border-pcnGreen-200 px-2 py-1 text-[11px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+          >
+            <span className="max-sm:hidden">abrir</span>
+            <ArrowUpRight className="size-3.5" />
+          </a>
+        </header>
 
-        {/* Body */}
-        <div className="max-h-[70vh] overflow-y-auto px-6 py-5">
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              <p className="text-sm">Cargando artículo…</p>
+        <div className="relative min-h-0 flex-1 bg-background">
+          {embeddable && (
+            <iframe
+              key={article.url}
+              src={article.url}
+              title={article.title}
+              onLoad={() => setLoadedUrl(article.url)}
+              referrerPolicy="no-referrer"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+              className="size-full border-0 bg-white"
+            />
+          )}
+
+          {(isLoading || (embeddable && !frameLoaded)) && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background font-mono text-xs text-pcnGreen-700">
+              <Loader2 className="size-5 animate-spin text-pcnGreen" />
+              <span className="cursor-blink">$ curl {new URL(article.url).host}</span>
             </div>
           )}
 
-          {isError && (
-            <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-              <AlertCircle className="h-8 w-8 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">No se pudo cargar el artículo</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {error?.message ?? 'Error desconocido'}
+          {embeddable === false && (
+            <div className="flex size-full flex-col items-center justify-center gap-4 p-6 text-center font-mono">
+              <ShieldAlert className="size-8 text-pcnGreen-600" />
+              <div className="space-y-1">
+                <p className="text-sm text-foreground">
+                  {new URL(article.url).host} no permite mostrarse embebido
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Abrilo en su sitio original para leerlo.
                 </p>
               </div>
-              <Link href={article.url} target="_blank" rel="noopener noreferrer">
-                <Button variant="pcn" size="sm" className="flex items-center gap-2">
-                  Abrir en nueva pestaña
-                  <ArrowUpRight className="h-4 w-4" />
-                </Button>
-              </Link>
+              <Button asChild variant="pcn" size="sm">
+                <a href={article.url} target="_blank" rel="noopener noreferrer">
+                  Leer en {new URL(article.url).host}
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </Button>
             </div>
-          )}
-
-          {data && (
-            <article
-              className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-semibold prose-a:text-primary prose-code:text-foreground prose-pre:bg-muted prose-pre:text-foreground prose-img:rounded-md"
-              dangerouslySetInnerHTML={{ __html: data.content }}
-            />
           )}
         </div>
       </DialogContent>
