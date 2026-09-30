@@ -1,6 +1,7 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, CheckCircle2, User, Globe, Check } from 'lucide-react';
@@ -138,14 +139,10 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
 
   if (errors.length === 0) {
     return (
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
-        <CardContent className="pt-6">
-          <div className="py-8 text-center">
-            <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-green-500" />
-            <p className="text-muted-foreground">No hay errores registrados</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="border border-pcnGreen-200 px-4 py-6 text-center">
+        <CheckCircle2 className="mx-auto mb-2 h-6 w-6 text-green-500" />
+        <p className="text-muted-foreground">No hay errores registrados</p>
+      </div>
     );
   }
 
@@ -168,193 +165,183 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
 
       {unresolvedErrors.length > 0 && (
         <TabsContent value="unresolved" className="mt-0">
-          <div className="space-y-3">
+          <RuledGrid className="grid-cols-1">
             {unresolvedErrors.map((error) => (
-              <Card
-                key={error.id}
-                className="border-2 border-destructive/50 bg-gradient-to-br from-white to-red-50/50 transition-all duration-300 hover:scale-[1.02] hover:border-destructive hover:shadow-xl dark:border-red-900/50 dark:from-black dark:to-red-950/20 dark:hover:border-red-800"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 flex-shrink-0 text-destructive" />
-                        <CardTitle className="m-0 min-w-0 flex-1 text-base">
-                          <TruncatedText text={error.message} maxLength={120} />
-                        </CardTitle>
-                        <Badge variant="destructive" className="flex-shrink-0">
-                          Sin resolver
-                        </Badge>
-                      </div>
-                      <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {error.path && (
-                          <div className="flex items-center gap-1">
-                            <Globe className="h-4 w-4" />
-                            <span>{error.path}</span>
-                          </div>
-                        )}
-                        {error.user && (
-                          <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" />
-                            <span>{error.user.name}</span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
-                      </p>
-                      {(error.stack || error.metadata) && (
-                        <Collapsible
-                          open={expandedErrors.has(error.id)}
-                          onOpenChange={() => toggleExpand(error.id)}
-                        >
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm" className="mt-2">
-                              <ChevronDown
-                                className={`mr-2 h-4 w-4 transition-transform ${
-                                  expandedErrors.has(error.id) ? 'rotate-180' : ''
-                                }`}
-                              />
-                              {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
-                            </Button>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="mt-2">
-                            <div className="space-y-2 text-sm">
-                              {error.stack && (
-                                <div>
-                                  <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                    {error.stack}
-                                  </pre>
-                                </div>
-                              )}
-                              {error.metadata && (
-                                <div>
-                                  <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                    {JSON.stringify(JSON.parse(error.metadata), null, 2)}
-                                  </pre>
-                                </div>
-                              )}
-                            </div>
-                          </CollapsibleContent>
-                        </Collapsible>
+              <div key={error.id} className={cn(ruledCellClassName, 'bg-red-500/[0.03] p-3')}>
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 flex-shrink-0 text-destructive" />
+                      <h3 className="m-0 min-w-0 flex-1 font-mono text-sm font-medium">
+                        <TruncatedText text={error.message} maxLength={120} />
+                      </h3>
+                      <Badge variant="destructive" className="flex-shrink-0">
+                        Sin resolver
+                      </Badge>
+                    </div>
+                    <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
+                      {error.path && (
+                        <div className="flex items-center gap-1">
+                          <Globe className="h-3.5 w-3.5" />
+                          <span>{error.path}</span>
+                        </div>
+                      )}
+                      {error.user && (
+                        <div className="flex items-center gap-1">
+                          <User className="h-3.5 w-3.5" />
+                          <span>{error.user.name}</span>
+                        </div>
                       )}
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleMarkAsResolved(error.id)}
-                      disabled={markingAsResolved === error.id}
-                      className="ml-4"
-                    >
-                      <Check className="mr-2 h-4 w-4" />
-                      Marcar como resuelto
-                    </Button>
+                    <p className="text-xs text-muted-foreground">
+                      {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
+                    </p>
+                    {(error.stack || error.metadata) && (
+                      <Collapsible
+                        open={expandedErrors.has(error.id)}
+                        onOpenChange={() => toggleExpand(error.id)}
+                      >
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" size="sm" className="mt-1 h-7 px-2 text-xs">
+                            <ChevronDown
+                              className={`mr-2 h-4 w-4 transition-transform ${
+                                expandedErrors.has(error.id) ? 'rotate-180' : ''
+                              }`}
+                            />
+                            {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-2">
+                          <div className="space-y-2 text-sm">
+                            {error.stack && (
+                              <div>
+                                <p className="mb-1 font-semibold">Stack trace:</p>
+                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
+                                  {error.stack}
+                                </pre>
+                              </div>
+                            )}
+                            {error.metadata && (
+                              <div>
+                                <p className="mb-1 font-semibold">Metadata:</p>
+                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
+                                  {JSON.stringify(JSON.parse(error.metadata), null, 2)}
+                                </pre>
+                              </div>
+                            )}
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
                   </div>
-                </CardHeader>
-              </Card>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleMarkAsResolved(error.id)}
+                    disabled={markingAsResolved === error.id}
+                    className="ml-4"
+                  >
+                    <Check className="mr-2 h-4 w-4" />
+                    Marcar como resuelto
+                  </Button>
+                </div>
+              </div>
             ))}
-          </div>
+          </RuledGrid>
         </TabsContent>
       )}
 
       {resolvedErrors.length > 0 && (
         <TabsContent value="resolved" className="mt-0">
-          <div className="space-y-3">
+          <RuledGrid className="grid-cols-1">
             {resolvedErrors.map((error) => (
-              <Card
-                key={error.id}
-                className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500" />
-                        <CardTitle className="m-0 min-w-0 flex-1 text-base">
-                          <TruncatedText text={error.message} maxLength={120} />
-                        </CardTitle>
-                        <Badge variant="default" className="flex-shrink-0 bg-green-500">
-                          Resuelto
-                        </Badge>
-                      </div>
-                      <div className="mb-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {error.path && (
-                          <div className="flex items-center gap-1">
-                            <Globe className="h-4 w-4" />
-                            <span>{error.path}</span>
-                          </div>
-                        )}
-                        {error.user && (
-                          <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" />
-                            <span>{error.user.name}</span>
-                          </div>
-                        )}
-                        {error.resolver && (
-                          <div className="flex items-center gap-1">
-                            <span>Resuelto por: {error.resolver.name}</span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
-                        {error.resolvedAt && <> • Resuelto: {formatDate(error.resolvedAt)}</>}
-                      </p>
-                      {(error.stack || error.metadata) && (
-                        <Collapsible
-                          open={expandedErrors.has(error.id)}
-                          onOpenChange={() => toggleExpand(error.id)}
-                        >
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm" className="mt-2">
-                              <ChevronDown
-                                className={`mr-2 h-4 w-4 transition-transform ${
-                                  expandedErrors.has(error.id) ? 'rotate-180' : ''
-                                }`}
-                              />
-                              {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
-                            </Button>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="mt-2">
-                            <div className="space-y-2 text-sm">
-                              {error.stack && (
-                                <div>
-                                  <p className="mb-1 font-semibold">Stack trace:</p>
-                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                    {error.stack}
-                                  </pre>
-                                </div>
-                              )}
-                              {error.metadata && (
-                                <div>
-                                  <p className="mb-1 font-semibold">Metadata:</p>
-                                  <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
-                                    {JSON.stringify(JSON.parse(error.metadata), null, 2)}
-                                  </pre>
-                                </div>
-                              )}
-                            </div>
-                          </CollapsibleContent>
-                        </Collapsible>
+              <div key={error.id} className={cn(ruledCellClassName, 'p-3 opacity-75')}>
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500" />
+                      <h3 className="m-0 min-w-0 flex-1 font-mono text-sm font-medium">
+                        <TruncatedText text={error.message} maxLength={120} />
+                      </h3>
+                      <Badge variant="default" className="flex-shrink-0 bg-green-500">
+                        Resuelto
+                      </Badge>
+                    </div>
+                    <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
+                      {error.path && (
+                        <div className="flex items-center gap-1">
+                          <Globe className="h-3.5 w-3.5" />
+                          <span>{error.path}</span>
+                        </div>
+                      )}
+                      {error.user && (
+                        <div className="flex items-center gap-1">
+                          <User className="h-3.5 w-3.5" />
+                          <span>{error.user.name}</span>
+                        </div>
+                      )}
+                      {error.resolver && (
+                        <div className="flex items-center gap-1">
+                          <span>Resuelto por: {error.resolver.name}</span>
+                        </div>
                       )}
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      {formatRelativeTime(error.createdAt)} - {formatDate(error.createdAt)}
+                      {error.resolvedAt && <> • Resuelto: {formatDate(error.resolvedAt)}</>}
+                    </p>
+                    {(error.stack || error.metadata) && (
+                      <Collapsible
+                        open={expandedErrors.has(error.id)}
+                        onOpenChange={() => toggleExpand(error.id)}
+                      >
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" size="sm" className="mt-1 h-7 px-2 text-xs">
+                            <ChevronDown
+                              className={`mr-2 h-4 w-4 transition-transform ${
+                                expandedErrors.has(error.id) ? 'rotate-180' : ''
+                              }`}
+                            />
+                            {expandedErrors.has(error.id) ? 'Ocultar' : 'Ver'} detalles
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-2">
+                          <div className="space-y-2 text-sm">
+                            {error.stack && (
+                              <div>
+                                <p className="mb-1 font-semibold">Stack trace:</p>
+                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
+                                  {error.stack}
+                                </pre>
+                              </div>
+                            )}
+                            {error.metadata && (
+                              <div>
+                                <p className="mb-1 font-semibold">Metadata:</p>
+                                <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre-wrap break-words break-all rounded-md bg-muted p-3 text-xs">
+                                  {JSON.stringify(JSON.parse(error.metadata), null, 2)}
+                                </pre>
+                              </div>
+                            )}
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
                   </div>
-                </CardHeader>
-              </Card>
+                </div>
+              </div>
             ))}
-          </div>
+          </RuledGrid>
         </TabsContent>
       )}
 
-      <div className="mt-6">
+      <div className="mt-4">
         <Pagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
           onPageChange={handlePageChange}
         />
-        <p className="mt-4 text-center text-sm text-muted-foreground">
+        <p className="mt-2 text-center font-mono text-xs text-muted-foreground">
           Mostrando {(pagination.page - 1) * pagination.limit + 1} -{' '}
           {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total}{' '}
           errores
