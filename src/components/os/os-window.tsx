@@ -96,23 +96,31 @@ const WindowButton = ({
     onPointerDown={(e) => e.stopPropagation()}
     onDoubleClick={(e) => e.stopPropagation()}
     onClick={onClick}
-    className="group/btn flex size-6 items-center justify-center rounded-sm outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+    className={cn(
+      'group/btn flex size-[18px] items-center justify-center outline-none transition-[filter] duration-200',
+      danger
+        ? 'hover:drop-shadow-[0_0_6px_rgba(248,113,113,0.9)] focus-visible:drop-shadow-[0_0_6px_rgba(248,113,113,0.9)]'
+        : 'hover:drop-shadow-[0_0_6px_rgba(4,244,190,0.9)] focus-visible:drop-shadow-[0_0_6px_rgba(4,244,190,0.9)]',
+    )}
   >
+    {/* Chamfered corners give the controls a HUD look; the glow lives on the button's filter. */}
     <span
       className={cn(
-        'flex size-3.5 items-center justify-center rounded-[3px] border transition-colors',
-        focused ? 'border-pcnGreen-500 bg-pcnGreen-100' : 'border-pcnGreen-300 bg-transparent',
-        'group-hover/controls:border-pcnGreen group-hover/controls:bg-pcnGreen-200',
+        'flex size-full items-center justify-center border transition-all duration-200 [clip-path:polygon(0_0,calc(100%-4px)_0,100%_4px,100%_100%,4px_100%,0_calc(100%-4px))]',
+        focused
+          ? 'border-pcnGreen-500 bg-pcnGreen-100 text-pcnGreen'
+          : 'border-pcnGreen-300 text-pcnGreen-500',
         danger
-          ? 'group-hover/btn:!border-red-400 group-hover/btn:!bg-red-500/25'
-          : 'group-hover/btn:!bg-pcnGreen-300',
+          ? 'group-hover/btn:border-red-400 group-hover/btn:bg-red-500 group-hover/btn:text-black'
+          : 'group-hover/btn:border-pcnGreen group-hover/btn:bg-pcnGreen group-hover/btn:text-black',
+        'group-active/btn:scale-90',
       )}
     >
       <Icon
-        strokeWidth={3}
+        strokeWidth={2.5}
         className={cn(
-          'size-2.5 opacity-0 transition-opacity group-hover/controls:opacity-100 group-focus-visible/btn:opacity-100',
-          danger ? 'text-red-400' : 'text-pcnGreen',
+          'size-2.5 transition-transform duration-200',
+          danger ? 'group-hover/btn:rotate-90' : 'group-hover/btn:scale-125',
         )}
       />
     </span>
@@ -219,15 +227,15 @@ export function OsWindow({
           focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',
         )}
       >
-        <div className="group/controls flex items-center">
+        <div className="flex items-center gap-1 pl-0.5">
           <WindowButton label="Cerrar" icon={X} focused={focused} danger onClick={onClose} />
-          <WindowButton label="Minimizar" icon={Minus} focused={focused} onClick={onMinimize} />
           <WindowButton
             label={win.maximized ? 'Restaurar' : 'Maximizar'}
             icon={win.maximized ? Copy : Square}
             focused={focused}
             onClick={onToggleMaximize}
           />
+          <WindowButton label="Minimizar" icon={Minus} focused={focused} onClick={onMinimize} />
         </div>
 
         <div className="pointer-events-none absolute inset-x-28 flex items-center justify-center gap-2 text-xs">
