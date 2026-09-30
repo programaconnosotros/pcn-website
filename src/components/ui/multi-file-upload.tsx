@@ -25,10 +25,8 @@ export function MultiFileUpload({
     }
   };
 
-  const handleAdd = (url: string) => {
-    if (url !== '') {
-      onChange([...value, url]);
-    }
+  const handleAdd = (urls: string[]) => {
+    onChange([...value, ...urls]);
   };
 
   return (
@@ -43,9 +41,9 @@ export function MultiFileUpload({
         />
       ))}
       <FileUpload
-        key={value.length}
         value=""
-        onChange={handleAdd}
+        onChange={() => {}}
+        onChangeMultiple={handleAdd}
         folder={folder}
         disabled={disabled}
       />
