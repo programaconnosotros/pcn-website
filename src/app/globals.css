@@ -300,6 +300,26 @@
     }
   }
 
+  /* Toasts (components/ui/sonner.tsx): the bottom bar drains over the default 4s duration and
+     pauses while the stack is hovered, like the toasts themselves. */
+  .pcn-toast::after {
+    animation: toast-timer 4s linear forwards;
+  }
+  .toaster:hover .pcn-toast::after,
+  .pcn-toast[data-type='loading']::after {
+    animation-play-state: paused;
+  }
+  @keyframes toast-timer {
+    to {
+      transform: scaleX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pcn-toast::after {
+      animation: none;
+    }
+  }
+
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
     background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),
