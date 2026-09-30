@@ -20,6 +20,7 @@ const directories = [
     links: [
       { label: 'cursos', href: '/cursos' },
       { label: 'lectura', href: '/lectura' },
+      { label: 'videos', href: '/videos' },
       { label: 'consejos', href: '/consejos' },
       { label: 'herramientas', href: '/herramientas' },
     ],

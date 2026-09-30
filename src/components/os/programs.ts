@@ -27,6 +27,7 @@ import {
   UserRound,
   Users,
   Wrench,
+  Youtube,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -120,6 +121,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-orange-300 to-amber-700',
     group: 'Recursos',
     pinned: true,
+  },
+  {
+    id: 'videos',
+    name: 'Videos',
+    url: '/videos',
+    icon: Youtube,
+    color: 'from-rose-400 to-red-700',
+    group: 'Recursos',
   },
   {
     id: 'especialidades',

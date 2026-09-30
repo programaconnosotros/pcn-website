@@ -24,6 +24,7 @@ import {
   Share2,
   Users,
   Wrench,
+  Youtube,
 } from 'lucide-react';
 import { GeistMono } from 'geist/font/mono';
 import Link from 'next/link';
@@ -58,6 +59,7 @@ const actividadesItems: NavItem[] = [
 const recursosItems: NavItem[] = [
   { title: 'Cursos', url: '/cursos', icon: GraduationCap },
   { title: 'Lectura', url: '/lectura', icon: BookOpen },
+  { title: 'Videos', url: '/videos', icon: Youtube },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
   { title: 'Herramientas', url: '/herramientas', icon: Wrench },
   { title: 'Proyectos', url: '/proyectos', icon: Rocket },
