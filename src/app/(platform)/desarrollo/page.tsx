@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { Team } from '@/components/landing/team';
+import { Team, teamSize } from '@/components/landing/team';
 import { NextJsSVG } from '@/components/logos/NextJsSVG';
 import { ReactSVG } from '@/components/logos/ReactSVG';
 import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
@@ -319,6 +319,10 @@ const DesarrolloPage = () => (
             </dl>
           </Section>
 
+          <Section title={`Team de desarrollo (${teamSize})`}>
+            <Team />
+          </Section>
+
           <Section title="Por qué contribuir">
             <BulletList items={benefits} />
           </Section>
@@ -336,8 +340,6 @@ const DesarrolloPage = () => (
             </Link>
           </div>
         </div>
-
-        <Team />
       </div>
     </div>
   </>
