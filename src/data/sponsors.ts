@@ -50,7 +50,7 @@ export const sponsors: Sponsor[] = [
   },
   {
     name: 'Bowery',
-    url: 'https://bowerystudio.co/en/',
+    url: 'https://choosebowery.com/',
     logo: '/bowery-logo-light.svg',
     description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
     location: 'Buenos Aires, Argentina',
