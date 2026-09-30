@@ -30,7 +30,7 @@ interface TableOfContentsProps {
 
 /**
  * Distance from the top of the viewport at which a section is considered "current".
- * Matches the sticky header plus the scroll margin used by the sections.
+ * Matches the sticky mobile bar plus the scroll margin used by the sections.
  */
 const REFERENCE_POINT = 140;
 
@@ -158,7 +158,7 @@ export function TableOfContents({ sections, label = 'Contenido' }: TableOfConten
   return (
     <>
       {/* Mobile: sticky bar with a dropdown listing every section. */}
-      <div className="sticky top-16 z-30 -mx-4 border-b bg-background/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:hidden">
+      <div className="sticky top-0 z-30 -mx-4 border-b bg-background/95 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
