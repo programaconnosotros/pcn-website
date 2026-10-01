@@ -1,19 +1,17 @@
 import { EventStatusBadge } from '@/components/events/event-status-badge';
-import { fetchEvents } from '@/actions/events/fetch-events';
 import { LocalEventDate } from '@/components/ui/local-date-time';
 import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ChevronRight, MapPin, Video } from 'lucide-react';
 import Link from 'next/link';
+import type { Event } from '@prisma/client';
 
-type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
+type EventWithCount = Event & { _count: { registrations: number } };
 
 export const EventRow: React.FC<{
   event: EventWithCount;
-  /** Mutes the flyer so upcoming events stand out in the list. */
-  past?: boolean;
   className?: string;
-}> = ({ event, past = false, className }) => {
+}> = ({ event, className }) => {
   const isFull =
     event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
   const flyer = event.flyerImages[0];
@@ -36,7 +34,6 @@ export const EventRow: React.FC<{
           className={cn(
             'h-full w-full object-cover object-top transition-[filter,transform] duration-300 group-hover:scale-105',
             !flyer && 'p-4 opacity-30',
-            past && 'grayscale-[70%] group-hover:grayscale-0',
           )}
         />
       </div>

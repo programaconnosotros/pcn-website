@@ -12,6 +12,8 @@ export const fetchEvents = async () =>
       _count: {
         select: {
           registrations: { where: { cancelledAt: null } },
+          galleryItems: true,
+          talks: true,
         },
       },
     },
