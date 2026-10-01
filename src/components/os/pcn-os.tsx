@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
 import { isOsMessage } from './os-env';
-import { OsDock } from './os-dock';
+import { OsDock, dockReservedHeight } from './os-dock';
 import { OsLauncher } from './os-launcher';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
 import { OsProcesses } from './os-processes';
@@ -26,8 +26,6 @@ import {
 import { useOsMode } from './use-os-mode';
 
 export const MENU_BAR_HEIGHT = 28;
-/** Space kept free at the bottom of the screen for the dock. */
-const DOCK_RESERVED_HEIGHT = 76;
 
 interface Viewport {
   w: number;
@@ -125,7 +123,7 @@ const desktopArea = (viewport: Viewport): Rect => ({
   x: 0,
   y: MENU_BAR_HEIGHT,
   w: viewport.w,
-  h: viewport.h - MENU_BAR_HEIGHT - DOCK_RESERVED_HEIGHT,
+  h: viewport.h - MENU_BAR_HEIGHT - dockReservedHeight(),
 });
 
 /**

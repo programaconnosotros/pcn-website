@@ -16,8 +16,11 @@ import { cn } from '@/lib/utils';
 import { ProgramIcon } from './program-icon';
 import type { OsProgram } from './programs';
 
-/** Widest a dock item gets at rest; items shrink below this so the whole dock fits the screen. */
-const MAX_ITEM_WIDTH = 54;
+/**
+ * Widest a dock item gets at rest; items shrink below this so the whole dock fits the screen.
+ * Labelled items are wider so their names have room.
+ */
+const MAX_ITEM_WIDTH = { compact: 46, labelled: 54 };
 const MIN_ITEM_WIDTH = 40;
 /** Screen margin, dock padding and border around the items. */
 const DOCK_CHROME_WIDTH = 16 + 8 + 2;
@@ -25,8 +28,28 @@ const DIVIDER_WIDTH = 11;
 const ITEM_GAP = 2;
 /** Most an item grows (as a fraction of its width) when the cursor is right over it. */
 const MAX_MAGNIFICATION = 0.55;
-/** Room the label, the gaps and the activity meter take under each icon. */
-const ITEM_TEXT_HEIGHT = 22;
+/** Room under each icon: the activity meter, plus the name when labels show. */
+const ITEM_FOOTER_HEIGHT = { compact: 8, labelled: 22 };
+
+/**
+ * Devices that can't hover (touch tablets wide enough for PCN OS) never see the tooltips, so the
+ * dock shows each program's name under its icon there instead.
+ */
+const NO_HOVER_QUERY = '(hover: none)';
+const wantsDockLabels = () =>
+  typeof window !== 'undefined' && window.matchMedia(NO_HOVER_QUERY).matches;
+
+const subscribeToHoverCapability = (onChange: () => void) => {
+  const mediaQuery = window.matchMedia(NO_HOVER_QUERY);
+  mediaQuery.addEventListener('change', onChange);
+  return () => mediaQuery.removeEventListener('change', onChange);
+};
+
+const useDockLabels = () =>
+  useSyncExternalStore(subscribeToHoverCapability, wantsDockLabels, () => false);
+
+/** Space the desktop keeps free at the bottom of the screen for the dock. */
+export const dockReservedHeight = () => (wantsDockLabels() ? 76 : 64);
 
 const SCRAMBLE_GLYPHS = '!<>-_\\/[]{}=+*^?#01ｱｲｳｴｵｶｷ';
 
@@ -43,11 +66,16 @@ const useViewportWidth = () =>
   );
 
 /** Width for each dock item so every item fits on screen, however many programs are open. */
-const dockItemWidth = (viewportWidth: number, items: number, dividers: number) => {
-  if (!viewportWidth) return MAX_ITEM_WIDTH;
+const dockItemWidth = (
+  viewportWidth: number,
+  items: number,
+  dividers: number,
+  maxWidth: number,
+) => {
+  if (!viewportWidth) return maxWidth;
   const available =
     viewportWidth - DOCK_CHROME_WIDTH - dividers * DIVIDER_WIDTH - (items + dividers) * ITEM_GAP;
-  return Math.max(MIN_ITEM_WIDTH, Math.min(MAX_ITEM_WIDTH, Math.floor(available / items)));
+  return Math.max(MIN_ITEM_WIDTH, Math.min(maxWidth, Math.floor(available / items)));
 };
 
 /** How much the hovered item may grow without the magnified dock running off the screen. */
@@ -209,6 +237,7 @@ interface DockItemProps {
   program: Pick<OsProgram, 'name' | 'icon'>;
   running: boolean;
   focused: boolean;
+  showLabel: boolean;
   hovered: boolean;
   index: number;
   mouseX: MotionValue<number>;
@@ -223,6 +252,7 @@ const DockItem = ({
   program,
   running,
   focused,
+  showLabel,
   hovered,
   index,
   mouseX,
@@ -237,6 +267,7 @@ const DockItem = ({
   const reduceMotion = useReducedMotion();
 
   const baseIcon = Math.min(36, baseWidth - 12);
+  const footerHeight = showLabel ? ITEM_FOOTER_HEIGHT.labelled : ITEM_FOOTER_HEIGHT.compact;
   // Read through refs so the fisheye always uses the latest sizes without resubscribing.
   const sizing = useRef({ baseWidth, magnification });
   useEffect(() => {
@@ -289,14 +320,11 @@ const DockItem = ({
       initial={reduceMotion ? false : { opacity: 0, y: 24, filter: 'blur(6px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       transition={{ delay: 0.25 + index * 0.035, type: 'spring', stiffness: 260, damping: 20 }}
-      style={{ width, height: baseIcon + ITEM_TEXT_HEIGHT }}
+      style={{ width, height: baseIcon + footerHeight }}
       className="group relative flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
     >
-      {/* Anchored above the label so the icon grows upwards out of the dock when magnified. */}
-      <span
-        className="absolute inset-x-0 flex justify-center"
-        style={{ bottom: ITEM_TEXT_HEIGHT - 3 }}
-      >
+      {/* Anchored above the meter so the icon grows upwards out of the dock when magnified. */}
+      <span className="absolute inset-x-0 flex justify-center" style={{ bottom: footerHeight - 2 }}>
         <motion.span
           animate={iconControls}
           style={{ width: iconSize, height: iconSize }}
@@ -311,14 +339,16 @@ const DockItem = ({
           {launches > 0 && <LaunchBurst key={launches} seed={launches} />}
         </motion.span>
       </span>
-      <span
-        className={cn(
-          'w-full truncate text-center font-mono text-[10px] lowercase leading-3 transition-colors',
-          hovered || focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-600',
-        )}
-      >
-        {program.name}
-      </span>
+      {showLabel && (
+        <span
+          className={cn(
+            'w-full truncate text-center font-mono text-[10px] lowercase leading-3',
+            focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-600',
+          )}
+        >
+          {program.name}
+        </span>
+      )}
       <ActivityMeter running={running} focused={focused} />
     </motion.button>
   );
@@ -327,7 +357,7 @@ const DockItem = ({
 const Divider = () => (
   <span
     aria-hidden
-    className="relative mx-[5px] mb-5 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
+    className="relative mx-[5px] mb-3 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
   >
     <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen shadow-[0_0_6px_#04f4be]" />
   </span>
@@ -374,7 +404,13 @@ export function OsDock({
   const viewportWidth = useViewportWidth();
   const items = pinned.length + unpinnedRunning.length + 1;
   const dividers = unpinnedRunning.length > 0 ? 2 : 1;
-  const itemWidth = dockItemWidth(viewportWidth, items, dividers);
+  const showLabels = useDockLabels();
+  const itemWidth = dockItemWidth(
+    viewportWidth,
+    items,
+    dividers,
+    showLabels ? MAX_ITEM_WIDTH.labelled : MAX_ITEM_WIDTH.compact,
+  );
   const magnification = reduceMotion
     ? 0
     : dockMagnification(viewportWidth, itemWidth, items, dividers);
@@ -411,6 +447,7 @@ export function OsDock({
     magnification,
     hovered: hoveredId === id,
     focused: focusedProgramId === id,
+    showLabel: showLabels,
     onHover: setHoveredId,
   });
 
