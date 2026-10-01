@@ -56,7 +56,9 @@ dist
 .vscode
 
 # Claude Code
-.claude/worktrees/
+/.claude/*
+!/.claude/agents/
+!/.claude/agents/**
 
 # PR screenshots (local capture dir; PNGs are published to the pr-screenshots branch)
 .pr-screenshots/

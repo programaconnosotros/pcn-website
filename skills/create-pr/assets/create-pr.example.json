@@ -1,0 +1,35 @@
+{
+  "$comment": "Copy to .eagerworks/create-pr.json in the target repo and trim to what you need — every field is optional. This example blends a Rails-into-staging setup and a Node/TS setup with Playwright screenshots; keep only what applies to your repo.",
+
+  "baseBranch": "main",
+
+  "pr": {
+    "titleFormat": "conventional",
+    "assignSelf": true,
+    "labels": "auto",
+    "draft": false,
+    "reviewers": [],
+    "language": "en",
+    "sections": [],
+    "checklist": [
+      "Tests — `<your test command>` — result: …",
+      "Lint / typecheck — `<your lint command>` — result: …",
+      "Tests were added or updated for this change",
+      "Documentation added or updated where it applies",
+      "No secrets or live keys in the diff"
+    ],
+    "screenshots": {
+      "mode": "auto",
+      "uiPaths": ["apps/web/**", "apps/mobile/**"],
+      "artifactPaths": [
+        "playwright-report/**/*.png",
+        "test-results/**/*.png",
+        "cypress/screenshots/**/*.png"
+      ],
+      "captureCommand": null
+    },
+    "manualTestCases": {
+      "enabled": true
+    }
+  }
+}

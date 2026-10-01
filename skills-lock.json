@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "commit": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/commit/SKILL.md",
+      "computedHash": "79b73813ce0b5c20ce2a23c85f75a72b355436c63956fecee857bfd88552bd6a"
+    },
+    "create-pr": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/create-pr/SKILL.md",
+      "computedHash": "7050f625a046c11f133506b19152198d932fe1904adf00613018a6a7944eb460"
+    },
+    "pr-review": {
+      "source": "eagerworks/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pr-review/SKILL.md",
+      "computedHash": "daef5efb8f2dd7136313012bdc5f53a7de4cabc50bd1d10fa99d6188cc56d113"
+    }
+  }
+}

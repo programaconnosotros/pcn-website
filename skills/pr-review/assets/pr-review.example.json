@@ -1,0 +1,24 @@
+{
+  "$comment": "Copy to .eagerworks/pr-review.json in the target repo and trim to what you need — every field is optional. This example blends a Rails and a Node extraFocus entry; keep only what applies to your repo.",
+
+  "baseBranch": "main",
+
+  "review": {
+    "maxRounds": 3,
+    "extraFocus": [
+      "Rails: every query scoped to an Organization filters through current_user.organization, not just organization_id from params",
+      "Node: every Prisma query on a tenant-scoped model includes orgId from the session, never only from the request body"
+    ],
+    "ignorePaths": ["db/schema.rb", "package-lock.json", "src/generated/**"],
+    "documentation": {
+      "enabled": true,
+      "decisionRecordsPath": "docs/decision-records/",
+      "maxSuggestions": 2
+    },
+    "postToPr": true,
+    "commentStyle": "inline",
+    "language": "en"
+  },
+
+  "localChecks": ["bundle exec rspec", "bundle exec rubocop"]
+}
