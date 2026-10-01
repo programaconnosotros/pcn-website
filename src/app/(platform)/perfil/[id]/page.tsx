@@ -474,21 +474,6 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   </section>
                 )}
 
-                {user.advises.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="consejos"
-                      count={user.advises.length}
-                      href={user.advises.length > PREVIEW ? tabHref('consejos') : undefined}
-                    />
-                    <RuledGrid className="grid-cols-1">
-                      {user.advises.slice(0, PREVIEW).map((advise) => (
-                        <AdviseCard key={advise.id} session={session} advise={advise} />
-                      ))}
-                    </RuledGrid>
-                  </section>
-                )}
-
                 {userTalks.length > 0 && (
                   <section>
                     <SectionHeading
@@ -514,6 +499,21 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     <ConversationRows
                       conversations={userConversations.slice(0, CONVERSATIONS_PREVIEW)}
                     />
+                  </section>
+                )}
+
+                {user.advises.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="consejos"
+                      count={user.advises.length}
+                      href={user.advises.length > PREVIEW ? tabHref('consejos') : undefined}
+                    />
+                    <RuledGrid className="grid-cols-1">
+                      {user.advises.slice(0, PREVIEW).map((advise) => (
+                        <AdviseCard key={advise.id} session={session} advise={advise} />
+                      ))}
+                    </RuledGrid>
                   </section>
                 )}
               </div>
