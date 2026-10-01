@@ -81,6 +81,7 @@ export function ConversationRow({
         )}
       </div>
 
+      {/* The title button stretches over the whole card, so clicking anywhere opens the summary. */}
       <h3
         className={cn(
           'font-mono text-sm font-semibold leading-snug transition-colors group-hover:text-pcnGreen',
@@ -90,7 +91,7 @@ export function ConversationRow({
         <button
           type="button"
           onClick={onOpen}
-          className="text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+          className="text-left after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen"
         >
           <Highlight text={title} query={query} />
         </button>
@@ -101,13 +102,15 @@ export function ConversationRow({
       </p>
 
       <div className="mt-auto flex flex-wrap items-center gap-1 pt-1 font-mono text-[11px]">
+        {/* Lifted above the title's stretched hit area so `@name` filters instead of opening. */}
         {visibleParticipants.map((name) => (
-          <ParticipantChip
-            key={name}
-            name={name}
-            active={activeParticipant === name}
-            onClick={() => onParticipantClick(name)}
-          />
+          <span key={name} className="relative z-10 flex">
+            <ParticipantChip
+              name={name}
+              active={activeParticipant === name}
+              onClick={() => onParticipantClick(name)}
+            />
+          </span>
         ))}
         {hiddenCount > 0 && (
           <button
