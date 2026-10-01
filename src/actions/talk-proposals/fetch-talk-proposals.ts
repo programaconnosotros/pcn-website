@@ -1,10 +1,10 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { requireAdmin } from '@/lib/admin';
+import { requireEventManager } from '@/lib/event-access';
 
 export const fetchTalkProposals = async (eventId: string) => {
-  await requireAdmin();
+  await requireEventManager(eventId);
 
   return prisma.talkProposal.findMany({
     where: { eventId },

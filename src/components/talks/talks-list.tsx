@@ -190,6 +190,7 @@ export function TalksList({ talks, eventId }: Props) {
           </DialogHeader>
           {editingTalk && (
             <TalkForm
+              eventId={eventId}
               talk={editingTalk}
               onSuccess={() => setEditingTalk(null)}
               onCancel={() => setEditingTalk(null)}

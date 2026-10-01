@@ -79,6 +79,7 @@ describe('updateTalkProposalStatus', () => {
   it('updates the status, revalidates the path, and returns success', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talkProposal.findUnique.mockResolvedValue({ eventId: 'event-1' } as any);
     prismaMock.talkProposal.update.mockResolvedValue({
       id: 'proposal-1',
       eventId: 'event-1',
@@ -98,6 +99,7 @@ describe('updateTalkProposalStatus', () => {
   it('updates to REJECTED status', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talkProposal.findUnique.mockResolvedValue({ eventId: 'event-1' } as any);
     prismaMock.talkProposal.update.mockResolvedValue({
       id: 'proposal-2',
       eventId: 'event-2',

@@ -1,9 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchTalkProposals } from './fetch-talk-proposals';
-import { requireAdmin } from '@/lib/admin';
+import { requireEventManager } from '@/lib/event-access';
 
-// Admin-only data: every test runs as an admin unless it says otherwise.
-jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
+// Event managers only: every test runs as one unless it says otherwise.
+jest.mock('@/lib/event-access', () => ({ requireEventManager: jest.fn() }));
 
 const mockProposals = [
   {
@@ -62,8 +62,8 @@ describe('fetchTalkProposals', () => {
 });
 
 describe('fetchTalkProposals access', () => {
-  it('rejects anyone who is not an admin', async () => {
-    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+  it('rejects anyone who does not manage the event', async () => {
+    (requireEventManager as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
 
     await expect(fetchTalkProposals('event-1')).rejects.toThrow('No autorizado');
   });

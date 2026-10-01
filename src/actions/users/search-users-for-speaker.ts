@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
+import { canManageSomeEvent } from '@/lib/event-access';
 
 export type SpeakerUserOption = {
   id: string;
@@ -22,7 +23,8 @@ async function requireAdmin() {
     where: { id: sessionId },
     include: { user: true },
   });
-  if (!session || session.user.role !== 'ADMIN') throw new Error('No autorizado');
+  // Admins y quienes gestionan eventos (para cargar oradores en sus charlas)
+  if (!session || !(await canManageSomeEvent(session.user))) throw new Error('No autorizado');
 }
 
 const speakerSelect = {

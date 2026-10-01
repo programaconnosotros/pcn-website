@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 
 export const createTalk = async (data: TalkFormData) => {
@@ -16,7 +17,8 @@ export const createTalk = async (data: TalkFormData) => {
     include: { user: true },
   });
 
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins y quienes gestionan eventos; el evento puntual se valida más abajo
+  if (!session || !(await canManageSomeEvent(session.user))) {
     throw new Error('No tenés permisos para realizar esta acción');
   }
 
@@ -26,6 +28,11 @@ export const createTalk = async (data: TalkFormData) => {
   }
 
   const talkData = parsed.data;
+
+  // Admins cargan cualquier charla; quien gestiona un evento, solo las de ese evento
+  if (!(await canManageEventById(session.user, talkData.eventId))) {
+    throw new Error('No tenés permisos para realizar esta acción');
+  }
 
   const talk = await prisma.talk.create({
     data: {

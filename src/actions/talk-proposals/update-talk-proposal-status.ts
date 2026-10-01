@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { TalkProposalStatus } from '@prisma/client';
 
 export const updateTalkProposalStatus = async (id: string, status: TalkProposalStatus) => {
@@ -16,7 +17,20 @@ export const updateTalkProposalStatus = async (id: string, status: TalkProposalS
     include: { user: true },
   });
 
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins y quienes gestionan eventos; el evento puntual se valida más abajo
+  if (!session || !(await canManageSomeEvent(session.user))) {
+    throw new Error('No tenés permisos para realizar esta acción');
+  }
+
+  const existing = await prisma.talkProposal.findUnique({
+    where: { id },
+    select: { eventId: true },
+  });
+  if (!existing) {
+    throw new Error('Propuesta no encontrada');
+  }
+
+  if (!(await canManageEventById(session.user, existing.eventId))) {
     throw new Error('No tenés permisos para realizar esta acción');
   }
 

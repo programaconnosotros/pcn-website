@@ -190,7 +190,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
     };
   }> = [];
 
-  if (isAdmin && !isExternalEvent) {
+  if (canEdit && !isExternalEvent) {
     registrations = await prisma.eventRegistration.findMany({
       where: {
         eventId: id,
@@ -251,8 +251,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               </Section>
             )}
 
-            {/* Link a propuestas de charlas (solo para admins con call for speakers habilitado) */}
-            {isAdmin && event.callForSpeakersEnabled && (
+            {/* Link a propuestas de charlas (quien gestiona el evento, con call for speakers) */}
+            {canEdit && event.callForSpeakersEnabled && (
               <Section title="propuestas de charlas">
                 <Link
                   href={`/eventos/${id}/propuestas-de-charlas`}
@@ -263,6 +263,22 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                     Call for speakers habilitado.
                   </span>
                   <span className="font-mono text-xs">ver propuestas →</span>
+                </Link>
+              </Section>
+            )}
+
+            {/* Gestión de las charlas del evento (quien gestiona el evento) */}
+            {canEdit && (
+              <Section title="charlas del evento">
+                <Link
+                  href={`/eventos/${id}/charlas`}
+                  className="flex items-center justify-between gap-2 text-sm text-muted-foreground hover:text-pcnGreen"
+                >
+                  <span className="flex items-center gap-2">
+                    <Mic className="h-4 w-4" />
+                    Cargá y editá las charlas que se dieron.
+                  </span>
+                  <span className="font-mono text-xs">gestionar →</span>
                 </Link>
               </Section>
             )}
@@ -382,8 +398,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               </Section>
             )}
 
-            {/* Link a página de inscripciones (solo para admins con inscripción interna) */}
-            {isAdmin && !isExternalEvent && (
+            {/* Link a página de inscripciones (solo para quien gestiona el evento) */}
+            {canEdit && !isExternalEvent && (
               <Section title="inscripciones">
                 <Link
                   href={`/eventos/${id}/inscripciones`}

@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 
 export const createTalkFromProposal = async (proposalId: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -15,7 +16,8 @@ export const createTalkFromProposal = async (proposalId: string) => {
     include: { user: true },
   });
 
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins y quienes gestionan eventos; el evento puntual se valida más abajo
+  if (!session || !(await canManageSomeEvent(session.user))) {
     throw new Error('No tenés permisos para realizar esta acción');
   }
 
@@ -26,6 +28,10 @@ export const createTalkFromProposal = async (proposalId: string) => {
 
   if (!proposal) {
     throw new Error('Propuesta no encontrada');
+  }
+
+  if (!(await canManageEventById(session.user, proposal.eventId))) {
+    throw new Error('No tenés permisos para realizar esta acción');
   }
 
   if (proposal.talk) {

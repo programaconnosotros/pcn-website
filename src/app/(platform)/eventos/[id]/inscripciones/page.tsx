@@ -2,8 +2,7 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getEventManager } from '@/lib/event-access';
 import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { getEventRegistrations } from '@/actions/events/get-event-registrations';
@@ -15,19 +14,8 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
   const params = await props.params;
   const id = params.id;
 
-  // Verificar autenticación y permisos de admin
-  const sessionId = (await cookies()).get('sessionId')?.value;
-
-  if (!sessionId) {
-    redirect(`/eventos/${id}`);
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins del sitio y quienes gestionan este evento
+  if (!(await getEventManager(id))) {
     redirect(`/eventos/${id}`);
   }
 
