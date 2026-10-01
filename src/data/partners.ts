@@ -1,5 +1,8 @@
+export type PartnerKind = 'empresa' | 'organizacion';
+
 export interface Partner {
   name: string;
+  kind: PartnerKind;
   url: string;
   logo: string;
   description: string;
@@ -13,6 +16,7 @@ export interface Partner {
 export const partners: Partner[] = [
   {
     name: 'DIZENZ',
+    kind: 'empresa',
     url: 'https://dizenz.com',
     logo: '/dizenz-logo.webp',
     description: 'Modern Software Studio.',
@@ -21,6 +25,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Xetro',
+    kind: 'empresa',
     url: 'https://xetro.ai',
     logo: '/xetro-logo.png',
     description: 'AI Software Factory.',
@@ -28,6 +33,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Once57',
+    kind: 'empresa',
     url: 'https://once57.com.ar',
     logo: '/once57-logo.PNG',
     description: 'Espacio de coworking moderno.',
@@ -35,6 +41,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'UTN-FRT',
+    kind: 'organizacion',
     url: 'https://www.frt.utn.edu.ar/',
     logo: '/utn-frt-logo.png',
     description: 'Universidad de ingeniería.',
@@ -42,6 +49,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Macch',
+    kind: 'empresa',
     url: 'https://macch.ai/',
     logo: '/macch-white-logo.svg',
     description: 'IA para la atención al cliente y la operación de proveedores de internet.',
@@ -49,6 +57,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Crisol',
+    kind: 'empresa',
     url: 'https://www.crisol.studio',
     logo: '/crisol-white-logo.svg',
     description:
@@ -57,6 +66,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Blackbox Cowork',
+    kind: 'empresa',
     url: 'https://www.instagram.com/blackboxcowork/',
     logo: '/blackbox-cowork-logo.png',
     description: 'Espacio de coworking adaptable.',
@@ -65,6 +75,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Bowery',
+    kind: 'empresa',
     url: 'https://choosebowery.com/',
     logo: '/bowery-logo-light.svg',
     description: 'Proveedor de ingenieros top en LATAM para empresas de primer nivel.',
@@ -72,6 +83,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Eagerworks',
+    kind: 'empresa',
     url: 'https://eagerworks.com/',
     logo: '/eagerworks-white-logo.svg',
     description: 'Agencia de diseño y desarrollo de software.',
@@ -79,6 +91,7 @@ export const partners: Partner[] = [
   },
   {
     name: 'Endpoint Consulting',
+    kind: 'empresa',
     url: 'https://www.instagram.com/endpoint_ciberseguridad/',
     logo: '/endpoint-security-logo.png',
     description: 'Expertos en seguridad informática y consultoría tecnológica.',
@@ -86,12 +99,29 @@ export const partners: Partner[] = [
   },
   {
     name: 'IEEE Computer Society',
+    kind: 'organizacion',
     url: 'https://www.computer.org/',
     logo: '/ieee-computer-society-logo.png',
     description:
       'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
     location: 'IEEE CS Región Latinoamérica',
     monochromeOnDark: true,
+  },
+  {
+    name: 'SaltaDev',
+    kind: 'organizacion',
+    url: 'https://salta.dev/',
+    logo: '/salta-dev-logo.webp',
+    description: 'Comunidad de desarrolladores de Salta.',
+    location: 'Salta, Argentina',
+  },
+  {
+    name: 'FormosaDev',
+    kind: 'organizacion',
+    url: 'https://www.instagram.com/formosa.dev.ar/',
+    logo: '/formosa-dev-logo.webp',
+    description: 'Comunidad de desarrolladores de Formosa.',
+    location: 'Formosa, Argentina',
   },
 ];
 

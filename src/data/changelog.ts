@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
     area: 'partners',
+    title: 'SaltaDev y FormosaDev se suman como partners',
+    description:
+      'La página de partners ahora separa empresas de organizaciones, y suma a las comunidades SaltaDev y FormosaDev.',
+    authors: ['agustin-sanc'],
+    href: '/partners',
+  },
+  {
+    date: '2026-10-01',
+    area: 'partners',
     title: 'Sponsors ahora es Partners',
     description:
       'La página de sponsors pasa a llamarse partners; los links viejos redirigen solos.',
