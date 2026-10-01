@@ -167,6 +167,22 @@ const allVideos: Video[] = [
     isTalk: true,
   },
   {
+    id: 'NYFGCESmikA',
+    title: 'DHH: Future of programming, AI, agentic engineering, vibe coding & Linux',
+    speaker: 'DHH y Lex Fridman',
+    channel: 'Lex Fridman',
+    date: '2026-08-26',
+    durationSeconds: 18951,
+  },
+  {
+    id: 'vagyIcmIGOQ',
+    title: 'DHH: Future of programming, AI, Ruby on Rails, productivity & parenting',
+    speaker: 'DHH y Lex Fridman',
+    channel: 'Lex Fridman',
+    date: '2025-07-12',
+    durationSeconds: 22128,
+  },
+  {
     id: 'eiC58R16hb8',
     title: 'JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue',
     channel: 'Lydia Hallie',
