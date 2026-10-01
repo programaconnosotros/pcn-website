@@ -1,6 +1,7 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { AmbassadorBadge } from '@/components/profile/ambassador-badge';
+import { BadgeStrip, ProfileBadges } from '@/components/badges/profile-badges';
+import { AMBASSADOR_BADGE, isBadgeIcon, isBadgeTone, type DisplayBadge } from '@/lib/badges';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -172,6 +173,10 @@ async function getUser(id: string) {
             likes: true,
           },
         },
+        badges: {
+          include: { badge: true },
+          orderBy: { awardedAt: 'asc' },
+        },
         languages: {
           select: {
             language: true,
@@ -193,6 +198,7 @@ async function getUser(id: string) {
       email: user.email,
       image: user.image,
       isAmbassador: user.isAmbassador,
+      customBadges: user.badges,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
       phoneNumber: (user as any).phoneNumber ?? null,
@@ -234,6 +240,21 @@ export default async function ProfilePage(props: ProfilePageProps) {
     : [];
 
   const isOwnProfile = session?.user?.id === params.id;
+  const viewerIsAdmin = session?.user?.role === 'ADMIN';
+
+  // Built-in badges first, then the custom ones an admin awarded, oldest first.
+  const badges: (DisplayBadge & { custom?: boolean })[] = [
+    ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
+    ...user.customBadges.map(({ badge, awardedAt }) => ({
+      id: badge.id,
+      name: badge.name,
+      description: badge.description,
+      icon: isBadgeIcon(badge.icon) ? badge.icon : 'award',
+      tone: isBadgeTone(badge.tone) ? badge.tone : 'green',
+      awardedAt,
+      custom: true,
+    })),
+  ];
 
   const profileFacts: { label: string; value: string; href?: string }[] = [
     { label: 'cargo', value: user.jobTitle },
@@ -338,8 +359,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 </Avatar>
 
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
-                  {user.isAmbassador && <AmbassadorBadge />}
+                  <div className="flex min-w-0 items-center gap-2">
+                    <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
+                    <BadgeStrip badges={badges} />
+                  </div>
                   <div className="flex flex-wrap items-center gap-x-3 font-mono text-[11px] text-muted-foreground">
                     {user.xAccountUrl && (
                       <a
@@ -390,6 +413,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   {user.slogan}
                 </p>
               )}
+
+              <ProfileBadges
+                userId={user.id}
+                userName={user.name}
+                badges={badges}
+                isAdmin={viewerIsAdmin}
+              />
 
               {profileFacts.length > 0 && (
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">

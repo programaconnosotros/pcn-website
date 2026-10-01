@@ -57,6 +57,8 @@ model User {
   identityLinks        IdentityLink[]
   createdEvents        Event[]               @relation("UserCreatedEvents")
   eventAdminships      EventAdmin[]
+  badges               UserBadge[]
+  awardedBadges        UserBadge[]           @relation("BadgeAwarder")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -564,4 +566,35 @@ model IdentityLink {
 
   @@unique([source, externalName])
   @@index([userId])
+}
+
+// Badge custom que un admin crea y otorga a miembros de la comunidad.
+model Badge {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  // Ícono y color del badge, validados en src/lib/badges.
+  icon        String
+  tone        String
+
+  awards UserBadge[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserBadge {
+  id          String  @id @default(cuid())
+  userId      String
+  badgeId     String
+  awardedById String?
+
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedBy User? @relation("BadgeAwarder", fields: [awardedById], references: [id], onDelete: SetNull)
+
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([badgeId])
 }

@@ -1137,3 +1137,24 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   initial-value: 0deg;
   inherits: false;
 }
+
+/* Periodic light sweep across earned badges (src/components/badges/badge-medal.tsx). */
+@keyframes badge-shine {
+  0%,
+  78% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.badge-shine {
+  animation: badge-shine 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-shine {
+    animation: none;
+  }
+}
