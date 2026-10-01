@@ -53,7 +53,7 @@ export function OsPhotos({
       disabled={!photo}
       onClick={() => photo && onOpen(`/galeria?foto=${photo.id}`)}
       aria-label={photo ? 'Ver foto en la galería' : 'Fotos de la comunidad'}
-      className="group absolute right-6 top-1/2 hidden w-[300px] -translate-y-1/2 select-none flex-col overflow-hidden border border-pcnGreen-200 bg-black/70 text-left font-mono text-[10px] leading-[1.45] text-pcnGreen-700 opacity-80 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] outline-none transition-[opacity,border-color,box-shadow] duration-200 hover:border-pcnGreen-500 hover:opacity-100 hover:shadow-[0_0_40px_-10px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:opacity-100 [@media(min-height:760px)]:flex"
+      className="group absolute right-6 top-1/2 hidden w-[300px] -translate-y-1/2 select-none flex-col overflow-hidden border border-pcnGreen-200 bg-black/70 text-left font-mono text-[10px] leading-[1.45] text-pcnGreen-700 opacity-80 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] outline-none transition-[opacity,border-color,box-shadow] duration-200 hover:border-pcnGreen-500 hover:opacity-100 hover:shadow-[0_0_40px_-10px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:opacity-100 xl:bottom-64 xl:top-auto xl:translate-y-0 [@media(min-height:760px)]:flex"
     >
       <span className="flex items-center gap-2 border-b border-pcnGreen-200 px-2 py-1 text-pcnGreen-600">
         <span className="flex gap-1">
