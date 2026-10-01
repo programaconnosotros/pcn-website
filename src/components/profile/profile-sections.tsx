@@ -147,17 +147,22 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
           'group flex gap-3 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
         )}
       >
-        <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white p-1 ring-1 ring-pcnGreen-200 group-hover:ring-pcnGreen-600">
+        <span
+          className={cn(
+            'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+            !project.logoUrl && 'bg-white',
+          )}
+        >
           {project.logoUrl ? (
             <Image
               src={project.logoUrl}
               alt=""
-              width={32}
-              height={32}
-              className="h-full w-full object-contain"
+              width={112}
+              height={112}
+              className="h-full w-full object-cover"
             />
           ) : (
-            <span className="font-mono text-xs font-bold text-black">
+            <span className="font-mono text-lg font-bold text-black">
               {project.title.slice(0, 2).toUpperCase()}
             </span>
           )}
