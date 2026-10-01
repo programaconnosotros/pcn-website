@@ -342,6 +342,8 @@ const DockItem = ({
           'drop-shadow(0px 0px 0px rgba(255,0,92,0)) drop-shadow(0px 0px 0px rgba(0,229,255,0))',
         ],
         transition: { duration: 0.65, ease: 'easeOut' },
+        // A lingering filter would stop the tile's backdrop blur from seeing the desktop.
+        transitionEnd: { filter: 'none' },
       });
     }
     onClick();
@@ -358,7 +360,7 @@ const DockItem = ({
       onBlur={() => onHover(null)}
       aria-label={program.name}
       initial={reduceMotion ? false : { opacity: 0, y: 24, filter: 'blur(6px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { filter: 'none' } }}
       transition={{ delay: 0.25 + index * 0.035, type: 'spring', stiffness: 260, damping: 20 }}
       style={{ width, height: baseIcon + footerHeight }}
       className="group relative flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
@@ -538,12 +540,13 @@ export function OsDock({
         <div
           onMouseMove={onMouseMove}
           onMouseLeave={onMouseLeave}
-          className="relative flex items-end gap-0.5 rounded-md bg-black/85 px-1 pb-0.5 pt-1.5 backdrop-blur-xl"
+          className="relative flex items-end gap-0.5 rounded-md px-1 pb-0.5 pt-1.5"
         >
-          {/* Surface effects, clipped to the dock. */}
+          {/* Glass and surface effects, clipped to the dock. The blur lives on this layer rather than
+              the items' parent so a hovered tile rising out of the dock can blur the desktop too. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 overflow-hidden rounded-md"
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-md bg-black/85 backdrop-blur-xl"
           >
             <motion.span
               className="absolute inset-0"

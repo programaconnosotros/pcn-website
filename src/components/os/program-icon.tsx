@@ -19,7 +19,7 @@ export function ProgramIcon({
     <span
       className={cn(
         'relative flex items-center justify-center rounded-md border bg-black/80 transition-all duration-200 ease-out',
-        'group-hover:-translate-y-1 group-hover:border-pcnGreen group-hover:shadow-[0_0_18px_-2px_#04f4be99] group-active:scale-95',
+        'group-hover:-translate-y-1 group-hover:border-pcnGreen group-hover:bg-black/90 group-hover:shadow-[0_0_18px_-2px_#04f4be99] group-hover:backdrop-blur-md group-active:scale-95',
         running ? 'border-pcnGreen-700 shadow-[0_0_10px_-4px_#04f4be]' : 'border-pcnGreen-300',
         className,
       )}
