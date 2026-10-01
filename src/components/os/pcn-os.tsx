@@ -46,6 +46,8 @@ type OsAction =
   | { type: 'focus'; id: string }
   | { type: 'close'; id: string }
   | { type: 'minimize'; id: string }
+  /** Clicking the desktop hides every window, like "show desktop". */
+  | { type: 'minimizeAll' }
   | { type: 'toggleMaximize'; id: string }
   | { type: 'rect'; id: string; rect: Rect }
   | { type: 'fit'; viewport: Viewport }
@@ -105,6 +107,8 @@ const reducer = (state: OsState, action: OsAction): OsState => {
       };
     case 'minimize':
       return updateWindow(state, action.id, () => ({ minimized: true }));
+    case 'minimizeAll':
+      return { ...state, windows: state.windows.map((win) => ({ ...win, minimized: true })) };
     case 'toggleMaximize':
       return updateWindow(state, action.id, (win) => ({ maximized: !win.maximized }));
     case 'rect':
@@ -292,7 +296,10 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   return (
     <div className="hidden os:block">
       <div className={cn('fixed inset-0 overflow-hidden', interactionCursor && 'select-none')}>
-        <OsWallpaper showHint={isOs && viewport !== null && state.windows.length === 0} />
+        <OsWallpaper
+          showHint={isOs && viewport !== null && state.windows.length === 0}
+          onPointerDown={() => dispatch({ type: 'minimizeAll' })}
+        />
         {isOs && <OsProcesses covered={covered} />}
         {isOs && viewport && (
           <OsPhotos

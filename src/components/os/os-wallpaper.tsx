@@ -2,9 +2,19 @@ import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 
 /** Desktop background: brand glows, a faint grid and the PCN OS watermark. */
-export function OsWallpaper({ showHint }: { showHint: boolean }) {
+export function OsWallpaper({
+  showHint,
+  onPointerDown,
+}: {
+  showHint: boolean;
+  onPointerDown: () => void;
+}) {
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden bg-[#020504]">
+    <div
+      aria-hidden
+      className="absolute inset-0 overflow-hidden bg-[#020504]"
+      onPointerDown={onPointerDown}
+    >
       <div className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pcnGreen/[0.07] blur-[180px]" />
       <div className="bg-grid-fade absolute inset-0" />
       <div className="absolute inset-0 flex select-none flex-col items-center justify-center gap-5 pb-24">
