@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { LocalDate } from '@/components/ui/local-date-time';
-import { PersonLink } from '@/components/people/person-link';
 import { PhotoActionsBar } from '@/components/photo-gallery/photo-actions-bar';
+import { PhotoPeople } from '@/components/photo-gallery/photo-people';
 import { PhotoKeyboardNav } from '@/components/photo-gallery/photo-keyboard-nav';
 import {
   keyCapClassName,
@@ -14,7 +14,7 @@ import {
   photoCaption,
   photoFileName,
 } from '@/components/photo-gallery/photo-utils';
-import { getAdminUser } from '@/lib/admin';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { optimizedOgImage } from '@/lib/og-image';
 import { getPhoto, getPhotoNeighbours } from '@/lib/photos';
 import { cn } from '@/lib/utils';
@@ -65,8 +65,10 @@ export default async function PhotoPage(props: Props) {
   const { id } = await props.params;
   const { evento } = await props.searchParams;
 
-  const [photo, admin] = await Promise.all([getPhoto(id), getAdminUser()]);
+  const [photo, session] = await Promise.all([getPhoto(id), getCurrentSession()]);
   if (!photo) notFound();
+  const viewer = session?.user ?? null;
+  const isAdmin = viewer?.role === 'ADMIN';
 
   // Browsing an event's photos keeps prev/next within that event.
   const scopeEventId = evento && evento === photo.eventId ? evento : undefined;
@@ -99,7 +101,7 @@ export default async function PhotoPage(props: Props) {
           }
           action={
             <>
-              {admin && (
+              {isAdmin && (
                 <Link
                   href={`/galeria/${photo.id}/editar`}
                   className={keyCapClassName}
@@ -185,19 +187,12 @@ export default async function PhotoPage(props: Props) {
           )}
 
           <Section title="en la foto">
-            {photo.tags.length > 0 ? (
-              <ul className="space-y-1.5">
-                {photo.tags.map(({ user }) => (
-                  <li key={user.id}>
-                    <PersonLink person={user} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="font-mono text-xs text-muted-foreground">
-                Todavía no hay nadie etiquetado.
-              </p>
-            )}
+            <PhotoPeople
+              photoId={photo.id}
+              people={photo.tags.map((tag) => tag.user)}
+              viewerId={viewer?.id ?? null}
+              isAdmin={isAdmin}
+            />
           </Section>
 
           <p className="hidden p-3 font-mono text-[10px] text-muted-foreground lg:block">
