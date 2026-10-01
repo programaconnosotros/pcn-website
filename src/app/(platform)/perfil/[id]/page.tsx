@@ -15,6 +15,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
 import { photoOrder } from '@/lib/photos';
+import { articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Pencil } from 'lucide-react';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
@@ -24,6 +25,7 @@ import {
   ContributionStats,
   ConversationRows,
   EmptyLine,
+  ArticleRows,
   OrganizedEventRows,
   PhotoGrid,
   ProfileStat,
@@ -285,49 +287,57 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
-  const [userTalks, projects, identities, organizedEvents, taggedPhotos] = await Promise.all([
-    prisma.talk.findMany({
-      where: { speakers: { some: { userId: user.id } } },
-      include: {
-        event: { select: { date: true, placeName: true, city: true } },
-        speakers: { orderBy: { order: 'asc' } },
-      },
-      orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-    }),
-    prisma.project.findMany({
-      where: { OR: [{ authorId: user.id }, { members: { some: { userId: user.id } } }] },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        logoUrl: true,
-        techStack: true,
-        authorId: true,
-        authorRole: true,
-        members: { where: { userId: user.id }, select: { role: true }, take: 1 },
-      },
-      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-    }),
-    getUserIdentities(user.id),
-    prisma.event.findMany({
-      where: { deletedAt: null, organizers: { some: { userId: user.id } } },
-      select: {
-        id: true,
-        name: true,
-        date: true,
-        isOnline: true,
-        placeName: true,
-        city: true,
-        flyerImages: true,
-      },
-      orderBy: { date: 'desc' },
-    }),
-    prisma.photo.findMany({
-      where: { tags: { some: { userId: user.id } } },
-      select: { id: true, thumbSrc: true, description: true },
-      orderBy: photoOrder,
-    }),
-  ]);
+  const [userTalks, projects, identities, organizedEvents, taggedPhotos, articleAuthorships] =
+    await Promise.all([
+      prisma.talk.findMany({
+        where: { speakers: { some: { userId: user.id } } },
+        include: {
+          event: { select: { date: true, placeName: true, city: true } },
+          speakers: { orderBy: { order: 'asc' } },
+        },
+        orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
+      }),
+      prisma.project.findMany({
+        where: { OR: [{ authorId: user.id }, { members: { some: { userId: user.id } } }] },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          logoUrl: true,
+          techStack: true,
+          authorId: true,
+          authorRole: true,
+          members: { where: { userId: user.id }, select: { role: true }, take: 1 },
+        },
+        orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      }),
+      getUserIdentities(user.id),
+      prisma.event.findMany({
+        where: { deletedAt: null, organizers: { some: { userId: user.id } } },
+        select: {
+          id: true,
+          name: true,
+          date: true,
+          isOnline: true,
+          placeName: true,
+          city: true,
+          flyerImages: true,
+        },
+        orderBy: { date: 'desc' },
+      }),
+      prisma.photo.findMany({
+        where: { tags: { some: { userId: user.id } } },
+        select: { id: true, thumbSrc: true, description: true },
+        orderBy: photoOrder,
+      }),
+      prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),
+    ]);
+
+  // Articles from /lectura that an admin marked as written by this user, newest first.
+  const writtenIds = new Set(articleAuthorships.map(({ articleId }) => articleId));
+  const userArticles = allArticles
+    .filter((article) => writtenIds.has(article.id))
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
   const userProjects: ProfileProject[] = projects.map(({ members, authorRole, ...project }) => ({
@@ -357,6 +367,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     proyectos: userProjects.length,
     consejos: user.advises.length,
     charlas: userTalks.length,
+    articulos: userArticles.length,
     eventos: organizedEvents.length,
     fotos: taggedPhotos.length,
     conversaciones: userConversations.length,
@@ -368,6 +379,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     userProjects.length +
       user.advises.length +
       userTalks.length +
+      userArticles.length +
       organizedEvents.length +
       taggedPhotos.length +
       userConversations.length +
@@ -496,7 +508,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 <RuledGrid
                   className={cn(
                     'grid-cols-2',
-                    contributions.length > 0 ? 'sm:grid-cols-3' : 'sm:grid-cols-4',
+                    contributions.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-5',
                   )}
                 >
                   <ProfileStat
@@ -510,8 +522,18 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     href={tabHref('consejos')}
                   />
                   <ProfileStat label="charlas" value={userTalks.length} href={tabHref('charlas')} />
+                  <ProfileStat
+                    label="artículos publicados"
+                    value={userArticles.length}
+                    href={tabHref('articulos')}
+                  />
                   {contributions.length > 0 ? (
                     <>
+                      <ProfileStat
+                        label="conversaciones"
+                        value={userConversations.length}
+                        href={tabHref('conversaciones')}
+                      />
                       <ProfileStat
                         label="PRs a pcn"
                         value={mergedPrs}
@@ -573,6 +595,17 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       href={userTalks.length > PREVIEW ? tabHref('charlas') : undefined}
                     />
                     <TalkRows talks={userTalks.slice(0, PREVIEW)} />
+                  </section>
+                )}
+
+                {userArticles.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="artículos"
+                      count={userArticles.length}
+                      href={userArticles.length > PREVIEW ? tabHref('articulos') : undefined}
+                    />
+                    <ArticleRows articles={userArticles.slice(0, PREVIEW)} />
                   </section>
                 )}
 
@@ -662,6 +695,16 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   <TalkRows talks={userTalks} />
                 ) : (
                   <EmptyLine>{firstName} todavía no dio ninguna charla.</EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'articulos' && (
+              <div className="mb-14">
+                {userArticles.length > 0 ? (
+                  <ArticleRows articles={userArticles} />
+                ) : (
+                  <EmptyLine>{firstName} todavía no publicó ningún artículo.</EmptyLine>
                 )}
               </div>
             )}
