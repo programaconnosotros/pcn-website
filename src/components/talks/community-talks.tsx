@@ -106,8 +106,6 @@ const linkClass =
 
 const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: TalkCellProps) => {
   const videoId = youtubeId(talk.videoUrl);
-  const cover =
-    talk.portraitUrl ?? (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null);
   const date = talkDate(talk);
   const location = talkLocation(talk);
   const eventTitle = talk.event?.name ?? talk.manualEventTitle;
@@ -117,20 +115,31 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
 
   return (
     <article className={cn(ruledCellClassName, 'group relative flex flex-col gap-2.5 p-3')}>
-      <span className="relative block aspect-video overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
-        {cover ? (
+      {/* Portraits are square flyers with their own text, so they're shown whole and unobstructed. */}
+      <span className="relative block aspect-square overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
+        {talk.portraitUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={cover}
+            src={talk.portraitUrl}
             alt=""
             loading="lazy"
-            className="size-full object-cover opacity-75 transition-[opacity,transform] duration-500 group-hover:scale-[1.04] group-hover:opacity-100"
+            className="size-full object-contain transition-opacity duration-300 group-hover:opacity-90"
           />
+        ) : videoId ? (
+          <>
+            {/* hqdefault is 4:3 with letterbox bars baked in; the scale crops them off. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+              alt=""
+              loading="lazy"
+              className="size-full scale-[1.34] object-cover opacity-75 transition-[opacity,transform] duration-500 group-hover:scale-[1.4] group-hover:opacity-100"
+            />
+            <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.18)_0_1px,transparent_1px_3px)]" />
+          </>
         ) : (
           <Placeholder title={talk.title} />
         )}
-        <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.18)_0_1px,transparent_1px_3px)]" />
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
 
         <span className="absolute left-1.5 top-1.5 bg-black/80 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600">
           #{String(index).padStart(3, '0')}
@@ -143,27 +152,6 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
             </span>
           </span>
         )}
-
-        <span className="absolute bottom-1.5 left-1.5 right-1.5 flex items-end justify-between gap-2 font-mono text-[10px]">
-          {date ? (
-            <span className="bg-black/80 px-1 tabular-nums text-pcnGreen">{formatDate(date)}</span>
-          ) : (
-            <span />
-          )}
-          {avatars.length > 0 && (
-            <span className="flex -space-x-1.5">
-              {avatars.slice(0, 3).map((speaker) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={speaker.id}
-                  src={speaker.user!.image!}
-                  alt=""
-                  className="size-6 rounded-full border border-pcnGreen-500 bg-black object-cover"
-                />
-              ))}
-            </span>
-          )}
-        </span>
       </span>
 
       <div className="flex items-start gap-2">
@@ -207,23 +195,39 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
 
       <div className="flex flex-col gap-0.5 font-mono text-[11px]">
         {talk.speakers.length > 0 && (
-          <p className="truncate text-muted-foreground">
-            <span className="text-pcnGreen-500">@ </span>
-            {talk.speakers.map((speaker, i) => (
-              <span key={speaker.id}>
-                {i > 0 && ', '}
-                {speaker.user ? (
-                  <Link
-                    href={`/perfil/${speaker.user.id}`}
-                    className="relative z-10 hover:text-pcnGreen hover:underline"
-                  >
-                    {speaker.speakerName}
-                  </Link>
-                ) : (
-                  speaker.speakerName
-                )}
+          <p className="flex items-center gap-1.5 truncate text-muted-foreground">
+            {avatars.length > 0 ? (
+              <span className="flex shrink-0 -space-x-1.5">
+                {avatars.slice(0, 3).map((speaker) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={speaker.id}
+                    src={speaker.user!.image!}
+                    alt=""
+                    className="size-4 rounded-full border border-pcnGreen-500 bg-black object-cover"
+                  />
+                ))}
               </span>
-            ))}
+            ) : (
+              <span className="text-pcnGreen-500">@</span>
+            )}
+            <span className="truncate">
+              {talk.speakers.map((speaker, i) => (
+                <span key={speaker.id}>
+                  {i > 0 && ', '}
+                  {speaker.user ? (
+                    <Link
+                      href={`/perfil/${speaker.user.id}`}
+                      className="relative z-10 hover:text-pcnGreen hover:underline"
+                    >
+                      {speaker.speakerName}
+                    </Link>
+                  ) : (
+                    speaker.speakerName
+                  )}
+                </span>
+              ))}
+            </span>
           </p>
         )}
         {eventTitle && (
@@ -241,10 +245,16 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
             )}
           </p>
         )}
-        {location && (
+        {(date || location) && (
           <p className="flex items-center gap-1 truncate text-muted-foreground/60">
-            <MapPin className="size-3 shrink-0 text-pcnGreen-500" />
-            {location}
+            {date && <span className="tabular-nums text-pcnGreen-600">{formatDate(date)}</span>}
+            {date && location && <span>·</span>}
+            {location && (
+              <>
+                <MapPin className="size-3 shrink-0 text-pcnGreen-500" />
+                <span className="truncate">{location}</span>
+              </>
+            )}
           </p>
         )}
       </div>
@@ -418,7 +428,7 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
                 {items.length} {items.length === 1 ? 'charla' : 'charlas'}
               </span>
             </h2>
-            <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            <RuledGrid className="grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {items.map((talk) => (
                 <TalkCell
                   key={talk.id}
