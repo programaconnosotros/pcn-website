@@ -14,6 +14,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
+import { photoOrder } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Pencil } from 'lucide-react';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
@@ -24,6 +25,7 @@ import {
   ConversationRows,
   EmptyLine,
   OrganizedEventRows,
+  PhotoGrid,
   ProfileStat,
   ProfileTabs,
   ProjectRows,
@@ -93,6 +95,7 @@ interface ProfilePageProps {
 // How many items of each section the overview shows before "ver todo".
 const PREVIEW = 2;
 const CONVERSATIONS_PREVIEW = 4;
+const PHOTOS_PREVIEW = 6;
 
 type ProfileTalk = {
   id: string;
@@ -282,7 +285,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
-  const [userTalks, projects, identities, organizedEvents] = await Promise.all([
+  const [userTalks, projects, identities, organizedEvents, taggedPhotos] = await Promise.all([
     prisma.talk.findMany({
       where: { speakers: { some: { userId: user.id } } },
       include: {
@@ -319,6 +322,11 @@ export default async function ProfilePage(props: ProfilePageProps) {
       },
       orderBy: { date: 'desc' },
     }),
+    prisma.photo.findMany({
+      where: { tags: { some: { userId: user.id } } },
+      select: { id: true, thumbSrc: true, description: true },
+      orderBy: photoOrder,
+    }),
   ]);
 
   // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
@@ -350,6 +358,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     consejos: user.advises.length,
     charlas: userTalks.length,
     eventos: organizedEvents.length,
+    fotos: taggedPhotos.length,
     conversaciones: userConversations.length,
     ...(contributions.length > 0 && { contribuciones: mergedPrs }),
   };
@@ -360,6 +369,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
       user.advises.length +
       userTalks.length +
       organizedEvents.length +
+      taggedPhotos.length +
       userConversations.length +
       contributions.length >
     0;
@@ -577,6 +587,17 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   </section>
                 )}
 
+                {taggedPhotos.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="fotos"
+                      count={taggedPhotos.length}
+                      href={taggedPhotos.length > PHOTOS_PREVIEW ? tabHref('fotos') : undefined}
+                    />
+                    <PhotoGrid photos={taggedPhotos.slice(0, PHOTOS_PREVIEW)} />
+                  </section>
+                )}
+
                 {userConversations.length > 0 && (
                   <section>
                     <SectionHeading
@@ -651,6 +672,22 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   <OrganizedEventRows events={organizedEvents} />
                 ) : (
                   <EmptyLine>{firstName} todavía no organizó ningún evento.</EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'fotos' && (
+              <div className="mb-14">
+                {taggedPhotos.length > 0 ? (
+                  <PhotoGrid photos={taggedPhotos} />
+                ) : (
+                  <EmptyLine>
+                    {firstName} todavía no aparece en ninguna foto de la{' '}
+                    <Link href="/galeria" className="text-pcnGreen hover:underline">
+                      galería
+                    </Link>
+                    .
+                  </EmptyLine>
                 )}
               </div>
             )}

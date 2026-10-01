@@ -13,6 +13,7 @@ export const PROFILE_TABS = [
   { id: 'consejos', label: 'consejos' },
   { id: 'charlas', label: 'charlas' },
   { id: 'eventos', label: 'eventos' },
+  { id: 'fotos', label: 'fotos' },
   { id: 'conversaciones', label: 'conversaciones' },
   { id: 'contribuciones', label: 'contribuciones' },
 ] as const;
@@ -247,6 +248,32 @@ export const OrganizedEventRows = ({ events }: { events: ProfileEvent[] }) => (
         </Link>
       );
     })}
+  </RuledGrid>
+);
+
+export type ProfilePhoto = { id: string; thumbSrc: string; description: string | null };
+
+// Square thumbnails of the photos the person was tagged in, each opening its gallery page.
+export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
+  <RuledGrid className="grid-cols-3 sm:grid-cols-4 xl:grid-cols-6">
+    {photos.map((photo) => (
+      <Link
+        key={photo.id}
+        href={`/galeria/${photo.id}`}
+        className={cn(ruledCellClassName, 'group block p-1')}
+      >
+        <span className="block aspect-square overflow-hidden bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo.thumbSrc}
+            alt={photo.description ?? 'Foto de la comunidad'}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover brightness-[0.85] transition duration-300 group-hover:scale-[1.04] group-hover:brightness-100"
+          />
+        </span>
+      </Link>
+    ))}
   </RuledGrid>
 );
 
