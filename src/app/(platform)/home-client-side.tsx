@@ -1,5 +1,6 @@
 'use client';
 
+import { FaqSection } from '@/components/home/faq-section';
 import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
@@ -77,6 +78,10 @@ const HomeClientSide = ({
 
       <Reveal>
         <SocialLinks />
+      </Reveal>
+
+      <Reveal>
+        <FaqSection />
       </Reveal>
 
       <Reveal>
