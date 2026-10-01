@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { checkboxClassName } from '@/components/ui/field-surface';
 import { Textarea } from '@/components/ui/textarea';
 import {
   talkProposalSchema,
@@ -162,10 +163,13 @@ function SpeakerFields({
                   id={`isProfessional-${index}`}
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                  className={checkboxClassName}
                 />
               </FormControl>
-              <FormLabel htmlFor={`isProfessional-${index}`} className="cursor-pointer">
+              <FormLabel
+                htmlFor={`isProfessional-${index}`}
+                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+              >
                 Soy profesional
               </FormLabel>
             </div>
@@ -217,10 +221,13 @@ function SpeakerFields({
                   id={`isStudent-${index}`}
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                  className={checkboxClassName}
                 />
               </FormControl>
-              <FormLabel htmlFor={`isStudent-${index}`} className="cursor-pointer">
+              <FormLabel
+                htmlFor={`isStudent-${index}`}
+                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+              >
                 Soy estudiante
               </FormLabel>
             </div>

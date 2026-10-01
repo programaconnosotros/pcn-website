@@ -6,8 +6,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+// Labels read like terminal prompts: a dim `>` that lights up, along with the label itself,
+// while the field inside the same FormItem (`group/field`) has focus.
 const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  [
+    'inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase leading-none tracking-[0.14em] text-pcnGreen-800 transition-colors duration-200',
+    "before:text-pcnGreen-500 before:transition-[color,text-shadow] before:content-['>']",
+    'group-focus-within/field:text-pcnGreen group-focus-within/field:before:text-pcnGreen group-focus-within/field:before:text-glow',
+    'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  ].join(' '),
 );
 
 const Label = React.forwardRef<

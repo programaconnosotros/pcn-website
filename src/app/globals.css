@@ -1162,3 +1162,221 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
     animation: none;
   }
 }
+
+/* Form fields (see components/ui/field-surface.ts). Every text input, textarea and select
+   trigger is a terminal prompt: mono text, a block caret, faint scanlines and two lit corner
+   brackets. Focusing it locks on: the frame glows, the brackets go bright and a scan beam keeps
+   sweeping along the bottom edge. An invalid field turns red and glitches once. All of it is
+   painted as backgrounds on the element itself, so callers keep a plain <input> they can size,
+   pad and position like any other. */
+@property --field-beam {
+  syntax: '<percentage>';
+  initial-value: -80%;
+  inherits: false;
+}
+@layer components {
+  .field-surface {
+    --field-corner: rgba(4, 244, 190, 0.55);
+    --field-beam-color: #04f4be;
+    font-family: var(--font-geist-mono), monospace;
+    caret-color: #04f4be;
+    caret-shape: block;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-image: linear-gradient(
+        90deg,
+        transparent,
+        var(--field-beam-color),
+        #d6fff6,
+        var(--field-beam-color),
+        transparent
+      ),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.035) 0 1px, transparent 1px 3px);
+    background-size:
+      40% 1px,
+      8px 2px,
+      2px 8px,
+      8px 2px,
+      2px 8px,
+      auto;
+    background-position:
+      var(--field-beam) 100%,
+      0 0,
+      0 0,
+      100% 100%,
+      100% 100%,
+      0 0;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    background-origin: border-box;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.25s,
+      color 0.2s,
+      --field-beam 0s;
+  }
+  .field-surface::placeholder {
+    color: hsl(var(--muted-foreground) / 0.55);
+    transition: opacity 0.2s;
+  }
+  .field-surface:hover:not(:disabled) {
+    --field-corner: rgba(4, 244, 190, 0.85);
+  }
+  .field-surface:focus-visible,
+  .field-surface[data-state='open'] {
+    --field-corner: #04f4be;
+    outline: none;
+    border-color: rgba(4, 244, 190, 0.7);
+    color: #d6fff6;
+    box-shadow:
+      0 0 0 1px rgba(4, 244, 190, 0.25),
+      0 0 22px -6px rgba(4, 244, 190, 0.7),
+      inset 0 0 18px -10px rgba(4, 244, 190, 0.8);
+    animation: field-beam 3.2s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+  }
+  .field-surface:focus-visible::placeholder {
+    opacity: 0.45;
+  }
+  .field-surface[aria-invalid='true'] {
+    --field-corner: hsl(var(--destructive));
+    --field-beam-color: hsl(var(--destructive));
+    border-color: hsl(var(--destructive) / 0.7);
+    caret-color: hsl(var(--destructive));
+    animation: field-glitch 0.35s steps(2) 1;
+  }
+  .field-surface[aria-invalid='true']:focus-visible {
+    box-shadow:
+      0 0 0 1px hsl(var(--destructive) / 0.3),
+      0 0 22px -6px hsl(var(--destructive) / 0.7);
+    animation: field-beam 3.2s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+  }
+  /* Disabled / read-only fields are hatched like a locked terminal. */
+  .field-surface:disabled,
+  .field-surface[readonly] {
+    --field-corner: rgba(4, 244, 190, 0.2);
+    border-style: dashed;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(4, 244, 190, 0.05) 0 2px,
+      transparent 2px 7px
+    );
+    background-size: auto;
+    background-position: 0 0;
+  }
+  /* Keep autofill from repainting the field in the browser's own colors. */
+  .field-surface:-webkit-autofill,
+  .field-surface:-webkit-autofill:hover,
+  .field-surface:-webkit-autofill:focus {
+    -webkit-text-fill-color: #04f4be;
+    transition: background-color 600000s 0s;
+  }
+  .field-surface::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1) sepia(1) saturate(6) hue-rotate(115deg);
+    opacity: 0.7;
+  }
+  .field-surface::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+  .field-surface::file-selector-button {
+    margin-right: 0.75rem;
+    border: 0;
+    border-right: 1px solid rgba(4, 244, 190, 0.3);
+    background: transparent;
+    color: #04f4be;
+    font: inherit;
+  }
+
+  /* A boxed terminal checkbox: an empty slot that fills with a glowing block when checked. */
+  .field-check {
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    border: 1px solid rgba(4, 244, 190, 0.45);
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.2s;
+  }
+  .field-check::before {
+    content: '';
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #04f4be;
+    box-shadow: 0 0 8px rgba(4, 244, 190, 0.9);
+    transform: scale(0);
+    transition: transform 0.15s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .field-check:checked {
+    border-color: #04f4be;
+    box-shadow: 0 0 12px -3px rgba(4, 244, 190, 0.8);
+  }
+  .field-check:checked::before {
+    transform: scale(1);
+  }
+  .field-check:hover,
+  .field-check:focus-visible {
+    border-color: #04f4be;
+    outline: none;
+  }
+  .field-check:focus-visible {
+    box-shadow: 0 0 0 2px rgba(4, 244, 190, 0.3);
+  }
+  .field-check:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Validation messages stream in with a short glitch. */
+  .field-message {
+    animation: field-message-in 0.3s steps(3) both;
+  }
+}
+@keyframes field-beam {
+  0% {
+    --field-beam: -80%;
+  }
+  45%,
+  100% {
+    --field-beam: 180%;
+  }
+}
+@keyframes field-glitch {
+  0% {
+    transform: translateX(-2px);
+    filter: hue-rotate(40deg) brightness(1.4);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes field-message-in {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-surface,
+  .field-surface:focus-visible,
+  .field-surface[data-state='open'],
+  .field-surface[aria-invalid='true'],
+  .field-message {
+    animation: none;
+  }
+}

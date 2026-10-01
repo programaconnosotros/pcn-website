@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { checkboxClassName } from '@/components/ui/field-surface';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { FileUpload } from '@/components/ui/file-upload';
@@ -190,10 +191,13 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
                       // El repo solo aplica a proyectos open-source; no lo dejamos validando oculto.
                       if (!e.target.checked) form.setValue('repoUrl', '', { shouldValidate: true });
                     }}
-                    className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                    className={checkboxClassName}
                   />
                 </FormControl>
-                <FormLabel htmlFor="isOpenSource" className="cursor-pointer">
+                <FormLabel
+                  htmlFor="isOpenSource"
+                  className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+                >
                   Es open-source
                 </FormLabel>
               </div>
