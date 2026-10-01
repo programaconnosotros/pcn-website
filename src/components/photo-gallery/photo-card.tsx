@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { Download, Share2 } from 'lucide-react';
-import { useParallax } from './use-parallax';
+import { parallaxStyle, useParallax } from './use-parallax';
 import {
   formatPhotoDate,
   keyCapClassName,
@@ -26,10 +26,6 @@ const cornerClassName =
 // A dimmed, scanlined thumbnail that powers up on hover: full colour, lit corner brackets and a
 // file-name caption sliding up from the bottom. The photo is taller than its frame and drifts
 // against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
-const parallaxStyle = {
-  transform:
-    'translate3d(calc(var(--px, 0) * -6px), calc(var(--parallax, 0) * 8% + var(--py, 0) * -6px), 0)',
-};
 export function PhotoCard({ photo, index, total, onOpen, onShare }: PhotoCardProps) {
   const { download, isDownloading } = usePhotoDownload();
   const frameRef = useRef<HTMLDivElement>(null);

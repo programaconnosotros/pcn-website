@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowUpRight,
@@ -30,6 +30,7 @@ import {
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
 import { cn } from '@/lib/utils';
+import { parallaxStyle, useParallax } from '@/components/photo-gallery/use-parallax';
 import type { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
 
 export type TalkWithEvent = Awaited<ReturnType<typeof fetchPublicTalks>>[number];
@@ -90,6 +91,12 @@ interface TalkCellProps {
   onDelete: () => void;
 }
 
+const coverClassName =
+  'size-full brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-hover:brightness-100 group-hover:saturate-100 group-focus-within:brightness-100 group-focus-within:saturate-100';
+
+const cornerClassName =
+  'pointer-events-none absolute size-3 border-pcnGreen opacity-0 transition-all duration-300 group-hover:opacity-100 group-focus-within:opacity-100';
+
 const linkClass =
   'relative z-10 inline-flex items-center gap-1 rounded-sm border border-pcnGreen-200 px-1.5 py-0.5 font-mono text-[10px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen';
 
@@ -101,36 +108,52 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
   const avatars = talk.speakers.filter((speaker) => speaker.user?.image);
   // Videos that aren't on YouTube can't be embedded, so they open in a new tab instead.
   const primaryAction = videoId ? onPlay : talk.slideImages.length > 0 ? onSlides : null;
+  const frameRef = useRef<HTMLSpanElement>(null);
+  useParallax(frameRef);
 
   return (
     <article className={cn(ruledCellClassName, 'group relative flex flex-col gap-2.5 p-3')}>
-      {/* Portraits are square flyers with their own text, so they're shown whole and unobstructed. */}
-      <span className="relative block aspect-square overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
-        {talk.portraitUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={talk.portraitUrl}
-            alt=""
-            loading="lazy"
-            className="size-full object-contain transition-opacity duration-300 group-hover:opacity-90"
-          />
-        ) : videoId ? (
-          <>
-            {/* hqdefault is 4:3 with letterbox bars baked in; the scale crops them off. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* Same window as the gallery photos: a dimmed, scanlined cover that powers up on hover, with
+          lit corner brackets and an oversized layer drifting with the scroll and the pointer. */}
+      <span
+        ref={frameRef}
+        className="relative block aspect-square overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500"
+      >
+        <span
+          aria-hidden
+          style={parallaxStyle}
+          className="absolute inset-x-0 -top-[12%] block h-[124%] transition-transform duration-150 ease-out will-change-transform"
+        >
+          {talk.portraitUrl ? (
+            // Portraits are square flyers with their own text, so they're shown whole.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={talk.portraitUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className={cn(coverClassName, 'object-contain group-hover:scale-[1.04]')}
+            />
+          ) : videoId ? (
+            // hqdefault is 4:3 with letterbox bars baked in; the scale crops them off.
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
               alt=""
               loading="lazy"
-              className="size-full scale-[1.34] object-cover opacity-75 transition-[opacity,transform] duration-500 group-hover:scale-[1.4] group-hover:opacity-100"
+              decoding="async"
+              className={cn(coverClassName, 'scale-[1.34] object-cover group-hover:scale-[1.4]')}
             />
-            <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.18)_0_1px,transparent_1px_3px)]" />
-          </>
-        ) : (
-          <Placeholder title={talk.title} />
-        )}
+          ) : (
+            <Placeholder title={talk.title} />
+          )}
+        </span>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.22)_0_1px,transparent_1px_3px)] transition-opacity duration-500 group-hover:opacity-0"
+        />
 
-        <span className="absolute left-1.5 top-1.5 bg-black/80 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600">
+        <span className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm">
           #{String(index).padStart(3, '0')}
         </span>
 
@@ -141,6 +164,17 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
             </span>
           </span>
         )}
+
+        <span aria-hidden className={cn(cornerClassName, 'left-1 top-1 border-l-2 border-t-2')} />
+        <span aria-hidden className={cn(cornerClassName, 'right-1 top-1 border-r-2 border-t-2')} />
+        <span
+          aria-hidden
+          className={cn(cornerClassName, 'bottom-1 left-1 border-b-2 border-l-2')}
+        />
+        <span
+          aria-hidden
+          className={cn(cornerClassName, 'bottom-1 right-1 border-b-2 border-r-2')}
+        />
       </span>
 
       <div className="flex items-start gap-2">

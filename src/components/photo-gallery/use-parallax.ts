@@ -50,6 +50,15 @@ const getObserver = () =>
   }));
 
 /**
+ * Inline style for the oversized layer inside a `useParallax` frame: it drifts against the scroll
+ * and away from the pointer, so the frame reads as a window onto a deeper layer.
+ */
+export const parallaxStyle = {
+  transform:
+    'translate3d(calc(var(--px, 0) * -6px), calc(var(--parallax, 0) * 8% + var(--py, 0) * -6px), 0)',
+};
+
+/**
  * Sets `--parallax` (-1…1) on the element as it scrolls through the viewport, and `--px`/`--py`
  * (-1…1) while the pointer moves over it, for the photo inside to drift with some depth.
  */
