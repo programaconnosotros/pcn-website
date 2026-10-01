@@ -92,7 +92,7 @@ export const socialNetworks = [
 const comunidadItems: NavItem[] = [
   { title: 'Historia', url: '/historia', icon: ScrollText },
   { title: 'Galería', url: '/galeria', icon: Image },
-  { title: 'Sponsors', url: '/sponsors', icon: Handshake },
+  { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },
   { title: 'Redes', icon: Share2, items: socialNetworks },
 ];

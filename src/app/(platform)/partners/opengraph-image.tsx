@@ -3,8 +3,8 @@ import { renderSectionCard, sectionCardAlt } from '@/lib/og/section-cards';
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
-export const alt = sectionCardAlt('sponsors');
+export const alt = sectionCardAlt('partners');
 
 export default function Image() {
-  return renderSectionCard('sponsors');
+  return renderSectionCard('partners');
 }

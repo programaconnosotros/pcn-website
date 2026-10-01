@@ -223,9 +223,9 @@ export const OS_PROGRAMS: OsProgram[] = [
     pinned: true,
   },
   {
-    id: 'sponsors',
-    name: 'Sponsors',
-    url: '/sponsors',
+    id: 'partners',
+    name: 'Partners',
+    url: '/partners',
     icon: Handshake,
     color: 'from-teal-300 to-emerald-700',
     group: 'Comunidad',

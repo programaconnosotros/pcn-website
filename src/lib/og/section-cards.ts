@@ -190,9 +190,9 @@ const SECTION_CARDS = {
       'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
     meta: [EVENTS],
   },
-  sponsors: {
-    command: 'cat sponsors.txt',
-    title: 'Sponsors',
+  partners: {
+    command: 'cat partners.txt',
+    title: 'Partners',
     description:
       'Las empresas y organizaciones que apoyan a programaConNosotros y hacen posible que la comunidad crezca.',
     meta: ['gracias por el apoyo'],

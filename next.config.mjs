@@ -4,6 +4,9 @@ const nextConfig = {
     root: import.meta.dirname,
   },
   serverExternalPackages: ['jsdom'],
+  async redirects() {
+    return [{ source: '/sponsors', destination: '/partners', permanent: true }];
+  },
   images: {
     remotePatterns: [
       {

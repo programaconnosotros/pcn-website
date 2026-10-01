@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
+    area: 'partners',
+    title: 'Sponsors ahora es Partners',
+    description:
+      'La página de sponsors pasa a llamarse partners; los links viejos redirigen solos.',
+    authors: ['agustin-sanc'],
+    href: '/partners',
+  },
+  {
+    date: '2026-10-01',
     area: 'changelog',
     title: 'Changelog de la plataforma',
     description:
@@ -271,7 +280,7 @@ export const changelog: ChangelogEntry[] = [
     title: 'Sponsors en la barra lateral',
     description: 'La página de sponsors ahora está en la sección Comunidad de la barra lateral.',
     authors: ['MaxiR23'],
-    href: '/sponsors',
+    href: '/partners',
   },
 
   // 2026-09-30: the rest of the terminal redesign day.
@@ -354,7 +363,7 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Macch es nuevo sponsor de la comunidad, y todos los logos se muestran al mismo tamaño y sin fondos.',
     authors: ['agustin-sanc'],
-    href: '/sponsors',
+    href: '/partners',
   },
   {
     date: '2026-09-30',
@@ -767,7 +776,7 @@ export const changelog: ChangelogEntry[] = [
     title: 'Xetro y Once57 se suman como sponsors',
     description: 'Nuevos sponsors en la página de inicio.',
     authors: ['agustin-sanc'],
-    href: '/sponsors',
+    href: '/partners',
   },
   {
     date: '2026-04-12',
@@ -808,7 +817,7 @@ export const changelog: ChangelogEntry[] = [
     title: 'ASZ Software ahora es DIZENZ',
     description: 'El sponsor principal aparece con su nuevo nombre.',
     authors: ['agustin-sanc'],
-    href: '/sponsors',
+    href: '/partners',
   },
 
   // 2025-12: the big platform push.
@@ -843,7 +852,7 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Sección de sponsors con Bowery, IEEE Computer Society, Blackbox Cowork, UTN-FRT y Endpoint Consulting, y una invitación a sumarse.',
     authors: ['agustin-sanc'],
-    href: '/sponsors',
+    href: '/partners',
   },
   {
     date: '2025-12-28',

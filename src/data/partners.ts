@@ -1,16 +1,16 @@
-export interface Sponsor {
+export interface Partner {
   name: string;
   url: string;
   logo: string;
   description: string;
   location: string;
-  /** Show the sponsor name under the logo. */
+  /** Show the partner name under the logo. */
   showName?: boolean;
   /** Dark logo on a transparent canvas; rendered as a white mark on the dark theme. */
   monochromeOnDark?: boolean;
 }
 
-export const sponsors: Sponsor[] = [
+export const partners: Partner[] = [
   {
     name: 'DIZENZ',
     url: 'https://dizenz.com',
@@ -95,4 +95,4 @@ export const sponsors: Sponsor[] = [
   },
 ];
 
-export const SPONSOR_CONTACT_URL = 'https://wa.me/5493815777562';
+export const PARTNER_CONTACT_URL = 'https://wa.me/5493815777562';
