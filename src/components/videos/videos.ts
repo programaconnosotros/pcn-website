@@ -97,6 +97,7 @@ const allVideos: Video[] = [
   {
     id: 'iRGc8KQDyQ8',
     title: 'Composition, caching, and architecture in modern Next.js',
+    speaker: 'Aurora Scharff (Crayon Consulting)',
     channel: 'Vercel',
     date: '2025-12-03',
     durationSeconds: 1787,
@@ -105,6 +106,7 @@ const allVideos: Video[] = [
   {
     id: 'WT7_TJS0tFE',
     title: 'Next.js for AI agents',
+    speaker: 'Jude Gao (Vercel)',
     channel: 'Vercel',
     date: '2025-11-17',
     durationSeconds: 1542,
@@ -113,6 +115,7 @@ const allVideos: Video[] = [
   {
     id: 'f--3aG0XfCw',
     title: 'Next.js at the speed of Bun',
+    speaker: 'Lydia Hallie (Bun)',
     channel: 'Vercel',
     date: '2025-12-15',
     durationSeconds: 1131,
