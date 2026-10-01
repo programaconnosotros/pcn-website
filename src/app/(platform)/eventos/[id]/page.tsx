@@ -18,6 +18,7 @@ import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
+import { PersonLink } from '@/components/people/person-link';
 
 type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
 
@@ -387,6 +388,27 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                   {event.description}
                 </p>
+              </Section>
+            )}
+
+            {/* Organizadores, con link a su perfil */}
+            {(event.organizers.length > 0 || canEdit) && (
+              <Section title="organizadores">
+                <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                  {event.organizers.map(({ user }) => (
+                    <li key={user.id}>
+                      <PersonLink person={user} />
+                    </li>
+                  ))}
+                </ul>
+                {canEdit && (
+                  <Link
+                    href={`/eventos/${id}/organizadores`}
+                    className="mt-2 block text-right font-mono text-xs text-muted-foreground hover:text-pcnGreen"
+                  >
+                    gestionar organizadores →
+                  </Link>
+                )}
               </Section>
             )}
 
