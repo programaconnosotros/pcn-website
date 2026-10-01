@@ -18,6 +18,7 @@ import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
+import { canEditEvent } from '@/lib/event-permissions';
 
 type EventWithImages = Event & {
   images: Images[];
@@ -92,6 +93,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   // Verificar si el usuario es admin y obtener datos de sesión
   const sessionId = (await cookies()).get('sessionId')?.value;
   let isAdmin = false;
+  let canEdit = false;
   let userId: string | null = null;
 
   if (sessionId) {
@@ -105,6 +107,17 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
         isAdmin = true;
       }
       userId = session.userId;
+
+      // Ambassadors editan los eventos que crearon o en los que son administradores
+      if (isAdmin) {
+        canEdit = true;
+      } else if (event && session.user.isAmbassador) {
+        const admins = await prisma.eventAdmin.findMany({
+          where: { eventId: id },
+          select: { userId: true },
+        });
+        canEdit = canEditEvent(session.user, { ...event, admins });
+      }
     }
   }
 
@@ -208,7 +221,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             action={
               <>
                 <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
-                {isAdmin && (
+                {canEdit && (
                   <Link href={`/eventos/${id}/editar`}>
                     <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                       <Edit className="h-4 w-4" />

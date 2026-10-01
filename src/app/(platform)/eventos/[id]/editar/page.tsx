@@ -1,7 +1,7 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { canCreateEvents, canDeleteEvent, canManageEventAdmins } from '@/lib/event-permissions';
 import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
@@ -11,26 +11,14 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
   const id = params.id;
 
-  const sessionId = (await cookies()).get('sessionId')?.value;
+  const session = await getCurrentSession();
 
-  if (!sessionId) {
+  if (!canCreateEvents(session?.user)) {
     redirect(`/eventos/${id}`);
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session) {
-    redirect(`/eventos/${id}`);
-  }
-
-  if (session.user.role !== 'ADMIN') {
-    redirect(`/eventos/${id}`);
-  }
-
-  const event = await fetchEventForEdit(id);
+  // Ambassadors sin acceso a este evento vuelven al detalle
+  const event = await fetchEventForEdit(id).catch(() => redirect(`/eventos/${id}`));
 
   if (!event) {
     redirect('/eventos');
@@ -73,13 +61,18 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
                 { label: event.name, href: `/eventos/${id}` },
                 { label: 'editar' },
               ]}
-              action={<DeleteEventButton eventId={id} eventName={event.name} />}
+              action={
+                canDeleteEvent(session.user, event) && (
+                  <DeleteEventButton eventId={id} eventName={event.name} />
+                )
+              }
             />
           </StickyHeader>
 
           <EditEventForm
             eventId={id}
             defaultValues={defaultValues}
+            canManageAdmins={canManageEventAdmins(session.user, event)}
             initialAdmins={event.admins.map(({ user }) => user)}
             createdById={event.createdById}
           />

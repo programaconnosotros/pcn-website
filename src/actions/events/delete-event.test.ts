@@ -42,6 +42,13 @@ const existingEvent = {
   deletedAt: null,
 };
 
+const ambassadorSession = {
+  ...adminSession,
+  id: 'session-amb',
+  userId: 'user-amb',
+  user: { ...adminUser, id: 'user-amb', role: 'REGULAR' as const, isAmbassador: true },
+};
+
 describe('deleteEvent', () => {
   it('throws when there is no sessionId cookie', async () => {
     mockCookies();
@@ -97,5 +104,33 @@ describe('deleteEvent', () => {
     expect(prismaMock.event.update).toHaveBeenCalledTimes(1);
     expect(revalidatePath).toHaveBeenCalledWith('/eventos');
     expect(redirect).toHaveBeenCalledWith('/eventos');
+  });
+
+  it('does not let event admins delete events they did not create', async () => {
+    mockCookies({ sessionId: 'session-amb' });
+    prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      ...existingEvent,
+      createdById: 'someone-else',
+      admins: [{ userId: 'user-amb' }],
+    } as any);
+
+    await expect(deleteEvent('event-1')).rejects.toThrow(
+      'Solo puedes eliminar los eventos que creaste',
+    );
+    expect(prismaMock.event.update).not.toHaveBeenCalled();
+  });
+
+  it('lets ambassadors delete the events they created', async () => {
+    mockCookies({ sessionId: 'session-amb' });
+    prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      ...existingEvent,
+      createdById: 'user-amb',
+      admins: [],
+    } as any);
+
+    await expect(deleteEvent('event-1')).rejects.toThrow('NEXT_REDIRECT:/eventos');
+    expect(prismaMock.event.update).toHaveBeenCalledTimes(1);
   });
 });

@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { buildEventAdmins } from './build-event-admins';
+import { canCreateEvents } from '@/lib/event-permissions';
 
 export const createEvent = async (data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
@@ -25,7 +26,7 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('Sesión no encontrada');
   }
 
-  if (session.user.role !== 'ADMIN') {
+  if (!canCreateEvents(session.user)) {
     throw new Error('No tienes permisos para crear eventos');
   }
 

@@ -1,21 +1,30 @@
 import { prismaMock } from '@/test/prisma';
+import { mockCookies } from '@/test/cookies';
 import { fetchEventForEdit } from './fetch-event-for-edit';
-import { requireAdmin } from '@/lib/admin';
 
-// Admin-only data: every test runs as an admin unless it says otherwise.
-jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
+const admin = { id: 'admin-1', role: 'ADMIN' as const, isAmbassador: false };
+const ambassador = { id: 'amb-1', role: 'REGULAR' as const, isAmbassador: true };
+const regular = { id: 'user-1', role: 'REGULAR' as const, isAmbassador: false };
+
+const loginAs = (user: typeof admin | typeof regular) => {
+  mockCookies({ sessionId: `session-${user.id}` });
+  prismaMock.session.findUnique.mockResolvedValue({ id: 's', userId: user.id, user } as any);
+};
 
 const mockEvent = {
   id: 'event-1',
   name: 'Tech Talk',
   date: new Date('2026-08-15'),
   deletedAt: new Date('2026-01-01'),
+  createdById: null,
   images: [],
   sponsors: [],
+  admins: [],
 };
 
 describe('fetchEventForEdit', () => {
   it('returns the event when found (including soft-deleted events)', async () => {
+    loginAs(admin);
     prismaMock.event.findUnique.mockResolvedValue(mockEvent as any);
 
     const result = await fetchEventForEdit('event-1');
@@ -25,6 +34,7 @@ describe('fetchEventForEdit', () => {
   });
 
   it('returns null when the event does not exist', async () => {
+    loginAs(admin);
     prismaMock.event.findUnique.mockResolvedValue(null);
 
     const result = await fetchEventForEdit('non-existent');
@@ -34,8 +44,28 @@ describe('fetchEventForEdit', () => {
 });
 
 describe('fetchEventForEdit access', () => {
-  it('rejects anyone who is not an admin', async () => {
-    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+  it('rejects anyone who is not an admin or an ambassador', async () => {
+    loginAs(regular);
+
+    await expect(fetchEventForEdit('event-1')).rejects.toThrow('No autorizado');
+    expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('returns the events an ambassador created', async () => {
+    loginAs(ambassador);
+    const own = { ...mockEvent, deletedAt: null, createdById: 'amb-1' };
+    prismaMock.event.findUnique.mockResolvedValue(own as any);
+
+    await expect(fetchEventForEdit('event-1')).resolves.toEqual(own);
+  });
+
+  it('rejects ambassadors on events they do not administer', async () => {
+    loginAs(ambassador);
+    prismaMock.event.findUnique.mockResolvedValue({
+      ...mockEvent,
+      deletedAt: null,
+      createdById: 'someone-else',
+    } as any);
 
     await expect(fetchEventForEdit('event-1')).rejects.toThrow('No autorizado');
   });

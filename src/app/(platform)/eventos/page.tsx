@@ -4,8 +4,8 @@ import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
 import { Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { canCreateEvents } from '@/lib/event-permissions';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -31,20 +31,8 @@ export const metadata: Metadata = {
 };
 
 const EventsPage = async () => {
-  const sessionId = (await cookies()).get('sessionId')?.value;
-
-  let isAdmin = false;
-
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (session?.user.role === 'ADMIN') {
-      isAdmin = true;
-    }
-  }
+  // Admins y ambassadors pueden crear eventos
+  const canCreate = canCreateEvents((await getCurrentSession())?.user);
 
   return (
     <>
@@ -57,7 +45,7 @@ const EventsPage = async () => {
                 meta="meetups, hackathons, coworks, etc."
                 className="mb-0 flex-1"
               />
-              {!isAdmin && (
+              {!canCreate && (
                 <Link
                   href="https://wa.me/5493815777562"
                   target="_blank"
@@ -67,7 +55,7 @@ const EventsPage = async () => {
                   quiero organizar algo
                 </Link>
               )}
-              {isAdmin && (
+              {canCreate && (
                 <Link href="/eventos/nuevo">
                   <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                     <Plus className="h-4 w-4" />
