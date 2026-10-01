@@ -15,7 +15,7 @@ export interface Partner {
 
 export const partners: Partner[] = [
   {
-    name: 'DIZENZ',
+    name: 'Dizenz',
     kind: 'empresa',
     url: 'https://dizenz.com',
     logo: '/dizenz-logo.webp',
@@ -115,6 +115,7 @@ export const partners: Partner[] = [
     description:
       'Asociación de empresas e instituciones que impulsan la industria del software en Tucumán.',
     location: 'Tucumán, Argentina',
+    showName: true,
   },
   {
     name: 'SaltaDev',
@@ -123,6 +124,7 @@ export const partners: Partner[] = [
     logo: '/salta-dev-logo.webp',
     description: 'Comunidad de desarrolladores de Salta.',
     location: 'Salta, Argentina',
+    showName: true,
   },
   {
     name: 'FormosaDev',
@@ -131,6 +133,7 @@ export const partners: Partner[] = [
     logo: '/formosa-dev-logo.webp',
     description: 'Comunidad de desarrolladores de Formosa.',
     location: 'Formosa, Argentina',
+    showName: true,
   },
 ];
 
