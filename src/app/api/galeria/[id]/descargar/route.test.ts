@@ -32,17 +32,18 @@ describe('GET /api/galeria/[id]/descargar', () => {
     } as any);
   });
 
-  it('redirects uploaded files to a presigned S3 download', async () => {
+  it('answers uploaded files with a presigned S3 download URL', async () => {
     const response = await download();
 
-    expect(response.status).toBe(302);
+    expect(response.status).toBe(200);
     expect(getPresignedDownloadUrl).toHaveBeenCalledWith(
       'gallery/abc/full.webp',
       'pcn-2026-05-12-123456.webp',
     );
-    expect(response.headers.get('location')).toBe(
-      'https://s3.example.com/gallery/abc/full.webp?dl=pcn-2026-05-12-123456.webp',
-    );
+    expect(await response.json()).toEqual({
+      url: 'https://s3.example.com/gallery/abc/full.webp?dl=pcn-2026-05-12-123456.webp',
+    });
+    expect(response.headers.get('cache-control')).toBe('private, no-store');
   });
 
   it('keeps the video extension in the file name', async () => {

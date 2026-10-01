@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, Share2 } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 import { keyCapClassName, photoCaption } from './photo-utils';
-import { galleryDownloadUrl } from '@/lib/gallery-urls';
+import { DownloadKey } from './download-key';
 import { ShareDialog } from './share-dialog';
 
 type Props = {
@@ -22,10 +22,7 @@ export function PhotoActionsBar({ photo }: Props) {
 
   return (
     <div className="flex gap-1">
-      <a href={galleryDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
-        <Download className="size-3.5" />
-        <span className="sr-only">Descargar</span>
-      </a>
+      <DownloadKey photoId={photo.id} />
       <button
         type="button"
         className={keyCapClassName}

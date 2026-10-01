@@ -2,11 +2,11 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { Download, Play, Share2 } from 'lucide-react';
+import { Play, Share2 } from 'lucide-react';
 import type { GalleryTile } from '@/lib/gallery';
 import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
-import { galleryDownloadUrl } from '@/lib/gallery-urls';
+import { DownloadKey } from './download-key';
 import { formatDuration } from '@/lib/gallery-filters';
 
 interface PhotoCardProps {
@@ -84,15 +84,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       <span aria-hidden className={`${cornerClassName} bottom-1 right-1 border-b-2 border-r-2`} />
 
       <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
-        <a
-          href={galleryDownloadUrl(photo.id)}
-          download
-          className={keyCapClassName}
-          title="Descargar"
-        >
-          <Download className="size-3.5" />
-          <span className="sr-only">Descargar</span>
-        </a>
+        <DownloadKey photoId={photo.id} />
         <button type="button" className={keyCapClassName} onClick={onShare} title="Compartir">
           <Share2 className="size-3.5" />
           <span className="sr-only">Compartir</span>

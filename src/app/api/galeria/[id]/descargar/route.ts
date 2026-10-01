@@ -11,8 +11,9 @@ import { CLOUDFRONT_URL, getPresignedDownloadUrl } from '@/lib/s3';
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
 // Downloads a gallery photo or video as an attachment, rate limited per user (or IP when logged
-// out). Uploaded files redirect to a presigned S3 URL, so videos never pass through the server;
-// photos stored in /public are read from there.
+// out). Uploaded files answer with a presigned S3 URL as JSON, which the download key then opens,
+// so videos never pass through the server. It isn't a redirect because the production proxy turns
+// 302s into 200s. Photos stored in /public are served from there.
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await enforceRateLimit('photoDownload');
@@ -35,9 +36,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   if (isSignedGallerySrc(item.src)) {
     const url = await getPresignedDownloadUrl(item.src.slice(CLOUDFRONT_URL.length + 1), fileName);
-    const response = NextResponse.redirect(url, 302);
-    response.headers.set('Cache-Control', 'private, no-store');
-    return response;
+    return NextResponse.json({ url }, { headers: { 'Cache-Control': 'private, no-store' } });
   }
 
   const file = path.join(PUBLIC_DIR, decodeURIComponent(item.src));
