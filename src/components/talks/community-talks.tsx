@@ -70,17 +70,6 @@ const initials = (name: string) =>
     .map((word) => word[0]?.toUpperCase())
     .join('');
 
-const Stat = ({ value, label }: { value: number | string; label: string }) => (
-  <div className="flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2.5">
-    <span className="text-glow font-mono text-2xl font-semibold tabular-nums leading-none text-pcnGreen">
-      {value}
-    </span>
-    <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-      {label}
-    </span>
-  </div>
-);
-
 // Cover for talks without a portrait or video: the title's initials over a dotted grid.
 const Placeholder = ({ title }: { title: string }) => (
   <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle,rgba(4,244,190,0.18)_1px,transparent_1px)] bg-[length:12px_12px]">
@@ -309,31 +298,12 @@ interface Props {
   onDelete: (_talk: TalkWithEvent) => void;
 }
 
-/** The community's own talks: stats, search and filters, grouped by year on the ruled grid. */
+/** The community's own talks: search and filters, grouped by year on the ruled grid. */
 export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('todas');
   const [playing, setPlaying] = useState<TalkWithEvent | null>(null);
   const [slides, setSlides] = useState<TalkWithEvent | null>(null);
-
-  const stats = useMemo(() => {
-    const speakers = new Set(
-      talks.flatMap((t) => t.speakers.map((s) => s.userId ?? s.speakerName)),
-    );
-    const events = new Set(
-      talks.map((t) => t.event?.id ?? t.manualEventTitle).filter((e): e is string => !!e),
-    );
-    const years = talks
-      .map(talkDate)
-      .filter((d): d is Date => !!d)
-      .map((d) => d.getFullYear());
-    return {
-      speakers: speakers.size,
-      events: events.size,
-      videos: talks.filter((t) => t.videoUrl).length,
-      since: years.length ? Math.min(...years) : null,
-    };
-  }, [talks]);
 
   // Numbered oldest first, so #001 is the community's first talk and the number never changes.
   const numbers = useMemo(
@@ -369,14 +339,7 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
 
   return (
     <>
-      <div className="grid grid-cols-2 border-l border-t border-pcnGreen-200 bg-black/40 sm:grid-cols-4">
-        <Stat value={talks.length} label="charlas" />
-        <Stat value={stats.speakers} label="speakers" />
-        <Stat value={stats.videos} label="con video" />
-        <Stat value={stats.since ?? stats.events} label={stats.since ? 'desde' : 'eventos'} />
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-x border-pcnGreen-200 bg-black/60 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-x border-t border-pcnGreen-200 bg-black/60 px-3 py-2">
         <SearchBar
           searchQuery={query}
           setSearchQuery={setQuery}
