@@ -96,6 +96,10 @@ export function CollaboratorsField({
     setResults([]);
   }
 
+  function updateRole(index: number, role: string) {
+    onChange(value.map((member, i) => (i === index ? { ...member, role } : member)));
+  }
+
   function removeAt(index: number) {
     onChange(value.filter((_, i) => i !== index));
   }
@@ -103,26 +107,41 @@ export function CollaboratorsField({
   return (
     <div ref={containerRef} className="relative space-y-2">
       {value.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5">
+        <ul className="divide-y divide-dashed divide-pcnGreen-200 border border-dashed border-pcnGreen-200">
           {value.map((member, index) => (
             <li
               key={member.userId ?? `name-${index}`}
-              className="flex items-center gap-1.5 rounded-full border border-input bg-muted/40 py-0.5 pl-0.5 pr-1 text-xs"
+              className="flex items-center gap-2 px-2 py-1.5"
             >
               <Avatar
                 name={member.memberName}
                 image={member.userId ? images[member.userId] ?? null : null}
-                size={20}
+                size={22}
               />
-              <span>{member.memberName}</span>
-              {!member.userId && <span className="text-muted-foreground">(sin cuenta)</span>}
+              <span className="min-w-0 flex-1 truncate text-sm">
+                {member.memberName}
+                {!member.userId && (
+                  <span className="text-xs text-muted-foreground"> (sin cuenta)</span>
+                )}
+              </span>
+              <Input
+                aria-label={`Rol de ${member.memberName}`}
+                placeholder="Rol (opcional)"
+                value={member.role ?? ''}
+                maxLength={100}
+                onChange={(e) => updateRole(index, e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') e.preventDefault();
+                }}
+                className="h-8 w-40 shrink-0 text-xs sm:w-48"
+              />
               <button
                 type="button"
                 aria-label={`Quitar a ${member.memberName}`}
                 onClick={() => removeAt(index)}
-                className="rounded-full p-0.5 opacity-70 hover:bg-muted hover:opacity-100"
+                className="shrink-0 rounded-sm p-1 opacity-70 hover:bg-muted hover:opacity-100"
               >
-                <X className="h-3 w-3" />
+                <X className="h-3.5 w-3.5" />
               </button>
             </li>
           ))}

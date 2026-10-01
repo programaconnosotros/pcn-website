@@ -268,15 +268,18 @@ export default async function ProfilePage(props: ProfilePageProps) {
         logoUrl: true,
         techStack: true,
         authorId: true,
+        authorRole: true,
+        members: { where: { userId: user.id }, select: { role: true }, take: 1 },
       },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     }),
     getUserIdentities(user.id),
   ]);
 
-  const userProjects: ProfileProject[] = projects.map((project) => ({
+  // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
+  const userProjects: ProfileProject[] = projects.map(({ members, authorRole, ...project }) => ({
     ...project,
-    role: project.authorId === user.id ? 'autor' : 'colaborador',
+    role: project.authorId === user.id ? authorRole || 'autor' : members[0]?.role || 'colaborador',
   }));
 
   // Conversations where any of the WhatsApp names an admin linked to this user took part.

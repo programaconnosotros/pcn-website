@@ -15,6 +15,7 @@ export function buildProjectMembers(members: ProjectData['members'], authorId: s
     .map((member, index) => ({
       userId: member.userId ?? null,
       memberName: member.memberName,
+      role: member.role ?? null,
       order: index,
     }));
 }

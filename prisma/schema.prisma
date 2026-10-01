@@ -466,10 +466,16 @@ model Project {
   isOpenSource Boolean @default(false)
   repoUrl      String?
 
+  // Años en que arrancó y (si terminó) cerró el proyecto. Ambos opcionales.
+  startYear Int?
+  endYear   Int?
+
   // Usuario que cargó el proyecto. Null solo en proyectos cargados por admins antes de que
   // los usuarios pudieran publicar los suyos.
-  authorId String?
-  author   User?   @relation("UserAuthoredProjects", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String?
+  author     User?   @relation("UserAuthoredProjects", fields: [authorId], references: [id], onDelete: Cascade)
+  // Rol del autor en el equipo (texto libre).
+  authorRole String?
 
   members ProjectMember[]
 
@@ -484,6 +490,8 @@ model ProjectMember {
   projectId  String
   userId     String?
   memberName String
+  // Rol en el equipo (texto libre). Solo el autor del proyecto lo edita.
+  role       String?
   order      Int     @default(0)
 
   createdAt DateTime @default(now())

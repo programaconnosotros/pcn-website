@@ -12,6 +12,7 @@ import {
   Edit,
   Github,
   GripVertical,
+  LogOut,
   MoreVertical,
   Plus,
   Terminal,
@@ -44,12 +45,18 @@ import { WebReaderDialog } from '@/components/web-reader/web-reader-dialog';
 import { cn } from '@/lib/utils';
 import { ProjectForm } from './project-form';
 import { deleteProject } from '@/actions/projects/delete-project';
+import { leaveProject } from '@/actions/projects/leave-project';
 import { reorderProjects } from '@/actions/projects/reorder-projects';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
-type Person = { key: string; name: string; user: { id: string; image: string | null } | null };
+type Person = {
+  key: string;
+  name: string;
+  role: string | null;
+  user: { id: string; image: string | null } | null;
+};
 
 interface Props {
   projects: ProjectWithMembers[];
@@ -79,6 +86,16 @@ const displayUrl = (url: string) => {
   }
 };
 
+// "2023 → 2025", "2023 → hoy" o solo el año de cierre si no se cargó el de inicio.
+const yearsLabel = ({ startYear, endYear }: ProjectWithMembers) => {
+  if (startYear) return `${startYear} → ${endYear ?? 'hoy'}`;
+  if (endYear) return `→ ${endYear}`;
+  return null;
+};
+
+const personTitle = (person: Person) =>
+  person.role ? `${person.name} · ${person.role}` : person.name;
+
 const initials = (name: string) =>
   name
     .split(' ')
@@ -90,11 +107,19 @@ const initials = (name: string) =>
 // Author first, then the collaborators, as one list of people.
 const peopleOf = (project: ProjectWithMembers): Person[] => [
   ...(project.author
-    ? [{ key: project.author.id, name: project.author.name, user: project.author }]
+    ? [
+        {
+          key: project.author.id,
+          name: project.author.name,
+          role: project.authorRole,
+          user: project.author,
+        },
+      ]
     : []),
   ...project.members.map((member) => ({
     key: member.id,
     name: member.memberName,
+    role: member.role,
     user: member.user,
   })),
 ];
@@ -150,11 +175,11 @@ const People = ({ people }: { people: Person[] }) => {
             </Avatar>
           );
           return person.user ? (
-            <Link key={person.key} href={`/perfil/${person.user.id}`} title={person.name}>
+            <Link key={person.key} href={`/perfil/${person.user.id}`} title={personTitle(person)}>
               {avatar}
             </Link>
           ) : (
-            <span key={person.key} title={person.name}>
+            <span key={person.key} title={personTitle(person)}>
               {avatar}
             </span>
           );
@@ -179,8 +204,11 @@ const People = ({ people }: { people: Person[] }) => {
 
 export function ProjectsList({ projects, currentUser }: Props) {
   const isAdmin = !!currentUser?.isAdmin;
+  // El autor (o un admin) puede todo; los colaboradores editan la info básica o se van.
   const canManage = (project: ProjectWithMembers) =>
     !!currentUser && (currentUser.isAdmin || project.authorId === currentUser.id);
+  const isCollaborator = (project: ProjectWithMembers) =>
+    !!currentUser && project.members.some((member) => member.userId === currentUser.id);
 
   const [items, setItems] = useState(projects);
   const [searchQuery, setSearchQuery] = useState('');
@@ -196,6 +224,8 @@ export function ProjectsList({ projects, currentUser }: Props) {
   const [editingProject, setEditingProject] = useState<ProjectWithMembers | null>(null);
   const [deletingProject, setDeletingProject] = useState<ProjectWithMembers | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [leavingProject, setLeavingProject] = useState<ProjectWithMembers | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   // Follow the server list after a create, edit or delete, unless an admin is mid-drag.
   useEffect(() => {
@@ -242,7 +272,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
           project.repoUrl ?? '',
           ...(project.isOpenSource ? ['open-source', 'open source', 'oss'] : []),
           ...project.techStack,
-          ...peopleOf(project).map((person) => person.name),
+          ...peopleOf(project).flatMap((person) => [person.name, person.role ?? '']),
         ].some((text) => text.toLowerCase().includes(query));
       });
 
@@ -292,6 +322,20 @@ export function ProjectsList({ projects, currentUser }: Props) {
       toast.error(error.message || 'Error al eliminar el proyecto');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleLeave = async () => {
+    if (!leavingProject) return;
+    setIsLeaving(true);
+    try {
+      await leaveProject(leavingProject.id);
+      toast.success('Saliste del proyecto');
+      setLeavingProject(null);
+    } catch (error: any) {
+      toast.error(error.message || 'Error al salir del proyecto');
+    } finally {
+      setIsLeaving(false);
     }
   };
 
@@ -510,8 +554,13 @@ export function ProjectsList({ projects, currentUser }: Props) {
                     open-source
                   </span>
                 )}
+                {yearsLabel(project) && (
+                  <span className="shrink-0 tabular-nums" title="Años del proyecto">
+                    {yearsLabel(project)}
+                  </span>
+                )}
 
-                {canManage(project) && !reordering && (
+                {(canManage(project) || isCollaborator(project)) && !reordering && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="ml-auto h-6 w-6 shrink-0">
@@ -524,13 +573,21 @@ export function ProjectsList({ projects, currentUser }: Props) {
                         <Edit className="mr-2 h-4 w-4" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setDeletingProject(project)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Eliminar
-                      </DropdownMenuItem>
+                      {isCollaborator(project) && (
+                        <DropdownMenuItem onClick={() => setLeavingProject(project)}>
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Salir del proyecto
+                        </DropdownMenuItem>
+                      )}
+                      {canManage(project) && (
+                        <DropdownMenuItem
+                          onClick={() => setDeletingProject(project)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Eliminar
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
@@ -723,6 +780,28 @@ export function ProjectsList({ projects, currentUser }: Props) {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isDeleting ? 'Eliminando...' : 'Eliminar'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Leave confirmation */}
+      <AlertDialog
+        open={!!leavingProject}
+        onOpenChange={(open) => !open && setLeavingProject(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Salir del proyecto?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Vas a dejar de figurar en el equipo de &quot;{leavingProject?.title}&quot; y ya no vas
+              a poder editarlo. Solo el autor puede volver a sumarte.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLeaving}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLeave} disabled={isLeaving}>
+              {isLeaving ? 'Saliendo...' : 'Salir'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -49,10 +49,14 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
       techStack: project?.techStack ?? [],
       isOpenSource: project?.isOpenSource ?? false,
       repoUrl: project?.repoUrl ?? '',
+      startYear: project?.startYear ?? '',
+      endYear: project?.endYear ?? '',
+      authorRole: project?.authorRole ?? '',
       members: project?.members
         ? project.members.map((m) => ({
             userId: m.userId ?? null,
             memberName: m.memberName,
+            role: m.role ?? '',
           }))
         : [],
     },
@@ -60,6 +64,9 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
 
   // Proyectos viejos cargados por admins pueden no tener autor.
   const author = project ? project.author : { id: currentUser.id, name: currentUser.name };
+  // Solo el autor (o un admin) arma el equipo y define los roles; los colaboradores editan
+  // la información básica.
+  const canManageTeam = !project || currentUser.isAdmin || project.authorId === currentUser.id;
   const memberImages = Object.fromEntries(
     (project?.members ?? []).flatMap((m) => (m.user ? [[m.user.id, m.user.image]] : [])),
   );
@@ -218,6 +225,49 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
           />
         )}
 
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="startYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Año de inicio</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="Ej: 2024"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>Opcional.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Año de cierre</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="Ej: 2025"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>Dejalo vacío si sigue activo.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         {/* Tech stack tag input */}
         <FormField
           control={form.control}
@@ -264,34 +314,85 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
 
         <div className="space-y-2">
           <p className="text-sm font-medium">Autor</p>
-          <p className="font-mono text-sm text-muted-foreground">
-            <span className="text-pcnGreen-500">@ </span>
-            {author?.name ?? 'Sin autor'}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="min-w-0 flex-1 truncate font-mono text-sm text-muted-foreground">
+              <span className="text-pcnGreen-500">@ </span>
+              {author?.name ?? 'Sin autor'}
+            </p>
+            {canManageTeam && author ? (
+              <FormField
+                control={form.control}
+                name="authorRole"
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormControl>
+                      <Input
+                        aria-label="Rol del autor"
+                        placeholder="Rol (opcional)"
+                        maxLength={100}
+                        className="h-8 w-40 text-xs sm:w-48"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              project?.authorRole && (
+                <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                  {project.authorRole}
+                </span>
+              )
+            )}
+          </div>
         </div>
 
-        <FormField
-          control={form.control}
-          name="members"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Compañeros que te ayudaron</FormLabel>
-              <FormControl>
-                <CollaboratorsField
-                  value={field.value ?? []}
-                  onChange={field.onChange}
-                  excludedUserIds={author ? [author.id] : []}
-                  initialImages={memberImages}
-                />
-              </FormControl>
-              <FormDescription>
-                Buscá a los miembros de la comunidad que participaron. Si alguien no tiene cuenta,
-                podés agregarlo por nombre.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {canManageTeam ? (
+          <FormField
+            control={form.control}
+            name="members"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Equipo</FormLabel>
+                <FormControl>
+                  <CollaboratorsField
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    excludedUserIds={author ? [author.id] : []}
+                    initialImages={memberImages}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Buscá a los miembros de la comunidad que participaron y, si querés, escribí el rol
+                  de cada uno. Si alguien no tiene cuenta, podés agregarlo por nombre.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Equipo</p>
+            {project && project.members.length > 0 && (
+              <ul className="space-y-1 font-mono text-sm text-muted-foreground">
+                {project.members.map((member) => (
+                  <li key={member.id} className="flex gap-2">
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className="text-pcnGreen-500">@ </span>
+                      {member.memberName}
+                    </span>
+                    {member.role && <span className="shrink-0 text-xs">{member.role}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="text-[0.8rem] text-muted-foreground">
+              Solo el autor puede cambiar el equipo y los roles.
+            </p>
+          </div>
+        )}
 
         <div className="flex gap-4">
           <Button

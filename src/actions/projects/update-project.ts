@@ -3,7 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
-import { canManageProject, requireSessionUser } from './get-session-user';
+import { canEditProject, canManageProject, requireSessionUser } from './get-session-user';
 import { buildProjectMembers } from './build-project-members';
 
 export const updateProject = async (id: string, data: ProjectFormData) => {
@@ -16,28 +16,43 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
 
   const projectData = parsed.data;
 
-  const existing = await prisma.project.findUnique({ where: { id } });
+  const existing = await prisma.project.findUnique({
+    where: { id },
+    include: { members: { select: { userId: true } } },
+  });
   if (!existing) {
     throw new Error('Proyecto no encontrado');
   }
 
-  if (!canManageProject(user, existing)) {
+  if (!canEditProject(user, existing)) {
     throw new Error('No tenés permisos para realizar esta acción');
+  }
+
+  // Información básica: la puede editar el autor o cualquier colaborador.
+  const basicInfo = {
+    title: projectData.title,
+    description: projectData.description,
+    url: projectData.url,
+    logoUrl: projectData.logoUrl ?? existing.logoUrl,
+    techStack: projectData.techStack,
+    isOpenSource: projectData.isOpenSource,
+    // Solo un proyecto open-source guarda el link al repo.
+    repoUrl: projectData.isOpenSource ? projectData.repoUrl ?? null : null,
+    startYear: projectData.startYear,
+    endYear: projectData.endYear,
+  };
+
+  // Un colaborador no toca el equipo ni los roles: se ignoran aunque los mande.
+  if (!canManageProject(user, existing)) {
+    await prisma.project.update({ where: { id }, data: basicInfo });
+    revalidatePath('/proyectos');
+    return { success: true };
   }
 
   await prisma.$transaction([
     prisma.project.update({
       where: { id },
-      data: {
-        title: projectData.title,
-        description: projectData.description,
-        url: projectData.url,
-        logoUrl: projectData.logoUrl ?? existing.logoUrl,
-        techStack: projectData.techStack,
-        isOpenSource: projectData.isOpenSource,
-        // Solo un proyecto open-source guarda el link al repo.
-        repoUrl: projectData.isOpenSource ? projectData.repoUrl ?? null : null,
-      },
+      data: { ...basicInfo, authorRole: projectData.authorRole },
     }),
     prisma.projectMember.deleteMany({ where: { projectId: id } }),
     prisma.projectMember.createMany({

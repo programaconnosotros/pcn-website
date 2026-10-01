@@ -3,6 +3,7 @@ import { mockCookies } from '@/test/cookies';
 import { createProject } from './create-project';
 import { updateProject } from './update-project';
 import { deleteProject } from './delete-project';
+import { leaveProject } from './leave-project';
 import { reorderProjects } from './reorder-projects';
 
 const baseUser = {
@@ -14,6 +15,7 @@ const baseUser = {
 const adminUser = { ...baseUser, id: 'cm0000000000000000admin001', role: 'ADMIN' as const };
 const otherUser = { ...baseUser, id: 'cm0000000000000000other001' };
 const collaboratorId = 'cm0000000000000000collab01';
+const collaboratorUser = { ...baseUser, id: collaboratorId, name: 'Compañero' };
 
 const sessionFor = (user: typeof baseUser | typeof adminUser) => ({
   id: `session-${user.id}`,
@@ -47,6 +49,7 @@ const existingProject = {
   techStack: [],
   order: 2,
   authorId: baseUser.id,
+  members: [{ userId: collaboratorId }, { userId: null }],
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -76,10 +79,60 @@ describe('createProject', () => {
     expect(data.order).toBe(8);
     expect(data.members).toEqual({
       create: [
-        { userId: collaboratorId, memberName: 'Compañero', order: 0 },
-        { userId: null, memberName: 'Sin cuenta', order: 1 },
+        { userId: collaboratorId, memberName: 'Compañero', role: null, order: 0 },
+        { userId: null, memberName: 'Sin cuenta', role: null, order: 1 },
       ],
     });
+  });
+
+  it('saves the role of each team member and the years of the project', async () => {
+    loginAs(baseUser);
+    prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
+
+    await createProject({
+      ...validInput,
+      authorRole: '  Tech lead ',
+      startYear: '2023',
+      endYear: 2025,
+      members: [
+        { userId: collaboratorId, memberName: 'Compañero', role: 'Frontend' },
+        { userId: null, memberName: 'Sin cuenta', role: '' },
+      ],
+    });
+
+    const { data } = prismaMock.project.create.mock.calls[0][0];
+    expect(data.authorRole).toBe('Tech lead');
+    expect(data.startYear).toBe(2023);
+    expect(data.endYear).toBe(2025);
+    expect(data.members).toEqual({
+      create: [
+        { userId: collaboratorId, memberName: 'Compañero', role: 'Frontend', order: 0 },
+        { userId: null, memberName: 'Sin cuenta', role: null, order: 1 },
+      ],
+    });
+  });
+
+  it('leaves the years empty when they are not set', async () => {
+    loginAs(baseUser);
+    prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
+
+    await createProject({ ...validInput, startYear: '', endYear: '' });
+
+    const { data } = prismaMock.project.create.mock.calls[0][0];
+    expect(data.startYear).toBeNull();
+    expect(data.endYear).toBeNull();
+  });
+
+  it('rejects a closing year before the starting year', async () => {
+    loginAs(baseUser);
+
+    await expect(createProject({ ...validInput, startYear: 2024, endYear: 2022 })).rejects.toThrow(
+      'no puede ser anterior',
+    );
+    await expect(createProject({ ...validInput, startYear: 1800 })).rejects.toThrow(
+      'Ingresá un año',
+    );
+    expect(prismaMock.project.create).not.toHaveBeenCalled();
   });
 
   it('never lists the author as a collaborator and removes duplicates', async () => {
@@ -97,7 +150,7 @@ describe('createProject', () => {
 
     const { data } = prismaMock.project.create.mock.calls[0][0];
     expect(data.members).toEqual({
-      create: [{ userId: collaboratorId, memberName: 'Compañero', order: 0 }],
+      create: [{ userId: collaboratorId, memberName: 'Compañero', role: null, order: 0 }],
     });
   });
 
@@ -168,7 +221,7 @@ describe('updateProject', () => {
     expect(data).not.toHaveProperty('authorId');
   });
 
-  it('rejects users who are neither the author nor an admin', async () => {
+  it('rejects users who are not part of the project', async () => {
     loginAs(otherUser);
     prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
 
@@ -176,6 +229,53 @@ describe('updateProject', () => {
       'No tenés permisos',
     );
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
+    expect(prismaMock.project.update).not.toHaveBeenCalled();
+  });
+
+  it('lets a collaborator edit the basic info but not the team or the roles', async () => {
+    loginAs(collaboratorUser);
+    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+
+    await updateProject(existingProject.id, {
+      ...validInput,
+      title: 'Nuevo nombre',
+      startYear: 2022,
+      authorRole: 'Becaria',
+      members: [{ userId: otherUser.id, memberName: 'Intrusa', role: 'Dueña' }],
+    });
+
+    const { data } = prismaMock.project.update.mock.calls[0][0];
+    expect(data.title).toBe('Nuevo nombre');
+    expect(data.startYear).toBe(2022);
+    expect(data).not.toHaveProperty('authorRole');
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
+    expect(prismaMock.projectMember.deleteMany).not.toHaveBeenCalled();
+    expect(prismaMock.projectMember.createMany).not.toHaveBeenCalled();
+  });
+
+  it('lets the author change the team and the roles', async () => {
+    loginAs(baseUser);
+    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await updateProject(existingProject.id, {
+      ...validInput,
+      authorRole: 'Tech lead',
+      members: [{ userId: collaboratorId, memberName: 'Compañero', role: 'Backend' }],
+    });
+
+    expect(prismaMock.project.update.mock.calls[0][0].data.authorRole).toBe('Tech lead');
+    expect(prismaMock.projectMember.createMany.mock.calls[0][0]).toEqual({
+      data: [
+        {
+          userId: collaboratorId,
+          memberName: 'Compañero',
+          role: 'Backend',
+          order: 0,
+          projectId: existingProject.id,
+        },
+      ],
+    });
   });
 
   it('lets admins edit any project', async () => {
@@ -207,11 +307,40 @@ describe('deleteProject', () => {
     expect(prismaMock.project.delete).not.toHaveBeenCalled();
   });
 
+  it('does not let collaborators delete the project', async () => {
+    loginAs(collaboratorUser);
+    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+
+    await expect(deleteProject(existingProject.id)).rejects.toThrow('No tenés permisos');
+    expect(prismaMock.project.delete).not.toHaveBeenCalled();
+  });
+
   it('does not let regular users delete legacy projects without an author', async () => {
     loginAs(baseUser);
     prismaMock.project.findUnique.mockResolvedValue({ ...existingProject, authorId: null } as any);
 
     await expect(deleteProject(existingProject.id)).rejects.toThrow('No tenés permisos');
+  });
+});
+
+describe('leaveProject', () => {
+  it('lets a collaborator remove only themselves from the team', async () => {
+    loginAs(collaboratorUser);
+    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+
+    await leaveProject(existingProject.id);
+
+    expect(prismaMock.projectMember.deleteMany).toHaveBeenCalledWith({
+      where: { projectId: existingProject.id, userId: collaboratorId },
+    });
+  });
+
+  it('rejects users who are not collaborators', async () => {
+    loginAs(otherUser);
+    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+
+    await expect(leaveProject(existingProject.id)).rejects.toThrow('No formás parte');
+    expect(prismaMock.projectMember.deleteMany).not.toHaveBeenCalled();
   });
 });
 

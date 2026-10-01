@@ -133,7 +133,8 @@ export type ProfileProject = {
   description: string;
   logoUrl: string;
   techStack: string[];
-  role: 'autor' | 'colaborador';
+  // Rol cargado en el proyecto, o 'autor' / 'colaborador' si no se cargó ninguno.
+  role: string;
 };
 
 export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
@@ -172,7 +173,7 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
             <span className="truncate font-semibold group-hover:text-pcnGreen">
               {project.title}
             </span>
-            <span className="shrink-0 border border-pcnGreen-200 px-1 text-[10px] leading-4 text-pcnGreen-600">
+            <span className="max-w-[50%] shrink-0 truncate border border-pcnGreen-200 px-1 text-[10px] leading-4 text-pcnGreen-600">
               {project.role}
             </span>
           </span>
