@@ -21,6 +21,7 @@ const STATIC_ROUTES = [
   '/videos',
   '/especialidades',
   '/herramientas',
+  '/entrevistas',
   '/proyectos',
   '/consejos',
   '/testimonios',

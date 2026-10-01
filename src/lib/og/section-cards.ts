@@ -4,6 +4,7 @@ import { specialties } from '@/components/especialidades/specialties';
 import { musicSets } from '@/components/music/music-sets';
 import { videos } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
+import { interviewQuestions } from '@/app/(platform)/entrevistas/questions';
 import { renderTerminalCard } from './terminal-card';
 
 // Community-wide public figures, the same ones the landing hero shows. Database counts only
@@ -11,6 +12,10 @@ import { renderTerminalCard } from './terminal-card';
 const MEMBERS = '500+ miembros';
 const TALKS = '50+ charlas';
 const EVENTS = '20+ eventos';
+
+const totalQuestions = Object.values(interviewQuestions)
+  .flatMap((bySeniority) => Object.values(bySeniority))
+  .flat().length;
 
 interface SectionCard {
   command: string;
@@ -110,6 +115,13 @@ const SECTION_CARDS = {
     description:
       'Proyectos de software creados por miembros de la comunidad: las tecnologías y las personas detrás de cada uno.',
     meta: ['hechos por la comunidad'],
+  },
+  entrevistas: {
+    command: './simular-entrevista --active-recall',
+    title: 'Entrevistas',
+    description:
+      'Simulá entrevistas técnicas de frontend, backend y agentic engineering para junior, semi-senior y senior.',
+    meta: [`${totalQuestions} preguntas`, 'active recall'],
   },
   consejos: {
     command: 'fortune',

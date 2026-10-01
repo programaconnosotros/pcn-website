@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   Bell,
+  BriefcaseBusiness,
   BookOpen,
   CalendarDays,
   CircleHelp,
@@ -159,6 +160,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-pink-400 to-rose-700',
     group: 'Recursos',
     pinned: true,
+  },
+  {
+    id: 'entrevistas',
+    name: 'Entrevistas',
+    url: '/entrevistas',
+    icon: BriefcaseBusiness,
+    color: 'from-amber-400 to-orange-700',
+    group: 'Recursos',
   },
   {
     id: 'influencers',

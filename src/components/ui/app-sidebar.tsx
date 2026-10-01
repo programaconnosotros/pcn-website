@@ -5,6 +5,7 @@ import {
   Link2,
   AlertTriangle,
   Bell,
+  BriefcaseBusiness,
   BookOpen,
   CalendarDays,
   Code2,
@@ -66,6 +67,7 @@ const recursosItems: NavItem[] = [
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
   { title: 'Herramientas', url: '/herramientas', icon: Wrench },
   { title: 'Proyectos', url: '/proyectos', icon: Rocket },
+  { title: 'Entrevistas', url: '/entrevistas', icon: BriefcaseBusiness },
   {
     title: 'Más recursos',
     icon: Library,
