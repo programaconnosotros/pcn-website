@@ -1259,4 +1259,40 @@ export const articles: Article[] = [
     avatar: 'https://github.com/eagerworks.png?size=128',
     date: '2024-07-04',
   },
+  {
+    id: '105',
+    title: 'Singletons y carreras de datos',
+    author: 'Mauricio Sánchez',
+    source: 'medium.com',
+    category: 'Programación',
+    description:
+      'Por qué un Singleton mal sincronizado expone tu app a carreras de datos y crashes como EXC_BAD_ACCESS, y cómo hacerlo thread-safe en iOS con conceptos que aplican a cualquier tecnología.',
+    url: 'https://medium.com/@mauriciosnchz/singletons-y-carreras-de-datos-38d3963d7fbc',
+    avatar: '/lectura/mauricio-sanchez.webp',
+    date: '2026-06-17',
+  },
+  {
+    id: '106',
+    title: 'Buscando el diseño perfecto',
+    author: 'Mauricio Sánchez',
+    source: 'medium.com',
+    category: 'Arquitectura',
+    description:
+      '¿Existe un diseño capaz de resolver todos los casos a medida que un sistema evoluciona? Eficacia, eficiencia, flexibilidad y fiabilidad a través de la evolución de la plataforma de PedidosYa.',
+    url: 'https://medium.com/peya-tech/buscando-el-dise%C3%B1o-perfecto-0651723fb26b',
+    avatar: '/lectura/mauricio-sanchez.webp',
+    date: '2025-07-04',
+  },
+  {
+    id: '107',
+    title: 'Growing Pains: Mejorando la performance de componentes iOS',
+    author: 'Mauricio Sánchez',
+    source: 'medium.com',
+    category: 'Programación',
+    description:
+      'Al migrar un flujo de PedidosYa de web a nativo con Server Driven UI, la carga mejoró pero aparecieron app hangs: los enfoques que probaron para resolverlos y qué resultados dio cada uno.',
+    url: 'https://medium.com/peya-tech/growing-pains-mejorando-la-performance-de-componentes-ios-ef80db706f81',
+    avatar: '/lectura/mauricio-sanchez.webp',
+    date: '2024-10-16',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));
