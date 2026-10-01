@@ -207,6 +207,90 @@
     }
   }
 
+  /* PCN OS dock: two light beams chase each other around the frame, a scan sweeps across the
+     surface, the divider carries a data pulse and running programs show a live meter. */
+  .os-dock-frame {
+    padding: 1px;
+    background: conic-gradient(
+        from var(--dock-beam),
+        transparent 0 30%,
+        rgba(4, 244, 190, 0.35) 40%,
+        #b4fff0 44%,
+        transparent 46% 80%,
+        rgba(4, 244, 190, 0.35) 90%,
+        #b4fff0 94%,
+        transparent 96%
+      ),
+      rgba(4, 244, 190, 0.3);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: dock-beam 7s linear infinite;
+  }
+  @keyframes dock-beam {
+    to {
+      --dock-beam: 360deg;
+    }
+  }
+  .os-dock-sweep {
+    animation: dock-sweep 6s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+  }
+  @keyframes dock-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    60%,
+    100% {
+      transform: translateX(400%);
+    }
+  }
+  .os-dock-divider {
+    animation: dock-divider 2.4s ease-in-out infinite;
+  }
+  @keyframes dock-divider {
+    from {
+      transform: translateY(-200%);
+    }
+    to {
+      transform: translateY(500%);
+    }
+  }
+  .os-dock-meter {
+    animation: dock-meter 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes dock-meter {
+    0% {
+      transform: scaleY(0.25);
+    }
+    40% {
+      transform: scaleY(1);
+    }
+    70% {
+      transform: scaleY(0.5);
+    }
+    100% {
+      transform: scaleY(0.85);
+    }
+  }
+  .os-dock-caret {
+    animation: cursor-blink 1s steps(1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .os-dock-frame,
+    .os-dock-sweep,
+    .os-dock-divider,
+    .os-dock-meter,
+    .os-dock-caret {
+      animation: none;
+    }
+    .os-dock-sweep,
+    .os-dock-divider {
+      display: none;
+    }
+  }
+
   /* Menus and dropdowns (see components/ui/menu-surface.ts): the panel boots open like a CRT,
      sweeping down with a brightness flash, and its items stream in one after another. */
   .menu-surface[data-state='open'] {
@@ -1020,4 +1104,11 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   .pcn-loader-beam {
     display: none;
   }
+}
+
+/* Angle of the light beams running around the PCN OS dock frame (see .os-dock-frame). */
+@property --dock-beam {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }

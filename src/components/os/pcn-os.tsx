@@ -27,7 +27,7 @@ import { useOsMode } from './use-os-mode';
 
 export const MENU_BAR_HEIGHT = 28;
 /** Space kept free at the bottom of the screen for the dock. */
-const DOCK_RESERVED_HEIGHT = 92;
+const DOCK_RESERVED_HEIGHT = 96;
 
 interface Viewport {
   w: number;
@@ -373,6 +373,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           programs={programs}
           runningPrograms={runningPrograms}
           runningProgramIds={runningProgramIds}
+          focusedProgramId={focusedProgram?.id ?? null}
           onOpenProgram={openProgram}
           onOpenLauncher={() => setLauncherOpen(true)}
         />
