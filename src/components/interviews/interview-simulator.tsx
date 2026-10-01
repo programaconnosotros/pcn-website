@@ -11,7 +11,7 @@ import {
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ArrowRight, Check, Eye, RotateCcw, X } from 'lucide-react';
+import { ArrowRight, Check, Eye, RotateCcw, Square, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 
 type Phase = 'setup' | 'running' | 'done';
@@ -92,17 +92,20 @@ export function InterviewSimulator() {
   const [current, setCurrent] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [toReview, setToReview] = useState<InterviewQuestion[]>([]);
+  const [answered, setAnswered] = useState(0);
 
   const start = (questions: InterviewQuestion[]) => {
     setDeck(shuffle(questions));
     setCurrent(0);
     setRevealed(false);
     setToReview([]);
+    setAnswered(0);
     setPhase('running');
   };
 
   const grade = (knewIt: boolean) => {
     if (!knewIt) setToReview((list) => [...list, deck[current]]);
+    setAnswered((count) => count + 1);
     if (current + 1 < deck.length) {
       setCurrent(current + 1);
       setRevealed(false);
@@ -187,17 +190,23 @@ export function InterviewSimulator() {
   }
 
   if (phase === 'done') {
-    const knownCount = deck.length - toReview.length;
+    const knownCount = answered - toReview.length;
+    const endedEarly = answered < deck.length;
 
     return (
       <div className="mb-14 max-w-3xl">
         <PageTitle path="entrevistas" meta={interviewName} />
         <div className="mb-6 font-mono">
-          <p className="text-sm text-muted-foreground">entrevista terminada</p>
-          <p className="text-3xl font-semibold text-pcnGreen">
-            {knownCount}/{deck.length}
-            <span className="ml-2 text-sm font-normal text-muted-foreground">la sabía</span>
+          <p className="text-sm text-muted-foreground">
+            entrevista terminada
+            {endedEarly && ` · respondiste ${answered} de ${deck.length} preguntas`}
           </p>
+          {answered > 0 && (
+            <p className="text-3xl font-semibold text-pcnGreen">
+              {knownCount}/{answered}
+              <span className="ml-2 text-sm font-normal text-muted-foreground">la sabía</span>
+            </p>
+          )}
         </div>
 
         <div className="mb-8 flex flex-wrap gap-2">
@@ -257,10 +266,11 @@ export function InterviewSimulator() {
         action={
           <button
             type="button"
-            onClick={() => setPhase('setup')}
-            className="font-mono text-xs text-muted-foreground hover:text-pcnGreen"
+            onClick={() => setPhase('done')}
+            className={secondaryButtonClassName}
           >
-            salir
+            <Square className="size-3" />
+            terminar entrevista
           </button>
         }
       />
