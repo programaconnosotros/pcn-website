@@ -111,4 +111,28 @@ describe('updateEvent', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/event-1');
     expect(redirect).toHaveBeenCalledWith('/eventos/event-1');
   });
+
+  it('replaces the event admins, never adding the creator', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      ...existingEvent,
+      createdById: 'creator-1',
+    } as any);
+    prismaMock.user.findMany.mockResolvedValue([{ id: 'ambassador-1' }] as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await expect(
+      updateEvent('event-1', { ...validEventData, adminIds: ['creator-1', 'ambassador-1'] }),
+    ).rejects.toThrow('NEXT_REDIRECT:');
+
+    expect(prismaMock.eventAdmin.deleteMany).toHaveBeenCalledWith({
+      where: { eventId: 'event-1' },
+    });
+    expect(prismaMock.event.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ admins: { create: [{ userId: 'ambassador-1' }] } }),
+      }),
+    );
+  });
 });

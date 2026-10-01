@@ -59,6 +59,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
         name: sponsor.name,
         website: sponsor.website || '',
       })) || [],
+    adminIds: event.admins.map(({ user }) => user.id),
   };
 
   return (
@@ -76,7 +77,12 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
             />
           </StickyHeader>
 
-          <EditEventForm eventId={id} defaultValues={defaultValues} />
+          <EditEventForm
+            eventId={id}
+            defaultValues={defaultValues}
+            initialAdmins={event.admins.map(({ user }) => user)}
+            createdById={event.createdById}
+          />
         </div>
       </div>
     </>

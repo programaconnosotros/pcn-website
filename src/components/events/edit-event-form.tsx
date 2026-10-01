@@ -6,10 +6,14 @@ import { EventFormData } from '@/schemas/event-schema';
 import { useEffect, useState } from 'react';
 import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
+import type { CommunityMemberOption } from '@/actions/users/search-community-members';
 
 type EditEventFormProps = {
   eventId: string;
   defaultValues: Omit<EventFormData, 'date' | 'endDate'> & { date: string; endDate: string };
+  canManageAdmins?: boolean;
+  initialAdmins?: CommunityMemberOption[];
+  createdById?: string | null;
 };
 
 const formatDateForInput = (iso: string): string => {
@@ -19,7 +23,13 @@ const formatDateForInput = (iso: string): string => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
+export function EditEventForm({
+  eventId,
+  defaultValues,
+  canManageAdmins,
+  initialAdmins,
+  createdById,
+}: EditEventFormProps) {
   const [formDefaults, setFormDefaults] = useState<EventFormData | null>(null);
 
   useEffect(() => {
@@ -58,6 +68,9 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
       onSubmit={onSubmit}
       submitLabel="guardarCambios();"
       cancelHref={`/eventos/${eventId}`}
+      canManageAdmins={canManageAdmins}
+      initialAdmins={initialAdmins}
+      createdById={createdById}
     />
   );
 }

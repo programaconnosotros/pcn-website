@@ -5,6 +5,7 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { buildEventAdmins } from './build-event-admins';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
@@ -46,11 +47,15 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, ...eventData } = validatedData;
+  const { sponsors, adminIds, ...eventData } = validatedData;
+  const admins = await buildEventAdmins(adminIds, existingEvent.createdById);
 
-  // Eliminar sponsors existentes y crear los nuevos
+  // Reemplazar sponsors y administradores existentes por los nuevos
   await prisma.$transaction([
     prisma.sponsor.deleteMany({
+      where: { eventId: id },
+    }),
+    prisma.eventAdmin.deleteMany({
       where: { eventId: id },
     }),
     prisma.event.update({
@@ -62,6 +67,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
         latitude: validatedData.latitude ?? null,
         longitude: validatedData.longitude ?? null,
         capacity: validatedData.capacity ?? null,
+        admins: { create: admins },
         sponsors: {
           create:
             sponsors

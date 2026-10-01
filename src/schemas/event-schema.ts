@@ -121,6 +121,8 @@ export const eventSchema = z
           .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones (sin espacios)')
           .optional(),
       ),
+    // Ambassadors que pueden editar el evento además de quien lo creó.
+    adminIds: z.array(z.string().min(1)).optional().default([]),
     capacity: z.preprocess(
       (val) => {
         if (val === null || val === undefined) return '';

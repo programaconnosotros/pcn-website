@@ -5,6 +5,7 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { buildEventAdmins } from './build-event-admins';
 
 export const createEvent = async (data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
@@ -37,7 +38,8 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, ...eventData } = validatedData;
+  const { sponsors, adminIds, ...eventData } = validatedData;
+  const admins = await buildEventAdmins(adminIds, session.user.id);
 
   const event = await prisma.event.create({
     data: {
@@ -47,6 +49,8 @@ export const createEvent = async (data: EventFormData) => {
       latitude: validatedData.latitude ?? null,
       longitude: validatedData.longitude ?? null,
       capacity: validatedData.capacity ?? null,
+      createdById: session.user.id,
+      admins: { create: admins },
       sponsors: {
         create:
           sponsors

@@ -14,6 +14,10 @@ export const fetchEventForEdit = async (id: string) => {
     include: {
       images: true,
       sponsors: true,
+      admins: {
+        select: { user: { select: { id: true, name: true, image: true } } },
+        orderBy: { createdAt: 'asc' },
+      },
     },
   });
 };

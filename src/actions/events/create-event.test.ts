@@ -112,4 +112,31 @@ describe('createEvent', () => {
       }),
     );
   });
+
+  it('records the creator and only keeps ambassadors as event admins', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.user.findMany.mockResolvedValue([{ id: 'ambassador-1' }] as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-3' } as any);
+
+    await expect(
+      createEvent({
+        ...validEventData,
+        adminIds: ['ambassador-1', 'regular-1', 'ambassador-1', 'user-admin'],
+      }),
+    ).rejects.toThrow('NEXT_REDIRECT:');
+
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: { id: { in: ['ambassador-1', 'regular-1'] }, isAmbassador: true },
+      select: { id: true },
+    });
+    expect(prismaMock.event.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          createdById: 'user-admin',
+          admins: { create: [{ userId: 'ambassador-1' }] },
+        }),
+      }),
+    );
+  });
 });

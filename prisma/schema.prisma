@@ -55,6 +55,8 @@ model User {
   authoredProjects     Project[]             @relation("UserAuthoredProjects")
   contentMarks         ContentMark[]
   identityLinks        IdentityLink[]
+  createdEvents        Event[]               @relation("UserCreatedEvents")
+  eventAdminships      EventAdmin[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,9 +138,13 @@ model Event {
   streamingUrl            String?
   shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
   deletedAt               DateTime? // Eliminación lógica
+  // Usuario que creó el evento. Null en eventos cargados antes de que se guardara.
+  createdById             String?
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
 
+  createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  admins        EventAdmin[]
   images        Image[]
   registrations EventRegistration[]
   sponsors      Sponsor[]
@@ -147,6 +153,22 @@ model Event {
   talks         Talk[]
 
   @@index([shortcut])
+  @@index([createdById])
+}
+
+// Usuarios asignados como administradores de un evento (además de quien lo creó).
+model EventAdmin {
+  id      String @id @default(cuid())
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([userId])
 }
 
 model Image {
