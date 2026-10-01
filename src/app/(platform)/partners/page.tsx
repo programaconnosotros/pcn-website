@@ -35,7 +35,6 @@ const Partners = () => {
           <StickyHeader className="-mx-6 px-6 md:-mx-10 md:px-10">
             <PageTitle
               path="partners"
-              meta="organizaciones que apoyan a la comunidad"
               action={
                 <Link
                   href={PARTNER_CONTACT_URL}
