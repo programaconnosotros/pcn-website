@@ -898,7 +898,7 @@ type ReadingPageProps = {
 export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
-  const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('libros');
+  const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('articulos');
   const [readerArticle, setReaderArticle] = useState<Article | null>(null);
   const [readStatus, setReadStatus] = useState<ReadStatus>('todos');
   const savedCount = useContentMarks('article').ids('saved').size;
@@ -964,11 +964,10 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
               <StickyHeader>
                 <PageTitle
                   path="lectura"
-                  meta={`${books.length} libros · ${articles.length} artículos`}
+                  meta={`${articles.length} artículos · ${books.length} libros`}
                 />
 
                 <TabsList className="mb-4">
-                  <TabsTrigger value="libros">Libros</TabsTrigger>
                   <TabsTrigger value="articulos">
                     Artículos
                     {savedCount > 0 && (
@@ -980,6 +979,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                       </span>
                     )}
                   </TabsTrigger>
+                  <TabsTrigger value="libros">Libros</TabsTrigger>
                 </TabsList>
 
                 {/* Filtros compartidos */}
@@ -1011,21 +1011,6 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                 </div>
               </StickyHeader>
 
-              {/* Tab: Libros */}
-              <TabsContent value="libros">
-                {filteredBooks.length > 0 ? (
-                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-                    {filteredBooks.map((book) => (
-                      <BookRow key={book.id} book={book} />
-                    ))}
-                  </RuledGrid>
-                ) : (
-                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
-                    No se encontraron libros con los filtros seleccionados.
-                  </p>
-                )}
-              </TabsContent>
-
               {/* Tab: Artículos */}
               <TabsContent value="articulos">
                 <ArticlesPanel
@@ -1039,6 +1024,21 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                   writers={articleWriters}
                   isAdmin={isAdmin}
                 />
+              </TabsContent>
+
+              {/* Tab: Libros */}
+              <TabsContent value="libros">
+                {filteredBooks.length > 0 ? (
+                  <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+                    {filteredBooks.map((book) => (
+                      <BookRow key={book.id} book={book} />
+                    ))}
+                  </RuledGrid>
+                ) : (
+                  <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+                    No se encontraron libros con los filtros seleccionados.
+                  </p>
+                )}
               </TabsContent>
             </Tabs>
           </div>
