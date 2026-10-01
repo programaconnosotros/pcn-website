@@ -65,8 +65,8 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
         </CardContent>
 
         <CardFooter className="mt-auto">
-          <Button variant="pcn" className="w-full">
-            Ver evento <ArrowRight className="ml-2 h-4 w-4" />
+          <Button variant="pcn" className="w-full" code>
+            verEvento(); <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
       </div>

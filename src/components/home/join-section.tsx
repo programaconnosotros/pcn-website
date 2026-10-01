@@ -66,10 +66,10 @@ export const JoinSection = () => (
         title="Sé referente en tu ciudad o universidad"
         description="Si compartís los valores de PCN y donde estás todavía no hay muchos miembros, armamos un plan juntos para que la comunidad crezca ahí."
       >
-        <Button asChild size="sm" variant="outline">
+        <Button asChild size="sm" variant="outline" code>
           <Link href={CONTACT_URL} target="_blank" rel="noreferrer">
             <MessageSquare className="mr-2 size-4" />
-            Contactanos
+            contactarnos();
           </Link>
         </Button>
       </Card>
@@ -80,10 +80,10 @@ export const JoinSection = () => (
         title="Proponé una iniciativa"
         description="¿Una idea buena para la comunidad? ¿Ganas de organizar un evento o dar una charla? Contanos y vemos la forma de llevarla a cabo."
       >
-        <Button asChild size="sm" variant="outline">
+        <Button asChild size="sm" variant="outline" code>
           <Link href={CONTACT_URL} target="_blank" rel="noreferrer">
             <MessageSquare className="mr-2 size-4" />
-            Proponer algo
+            proponerAlgo();
           </Link>
         </Button>
       </Card>
@@ -109,9 +109,9 @@ export const JoinSection = () => (
               + Prisma
             </li>
           </ul>
-          <Button asChild size="sm" className="w-fit">
+          <Button asChild size="sm" className="w-fit" code>
             <Link href={REPO_URL} target="_blank" rel="noreferrer">
-              Ver repositorio
+              verRepositorio();
               <ArrowUpRight className="ml-2 size-4" />
             </Link>
           </Button>

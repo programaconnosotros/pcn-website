@@ -55,6 +55,10 @@ const buttonVariants = cva(
         lg: 'h-11 px-6',
         icon: 'h-9 w-9',
       },
+      // Renders the label as a function call (e.g. `verEventos();`), so drop the CTA caps.
+      code: {
+        true: 'normal-case tracking-tight',
+      },
     },
     defaultVariants: {
       variant: 'default',
@@ -77,6 +81,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size,
+      code,
       asChild = false,
       loading = false,
       loadingText,
@@ -89,7 +94,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, code, className }))}
         ref={ref}
         disabled={disabled || loading}
         {...props}

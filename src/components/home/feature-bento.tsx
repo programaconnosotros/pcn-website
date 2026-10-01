@@ -144,9 +144,9 @@ const WhatsAppCell = () => (
       </ul>
     </div>
 
-    <Button asChild size="sm" className="w-fit shrink-0 px-4">
+    <Button asChild size="sm" className="w-fit shrink-0 px-4" code>
       <Link href={WHATSAPP_GROUP_URL} target="_blank" rel="noreferrer">
-        Unirme al grupo
+        unirmeAlGrupo();
         <ArrowUpRight className="ml-2 size-4" />
       </Link>
     </Button>

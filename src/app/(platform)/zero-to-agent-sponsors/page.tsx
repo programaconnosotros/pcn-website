@@ -256,9 +256,9 @@ const ZeroToAgentSponsors = () => (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button variant={tier.variant} size="sm" className="w-full">
+                <Button variant={tier.variant} size="sm" className="w-full" code>
                   <MessageSquare className="mr-2 h-4 w-4" />
-                  Patrocinar como {tier.name}
+                  {`patrocinar('${tier.name}');`}
                 </Button>
               </Link>
             </div>
