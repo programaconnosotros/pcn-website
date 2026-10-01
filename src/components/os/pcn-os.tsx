@@ -50,7 +50,8 @@ type OsAction =
   | { type: 'minimizeAll' }
   | { type: 'toggleMaximize'; id: string }
   | { type: 'rect'; id: string; rect: Rect }
-  | { type: 'fit'; viewport: Viewport }
+  /** The screen changed size: windows keep their share of the desktop. */
+  | { type: 'fit'; from: Viewport; to: Viewport }
   | { type: 'location'; id: string; path: string; title: string | null };
 
 const updateWindow = (
@@ -116,7 +117,10 @@ const reducer = (state: OsState, action: OsAction): OsState => {
     case 'fit':
       return {
         ...state,
-        windows: state.windows.map((win) => ({ ...win, ...fitToDesktop(win, action.viewport) })),
+        windows: state.windows.map((win) => ({
+          ...win,
+          ...fitToDesktop(scaleToDesktop(win, action.from, action.to), action.to),
+        })),
       };
     case 'location':
       return updateWindow(state, action.id, () => ({ path: action.path, title: action.title }));
@@ -163,6 +167,23 @@ const clampToDesktop = (rect: Rect, viewport: Viewport, mode: ClampMode): Rect =
   return fitToDesktop({ x: left, y: top, w: right - left, h: bottom - top }, viewport);
 };
 
+/**
+ * Scales a window with the desktop when the screen changes size, so it keeps the same share
+ * of it (and the same place) whether the screen grows or shrinks.
+ */
+const scaleToDesktop = (rect: Rect, from: Viewport, to: Viewport): Rect => {
+  const before = desktopArea(from);
+  const after = desktopArea(to);
+  const sx = after.w / before.w;
+  const sy = after.h / before.h;
+  return {
+    x: Math.round(after.x + (rect.x - before.x) * sx),
+    y: Math.round(after.y + (rect.y - before.y) * sy),
+    w: Math.round(rect.w * sx),
+    h: Math.round(rect.h * sy),
+  };
+};
+
 /** Shrinks and moves a window so it fits the desktop after the screen gets smaller. */
 const fitToDesktop = (rect: Rect, viewport: Viewport): Rect => {
   const area = desktopArea(viewport);
@@ -204,12 +225,15 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
 
   useEffect(() => {
     if (!isOs) return;
+    let current = readViewport();
+    setViewport(current);
+    dispatch({ type: 'fit', from: current, to: current });
     const onResize = () => {
       const next = readViewport();
       setViewport(next);
-      dispatch({ type: 'fit', viewport: next });
+      dispatch({ type: 'fit', from: current, to: next });
+      current = next;
     };
-    onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, [isOs]);
