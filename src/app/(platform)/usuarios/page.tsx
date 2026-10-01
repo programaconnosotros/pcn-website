@@ -23,6 +23,7 @@ const CommunityPage = async () => {
   ).length;
   const verified = users.filter((user) => user.emailVerified).length;
   const admins = users.filter((user) => user.role === 'ADMIN').length;
+  const ambassadors = users.filter((user) => user.isAmbassador).length;
   const withProfile = users.filter(
     (user) => user.jobTitle || user.career || user.slogan || user.languages.length > 0,
   ).length;
@@ -35,7 +36,7 @@ const CommunityPage = async () => {
         <DataTable
           header={<PageTitle path="usuarios" meta={`${users.length} usuarios registrados`} />}
           intro={
-            <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-4">
+            <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-5">
               <Stat label="nuevos" value={`+${newThisMonth}`} hint="últimos 30 días" />
               <Stat label="verificados" value={percent(verified)} hint={`${verified} emails`} />
               <Stat
@@ -44,6 +45,7 @@ const CommunityPage = async () => {
                 hint="cargo, estudios o bio"
               />
               <Stat label="admins" value={admins} hint="con acceso de administración" />
+              <Stat label="ambassadors" value={ambassadors} hint="programa PCN Ambassadors" />
             </RuledGrid>
           }
           columns={columns}

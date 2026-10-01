@@ -21,6 +21,9 @@ model User {
   emailVerified        Boolean               @default(false)
   phoneNumber          String?
   role                 Role                  @default(REGULAR)
+  // Miembro del programa PCN Ambassadors (personas que organizan actividades e iniciativas).
+  // Lo asigna un admin.
+  isAmbassador         Boolean               @default(false)
   image                String?
   countryOfOrigin      String?
   province             String? // Provincia (opcional)

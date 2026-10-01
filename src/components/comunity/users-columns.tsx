@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LocalDate } from '@/components/ui/local-date-time';
 import { TableTag } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { AmbassadorToggle } from './ambassador-toggle';
 
 const relativeFormat = new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' });
 
@@ -151,6 +152,17 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
       ) : (
         <TableTag>regular</TableTag>
       ),
+  },
+  {
+    accessorKey: 'isAmbassador',
+    header: ({ column }) => <SortableHeader label="Ambassador" column={column} />,
+    cell: ({ row }) => (
+      <AmbassadorToggle
+        userId={row.original.id}
+        userName={row.original.name}
+        isAmbassador={row.original.isAmbassador}
+      />
+    ),
   },
   {
     accessorKey: 'phoneNumber',
