@@ -23,6 +23,14 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
     area: 'partners',
+    title: 'Superteam Argentina se suma como partner',
+    description: 'Superteam Argentina aparece entre las organizaciones de la página de partners.',
+    authors: ['agustin-sanc'],
+    href: '/partners',
+  },
+  {
+    date: '2026-10-01',
+    area: 'partners',
     title: 'El Cluster Tecnológico Tucumán se suma como partner',
     description:
       'El Cluster Tecnológico Tucumán aparece entre las organizaciones de la página de partners.',

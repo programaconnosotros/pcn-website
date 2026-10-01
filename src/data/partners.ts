@@ -141,6 +141,15 @@ export const partners: Partner[] = [
     showName: true,
     brandColor: '#fcc400',
   },
+  {
+    name: 'Superteam Argentina',
+    kind: 'organizacion',
+    url: 'https://superteam.ar/',
+    logo: '/superteam-ar-logo.svg',
+    description: 'Comunidad de builders, founders y soñadores de Solana en Argentina.',
+    location: 'Argentina',
+    brandColor: '#74acdf',
+  },
 ];
 
 export const PARTNER_CONTACT_URL = 'https://wa.me/5493815777562';
