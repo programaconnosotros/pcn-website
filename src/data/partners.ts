@@ -9,6 +9,8 @@ export interface Partner {
   location: string;
   /** Show the partner name under the logo. */
   showName?: boolean;
+  /** Main logo color, used for the name on hover. Falls back to the site green. */
+  brandColor?: string;
   /** Dark logo on a transparent canvas; rendered as a white mark on the dark theme. */
   monochromeOnDark?: boolean;
 }
@@ -22,6 +24,7 @@ export const partners: Partner[] = [
     description: 'Modern Software Studio.',
     location: 'Tucumán, Argentina',
     showName: true,
+    brandColor: '#2b9cf2',
   },
   {
     name: 'Xetro',
@@ -116,6 +119,7 @@ export const partners: Partner[] = [
       'Asociación de empresas e instituciones que impulsan la industria del software en Tucumán.',
     location: 'Tucumán, Argentina',
     showName: true,
+    brandColor: '#f05a28',
   },
   {
     name: 'SaltaDev',
@@ -125,6 +129,7 @@ export const partners: Partner[] = [
     description: 'Comunidad de desarrolladores de Salta.',
     location: 'Salta, Argentina',
     showName: true,
+    brandColor: '#bb3638',
   },
   {
     name: 'FormosaDev',
@@ -134,6 +139,7 @@ export const partners: Partner[] = [
     description: 'Comunidad de desarrolladores de Formosa.',
     location: 'Formosa, Argentina',
     showName: true,
+    brandColor: '#fcc400',
   },
 ];
 

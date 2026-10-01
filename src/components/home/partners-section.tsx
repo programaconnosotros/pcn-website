@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { Heading2 } from '../ui/heading-2';
 import { RuledGrid, ruledCellClassName } from '../ui/ruled-grid';
@@ -40,7 +41,21 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
       />
     </div>
     {partner.showName && (
-      <h3 className="font-mono text-sm font-semibold group-hover:text-pcnGreen">{partner.name}</h3>
+      <h3
+        className={cn(
+          'font-mono text-sm font-semibold',
+          partner.brandColor
+            ? 'transition-colors group-hover:text-[var(--partner-brand)]'
+            : 'group-hover:text-pcnGreen',
+        )}
+        style={
+          partner.brandColor
+            ? ({ '--partner-brand': partner.brandColor } as CSSProperties)
+            : undefined
+        }
+      >
+        {partner.name}
+      </h3>
     )}
     <p className="text-xs text-muted-foreground">{partner.description}</p>
   </Link>
