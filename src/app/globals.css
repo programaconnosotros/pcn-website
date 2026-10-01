@@ -859,6 +859,8 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
 /* PCN loader: the logo booting up while a page loads (see components/ui/pcn-loader.tsx). */
 .pcn-loader {
   --pcn-loader-cycle: 2.4s;
+  /* The halves come together once; the looping effects start when they lock. */
+  --pcn-loader-assemble: 0.7s;
   position: relative;
   display: grid;
   place-items: center;
@@ -873,7 +875,8 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   border-radius: 9999px;
   background: radial-gradient(circle, rgba(4, 244, 190, 0.55), transparent 70%);
   filter: blur(10px);
-  animation: pcn-loader-core var(--pcn-loader-cycle) ease-out infinite;
+  animation: pcn-loader-core var(--pcn-loader-cycle) ease-out var(--pcn-loader-assemble) infinite
+    both;
 }
 .pcn-loader-ring {
   inset: 0;
@@ -932,6 +935,8 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   inset: 24%;
   /* On the wrapper: a filter on the clipped halves would be clipped too, drawing a seam. */
   filter: drop-shadow(0 0 10px rgba(4, 244, 190, 0.6));
+  animation: pcn-loader-tilt var(--pcn-loader-cycle) cubic-bezier(0.6, 0, 0.2, 1)
+    var(--pcn-loader-assemble) infinite;
 }
 .pcn-loader-logo > img {
   position: absolute;
@@ -941,23 +946,26 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
 }
 .pcn-loader-half--left {
   clip-path: inset(0 50% 0 0);
-  animation: pcn-loader-split-left var(--pcn-loader-cycle) cubic-bezier(0.7, 0, 0.2, 1) infinite;
+  animation: pcn-loader-join-left var(--pcn-loader-assemble) cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .pcn-loader-half--right {
   clip-path: inset(0 0 0 50%);
-  animation: pcn-loader-split-right var(--pcn-loader-cycle) cubic-bezier(0.7, 0, 0.2, 1) infinite;
+  animation: pcn-loader-join-right var(--pcn-loader-assemble) cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .pcn-loader-ghost {
   opacity: 0;
   mix-blend-mode: screen;
 }
+/* The same magenta/green RGB split as the /proyectos titles (see .project-glitch). */
 .pcn-loader-ghost--a {
-  filter: hue-rotate(150deg) saturate(2.5);
-  animation: pcn-loader-glitch-a var(--pcn-loader-cycle) steps(1) infinite;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(98%) saturate(7000%) hue-rotate(325deg);
+  animation: pcn-loader-glitch-a var(--pcn-loader-cycle) steps(1) var(--pcn-loader-assemble)
+    infinite;
 }
 .pcn-loader-ghost--b {
-  filter: hue-rotate(-140deg) saturate(2.5);
-  animation: pcn-loader-glitch-b var(--pcn-loader-cycle) steps(1) infinite;
+  filter: brightness(0) saturate(100%) invert(77%) sepia(62%) saturate(2000%) hue-rotate(115deg);
+  animation: pcn-loader-glitch-b var(--pcn-loader-cycle) steps(1) var(--pcn-loader-assemble)
+    infinite;
 }
 .pcn-loader-beam {
   left: -30%;
@@ -967,7 +975,8 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   background: linear-gradient(90deg, transparent, #04f4be 30%, #fff 50%, #04f4be 70%, transparent);
   box-shadow: 0 0 12px 2px rgba(4, 244, 190, 0.7);
   mix-blend-mode: screen;
-  animation: pcn-loader-beam var(--pcn-loader-cycle) ease-in-out infinite;
+  animation: pcn-loader-beam var(--pcn-loader-cycle) ease-in-out var(--pcn-loader-assemble) infinite
+    both;
 }
 @keyframes pcn-loader-spin {
   to {
@@ -989,38 +998,54 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
     transform: scale(0.8);
   }
 }
-@keyframes pcn-loader-split-left {
-  0%,
-  28% {
-    transform: translateX(0) rotate(0deg);
+/* The two chevrons slide in from the sides, overshoot slightly and lock together for good. */
+@keyframes pcn-loader-join-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-34%) rotate(-12deg);
   }
-  42%,
-  52% {
-    transform: translateX(-22%) rotate(-8deg);
+  35% {
+    opacity: 1;
   }
-  60% {
-    transform: translateX(4%) rotate(1deg);
+  75% {
+    transform: translateX(3%) rotate(1deg);
   }
-  66%,
   100% {
-    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+    transform: none;
   }
 }
-@keyframes pcn-loader-split-right {
-  0%,
-  28% {
-    transform: translateX(0) rotate(0deg);
+@keyframes pcn-loader-join-right {
+  0% {
+    opacity: 0;
+    transform: translateX(34%) rotate(12deg);
   }
-  42%,
-  52% {
-    transform: translateX(22%) rotate(8deg);
+  35% {
+    opacity: 1;
   }
-  60% {
-    transform: translateX(-4%) rotate(-1deg);
+  75% {
+    transform: translateX(-3%) rotate(-1deg);
   }
-  66%,
   100% {
-    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Once joined, the whole logo turns a little and settles back, in step with the RGB glitch. */
+@keyframes pcn-loader-tilt {
+  0%,
+  50% {
+    transform: none;
+  }
+  56% {
+    transform: rotate(-14deg) scale(1.06);
+  }
+  64% {
+    transform: rotate(5deg) scale(0.98);
+  }
+  72%,
+  100% {
+    transform: none;
   }
 }
 @keyframes pcn-loader-glitch-a {

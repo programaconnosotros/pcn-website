@@ -38,9 +38,10 @@ const useFakeProgress = () => {
 };
 
 /**
- * The PCN logo booting up: the two chevrons split apart and snap back together with an RGB
- * glitch, inside a spinning targeting ring, while a scan beam sweeps it and a boot log counts
- * up underneath. Everything visual lives in the `.pcn-loader*` rules in globals.css.
+ * The PCN logo booting up: the two chevrons slide in and lock together once, then the joined
+ * logo turns a little with the same RGB glitch as the /proyectos titles, inside a spinning
+ * targeting ring, while a scan beam sweeps it and a boot log counts up underneath. Everything
+ * visual lives in the `.pcn-loader*` rules in globals.css.
  */
 export function PcnLoader({ label, className }: { label?: string; className?: string }) {
   const { progress, address } = useFakeProgress();
