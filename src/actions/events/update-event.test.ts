@@ -79,18 +79,37 @@ describe('updateEvent', () => {
     await expect(updateEvent('event-1', validEventData)).rejects.toThrow('Sesión no encontrada');
   });
 
-  it('throws when the user does not have ADMIN role', async () => {
+  it('rejects regular users who do not administer the event', async () => {
     mockCookies({ sessionId: 'session-regular' });
     prismaMock.session.findUnique.mockResolvedValue({
       ...adminSession,
       user: { ...adminUser, role: 'REGULAR' as const },
     } as any);
+    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, admins: [] } as any);
 
     await expect(updateEvent('event-1', validEventData)).rejects.toThrow(
-      'No tienes permisos para editar eventos',
+      'No tienes permisos para editar este evento',
     );
 
-    expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('lets any user assigned as event admin edit it', async () => {
+    mockCookies({ sessionId: 'session-regular' });
+    prismaMock.session.findUnique.mockResolvedValue({
+      ...adminSession,
+      user: { ...adminUser, role: 'REGULAR' as const, isAmbassador: false },
+    } as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      ...existingEvent,
+      createdById: null,
+      admins: [{ userId: 'user-admin' }],
+    } as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await expect(updateEvent('event-1', validEventData)).rejects.toThrow(
+      'NEXT_REDIRECT:/eventos/event-1',
+    );
   });
 
   it('throws when the event is not found', async () => {

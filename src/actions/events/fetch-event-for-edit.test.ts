@@ -44,11 +44,26 @@ describe('fetchEventForEdit', () => {
 });
 
 describe('fetchEventForEdit access', () => {
-  it('rejects anyone who is not an admin or an ambassador', async () => {
-    loginAs(regular);
+  it('rejects anonymous visitors', async () => {
+    mockCookies();
 
     await expect(fetchEventForEdit('event-1')).rejects.toThrow('No autorizado');
     expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('rejects regular users on events they do not administer', async () => {
+    loginAs(regular);
+    prismaMock.event.findUnique.mockResolvedValue({ ...mockEvent, deletedAt: null } as any);
+
+    await expect(fetchEventForEdit('event-1')).rejects.toThrow('No autorizado');
+  });
+
+  it('returns the event to a regular user set as its admin', async () => {
+    loginAs(regular);
+    const shared = { ...mockEvent, deletedAt: null, admins: [{ userId: 'user-1' }] };
+    prismaMock.event.findUnique.mockResolvedValue(shared as any);
+
+    await expect(fetchEventForEdit('event-1')).resolves.toEqual(shared);
   });
 
   it('returns the events an ambassador created', async () => {

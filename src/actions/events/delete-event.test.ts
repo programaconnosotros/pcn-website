@@ -75,11 +75,12 @@ describe('deleteEvent', () => {
       user: { ...adminUser, role: 'REGULAR' as const },
     } as any);
 
+    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, admins: [] } as any);
+
     await expect(deleteEvent('event-1')).rejects.toThrow(
-      'No tienes permisos para eliminar eventos',
+      'Solo puedes eliminar los eventos que creaste',
     );
 
-    expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
     expect(prismaMock.event.update).not.toHaveBeenCalled();
   });
 

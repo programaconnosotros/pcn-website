@@ -2,14 +2,15 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { NewEventForm } from '@/components/events/new-event-form';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { canCreateEvents } from '@/lib/event-permissions';
+import { canCreateEvents, isSiteAdmin } from '@/lib/event-permissions';
 import { redirect } from 'next/navigation';
 
 const NewEventPage = async () => {
   const session = await getCurrentSession();
 
   // Admins y ambassadors crean eventos
-  if (!canCreateEvents(session?.user)) {
+  const user = session?.user;
+  if (!canCreateEvents(user)) {
     redirect('/eventos');
   }
 
@@ -21,7 +22,7 @@ const NewEventPage = async () => {
             <PageTitle path="eventos/nuevo" />
           </StickyHeader>
 
-          <NewEventForm />
+          <NewEventForm creatorId={user.id} searchAllUsers={isSiteAdmin(user)} />
         </div>
       </div>
     </>

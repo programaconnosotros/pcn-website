@@ -43,6 +43,7 @@ type EventFormProps = {
   initialAdmins?: CommunityMemberOption[];
   // Quien creó el evento: ya lo administra, así que no se puede agregar.
   createdById?: string | null;
+  searchAllUsers?: boolean;
 };
 
 export function EventForm({
@@ -53,6 +54,7 @@ export function EventForm({
   canManageAdmins = true,
   initialAdmins = [],
   createdById = null,
+  searchAllUsers = false,
 }: EventFormProps) {
   const form = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -581,9 +583,11 @@ export function EventForm({
                     onChange={field.onChange}
                     initialAdmins={initialAdmins}
                     excludedUserIds={createdById ? [createdById] : []}
+                    searchAllUsers={searchAllUsers}
                   />
                   <FormDescription>
-                    Ambassadors que pueden editar este evento además de quien lo creó.
+                    Personas que pueden editar este evento y ver sus inscripciones, charlas y
+                    propuestas.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

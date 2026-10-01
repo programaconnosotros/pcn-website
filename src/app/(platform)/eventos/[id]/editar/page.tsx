@@ -1,7 +1,7 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { canCreateEvents, canDeleteEvent, canManageEventAdmins } from '@/lib/event-permissions';
+import { canDeleteEvent, canManageEventAdmins, isSiteAdmin } from '@/lib/event-permissions';
 import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
@@ -13,11 +13,11 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
 
   const session = await getCurrentSession();
 
-  if (!canCreateEvents(session?.user)) {
+  if (!session) {
     redirect(`/eventos/${id}`);
   }
 
-  // Ambassadors sin acceso a este evento vuelven al detalle
+  // Quien no puede editar este evento vuelve al detalle
   const event = await fetchEventForEdit(id).catch(() => redirect(`/eventos/${id}`));
 
   if (!event) {
@@ -73,6 +73,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
             eventId={id}
             defaultValues={defaultValues}
             canManageAdmins={canManageEventAdmins(session.user, event)}
+            searchAllUsers={isSiteAdmin(session.user)}
             initialAdmins={event.admins.map(({ user }) => user)}
             createdById={event.createdById}
           />

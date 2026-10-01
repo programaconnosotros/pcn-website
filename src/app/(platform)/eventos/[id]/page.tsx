@@ -108,10 +108,10 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
       }
       userId = session.userId;
 
-      // Ambassadors editan los eventos que crearon o en los que son administradores
+      // Ambassadors editan los eventos que crearon; cualquier usuario, los que administra
       if (isAdmin) {
         canEdit = true;
-      } else if (event && session.user.isAmbassador) {
+      } else if (event) {
         const admins = await prisma.eventAdmin.findMany({
           where: { eventId: id },
           select: { userId: true },

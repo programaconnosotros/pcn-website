@@ -29,9 +29,16 @@ describe('event permissions', () => {
     expect(canEditEvent(admin, foreignEvent)).toBe(true);
   });
 
-  it('only counts event admins while they are still ambassadors', () => {
-    expect(canEditEvent({ ...ambassador, isAmbassador: false }, sharedEvent)).toBe(false);
+  it('lets any user set as event admin edit it', () => {
+    expect(canEditEvent({ ...ambassador, isAmbassador: false }, sharedEvent)).toBe(true);
+    expect(canEditEvent(regular, { createdById: 'someone', admins: [{ userId: 'reg' }] })).toBe(
+      true,
+    );
+  });
+
+  it('stops counting creators who are no longer ambassadors', () => {
     expect(canEditEvent(regular, { createdById: 'reg', admins: [] })).toBe(false);
+    expect(canDeleteEvent(regular, { createdById: 'reg', admins: [] })).toBe(false);
   });
 
   it('only lets the ambassador who created an event delete it', () => {

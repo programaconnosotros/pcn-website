@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { buildEventAdmins } from './build-event-admins';
-import { canCreateEvents } from '@/lib/event-permissions';
+import { canCreateEvents, isSiteAdmin } from '@/lib/event-permissions';
 
 export const createEvent = async (data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
@@ -40,7 +40,9 @@ export const createEvent = async (data: EventFormData) => {
   }
 
   const { sponsors, adminIds, ...eventData } = validatedData;
-  const admins = await buildEventAdmins(adminIds, session.user.id);
+  const admins = await buildEventAdmins(adminIds, session.user.id, {
+    anyUser: isSiteAdmin(session.user),
+  });
 
   const event = await prisma.event.create({
     data: {

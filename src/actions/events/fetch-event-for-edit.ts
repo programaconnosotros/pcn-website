@@ -2,13 +2,13 @@
 
 import prisma from '@/lib/prisma';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { canCreateEvents, canEditEvent } from '@/lib/event-permissions';
+import { canEditEvent } from '@/lib/event-permissions';
 
 // Esta función permite obtener eventos incluso si están eliminados
-// para que los admins puedan editarlos. Los ambassadors solo obtienen los que pueden editar.
+// para que los admins puedan editarlos. El resto solo obtiene los que puede editar.
 export const fetchEventForEdit = async (id: string) => {
   const session = await getCurrentSession();
-  if (!canCreateEvents(session?.user)) throw new Error('No autorizado');
+  if (!session) throw new Error('No autorizado');
 
   const event = await prisma.event.findUnique({
     where: {
@@ -24,7 +24,7 @@ export const fetchEventForEdit = async (id: string) => {
     },
   });
 
-  if (event && !canEditEvent(session?.user, event)) throw new Error('No autorizado');
+  if (event && !canEditEvent(session.user, event)) throw new Error('No autorizado');
 
   return event;
 };

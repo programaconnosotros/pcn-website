@@ -5,7 +5,10 @@ import { Loader2, Search, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { searchAmbassadors } from '@/actions/users/search-ambassadors';
-import type { CommunityMemberOption } from '@/actions/users/search-community-members';
+import {
+  searchCommunityMembers,
+  type CommunityMemberOption,
+} from '@/actions/users/search-community-members';
 
 type Props = {
   value: string[];
@@ -14,6 +17,8 @@ type Props = {
   initialAdmins?: CommunityMemberOption[];
   // Usuarios que no se pueden agregar (quien creó el evento ya lo administra).
   excludedUserIds?: string[];
+  // Los admins del sitio pueden asignar a cualquier usuario; el resto, solo a ambassadors.
+  searchAllUsers?: boolean;
 };
 
 const MemberAvatar = ({ user, size }: { user: CommunityMemberOption; size: string }) => (
@@ -25,12 +30,13 @@ const MemberAvatar = ({ user, size }: { user: CommunityMemberOption; size: strin
   </Avatar>
 );
 
-// Buscador de ambassadors para asignarlos como administradores de un evento.
+// Buscador de usuarios para asignarlos como administradores de un evento.
 export function EventAdminsField({
   value,
   onChange,
   initialAdmins = [],
   excludedUserIds = [],
+  searchAllUsers = false,
 }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<CommunityMemberOption[]>([]);
@@ -54,13 +60,14 @@ export function EventAdminsField({
     const timeout = setTimeout(async () => {
       setIsLoading(true);
       try {
-        setResults(await searchAmbassadors(trimmedQuery));
+        const search = searchAllUsers ? searchCommunityMembers : searchAmbassadors;
+        setResults(await search(trimmedQuery));
       } finally {
         setIsLoading(false);
       }
     }, 250);
     return () => clearTimeout(timeout);
-  }, [trimmedQuery, isOpen]);
+  }, [trimmedQuery, isOpen, searchAllUsers]);
 
   // Cerrar al hacer click afuera
   useEffect(() => {
@@ -107,7 +114,9 @@ export function EventAdminsField({
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Buscar ambassadors por nombre..."
+          placeholder={
+            searchAllUsers ? 'Buscar usuarios por nombre...' : 'Buscar ambassadors por nombre...'
+          }
           value={query}
           className="pl-9"
           onChange={(e) => {
@@ -142,7 +151,7 @@ export function EventAdminsField({
           ))}
           {visibleResults.length === 0 && (
             <li className="px-3 py-2 text-sm text-muted-foreground">
-              No hay ambassadors con ese nombre.
+              {searchAllUsers ? 'No hay usuarios' : 'No hay ambassadors'} con ese nombre.
             </li>
           )}
         </ul>

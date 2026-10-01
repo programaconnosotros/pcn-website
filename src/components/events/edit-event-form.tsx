@@ -14,6 +14,7 @@ type EditEventFormProps = {
   canManageAdmins?: boolean;
   initialAdmins?: CommunityMemberOption[];
   createdById?: string | null;
+  searchAllUsers?: boolean;
 };
 
 const formatDateForInput = (iso: string): string => {
@@ -29,6 +30,7 @@ export function EditEventForm({
   canManageAdmins,
   initialAdmins,
   createdById,
+  searchAllUsers,
 }: EditEventFormProps) {
   const [formDefaults, setFormDefaults] = useState<EventFormData | null>(null);
 
@@ -71,6 +73,7 @@ export function EditEventForm({
       canManageAdmins={canManageAdmins}
       initialAdmins={initialAdmins}
       createdById={createdById}
+      searchAllUsers={searchAllUsers}
     />
   );
 }

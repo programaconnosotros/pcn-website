@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { buildEventAdmins } from './build-event-admins';
-import { canCreateEvents, canEditEvent, canManageEventAdmins } from '@/lib/event-permissions';
+import { canEditEvent, canManageEventAdmins, isSiteAdmin } from '@/lib/event-permissions';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
   const validatedData = eventSchema.parse(data);
@@ -24,11 +24,6 @@ export const updateEvent = async (id: string, data: EventFormData) => {
 
   if (!session) {
     throw new Error('Sesión no encontrada');
-  }
-
-  // Solo admins y ambassadors editan eventos
-  if (!canCreateEvents(session.user)) {
-    throw new Error('No tienes permisos para editar eventos');
   }
 
   // Verificar que el evento existe
@@ -57,7 +52,11 @@ export const updateEvent = async (id: string, data: EventFormData) => {
   const { sponsors, adminIds, ...eventData } = validatedData;
   // Los administradores solo los cambia quien creó el evento (o un admin)
   const managesAdmins = canManageEventAdmins(session.user, existingEvent);
-  const admins = managesAdmins ? await buildEventAdmins(adminIds, existingEvent.createdById) : [];
+  const admins = managesAdmins
+    ? await buildEventAdmins(adminIds, existingEvent.createdById, {
+        anyUser: isSiteAdmin(session.user),
+      })
+    : [];
 
   // Reemplazar sponsors (y administradores, si corresponde) existentes por los nuevos
   await prisma.$transaction([
