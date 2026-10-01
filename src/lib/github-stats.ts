@@ -11,6 +11,8 @@ export type ContributorStat = {
   htmlUrl: string;
   commits: number;
   mergedPrs: number;
+  /** Lines added across all their commits, or `null` while GitHub computes the stats. */
+  linesAdded: number | null;
 };
 
 export type CollaborationStats = {
@@ -49,6 +51,11 @@ type GitHubPull = {
   created_at: string;
   merged_at: string | null;
   user: { login: string } | null;
+};
+
+type GitHubContributorActivity = {
+  author: { login: string } | null;
+  weeks: { a: number; d: number; c: number }[];
 };
 
 const github = async (path: string) => {
@@ -96,18 +103,23 @@ const median = (values: number[]) => {
 /** Collaboration numbers for the website repo, or `null` when GitHub can't be reached. */
 export const getCollaborationStats = async (): Promise<CollaborationStats | null> => {
   try {
-    const [repo, contributors, commitsResponse, participation, pulls] = await Promise.all([
-      github('').then((res) => res.json() as Promise<GitHubRepo>),
-      github('/contributors?per_page=100').then(
-        (res) => res.json() as Promise<GitHubContributor[]>,
-      ),
-      github('/commits?per_page=1'),
-      // Returns 202 with an empty body while GitHub computes the stats; treat that as no data.
-      github('/stats/participation')
-        .then((res) => (res.status === 200 ? res.json() : null))
-        .catch(() => null) as Promise<{ all?: number[] } | null>,
-      fetchAllPulls(),
-    ]);
+    const [repo, contributors, commitsResponse, participation, pulls, activity] = await Promise.all(
+      [
+        github('').then((res) => res.json() as Promise<GitHubRepo>),
+        github('/contributors?per_page=100').then(
+          (res) => res.json() as Promise<GitHubContributor[]>,
+        ),
+        github('/commits?per_page=1'),
+        // Returns 202 with an empty body while GitHub computes the stats; treat that as no data.
+        github('/stats/participation')
+          .then((res) => (res.status === 200 ? res.json() : null))
+          .catch(() => null) as Promise<{ all?: number[] } | null>,
+        fetchAllPulls(),
+        github('/stats/contributors')
+          .then((res) => (res.status === 200 ? res.json() : null))
+          .catch(() => null) as Promise<GitHubContributorActivity[] | null>,
+      ],
+    );
 
     const humans = contributors.filter((contributor) => contributor.type !== 'Bot');
     const merged = pulls.filter((pull) => pull.merged_at);
@@ -116,6 +128,16 @@ export const getCollaborationStats = async (): Promise<CollaborationStats | null
     for (const pull of merged) {
       const login = pull.user?.login;
       if (login) mergedByAuthor.set(login, (mergedByAuthor.get(login) ?? 0) + 1);
+    }
+
+    const linesAddedByAuthor = new Map<string, number>();
+    for (const { author, weeks } of activity ?? []) {
+      if (author) {
+        linesAddedByAuthor.set(
+          author.login,
+          weeks.reduce((sum, week) => sum + week.a, 0),
+        );
+      }
     }
 
     const hoursToMerge = merged.map(
@@ -129,6 +151,7 @@ export const getCollaborationStats = async (): Promise<CollaborationStats | null
         htmlUrl: contributor.html_url,
         commits: contributor.contributions,
         mergedPrs: mergedByAuthor.get(contributor.login) ?? 0,
+        linesAdded: activity ? linesAddedByAuthor.get(contributor.login) ?? 0 : null,
       }))
       .sort((a, b) => b.mergedPrs - a.mergedPrs || b.commits - a.commits);
 

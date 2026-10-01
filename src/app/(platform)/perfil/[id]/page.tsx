@@ -292,6 +292,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
       identities.github.includes(contributor.login),
     ) ?? [];
   const mergedPrs = contributions.reduce((sum, contributor) => sum + contributor.mergedPrs, 0);
+  const commits = contributions.reduce((sum, contributor) => sum + contributor.commits, 0);
+  const linesAdded = contributions.some((contributor) => contributor.linesAdded === null)
+    ? null
+    : contributions.reduce((sum, contributor) => sum + (contributor.linesAdded ?? 0), 0);
 
   const counts: Partial<Record<ProfileTab, number>> = {
     proyectos: userProjects.length,
@@ -419,7 +423,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
             {tab === 'resumen' && (
               <div className="mb-14 space-y-8">
-                <RuledGrid className="grid-cols-2 sm:grid-cols-4">
+                <RuledGrid
+                  className={cn(
+                    'grid-cols-2',
+                    contributions.length > 0 ? 'sm:grid-cols-3' : 'sm:grid-cols-4',
+                  )}
+                >
                   <ProfileStat
                     label="proyectos"
                     value={userProjects.length}
@@ -432,11 +441,23 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   />
                   <ProfileStat label="charlas" value={userTalks.length} href={tabHref('charlas')} />
                   {contributions.length > 0 ? (
-                    <ProfileStat
-                      label="PRs a pcn"
-                      value={mergedPrs}
-                      href={tabHref('contribuciones')}
-                    />
+                    <>
+                      <ProfileStat
+                        label="PRs a pcn"
+                        value={mergedPrs}
+                        href={tabHref('contribuciones')}
+                      />
+                      <ProfileStat
+                        label="commits a pcn"
+                        value={commits.toLocaleString('es-AR')}
+                        href={tabHref('contribuciones')}
+                      />
+                      <ProfileStat
+                        label="líneas a pcn"
+                        value={linesAdded === null ? '—' : linesAdded.toLocaleString('es-AR')}
+                        href={tabHref('contribuciones')}
+                      />
+                    </>
                   ) : (
                     <ProfileStat
                       label="conversaciones"
