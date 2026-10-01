@@ -95,3 +95,38 @@ export async function createPhoto(originalKey: string, input: PhotoDetailsInput)
   revalidatePhoto(photo.id, [details.eventId]);
   return photo;
 }
+
+/** Cambia la fecha, la descripción o el evento de una foto. Solo admins. */
+export async function updatePhoto(photoId: string, input: PhotoDetailsInput) {
+  await requireAdmin();
+  const details = parseDetails(input);
+
+  const photo = await prisma.photo.findUnique({
+    where: { id: photoId },
+    select: { eventId: true },
+  });
+  if (!photo) throw new Error('Foto no encontrada');
+  await assertEventExists(details.eventId);
+
+  await prisma.photo.update({ where: { id: photoId }, data: details });
+  revalidatePhoto(photoId, [photo.eventId, details.eventId]);
+  return { success: true };
+}
+
+/** Elimina una foto, sus etiquetas y sus archivos en S3. Solo admins. */
+export async function deletePhoto(photoId: string) {
+  await requireAdmin();
+
+  const photo = await prisma.photo.findUnique({
+    where: { id: photoId },
+    select: { eventId: true, storageKeys: true, tags: { select: { userId: true } } },
+  });
+  if (!photo) throw new Error('Foto no encontrada');
+
+  await prisma.photo.delete({ where: { id: photoId } });
+  await deleteObjects(photo.storageKeys);
+
+  revalidatePhoto(photoId, [photo.eventId]);
+  photo.tags.forEach(({ userId }) => revalidatePath(`/perfil/${userId}`));
+  return { success: true };
+}

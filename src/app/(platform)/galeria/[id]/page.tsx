@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { LocalDate } from '@/components/ui/local-date-time';
@@ -14,6 +14,7 @@ import {
   photoCaption,
   photoFileName,
 } from '@/components/photo-gallery/photo-utils';
+import { getAdminUser } from '@/lib/admin';
 import { optimizedOgImage } from '@/lib/og-image';
 import { getPhoto, getPhotoNeighbours } from '@/lib/photos';
 import { cn } from '@/lib/utils';
@@ -64,7 +65,7 @@ export default async function PhotoPage(props: Props) {
   const { id } = await props.params;
   const { evento } = await props.searchParams;
 
-  const photo = await getPhoto(id);
+  const [photo, admin] = await Promise.all([getPhoto(id), getAdminUser()]);
   if (!photo) notFound();
 
   // Browsing an event's photos keeps prev/next within that event.
@@ -96,7 +97,21 @@ export default async function PhotoPage(props: Props) {
               </span>
             )
           }
-          action={<PhotoActionsBar photo={photo} />}
+          action={
+            <>
+              {admin && (
+                <Link
+                  href={`/galeria/${photo.id}/editar`}
+                  className={keyCapClassName}
+                  title="Editar o eliminar"
+                >
+                  <Pencil className="size-3.5" />
+                  <span className="sr-only">Editar o eliminar</span>
+                </Link>
+              )}
+              <PhotoActionsBar photo={photo} />
+            </>
+          }
         />
       </StickyHeader>
 
