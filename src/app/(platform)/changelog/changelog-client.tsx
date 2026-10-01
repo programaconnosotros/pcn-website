@@ -127,7 +127,7 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
         <StickyHeader>
           <PageTitle
             path="changelog"
-            meta="los últimos cambios de la plataforma"
+            meta="todos los cambios de la plataforma desde 2024"
             action={
               isAdmin && (
                 <Link
