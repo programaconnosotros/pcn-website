@@ -8,8 +8,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 
+// ISO dates are calendar days, so format them in UTC to keep server and client in sync.
+const formatArticleDate = (date: string) =>
+  new Date(`${date}T00:00:00Z`).toLocaleDateString('es-AR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
 // Articles from /lectura, opened in the same reader the reading page uses.
-export const RelatedArticles = ({ articles }: { articles: Article[] }) => {
+export const RelatedArticles = ({
+  articles,
+  showDate = false,
+}: {
+  articles: Article[];
+  showDate?: boolean;
+}) => {
   const [reading, setReading] = useState<Article | null>(null);
 
   return (
@@ -41,10 +56,17 @@ export const RelatedArticles = ({ articles }: { articles: Article[] }) => {
               <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                 {article.description}
               </p>
-              <p className="truncate font-mono text-[11px] text-muted-foreground/80">
-                <span className="text-pcnGreen-500">@ </span>
-                {article.author} · {article.source}
-              </p>
+              <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
+                <p className="min-w-0 flex-1 truncate">
+                  <span className="text-pcnGreen-500">@ </span>
+                  {article.author} · {article.source}
+                </p>
+                {showDate && (
+                  <time dateTime={article.date} className="shrink-0">
+                    {formatArticleDate(article.date)}
+                  </time>
+                )}
+              </div>
             </div>
           </button>
         ))}
