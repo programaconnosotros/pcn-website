@@ -6,13 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,7 +28,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { UserProgrammingLanguage, programmingLanguages } from '@/types/programming-language';
-import { LanguageCoinsContainer } from './language-coins-container';
+import { LanguageChip } from './language-chip';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { Briefcase, GraduationCap, Link2, User as UserIcon, Code } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
@@ -64,61 +57,6 @@ const COUNTRIES = [
   'Venezuela',
   'Otro',
 ];
-
-type LanguageDialogProps = {
-  currentLanguage: string;
-  setCurrentLanguage: (_value: string) => void;
-  addLanguage: () => void;
-};
-
-const LanguageDialog = ({
-  currentLanguage,
-  setCurrentLanguage,
-  addLanguage,
-}: LanguageDialogProps) => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <Button variant="outline" size="sm">
-        agregarLenguaje();
-      </Button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Agregar lenguaje de programación</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4 py-4">
-        <div className="space-y-2">
-          <Label htmlFor="language">Selecciona un lenguaje</Label>
-          <Select value={currentLanguage} onValueChange={setCurrentLanguage}>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar lenguaje" />
-            </SelectTrigger>
-            <SelectContent>
-              {programmingLanguages.map((lang) => (
-                <SelectItem key={lang.id} value={lang.id}>
-                  <div className="flex items-center gap-2">
-                    <div className="relative h-5 w-5">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={lang.logo || '/placeholder.svg'}
-                        alt={lang.name}
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                    <span>{lang.name}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button onClick={addLanguage} className="w-full">
-          agregar();
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
 
 type FormErrorProps = {
   error?: { message?: string };
@@ -158,7 +96,6 @@ export const ProfileForm = ({
   });
 
   const [userLanguages, setUserLanguages] = useState<UserProgrammingLanguage[]>(languages || []);
-  const [currentLanguage, setCurrentLanguage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const watchCountry = form.watch('countryOfOrigin');
 
@@ -169,19 +106,16 @@ export const ProfileForm = ({
     }
   }, [languages, form]);
 
-  const addLanguage = () => {
-    if (!currentLanguage) return;
+  const addLanguage = (languageId: string) => {
+    if (userLanguages.some((lang) => lang.languageId === languageId)) return;
 
-    const exists = userLanguages.some((lang) => lang.languageId === currentLanguage);
-    if (exists) return;
-
-    const selectedLanguage = programmingLanguages.find((lang) => lang.id === currentLanguage);
+    const selectedLanguage = programmingLanguages.find((lang) => lang.id === languageId);
     if (!selectedLanguage) return;
 
     const newLanguage: UserProgrammingLanguage = {
-      languageId: currentLanguage,
+      languageId,
       color: selectedLanguage.color,
-      logo: selectedLanguage.logo,
+      logo: selectedLanguage.ext,
       experienceLevel: 0,
     };
 
@@ -189,7 +123,6 @@ export const ProfileForm = ({
 
     setUserLanguages(updatedLanguages);
     form.setValue('programmingLanguages', updatedLanguages);
-    setCurrentLanguage('');
   };
 
   //function for removing language
@@ -476,19 +409,26 @@ export const ProfileForm = ({
                 <Code className="h-4 w-4 text-pcnGreen" />
                 Lenguajes de programación
               </h3>
-              <LanguageDialog
-                currentLanguage={currentLanguage}
-                setCurrentLanguage={setCurrentLanguage}
-                addLanguage={addLanguage}
-              />
+              <span className="font-mono text-[11px] text-muted-foreground">
+                {userLanguages.length} marcados
+              </span>
             </div>
 
-            {/* View of added languages using the LanguageCoinsContainer */}
-            <LanguageCoinsContainer
-              languages={userLanguages}
-              editable={true}
-              onRemoveLanguage={removeLanguage}
-            />
+            {/* Every language as a token: click to mark or unmark it */}
+            <div className="flex flex-wrap gap-1.5">
+              {programmingLanguages.map((lang) => {
+                const selected = userLanguages.some((ul) => ul.languageId === lang.id);
+                return (
+                  <LanguageChip
+                    key={lang.id}
+                    languageId={lang.id}
+                    selectable
+                    selected={selected}
+                    onToggle={() => (selected ? removeLanguage(lang.id) : addLanguage(lang.id))}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
 

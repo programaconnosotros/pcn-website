@@ -10,6 +10,7 @@ import { LocalDate } from '@/components/ui/local-date-time';
 import { TableTag } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { UserFlagToggle } from './user-flag-toggle';
+import { findProgrammingLanguage } from '@/types/programming-language';
 
 const relativeFormat = new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' });
 
@@ -280,7 +281,9 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
             <span
               key={l.language}
               className="size-2 rounded-full ring-1 ring-black"
-              style={{ backgroundColor: l.color }}
+              style={{
+                backgroundColor: findProgrammingLanguage(l.language)?.color ?? l.color,
+              }}
             />
           ))}
           <span className="ml-1 font-mono text-[10px] text-muted-foreground">{langs.length}</span>
