@@ -1217,6 +1217,11 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
       color 0.2s,
       --field-beam 0s;
   }
+  /* Fields that TerminalCaret can't measure (number) keep a native caret; an underscore never
+     covers the character under it. */
+  .field-surface[type='number'] {
+    caret-shape: underscore;
+  }
   .field-surface::placeholder {
     color: hsl(var(--muted-foreground) / 0.55);
     transition: opacity 0.2s;
@@ -1334,6 +1339,25 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
     opacity: 0.5;
   }
 
+  /* Block caret drawn by components/ui/terminal-caret.tsx: the character under it in black. */
+  .terminal-caret {
+    position: fixed;
+    z-index: 2147483001;
+    pointer-events: none;
+    white-space: pre;
+    overflow: hidden;
+    background: #04f4be;
+    color: #000;
+    box-shadow: 0 0 8px rgba(4, 244, 190, 0.8);
+  }
+  .terminal-caret[data-invalid='true'] {
+    background: hsl(var(--destructive));
+    box-shadow: 0 0 8px hsl(var(--destructive) / 0.8);
+  }
+  .terminal-caret-blink {
+    animation: cursor-blink 1s steps(1) 0.5s infinite;
+  }
+
   /* Validation messages stream in with a short glitch. */
   .field-message {
     animation: field-message-in 0.3s steps(3) both;
@@ -1376,7 +1400,8 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
   .field-surface:focus-visible,
   .field-surface[data-state='open'],
   .field-surface[aria-invalid='true'],
-  .field-message {
+  .field-message,
+  .terminal-caret-blink {
     animation: none;
   }
 }
