@@ -11,7 +11,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export async function generateMetadata(): Promise<Metadata> {
   const event = await prisma.event.findUnique({
     where: { id: EVENT_ID },
-    include: { images: true },
+    include: { photos: { select: { src: true }, take: 1 } },
   });
 
   if (!event) {
@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const imageUrl =
     event.flyerImages[0] ||
-    (event.images.length > 0 ? event.images[0].imgSrc : `/eventos/${event.id}/og-image`);
+    (event.photos.length > 0 ? event.photos[0].src : `/eventos/${event.id}/og-image`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   const description =

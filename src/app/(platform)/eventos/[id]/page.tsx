@@ -56,7 +56,7 @@ export async function generateMetadata(props: {
   const description =
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
-  const rawImage = event.flyerImages[0] || event.images[0]?.imgSrc;
+  const rawImage = event.flyerImages[0] || event.photos[0]?.src;
   const imageUrl = rawImage ? optimizedOgImage(rawImage) : `/eventos/${event.id}/og-image`;
   const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
@@ -238,9 +238,14 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               />
             </div>
 
-            {event.images && event.images.length > 0 && (
+            {(event.photos.length > 0 || isAdmin) && (
               <Section title="fotos">
-                <EventPhotos images={event.images} />
+                <EventPhotos
+                  eventId={id}
+                  photos={event.photos}
+                  total={event._count.photos}
+                  canUpload={isAdmin}
+                />
               </Section>
             )}
 

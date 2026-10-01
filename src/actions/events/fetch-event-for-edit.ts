@@ -15,7 +15,6 @@ export const fetchEventForEdit = async (id: string) => {
       id: id,
     },
     include: {
-      images: true,
       sponsors: true,
       organizers: { select: { userId: true } },
     },

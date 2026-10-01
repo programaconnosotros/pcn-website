@@ -61,6 +61,9 @@ model User {
   organizedEvents      EventOrganizer[]
   badges               UserBadge[]
   awardedBadges        UserBadge[]           @relation("BadgeAwarder")
+  uploadedPhotos       Photo[]               @relation("UserUploadedPhotos")
+  photoTags            PhotoTag[]
+  photoTagsAdded       PhotoTag[]            @relation("PhotoTagger")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -149,7 +152,7 @@ model Event {
 
   createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
   organizers    EventOrganizer[]
-  images        Image[]
+  photos        Photo[]
   registrations EventRegistration[]
   sponsors      Sponsor[]
   announcements Announcement[]
@@ -176,11 +179,50 @@ model EventOrganizer {
   @@index([userId])
 }
 
-model Image {
-  id      String  @id @default(cuid())
-  imgSrc  String
-  event   Event?  @relation(fields: [eventId], references: [id])
-  eventId String?
+// Foto de la galería. Las que suben los admins se guardan en S3 como webp (una grande y una
+// miniatura) y se sirven por CloudFront; las históricas viven en /public.
+model Photo {
+  id           String   @id @default(cuid())
+  src          String
+  thumbSrc     String
+  width        Int?
+  height       Int?
+  // Objetos de S3 de la foto, para borrarlos junto con ella. Vacío en las fotos de /public.
+  storageKeys  String[] @default([])
+  // Cuándo se sacó (por defecto, la fecha del archivo).
+  takenAt      DateTime
+  description  String?
+  eventId      String?
+  uploadedById String?
+  // Id en la galería estática anterior, para que sigan andando los links `/galeria?foto=<n>`.
+  legacyId     Int?     @unique
+
+  event      Event?     @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  uploadedBy User?      @relation("UserUploadedPhotos", fields: [uploadedById], references: [id], onDelete: SetNull)
+  tags       PhotoTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([takenAt])
+  @@index([eventId])
+}
+
+// Persona que aparece en una foto. La etiquetan los admins o la propia persona.
+model PhotoTag {
+  id         String  @id @default(cuid())
+  photoId    String
+  userId     String
+  taggedById String?
+
+  photo    Photo @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  user     User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taggedBy User? @relation("PhotoTagger", fields: [taggedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([photoId, userId])
+  @@index([userId])
 }
 
 model Like {

@@ -40,7 +40,8 @@ async function clearSeedData() {
   await prisma.notification.deleteMany();
   await prisma.eventRegistration.deleteMany();
   await prisma.sponsor.deleteMany();
-  await prisma.image.deleteMany();
+  // Las fotos históricas de la galería las carga una migración: solo se borran las de prueba.
+  await prisma.photo.deleteMany({ where: { legacyId: null } });
   await prisma.comment.deleteMany();
   await prisma.userLanguage.deleteMany();
   await prisma.like.deleteMany();
@@ -174,19 +175,7 @@ async function main() {
         const endDate = new Date(startDate);
         endDate.setHours(startDate.getHours() + 4);
 
-        const includeImages = index % 2 === 0;
-        const imageIds: string[] = [];
-
-        if (includeImages) {
-          await Promise.all(
-            Array.from({ length: 3 }).map(async () => {
-              const image = await prisma.image.create({
-                data: { imgSrc: '/events/Lightning talks flyer.webp' },
-              });
-              imageIds.push(image.id);
-            }),
-          );
-        }
+        const includePhotos = index % 2 === 0;
 
         return prisma.event.create({
           data: {
@@ -200,8 +189,14 @@ async function main() {
             placeName: 'UTN-FRT',
             latitude: -26.844408,
             longitude: -65.22264,
-            images: {
-              connect: imageIds.length > 0 ? imageIds.map((id) => ({ id })) : [],
+            photos: {
+              create: includePhotos
+                ? Array.from({ length: 3 }).map(() => ({
+                    src: '/events/Lightning talks flyer.webp',
+                    thumbSrc: '/events/Lightning talks flyer.webp',
+                    takenAt: startDate,
+                  }))
+                : [],
             },
           },
         });

@@ -4,31 +4,29 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
+import { Button } from '@/components/ui/button';
 import { dateContainsString } from '@/lib/date-formatter';
+import type { PhotoTile } from '@/lib/photos';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { ImagePlus, X } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import { PhotoCard } from './photo-card';
-import { PhotoDialog } from './photo-dialog';
-import type { Photo } from './photo-utils';
-import { photos } from './photos';
+import { photoCaption } from './photo-utils';
 import { ShareDialog } from './share-dialog';
 
 // Lowercase without accents, so `tafi` finds `Tafí`.
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
+const normalize = (text: string) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 interface GalleryProps {
-  initialPhotoId?: number | null;
+  photos: PhotoTile[];
+  // When browsing one event's photos.
+  event?: { id: string; name: string } | null;
+  canUpload: boolean;
 }
 
-export function Gallery({ initialPhotoId }: GalleryProps) {
-  const router = useRouter();
-  const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
-  const [sharedPhoto, setSharedPhoto] = useState<Photo | null>(null);
+export function Gallery({ photos, event, canUpload }: GalleryProps) {
+  const [sharedPhoto, setSharedPhoto] = useState<PhotoTile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredPhotos = useMemo(() => {
@@ -37,47 +35,62 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
 
     return photos.filter(
       (photo) =>
-        normalize(photo.title).includes(query) ||
-        photo.image.toLowerCase().includes(query) ||
-        (photo.date && dateContainsString(photo.date, query)),
+        normalize(photo.description ?? '').includes(query) ||
+        normalize(photo.event?.name ?? '').includes(query) ||
+        photo.tags.some((tag) => normalize(tag.user.name).includes(query)) ||
+        dateContainsString(photo.takenAt, query),
     );
-  }, [searchQuery]);
+  }, [photos, searchQuery]);
 
-  // Tracked by id rather than index so searching doesn't swap the open photo.
-  const selectedPhotoIndex = filteredPhotos.findIndex((photo) => photo.id === selectedPhotoId);
+  const photoHref = (photo: PhotoTile) =>
+    event ? `/galeria/${photo.id}?evento=${event.id}` : `/galeria/${photo.id}`;
 
-  // Open the photo linked from `?foto=<id>`.
-  useEffect(() => {
-    if (initialPhotoId) setSelectedPhotoId(initialPhotoId);
-  }, [initialPhotoId]);
-
-  const openPhoto = (photo: Photo) => {
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoId(photo.id);
-  };
-
-  const handleCloseDialog = () => {
-    router.push('/galeria', { scroll: false });
-    setSelectedPhotoId(null);
-  };
-
-  const getShareUrl = (photoId: number) => {
+  const getShareUrl = (photo: PhotoTile) => {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/galeria?foto=${photoId}`;
+    return `${baseUrl}/galeria/${photo.id}`;
   };
 
   return (
     <>
       <StickyHeader className="mt-4">
-        <PageTitle path="galeria" meta={`${photos.length} fotos de la comunidad`} />
+        <PageTitle
+          path={event ? [{ label: 'galeria', href: '/galeria' }, { label: event.name }] : 'galeria'}
+          meta={`${photos.length} fotos ${event ? 'del evento' : 'de la comunidad'}`}
+          action={
+            canUpload && (
+              <Link href={event ? `/galeria/subir?evento=${event.id}` : '/galeria/subir'}>
+                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                  <ImagePlus className="h-4 w-4" />
+                  subirFotos();
+                </Button>
+              </Link>
+            )
+          }
+        />
 
         <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="título, archivo o fecha"
-            label="Buscar fotos"
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="descripción, evento, persona o fecha"
+              label="Buscar fotos"
+            />
+            {event && (
+              <span className="flex items-center gap-1 rounded-sm border border-pcnGreen-200 px-2 py-1 font-mono text-xs">
+                <Link href={`/eventos/${event.id}`} className="text-pcnGreen hover:underline">
+                  evento:{event.name}
+                </Link>
+                <Link
+                  href="/galeria"
+                  aria-label="Ver todas las fotos"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </Link>
+              </span>
+            )}
+          </div>
           <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
             {searchQuery.trim() ? (
               <>
@@ -93,7 +106,11 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
         </div>
       </StickyHeader>
 
-      {filteredPhotos.length === 0 ? (
+      {photos.length === 0 ? (
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          {event ? 'Este evento todavía no tiene fotos.' : 'Todavía no hay fotos.'}
+        </p>
+      ) : filteredPhotos.length === 0 ? (
         <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
           grep: sin coincidencias para{' '}
           <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
@@ -106,7 +123,7 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
                 photo={photo}
                 index={index}
                 total={filteredPhotos.length}
-                onOpen={() => openPhoto(photo)}
+                href={photoHref(photo)}
                 onShare={() => setSharedPhoto(photo)}
               />
             </div>
@@ -114,23 +131,12 @@ export function Gallery({ initialPhotoId }: GalleryProps) {
         </RuledGrid>
       )}
 
-      {selectedPhotoIndex !== -1 && (
-        <PhotoDialog
-          photos={filteredPhotos}
-          currentPhotoIndex={selectedPhotoIndex}
-          isOpen
-          onClose={handleCloseDialog}
-          onNavigate={(index) => openPhoto(filteredPhotos[index])}
-          onShare={setSharedPhoto}
-        />
-      )}
-
       {sharedPhoto && (
         <ShareDialog
           isOpen
           onClose={() => setSharedPhoto(null)}
-          url={getShareUrl(sharedPhoto.id)}
-          title={sharedPhoto.title}
+          url={getShareUrl(sharedPhoto)}
+          title={photoCaption(sharedPhoto)}
         />
       )}
     </>

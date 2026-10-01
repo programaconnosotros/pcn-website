@@ -1,22 +1,18 @@
 'use client';
 
 import { useRef } from 'react';
+import Link from 'next/link';
 import { Download, Share2 } from 'lucide-react';
+import type { PhotoTile } from '@/lib/photos';
 import { parallaxStyle, useParallax } from './use-parallax';
-import {
-  formatPhotoDate,
-  keyCapClassName,
-  padIndex,
-  photoFileName,
-  usePhotoDownload,
-  type Photo,
-} from './photo-utils';
+import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
+import { usePhotoDownload } from './use-photo-download';
 
 interface PhotoCardProps {
-  photo: Photo;
+  photo: PhotoTile;
   index: number;
   total: number;
-  onOpen: () => void;
+  href: string;
   onShare: () => void;
 }
 
@@ -26,18 +22,17 @@ const cornerClassName =
 // A dimmed, scanlined thumbnail that powers up on hover: full colour, lit corner brackets and a
 // file-name caption sliding up from the bottom. The photo is taller than its frame and drifts
 // against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
-export function PhotoCard({ photo, index, total, onOpen, onShare }: PhotoCardProps) {
+export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps) {
   const { download, isDownloading } = usePhotoDownload();
   const frameRef = useRef<HTMLDivElement>(null);
   useParallax(frameRef);
 
   return (
     <div ref={frameRef} className="group relative aspect-square w-full overflow-hidden bg-black">
-      <button
-        type="button"
-        onClick={onOpen}
+      <Link
+        href={href}
         className="absolute inset-0 focus-visible:outline-none"
-        aria-label={`Ver foto: ${photo.title}`}
+        aria-label={`Ver foto: ${photoCaption(photo)}`}
       >
         <span
           aria-hidden
@@ -46,7 +41,7 @@ export function PhotoCard({ photo, index, total, onOpen, onShare }: PhotoCardPro
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={photo.image}
+            src={photo.thumbSrc}
             alt=""
             loading="lazy"
             decoding="async"
@@ -67,10 +62,14 @@ export function PhotoCard({ photo, index, total, onOpen, onShare }: PhotoCardPro
           aria-hidden
           className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black via-black/70 to-transparent px-2 pb-1.5 pt-8 text-left font-mono text-[10px] leading-tight transition-transform duration-300 ease-out group-focus-within:translate-y-0 group-hover:translate-y-0"
         >
-          <span className="block truncate text-pcnGreen">{photoFileName(photo)}</span>
-          <span className="block tabular-nums text-white/50">{formatPhotoDate(photo.date)}</span>
+          <span className="block truncate text-pcnGreen">{photoCaption(photo)}</span>
+          <span className="block truncate tabular-nums text-white/50">
+            {formatPhotoDate(photo.takenAt)}
+            {photo.tags.length > 0 &&
+              ` · ${photo.tags.length} ${photo.tags.length === 1 ? 'persona' : 'personas'}`}
+          </span>
         </span>
-      </button>
+      </Link>
 
       <span aria-hidden className={`${cornerClassName} left-1 top-1 border-l-2 border-t-2`} />
       <span aria-hidden className={`${cornerClassName} right-1 top-1 border-r-2 border-t-2`} />

@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { shortcut } = await params;
   const label = slugToLabel(shortcut);
 
-  const event = await findNextEventByShortcut(shortcut, { includeImages: true });
+  const event = await findNextEventByShortcut(shortcut);
 
   if (!event) {
     return {
@@ -37,9 +37,7 @@ export async function generateMetadata({
     };
   }
 
-  const rawImage =
-    event.flyerImages[0] ||
-    ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
+  const rawImage = event.flyerImages[0] || event.photos[0]?.src || null;
   // Events without a flyer get the generated terminal card.
   const imageUrl = rawImage
     ? optimizedOgImage(rawImage)
