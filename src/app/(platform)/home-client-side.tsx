@@ -26,6 +26,7 @@ interface HomeClientSideProps {
   recentlyAddedEventsSection: React.ReactNode;
   latestConversationsSection: React.ReactNode;
   latestTalksSection: React.ReactNode;
+  latestPhotosSection: React.ReactNode;
   latestChangesSection: React.ReactNode;
   ambassadorsSection: React.ReactNode;
 }
@@ -37,6 +38,7 @@ const HomeClientSide = ({
   recentlyAddedEventsSection,
   latestConversationsSection,
   latestTalksSection,
+  latestPhotosSection,
   latestChangesSection,
   ambassadorsSection,
 }: HomeClientSideProps) => (
@@ -55,6 +57,8 @@ const HomeClientSide = ({
       <Reveal>{latestConversationsSection}</Reveal>
 
       {latestTalksSection && <Reveal>{latestTalksSection}</Reveal>}
+
+      {latestPhotosSection && <Reveal>{latestPhotosSection}</Reveal>}
 
       <Reveal>
         <LatestArticlesSection />

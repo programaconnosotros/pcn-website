@@ -100,3 +100,11 @@ export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFi
     total: ids.length,
   };
 }
+
+/** The most recently uploaded photos and videos, newest upload first. */
+export const listLatestGalleryItems = (take: number) =>
+  prisma.galleryItem.findMany({
+    select: galleryTileSelect,
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take,
+  });
