@@ -67,7 +67,7 @@ export function OsPhotos({
         </span>
       </span>
 
-      <span className="relative block aspect-[16/10] overflow-hidden bg-black">
+      <span className="relative block aspect-square overflow-hidden bg-black">
         <AnimatePresence initial={false}>
           {photo && (
             <motion.img
