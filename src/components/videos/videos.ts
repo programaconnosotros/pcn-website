@@ -122,6 +122,15 @@ const allVideos: Video[] = [
     isTalk: true,
   },
   {
+    id: 'gcwzWzC7gUA',
+    title: 'Rails World 2025 Opening Keynote',
+    speaker: 'DHH',
+    channel: 'Ruby on Rails',
+    date: '2025-09-04',
+    durationSeconds: 3835,
+    isTalk: true,
+  },
+  {
     id: 'vDjW_dRyKXY',
     title: 'Rails World 2026 Opening Keynote',
     speaker: 'DHH',
