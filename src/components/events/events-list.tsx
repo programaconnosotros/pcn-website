@@ -90,7 +90,7 @@ export const EventsList: React.FC = async () => {
           <SectionHeading
             label="museo"
             count={past.length}
-            note="cada flyer es una noche que armamos juntos. pasá, mirá, acordate."
+            note="cada flyer es un momento y energía que creamos juntos. pasá, mirá, acordate."
           />
           <div className="flex flex-col gap-8">
             {pastByYear.map(([year, yearEvents]) => (
