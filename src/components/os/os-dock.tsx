@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type MouseEvent,
+  type RefObject,
+} from 'react';
+import { createPortal } from 'react-dom';
 import {
   motion,
   useAnimationControls,
@@ -143,13 +151,43 @@ function TypedCommand({ text }: { text: string }) {
   return <span className="text-glow text-pcnGreen">{text.slice(0, typed)}</span>;
 }
 
-/** Floating terminal tag above the hovered icon. */
-function DockTooltip({ name, pid }: { name: string; pid: string }) {
+/**
+ * Floating terminal tag above the hovered icon. Portalled to the body so nothing in the dock (its
+ * frame, the prompt) or elsewhere in the OS can paint over it; it follows the icon every frame as
+ * the dock magnifies.
+ */
+function DockTooltip({
+  name,
+  pid,
+  anchorRef,
+}: {
+  name: string;
+  pid: string;
+  anchorRef: RefObject<HTMLElement | null>;
+}) {
   const scrambled = useScrambledText(name.toLowerCase());
-  return (
+  const tooltipRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const follow = () => {
+      const anchor = anchorRef.current?.getBoundingClientRect();
+      const tooltip = tooltipRef.current;
+      if (anchor && tooltip) {
+        tooltip.style.left = `${anchor.left + anchor.width / 2}px`;
+        tooltip.style.top = `${anchor.top - 10}px`;
+      }
+      frame = requestAnimationFrame(follow);
+    };
+    follow();
+    return () => cancelAnimationFrame(frame);
+  }, [anchorRef]);
+
+  return createPortal(
     <span
+      ref={tooltipRef}
       aria-hidden
-      className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap"
+      className="pointer-events-none fixed z-[2147483646] -translate-x-1/2 -translate-y-full whitespace-nowrap"
     >
       <motion.span
         initial={{ opacity: 0, y: 6, scaleX: 0.6 }}
@@ -163,7 +201,8 @@ function DockTooltip({ name, pid }: { name: string; pid: string }) {
         {/* Pointer down to the icon. */}
         <span className="absolute left-1/2 top-full block size-1.5 -translate-x-1/2 -translate-y-[3px] rotate-45 border-b border-r border-pcnGreen-600 bg-black" />
       </motion.span>
-    </span>
+    </span>,
+    document.body,
   );
 }
 
@@ -262,6 +301,7 @@ const DockItem = ({
   onClick,
 }: DockItemProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+  const iconRef = useRef<HTMLSpanElement>(null);
   const [launches, setLaunches] = useState(0);
   const iconControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
@@ -326,11 +366,12 @@ const DockItem = ({
       {/* Anchored above the meter so the icon grows upwards out of the dock when magnified. */}
       <span className="absolute inset-x-0 flex justify-center" style={{ bottom: footerHeight - 2 }}>
         <motion.span
+          ref={iconRef}
           animate={iconControls}
           style={{ width: iconSize, height: iconSize }}
           className="relative block shrink-0"
         >
-          {hovered && <DockTooltip name={program.name} pid={pidFor(id)} />}
+          {hovered && <DockTooltip name={program.name} pid={pidFor(id)} anchorRef={iconRef} />}
           <ProgramIcon
             program={program}
             running={running}
