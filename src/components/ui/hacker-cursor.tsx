@@ -116,6 +116,7 @@ export function HackerCursor() {
       dot.style.transform = `translate3d(${target.x}px, ${target.y}px, 0) translate(-50%, -50%) scale(${scale})`;
       ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%) scale(${pressed ? 0.8 : 1})`;
       ring.style.width = ring.style.height = `${ringSize}px`;
+      label.style.transform = `translate3d(${ringPos.x + ringSize / 2 + 6}px, ${ringPos.y}px, 0) translateY(-50%)`;
 
       if (!settled) frame = requestAnimationFrame(render);
     };
@@ -141,7 +142,7 @@ export function HackerCursor() {
 
       const hovering = state.label !== null;
       targetSize = hovering ? RING_HOVER_SIZE : RING_SIZE;
-      ring.dataset.hover = String(hovering);
+      ring.dataset.hover = label.dataset.hover = String(hovering);
       label.textContent = state.label ?? '';
       schedule();
     };
@@ -249,18 +250,23 @@ export function HackerCursor() {
   }, []);
 
   return (
-    <div aria-hidden className="pcn-cursor-layer">
-      <div ref={burstRef} />
-      <div ref={ringRef} className="pcn-cursor-ring" data-hover="false" data-pressed="false">
-        <span className="pcn-cursor-frame">
-          <span className="pcn-cursor-corner left-0 top-0 border-l-2 border-t-2" />
-          <span className="pcn-cursor-corner right-0 top-0 border-r-2 border-t-2" />
-          <span className="pcn-cursor-corner bottom-0 left-0 border-b-2 border-l-2" />
-          <span className="pcn-cursor-corner bottom-0 right-0 border-b-2 border-r-2" />
-        </span>
-        <span ref={labelRef} className="pcn-cursor-label" />
+    <div aria-hidden>
+      {/* Blended with the page so the brackets and dot turn dark over accent-colored fills. */}
+      <div className="pcn-cursor-layer pcn-cursor-blend">
+        <div ref={ringRef} className="pcn-cursor-ring" data-hover="false" data-pressed="false">
+          <span className="pcn-cursor-frame">
+            <span className="pcn-cursor-corner left-0 top-0 border-l-2 border-t-2" />
+            <span className="pcn-cursor-corner right-0 top-0 border-r-2 border-t-2" />
+            <span className="pcn-cursor-corner bottom-0 left-0 border-b-2 border-l-2" />
+            <span className="pcn-cursor-corner bottom-0 right-0 border-b-2 border-r-2" />
+          </span>
+        </div>
+        <div ref={dotRef} className="pcn-cursor-dot" />
       </div>
-      <div ref={dotRef} className="pcn-cursor-dot" />
+      <div className="pcn-cursor-layer">
+        <div ref={burstRef} />
+        <span ref={labelRef} className="pcn-cursor-label" data-hover="false" />
+      </div>
     </div>
   );
 }

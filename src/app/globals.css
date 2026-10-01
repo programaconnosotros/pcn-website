@@ -720,13 +720,18 @@ html.pcn-cursor
   pointer-events: none;
   overflow: hidden;
 }
+/* Difference against the page: accent over dark stays accent, accent over accent goes black. */
+.pcn-cursor-blend {
+  mix-blend-mode: difference;
+}
 /* Inside a PCN OS window the desktop draws the cursor. */
 html[data-embedded] .pcn-cursor-layer {
   display: none;
 }
 html:not(.pcn-cursor) .pcn-cursor-layer,
 html.pcn-cursor-hidden .pcn-cursor-dot,
-html.pcn-cursor-hidden .pcn-cursor-ring {
+html.pcn-cursor-hidden .pcn-cursor-ring,
+html.pcn-cursor-hidden .pcn-cursor-label {
   opacity: 0;
 }
 .pcn-cursor-dot,
@@ -744,7 +749,6 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   box-shadow:
     0 0 6px #04f4be,
     0 0 14px rgba(4, 244, 190, 0.6);
-  mix-blend-mode: screen;
 }
 .pcn-cursor-ring {
   width: 26px;
@@ -778,10 +782,10 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   border-color: #fff;
 }
 .pcn-cursor-label {
-  position: absolute;
-  left: calc(100% + 6px);
-  top: 50%;
-  translate: 0 -50%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  will-change: transform;
   white-space: nowrap;
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
@@ -792,7 +796,7 @@ html.pcn-cursor-hidden .pcn-cursor-ring {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.pcn-cursor-ring[data-hover='true'] .pcn-cursor-label:not(:empty) {
+html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
   opacity: 1;
   animation: pcn-cursor-type 0.35s steps(6) both;
 }
