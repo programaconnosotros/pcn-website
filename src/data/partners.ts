@@ -65,7 +65,7 @@ export const partners: Partner[] = [
     logo: '/crisol-white-logo.svg',
     description:
       'Estudio de ingeniería: sistemas para procesos donde un error no se revierte, con la seguridad en la fundación.',
-    location: 'Argentina',
+    location: 'Tucumán, Argentina',
   },
   {
     name: 'Blackbox Cowork',
