@@ -17,11 +17,11 @@ import { ProgramIcon } from './program-icon';
 import type { OsProgram } from './programs';
 
 /** Widest a dock item gets at rest; items shrink below this so the whole dock fits the screen. */
-const MAX_ITEM_WIDTH = 62;
+const MAX_ITEM_WIDTH = 54;
 const MIN_ITEM_WIDTH = 40;
 /** Screen margin, dock padding and border around the items. */
-const DOCK_CHROME_WIDTH = 16 + 16 + 2;
-const DIVIDER_WIDTH = 16;
+const DOCK_CHROME_WIDTH = 16 + 8 + 2;
+const DIVIDER_WIDTH = 11;
 const ITEM_GAP = 2;
 /** Most an item grows (as a fraction of its width) when the cursor is right over it. */
 const MAX_MAGNIFICATION = 0.55;
@@ -327,7 +327,7 @@ const DockItem = ({
 const Divider = () => (
   <span
     aria-hidden
-    className="relative mx-[7px] mb-5 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
+    className="relative mx-[5px] mb-5 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
   >
     <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen shadow-[0_0_6px_#04f4be]" />
   </span>
@@ -460,7 +460,7 @@ export function OsDock({
         <div
           onMouseMove={onMouseMove}
           onMouseLeave={onMouseLeave}
-          className="relative flex items-end gap-0.5 rounded-md bg-black/85 px-2 pb-1 pt-2 backdrop-blur-xl"
+          className="relative flex items-end gap-0.5 rounded-md bg-black/85 px-1 pb-0.5 pt-1.5 backdrop-blur-xl"
         >
           {/* Surface effects, clipped to the dock. */}
           <span
