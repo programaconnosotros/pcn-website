@@ -824,6 +824,102 @@ const books: Book[] = [
     cover: '/lectura/serverless-as-a-game-changer.jpg',
     isbn: '0137392621',
   },
+  {
+    id: '73',
+    title: 'Generative AI Design Patterns',
+    author: 'Valliappa Lakshmanan, Hannes Hapke',
+    categories: ['IA'],
+    description:
+      'Un catálogo de patrones para resolver los problemas habituales al construir agentes y aplicaciones con IA generativa: control de salidas, RAG, razonamiento, confiabilidad y despliegue.',
+    year: 2025,
+    cover: '/lectura/generative-ai-design-patterns.jpg',
+    isbn: '9798341622661',
+    url: 'https://www.amazon.com/dp/B0FN37DV9N',
+  },
+  {
+    id: '74',
+    title: 'AI Engineering',
+    author: 'Chip Huyen',
+    categories: ['IA'],
+    description:
+      'Una guía práctica para construir aplicaciones sobre modelos fundacionales, desde la evaluación y el prompt engineering hasta RAG, agentes, fine-tuning y optimización de inferencia.',
+    year: 2024,
+    cover: '/lectura/ai-engineering.jpg',
+    isbn: '1098166302',
+    url: 'https://www.amazon.com/dp/1098166302',
+  },
+  {
+    id: '75',
+    title: 'Prompt Engineering for Generative AI',
+    author: 'James Phoenix, Mike Taylor',
+    categories: ['IA'],
+    description:
+      'Principios y técnicas para escribir prompts que den resultados confiables con modelos de texto e imagen, incluyendo cadenas, agentes y RAG con LangChain.',
+    year: 2024,
+    cover: '/lectura/prompt-engineering-for-generative-ai.jpg',
+    isbn: '109815343X',
+    url: 'https://www.amazon.com/dp/109815343X',
+  },
+  {
+    id: '76',
+    title: 'Designing Multi-Agent Systems',
+    author: 'Victor Dibia',
+    categories: ['IA'],
+    description:
+      'Cómo diseñar e implementar sistemas multiagente con LLMs desde primeros principios: patrones de colaboración, orquestación, evaluación, observabilidad y confiabilidad de agentes.',
+    year: 2025,
+    cover: '/lectura/designing-multi-agent-systems.jpg',
+    isbn: '9798993101200',
+    url: 'https://www.amazon.com/dp/B0G2BCQQJY',
+  },
+  {
+    id: '77',
+    title: 'AI Systems Performance Engineering',
+    author: 'Chris Fregly',
+    categories: ['IA'],
+    description:
+      'Estrategias concretas para optimizar el entrenamiento y la inferencia de modelos de IA, aprovechando al máximo GPUs, CUDA y PyTorch a nivel de hardware y software.',
+    year: 2025,
+    cover: '/lectura/ai-systems-performance-engineering.jpg',
+    isbn: '9798341627789',
+    url: 'https://www.amazon.com/dp/B0F47689K8',
+  },
+  {
+    id: '78',
+    title: 'Designing Machine Learning Systems',
+    author: 'Chip Huyen',
+    categories: ['IA'],
+    description:
+      'Un enfoque integral para diseñar sistemas de machine learning en producción: datos, features, evaluación, despliegue, monitoreo y mejora continua de los modelos.',
+    year: 2022,
+    cover: '/lectura/designing-machine-learning-systems.jpg',
+    isbn: '1098107969',
+    url: 'https://www.amazon.com/dp/1098107969',
+  },
+  {
+    id: '79',
+    title: 'Hands-On LLM Serving and Optimization',
+    author: 'Chi Wang, Peiheng Hu',
+    categories: ['IA'],
+    description:
+      'Cómo servir LLMs a escala de forma eficiente, con técnicas de optimización e infraestructura para bajar la latencia y los costos de inferencia.',
+    year: 2026,
+    cover: '/lectura/hands-on-llm-serving-and-optimization.jpg',
+    isbn: '9798341621497',
+    url: 'https://www.amazon.com/dp/B0G48JRRMF',
+  },
+  {
+    id: '80',
+    title: 'Hands-On Large Language Models',
+    author: 'Jay Alammar, Maarten Grootendorst',
+    categories: ['IA'],
+    description:
+      'Una introducción visual y práctica a los LLMs: cómo funcionan por dentro y cómo usarlos para clasificación, búsqueda semántica, generación de texto y fine-tuning.',
+    year: 2024,
+    cover: '/lectura/hands-on-large-language-models.jpg',
+    isbn: '1098150961',
+    url: 'https://www.amazon.com/dp/1098150961',
+  },
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
