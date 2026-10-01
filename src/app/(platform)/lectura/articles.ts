@@ -587,4 +587,16 @@ export const articles: Article[] = [
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-06-17',
   },
+  {
+    id: '49',
+    title: 'Hexagonal Architecture',
+    author: 'Alistair Cockburn',
+    source: 'alistair.cockburn.us',
+    category: 'Arquitectura',
+    description:
+      'El artículo original de Ports & Adapters: aislar la lógica de la aplicación detrás de puertos para que la UI, los tests, las bases de datos y otros sistemas se conecten mediante adaptadores intercambiables, sin que el núcleo dependa de ellos.',
+    url: 'https://alistair.cockburn.us/hexagonal-architecture',
+    avatar: '/lectura/alistair-cockburn.jpg',
+    date: '2005-01-04',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));
