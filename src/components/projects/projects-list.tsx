@@ -537,14 +537,19 @@ export function ProjectsList({ projects, currentUser }: Props) {
               </header>
 
               <div className="flex items-start gap-3">
-                <div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white p-1.5 ring-1 ring-pcnGreen-200 transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)] group-hover:ring-pcnGreen-600">
+                <div
+                  className={cn(
+                    'relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+                    !project.logoUrl && 'bg-white',
+                  )}
+                >
                   {project.logoUrl ? (
                     <Image
                       src={project.logoUrl}
                       alt={`Logo de ${project.title}`}
-                      width={48}
-                      height={48}
-                      className="h-full w-full object-contain"
+                      width={112}
+                      height={112}
+                      className="h-full w-full object-cover"
                     />
                   ) : (
                     <span className="font-mono text-lg font-bold text-black">
