@@ -59,10 +59,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
         <div className="grid items-center gap-8 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
             <motion.div {...fadeUp(0)} className="hidden md:block">
-              <span className="inline-flex items-center gap-2 rounded-sm border border-pcnGreen/25 bg-black/60 px-3 py-1 font-mono text-xs font-medium text-pcnGreen">
-                <span className="text-pcnGreen-600">$</span>
-                Comunidad de ingeniería de software · Sin fronteras
-              </span>
+              <PromptLine user={firstName ? toShellName(firstName) : 'guest'} />
             </motion.div>
 
             <motion.h1
@@ -73,7 +70,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                 <>
                   Hola, <span className="text-glow text-pcnGreen">{firstName}</span>.
                   <br />
-                  Qué bueno verte.
+                  <span className="cursor-blink">Qué bueno verte.</span>
                 </>
               ) : (
                 <>
@@ -86,11 +83,16 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
 
             <motion.p
               {...fadeUp(0.16)}
-              className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
+              className="mt-6 flex max-w-xl gap-3 border-l border-pcnGreen/30 pl-4 font-mono text-[15px] leading-relaxed text-muted-foreground"
             >
-              {firstName
-                ? 'Gracias por ser parte de la comunidad. Hay eventos, charlas y recursos nuevos esperándote.'
-                : 'Eventos, charlas, mentores y una red de gente apasionada por el software para llevar tu carrera al siguiente nivel.'}
+              <span aria-hidden className="select-none text-pcnGreen-600">
+                {'//'}
+              </span>
+              <span className="text-pretty">
+                {firstName
+                  ? 'Gracias por ser parte de la comunidad. Hay eventos, charlas y recursos nuevos esperándote.'
+                  : 'Eventos, charlas, mentores y una red de gente apasionada por el software para llevar tu carrera al siguiente nivel.'}
+              </span>
             </motion.p>
 
             <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-wrap items-center gap-3">
@@ -161,6 +163,28 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
     </section>
   );
 };
+
+/** "Agustín" → "agustin": a first name as it would look as a unix user. */
+const toShellName = (name: string) =>
+  name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, '');
+
+/** The shell prompt that "runs" the hero: who is logged in and what the community is about. */
+const PromptLine = ({ user }: { user: string }) => (
+  <p className="font-mono text-xs leading-relaxed text-muted-foreground">
+    <span className="text-pcnGreen">{user}@pcn</span>
+    <span>:</span>
+    <span className="text-sky-400">~</span>
+    <span className="text-pcnGreen-600">$ </span>
+    <span className="text-foreground">./comunidad</span> <span>--tipo=</span>
+    <span className="text-amber-300">&quot;ingeniería de software&quot;</span>{' '}
+    <span>--fronteras=</span>
+    <span className="text-amber-300">none</span>
+  </p>
+);
 
 const StatsPanel = () => {
   return (
