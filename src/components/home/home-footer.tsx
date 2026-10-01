@@ -54,9 +54,10 @@ export const HomeFooter = () => {
       className={cn(
         GeistMono.className,
         // On phones the layout pads the page for the fixed tab bar; pull the footer
-        // into that padding so its backdrop runs under the bar instead of stopping short.
+        // into that padding so its backdrop runs under the bar instead of stopping short,
+        // and pad only by the bar's own height (h-16) so the wordmark sits right on it.
         // PCN OS windows never show the tab bar, so there is no padding to pull into.
-        'relative -mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden border-t border-pcnGreen-200 pb-[calc(5rem+env(safe-area-inset-bottom))] embedded:mb-0 embedded:pb-0 md:mb-0 md:pb-0',
+        'relative -mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden border-t border-pcnGreen-200 pb-[calc(4rem+env(safe-area-inset-bottom))] embedded:mb-0 embedded:pb-0 md:mb-0 md:pb-0',
       )}
     >
       {/* Backdrop: grid + green haze rising from the bottom */}
