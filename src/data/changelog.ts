@@ -715,7 +715,6 @@ export const changelog: ChangelogEntry[] = [
     title: 'Sponsors de Zero to Agent',
     description: 'Una página para presentar el evento Zero to Agent a posibles sponsors.',
     authors: ['agustin-sanc'],
-    href: '/zero-to-agent-sponsors',
   },
   {
     date: '2026-04-22',
