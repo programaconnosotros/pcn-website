@@ -4,25 +4,23 @@ import {
   interviewQuestions,
   SENIORITIES,
   TRACKS,
+  type InterviewQuestion,
   type InterviewTrack,
   type Seniority,
 } from '@/app/(platform)/entrevistas/questions';
-import { MarkToggle } from '@/components/ui/mark-toggle';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import { StickyHeader } from '@/components/ui/sticky-header';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import { Check, Eye, EyeOff, RotateCcw, Shuffle, X } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { ArrowRight, Check, Eye, RotateCcw, X } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
 
-type Grade = 'known' | 'review';
+type Phase = 'setup' | 'running' | 'done';
 
 // Answers mark code with backticks, like Markdown inline code.
 const renderInlineCode = (text: string) =>
   text.split(/`([^`]+)`/).map((part, i) =>
     i % 2 === 1 ? (
-      <code key={i} className="rounded-sm bg-pcnGreen/10 px-1 font-mono text-[11px] text-pcnGreen">
+      <code key={i} className="rounded-sm bg-pcnGreen/10 px-1 font-mono text-[0.9em] text-pcnGreen">
         {part}
       </code>
     ) : (
@@ -39,175 +37,288 @@ const shuffle = <T,>(items: T[]) => {
   return result;
 };
 
-const actionClassName =
-  'inline-flex items-center gap-1 border border-pcnGreen-200 bg-black/40 px-2 py-1 font-mono text-[11px] lowercase text-muted-foreground transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen';
+const isTypingTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+
+const buttonClassName =
+  'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 font-mono text-xs lowercase transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen disabled:pointer-events-none disabled:opacity-40';
+const primaryButtonClassName = cn(
+  buttonClassName,
+  'border-pcnGreen bg-pcnGreen/15 text-pcnGreen hover:bg-pcnGreen/25',
+);
+const secondaryButtonClassName = cn(
+  buttonClassName,
+  'border-pcnGreen-200 bg-black/40 text-muted-foreground hover:border-pcnGreen-500 hover:text-pcnGreen',
+);
+
+const Kbd = ({ children }: { children: string }) => (
+  <kbd className="hidden border border-current px-1 text-[10px] opacity-50 md:inline">
+    {children}
+  </kbd>
+);
+
+interface OptionProps {
+  selected: boolean;
+  onSelect: () => void;
+  label: string;
+  hint?: string;
+}
+
+const Option = ({ selected, onSelect, label, hint }: OptionProps) => (
+  <button
+    type="button"
+    aria-pressed={selected}
+    onClick={onSelect}
+    className={cn(
+      ruledCellClassName,
+      'flex items-center gap-3 p-3 text-left font-mono text-sm',
+      selected && 'bg-pcnGreen/10 text-pcnGreen hover:bg-pcnGreen/10',
+    )}
+  >
+    <span className={cn('shrink-0', selected ? 'text-pcnGreen' : 'text-pcnGreen-500/50')}>
+      {selected ? '[x]' : '[ ]'}
+    </span>
+    <span className="font-semibold">{label}</span>
+    {hint && <span className="ml-auto text-[11px] text-muted-foreground">{hint}</span>}
+  </button>
+);
 
 export function InterviewSimulator() {
-  const [track, setTrack] = useState<InterviewTrack>('frontend');
-  const [seniority, setSeniority] = useState<Seniority>('junior');
+  const [phase, setPhase] = useState<Phase>('setup');
+  const [track, setTrack] = useState<InterviewTrack | null>(null);
+  const [seniority, setSeniority] = useState<Seniority | null>(null);
+  const [deck, setDeck] = useState<InterviewQuestion[]>([]);
+  const [current, setCurrent] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [toReview, setToReview] = useState<InterviewQuestion[]>([]);
 
-  const questions = interviewQuestions[track][seniority];
-  const [order, setOrder] = useState(() => questions.map((_, i) => i));
-  // Revealed answers and self-grades are keyed by the question's original index.
-  const [revealed, setRevealed] = useState<Set<number>>(new Set());
-  const [grades, setGrades] = useState<Record<number, Grade>>({});
-
-  const reset = (count = questions.length) => {
-    setOrder(Array.from({ length: count }, (_, i) => i));
-    setRevealed(new Set());
-    setGrades({});
+  const start = (questions: InterviewQuestion[]) => {
+    setDeck(shuffle(questions));
+    setCurrent(0);
+    setRevealed(false);
+    setToReview([]);
+    setPhase('running');
   };
 
-  const changeInterview = (nextTrack: InterviewTrack, nextSeniority: Seniority) => {
-    setTrack(nextTrack);
-    setSeniority(nextSeniority);
-    reset(interviewQuestions[nextTrack][nextSeniority].length);
+  const grade = (knewIt: boolean) => {
+    if (!knewIt) setToReview((list) => [...list, deck[current]]);
+    if (current + 1 < deck.length) {
+      setCurrent(current + 1);
+      setRevealed(false);
+    } else {
+      setPhase('done');
+    }
   };
 
-  const toggleRevealed = (index: number) =>
-    setRevealed((current) => {
-      const next = new Set(current);
-      if (next.has(index)) next.delete(index);
-      else next.add(index);
-      return next;
-    });
+  // Space or Enter reveals the answer; 1 and 2 grade it.
+  useEffect(() => {
+    if (phase !== 'running') return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;
+      if (!revealed && (e.key === ' ' || e.key === 'Enter')) {
+        e.preventDefault();
+        setRevealed(true);
+      } else if (revealed && (e.key === '1' || e.key === '2')) {
+        e.preventDefault();
+        grade(e.key === '1');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
 
-  const toggleGrade = (index: number, grade: Grade) =>
-    setGrades((current) => {
-      const next = { ...current };
-      if (next[index] === grade) delete next[index];
-      else next[index] = grade;
-      return next;
-    });
+  const trackInfo = TRACKS.find(({ id }) => id === track);
+  const seniorityInfo = SENIORITIES.find(({ id }) => id === seniority);
+  const interviewName = trackInfo && seniorityInfo && `${trackInfo.label} · ${seniorityInfo.label}`;
 
-  const allRevealed = revealed.size === questions.length;
-  const knownCount = Object.values(grades).filter((grade) => grade === 'known').length;
-  const reviewCount = Object.values(grades).filter((grade) => grade === 'review').length;
-  const activeTrack = TRACKS.find(({ id }) => id === track)!;
+  if (phase === 'setup' || !track || !seniority) {
+    const count = track && seniority ? interviewQuestions[track][seniority].length : 0;
 
-  return (
-    <>
-      <StickyHeader>
-        <PageTitle
-          path="entrevistas"
-          meta={`${revealed.size}/${questions.length} reveladas · ${knownCount} la sabía · ${reviewCount} a repasar`}
-        />
+    return (
+      <div className="mb-14 max-w-2xl">
+        <PageTitle path="entrevistas" meta="active recall" />
+        <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
+          Practicá para tu próxima entrevista técnica. Las preguntas aparecen de a una y en orden
+          aleatorio: respondé en voz alta y recién después mirá la respuesta.
+        </p>
 
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Tabs
-            value={track}
-            onValueChange={(value) => changeInterview(value as InterviewTrack, seniority)}
+        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 1. tipo de entrevista</h2>
+        <RuledGrid className="mb-6 grid-cols-1">
+          {TRACKS.map(({ id, label, stack }) => (
+            <Option
+              key={id}
+              selected={track === id}
+              onSelect={() => setTrack(id)}
+              label={label}
+              hint={stack}
+            />
+          ))}
+        </RuledGrid>
+
+        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 2. seniority</h2>
+        <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-3">
+          {SENIORITIES.map(({ id, label }) => (
+            <Option
+              key={id}
+              selected={seniority === id}
+              onSelect={() => setSeniority(id)}
+              label={label}
+            />
+          ))}
+        </RuledGrid>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            disabled={!count}
+            onClick={() => track && seniority && start(interviewQuestions[track][seniority])}
+            className={primaryButtonClassName}
           >
-            <TabsList>
-              {TRACKS.map(({ id, label }) => (
-                <TabsTrigger key={id} value={id}>
-                  {label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-          <Tabs
-            value={seniority}
-            onValueChange={(value) => changeInterview(track, value as Seniority)}
-          >
-            <TabsList>
-              {SENIORITIES.map(({ id, label }) => (
-                <TabsTrigger key={id} value={id}>
-                  {label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+            comenzar entrevista
+            <ArrowRight className="size-3.5" />
+          </button>
+          <span className="font-mono text-[11px] text-muted-foreground">
+            {count ? `${count} preguntas` : 'elegí el tipo y la seniority'}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === 'done') {
+    const knownCount = deck.length - toReview.length;
+
+    return (
+      <div className="mb-14 max-w-3xl">
+        <PageTitle path="entrevistas" meta={interviewName} />
+        <div className="mb-6 font-mono">
+          <p className="text-sm text-muted-foreground">entrevista terminada</p>
+          <p className="text-3xl font-semibold text-pcnGreen">
+            {knownCount}/{deck.length}
+            <span className="ml-2 text-sm font-normal text-muted-foreground">la sabía</span>
+          </p>
         </div>
 
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <p className="mr-auto font-mono text-xs text-muted-foreground">
-            <span className="text-pcnGreen-500"># </span>
-            {activeTrack.stack} · {seniority} — respondé en voz alta antes de ver la respuesta
-          </p>
-          <button type="button" className={actionClassName} onClick={() => setOrder(shuffle)}>
-            <Shuffle className="size-3" />
-            mezclar
+        <div className="mb-8 flex flex-wrap gap-2">
+          {toReview.length > 0 && (
+            <button
+              type="button"
+              onClick={() => start(toReview)}
+              className={primaryButtonClassName}
+            >
+              <RotateCcw className="size-3.5" />
+              repasar {toReview.length} {toReview.length === 1 ? 'pregunta' : 'preguntas'}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => start(interviewQuestions[track][seniority])}
+            className={toReview.length ? secondaryButtonClassName : primaryButtonClassName}
+          >
+            <RotateCcw className="size-3.5" />
+            repetir entrevista
           </button>
           <button
             type="button"
-            className={actionClassName}
-            onClick={() =>
-              setRevealed(allRevealed ? new Set() : new Set(questions.map((_, i) => i)))
-            }
+            onClick={() => setPhase('setup')}
+            className={secondaryButtonClassName}
           >
-            {allRevealed ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
-            {allRevealed ? 'ocultar todas' : 'mostrar todas'}
-          </button>
-          <button type="button" className={actionClassName} onClick={() => reset()}>
-            <RotateCcw className="size-3" />
-            reiniciar
+            elegir otra entrevista
           </button>
         </div>
-      </StickyHeader>
 
-      <RuledGrid className="mb-14 grid-cols-1">
-        {order.map((index, position) => {
-          const { question, answer, topic } = questions[index];
-          const isRevealed = revealed.has(index);
-          const grade = grades[index];
+        {toReview.length > 0 && (
+          <>
+            <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># a repasar</h2>
+            <RuledGrid className="grid-cols-1">
+              {toReview.map(({ question, answer }) => (
+                <div key={question} className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3')}>
+                  <h3 className="font-mono text-sm font-semibold">{renderInlineCode(question)}</h3>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    {renderInlineCode(answer)}
+                  </p>
+                </div>
+              ))}
+            </RuledGrid>
+          </>
+        )}
+      </div>
+    );
+  }
 
-          return (
-            <div
-              key={`${track}-${seniority}-${index}`}
-              className={cn(ruledCellClassName, 'flex flex-col gap-2 p-3')}
-            >
-              <div className="flex items-start gap-3">
-                <h2 className="flex-1 font-mono text-sm font-semibold">
-                  <span className="text-pcnGreen-500">
-                    {String(position + 1).padStart(2, '0')}{' '}
-                  </span>
-                  {renderInlineCode(question)}
-                </h2>
-                <span className="shrink-0 font-mono text-[11px] text-muted-foreground/70">
-                  {topic}
-                </span>
-              </div>
+  const { question, answer, topic } = deck[current];
 
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  aria-expanded={isRevealed}
-                  className={actionClassName}
-                  onClick={() => toggleRevealed(index)}
-                >
-                  {isRevealed ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
-                  {isRevealed ? 'ocultar respuesta' : 'mostrar respuesta'}
-                </button>
-                {isRevealed && (
-                  <>
-                    <MarkToggle
-                      active={grade === 'known'}
-                      onToggle={() => toggleGrade(index, 'known')}
-                      icon={Check}
-                      label="la sabía"
-                      title="Marcar como respondida correctamente"
-                    />
-                    <MarkToggle
-                      active={grade === 'review'}
-                      onToggle={() => toggleGrade(index, 'review')}
-                      icon={X}
-                      label="a repasar"
-                      title="Marcar para repasar"
-                    />
-                  </>
-                )}
-              </div>
+  return (
+    <div className="mb-14 max-w-3xl">
+      <PageTitle
+        path="entrevistas"
+        meta={interviewName}
+        action={
+          <button
+            type="button"
+            onClick={() => setPhase('setup')}
+            className="font-mono text-xs text-muted-foreground hover:text-pcnGreen"
+          >
+            salir
+          </button>
+        }
+      />
 
-              {isRevealed && (
-                <p className="border-l-2 border-pcnGreen-500 pl-3 text-xs leading-relaxed text-muted-foreground">
-                  {renderInlineCode(answer)}
-                </p>
-              )}
-            </div>
-          );
-        })}
-      </RuledGrid>
-    </>
+      <div className="mb-6 font-mono text-[11px] text-muted-foreground">
+        <div className="mb-1 flex justify-between">
+          <span>
+            pregunta {current + 1}/{deck.length}
+          </span>
+          <span># {topic}</span>
+        </div>
+        <div className="h-px bg-pcnGreen-200">
+          <div
+            className="h-px bg-pcnGreen shadow-[0_0_8px_rgba(4,244,190,0.8)] transition-[width] duration-300"
+            style={{ width: `${(current / deck.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <h2 className="mb-6 font-mono text-lg font-semibold leading-snug md:text-xl">
+        <span className="text-pcnGreen-500">&gt; </span>
+        {renderInlineCode(question)}
+      </h2>
+
+      {revealed ? (
+        <>
+          <p className="mb-6 border-l-2 border-pcnGreen-500 pl-4 text-sm leading-relaxed text-muted-foreground">
+            {renderInlineCode(answer)}
+          </p>
+          <p className="mb-2 font-mono text-xs text-muted-foreground">¿la sabías?</p>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={() => grade(true)} className={primaryButtonClassName}>
+              <Check className="size-3.5" />
+              la sabía
+              <Kbd>1</Kbd>
+            </button>
+            <button type="button" onClick={() => grade(false)} className={secondaryButtonClassName}>
+              <X className="size-3.5" />a repasar
+              <Kbd>2</Kbd>
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="mb-4 font-mono text-xs text-muted-foreground">
+            pensá tu respuesta y decila en voz alta
+          </p>
+          <button
+            type="button"
+            onClick={() => setRevealed(true)}
+            className={primaryButtonClassName}
+          >
+            <Eye className="size-3.5" />
+            mostrar respuesta
+            <Kbd>espacio</Kbd>
+          </button>
+        </>
+      )}
+    </div>
   );
 }
