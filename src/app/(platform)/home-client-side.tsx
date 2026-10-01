@@ -26,6 +26,7 @@ interface HomeClientSideProps {
   recentlyAddedEventsSection: React.ReactNode;
   latestConversationsSection: React.ReactNode;
   latestTalksSection: React.ReactNode;
+  latestChangesSection: React.ReactNode;
 }
 
 const HomeClientSide = ({
@@ -35,6 +36,7 @@ const HomeClientSide = ({
   recentlyAddedEventsSection,
   latestConversationsSection,
   latestTalksSection,
+  latestChangesSection,
 }: HomeClientSideProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
@@ -79,6 +81,8 @@ const HomeClientSide = ({
       <Reveal>
         <SocialLinks />
       </Reveal>
+
+      <Reveal>{latestChangesSection}</Reveal>
 
       <Reveal>
         <FaqSection />
