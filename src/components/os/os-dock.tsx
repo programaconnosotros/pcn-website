@@ -363,7 +363,7 @@ const DockItem = ({
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { filter: 'none' } }}
       transition={{ delay: 0.25 + index * 0.035, type: 'spring', stiffness: 260, damping: 20 }}
       style={{ width, height: baseIcon + footerHeight }}
-      className="group relative flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+      className="group relative z-30 flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
     >
       {/* Anchored above the meter so the icon grows upwards out of the dock when magnified. */}
       <span className="absolute inset-x-0 flex justify-center" style={{ bottom: footerHeight - 2 }}>
@@ -508,7 +508,7 @@ export function OsDock({
       {/* Live prompt: types out the command for the hovered program. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute left-3 top-0 z-30 flex -translate-y-1/2 items-center gap-1 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
+        className="pointer-events-none absolute left-3 top-0 z-20 flex -translate-y-1/2 items-center gap-1 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
       >
         ~/pcn ${command && <TypedCommand key={command} text={command} />}
         <span className="os-dock-caret inline-block h-2 w-1.5 bg-pcnGreen" />
@@ -517,7 +517,7 @@ export function OsDock({
       {/* Process counter. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute right-3 top-0 z-30 flex -translate-y-1/2 items-center gap-1.5 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
+        className="pointer-events-none absolute right-3 top-0 z-20 flex -translate-y-1/2 items-center gap-1.5 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
       >
         <span
           className={cn(
