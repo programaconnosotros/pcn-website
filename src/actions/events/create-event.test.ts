@@ -120,47 +120,21 @@ describe('createEvent', () => {
     );
   });
 
-  it('records the creator and lets admins assign any existing user as event admin', async () => {
+  it('records the creator as the first organizer', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
-    prismaMock.user.findMany.mockResolvedValue([{ id: 'ambassador-1' }] as any);
     prismaMock.event.create.mockResolvedValue({ id: 'event-3' } as any);
 
-    await expect(
-      createEvent({
-        ...validEventData,
-        adminIds: ['ambassador-1', 'regular-1', 'ambassador-1', 'user-admin'],
-      }),
-    ).rejects.toThrow('NEXT_REDIRECT:');
+    await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT:');
 
-    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { id: { in: ['ambassador-1', 'regular-1'] } },
-      select: { id: true },
-    });
     expect(prismaMock.event.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
           createdById: 'user-admin',
-          admins: { create: [{ userId: 'ambassador-1' }] },
+          organizers: { create: { userId: 'user-admin' } },
         }),
       }),
     );
-  });
-
-  it('only lets ambassadors assign other ambassadors as event admins', async () => {
-    mockCookies({ sessionId: 'session-amb' });
-    prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
-    prismaMock.user.findMany.mockResolvedValue([] as any);
-    prismaMock.event.create.mockResolvedValue({ id: 'event-5' } as any);
-
-    await expect(createEvent({ ...validEventData, adminIds: ['regular-1'] })).rejects.toThrow(
-      'NEXT_REDIRECT:',
-    );
-
-    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: { id: { in: ['regular-1'] }, isAmbassador: true },
-      select: { id: true },
-    });
   });
 
   it('lets ambassadors create events', async () => {

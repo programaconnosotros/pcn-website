@@ -5,8 +5,7 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { buildEventAdmins } from './build-event-admins';
-import { canCreateEvents, isSiteAdmin } from '@/lib/event-permissions';
+import { canCreateEvents } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const createEvent = async (data: EventFormData) => {
@@ -42,10 +41,7 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, adminIds, ...eventData } = validatedData;
-  const admins = await buildEventAdmins(adminIds, session.user.id, {
-    anyUser: isSiteAdmin(session.user),
-  });
+  const { sponsors, ...eventData } = validatedData;
 
   const event = await prisma.event.create({
     data: {
@@ -56,7 +52,8 @@ export const createEvent = async (data: EventFormData) => {
       longitude: validatedData.longitude ?? null,
       capacity: validatedData.capacity ?? null,
       createdById: session.user.id,
-      admins: { create: admins },
+      // Quien crea el evento queda como organizador; el resto se suma desde su página.
+      organizers: { create: { userId: session.user.id } },
       sponsors: {
         create:
           sponsors

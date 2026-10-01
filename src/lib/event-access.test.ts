@@ -10,11 +10,11 @@ describe('canManageEventById', () => {
     expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
   });
 
-  it('lets event admins manage their event', async () => {
+  it('lets event organizers manage their event', async () => {
     prismaMock.event.findUnique.mockResolvedValue({
       createdById: 'someone',
       deletedAt: null,
-      admins: [{ userId: 'reg' }],
+      organizers: [{ userId: 'reg' }],
     } as any);
 
     await expect(canManageEventById(regular, 'event-1')).resolves.toBe(true);
@@ -24,7 +24,7 @@ describe('canManageEventById', () => {
     prismaMock.event.findUnique.mockResolvedValue({
       createdById: 'someone',
       deletedAt: null,
-      admins: [],
+      organizers: [],
     } as any);
 
     await expect(canManageEventById(regular, 'event-1')).resolves.toBe(false);
@@ -35,10 +35,10 @@ describe('canManageEventById', () => {
 
 describe('canManageSomeEvent', () => {
   it('counts users who administer at least one event', async () => {
-    prismaMock.eventAdmin.count.mockResolvedValue(1);
+    prismaMock.eventOrganizer.count.mockResolvedValue(1);
     await expect(canManageSomeEvent(regular)).resolves.toBe(true);
 
-    prismaMock.eventAdmin.count.mockResolvedValue(0);
+    prismaMock.eventOrganizer.count.mockResolvedValue(0);
     await expect(canManageSomeEvent(regular)).resolves.toBe(false);
   });
 });

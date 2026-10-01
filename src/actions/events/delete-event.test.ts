@@ -75,7 +75,7 @@ describe('deleteEvent', () => {
       user: { ...adminUser, role: 'REGULAR' as const },
     } as any);
 
-    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, admins: [] } as any);
+    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, organizers: [] } as any);
 
     await expect(deleteEvent('event-1')).rejects.toThrow(
       'Solo puedes eliminar los eventos que creaste',
@@ -107,13 +107,13 @@ describe('deleteEvent', () => {
     expect(redirect).toHaveBeenCalledWith('/eventos');
   });
 
-  it('does not let event admins delete events they did not create', async () => {
+  it('does not let event organizers delete events they did not create', async () => {
     mockCookies({ sessionId: 'session-amb' });
     prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
     prismaMock.event.findUnique.mockResolvedValue({
       ...existingEvent,
       createdById: 'someone-else',
-      admins: [{ userId: 'user-amb' }],
+      organizers: [{ userId: 'user-amb' }],
     } as any);
 
     await expect(deleteEvent('event-1')).rejects.toThrow(
@@ -128,7 +128,7 @@ describe('deleteEvent', () => {
     prismaMock.event.findUnique.mockResolvedValue({
       ...existingEvent,
       createdById: 'user-amb',
-      admins: [],
+      organizers: [],
     } as any);
 
     await expect(deleteEvent('event-1')).rejects.toThrow('NEXT_REDIRECT:/eventos');

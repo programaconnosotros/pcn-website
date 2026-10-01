@@ -9,7 +9,6 @@ import { EventDetailClient } from '@/components/events/event-detail-client';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
 import { EventAnnouncements } from '@/components/announcements/event-announcements';
 import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
-import { Image as Images, Event, Sponsor } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
@@ -20,10 +19,7 @@ import { optimizedOgImage } from '@/lib/og-image';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
 
-type EventWithImages = Event & {
-  images: Images[];
-  sponsors: Sponsor[];
-};
+type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="p-3">
@@ -88,7 +84,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   const params = await props.params;
   const id: string = params.id;
 
-  const event: EventWithImages | null = await fetchEvent(id);
+  const event: EventWithDetails = await fetchEvent(id);
 
   // Verificar si el usuario es admin y obtener datos de sesión
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -108,15 +104,11 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
       }
       userId = session.userId;
 
-      // Ambassadors editan los eventos que crearon; cualquier usuario, los que administra
+      // Ambassadors editan los eventos que crearon; cualquier usuario, los que organiza
       if (isAdmin) {
         canEdit = true;
       } else if (event) {
-        const admins = await prisma.eventAdmin.findMany({
-          where: { eventId: id },
-          select: { userId: true },
-        });
-        canEdit = canEditEvent(session.user, { ...event, admins });
+        canEdit = canEditEvent(session.user, event);
       }
     }
   }

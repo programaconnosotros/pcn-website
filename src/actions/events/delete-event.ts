@@ -25,7 +25,7 @@ export const deleteEvent = async (id: string) => {
   // Verificar que el evento existe
   const existingEvent = await prisma.event.findUnique({
     where: { id },
-    include: { admins: { select: { userId: true } } },
+    include: { organizers: { select: { userId: true } } },
   });
 
   if (!existingEvent) {

@@ -85,7 +85,7 @@ describe('updateEvent', () => {
       ...adminSession,
       user: { ...adminUser, role: 'REGULAR' as const },
     } as any);
-    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, admins: [] } as any);
+    prismaMock.event.findUnique.mockResolvedValue({ ...existingEvent, organizers: [] } as any);
 
     await expect(updateEvent('event-1', validEventData)).rejects.toThrow(
       'No tienes permisos para editar este evento',
@@ -103,7 +103,7 @@ describe('updateEvent', () => {
     prismaMock.event.findUnique.mockResolvedValue({
       ...existingEvent,
       createdById: null,
-      admins: [{ userId: 'user-admin' }],
+      organizers: [{ userId: 'user-admin' }],
     } as any);
     prismaMock.$transaction.mockResolvedValue([] as any);
 
@@ -138,37 +138,13 @@ describe('updateEvent', () => {
     expect(redirect).toHaveBeenCalledWith('/eventos/event-1');
   });
 
-  it('replaces the event admins, never adding the creator', async () => {
-    mockCookies({ sessionId: 'session-admin' });
-    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
-    prismaMock.event.findUnique.mockResolvedValue({
-      ...existingEvent,
-      createdById: 'creator-1',
-    } as any);
-    prismaMock.user.findMany.mockResolvedValue([{ id: 'ambassador-1' }] as any);
-    prismaMock.$transaction.mockResolvedValue([] as any);
-
-    await expect(
-      updateEvent('event-1', { ...validEventData, adminIds: ['creator-1', 'ambassador-1'] }),
-    ).rejects.toThrow('NEXT_REDIRECT:');
-
-    expect(prismaMock.eventAdmin.deleteMany).toHaveBeenCalledWith({
-      where: { eventId: 'event-1' },
-    });
-    expect(prismaMock.event.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ admins: { create: [{ userId: 'ambassador-1' }] } }),
-      }),
-    );
-  });
-
   it('rejects ambassadors on events they did not create nor administer', async () => {
     mockCookies({ sessionId: 'session-amb' });
     prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
     prismaMock.event.findUnique.mockResolvedValue({
       ...existingEvent,
       createdById: 'someone-else',
-      admins: [],
+      organizers: [],
     } as any);
 
     await expect(updateEvent('event-1', validEventData)).rejects.toThrow(
@@ -177,23 +153,25 @@ describe('updateEvent', () => {
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
 
-  it('lets event admins edit the event without touching its admins', async () => {
+  it('lets event organizers edit the event without touching its organizers', async () => {
     mockCookies({ sessionId: 'session-amb' });
     prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
     prismaMock.event.findUnique.mockResolvedValue({
       ...existingEvent,
       createdById: 'someone-else',
-      admins: [{ userId: 'user-amb' }],
+      organizers: [{ userId: 'user-amb' }],
     } as any);
     prismaMock.$transaction.mockResolvedValue([] as any);
 
-    await expect(
-      updateEvent('event-1', { ...validEventData, adminIds: ['user-amb', 'other'] }),
-    ).rejects.toThrow('NEXT_REDIRECT:/eventos/event-1');
+    await expect(updateEvent('event-1', validEventData)).rejects.toThrow(
+      'NEXT_REDIRECT:/eventos/event-1',
+    );
 
-    expect(prismaMock.eventAdmin.deleteMany).not.toHaveBeenCalled();
+    expect(prismaMock.eventOrganizer.deleteMany).not.toHaveBeenCalled();
     expect(prismaMock.event.update).toHaveBeenCalledWith(
-      expect.objectContaining({ data: expect.not.objectContaining({ admins: expect.anything() }) }),
+      expect.objectContaining({
+        data: expect.not.objectContaining({ organizers: expect.anything() }),
+      }),
     );
   });
 });

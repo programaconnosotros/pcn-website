@@ -27,8 +27,6 @@ import {
   Link2,
 } from 'lucide-react';
 import { MultiFileUpload } from '@/components/ui/multi-file-upload';
-import { EventAdminsField } from '@/components/events/event-admins-field';
-import type { CommunityMemberOption } from '@/actions/users/search-community-members';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
@@ -38,12 +36,6 @@ type EventFormProps = {
   onSubmit: (_values: EventFormData) => Promise<void>;
   submitLabel?: string;
   cancelHref?: string;
-  // Si quien edita puede cambiar los administradores del evento.
-  canManageAdmins?: boolean;
-  initialAdmins?: CommunityMemberOption[];
-  // Quien creó el evento: ya lo administra, así que no se puede agregar.
-  createdById?: string | null;
-  searchAllUsers?: boolean;
 };
 
 export function EventForm({
@@ -51,10 +43,6 @@ export function EventForm({
   onSubmit,
   submitLabel = 'guardarEvento();',
   cancelHref = '/eventos',
-  canManageAdmins = true,
-  initialAdmins = [],
-  createdById = null,
-  searchAllUsers = false,
 }: EventFormProps) {
   const form = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -70,7 +58,6 @@ export function EventForm({
       latitude: defaultValues?.latitude || '',
       longitude: defaultValues?.longitude || '',
       sponsors: defaultValues?.sponsors || [],
-      adminIds: defaultValues?.adminIds ?? [],
       capacity: defaultValues?.capacity?.toString() || '',
       externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
       shortcut: defaultValues?.shortcut ?? '',
@@ -569,31 +556,6 @@ export function EventForm({
               </p>
             )}
           </div>
-
-          {/* Administradores */}
-          {canManageAdmins && (
-            <FormField
-              control={form.control}
-              name="adminIds"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Administradores (opcional)</FormLabel>
-                  <EventAdminsField
-                    value={field.value ?? []}
-                    onChange={field.onChange}
-                    initialAdmins={initialAdmins}
-                    excludedUserIds={createdById ? [createdById] : []}
-                    searchAllUsers={searchAllUsers}
-                  />
-                  <FormDescription>
-                    Personas que pueden editar este evento y ver sus inscripciones, charlas y
-                    propuestas.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
 
           {/* Botones */}
           <div className="flex gap-4">

@@ -58,7 +58,7 @@ model User {
   contentMarks         ContentMark[]
   identityLinks        IdentityLink[]
   createdEvents        Event[]               @relation("UserCreatedEvents")
-  eventAdminships      EventAdmin[]
+  organizedEvents      EventOrganizer[]
   badges               UserBadge[]
   awardedBadges        UserBadge[]           @relation("BadgeAwarder")
 
@@ -148,7 +148,7 @@ model Event {
   updatedAt               DateTime  @updatedAt
 
   createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
-  admins        EventAdmin[]
+  organizers    EventOrganizer[]
   images        Image[]
   registrations EventRegistration[]
   sponsors      Sponsor[]
@@ -160,8 +160,9 @@ model Event {
   @@index([createdById])
 }
 
-// Usuarios asignados como administradores de un evento (además de quien lo creó).
-model EventAdmin {
+// Personas que organizan un evento (ambassadors o no). Pueden editarlo y gestionarlo, y el
+// evento aparece en su perfil. Quien crea el evento queda como organizador.
+model EventOrganizer {
   id      String @id @default(cuid())
   eventId String
   userId  String

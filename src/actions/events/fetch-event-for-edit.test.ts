@@ -19,7 +19,7 @@ const mockEvent = {
   createdById: null,
   images: [],
   sponsors: [],
-  admins: [],
+  organizers: [],
 };
 
 describe('fetchEventForEdit', () => {
@@ -60,7 +60,7 @@ describe('fetchEventForEdit access', () => {
 
   it('returns the event to a regular user set as its admin', async () => {
     loginAs(regular);
-    const shared = { ...mockEvent, deletedAt: null, admins: [{ userId: 'user-1' }] };
+    const shared = { ...mockEvent, deletedAt: null, organizers: [{ userId: 'user-1' }] };
     prismaMock.event.findUnique.mockResolvedValue(shared as any);
 
     await expect(fetchEventForEdit('event-1')).resolves.toEqual(shared);

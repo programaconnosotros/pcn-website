@@ -2,7 +2,7 @@ import {
   canCreateEvents,
   canDeleteEvent,
   canEditEvent,
-  canManageEventAdmins,
+  canManageEventOrganizers,
 } from './event-permissions';
 
 const admin = { id: 'admin', role: 'ADMIN', isAmbassador: false };
@@ -10,9 +10,9 @@ const ambassador = { id: 'amb', role: 'REGULAR', isAmbassador: true };
 const otherAmbassador = { id: 'amb-2', role: 'REGULAR', isAmbassador: true };
 const regular = { id: 'reg', role: 'REGULAR', isAmbassador: false };
 
-const ownEvent = { createdById: 'amb', admins: [] };
-const sharedEvent = { createdById: 'someone', admins: [{ userId: 'amb' }] };
-const foreignEvent = { createdById: 'someone', admins: [{ userId: 'amb-2' }] };
+const ownEvent = { createdById: 'amb', organizers: [] };
+const sharedEvent = { createdById: 'someone', organizers: [{ userId: 'amb' }] };
+const foreignEvent = { createdById: 'someone', organizers: [{ userId: 'amb-2' }] };
 
 describe('event permissions', () => {
   it('lets admins and ambassadors create events', () => {
@@ -31,14 +31,14 @@ describe('event permissions', () => {
 
   it('lets any user set as event admin edit it', () => {
     expect(canEditEvent({ ...ambassador, isAmbassador: false }, sharedEvent)).toBe(true);
-    expect(canEditEvent(regular, { createdById: 'someone', admins: [{ userId: 'reg' }] })).toBe(
+    expect(canEditEvent(regular, { createdById: 'someone', organizers: [{ userId: 'reg' }] })).toBe(
       true,
     );
   });
 
   it('stops counting creators who are no longer ambassadors', () => {
-    expect(canEditEvent(regular, { createdById: 'reg', admins: [] })).toBe(false);
-    expect(canDeleteEvent(regular, { createdById: 'reg', admins: [] })).toBe(false);
+    expect(canEditEvent(regular, { createdById: 'reg', organizers: [] })).toBe(false);
+    expect(canDeleteEvent(regular, { createdById: 'reg', organizers: [] })).toBe(false);
   });
 
   it('only lets the ambassador who created an event delete it', () => {
@@ -46,7 +46,7 @@ describe('event permissions', () => {
     expect(canDeleteEvent(ambassador, sharedEvent)).toBe(false);
     expect(canDeleteEvent(otherAmbassador, ownEvent)).toBe(false);
     expect(canDeleteEvent(admin, foreignEvent)).toBe(true);
-    expect(canManageEventAdmins(ambassador, sharedEvent)).toBe(false);
+    expect(canManageEventOrganizers(ambassador, sharedEvent)).toBe(false);
   });
 
   it('keeps deleted events for admins only', () => {

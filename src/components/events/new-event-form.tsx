@@ -6,13 +6,7 @@ import { EventFormData } from '@/schemas/event-schema';
 import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
 
-export function NewEventForm({
-  creatorId,
-  searchAllUsers,
-}: {
-  creatorId: string;
-  searchAllUsers: boolean;
-}) {
+export function NewEventForm() {
   const onSubmit = async (values: EventFormData) => {
     const toastId = toast.loading('Creando evento...');
 
@@ -31,13 +25,5 @@ export function NewEventForm({
     }
   };
 
-  return (
-    <EventForm
-      onSubmit={onSubmit}
-      submitLabel="crearEvento();"
-      cancelHref="/eventos"
-      createdById={creatorId}
-      searchAllUsers={searchAllUsers}
-    />
-  );
+  return <EventForm onSubmit={onSubmit} submitLabel="crearEvento();" cancelHref="/eventos" />;
 }

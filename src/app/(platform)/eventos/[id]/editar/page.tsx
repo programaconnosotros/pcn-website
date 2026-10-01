@@ -1,7 +1,7 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { canDeleteEvent, canManageEventAdmins, isSiteAdmin } from '@/lib/event-permissions';
+import { canDeleteEvent } from '@/lib/event-permissions';
 import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
@@ -47,7 +47,6 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
         name: sponsor.name,
         website: sponsor.website || '',
       })) || [],
-    adminIds: event.admins.map(({ user }) => user.id),
   };
 
   return (
@@ -69,14 +68,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
             />
           </StickyHeader>
 
-          <EditEventForm
-            eventId={id}
-            defaultValues={defaultValues}
-            canManageAdmins={canManageEventAdmins(session.user, event)}
-            searchAllUsers={isSiteAdmin(session.user)}
-            initialAdmins={event.admins.map(({ user }) => user)}
-            createdById={event.createdById}
-          />
+          <EditEventForm eventId={id} defaultValues={defaultValues} />
         </div>
       </div>
     </>

@@ -6,7 +6,7 @@ type SessionUser = { id: string; role: string; isAmbassador: boolean };
 
 /**
  * Si el usuario puede gestionar el evento (editarlo, ver inscripciones, charlas y propuestas):
- * admins del sitio, quien lo creó siendo ambassador y sus administradores.
+ * admins del sitio, quien lo creó siendo ambassador y sus organizadores.
  */
 export async function canManageEventById(
   user: SessionUser | null | undefined,
@@ -18,7 +18,7 @@ export async function canManageEventById(
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
-    select: { createdById: true, deletedAt: true, admins: { select: { userId: true } } },
+    select: { createdById: true, deletedAt: true, organizers: { select: { userId: true } } },
   });
   return !!event && canEditEvent(user, event);
 }
@@ -36,9 +36,9 @@ export async function requireEventManager(eventId: string) {
   return user;
 }
 
-/** Admins, ambassadors o administradores de al menos un evento. */
+/** Admins, ambassadors u organizadores de al menos un evento. */
 export async function canManageSomeEvent(user: SessionUser | null | undefined) {
   if (!user) return false;
   if (isSiteAdmin(user) || user.isAmbassador) return true;
-  return (await prisma.eventAdmin.count({ where: { userId: user.id } })) > 0;
+  return (await prisma.eventOrganizer.count({ where: { userId: user.id } })) > 0;
 }

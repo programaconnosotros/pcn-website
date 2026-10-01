@@ -5,8 +5,7 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { buildEventAdmins } from './build-event-admins';
-import { canEditEvent, canManageEventAdmins, isSiteAdmin } from '@/lib/event-permissions';
+import { canEditEvent } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
@@ -32,7 +31,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
   // Verificar que el evento existe
   const existingEvent = await prisma.event.findUnique({
     where: { id },
-    include: { admins: { select: { userId: true } } },
+    include: { organizers: { select: { userId: true } } },
   });
 
   if (!existingEvent) {
@@ -52,21 +51,13 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, adminIds, ...eventData } = validatedData;
-  // Los administradores solo los cambia quien creó el evento (o un admin)
-  const managesAdmins = canManageEventAdmins(session.user, existingEvent);
-  const admins = managesAdmins
-    ? await buildEventAdmins(adminIds, existingEvent.createdById, {
-        anyUser: isSiteAdmin(session.user),
-      })
-    : [];
+  const { sponsors, ...eventData } = validatedData;
 
-  // Reemplazar sponsors (y administradores, si corresponde) existentes por los nuevos
+  // Reemplazar sponsors existentes por los nuevos
   await prisma.$transaction([
     prisma.sponsor.deleteMany({
       where: { eventId: id },
     }),
-    ...(managesAdmins ? [prisma.eventAdmin.deleteMany({ where: { eventId: id } })] : []),
     prisma.event.update({
       where: { id },
       data: {
@@ -76,7 +67,6 @@ export const updateEvent = async (id: string, data: EventFormData) => {
         latitude: validatedData.latitude ?? null,
         longitude: validatedData.longitude ?? null,
         capacity: validatedData.capacity ?? null,
-        ...(managesAdmins && { admins: { create: admins } }),
         sponsors: {
           create:
             sponsors

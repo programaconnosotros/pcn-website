@@ -9,23 +9,33 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-interface UserComboboxProps {
-  onSelect: (_user: SpeakerUserOption) => void;
+type UserOption = { id: string; name: string; image: string | null; email?: string };
+
+interface UserComboboxProps<T extends UserOption> {
+  onSelect: (_user: T) => void;
+  // Server action that finds users; by default, the event managers' speaker search.
+  search?: (_query: string) => Promise<T[]>;
+  // Users already picked, left out of the results.
+  excludeIds?: string[];
   placeholder?: string;
   disabled?: boolean;
   className?: string;
 }
 
-// A one-line `$ usuario…` prompt that searches platform users as you type (admins only, the
-// search action checks it) and lists matches in a small dropdown. Arrows + Enter pick one.
-export function UserCombobox({
+const searchSpeakers = (query: string) => searchUsersForSpeaker(query, 8);
+
+// A one-line `$ usuario…` prompt that searches platform users as you type (the search action
+// checks who may) and lists matches in a small dropdown. Arrows + Enter pick one.
+export function UserCombobox<T extends UserOption = SpeakerUserOption>({
   onSelect,
+  search = searchSpeakers as unknown as (_query: string) => Promise<T[]>,
+  excludeIds,
   placeholder = 'buscar usuario',
   disabled,
   className,
-}: UserComboboxProps) {
+}: UserComboboxProps<T>) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SpeakerUserOption[]>([]);
+  const [found, setFound] = useState<T[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [highlighted, setHighlighted] = useState(0);
@@ -36,14 +46,16 @@ export function UserCombobox({
     const timeout = setTimeout(async () => {
       setLoading(true);
       try {
-        setResults(await searchUsersForSpeaker(query, 8));
+        setFound(await search(query));
         setHighlighted(0);
       } finally {
         setLoading(false);
       }
     }, 200);
     return () => clearTimeout(timeout);
-  }, [query, open]);
+  }, [query, open, search]);
+
+  const results = excludeIds ? found.filter((user) => !excludeIds.includes(user.id)) : found;
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -53,7 +65,7 @@ export function UserCombobox({
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, []);
 
-  const pick = (user: SpeakerUserOption) => {
+  const pick = (user: T) => {
     onSelect(user);
     setOpen(false);
     setQuery('');
