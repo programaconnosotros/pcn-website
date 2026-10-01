@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import {
   searchUsersForSpeaker,
@@ -40,6 +40,12 @@ export function UserCombobox<T extends UserOption = SpeakerUserOption>({
   const [loading, setLoading] = useState(false);
   const [highlighted, setHighlighted] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Where the list fits: below the prompt unless the viewport (or the OS window) runs out of
+  // room there, then above it, never taller than the space it has.
+  const [placement, setPlacement] = useState<{ above: boolean; maxHeight: number }>({
+    above: false,
+    maxHeight: 256,
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -56,6 +62,26 @@ export function UserCombobox<T extends UserOption = SpeakerUserOption>({
   }, [query, open, search]);
 
   const results = excludeIds ? found.filter((user) => !excludeIds.includes(user.id)) : found;
+  const listOpen = open && results.length > 0;
+
+  useLayoutEffect(() => {
+    if (!listOpen) return;
+    const place = () => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const below = window.innerHeight - rect.bottom - 12;
+      const above = rect.top - 12;
+      const flip = below < 160 && above > below;
+      setPlacement({ above: flip, maxHeight: Math.max(96, Math.min(256, flip ? above : below)) });
+    };
+    place();
+    window.addEventListener('resize', place);
+    window.addEventListener('scroll', place, true);
+    return () => {
+      window.removeEventListener('resize', place);
+      window.removeEventListener('scroll', place, true);
+    };
+  }, [listOpen]);
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -108,11 +134,16 @@ export function UserCombobox<T extends UserOption = SpeakerUserOption>({
         {loading && <Loader2 className="size-3 animate-spin text-pcnGreen-600" />}
       </label>
 
-      {open && results.length > 0 && (
+      {listOpen && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-auto rounded-sm border border-pcnGreen-400 bg-background/95 py-1 shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur"
+          style={{ maxHeight: placement.maxHeight }}
+          className={cn(
+            'absolute left-0 right-0 z-50 overflow-auto rounded-sm border border-pcnGreen-400 bg-background/95 py-1 shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur',
+            placement.above ? 'bottom-full mb-1' : 'top-full mt-1',
+          )}
         >
+          {' '}
           {results.map((user, index) => (
             <li key={user.id} role="option" aria-selected={index === highlighted}>
               <button
