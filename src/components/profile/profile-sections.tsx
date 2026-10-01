@@ -12,6 +12,7 @@ export const PROFILE_TABS = [
   { id: 'proyectos', label: 'proyectos' },
   { id: 'consejos', label: 'consejos' },
   { id: 'charlas', label: 'charlas' },
+  { id: 'eventos', label: 'eventos' },
   { id: 'conversaciones', label: 'conversaciones' },
   { id: 'contribuciones', label: 'contribuciones' },
 ] as const;
@@ -189,6 +190,63 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
         </span>
       </Link>
     ))}
+  </RuledGrid>
+);
+
+export type ProfileEvent = {
+  id: string;
+  name: string;
+  date: Date;
+  isOnline: boolean;
+  placeName: string | null;
+  city: string | null;
+  flyerImages: string[];
+};
+
+// Events the person organized, newest first, each linking to its page.
+export const OrganizedEventRows = ({ events }: { events: ProfileEvent[] }) => (
+  <RuledGrid className="grid-cols-1">
+    {events.map((event) => {
+      const where = event.isOnline
+        ? 'online'
+        : [event.placeName, event.city].filter(Boolean).join(', ');
+      return (
+        <Link
+          key={event.id}
+          href={`/eventos/${event.id}`}
+          className={cn(ruledCellClassName, 'group flex items-center gap-3 p-3')}
+        >
+          {event.flyerImages[0] && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={event.flyerImages[0]}
+              alt=""
+              loading="lazy"
+              className="h-12 w-12 shrink-0 object-cover"
+            />
+          )}
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <h3 className="truncate font-mono text-sm font-semibold group-hover:text-pcnGreen">
+              {event.name}
+            </h3>
+            <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+              {new Date(event.date).toLocaleDateString('es-AR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+              {where && (
+                <>
+                  <span className="text-pcnGreen-500"> @ </span>
+                  {where}
+                </>
+              )}
+            </p>
+          </div>
+          <ChevronRight className="size-4 shrink-0 text-muted-foreground group-hover:text-pcnGreen" />
+        </Link>
+      );
+    })}
   </RuledGrid>
 );
 

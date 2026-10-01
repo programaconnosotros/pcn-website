@@ -23,6 +23,7 @@ import {
   ContributionStats,
   ConversationRows,
   EmptyLine,
+  OrganizedEventRows,
   ProfileStat,
   ProfileTabs,
   ProjectRows,
@@ -281,7 +282,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
-  const [userTalks, projects, identities] = await Promise.all([
+  const [userTalks, projects, identities, organizedEvents] = await Promise.all([
     prisma.talk.findMany({
       where: { speakers: { some: { userId: user.id } } },
       include: {
@@ -305,6 +306,19 @@ export default async function ProfilePage(props: ProfilePageProps) {
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     }),
     getUserIdentities(user.id),
+    prisma.event.findMany({
+      where: { deletedAt: null, organizers: { some: { userId: user.id } } },
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        isOnline: true,
+        placeName: true,
+        city: true,
+        flyerImages: true,
+      },
+      orderBy: { date: 'desc' },
+    }),
   ]);
 
   // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
@@ -335,6 +349,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     proyectos: userProjects.length,
     consejos: user.advises.length,
     charlas: userTalks.length,
+    eventos: organizedEvents.length,
     conversaciones: userConversations.length,
     ...(contributions.length > 0 && { contribuciones: mergedPrs }),
   };
@@ -344,6 +359,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     userProjects.length +
       user.advises.length +
       userTalks.length +
+      organizedEvents.length +
       userConversations.length +
       contributions.length >
     0;
@@ -550,6 +566,17 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   </section>
                 )}
 
+                {organizedEvents.length > 0 && (
+                  <section>
+                    <SectionHeading
+                      label="eventos organizados"
+                      count={organizedEvents.length}
+                      href={organizedEvents.length > PREVIEW ? tabHref('eventos') : undefined}
+                    />
+                    <OrganizedEventRows events={organizedEvents.slice(0, PREVIEW)} />
+                  </section>
+                )}
+
                 {userConversations.length > 0 && (
                   <section>
                     <SectionHeading
@@ -614,6 +641,16 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   <TalkRows talks={userTalks} />
                 ) : (
                   <EmptyLine>{firstName} todavía no dio ninguna charla.</EmptyLine>
+                )}
+              </div>
+            )}
+
+            {tab === 'eventos' && (
+              <div className="mb-14">
+                {organizedEvents.length > 0 ? (
+                  <OrganizedEventRows events={organizedEvents} />
+                ) : (
+                  <EmptyLine>{firstName} todavía no organizó ningún evento.</EmptyLine>
                 )}
               </div>
             )}
