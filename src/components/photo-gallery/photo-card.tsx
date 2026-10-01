@@ -6,7 +6,7 @@ import { Download, Play, Share2 } from 'lucide-react';
 import type { GalleryTile } from '@/lib/gallery';
 import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
-import { galleryDownloadUrl, galleryImageUrl } from '@/lib/gallery-urls';
+import { galleryDownloadUrl } from '@/lib/gallery-urls';
 import { formatDuration } from '@/lib/gallery-filters';
 
 interface PhotoCardProps {
@@ -41,7 +41,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={galleryImageUrl(photo.id)}
+            src={photo.thumbUrl}
             alt=""
             loading="lazy"
             decoding="async"

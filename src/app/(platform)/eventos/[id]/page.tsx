@@ -16,7 +16,7 @@ import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
-import { signGallerySrc } from '@/lib/gallery-signing';
+import { signGallerySrc, signGalleryItem } from '@/lib/gallery-signing';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
@@ -245,7 +245,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               <Section title="fotos y videos">
                 <EventPhotos
                   eventId={id}
-                  photos={event.galleryItems}
+                  photos={event.galleryItems.map(signGalleryItem)}
                   total={event._count.galleryItems}
                   canUpload={isAdmin}
                 />

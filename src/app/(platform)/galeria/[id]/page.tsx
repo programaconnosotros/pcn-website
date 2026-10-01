@@ -16,8 +16,6 @@ import {
 } from '@/components/photo-gallery/photo-utils';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { optimizedOgImage } from '@/lib/og-image';
-import { signGallerySrc } from '@/lib/gallery-signing';
-import { galleryImageUrl } from '@/lib/gallery-urls';
 import { getGalleryItem, getGalleryNeighbours } from '@/lib/gallery';
 import { formatDuration, galleryQuery, parseGalleryFilter } from '@/lib/gallery-filters';
 import { cn } from '@/lib/utils';
@@ -49,9 +47,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     : 'Galería de fotos de la comunidad programaConNosotros.';
   const images = [
     {
-      url: optimizedOgImage(
-        signGallerySrc(photo.kind === 'VIDEO' ? photo.thumbSrc : photo.src).url,
-      ),
+      url: optimizedOgImage(photo.kind === 'VIDEO' ? photo.thumbUrl : photo.fullUrl),
       alt: title,
     },
   ];
@@ -136,8 +132,8 @@ export default async function GalleryItemPage(props: Props) {
           {isVideo ? (
             <video
               key={photo.id}
-              src={galleryImageUrl(photo.id, 'full')}
-              poster={galleryImageUrl(photo.id, 'thumb')}
+              src={photo.fullUrl}
+              poster={photo.thumbUrl}
               width={photo.width ?? undefined}
               height={photo.height ?? undefined}
               controls
@@ -150,7 +146,7 @@ export default async function GalleryItemPage(props: Props) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               key={photo.id}
-              src={galleryImageUrl(photo.id, 'full')}
+              src={photo.fullUrl}
               alt={caption}
               width={photo.width ?? undefined}
               height={photo.height ?? undefined}

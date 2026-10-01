@@ -20,7 +20,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { galleryImageUrl } from '@/lib/gallery-urls';
 import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
 
@@ -30,6 +29,7 @@ type Props = {
     takenAt: Date;
     description: string | null;
     eventId: string | null;
+    thumbUrl: string;
   };
   events: EventOption[];
 };
@@ -87,11 +87,7 @@ export function PhotoEditForm({ photo, events }: Props) {
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={galleryImageUrl(photo.id)}
-        alt=""
-        className="aspect-square w-40 bg-black object-cover"
-      />
+      <img src={photo.thumbUrl} alt="" className="aspect-square w-40 bg-black object-cover" />
 
       <div className="space-y-4">
         <Field label="fecha">

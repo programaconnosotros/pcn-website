@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { visibleGalleryItem } from '@/lib/gallery';
 
 /**
  * Finds the next upcoming event that has the given shortcut slug.
@@ -15,7 +16,7 @@ export async function findNextEventByShortcut(slug: string) {
       OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
     },
     orderBy: { date: 'asc' },
-    include: { galleryItems: { select: { src: true }, take: 1 } },
+    include: { galleryItems: { where: visibleGalleryItem, select: { src: true }, take: 1 } },
   });
 }
 

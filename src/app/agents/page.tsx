@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import { signGallerySrc } from '@/lib/gallery-signing';
+import { visibleGalleryItem } from '@/lib/gallery';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
 
@@ -12,7 +13,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export async function generateMetadata(): Promise<Metadata> {
   const event = await prisma.event.findUnique({
     where: { id: EVENT_ID },
-    include: { galleryItems: { select: { src: true }, take: 1 } },
+    include: { galleryItems: { where: visibleGalleryItem, select: { src: true }, take: 1 } },
   });
 
   if (!event) {

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
 import { photoCaption } from '@/components/photo-gallery/photo-utils';
 import { listLatestGalleryItems } from '@/lib/gallery';
-import { galleryImageUrl } from '@/lib/gallery-urls';
 import { SectionHeader } from './section-header';
 
 const LATEST_PHOTOS_COUNT = 8;
@@ -35,7 +34,7 @@ export const LatestPhotosSection = async () => {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={galleryImageUrl(item.id)}
+              src={item.thumbUrl}
               alt={photoCaption(item)}
               loading="lazy"
               decoding="async"

@@ -31,3 +31,13 @@ export function signGallerySrc(src: string, now = Date.now()) {
   });
   return { url, expiresAt };
 }
+
+/**
+ * Las URLs firmadas de la miniatura y del archivo completo de un ítem, para ponerlas directo
+ * en la página en vez de pasar por un redirect.
+ */
+export const signGalleryItem = <T extends { src: string; thumbSrc: string }>(item: T) => ({
+  ...item,
+  thumbUrl: signGallerySrc(item.thumbSrc).url,
+  fullUrl: signGallerySrc(item.src).url,
+});

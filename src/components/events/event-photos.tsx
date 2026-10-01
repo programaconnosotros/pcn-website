@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
-import { galleryImageUrl } from '@/lib/gallery-urls';
 
-type EventPhoto = { id: string; kind: 'PHOTO' | 'VIDEO'; description: string | null };
+type EventPhoto = {
+  id: string;
+  kind: 'PHOTO' | 'VIDEO';
+  description: string | null;
+  thumbUrl: string;
+};
 
 type EventPhotosProps = {
   eventId: string;
@@ -28,7 +32,7 @@ export function EventPhotos({ eventId, photos, total, canUpload }: EventPhotosPr
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={galleryImageUrl(photo.id)}
+                src={photo.thumbUrl}
                 alt={
                   photo.description ??
                   `${photo.kind === 'VIDEO' ? 'Video' : 'Foto'} ${index + 1} del evento`

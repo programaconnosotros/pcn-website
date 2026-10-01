@@ -17,8 +17,6 @@ export const RATE_LIMITS = {
   editContent: { limit: 30, windowSeconds: 10 * 60 },
   eventRegistration: { limit: 20, windowSeconds: 10 * 60 },
   upload: { limit: 20, windowSeconds: 10 * 60 },
-  // Imágenes de la galería: una grilla carga ~100 miniaturas, así que el límite es amplio.
-  photoView: { limit: 600, windowSeconds: 10 * 60 },
   photoDownload: { limit: 30, windowSeconds: 60 * 60 },
 } satisfies Record<string, RateLimitRule>;
 
@@ -79,10 +77,3 @@ export const enforceRateLimit = async (name: RateLimitName) => {
     throw new Error(`RATE_LIMIT:${waitSeconds}`);
   }
 };
-
-/**
- * Para rutas que se piden muchas veces por página (como las imágenes): cuenta por IP, sin
- * consultar la sesión. Devuelve los segundos a esperar, o 0 si el pedido está permitido.
- */
-export const consumeIpRateLimit = async (name: RateLimitName) =>
-  consumeRateLimit(`${name}:ip:${await getClientIp()}`, RATE_LIMITS[name]);

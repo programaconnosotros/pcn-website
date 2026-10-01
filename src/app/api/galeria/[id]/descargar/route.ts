@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { photoFileName } from '@/components/photo-gallery/photo-utils';
 import { isSignedGallerySrc } from '@/lib/gallery-signing';
+import { visibleGalleryItem } from '@/lib/gallery';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { CLOUDFRONT_URL, getPresignedDownloadUrl } from '@/lib/s3';
 
@@ -11,7 +12,7 @@ const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
 // Downloads a gallery photo or video as an attachment, rate limited per user (or IP when logged
 // out). Uploaded files redirect to a presigned S3 URL, so videos never pass through the server;
-// the historical photos are read from /public.
+// photos stored in /public are read from there.
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await enforceRateLimit('photoDownload');
@@ -24,8 +25,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const item = await prisma.galleryItem.findUnique({
-    where: { id },
+  const item = await prisma.galleryItem.findFirst({
+    where: { id, ...visibleGalleryItem },
     select: { id: true, src: true, takenAt: true },
   });
   if (!item) return new Response('No encontrado', { status: 404 });

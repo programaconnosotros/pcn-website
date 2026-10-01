@@ -25,7 +25,7 @@ describe('GET /api/galeria/[id]/descargar', () => {
     resetRateLimits();
     mockCookies({});
     mockHeaders({ 'x-forwarded-for': '5.6.7.8' });
-    prismaMock.galleryItem.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
       id: 'photo-123456',
       src: 'https://cdn.example.com/gallery/abc/full.webp',
       takenAt: new Date(2026, 4, 12),
@@ -46,7 +46,7 @@ describe('GET /api/galeria/[id]/descargar', () => {
   });
 
   it('keeps the video extension in the file name', async () => {
-    prismaMock.galleryItem.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
       id: 'video-abcdef',
       src: 'https://cdn.example.com/gallery/xyz/video.mp4',
       takenAt: new Date(2026, 4, 12),
@@ -60,8 +60,8 @@ describe('GET /api/galeria/[id]/descargar', () => {
     );
   });
 
-  it('serves the historical photos from /public', async () => {
-    prismaMock.galleryItem.findUnique.mockResolvedValue({
+  it('serves photos stored in /public', async () => {
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
       id: 'legacy-5',
       src: '/photos/agus-talk.webp',
       takenAt: new Date(2024, 9, 16),
@@ -74,7 +74,7 @@ describe('GET /api/galeria/[id]/descargar', () => {
   });
 
   it('never reads outside /public', async () => {
-    prismaMock.galleryItem.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
       id: 'x',
       src: '/../.env',
       takenAt: new Date(),
@@ -91,6 +91,6 @@ describe('GET /api/galeria/[id]/descargar', () => {
     expect(enforceRateLimit).toHaveBeenCalledWith('photoDownload');
     expect(response.status).toBe(429);
     expect(response.headers.get('retry-after')).toBe('120');
-    expect(prismaMock.galleryItem.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItem.findFirst).not.toHaveBeenCalled();
   });
 });

@@ -56,3 +56,24 @@ describe('signGallerySrc', () => {
     expect(isSignedGallerySrc('https://cdn.example.com/events/flyer.webp')).toBe(false);
   });
 });
+
+describe('signGalleryItem', () => {
+  it('adds signed URLs for the thumbnail and the full file, ready to render', () => {
+    const { signGalleryItem } = loadSigning();
+    const item = {
+      id: 'photo-1',
+      src: 'https://cdn.example.com/gallery/abc/full.webp',
+      thumbSrc: 'https://cdn.example.com/gallery/abc/thumb.webp',
+    };
+
+    const signed = signGalleryItem(item);
+
+    expect(signed.id).toBe('photo-1');
+    expect(signed.fullUrl).toMatch(
+      /^https:\/\/cdn\.example\.com\/gallery\/abc\/full\.webp\?.*Signature=/,
+    );
+    expect(signed.thumbUrl).toMatch(
+      /^https:\/\/cdn\.example\.com\/gallery\/abc\/thumb\.webp\?.*Signature=/,
+    );
+  });
+});

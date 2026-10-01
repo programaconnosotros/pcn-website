@@ -1,20 +1,30 @@
 import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import type { GalleryFilter } from '@/lib/gallery-filters';
+import { signGalleryItem } from '@/lib/gallery-signing';
 
-// What a tile needs: its kind, caption and enough to search it.
+/**
+ * The items the gallery shows: the photos of the old static gallery (the ones with a
+ * `legacyId`, served from /public) are kept in the database but no longer shown.
+ */
+export const visibleGalleryItem = { legacyId: null } satisfies Prisma.GalleryItemWhereInput;
+
+// What a tile needs: its kind, caption, thumbnail and enough to search it.
 export const galleryTileSelect = {
   id: true,
   kind: true,
   durationSeconds: true,
   src: true,
+  thumbSrc: true,
   takenAt: true,
   description: true,
   event: { select: { id: true, name: true } },
   tags: { select: { user: { select: { name: true } } } },
 } satisfies Prisma.GalleryItemSelect;
 
-export type GalleryTile = Prisma.GalleryItemGetPayload<{ select: typeof galleryTileSelect }>;
+export type GalleryTile = ReturnType<
+  typeof signGalleryItem<Prisma.GalleryItemGetPayload<{ select: typeof galleryTileSelect }>>
+>;
 
 // Newest first; ties (same instant) by upload order so prev/next stay stable.
 export const galleryOrder = [
@@ -24,6 +34,7 @@ export const galleryOrder = [
 ] satisfies Prisma.GalleryItemOrderByWithRelationInput[];
 
 const galleryWhere = (filter: Partial<GalleryFilter>): Prisma.GalleryItemWhereInput => ({
+  ...visibleGalleryItem,
   ...(filter.type === 'fotos' && { kind: 'PHOTO' }),
   ...(filter.type === 'videos' && { kind: 'VIDEO' }),
   ...(filter.eventId && { eventId: filter.eventId }),
@@ -31,24 +42,35 @@ const galleryWhere = (filter: Partial<GalleryFilter>): Prisma.GalleryItemWhereIn
 });
 
 /** Photos and videos of the gallery, mixed, optionally filtered by type, event or person. */
-export const listGalleryItems = (filter: Partial<GalleryFilter> = {}) =>
-  prisma.galleryItem.findMany({
-    where: galleryWhere(filter),
-    select: galleryTileSelect,
-    orderBy: galleryOrder,
-  });
+export const listGalleryItems = async (filter: Partial<GalleryFilter> = {}) =>
+  (
+    await prisma.galleryItem.findMany({
+      where: galleryWhere(filter),
+      select: galleryTileSelect,
+      orderBy: galleryOrder,
+    })
+  ).map(signGalleryItem);
 
 /** The events and the people that have something in the gallery, for its filters. */
 export async function getGalleryFilterOptions() {
   const [events, people] = await Promise.all([
     prisma.event.findMany({
-      where: { deletedAt: null, galleryItems: { some: {} } },
-      select: { id: true, name: true, date: true, _count: { select: { galleryItems: true } } },
+      where: { deletedAt: null, galleryItems: { some: visibleGalleryItem } },
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        _count: { select: { galleryItems: { where: visibleGalleryItem } } },
+      },
       orderBy: { date: 'desc' },
     }),
     prisma.user.findMany({
-      where: { galleryTags: { some: {} } },
-      select: { id: true, name: true, _count: { select: { galleryTags: true } } },
+      where: { galleryTags: { some: { item: visibleGalleryItem } } },
+      select: {
+        id: true,
+        name: true,
+        _count: { select: { galleryTags: { where: { item: visibleGalleryItem } } } },
+      },
       orderBy: { name: 'asc' },
     }),
   ]);
@@ -61,9 +83,9 @@ export async function getGalleryFilterOptions() {
 export type GalleryFilterOptions = Awaited<ReturnType<typeof getGalleryFilterOptions>>;
 
 /** A photo or video with everything its page shows: event, people and who tagged them. */
-export const getGalleryItem = (id: string) =>
-  prisma.galleryItem.findUnique({
-    where: { id },
+export async function getGalleryItem(id: string) {
+  const item = await prisma.galleryItem.findFirst({
+    where: { id, ...visibleGalleryItem },
     include: {
       event: { select: { id: true, name: true, date: true } },
       tags: {
@@ -75,6 +97,8 @@ export const getGalleryItem = (id: string) =>
       },
     },
   });
+  return item && signGalleryItem(item);
+}
 
 /**
  * The items before and after `id` in the gallery order (wrapping around), within the same
@@ -102,9 +126,12 @@ export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFi
 }
 
 /** The most recently uploaded photos and videos, newest upload first. */
-export const listLatestGalleryItems = (take: number) =>
-  prisma.galleryItem.findMany({
-    select: galleryTileSelect,
-    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-    take,
-  });
+export const listLatestGalleryItems = async (take: number) =>
+  (
+    await prisma.galleryItem.findMany({
+      where: visibleGalleryItem,
+      select: galleryTileSelect,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take,
+    })
+  ).map(signGalleryItem);

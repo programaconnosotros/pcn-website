@@ -14,7 +14,8 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
-import { galleryOrder } from '@/lib/gallery';
+import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
+import { signGalleryItem } from '@/lib/gallery-signing';
 import { articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Pencil } from 'lucide-react';
@@ -325,11 +326,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         },
         orderBy: { date: 'desc' },
       }),
-      prisma.galleryItem.findMany({
-        where: { tags: { some: { userId: user.id } } },
-        select: { id: true, kind: true, description: true },
-        orderBy: galleryOrder,
-      }),
+      prisma.galleryItem
+        .findMany({
+          where: { ...visibleGalleryItem, tags: { some: { userId: user.id } } },
+          select: { id: true, kind: true, description: true, src: true, thumbSrc: true },
+          orderBy: galleryOrder,
+        })
+        .then((items) => items.map(signGalleryItem)),
       prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),
     ]);
 

@@ -7,7 +7,6 @@ import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
-import { galleryImageUrl } from '@/lib/gallery-urls';
 
 export const PROFILE_TABS = [
   { id: 'resumen', label: 'resumen' },
@@ -289,7 +288,12 @@ export const ArticleRows = ({ articles }: { articles: ProfileArticle[] }) => (
   </RuledGrid>
 );
 
-export type ProfilePhoto = { id: string; kind: 'PHOTO' | 'VIDEO'; description: string | null };
+export type ProfilePhoto = {
+  id: string;
+  kind: 'PHOTO' | 'VIDEO';
+  description: string | null;
+  thumbUrl: string;
+};
 
 // Square thumbnails of the photos and videos the person was tagged in, each opening its page.
 export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
@@ -303,7 +307,7 @@ export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
         <span className="relative block aspect-square overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={galleryImageUrl(photo.id)}
+            src={photo.thumbUrl}
             alt={photo.description ?? 'Foto de la comunidad'}
             loading="lazy"
             decoding="async"
