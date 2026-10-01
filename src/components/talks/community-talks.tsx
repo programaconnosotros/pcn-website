@@ -87,8 +87,9 @@ interface TalkCellProps {
   isAdmin: boolean;
   onPlay: () => void;
   onSlides: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  /** Only reachable from the admin menu, so cells shown to everyone can leave them out. */
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const coverClassName =
@@ -100,7 +101,15 @@ const cornerClassName =
 const linkClass =
   'relative z-10 inline-flex items-center gap-1 rounded-sm border border-pcnGreen-200 px-1.5 py-0.5 font-mono text-[10px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen';
 
-const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: TalkCellProps) => {
+export const TalkCell = ({
+  talk,
+  index,
+  isAdmin,
+  onPlay,
+  onSlides,
+  onEdit,
+  onDelete,
+}: TalkCellProps) => {
   const videoId = youtubeId(talk.videoUrl);
   const date = talkDate(talk);
   const location = talkLocation(talk);
@@ -325,6 +334,89 @@ const TalkCell = ({ talk, index, isAdmin, onPlay, onSlides, onEdit, onDelete }: 
   );
 };
 
+interface TalkMediaDialogsProps {
+  playing: TalkWithEvent | null;
+  slides: TalkWithEvent | null;
+  onClosePlaying: () => void;
+  onCloseSlides: () => void;
+}
+
+/** The in-place YouTube player and slides carousel opened from a talk cell. */
+export const TalkMediaDialogs = ({
+  playing,
+  slides,
+  onClosePlaying,
+  onCloseSlides,
+}: TalkMediaDialogsProps) => {
+  const playingId = youtubeId(playing?.videoUrl ?? null);
+
+  return (
+    <>
+      <Dialog open={!!playing} onOpenChange={(open) => !open && onClosePlaying()}>
+        {playing && playingId && (
+          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
+            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
+              <div className="min-w-0 flex-1">
+                <DialogTitle className="truncate text-sm font-semibold">
+                  {playing.title}
+                </DialogTitle>
+                <DialogDescription className="truncate text-[11px] text-pcnGreen-600">
+                  <span className="text-pcnGreen-500">@ </span>
+                  {playing.speakers.map((s) => s.speakerName).join(', ')}
+                  {talkDate(playing) && ` · ${formatDate(talkDate(playing)!)}`}
+                </DialogDescription>
+              </div>
+              <a
+                href={playing.videoUrl!}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Ver en YouTube"
+                className="flex shrink-0 items-center gap-1 rounded-sm border border-pcnGreen-200 px-2 py-1 text-[11px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+              >
+                <span className="max-sm:hidden">youtube</span>
+                <ArrowUpRight className="size-3.5" />
+              </a>
+            </header>
+            <iframe
+              key={playingId}
+              src={`https://www.youtube-nocookie.com/embed/${playingId}?autoplay=1&rel=0`}
+              title={playing.title}
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+              className="aspect-video w-full border-0"
+            />
+          </DialogContent>
+        )}
+      </Dialog>
+
+      <Dialog open={!!slides} onOpenChange={(open) => !open && onCloseSlides()}>
+        {slides && (
+          <DialogContent className="max-w-4xl gap-3 rounded-sm border border-pcnGreen-300 bg-black px-16 font-mono">
+            <DialogTitle className="text-sm font-semibold">{slides.title}</DialogTitle>
+            <DialogDescription className="sr-only">Slides de la charla</DialogDescription>
+            <Carousel>
+              <CarouselContent>
+                {slides.slideImages.map((slide, i) => (
+                  <CarouselItem key={i}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={slide}
+                      alt={`Slide ${i + 1} de ${slides.slideImages.length}`}
+                      className="h-auto w-full rounded-sm border border-pcnGreen-200"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </DialogContent>
+        )}
+      </Dialog>
+    </>
+  );
+};
+
 interface Props {
   talks: TalkWithEvent[];
   isAdmin: boolean;
@@ -369,7 +461,6 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
   }, [talks, query, filter]);
 
   const visibleCount = groups.reduce((sum, [, items]) => sum + items.length, 0);
-  const playingId = youtubeId(playing?.videoUrl ?? null);
 
   return (
     <>
@@ -443,67 +534,12 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
         ))
       )}
 
-      <Dialog open={!!playing} onOpenChange={(open) => !open && setPlaying(null)}>
-        {playing && playingId && (
-          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
-            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
-              <div className="min-w-0 flex-1">
-                <DialogTitle className="truncate text-sm font-semibold">
-                  {playing.title}
-                </DialogTitle>
-                <DialogDescription className="truncate text-[11px] text-pcnGreen-600">
-                  <span className="text-pcnGreen-500">@ </span>
-                  {playing.speakers.map((s) => s.speakerName).join(', ')}
-                  {talkDate(playing) && ` · ${formatDate(talkDate(playing)!)}`}
-                </DialogDescription>
-              </div>
-              <a
-                href={playing.videoUrl!}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Ver en YouTube"
-                className="flex shrink-0 items-center gap-1 rounded-sm border border-pcnGreen-200 px-2 py-1 text-[11px] text-pcnGreen-700 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
-              >
-                <span className="max-sm:hidden">youtube</span>
-                <ArrowUpRight className="size-3.5" />
-              </a>
-            </header>
-            <iframe
-              key={playingId}
-              src={`https://www.youtube-nocookie.com/embed/${playingId}?autoplay=1&rel=0`}
-              title={playing.title}
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowFullScreen
-              className="aspect-video w-full border-0"
-            />
-          </DialogContent>
-        )}
-      </Dialog>
-
-      <Dialog open={!!slides} onOpenChange={(open) => !open && setSlides(null)}>
-        {slides && (
-          <DialogContent className="max-w-4xl gap-3 rounded-sm border border-pcnGreen-300 bg-black px-16 font-mono">
-            <DialogTitle className="text-sm font-semibold">{slides.title}</DialogTitle>
-            <DialogDescription className="sr-only">Slides de la charla</DialogDescription>
-            <Carousel>
-              <CarouselContent>
-                {slides.slideImages.map((slide, i) => (
-                  <CarouselItem key={i}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={slide}
-                      alt={`Slide ${i + 1} de ${slides.slideImages.length}`}
-                      className="h-auto w-full rounded-sm border border-pcnGreen-200"
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </DialogContent>
-        )}
-      </Dialog>
+      <TalkMediaDialogs
+        playing={playing}
+        slides={slides}
+        onClosePlaying={() => setPlaying(null)}
+        onCloseSlides={() => setSlides(null)}
+      />
     </>
   );
 }

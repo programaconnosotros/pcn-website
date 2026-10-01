@@ -8,6 +8,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
 import { LatestConversationsSection } from '@/components/home/latest-conversations-section';
+import { LatestTalksSection } from '@/components/home/latest-talks-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
 
@@ -74,6 +75,7 @@ const Home = async () => {
       featuredTestimonials={featuredTestimonials}
       recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
       latestConversationsSection={<LatestConversationsSection />}
+      latestTalksSection={<LatestTalksSection />}
     />
   );
 };
