@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PARTNER_CONTACT_URL } from '@/data/partners';
 import { PartnersSection } from '@/components/home/partners-section';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -31,7 +33,20 @@ const Partners = () => {
       <div className="-mx-1 px-6 md:-mx-6 md:px-10">
         <div className="mt-4">
           <StickyHeader className="-mx-6 px-6 md:-mx-10 md:px-10">
-            <PageTitle path="partners" meta="organizaciones que apoyan a la comunidad" />
+            <PageTitle
+              path="partners"
+              meta="organizaciones que apoyan a la comunidad"
+              action={
+                <Link
+                  href={PARTNER_CONTACT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                >
+                  + sumate como partner →
+                </Link>
+              }
+            />
           </StickyHeader>
           <PartnersSection showHeading={false} />
         </div>

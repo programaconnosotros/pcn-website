@@ -4,9 +4,9 @@ import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { Heading2 } from '../ui/heading-2';
 import { RuledGrid, ruledCellClassName } from '../ui/ruled-grid';
-import { ArrowUpRight, Handshake, MapPin } from 'lucide-react';
+import { Handshake, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PARTNER_CONTACT_URL, type Partner, type PartnerKind, partners } from '@/data/partners';
+import { type Partner, type PartnerKind, partners } from '@/data/partners';
 
 const GROUPS: { kind: PartnerKind; label: string }[] = [
   { kind: 'empresa', label: 'empresas' },
@@ -65,25 +65,6 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
   </Link>
 );
 
-const ContactCell = () => (
-  <Link
-    href={PARTNER_CONTACT_URL}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={cn(
-      ruledCellClassName,
-      'group flex flex-col items-center justify-center gap-2 p-4 text-center font-mono',
-    )}
-  >
-    <p className="text-sm font-semibold group-hover:text-pcnGreen">
-      <span className="text-pcnGreen-500">+ </span>¿Querés sumarte como partner?
-    </p>
-    <p className="flex items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
-      contactanos <ArrowUpRight className="h-3 w-3" />
-    </p>
-  </Link>
-);
-
 export const PartnersSection = ({ showHeading = true }: PartnersSectionProps) => {
   return (
     <div className={showHeading ? 'py-6' : 'pb-10'}>
@@ -106,7 +87,6 @@ export const PartnersSection = ({ showHeading = true }: PartnersSectionProps) =>
               .map((partner) => (
                 <PartnerCell key={partner.name} partner={partner} />
               ))}
-            {index === GROUPS.length - 1 && <ContactCell />}
           </RuledGrid>
         </section>
       ))}
