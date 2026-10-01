@@ -12,11 +12,6 @@ const HIDE_DISTANCE = 8;
 // Scroll events further apart than this (ms) start a new gesture.
 const GESTURE_GAP = 100;
 
-// Desktop only: medium screens and pages rendered inside a PCN OS window.
-const isDesktop = () =>
-  document.documentElement.hasAttribute('data-embedded') ||
-  window.matchMedia('(min-width: 768px)').matches;
-
 interface StickyHeaderProps {
   children: ReactNode;
   className?: string;
@@ -55,6 +50,9 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
 
       const now = performance.now();
       const y = window.scrollY;
+      // iOS rubber-banding past the bottom reads as a flick up; ignore it.
+      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+      if (y > maxY) return;
       const dy = y - lastY;
       const elapsed = now - lastTime;
       lastY = y;
@@ -67,7 +65,7 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
       const top = sentinel.getBoundingClientRect().top;
       const height = header.offsetHeight;
 
-      if (!isDesktop() || top >= 0) return setHeaderState('rest');
+      if (top >= 0) return setHeaderState('rest');
       // Still partly in its natural spot: let it scroll away (or back) with the page.
       if (stateRef.current !== 'shown' && top > -height) return setHeaderState('rest');
 
