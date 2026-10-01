@@ -458,10 +458,10 @@ const PCNStory = () => (
                   />
                 </HistoriaSection>
 
-                <HistoriaSection id="era-meetups" title="La era de los Meetups" period="2025">
+                <HistoriaSection id="era-meetups" title="La era de las Meetups" period="2025">
                   <p>
                     A partir de 2025, la comunidad adoptó un nuevo formato que se convirtió en el
-                    corazón de la actividad de PCN: los meetups mensuales. Con sedes que rotaron
+                    corazón de la actividad de PCN: las meetups mensuales. Con sedes que rotaron
                     entre Blackbox Cowork (Yerba Buena), Once57 Cowork y Xetro AI (San Miguel de
                     Tucumán), cada encuentro combinó charlas técnicas, networking y trabajo
                     colaborativo en un ambiente relajado.
@@ -473,7 +473,7 @@ const PCNStory = () => (
                     en un espacio muy valorado por quienes están en modo aprendizaje intensivo.
                   </p>
                   <p>
-                    El cierre de 2025 fue en Blackbox Cowork con un meetup especial de fin de año:
+                    El cierre de 2025 fue en Blackbox Cowork con una meetup especial de fin de año:
                     coworking, charlas y mucho networking para despedir un año muy activo para la
                     comunidad.
                   </p>

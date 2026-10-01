@@ -20,7 +20,7 @@ export const historiaSections: TocSection[] = [
   { id: 'charlas-comunidad', title: 'Compartiendo con la industria y las escuelas', meta: '2023' },
   { id: 'desarrollo-website', title: 'Empezamos a desarrollar el website', meta: '2024' },
   { id: 'tech-in-action', title: 'Tech in Action', meta: '2025' },
-  { id: 'era-meetups', title: 'La era de los Meetups', meta: '2025' },
+  { id: 'era-meetups', title: 'La era de las Meetups', meta: '2025' },
   { id: 'zero-to-agent', title: 'Zero to Agent', meta: '2026' },
   { id: 'nextgen-software-2026', title: 'NextGen Software 2026', meta: '2026' },
   { id: 'comunidad-whatsapp', title: 'La comunidad en WhatsApp', meta: 'Hoy' },
