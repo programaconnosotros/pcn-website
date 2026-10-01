@@ -11,7 +11,20 @@ export type OsMessage =
   /** Plays a music set in the desktop's player, so it keeps playing when the window closes. */
   | { source: typeof OS_MESSAGE_SOURCE; type: 'playMusic'; id: string }
   /** Opens the desktop's global search (⌘K pressed inside a window). */
-  | { source: typeof OS_MESSAGE_SOURCE; type: 'search'; query: string };
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'search'; query: string }
+  /**
+   * Pointer activity inside a window (coordinates relative to the window's page), so the
+   * desktop draws the one hacker cursor over every window.
+   */
+  | {
+      source: typeof OS_MESSAGE_SOURCE;
+      type: 'cursor';
+      phase: 'move' | 'down' | 'up' | 'leave';
+      x: number;
+      y: number;
+      label: string | null;
+      inText: boolean;
+    };
 
 type OutgoingOsMessage = OsMessage extends infer M
   ? M extends OsMessage

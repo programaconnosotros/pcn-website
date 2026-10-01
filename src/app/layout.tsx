@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
+import { HackerCursor } from '@/components/ui/hacker-cursor';
 import { VimNavigation } from '@/components/ui/vim-navigation';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
@@ -70,6 +71,7 @@ const RootLayout = async ({
           <Toaster closeButton position="top-right" />
           <ScrollToTop />
           <ScrollIndicator />
+          <HackerCursor />
           <VimNavigation />
         </ThemeProvider>
       </body>
