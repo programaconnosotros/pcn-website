@@ -41,6 +41,21 @@ export const sponsors: Sponsor[] = [
     location: 'Tucumán, Argentina',
   },
   {
+    name: 'Macch',
+    url: 'https://macch.ai/',
+    logo: '/macch-white-logo.svg',
+    description: 'IA para la atención al cliente y la operación de proveedores de internet.',
+    location: 'Tucumán, Argentina',
+  },
+  {
+    name: 'Crisol',
+    url: 'https://www.crisol.studio',
+    logo: '/crisol-white-logo.svg',
+    description:
+      'Estudio de ingeniería: sistemas para procesos donde un error no se revierte, con la seguridad en la fundación.',
+    location: 'Argentina',
+  },
+  {
     name: 'Blackbox Cowork',
     url: 'https://www.instagram.com/blackboxcowork/',
     logo: '/blackbox-cowork-logo.png',
@@ -63,13 +78,6 @@ export const sponsors: Sponsor[] = [
     location: 'Montevideo, Uruguay',
   },
   {
-    name: 'Macch',
-    url: 'https://macch.ai/',
-    logo: '/macch-white-logo.svg',
-    description: 'IA para la atención al cliente y la operación de proveedores de internet.',
-    location: 'Tucumán, Argentina',
-  },
-  {
     name: 'Endpoint Consulting',
     url: 'https://www.instagram.com/endpoint_ciberseguridad/',
     logo: '/endpoint-security-logo.png',
@@ -84,14 +92,6 @@ export const sponsors: Sponsor[] = [
       'Organización que busca promover la computación a través de publicaciones, estándares y conferencias.',
     location: 'IEEE CS Región Latinoamérica',
     monochromeOnDark: true,
-  },
-  {
-    name: 'Crisol',
-    url: 'https://www.crisol.studio',
-    logo: '/crisol-white-logo.svg',
-    description:
-      'Estudio de ingeniería: sistemas para procesos donde un error no se revierte, con la seguridad en la fundación.',
-    location: 'Argentina',
   },
 ];
 
