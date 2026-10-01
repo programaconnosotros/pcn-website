@@ -93,6 +93,14 @@ export type DisplayBadge = {
   awardedAt?: Date | null;
 };
 
+export const COFOUNDER_BADGE: DisplayBadge = {
+  id: 'cofounder',
+  name: 'Co-founder',
+  description: 'Fundó programaConNosotros. Estuvo desde el día cero.',
+  icon: 'crown',
+  tone: 'gold',
+};
+
 export const AMBASSADOR_BADGE: DisplayBadge = {
   id: 'ambassador',
   name: 'PCN Ambassador',

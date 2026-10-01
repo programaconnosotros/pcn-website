@@ -156,6 +156,18 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     ),
   },
   {
+    accessorKey: 'isCofounder',
+    header: ({ column }) => <SortableHeader label="Co-founder" column={column} />,
+    cell: ({ row }) => (
+      <UserFlagToggle
+        flag="cofounder"
+        userId={row.original.id}
+        userName={row.original.name}
+        active={row.original.isCofounder}
+      />
+    ),
+  },
+  {
     accessorKey: 'isAmbassador',
     header: ({ column }) => <SortableHeader label="Ambassador" column={column} />,
     cell: ({ row }) => (

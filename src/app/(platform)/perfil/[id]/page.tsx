@@ -1,7 +1,13 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
 import { BadgeStrip, ProfileBadges } from '@/components/badges/profile-badges';
-import { AMBASSADOR_BADGE, isBadgeIcon, isBadgeTone, type DisplayBadge } from '@/lib/badges';
+import {
+  AMBASSADOR_BADGE,
+  COFOUNDER_BADGE,
+  isBadgeIcon,
+  isBadgeTone,
+  type DisplayBadge,
+} from '@/lib/badges';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -198,6 +204,7 @@ async function getUser(id: string) {
       email: user.email,
       image: user.image,
       isAmbassador: user.isAmbassador,
+      isCofounder: user.isCofounder,
       customBadges: user.badges,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
@@ -244,6 +251,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
   // Built-in badges first, then the custom ones an admin awarded, oldest first.
   const badges: (DisplayBadge & { custom?: boolean })[] = [
+    ...(user.isCofounder ? [COFOUNDER_BADGE] : []),
     ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
     ...user.customBadges.map(({ badge, awardedAt }) => ({
       id: badge.id,

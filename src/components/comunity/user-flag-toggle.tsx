@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Award, ShieldCheck, type LucideIcon } from 'lucide-react';
+import { Award, Crown, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { setAmbassador } from '@/actions/users/set-ambassador';
+import { setCofounder } from '@/actions/users/set-cofounder';
 import { setUserRole } from '@/actions/users/set-user-role';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 
@@ -30,6 +31,13 @@ const FLAGS = {
     save: setAmbassador,
     on: (name) => `${name} ahora es ambassador`,
     off: (name) => `${name} ya no es ambassador`,
+  },
+  cofounder: {
+    icon: Crown,
+    label: 'co-founder',
+    save: setCofounder,
+    on: (name) => `${name} ahora figura como co-founder`,
+    off: (name) => `${name} ya no figura como co-founder`,
   },
 } satisfies Record<string, FlagConfig>;
 
