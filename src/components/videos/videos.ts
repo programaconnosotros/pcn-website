@@ -167,6 +167,13 @@ const allVideos: Video[] = [
     isTalk: true,
   },
   {
+    id: 'LU6K07U4wOk',
+    title: 'Jev de TypeSafe AI: el modelo que NO escribe texto',
+    channel: 'Fazt',
+    date: '2026-09-18',
+    durationSeconds: 1850,
+  },
+  {
     id: 'NYFGCESmikA',
     title: 'DHH: Future of programming, AI, agentic engineering, vibe coding & Linux',
     speaker: 'DHH y Lex Fridman',
