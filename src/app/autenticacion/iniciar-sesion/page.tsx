@@ -145,9 +145,9 @@ function SignInContent() {
             size="lg"
             className="w-full"
             loading={isLoading}
-            loadingText="Ingresando..."
+            loadingText="ingresando..."
           >
-            Ingresar
+            ingresar();
             <LogIn className="ml-2 h-4 w-4" />
           </Button>
         </form>

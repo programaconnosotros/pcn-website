@@ -75,9 +75,9 @@ export const EditAdviseDialog = ({
               type="submit"
               className="w-full"
               loading={isSubmitting}
-              loadingText="Guardando..."
+              loadingText="guardando..."
             >
-              Guardar cambios
+              guardarCambios();
             </Button>
           </form>
         </Form>

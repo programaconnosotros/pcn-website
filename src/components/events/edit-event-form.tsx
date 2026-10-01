@@ -56,7 +56,7 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
     <EventForm
       defaultValues={formDefaults}
       onSubmit={onSubmit}
-      submitLabel="Guardar cambios"
+      submitLabel="guardarCambios();"
       cancelHref={`/eventos/${eventId}`}
     />
   );

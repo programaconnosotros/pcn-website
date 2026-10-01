@@ -212,7 +212,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   <Link href={`/eventos/${id}/editar`}>
                     <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                       <Edit className="h-4 w-4" />
-                      Editar evento
+                      editarEvento();
                     </Button>
                   </Link>
                 )}
@@ -263,7 +263,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 <Suspense
                   fallback={
                     <Button variant="pcn" className="w-full" disabled>
-                      Cargando...
+                      cargando...
                     </Button>
                   }
                 >

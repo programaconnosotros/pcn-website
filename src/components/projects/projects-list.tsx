@@ -363,17 +363,17 @@ export function ProjectsList({ projects, currentUser }: Props) {
                 ) : (
                   <GripVertical className="mr-1 h-4 w-4" />
                 )}
-                {reordering ? 'listo' : 'ordenar'}
+                {reordering ? 'terminar();' : 'ordenar();'}
               </Button>
             )}
             {currentUser ? (
               <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
                 <Plus className="mr-1 h-4 w-4" />
-                Publicar proyecto
+                publicarProyecto();
               </Button>
             ) : (
               <Button variant="outline" size="sm" asChild>
-                <Link href="/autenticacion/iniciar-sesion">Iniciá sesión para publicar</Link>
+                <Link href="/autenticacion/iniciar-sesion">iniciarSesion();</Link>
               </Button>
             )}
           </div>

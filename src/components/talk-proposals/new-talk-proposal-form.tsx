@@ -355,7 +355,7 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
               onClick={() => append({ ...EMPTY_SPEAKER })}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Agregar orador
+              agregarOrador();
             </Button>
           </div>
 
@@ -365,14 +365,14 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
               variant="pcn"
               className="flex-1"
               loading={isSubmitting}
-              loadingText="Enviando..."
+              loadingText="enviando..."
             >
               <Save className="mr-2 h-4 w-4" />
-              Enviar propuesta
+              enviarPropuesta();
             </Button>
             <Link href={`/eventos/${eventId}`} className="flex-1">
               <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>
-                Cancelar
+                cancelar();
               </Button>
             </Link>
           </div>

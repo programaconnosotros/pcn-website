@@ -123,8 +123,8 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
             {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
             <div className="flex gap-2">
-              <Button type="submit" size="sm" loading={isSubmitting} loadingText="Enviando...">
-                Enviar respuesta
+              <Button type="submit" size="sm" loading={isSubmitting} loadingText="enviando...">
+                enviarRespuesta();
               </Button>
 
               <Button
@@ -160,8 +160,8 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
 
           {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
-          <Button type="submit" size="sm" loading={isSubmitting} loadingText="Enviando...">
-            Enviar comentario
+          <Button type="submit" size="sm" loading={isSubmitting} loadingText="enviando...">
+            enviarComentario();
           </Button>
         </form>
       ) : (

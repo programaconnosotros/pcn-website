@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 // Primary call to action: a lit green slab with a scanline texture, an outer glow and a light
 // streak that sweeps across it every few seconds so it catches the eye even at rest.
 const primaryCta = cn(
-  'relative isolate overflow-hidden border border-pcnGreen bg-pcnGreen font-semibold uppercase tracking-[0.12em] text-black',
+  'relative isolate overflow-hidden border border-pcnGreen bg-pcnGreen font-semibold tracking-tight text-black',
   'animate-cta-pulse motion-reduce:animate-none hover:animate-none',
   'hover:-translate-y-px hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(4,244,190,0.6),0_0_36px_-4px_rgba(4,244,190,0.95),inset_0_1px_0_rgba(255,255,255,0.6)] active:translate-y-0',
   'before:absolute before:inset-y-0 before:left-0 before:-z-10 before:w-1/3 before:bg-gradient-to-r before:from-transparent before:via-white/70 before:to-transparent before:animate-cta-shine motion-reduce:before:hidden',
@@ -20,7 +20,7 @@ const primaryCta = cn(
 // Secondary call to action: a dark terminal frame with lit corner brackets that open up on
 // hover while a green fill wipes in from the left.
 const secondaryCta = cn(
-  'relative border border-pcnGreen-400 bg-black/50 uppercase tracking-[0.12em] text-pcnGreen-900',
+  'relative border border-pcnGreen-400 bg-black/50 tracking-tight text-pcnGreen-900',
   'bg-[linear-gradient(90deg,rgba(4,244,190,0.16),rgba(4,244,190,0.06))] bg-[length:0%_100%] bg-left bg-no-repeat transition-[background-size,border-color,box-shadow,color,transform] duration-300',
   'hover:border-pcnGreen hover:bg-[length:100%_100%] hover:text-pcnGreen hover:text-glow hover:shadow-[0_0_20px_-4px_rgba(4,244,190,0.65),inset_0_0_12px_-6px_rgba(4,244,190,0.8)]',
   'before:pointer-events-none before:absolute before:-left-px before:-top-px before:size-2 before:border-l-2 before:border-t-2 before:border-pcnGreen before:transition-all before:duration-300 hover:before:size-3',
@@ -28,6 +28,7 @@ const secondaryCta = cn(
   '[&_svg]:text-current [&_svg]:transition-transform hover:[&_svg]:translate-x-0.5',
 );
 
+// Buttons with a fill and a border label their action as a function call, e.g. `crearEvento();`.
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-sm font-mono text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
   {
@@ -55,10 +56,6 @@ const buttonVariants = cva(
         lg: 'h-11 px-6',
         icon: 'h-9 w-9',
       },
-      // Renders the label as a function call (e.g. `verEventos();`), so drop the CTA caps.
-      code: {
-        true: 'normal-case tracking-tight',
-      },
     },
     defaultVariants: {
       variant: 'default',
@@ -81,7 +78,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size,
-      code,
       asChild = false,
       loading = false,
       loadingText,
@@ -94,7 +90,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, code, className }))}
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
         {...props}

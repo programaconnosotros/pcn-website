@@ -71,7 +71,7 @@ const EventsPage = async () => {
                 <Link href="/eventos/nuevo">
                   <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                     <Plus className="h-4 w-4" />
-                    Crear evento
+                    crearEvento();
                   </Button>
                 </Link>
               )}

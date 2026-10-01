@@ -79,7 +79,7 @@ const LanguageDialog = ({
   <Dialog>
     <DialogTrigger asChild>
       <Button variant="outline" size="sm">
-        Agregar lenguaje
+        agregarLenguaje();
       </Button>
     </DialogTrigger>
     <DialogContent>
@@ -113,7 +113,7 @@ const LanguageDialog = ({
           </Select>
         </div>
         <Button onClick={addLanguage} className="w-full">
-          Agregar
+          agregar();
         </Button>
       </div>
     </DialogContent>
@@ -493,8 +493,8 @@ export const ProfileForm = ({
         </div>
 
         <div className="mb-8 pb-4">
-          <Button type="submit" variant="default" loading={isSubmitting} loadingText="Guardando...">
-            Guardar cambios
+          <Button type="submit" variant="default" loading={isSubmitting} loadingText="guardando...">
+            guardarCambios();
           </Button>
         </div>
       </form>

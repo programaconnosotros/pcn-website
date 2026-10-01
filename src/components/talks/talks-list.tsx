@@ -37,7 +37,7 @@ export function TalksList({ talks, eventId }: Props) {
         </h2>
         <Button size="sm" variant="pcn" onClick={() => setShowCreate(true)}>
           <Plus className="mr-1 h-4 w-4" />
-          Nueva charla
+          nuevaCharla();
         </Button>
       </div>
       <div className="p-3">

@@ -158,7 +158,7 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
               {course.websiteUrl && (
                 <div className="p-4">
                   <a href={course.websiteUrl} target="_blank" rel="noopener noreferrer">
-                    <Button size="sm" className="flex flex-row items-center gap-2" code>
+                    <Button size="sm" className="flex flex-row items-center gap-2">
                       irAlCurso();
                       <ExternalLink className="h-4 w-4" />
                     </Button>

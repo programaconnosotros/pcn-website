@@ -50,7 +50,7 @@ export function NavUser({ user }: { user: User | null }) {
                     <LogIn className="size-4" />
                   ) : (
                     <>
-                      Iniciar sesión <LogIn className="ml-2 size-4" />
+                      iniciarSesion(); <LogIn className="ml-2 size-4" />
                     </>
                   )}
                 </Link>

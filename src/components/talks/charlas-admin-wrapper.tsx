@@ -69,7 +69,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
             {isAdmin ? (
               <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
                 <Plus className="mr-1.5 h-4 w-4" />
-                Nueva charla
+                nuevaCharla();
               </Button>
             ) : (
               <Link

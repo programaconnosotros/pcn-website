@@ -41,7 +41,7 @@ type EventFormProps = {
 export function EventForm({
   defaultValues,
   onSubmit,
-  submitLabel = 'Guardar evento',
+  submitLabel = 'guardarEvento();',
   cancelHref = '/eventos',
 }: EventFormProps) {
   const form = useForm<EventFormData>({
@@ -503,7 +503,7 @@ export function EventForm({
                 onClick={() => append({ name: '', website: '' })}
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Agregar sponsor
+                agregarSponsor();
               </Button>
             </div>
 
@@ -564,14 +564,14 @@ export function EventForm({
               variant="pcn"
               className="flex-1"
               loading={isSubmitting}
-              loadingText="Guardando..."
+              loadingText="guardando..."
             >
               <Save className="mr-2 h-4 w-4" />
               {submitLabel}
             </Button>
             <Link href={cancelHref} className="flex-1">
               <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>
-                Cancelar
+                cancelar();
               </Button>
             </Link>
           </div>

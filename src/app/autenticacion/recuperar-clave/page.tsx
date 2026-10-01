@@ -222,8 +222,8 @@ export default function ResetPasswordPage() {
               )}
             />
 
-            <Button type="submit" className="w-full" loading={isLoading} loadingText="Enviando...">
-              Enviar código
+            <Button type="submit" className="w-full" loading={isLoading} loadingText="enviando...">
+              enviarCodigo();
               <Mail className="ml-2 h-4 w-4" />
             </Button>
           </form>
@@ -263,9 +263,9 @@ export default function ResetPasswordPage() {
               type="submit"
               className="w-full"
               loading={isLoading}
-              loadingText="Verificando..."
+              loadingText="verificando..."
             >
-              Verificar código
+              verificarCodigo();
               <ShieldCheck className="ml-2 h-4 w-4" />
             </Button>
 
@@ -330,9 +330,9 @@ export default function ResetPasswordPage() {
               type="submit"
               className="w-full"
               loading={isLoading}
-              loadingText="Actualizando..."
+              loadingText="actualizando..."
             >
-              Actualizar contraseña
+              actualizarClave();
               <KeyRound className="ml-2 h-4 w-4" />
             </Button>
 
@@ -355,7 +355,7 @@ export default function ResetPasswordPage() {
           </AuthStatus>
           <Button asChild size="lg" className="w-full">
             <Link href="/autenticacion/iniciar-sesion">
-              Iniciar sesión
+              iniciarSesion();
               <LogIn className="ml-2 h-4 w-4" />
             </Link>
           </Button>

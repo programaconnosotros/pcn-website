@@ -51,7 +51,7 @@ export const AddAdvise = () => {
       <DialogTrigger asChild>
         <Button variant="pcn" size="sm">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Publicar un consejo
+          publicarConsejo();
         </Button>
       </DialogTrigger>
 
@@ -80,9 +80,9 @@ export const AddAdvise = () => {
               type="submit"
               className="w-full"
               loading={isSubmitting}
-              loadingText="Publicando..."
+              loadingText="publicando..."
             >
-              Publicar
+              publicar();
             </Button>
           </form>
         </Form>

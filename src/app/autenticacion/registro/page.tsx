@@ -391,9 +391,9 @@ function SignUpContent() {
             size="lg"
             className="w-full"
             loading={isSubmitting}
-            loadingText="Creando usuario..."
+            loadingText="creando cuenta..."
           >
-            Crear cuenta
+            crearCuenta();
             <UserPlus className="ml-2 h-4 w-4" />
           </Button>
         </form>

@@ -140,7 +140,7 @@ function VerifyEmailContent() {
         description="No se especificó un email para verificar."
       >
         <Button asChild size="lg" className="w-full">
-          <Link href="/autenticacion/iniciar-sesion">Ir a iniciar sesión</Link>
+          <Link href="/autenticacion/iniciar-sesion">irAIniciarSesion();</Link>
         </Button>
       </AuthShell>
     );
@@ -191,10 +191,10 @@ function VerifyEmailContent() {
               size="lg"
               className="w-full"
               loading={isVerifying}
-              loadingText="Verificando..."
+              loadingText="verificando..."
               disabled={isVerifying || isResending}
             >
-              Verificar email
+              verificarEmail();
               <Mail className="ml-2 h-4 w-4" />
             </Button>
 

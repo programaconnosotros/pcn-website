@@ -128,7 +128,7 @@ export function EventDetailClient({
         isAuthenticated={isAuthenticated}
         capacityAvailable={true}
         externalUrl={externalRegistrationUrl}
-        label={isFull ? 'Inscribirse en lista de espera' : undefined}
+        label={isFull ? 'unirmeAListaDeEspera();' : undefined}
       />
     );
   }

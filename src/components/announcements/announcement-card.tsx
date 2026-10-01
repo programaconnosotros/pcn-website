@@ -172,7 +172,7 @@ export function AnnouncementCard({
             onSubmit={handleUpdate}
             onCancel={() => setIsEditOpen(false)}
             isLoading={isUpdating}
-            submitLabel="Actualizar"
+            submitLabel="actualizar();"
           />
         </DialogContent>
       </Dialog>

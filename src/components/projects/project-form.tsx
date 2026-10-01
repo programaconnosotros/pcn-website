@@ -400,10 +400,10 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
             variant="pcn"
             className="flex-1"
             loading={isSubmitting}
-            loadingText="Guardando..."
+            loadingText="guardando..."
           >
             <Save className="mr-2 h-4 w-4" />
-            {project ? 'Actualizar proyecto' : 'Publicar proyecto'}
+            {project ? 'actualizarProyecto();' : 'publicarProyecto();'}
           </Button>
           {onCancel && (
             <Button
@@ -413,7 +413,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
               disabled={isSubmitting}
               onClick={onCancel}
             >
-              Cancelar
+              cancelar();
             </Button>
           )}
         </div>

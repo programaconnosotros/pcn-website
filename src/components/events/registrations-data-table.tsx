@@ -128,7 +128,7 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeft className="h-4 w-4" />
-            Anterior
+            anterior();
           </Button>
           <Button
             variant="outline"
@@ -136,7 +136,7 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Siguiente
+            siguiente();
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

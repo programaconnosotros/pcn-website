@@ -175,9 +175,9 @@ export function TestimonialCard({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>cancelar();</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
-              Eliminar
+              eliminar();
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -25,5 +25,5 @@ export function NewEventForm() {
     }
   };
 
-  return <EventForm onSubmit={onSubmit} submitLabel="Crear evento" cancelHref="/eventos" />;
+  return <EventForm onSubmit={onSubmit} submitLabel="crearEvento();" cancelHref="/eventos" />;
 }

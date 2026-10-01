@@ -126,7 +126,7 @@ export function TestimonialForm({
               <AlertDialogTrigger asChild>
                 <Button type="button" variant="destructive" disabled={isDeleting}>
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Eliminar
+                  eliminar();
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -137,12 +137,12 @@ export function TestimonialForm({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>cancelar();</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Eliminar
+                    eliminar();
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -151,16 +151,16 @@ export function TestimonialForm({
           <div className="ml-auto flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>
               <X className="mr-2 h-4 w-4" />
-              Cancelar
+              cancelar();
             </Button>
             <Button
               type="submit"
               variant="pcn"
               loading={isSubmitting}
-              loadingText={testimonialId ? 'Actualizando...' : 'Creando...'}
+              loadingText={testimonialId ? 'actualizando...' : 'creando...'}
             >
               <Save className="mr-2 h-4 w-4" />
-              {testimonialId ? 'Actualizar' : 'Crear'}
+              {testimonialId ? 'actualizar();' : 'crear();'}
             </Button>
           </div>
         </div>

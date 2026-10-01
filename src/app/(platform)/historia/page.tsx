@@ -589,7 +589,7 @@ const PCNStory = () => (
                   </p>
                   <div className="flex flex-wrap gap-3 pt-2">
                     <Link href="/conversaciones">
-                      <Button variant="outline" size="sm" code>
+                      <Button variant="outline" size="sm">
                         verConversaciones();
                       </Button>
                     </Link>
@@ -598,7 +598,7 @@ const PCNStory = () => (
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Button variant="pcn" size="sm" className="flex items-center gap-2" code>
+                      <Button variant="pcn" size="sm" className="flex items-center gap-2">
                         <MessageCircle className="h-4 w-4" />
                         unirmeAlGrupo();
                       </Button>

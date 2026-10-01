@@ -500,7 +500,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               onClick={() => append({ ...EMPTY_SPEAKER })}
             >
               <Plus className="mr-1 h-4 w-4" />
-              Agregar orador
+              agregarOrador();
             </Button>
           </div>
           {fields.map((field, idx) => (
@@ -612,10 +612,10 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
             variant="pcn"
             className="flex-1"
             loading={isSubmitting}
-            loadingText="Guardando..."
+            loadingText="guardando..."
           >
             <Save className="mr-2 h-4 w-4" />
-            {talk ? 'Actualizar charla' : 'Crear charla'}
+            {talk ? 'actualizarCharla();' : 'crearCharla();'}
           </Button>
           {onCancel && (
             <Button
@@ -625,7 +625,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               disabled={isSubmitting}
               onClick={onCancel}
             >
-              Cancelar
+              cancelar();
             </Button>
           )}
         </div>

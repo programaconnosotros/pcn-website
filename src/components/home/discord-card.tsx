@@ -19,7 +19,7 @@ export const DiscordCard = () => (
     <div className="flex w-full justify-center">
       <Link className="w-full" href="https://discord.gg/dTQexKw56S" target="_blank">
         <Button className="flex w-full flex-row gap-2" variant="outline">
-          Ir a Discord <SquareArrowOutUpRight size={16} />
+          abrirDiscord(); <SquareArrowOutUpRight size={16} />
         </Button>
       </Link>
     </div>

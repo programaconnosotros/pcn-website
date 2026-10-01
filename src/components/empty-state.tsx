@@ -37,7 +37,7 @@ export function EmptyState({ title, description, showRefresh = true, onRefresh }
           className="flex items-center space-x-2 transition-transform duration-200 hover:scale-[1.015]"
         >
           <RefreshCw className="h-4 w-4" />
-          <span>Limpiar filtros</span>
+          <span>limpiarFiltros();</span>
         </Button>
       )}
     </div>

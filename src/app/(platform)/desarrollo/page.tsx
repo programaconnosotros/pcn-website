@@ -236,7 +236,7 @@ const DesarrolloPage = () => (
               meta="open-source · cualquier persona puede contribuir"
             />
             <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2" code>
+              <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
                 <Github className="h-4 w-4" />
                 abrirGitHub();
               </Button>
@@ -350,7 +350,7 @@ const DesarrolloPage = () => (
               ¿Listo para empezar? Elegí un issue o proponé una mejora.
             </p>
             <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="pcn" size="sm" className="flex items-center gap-2" code>
+              <Button variant="pcn" size="sm" className="flex items-center gap-2">
                 <Github className="h-4 w-4" />
                 irAlRepositorio();
               </Button>

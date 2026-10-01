@@ -65,7 +65,7 @@ export function ShareDialog({ isOpen, onClose, url, title }: ShareDialogProps) {
         </div>
         <div className="flex justify-end">
           <Button variant="outline" onClick={onClose}>
-            Cerrar
+            cerrar();
           </Button>
         </div>
       </DialogContent>

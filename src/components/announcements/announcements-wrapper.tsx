@@ -77,7 +77,7 @@ export function AnnouncementsWrapper({
           {isAdmin && (
             <Button size="sm" onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Nuevo anuncio
+              nuevoAnuncio();
             </Button>
           )}
         </div>
@@ -113,7 +113,7 @@ export function AnnouncementsWrapper({
             onSubmit={handleCreate}
             onCancel={() => setIsCreateOpen(false)}
             isLoading={isCreating}
-            submitLabel="Crear anuncio"
+            submitLabel="crearAnuncio();"
           />
         </DialogContent>
       </Dialog>

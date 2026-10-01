@@ -102,7 +102,7 @@ export function WebReaderDialog({ page, open, onOpenChange }: WebReaderDialogPro
               </div>
               <Button asChild variant="pcn" size="sm">
                 <a href={page.url} target="_blank" rel="noopener noreferrer">
-                  Abrir {host}
+                  {`abrir('${host}');`}
                   <ArrowUpRight className="size-4" />
                 </a>
               </Button>

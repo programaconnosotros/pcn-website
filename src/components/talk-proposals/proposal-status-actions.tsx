@@ -81,7 +81,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         onClick={() => handleStatusChange('ACCEPTED')}
       >
         <CheckCircle className="h-3 w-3" />
-        Aceptar
+        aceptar();
       </Button>
 
       <Button
@@ -93,7 +93,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         onClick={() => handleStatusChange('REJECTED')}
       >
         <XCircle className="h-3 w-3" />
-        Rechazar
+        rechazar();
       </Button>
 
       {currentStatus === 'ACCEPTED' && (
@@ -102,13 +102,13 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
           variant="outline"
           className="gap-1"
           loading={isPending}
-          loadingText={hasTalk ? 'Charla creada' : 'Creando...'}
+          loadingText={hasTalk ? '// charla creada' : 'creando...'}
           disabled={isPending || !!hasTalk}
           onClick={handlePromoteToTalk}
           title={hasTalk ? 'Ya tiene una charla creada' : 'Crear charla a partir de esta propuesta'}
         >
           <Mic className="h-3 w-3" />
-          {hasTalk ? 'Charla creada' : 'Crear charla'}
+          {hasTalk ? '// charla creada' : 'crearCharla();'}
         </Button>
       )}
 
@@ -127,14 +127,14 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>cancelar();</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isPending ? 'Eliminando...' : 'Eliminar'}
+              {isPending ? 'eliminando...' : 'eliminar();'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
