@@ -5,8 +5,11 @@ import { ProfileFormData } from '@/schemas/profile-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const updateProfile = async (data: ProfileFormData) => {
+  await enforceRateLimit('editContent');
+
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {

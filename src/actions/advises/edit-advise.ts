@@ -4,8 +4,11 @@ import prisma from '@/lib/prisma';
 import { adviseSchema } from '@/schemas/advise-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const editAdvise = async ({ id, content }: { id: string; content: string }) => {
+  await enforceRateLimit('editContent');
+
   const validatedData = adviseSchema.parse({ content });
 
   const sessionId = (await cookies()).get('sessionId');

@@ -2,8 +2,11 @@
 
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const completePasswordReset = async (email: string, code: string, newPassword: string) => {
+  await enforceRateLimit('verifyCode');
+
   // Verificar el token nuevamente
   const token = await prisma.passwordResetToken.findFirst({
     where: {

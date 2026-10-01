@@ -1,6 +1,7 @@
 'use server';
 
 import { getPresignedUploadUrl } from '@/lib/s3';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
@@ -17,6 +18,8 @@ export async function getPresignedUrlPublic({
   fileName,
   contentType,
 }: GetPresignedUrlPublicParams) {
+  await enforceRateLimit('upload');
+
   if (!ALLOWED_TYPES.includes(contentType)) {
     throw new Error(
       'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)',

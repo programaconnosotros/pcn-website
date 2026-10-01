@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 type CancelRegistrationParams = {
   registrationId?: string;
@@ -11,6 +12,8 @@ type CancelRegistrationParams = {
 };
 
 export const cancelRegistration = async (params: CancelRegistrationParams) => {
+  await enforceRateLimit('eventRegistration');
+
   const { registrationId, eventId } = params;
 
   // Verificar autenticación

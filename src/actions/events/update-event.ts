@@ -7,8 +7,11 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { buildEventAdmins } from './build-event-admins';
 import { canEditEvent, canManageEventAdmins, isSiteAdmin } from '@/lib/event-permissions';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
+  await enforceRateLimit('editContent');
+
   const validatedData = eventSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;

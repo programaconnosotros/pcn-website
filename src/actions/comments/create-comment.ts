@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const commentSchema = z.object({
   content: z
@@ -19,6 +20,8 @@ export const createComment = async ({
   adviseId,
   parentCommentId,
 }: z.infer<typeof commentSchema>) => {
+  await enforceRateLimit('comment');
+
   const validatedData = commentSchema.parse({ content, adviseId, parentCommentId });
 
   const sessionId = (await cookies()).get('sessionId');

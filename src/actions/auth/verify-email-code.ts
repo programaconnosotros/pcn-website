@@ -2,8 +2,11 @@
 
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const verifyEmailCode = async (email: string, code: string) => {
+  await enforceRateLimit('verifyCode');
+
   // Buscar token válido
   const token = await prisma.emailVerificationToken.findFirst({
     where: {

@@ -5,8 +5,11 @@ import { revalidatePath } from 'next/cache';
 import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
 import { canEditProject, canManageProject, requireSessionUser } from './get-session-user';
 import { buildProjectMembers } from './build-project-members';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const updateProject = async (id: string, data: ProjectFormData) => {
+  await enforceRateLimit('editContent');
+
   const user = await requireSessionUser();
 
   const parsed = projectSchema.safeParse(data);

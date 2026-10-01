@@ -5,8 +5,11 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { talkProposalSchema, TalkProposalFormData } from '@/schemas/talk-proposal-schema';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const createTalkProposal = async (eventId: string, data: TalkProposalFormData) => {
+  await enforceRateLimit('createContent');
+
   const event = await prisma.event.findFirst({
     where: { id: eventId, deletedAt: null },
   });

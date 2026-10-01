@@ -1,8 +1,11 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const verifyResetCode = async (email: string, code: string) => {
+  await enforceRateLimit('verifyCode');
+
   // Buscar token válido
   const token = await prisma.passwordResetToken.findFirst({
     where: {

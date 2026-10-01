@@ -5,8 +5,11 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const registerEvent = async (eventId: string, options?: { skipRedirect?: boolean }) => {
+  await enforceRateLimit('eventRegistration');
+
   // Verificar que el evento existe y no está eliminado
   const event = await prisma.event.findFirst({
     where: {

@@ -7,6 +7,7 @@ import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
 import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const signUp = async (
   data: z.infer<typeof signUpActionSchema>,
@@ -15,6 +16,8 @@ export const signUp = async (
   | { success: false; error: 'EMAIL_ALREADY_EXISTS' }
   | { success: false; error: 'UNKNOWN_ERROR' }
 > => {
+  await enforceRateLimit('signUp');
+
   const {
     confirmPassword: _confirmPassword,
     redirectTo,

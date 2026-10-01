@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -22,6 +23,8 @@ export const signIn = async (
   | { success: false; error: 'INVALID_CREDENTIALS' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
 > => {
+  await enforceRateLimit('signIn');
+
   try {
     const validatedData = formSchema.parse(data);
     const { email, password } = validatedData;

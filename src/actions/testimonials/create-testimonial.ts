@@ -5,8 +5,11 @@ import { testimonialSchema, TestimonialFormData } from '@/schemas/testimonial-sc
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const createTestimonial = async (data: TestimonialFormData) => {
+  await enforceRateLimit('createContent');
+
   const validatedData = testimonialSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;

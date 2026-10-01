@@ -10,8 +10,11 @@ import {
   sendEmail,
 } from '@/lib/email';
 import { render } from '@react-email/render';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const sendVerificationCode = async (email: string) => {
+  await enforceRateLimit('sendCode');
+
   // Verificar que el usuario existe
   const user = await prisma.user.findUnique({
     where: { email },

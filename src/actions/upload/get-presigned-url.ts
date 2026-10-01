@@ -3,6 +3,7 @@
 import { getPresignedUploadUrl } from '@/lib/s3';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
@@ -18,6 +19,8 @@ export async function getPresignedUrl({
   contentType,
   folder = 'events',
 }: GetPresignedUrlParams) {
+  await enforceRateLimit('upload');
+
   // Verificar autenticación
   const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
