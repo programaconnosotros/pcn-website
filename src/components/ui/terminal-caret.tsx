@@ -123,6 +123,9 @@ export function TerminalCaret() {
         width: `${width}px`,
         height: `${height}px`,
         font: style.font,
+        // The block is as tall as the glyph box, not the field's line box; a taller line-height
+        // would push the character below the block.
+        lineHeight: `${height}px`,
         letterSpacing: style.letterSpacing,
       });
       caret.dataset.invalid = String(field.getAttribute('aria-invalid') === 'true');
