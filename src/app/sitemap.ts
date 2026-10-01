@@ -33,6 +33,7 @@ const STATIC_ROUTES = [
   '/historia',
   '/galeria',
   '/sponsors',
+  '/changelog',
   '/usuarios',
 ];
 

@@ -32,6 +32,7 @@ const directories = [
       { label: 'galería', href: '/galeria' },
       { label: 'sponsors', href: '/sponsors' },
       { label: 'testimonios', href: '/testimonios' },
+      { label: 'changelog', href: '/changelog' },
     ],
   },
 ];

@@ -12,6 +12,7 @@ import {
   Globe,
   GraduationCap,
   Handshake,
+  History,
   Home,
   Image,
   LayoutDashboard,
@@ -229,6 +230,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-teal-300 to-emerald-700',
     group: 'Comunidad',
     pinned: true,
+  },
+  {
+    id: 'changelog',
+    name: 'Changelog',
+    url: '/changelog',
+    icon: History,
+    color: 'from-lime-300 to-green-700',
+    group: 'Comunidad',
   },
   {
     id: 'admin',

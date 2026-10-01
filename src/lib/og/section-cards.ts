@@ -4,6 +4,7 @@ import { specialties } from '@/components/especialidades/specialties';
 import { musicSets } from '@/components/music/music-sets';
 import { videos } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
+import { changelog } from '@/data/changelog';
 import { TRACKS, trackQuestionCount } from '@/app/(platform)/entrevistas/questions';
 import { renderTerminalCard } from './terminal-card';
 
@@ -43,6 +44,12 @@ const SECTION_CARDS = {
     title: 'Anuncios',
     description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
     meta: ['novedades de la comunidad'],
+  },
+  changelog: {
+    command: 'git log --oneline',
+    title: 'Changelog',
+    description: 'Los últimos cambios de la plataforma y quién de la comunidad los hizo.',
+    meta: [`${changelog.filter((entry) => entry.audience !== 'admins').length} cambios`],
   },
   conversaciones: {
     command: 'cat whatsapp/*.md',
