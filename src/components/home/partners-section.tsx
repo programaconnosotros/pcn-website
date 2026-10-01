@@ -4,7 +4,7 @@ import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { Heading2 } from '../ui/heading-2';
 import { RuledGrid, ruledCellClassName } from '../ui/ruled-grid';
-import { ArrowUpRight, Handshake } from 'lucide-react';
+import { ArrowUpRight, Handshake, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PARTNER_CONTACT_URL, type Partner, type PartnerKind, partners } from '@/data/partners';
 
@@ -58,6 +58,10 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
       </h3>
     )}
     <p className="text-xs text-muted-foreground">{partner.description}</p>
+    <p className="mt-auto flex items-center gap-1 pt-1 font-mono text-[11px] text-muted-foreground/70">
+      <MapPin className="h-3 w-3 shrink-0" />
+      {partner.location}
+    </p>
   </Link>
 );
 
