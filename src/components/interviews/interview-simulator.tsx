@@ -2,12 +2,14 @@
 
 import {
   AREAS,
-  interviewQuestions,
+  getInterviewQuestions,
+  QA_TOOLS,
   SENIORITIES,
   TRACKS,
   type InterviewArea,
   type InterviewQuestion,
   type InterviewTrack,
+  type QaTool,
   type Seniority,
 } from '@/app/(platform)/entrevistas/questions';
 import { PageTitle } from '@/components/ui/page-title';
@@ -91,6 +93,9 @@ export function InterviewSimulator() {
   const [area, setArea] = useState<InterviewArea | null>(null);
   const [track, setTrack] = useState<InterviewTrack | null>(null);
   const [seniority, setSeniority] = useState<Seniority | null>(null);
+  // Quality engineering only: whether the role includes automated testing and with which tools.
+  const [qaAutomated, setQaAutomated] = useState<boolean | null>(null);
+  const [qaTools, setQaTools] = useState<QaTool[]>([]);
   const [deck, setDeck] = useState<InterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -115,6 +120,21 @@ export function InterviewSimulator() {
       selectArea(tipo as InterviewArea);
     }
   }, []);
+
+  const toggleQaTool = (tool: QaTool) =>
+    setQaTools((tools) =>
+      tools.includes(tool) ? tools.filter((t) => t !== tool) : [...tools, tool],
+    );
+
+  const qaReady = qaAutomated === false || (qaAutomated === true && qaTools.length > 0);
+  const interviewDeck =
+    track && seniority && (track !== 'qa' || qaReady)
+      ? getInterviewQuestions(track, seniority, {
+          automated: !!qaAutomated,
+          // Keep the tools in display order regardless of the order they were clicked.
+          tools: QA_TOOLS.map(({ id }) => id).filter((id) => qaTools.includes(id)),
+        })
+      : [];
 
   const start = (questions: InterviewQuestion[]) => {
     setDeck(shuffle(questions));
@@ -155,12 +175,31 @@ export function InterviewSimulator() {
 
   const trackInfo = TRACKS.find(({ id }) => id === track);
   const seniorityInfo = SENIORITIES.find(({ id }) => id === seniority);
-  const interviewName = trackInfo && seniorityInfo && `${trackInfo.label} · ${seniorityInfo.label}`;
+  const qaLabel =
+    track === 'qa' &&
+    (qaAutomated
+      ? QA_TOOLS.filter(({ id }) => qaTools.includes(id))
+          .map(({ label }) => label)
+          .join(' + ')
+      : 'manual');
+  const interviewName =
+    trackInfo &&
+    seniorityInfo &&
+    [trackInfo.label, qaLabel, seniorityInfo.label].filter(Boolean).join(' · ');
 
   if (phase === 'setup' || !track || !seniority) {
-    const count = track && seniority ? interviewQuestions[track][seniority].length : 0;
+    const count = interviewDeck.length;
     const technologies = TRACKS.filter((option) => option.technology && option.area === area);
-    const step = (n: number) => (technologies.length ? n + 1 : n);
+    const isQa = area === 'qa';
+    const extraSteps = (technologies.length ? 1 : 0) + (isQa ? (qaAutomated ? 2 : 1) : 0);
+    const pendingHint =
+      technologies.length && !track
+        ? 'elegí la tecnología y la seniority'
+        : isQa && qaAutomated === null
+          ? 'elegí el tipo de testing y la seniority'
+          : isQa && qaAutomated && !qaTools.length
+            ? 'elegí al menos una herramienta'
+            : 'elegí el tipo y la seniority';
 
     return (
       <div className="mb-14 max-w-2xl">
@@ -200,7 +239,45 @@ export function InterviewSimulator() {
           </>
         )}
 
-        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># {step(2)}. seniority</h2>
+        {isQa && (
+          <>
+            <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 2. testing</h2>
+            <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-2">
+              <Option
+                selected={qaAutomated === false}
+                onSelect={() => setQaAutomated(false)}
+                label="Solo manual"
+              />
+              <Option
+                selected={qaAutomated === true}
+                onSelect={() => setQaAutomated(true)}
+                label="Incluye automatizado"
+              />
+            </RuledGrid>
+          </>
+        )}
+
+        {isQa && qaAutomated && (
+          <>
+            <h2 className="mb-2 font-mono text-xs text-pcnGreen-500">
+              # 3. herramientas{' '}
+              <span className="text-muted-foreground">(podés elegir más de una)</span>
+            </h2>
+            <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-3">
+              {QA_TOOLS.map(({ id, label, stack }) => (
+                <Option
+                  key={id}
+                  selected={qaTools.includes(id)}
+                  onSelect={() => toggleQaTool(id)}
+                  label={label}
+                  hint={stack}
+                />
+              ))}
+            </RuledGrid>
+          </>
+        )}
+
+        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># {2 + extraSteps}. seniority</h2>
         <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-3">
           {SENIORITIES.map(({ id, label }) => (
             <Option
@@ -216,18 +293,14 @@ export function InterviewSimulator() {
           <button
             type="button"
             disabled={!count}
-            onClick={() => track && seniority && start(interviewQuestions[track][seniority])}
+            onClick={() => start(interviewDeck)}
             className={primaryButtonClassName}
           >
             comenzar entrevista
             <ArrowRight className="size-3.5" />
           </button>
           <span className="font-mono text-[11px] text-muted-foreground">
-            {count
-              ? `${count} preguntas`
-              : technologies.length && !track
-                ? 'elegí la tecnología y la seniority'
-                : 'elegí el tipo y la seniority'}
+            {count ? `${count} preguntas` : pendingHint}
           </span>
         </div>
       </div>
@@ -267,7 +340,7 @@ export function InterviewSimulator() {
           )}
           <button
             type="button"
-            onClick={() => start(interviewQuestions[track][seniority])}
+            onClick={() => start(interviewDeck)}
             className={toReview.length ? secondaryButtonClassName : primaryButtonClassName}
           >
             <RotateCcw className="size-3.5" />

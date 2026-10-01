@@ -1,7 +1,7 @@
 import {
   AREAS,
-  interviewQuestions,
   TRACKS,
+  trackQuestionCount,
   type InterviewArea,
 } from '@/app/(platform)/entrevistas/questions';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -11,9 +11,10 @@ import Link from 'next/link';
 import { SectionHeader } from './section-header';
 
 const questionCount = (area: InterviewArea) =>
-  TRACKS.filter((track) => track.area === area).flatMap(({ id }) =>
-    Object.values(interviewQuestions[id]).flat(),
-  ).length;
+  TRACKS.filter((track) => track.area === area).reduce(
+    (total, { id }) => total + trackQuestionCount(id),
+    0,
+  );
 
 export const InterviewsSection = () => (
   <section>
@@ -28,7 +29,7 @@ export const InterviewsSection = () => (
       action={{ label: 'Empezar a practicar', href: '/entrevistas' }}
     />
 
-    <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+    <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
       {AREAS.map(({ id, label, stack }) => (
         <Link
           key={id}

@@ -1,5 +1,14 @@
-export type InterviewArea = 'frontend' | 'backend' | 'ai' | 'agentic';
-export type InterviewTrack = 'frontend' | 'node' | 'python' | 'java' | 'dotnet' | 'ai' | 'agentic';
+export type InterviewArea = 'frontend' | 'backend' | 'ai' | 'agentic' | 'qa';
+export type InterviewTrack =
+  | 'frontend'
+  | 'node'
+  | 'python'
+  | 'java'
+  | 'dotnet'
+  | 'ai'
+  | 'agentic'
+  | 'qa';
+export type QaTool = 'cypress' | 'playwright' | 'k6';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
 export interface InterviewQuestion {
@@ -13,6 +22,7 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'backend', label: 'Backend', stack: 'Node.js · Python · Java · .NET' },
   { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
+  { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
 ];
 
 // Areas with more than one track (backend) ask for the technology after picking the area.
@@ -59,6 +69,19 @@ export const TRACKS: {
     label: 'Agentic engineering',
     stack: 'desarrollar con agentes',
   },
+  {
+    id: 'qa',
+    area: 'qa',
+    label: 'Quality engineering',
+    stack: 'testing manual y automatizado',
+  },
+];
+
+// Quality engineering asks whether the role includes automated testing and, if so, which tools.
+export const QA_TOOLS: { id: QaTool; label: string; stack: string }[] = [
+  { id: 'cypress', label: 'Cypress', stack: 'E2E' },
+  { id: 'playwright', label: 'Playwright', stack: 'E2E · API' },
+  { id: 'k6', label: 'k6', stack: 'performance' },
 ];
 
 export const SENIORITIES: { id: Seniority; label: string }[] = [

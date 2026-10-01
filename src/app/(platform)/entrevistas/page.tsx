@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 const DESCRIPTION =
-  'Simulá entrevistas técnicas de frontend con React.js, backend con Node.js, AI engineering y agentic engineering para junior, semi-senior y senior, practicando con active recall.';
+  'Simulá entrevistas técnicas de frontend con React.js, backend con Node.js, Python, Java y .NET, AI engineering, agentic engineering y quality engineering para junior, semi-senior y senior, practicando con active recall.';
 
 export const metadata: Metadata = {
   title: 'Entrevistas',
