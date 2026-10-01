@@ -14,7 +14,7 @@ export const fetchEvent = async (id: string) =>
     },
     include: {
       galleryItems: {
-        select: { id: true, src: true, description: true },
+        select: { id: true, kind: true, src: true, description: true },
         orderBy: galleryOrder,
         take: EVENT_PHOTOS_PREVIEW,
       },

@@ -6,6 +6,7 @@ import { conversationHref } from '@/components/conversations/conversation-utils'
 import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
+import { VideoBadge } from '@/components/photo-gallery/video-badge';
 import { galleryImageUrl } from '@/lib/gallery-urls';
 
 export const PROFILE_TABS = [
@@ -15,7 +16,7 @@ export const PROFILE_TABS = [
   { id: 'charlas', label: 'charlas' },
   { id: 'articulos', label: 'artículos' },
   { id: 'eventos', label: 'eventos' },
-  { id: 'fotos', label: 'fotos' },
+  { id: 'fotos', label: 'galería' },
   { id: 'conversaciones', label: 'conversaciones' },
   { id: 'contribuciones', label: 'contribuciones' },
 ] as const;
@@ -288,9 +289,9 @@ export const ArticleRows = ({ articles }: { articles: ProfileArticle[] }) => (
   </RuledGrid>
 );
 
-export type ProfilePhoto = { id: string; description: string | null };
+export type ProfilePhoto = { id: string; kind: 'PHOTO' | 'VIDEO'; description: string | null };
 
-// Square thumbnails of the photos the person was tagged in, each opening its gallery page.
+// Square thumbnails of the photos and videos the person was tagged in, each opening its page.
 export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
   <RuledGrid className="grid-cols-3 sm:grid-cols-4 xl:grid-cols-6">
     {photos.map((photo) => (
@@ -299,7 +300,7 @@ export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
         href={`/galeria/${photo.id}`}
         className={cn(ruledCellClassName, 'group block p-1')}
       >
-        <span className="block aspect-square overflow-hidden bg-black">
+        <span className="relative block aspect-square overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={galleryImageUrl(photo.id)}
@@ -308,6 +309,7 @@ export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
             decoding="async"
             className="h-full w-full object-cover brightness-[0.85] transition duration-300 group-hover:scale-[1.04] group-hover:brightness-100"
           />
+          {photo.kind === 'VIDEO' && <VideoBadge />}
         </span>
       </Link>
     ))}

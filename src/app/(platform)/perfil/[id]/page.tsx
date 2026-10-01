@@ -327,7 +327,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
       }),
       prisma.galleryItem.findMany({
         where: { tags: { some: { userId: user.id } } },
-        select: { id: true, description: true },
+        select: { id: true, kind: true, description: true },
         orderBy: galleryOrder,
       }),
       prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),
@@ -623,7 +623,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 {taggedPhotos.length > 0 && (
                   <section>
                     <SectionHeading
-                      label="fotos"
+                      label="fotos y videos"
                       count={taggedPhotos.length}
                       href={taggedPhotos.length > PHOTOS_PREVIEW ? tabHref('fotos') : undefined}
                     />
@@ -725,7 +725,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   <PhotoGrid photos={taggedPhotos} />
                 ) : (
                   <EmptyLine>
-                    {firstName} todavía no aparece en ninguna foto de la{' '}
+                    {firstName} todavía no aparece en ninguna foto ni video de la{' '}
                     <Link href="/galeria" className="text-pcnGreen hover:underline">
                       galería
                     </Link>

@@ -2,12 +2,14 @@ import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
 import { enforceRateLimit, resetRateLimits } from '@/lib/rate-limit';
-import { getObjectBuffer } from '@/lib/s3';
+import { getPresignedDownloadUrl } from '@/lib/s3';
 import { GET } from './route';
 
 jest.mock('@/lib/s3', () => ({
   CLOUDFRONT_URL: 'https://cdn.example.com',
-  getObjectBuffer: jest.fn().mockResolvedValue(Buffer.from('webp')),
+  getPresignedDownloadUrl: jest.fn(
+    async (key: string, fileName: string) => `https://s3.example.com/${key}?dl=${fileName}`,
+  ),
 }));
 jest.mock('@/lib/gallery-signing', () => ({
   isSignedGallerySrc: (src: string) => src.startsWith('https://cdn.example.com/gallery/'),
@@ -30,16 +32,32 @@ describe('GET /api/galeria/[id]/descargar', () => {
     } as any);
   });
 
-  it('streams the photo from S3 as an attachment', async () => {
+  it('redirects uploaded files to a presigned S3 download', async () => {
     const response = await download();
 
-    expect(response.status).toBe(200);
-    expect(getObjectBuffer).toHaveBeenCalledWith('gallery/abc/full.webp');
-    expect(response.headers.get('content-type')).toBe('image/webp');
-    expect(response.headers.get('content-disposition')).toBe(
-      'attachment; filename="pcn-2026-05-12-123456.webp"',
+    expect(response.status).toBe(302);
+    expect(getPresignedDownloadUrl).toHaveBeenCalledWith(
+      'gallery/abc/full.webp',
+      'pcn-2026-05-12-123456.webp',
     );
-    expect(await response.text()).toBe('webp');
+    expect(response.headers.get('location')).toBe(
+      'https://s3.example.com/gallery/abc/full.webp?dl=pcn-2026-05-12-123456.webp',
+    );
+  });
+
+  it('keeps the video extension in the file name', async () => {
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
+      id: 'video-abcdef',
+      src: 'https://cdn.example.com/gallery/xyz/video.mp4',
+      takenAt: new Date(2026, 4, 12),
+    } as any);
+
+    await download();
+
+    expect(getPresignedDownloadUrl).toHaveBeenCalledWith(
+      'gallery/xyz/video.mp4',
+      'pcn-2026-05-12-abcdef.mp4',
+    );
   });
 
   it('serves the historical photos from /public', async () => {

@@ -4,7 +4,7 @@ import { PhotoUploader } from '@/components/photo-gallery/photo-uploader';
 import { requireAdminPage } from '@/lib/admin';
 import prisma from '@/lib/prisma';
 
-export const metadata = { title: 'Subir fotos' };
+export const metadata = { title: 'Subir fotos y videos' };
 
 export default async function UploadPhotosPage(props: {
   searchParams: Promise<{ evento?: string }>;
@@ -25,7 +25,7 @@ export default async function UploadPhotosPage(props: {
         <StickyHeader>
           <PageTitle
             path={[{ label: 'galeria', href: '/galeria' }, { label: 'subir' }]}
-            meta="Se optimizan a WebP y se sirven por CloudFront"
+            meta="Fotos optimizadas a WebP y videos tal cual, servidos por CloudFront"
           />
         </StickyHeader>
 

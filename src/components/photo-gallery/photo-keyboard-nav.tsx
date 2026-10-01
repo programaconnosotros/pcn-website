@@ -17,7 +17,7 @@ export function PhotoKeyboardNav({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       const target = event.target as HTMLElement;
-      if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      if (target.closest('input, textarea, select, video, [contenteditable="true"]')) return;
       const href =
         event.key === 'ArrowLeft' ? previousHref : event.key === 'ArrowRight' ? nextHref : null;
       if (!href) return;

@@ -2,11 +2,12 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { Download, Share2 } from 'lucide-react';
+import { Download, Play, Share2 } from 'lucide-react';
 import type { GalleryTile } from '@/lib/gallery';
 import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
 import { galleryDownloadUrl, galleryImageUrl } from '@/lib/gallery-urls';
+import { formatDuration } from '@/lib/gallery-filters';
 
 interface PhotoCardProps {
   photo: GalleryTile;
@@ -31,7 +32,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       <Link
         href={href}
         className="absolute inset-0 focus-visible:outline-none"
-        aria-label={`Ver foto: ${photoCaption(photo)}`}
+        aria-label={`Ver ${photo.kind === 'VIDEO' ? 'video' : 'foto'}: ${photoCaption(photo)}`}
       >
         <span
           aria-hidden
@@ -57,6 +58,13 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
         >
           #{padIndex(index + 1, total)}
         </span>
+        {photo.kind === 'VIDEO' && (
+          <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen backdrop-blur-sm transition-opacity group-hover:opacity-0">
+            <Play className="size-2.5 fill-current" />
+            {photo.durationSeconds !== null ? formatDuration(photo.durationSeconds) : 'video'}
+            <span className="sr-only"> (video)</span>
+          </span>
+        )}
         <span
           aria-hidden
           className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black via-black/70 to-transparent px-2 pb-1.5 pt-8 text-left font-mono text-[10px] leading-tight transition-transform duration-300 ease-out group-focus-within:translate-y-0 group-hover:translate-y-0"

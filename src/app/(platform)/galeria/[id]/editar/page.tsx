@@ -7,7 +7,7 @@ import { requireAdminPage } from '@/lib/admin';
 import { getGalleryItem } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
 
-export const metadata = { title: 'Editar foto' };
+export const metadata = { title: 'Editar' };
 
 export default async function EditPhotoPage(props: { params: Promise<{ id: string }> }) {
   await requireAdminPage();

@@ -1,9 +1,12 @@
 import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import type { GalleryFilter } from '@/lib/gallery-filters';
 
-// What a photo tile needs: the thumbnail, its caption and enough to search it.
+// What a tile needs: its kind, caption and enough to search it.
 export const galleryTileSelect = {
   id: true,
+  kind: true,
+  durationSeconds: true,
   src: true,
   takenAt: true,
   description: true,
@@ -20,18 +23,44 @@ export const galleryOrder = [
   { id: 'desc' },
 ] satisfies Prisma.GalleryItemOrderByWithRelationInput[];
 
-/** Photos of the gallery, optionally only the ones from an event or where a user appears. */
-export const listGalleryItems = (filter: { eventId?: string; userId?: string } = {}) =>
+const galleryWhere = (filter: Partial<GalleryFilter>): Prisma.GalleryItemWhereInput => ({
+  ...(filter.type === 'fotos' && { kind: 'PHOTO' }),
+  ...(filter.type === 'videos' && { kind: 'VIDEO' }),
+  ...(filter.eventId && { eventId: filter.eventId }),
+  ...(filter.userId && { tags: { some: { userId: filter.userId } } }),
+});
+
+/** Photos and videos of the gallery, mixed, optionally filtered by type, event or person. */
+export const listGalleryItems = (filter: Partial<GalleryFilter> = {}) =>
   prisma.galleryItem.findMany({
-    where: {
-      ...(filter.eventId && { eventId: filter.eventId }),
-      ...(filter.userId && { tags: { some: { userId: filter.userId } } }),
-    },
+    where: galleryWhere(filter),
     select: galleryTileSelect,
     orderBy: galleryOrder,
   });
 
-/** A photo with everything its page shows: event, people and who tagged them. */
+/** The events and the people that have something in the gallery, for its filters. */
+export async function getGalleryFilterOptions() {
+  const [events, people] = await Promise.all([
+    prisma.event.findMany({
+      where: { deletedAt: null, galleryItems: { some: {} } },
+      select: { id: true, name: true, date: true, _count: { select: { galleryItems: true } } },
+      orderBy: { date: 'desc' },
+    }),
+    prisma.user.findMany({
+      where: { galleryTags: { some: {} } },
+      select: { id: true, name: true, _count: { select: { galleryTags: true } } },
+      orderBy: { name: 'asc' },
+    }),
+  ]);
+  return {
+    events: events.map(({ _count, ...event }) => ({ ...event, count: _count.galleryItems })),
+    people: people.map(({ _count, ...person }) => ({ ...person, count: _count.galleryTags })),
+  };
+}
+
+export type GalleryFilterOptions = Awaited<ReturnType<typeof getGalleryFilterOptions>>;
+
+/** A photo or video with everything its page shows: event, people and who tagged them. */
 export const getGalleryItem = (id: string) =>
   prisma.galleryItem.findUnique({
     where: { id },
@@ -48,21 +77,22 @@ export const getGalleryItem = (id: string) =>
   });
 
 /**
- * The photos before and after `id` in the gallery order (wrapping around), within an event
- * when browsing that event's photos.
+ * The items before and after `id` in the gallery order (wrapping around), within the same
+ * filters the visitor was browsing with.
  */
-export async function getGalleryNeighbours(id: string, eventId?: string) {
+export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFilter> = {}) {
   const ids = (
     await prisma.galleryItem.findMany({
-      where: eventId ? { eventId } : undefined,
+      where: galleryWhere(filter),
       select: { id: true },
       orderBy: galleryOrder,
     })
-  ).map((photo) => photo.id);
+  ).map((item) => item.id);
 
   const index = ids.indexOf(id);
-  if (index === -1 || ids.length < 2)
+  if (index === -1 || ids.length < 2) {
     return { previousId: null, nextId: null, index, total: ids.length };
+  }
   return {
     previousId: ids[(index - 1 + ids.length) % ids.length],
     nextId: ids[(index + 1) % ids.length],

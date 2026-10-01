@@ -19,11 +19,12 @@ import { optimizedOgImage } from '@/lib/og-image';
 import { signGallerySrc } from '@/lib/gallery-signing';
 import { galleryImageUrl } from '@/lib/gallery-urls';
 import { getGalleryItem, getGalleryNeighbours } from '@/lib/gallery';
+import { formatDuration, galleryQuery, parseGalleryFilter } from '@/lib/gallery-filters';
 import { cn } from '@/lib/utils';
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ evento?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -46,7 +47,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const description = people.length
     ? `Con ${people.join(', ')}. Galería de programaConNosotros.`
     : 'Galería de fotos de la comunidad programaConNosotros.';
-  const images = [{ url: optimizedOgImage(signGallerySrc(photo.src).url), alt: title }];
+  const images = [
+    {
+      url: optimizedOgImage(
+        signGallerySrc(photo.kind === 'VIDEO' ? photo.thumbSrc : photo.src).url,
+      ),
+      alt: title,
+    },
+  ];
 
   return {
     title,
@@ -63,20 +71,20 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default async function PhotoPage(props: Props) {
+export default async function GalleryItemPage(props: Props) {
   const { id } = await props.params;
-  const { evento } = await props.searchParams;
+  const filter = parseGalleryFilter(await props.searchParams);
 
   const [photo, session] = await Promise.all([getGalleryItem(id), getCurrentSession()]);
   if (!photo) notFound();
   const viewer = session?.user ?? null;
   const isAdmin = viewer?.role === 'ADMIN';
 
-  // Browsing an event's photos keeps prev/next within that event.
-  const scopeEventId = evento && evento === photo.eventId ? evento : undefined;
-  const { previousId, nextId, index, total } = await getGalleryNeighbours(id, scopeEventId);
-  const hrefFor = (photoId: string | null) =>
-    photoId && `/galeria/${photoId}${scopeEventId ? `?evento=${scopeEventId}` : ''}`;
+  // Prev/next stay within the filters the visitor was browsing the gallery with.
+  const { previousId, nextId, index, total } = await getGalleryNeighbours(id, filter);
+  const query = galleryQuery(filter);
+  const hrefFor = (itemId: string | null) => itemId && `/galeria/${itemId}${query}`;
+  const isVideo = photo.kind === 'VIDEO';
   const previousHref = hrefFor(previousId);
   const nextHref = hrefFor(nextId);
 
@@ -88,9 +96,9 @@ export default async function PhotoPage(props: Props) {
       <StickyHeader className="mt-4">
         <PageTitle
           path={[
-            { label: 'galeria', href: '/galeria' },
-            ...(scopeEventId && photo.event
-              ? [{ label: photo.event.name, href: `/galeria?evento=${photo.event.id}` }]
+            { label: 'galeria', href: `/galeria${query}` },
+            ...(filter.eventId && filter.eventId === photo.event?.id
+              ? [{ label: photo.event.name, href: `/galeria${query}` }]
               : []),
             { label: photoFileName(photo) },
           ]}
@@ -125,16 +133,31 @@ export default async function PhotoPage(props: Props) {
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(4,244,190,0.06),transparent_70%)]"
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={photo.id}
-            src={galleryImageUrl(photo.id, 'full')}
-            alt={caption}
-            width={photo.width ?? undefined}
-            height={photo.height ?? undefined}
-            className="photo-glitch-in relative max-h-[calc(100dvh-10rem)] w-auto max-w-full select-none object-contain p-2 sm:p-4"
-            draggable={false}
-          />
+          {isVideo ? (
+            <video
+              key={photo.id}
+              src={galleryImageUrl(photo.id, 'full')}
+              poster={galleryImageUrl(photo.id, 'thumb')}
+              width={photo.width ?? undefined}
+              height={photo.height ?? undefined}
+              controls
+              playsInline
+              preload="metadata"
+              aria-label={caption}
+              className="relative max-h-[calc(100dvh-10rem)] w-auto max-w-full p-2 sm:p-4"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={photo.id}
+              src={galleryImageUrl(photo.id, 'full')}
+              alt={caption}
+              width={photo.width ?? undefined}
+              height={photo.height ?? undefined}
+              className="photo-glitch-in relative max-h-[calc(100dvh-10rem)] w-auto max-w-full select-none object-contain p-2 sm:p-4"
+              draggable={false}
+            />
+          )}
           {previousHref && (
             <Link
               href={previousHref}
@@ -142,7 +165,7 @@ export default async function PhotoPage(props: Props) {
               className={cn(keyCapClassName, 'absolute left-2 top-1/2 size-9 -translate-y-1/2')}
             >
               <ChevronLeft className="size-5" />
-              <span className="sr-only">Foto anterior</span>
+              <span className="sr-only">Anterior</span>
             </Link>
           )}
           {nextHref && (
@@ -152,7 +175,7 @@ export default async function PhotoPage(props: Props) {
               className={cn(keyCapClassName, 'absolute right-2 top-1/2 size-9 -translate-y-1/2')}
             >
               <ChevronRight className="size-5" />
-              <span className="sr-only">Foto siguiente</span>
+              <span className="sr-only">Siguiente</span>
             </Link>
           )}
         </div>
@@ -164,6 +187,12 @@ export default async function PhotoPage(props: Props) {
               <dd>
                 <LocalDate date={photo.takenAt} />
               </dd>
+              {isVideo && photo.durationSeconds !== null && (
+                <>
+                  <dt className="text-muted-foreground">duración</dt>
+                  <dd className="tabular-nums">{formatDuration(photo.durationSeconds)}</dd>
+                </>
+              )}
               {photo.event && (
                 <>
                   <dt className="text-muted-foreground">evento</dt>

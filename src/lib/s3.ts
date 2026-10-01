@@ -1,9 +1,11 @@
 import {
   DeleteObjectsCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 // Configuración del cliente S3
@@ -83,6 +85,43 @@ export async function deleteObjects(keys: string[]) {
       Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
     }),
   );
+}
+
+/**
+ * Formulario firmado (POST) para subir un archivo grande directo a S3 desde el navegador. A
+ * diferencia del PUT firmado, S3 rechaza el archivo si pesa más de `maxBytes`.
+ */
+export async function getPresignedPost(key: string, contentType: string, maxBytes: number) {
+  return createPresignedPost(s3Client, {
+    Bucket: S3_BUCKET,
+    Key: key,
+    Conditions: [
+      ['content-length-range', 1, maxBytes],
+      ['eq', '$Content-Type', contentType],
+    ],
+    Fields: { 'Content-Type': contentType, 'Cache-Control': 'public, max-age=31536000, immutable' },
+    Expires: 15 * 60,
+  });
+}
+
+/** Tamaño y tipo de un objeto del bucket, o null si no existe. */
+export async function headObject(key: string) {
+  try {
+    const head = await s3Client.send(new HeadObjectCommand({ Bucket: S3_BUCKET, Key: key }));
+    return { size: head.ContentLength ?? 0, contentType: head.ContentType ?? null };
+  } catch {
+    return null;
+  }
+}
+
+/** URL firmada de S3 que descarga el objeto como adjunto con `fileName`. Vence en 5 minutos. */
+export async function getPresignedDownloadUrl(key: string, fileName: string) {
+  const command = new GetObjectCommand({
+    Bucket: S3_BUCKET,
+    Key: key,
+    ResponseContentDisposition: `attachment; filename="${fileName.replace(/"/g, '')}"`,
+  });
+  return getSignedUrl(s3Client, command, { expiresIn: 300 });
 }
 
 export { s3Client, S3_BUCKET, CLOUDFRONT_URL };

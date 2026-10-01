@@ -184,21 +184,33 @@ model EventOrganizer {
 // Foto o video de la galería. Lo que suben los admins se guarda en S3 (las fotos como webp, una
 // grande y una miniatura; los videos tal cual, con una portada) y se sirve por CloudFront con
 // URLs firmadas. Las fotos históricas viven en /public.
+enum GalleryItemKind {
+  PHOTO
+  VIDEO
+}
+
 model GalleryItem {
-  id           String   @id @default(cuid())
-  src          String
-  thumbSrc     String
-  width        Int?
-  height       Int?
+  id              String          @id @default(cuid())
+  kind            GalleryItemKind @default(PHOTO)
+  // La foto (webp) o el video tal cual se subió.
+  src             String
+  // Miniatura de la foto, o portada del video (webp).
+  thumbSrc        String
+  // Tipo MIME del archivo de `src` (video/mp4, image/webp…).
+  mimeType        String?
+  // Duración de los videos, en segundos.
+  durationSeconds Int?
+  width           Int?
+  height          Int?
   // Objetos de S3 del ítem, para borrarlos junto con él. Vacío en las fotos de /public.
-  storageKeys  String[] @default([])
+  storageKeys     String[]        @default([])
   // Cuándo se sacó o grabó (por defecto, la fecha del archivo).
-  takenAt      DateTime
-  description  String?
-  eventId      String?
-  uploadedById String?
+  takenAt         DateTime
+  description     String?
+  eventId         String?
+  uploadedById    String?
   // Id en la galería estática anterior, para que sigan andando los links `/galeria?foto=<n>`.
-  legacyId     Int?     @unique
+  legacyId        Int?            @unique
 
   event      Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
   uploadedBy User?            @relation("UserUploadedGalleryItems", fields: [uploadedById], references: [id], onDelete: SetNull)

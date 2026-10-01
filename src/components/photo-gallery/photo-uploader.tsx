@@ -2,9 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Check, ImagePlus, Loader2, Upload, X } from 'lucide-react';
+import { Check, ImagePlus, Loader2, Play, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { createPhoto, getPhotoUploadUrl } from '@/actions/gallery/gallery-actions';
+import {
+  createPhoto,
+  createVideo,
+  getPhotoUploadUrl,
+  getVideoUploadUrl,
+} from '@/actions/gallery/gallery-actions';
+import { MAX_VIDEO_BYTES } from '@/actions/gallery/gallery-schema';
+import { formatDuration } from '@/lib/gallery-filters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,34 +19,66 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
+import {
+  VIDEO_TYPES,
+  isHeic,
+  isVideo,
+  postFile,
+  putFile,
+  readTakenAt,
+  readVideo,
+  type VideoInfo,
+} from './upload-media';
 
 type Status = 'pending' | 'uploading' | 'done' | 'error';
 
 type Item = {
   key: string;
   file: File;
+  // Object URL of the photo, or of the frame captured as the video's poster.
   preview: string;
+  video: VideoInfo | null;
   takenAt: string;
   description: string;
   status: Status;
+  // Why the file can't be uploaded at all (HEIC, a video the browser can't read, too big…).
+  unsupported?: string;
   error?: string;
-  photoId?: string;
+  progress?: number;
+  itemId?: string;
 };
 
-// sharp's prebuilt binaries can't decode HEIC, so iPhone photos have to be exported first.
-const isHeic = (file: File) => /hei[cf]$/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
+const MAX_VIDEO_MB = MAX_VIDEO_BYTES / 1024 / 1024;
 
-// The date the photo was taken from its EXIF data, or the file's date when it has none.
-async function readTakenAt(file: File) {
-  try {
-    const { default: exifr } = await import('exifr');
-    const exif = await exifr.parse(file, ['DateTimeOriginal', 'CreateDate']);
-    const date = exif?.DateTimeOriginal ?? exif?.CreateDate;
-    if (date instanceof Date && !Number.isNaN(date.getTime())) return date;
-  } catch {
-    // No EXIF: fall back to the file date.
+// Checks a picked file and reads what the form needs from it.
+async function prepare(file: File): Promise<Item> {
+  const base = {
+    key: crypto.randomUUID(),
+    file,
+    preview: '',
+    video: null,
+    takenAt: toDateTimeInput(await readTakenAt(file)),
+    description: '',
+    status: 'pending' as Status,
+  };
+  if (isHeic(file)) return { ...base, unsupported: 'HEIC no está soportado: exportala como JPG.' };
+  if (!isVideo(file)) return { ...base, preview: URL.createObjectURL(file) };
+
+  if (!VIDEO_TYPES.includes(file.type)) {
+    return { ...base, unsupported: 'Formato de video no soportado: subí MP4, WebM o MOV.' };
   }
-  return new Date(file.lastModified);
+  if (file.size > MAX_VIDEO_BYTES) {
+    return { ...base, unsupported: `El video pesa más de ${MAX_VIDEO_MB} MB.` };
+  }
+  try {
+    const video = await readVideo(file);
+    return { ...base, video, preview: URL.createObjectURL(video.poster) };
+  } catch {
+    return {
+      ...base,
+      unsupported: 'Este navegador no puede leer el video. Probá exportarlo como MP4 (H.264).',
+    };
+  }
 }
 
 export function PhotoUploader({
@@ -66,21 +105,10 @@ export function PhotoUploader({
     setItems((current) => current.map((item) => (item.key === key ? { ...item, ...patch } : item)));
 
   const addFiles = async (files: FileList | File[]) => {
-    const images = [...files].filter((file) => file.type.startsWith('image/') || isHeic(file));
-    const added = await Promise.all(
-      images.map(async (file): Promise<Item> => {
-        const heic = isHeic(file);
-        return {
-          key: crypto.randomUUID(),
-          file,
-          preview: heic ? '' : URL.createObjectURL(file),
-          takenAt: toDateTimeInput(await readTakenAt(file)),
-          description: '',
-          status: heic ? 'error' : 'pending',
-          error: heic ? 'HEIC no está soportado: exportala como JPG.' : undefined,
-        };
-      }),
+    const media = [...files].filter(
+      (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
+    const added = await Promise.all(media.map(prepare));
     setItems((current) => [...current, ...added]);
   };
 
@@ -89,28 +117,42 @@ export function PhotoUploader({
     setItems((current) => current.filter(({ key }) => key !== item.key));
   };
 
+  // Photos: PUT the original, the server optimizes it. Videos: POST the file as is (S3 enforces
+  // the size limit), PUT the captured poster, then save both.
   const uploadOne = async (item: Item) => {
-    update(item.key, { status: 'uploading', error: undefined });
+    update(item.key, { status: 'uploading', error: undefined, progress: 0 });
+    const details = {
+      takenAt: new Date(item.takenAt).toISOString(),
+      description: item.description,
+      eventId,
+    };
     try {
-      const { uploadUrl, key } = await getPhotoUploadUrl(item.file.name, item.file.type);
-      const response = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: item.file,
-        headers: { 'Content-Type': item.file.type },
-      });
-      if (!response.ok) throw new Error('No se pudo subir el archivo a S3');
+      let created: { id: string };
+      if (item.video) {
+        const { url, fields, key } = await getVideoUploadUrl(item.file.type, item.file.size);
+        await postFile(url, fields, item.file, (progress) => update(item.key, { progress }));
 
-      const photo = await createPhoto(key, {
-        takenAt: new Date(item.takenAt).toISOString(),
-        description: item.description,
-        eventId,
-      });
-      update(item.key, { status: 'done', photoId: photo.id });
+        const poster = await getPhotoUploadUrl('poster.jpg', 'image/jpeg');
+        await putFile(poster.uploadUrl, item.video.poster, 'image/jpeg');
+
+        const { durationSeconds, width, height } = item.video;
+        created = await createVideo(key, poster.key, {
+          ...details,
+          durationSeconds,
+          width,
+          height,
+        });
+      } else {
+        const { uploadUrl, key } = await getPhotoUploadUrl(item.file.name, item.file.type);
+        await putFile(uploadUrl, item.file, item.file.type);
+        created = await createPhoto(key, details);
+      }
+      update(item.key, { status: 'done', itemId: created.id });
       return true;
     } catch (error) {
       update(item.key, {
         status: 'error',
-        error: error instanceof Error ? error.message : 'Error al subir la foto',
+        error: error instanceof Error ? error.message : 'Error al subir el archivo',
       });
       return false;
     }
@@ -118,23 +160,23 @@ export function PhotoUploader({
 
   const uploadAll = async () => {
     const pending = items.filter((item) => item.status === 'pending' || item.status === 'error');
-    const uploadable = pending.filter((item) => !isHeic(item.file));
+    const uploadable = pending.filter((item) => !item.unsupported);
     if (uploadable.length === 0) return;
 
     setIsUploading(true);
     let uploaded = 0;
-    // One at a time: each photo is optimized on the server, which is the slow part.
+    // One at a time: photos are optimized on the server and videos are big.
     for (const item of uploadable) {
       if (await uploadOne(item)) uploaded++;
     }
     setIsUploading(false);
 
-    if (uploaded === uploadable.length) toast.success(`${uploaded} fotos subidas`);
-    else toast.error(`Se subieron ${uploaded} de ${uploadable.length} fotos`);
+    if (uploaded === uploadable.length) toast.success(`${uploaded} archivos subidos`);
+    else toast.error(`Se subieron ${uploaded} de ${uploadable.length} archivos`);
   };
 
   const pendingCount = items.filter(
-    (item) => (item.status === 'pending' || item.status === 'error') && !isHeic(item.file),
+    (item) => (item.status === 'pending' || item.status === 'error') && !item.unsupported,
   ).length;
   const doneCount = items.filter((item) => item.status === 'done').length;
 
@@ -161,15 +203,16 @@ export function PhotoUploader({
           )}
         >
           <ImagePlus className="size-6" />
-          <span>arrastrá fotos o hacé click para elegirlas</span>
+          <span>arrastrá fotos y videos o hacé click para elegirlos</span>
           <span className="text-[10px] text-muted-foreground/70">
-            JPG, PNG, WebP, AVIF · se optimizan a WebP al subirlas
+            fotos: JPG, PNG, WebP, AVIF (se optimizan a WebP) · videos: MP4, WebM, MOV hasta{' '}
+            {MAX_VIDEO_MB} MB
           </span>
         </button>
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,video/mp4,video/webm,video/quicktime"
           multiple
           hidden
           onChange={(event) => {
@@ -180,7 +223,7 @@ export function PhotoUploader({
 
         <label className="space-y-1">
           <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-            evento de las fotos
+            evento
           </span>
           <PhotoEventSelect
             events={events}
@@ -204,9 +247,22 @@ export function PhotoUploader({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.preview} alt="" className="h-full w-full object-cover" />
                   )}
+                  {item.video && item.status !== 'uploading' && item.status !== 'done' && (
+                    <span className="absolute bottom-1 left-1 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] text-pcnGreen">
+                      <Play className="size-2.5 fill-current" />
+                      {item.video.durationSeconds !== null
+                        ? formatDuration(item.video.durationSeconds)
+                        : 'video'}
+                    </span>
+                  )}
                   {item.status === 'uploading' && (
-                    <span className="absolute inset-0 flex items-center justify-center bg-black/60">
+                    <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60">
                       <Loader2 className="size-5 animate-spin text-pcnGreen" />
+                      {item.video && (
+                        <span className="font-mono text-[10px] tabular-nums text-pcnGreen">
+                          {Math.round((item.progress ?? 0) * 100)}%
+                        </span>
+                      )}
                     </span>
                   )}
                   {item.status === 'done' && (
@@ -235,21 +291,21 @@ export function PhotoUploader({
                     )}
                   </div>
 
-                  {item.status === 'done' && item.photoId ? (
+                  {item.status === 'done' && item.itemId ? (
                     <Link
-                      href={`/galeria/${item.photoId}`}
+                      href={`/galeria/${item.itemId}`}
                       className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
                     >
-                      ver foto y etiquetar personas →
+                      ver y etiquetar personas →
                     </Link>
-                  ) : isHeic(item.file) ? null : (
+                  ) : item.unsupported ? null : (
                     <>
                       <Input
                         type="datetime-local"
                         value={item.takenAt}
                         onChange={(event) => update(item.key, { takenAt: event.target.value })}
                         disabled={item.status === 'uploading'}
-                        aria-label="Fecha de la foto"
+                        aria-label="Fecha"
                         className="max-w-xs font-mono text-xs"
                       />
                       <Textarea
@@ -263,7 +319,11 @@ export function PhotoUploader({
                       />
                     </>
                   )}
-                  {item.error && <p className="font-mono text-xs text-red-500">{item.error}</p>}
+                  {(item.unsupported ?? item.error) && (
+                    <p className="font-mono text-xs text-red-500">
+                      {item.unsupported ?? item.error}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
@@ -288,7 +348,7 @@ export function PhotoUploader({
               className="flex items-center gap-1.5"
             >
               <Upload className="h-4 w-4" />
-              subir {pendingCount} {pendingCount === 1 ? 'foto' : 'fotos'}
+              subir {pendingCount} {pendingCount === 1 ? 'archivo' : 'archivos'}
             </Button>
           </div>
         </>

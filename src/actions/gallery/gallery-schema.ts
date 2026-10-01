@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// Los videos se suben tal cual (sin recomprimir), hasta 500 MB.
+export const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
+
 // Lo que se carga a mano de una foto: cuándo se sacó, una descripción y de qué evento es.
 export const galleryDetailsSchema = z.object({
   takenAt: z
@@ -19,3 +22,17 @@ export const galleryDetailsSchema = z.object({
 });
 
 export type GalleryDetailsInput = z.input<typeof galleryDetailsSchema>;
+
+// Lo que el navegador lee del video al subirlo.
+export const videoMetadataSchema = z.object({
+  durationSeconds: z
+    .number()
+    .int()
+    .min(0)
+    .max(24 * 60 * 60)
+    .nullable(),
+  width: z.number().int().positive().max(10_000).nullable(),
+  height: z.number().int().positive().max(10_000).nullable(),
+});
+
+export type VideoMetadataInput = z.input<typeof videoMetadataSchema>;

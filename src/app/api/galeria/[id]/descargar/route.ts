@@ -1,23 +1,17 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { photoFileName } from '@/components/photo-gallery/photo-utils';
 import { isSignedGallerySrc } from '@/lib/gallery-signing';
 import { enforceRateLimit } from '@/lib/rate-limit';
-import { CLOUDFRONT_URL, getObjectBuffer } from '@/lib/s3';
+import { CLOUDFRONT_URL, getPresignedDownloadUrl } from '@/lib/s3';
 
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
-// Reads the full-size file: from S3 for uploaded photos, from /public for the historical ones.
-async function readPhoto(src: string) {
-  if (isSignedGallerySrc(src)) return getObjectBuffer(src.slice(CLOUDFRONT_URL.length + 1));
-
-  const file = path.join(PUBLIC_DIR, decodeURIComponent(src));
-  if (!src.startsWith('/') || !file.startsWith(`${PUBLIC_DIR}${path.sep}`)) return null;
-  return readFile(file);
-}
-
-// Downloads a gallery photo as an attachment. Rate limited per user (or IP when logged out).
+// Downloads a gallery photo or video as an attachment, rate limited per user (or IP when logged
+// out). Uploaded files redirect to a presigned S3 URL, so videos never pass through the server;
+// the historical photos are read from /public.
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await enforceRateLimit('photoDownload');
@@ -30,19 +24,32 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const photo = await prisma.galleryItem.findUnique({
+  const item = await prisma.galleryItem.findUnique({
     where: { id },
     select: { id: true, src: true, takenAt: true },
   });
-  if (!photo) return new Response('Foto no encontrada', { status: 404 });
+  if (!item) return new Response('No encontrado', { status: 404 });
 
-  const file = await readPhoto(photo.src).catch(() => null);
-  if (!file) return new Response('Foto no encontrada', { status: 404 });
+  const fileName = photoFileName(item);
 
-  return new Response(new Uint8Array(file), {
+  if (isSignedGallerySrc(item.src)) {
+    const url = await getPresignedDownloadUrl(item.src.slice(CLOUDFRONT_URL.length + 1), fileName);
+    const response = NextResponse.redirect(url, 302);
+    response.headers.set('Cache-Control', 'private, no-store');
+    return response;
+  }
+
+  const file = path.join(PUBLIC_DIR, decodeURIComponent(item.src));
+  if (!item.src.startsWith('/') || !file.startsWith(`${PUBLIC_DIR}${path.sep}`)) {
+    return new Response('No encontrado', { status: 404 });
+  }
+  const content = await readFile(file).catch(() => null);
+  if (!content) return new Response('No encontrado', { status: 404 });
+
+  return new Response(new Uint8Array(content), {
     headers: {
       'Content-Type': 'image/webp',
-      'Content-Disposition': `attachment; filename="${photoFileName(photo)}"`,
+      'Content-Disposition': `attachment; filename="${fileName}"`,
       'Cache-Control': 'private, no-store',
     },
   });

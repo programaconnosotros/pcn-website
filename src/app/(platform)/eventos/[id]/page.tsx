@@ -242,7 +242,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             </div>
 
             {(event.galleryItems.length > 0 || isAdmin) && (
-              <Section title="fotos">
+              <Section title="fotos y videos">
                 <EventPhotos
                   eventId={id}
                   photos={event.galleryItems}

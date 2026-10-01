@@ -1,39 +1,34 @@
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Gallery } from '@/components/photo-gallery/gallery';
 import { getAdminUser } from '@/lib/admin';
-import { listGalleryItems } from '@/lib/gallery';
+import { getGalleryFilterOptions, listGalleryItems } from '@/lib/gallery';
+import { parseGalleryFilter } from '@/lib/gallery-filters';
 import prisma from '@/lib/prisma';
 
-export default async function PhotoGallery(props: {
-  searchParams: Promise<{ foto?: string; evento?: string }>;
+export default async function GalleryPage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { foto, evento } = await props.searchParams;
+  const searchParams = await props.searchParams;
 
   // Links from the old static gallery: `/galeria?foto=<n>`.
-  if (foto) {
-    const legacyId = Number.parseInt(foto, 10);
-    const photo = Number.isNaN(legacyId)
+  if (typeof searchParams.foto === 'string') {
+    const legacyId = Number.parseInt(searchParams.foto, 10);
+    const item = Number.isNaN(legacyId)
       ? null
       : await prisma.galleryItem.findUnique({ where: { legacyId }, select: { id: true } });
-    redirect(photo ? `/galeria/${photo.id}` : '/galeria');
+    redirect(item ? `/galeria/${item.id}` : '/galeria');
   }
 
-  const event = evento
-    ? await prisma.event.findFirst({
-        where: { id: evento, deletedAt: null },
-        select: { id: true, name: true },
-      })
-    : null;
-  if (evento && !event) notFound();
-
-  const [photos, admin] = await Promise.all([
-    listGalleryItems({ eventId: event?.id }),
+  const filter = parseGalleryFilter(searchParams);
+  const [items, options, admin] = await Promise.all([
+    listGalleryItems(filter),
+    getGalleryFilterOptions(),
     getAdminUser(),
   ]);
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <Gallery photos={photos} event={event} canUpload={!!admin} />
+      <Gallery items={items} filter={filter} options={options} canUpload={!!admin} />
     </div>
   );
 }

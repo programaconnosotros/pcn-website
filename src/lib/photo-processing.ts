@@ -29,3 +29,15 @@ export async function optimizePhoto(input: Buffer) {
 
   return { full: full.data, thumb, width: full.info.width, height: full.info.height };
 }
+
+/** Longest edge of a video's poster, shown in grids and before the video plays. */
+export const POSTER_SIZE = 1280;
+
+/** Turns a frame captured from a video into its webp poster. */
+export async function optimizePoster(input: Buffer) {
+  return sharp(input, { failOn: 'none' })
+    .rotate()
+    .resize({ width: POSTER_SIZE, height: POSTER_SIZE, ...resize })
+    .webp({ quality: 75 })
+    .toBuffer();
+}
