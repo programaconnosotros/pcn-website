@@ -64,6 +64,8 @@ model User {
   uploadedPhotos       Photo[]               @relation("UserUploadedPhotos")
   photoTags            PhotoTag[]
   photoTagsAdded       PhotoTag[]            @relation("PhotoTagger")
+  articles             ArticleAuthor[]
+  articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -642,4 +644,22 @@ model UserBadge {
 
   @@unique([userId, badgeId])
   @@index([badgeId])
+}
+
+// Miembro de la comunidad que escribió uno de los artículos de /lectura (que son contenido
+// estático: `articleId` es el id del artículo en src/app/(platform)/lectura/articles.ts). Lo
+// asigna un admin y el artículo aparece en su perfil.
+model ArticleAuthor {
+  id        String  @id @default(cuid())
+  articleId String
+  userId    String
+  addedById String?
+
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedBy User? @relation("ArticleAuthorAdder", fields: [addedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, userId])
+  @@index([userId])
 }

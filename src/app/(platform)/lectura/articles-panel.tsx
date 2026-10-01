@@ -6,7 +6,10 @@ import { cn } from '@/lib/utils';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { Bookmark, Check, CheckCheck, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import type { Person } from '@/components/people/person-link';
 import type { Article } from './articles';
+import { ArticleWriters } from './article-writers';
 
 export const ALL_ARTICLE_CATEGORIES = 'Todas las categorías';
 
@@ -53,6 +56,9 @@ interface ArticlesPanelProps {
   onOpen: (_article: Article) => void;
   status: ReadStatus;
   onStatusChange: (_status: ReadStatus) => void;
+  /** Community members who wrote each article, by article id. */
+  writers: Record<string, Person[]>;
+  isAdmin: boolean;
 }
 
 const CategoryHistogram = ({
@@ -120,6 +126,8 @@ const ArticleRow = ({
   onToggleRead,
   saved,
   onToggleSaved,
+  writers,
+  isAdmin,
 }: {
   article: Article;
   index: number;
@@ -128,11 +136,21 @@ const ArticleRow = ({
   onToggleRead: () => void;
   saved: boolean;
   onToggleSaved: () => void;
+  writers: Person[];
+  isAdmin: boolean;
 }) => {
   const isNew = Date.now() - new Date(article.date).getTime() < NEW_ARTICLE_MS;
+  // The writer search drops down past the card, so it can't clip while it's open.
+  const [isEditingWriters, setIsEditingWriters] = useState(false);
 
   return (
-    <article className={cn(ruledCellClassName, 'group relative flex gap-3 overflow-hidden p-3')}>
+    <article
+      className={cn(
+        ruledCellClassName,
+        'group relative flex gap-3 p-3',
+        !isEditingWriters && 'overflow-hidden',
+      )}
+    >
       {/* Hover: a lit edge on the left and a scan line sweeping down the row. */}
       <span className="pointer-events-none absolute inset-y-0 left-0 w-px origin-top scale-y-0 bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.9)] transition-transform duration-300 group-hover:scale-y-100" />
       <span className="article-scan pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-transparent via-pcnGreen/[0.08] to-transparent opacity-0 group-hover:opacity-100" />
@@ -189,6 +207,14 @@ const ArticleRow = ({
           {article.description}
         </p>
 
+        <ArticleWriters
+          articleId={article.id}
+          writers={writers}
+          isAdmin={isAdmin}
+          isEditing={isEditingWriters}
+          onEditingChange={setIsEditingWriters}
+        />
+
         <div className="mt-auto flex items-center gap-2 pt-0.5 font-mono text-[11px] text-muted-foreground/70">
           <span className="min-w-0 truncate">
             <span className="text-pcnGreen-500">@ </span>
@@ -231,6 +257,8 @@ export function ArticlesPanel({
   onOpen,
   status,
   onStatusChange,
+  writers,
+  isAdmin,
 }: ArticlesPanelProps) {
   const marks = useContentMarks('article');
   const readIds = marks.ids('read');
@@ -361,6 +389,8 @@ export function ArticlesPanel({
               onToggleRead={() => toggleRead(article.id)}
               saved={savedIds.has(article.id)}
               onToggleSaved={() => marks.toggle(article.id, 'saved')}
+              writers={writers[article.id] ?? []}
+              isAdmin={isAdmin}
             />
           ))}
         </RuledGrid>
