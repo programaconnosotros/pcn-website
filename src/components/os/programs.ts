@@ -168,6 +168,7 @@ export const OS_PROGRAMS: OsProgram[] = [
     icon: BriefcaseBusiness,
     color: 'from-amber-400 to-orange-700',
     group: 'Recursos',
+    pinned: true,
   },
   {
     id: 'influencers',

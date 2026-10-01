@@ -1,6 +1,6 @@
 import type { InterviewQuestion, Seniority } from './types';
 
-export const backendQuestions: Record<Seniority, InterviewQuestion[]> = {
+export const nodeQuestions: Record<Seniority, InterviewQuestion[]> = {
   junior: [
     {
       topic: 'node',

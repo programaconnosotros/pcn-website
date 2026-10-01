@@ -1,4 +1,5 @@
-export type InterviewTrack = 'frontend' | 'backend' | 'ai' | 'agentic';
+export type InterviewArea = 'frontend' | 'backend' | 'ai' | 'agentic';
+export type InterviewTrack = 'frontend' | 'node' | 'python' | 'java' | 'dotnet' | 'ai' | 'agentic';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
 export interface InterviewQuestion {
@@ -7,11 +8,57 @@ export interface InterviewQuestion {
   topic: string;
 }
 
-export const TRACKS: { id: InterviewTrack; label: string; stack: string }[] = [
+export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'frontend', label: 'Frontend', stack: 'React.js' },
-  { id: 'backend', label: 'Backend', stack: 'Node.js' },
+  { id: 'backend', label: 'Backend', stack: 'Node.js · Python · Java · .NET' },
   { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
+];
+
+// Areas with more than one track (backend) ask for the technology after picking the area.
+export const TRACKS: {
+  id: InterviewTrack;
+  area: InterviewArea;
+  label: string;
+  technology?: string;
+  stack: string;
+}[] = [
+  { id: 'frontend', area: 'frontend', label: 'Frontend', stack: 'React.js' },
+  {
+    id: 'node',
+    area: 'backend',
+    label: 'Backend · Node.js',
+    technology: 'Node.js',
+    stack: 'Express, NestJS',
+  },
+  {
+    id: 'python',
+    area: 'backend',
+    label: 'Backend · Python',
+    technology: 'Python',
+    stack: 'Django, FastAPI',
+  },
+  {
+    id: 'java',
+    area: 'backend',
+    label: 'Backend · Java',
+    technology: 'Java',
+    stack: 'Spring Boot',
+  },
+  {
+    id: 'dotnet',
+    area: 'backend',
+    label: 'Backend · .NET',
+    technology: '.NET',
+    stack: 'C#, ASP.NET Core',
+  },
+  { id: 'ai', area: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
+  {
+    id: 'agentic',
+    area: 'agentic',
+    label: 'Agentic engineering',
+    stack: 'desarrollar con agentes',
+  },
 ];
 
 export const SENIORITIES: { id: Seniority; label: string }[] = [

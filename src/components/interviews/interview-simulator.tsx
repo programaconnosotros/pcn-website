@@ -1,9 +1,11 @@
 'use client';
 
 import {
+  AREAS,
   interviewQuestions,
   SENIORITIES,
   TRACKS,
+  type InterviewArea,
   type InterviewQuestion,
   type InterviewTrack,
   type Seniority,
@@ -86,6 +88,7 @@ const Option = ({ selected, onSelect, label, hint }: OptionProps) => (
 
 export function InterviewSimulator() {
   const [phase, setPhase] = useState<Phase>('setup');
+  const [area, setArea] = useState<InterviewArea | null>(null);
   const [track, setTrack] = useState<InterviewTrack | null>(null);
   const [seniority, setSeniority] = useState<Seniority | null>(null);
   const [deck, setDeck] = useState<InterviewQuestion[]>([]);
@@ -93,6 +96,25 @@ export function InterviewSimulator() {
   const [revealed, setRevealed] = useState(false);
   const [toReview, setToReview] = useState<InterviewQuestion[]>([]);
   const [answered, setAnswered] = useState(0);
+
+  const selectArea = (nextArea: InterviewArea) => {
+    const areaTracks = TRACKS.filter((option) => option.area === nextArea);
+    setArea(nextArea);
+    // Areas with a single track select it right away; the rest ask for the technology next.
+    setTrack(areaTracks.length === 1 ? areaTracks[0].id : null);
+  };
+
+  // Links from the home page preselect the area (`?tipo=backend`) or a track (`?tipo=python`).
+  useEffect(() => {
+    const tipo = new URLSearchParams(window.location.search).get('tipo');
+    const linkedTrack = TRACKS.find(({ id }) => id === tipo);
+    if (linkedTrack) {
+      setArea(linkedTrack.area);
+      setTrack(linkedTrack.id);
+    } else if (AREAS.some(({ id }) => id === tipo)) {
+      selectArea(tipo as InterviewArea);
+    }
+  }, []);
 
   const start = (questions: InterviewQuestion[]) => {
     setDeck(shuffle(questions));
@@ -137,6 +159,8 @@ export function InterviewSimulator() {
 
   if (phase === 'setup' || !track || !seniority) {
     const count = track && seniority ? interviewQuestions[track][seniority].length : 0;
+    const technologies = TRACKS.filter((option) => option.technology && option.area === area);
+    const step = (n: number) => (technologies.length ? n + 1 : n);
 
     return (
       <div className="mb-14 max-w-2xl">
@@ -148,18 +172,35 @@ export function InterviewSimulator() {
 
         <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 1. tipo de entrevista</h2>
         <RuledGrid className="mb-6 grid-cols-1">
-          {TRACKS.map(({ id, label, stack }) => (
+          {AREAS.map(({ id, label, stack }) => (
             <Option
               key={id}
-              selected={track === id}
-              onSelect={() => setTrack(id)}
+              selected={area === id}
+              onSelect={() => selectArea(id)}
               label={label}
               hint={stack}
             />
           ))}
         </RuledGrid>
 
-        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 2. seniority</h2>
+        {technologies.length > 0 && (
+          <>
+            <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 2. tecnología</h2>
+            <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-2">
+              {technologies.map(({ id, technology, stack }) => (
+                <Option
+                  key={id}
+                  selected={track === id}
+                  onSelect={() => setTrack(id)}
+                  label={technology!}
+                  hint={stack}
+                />
+              ))}
+            </RuledGrid>
+          </>
+        )}
+
+        <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># {step(2)}. seniority</h2>
         <RuledGrid className="mb-6 grid-cols-1 sm:grid-cols-3">
           {SENIORITIES.map(({ id, label }) => (
             <Option
@@ -182,7 +223,11 @@ export function InterviewSimulator() {
             <ArrowRight className="size-3.5" />
           </button>
           <span className="font-mono text-[11px] text-muted-foreground">
-            {count ? `${count} preguntas` : 'elegí el tipo y la seniority'}
+            {count
+              ? `${count} preguntas`
+              : technologies.length && !track
+                ? 'elegí la tecnología y la seniority'
+                : 'elegí el tipo y la seniority'}
           </span>
         </div>
       </div>
