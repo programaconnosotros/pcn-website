@@ -120,7 +120,7 @@ const SECTION_CARDS = {
     command: './simular-entrevista --active-recall',
     title: 'Entrevistas',
     description:
-      'Simulá entrevistas técnicas de frontend, backend y agentic engineering para junior, semi-senior y senior.',
+      'Simulá entrevistas técnicas de frontend, backend, AI engineering y agentic engineering para junior, semi-senior y senior.',
     meta: [`${totalQuestions} preguntas`, 'active recall'],
   },
   consejos: {

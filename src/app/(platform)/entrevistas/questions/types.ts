@@ -1,4 +1,4 @@
-export type InterviewTrack = 'frontend' | 'backend' | 'agentic';
+export type InterviewTrack = 'frontend' | 'backend' | 'ai' | 'agentic';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
 export interface InterviewQuestion {
@@ -10,7 +10,8 @@ export interface InterviewQuestion {
 export const TRACKS: { id: InterviewTrack; label: string; stack: string }[] = [
   { id: 'frontend', label: 'Frontend', stack: 'React.js' },
   { id: 'backend', label: 'Backend', stack: 'Node.js' },
-  { id: 'agentic', label: 'Agentic engineering', stack: 'LLMs y agentes' },
+  { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
+  { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
 ];
 
 export const SENIORITIES: { id: Seniority; label: string }[] = [
