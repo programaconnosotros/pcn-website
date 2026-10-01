@@ -85,6 +85,14 @@ export const sponsors: Sponsor[] = [
     location: 'IEEE CS Región Latinoamérica',
     monochromeOnDark: true,
   },
+  {
+    name: 'Crisol',
+    url: 'https://www.crisol.studio',
+    logo: '/crisol-white-logo.svg',
+    description:
+      'Estudio de ingeniería: sistemas para procesos donde un error no se revierte, con la seguridad en la fundación.',
+    location: 'Argentina',
+  },
 ];
 
 export const SPONSOR_CONTACT_URL = 'https://wa.me/5493815777562';
