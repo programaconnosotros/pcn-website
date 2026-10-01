@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
     area: 'partners',
+    title: 'El Cluster Tecnológico Tucumán se suma como partner',
+    description:
+      'El Cluster Tecnológico Tucumán aparece entre las organizaciones de la página de partners.',
+    authors: ['agustin-sanc'],
+    href: '/partners',
+  },
+  {
+    date: '2026-10-01',
+    area: 'partners',
     title: 'SaltaDev y FormosaDev se suman como partners',
     description:
       'La página de partners ahora separa empresas de organizaciones, y suma a las comunidades SaltaDev y FormosaDev.',

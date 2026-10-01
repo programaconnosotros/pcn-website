@@ -108,6 +108,15 @@ export const partners: Partner[] = [
     monochromeOnDark: true,
   },
   {
+    name: 'Cluster Tecnológico Tucumán',
+    kind: 'organizacion',
+    url: 'https://clustertucuman.org.ar/',
+    logo: '/cluster-tecnologico-tucuman-logo.webp',
+    description:
+      'Asociación de empresas e instituciones que impulsan la industria del software en Tucumán.',
+    location: 'Tucumán, Argentina',
+  },
+  {
     name: 'SaltaDev',
     kind: 'organizacion',
     url: 'https://salta.dev/',
