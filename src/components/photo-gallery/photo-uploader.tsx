@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Check, ImagePlus, Loader2, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { createPhoto, getPhotoUploadUrl } from '@/actions/photos/photo-actions';
+import { createPhoto, getPhotoUploadUrl } from '@/actions/gallery/gallery-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

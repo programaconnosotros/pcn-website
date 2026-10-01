@@ -15,7 +15,7 @@ export async function findNextEventByShortcut(slug: string) {
       OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
     },
     orderBy: { date: 'asc' },
-    include: { photos: { select: { src: true }, take: 1 } },
+    include: { galleryItems: { select: { src: true }, take: 1 } },
   });
 }
 

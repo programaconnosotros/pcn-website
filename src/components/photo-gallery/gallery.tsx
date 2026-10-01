@@ -6,7 +6,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
 import { Button } from '@/components/ui/button';
 import { dateContainsString } from '@/lib/date-formatter';
-import type { PhotoTile } from '@/lib/photos';
+import type { GalleryTile } from '@/lib/gallery';
 import { cn } from '@/lib/utils';
 import { ImagePlus, X } from 'lucide-react';
 import Link from 'next/link';
@@ -19,14 +19,14 @@ import { ShareDialog } from './share-dialog';
 const normalize = (text: string) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 interface GalleryProps {
-  photos: PhotoTile[];
+  photos: GalleryTile[];
   // When browsing one event's photos.
   event?: { id: string; name: string } | null;
   canUpload: boolean;
 }
 
 export function Gallery({ photos, event, canUpload }: GalleryProps) {
-  const [sharedPhoto, setSharedPhoto] = useState<PhotoTile | null>(null);
+  const [sharedPhoto, setSharedPhoto] = useState<GalleryTile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredPhotos = useMemo(() => {
@@ -42,10 +42,10 @@ export function Gallery({ photos, event, canUpload }: GalleryProps) {
     );
   }, [photos, searchQuery]);
 
-  const photoHref = (photo: PhotoTile) =>
+  const photoHref = (photo: GalleryTile) =>
     event ? `/galeria/${photo.id}?evento=${event.id}` : `/galeria/${photo.id}`;
 
-  const getShareUrl = (photo: PhotoTile) => {
+  const getShareUrl = (photo: GalleryTile) => {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
     return `${baseUrl}/galeria/${photo.id}`;
   };

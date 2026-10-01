@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserCheck, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { tagPhotoUser, untagPhotoUser } from '@/actions/photos/photo-tags';
+import { tagGalleryItemUser, untagGalleryItemUser } from '@/actions/gallery/gallery-tags';
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
 import { UserCombobox } from '@/components/admin/user-combobox';
 import { PersonLink, type Person } from '@/components/people/person-link';
@@ -52,7 +52,7 @@ export function PhotoPeople({ photoId, people, viewerId, isAdmin }: Props) {
                   type="button"
                   onClick={() =>
                     run(
-                      () => untagPhotoUser(photoId, person.id),
+                      () => untagGalleryItemUser(photoId, person.id),
                       person.id === viewerId
                         ? 'Te quitaste de la foto'
                         : `Quitaste a ${person.name}`,
@@ -76,7 +76,7 @@ export function PhotoPeople({ photoId, people, viewerId, isAdmin }: Props) {
         <button
           type="button"
           onClick={() =>
-            run(() => tagPhotoUser(photoId, viewerId), '¡Listo! Ya aparecés en la foto')
+            run(() => tagGalleryItemUser(photoId, viewerId), '¡Listo! Ya aparecés en la foto')
           }
           disabled={isPending}
           className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen disabled:opacity-50"
@@ -91,7 +91,7 @@ export function PhotoPeople({ photoId, people, viewerId, isAdmin }: Props) {
           search={searchCommunityMembers}
           excludeIds={people.map((person) => person.id)}
           onSelect={(user) =>
-            run(() => tagPhotoUser(photoId, user.id), `Etiquetaste a ${user.name}`)
+            run(() => tagGalleryItemUser(photoId, user.id), `Etiquetaste a ${user.name}`)
           }
           placeholder="etiquetar persona"
           disabled={isPending}

@@ -8,9 +8,9 @@ jest.mock('@/lib/s3', () => ({ CLOUDFRONT_URL: 'https://cdn.example.com' }));
 const loadSigning = () => {
   process.env.AWS_CLOUDFRONT_KEY_PAIR_ID = 'KTEST';
   process.env.AWS_CLOUDFRONT_PRIVATE_KEY_BASE64 = Buffer.from(pem).toString('base64');
-  let signing: typeof import('./photo-signing');
+  let signing: typeof import('./gallery-signing');
   jest.isolateModules(() => {
-    signing = require('./photo-signing');
+    signing = require('./gallery-signing');
   });
   return signing!;
 };
@@ -19,14 +19,14 @@ const loadSigning = () => {
 const fromCloudFrontBase64 = (value: string) =>
   Buffer.from(value.replace(/-/g, '+').replace(/_/g, '=').replace(/~/g, '/'), 'base64');
 
-describe('signPhotoSrc', () => {
+describe('signGallerySrc', () => {
   const now = new Date('2026-10-01T10:20:00Z').getTime();
 
   it('signs uploaded gallery photos with a key the public key verifies', () => {
-    const { signPhotoSrc } = loadSigning();
+    const { signGallerySrc } = loadSigning();
     const src = 'https://cdn.example.com/gallery/abc/full.webp';
 
-    const { url, expiresAt } = signPhotoSrc(src, now);
+    const { url, expiresAt } = signGallerySrc(src, now);
 
     const params = new URL(url).searchParams;
     expect(url.startsWith(`${src}?`)).toBe(true);
@@ -39,20 +39,20 @@ describe('signPhotoSrc', () => {
   });
 
   it('expires at the end of the next hour, so URLs stay stable for an hour', () => {
-    const { signPhotoSrc } = loadSigning();
+    const { signGallerySrc } = loadSigning();
     const src = 'https://cdn.example.com/gallery/abc/thumb.webp';
 
-    const first = signPhotoSrc(src, now);
-    const later = signPhotoSrc(src, now + 30 * 60 * 1000);
+    const first = signGallerySrc(src, now);
+    const later = signGallerySrc(src, now + 30 * 60 * 1000);
 
     expect(first.expiresAt.toISOString()).toBe('2026-10-01T12:00:00.000Z');
     expect(later.url).toBe(first.url);
   });
 
   it('leaves photos that live in /public untouched', () => {
-    const { signPhotoSrc, isSignedGallerySrc } = loadSigning();
+    const { signGallerySrc, isSignedGallerySrc } = loadSigning();
 
-    expect(signPhotoSrc('/photos/agus-talk.webp', now).url).toBe('/photos/agus-talk.webp');
+    expect(signGallerySrc('/photos/agus-talk.webp', now).url).toBe('/photos/agus-talk.webp');
     expect(isSignedGallerySrc('https://cdn.example.com/events/flyer.webp')).toBe(false);
   });
 });

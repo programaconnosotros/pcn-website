@@ -16,7 +16,7 @@ import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
-import { signPhotoSrc } from '@/lib/photo-signing';
+import { signGallerySrc } from '@/lib/gallery-signing';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
@@ -58,7 +58,8 @@ export async function generateMetadata(props: {
     normalizedDesc.length > 160 ? normalizedDesc.substring(0, 157) + '…' : normalizedDesc;
 
   const rawImage =
-    event.flyerImages[0] || (event.photos[0] && signPhotoSrc(event.photos[0].src).url);
+    event.flyerImages[0] ||
+    (event.galleryItems[0] && signGallerySrc(event.galleryItems[0].src).url);
   const imageUrl = rawImage ? optimizedOgImage(rawImage) : `/eventos/${event.id}/og-image`;
   const imageAlt = `Flyer de ${event.name}`;
   const url = `/eventos/${event.id}`;
@@ -240,12 +241,12 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               />
             </div>
 
-            {(event.photos.length > 0 || isAdmin) && (
+            {(event.galleryItems.length > 0 || isAdmin) && (
               <Section title="fotos">
                 <EventPhotos
                   eventId={id}
-                  photos={event.photos}
-                  total={event._count.photos}
+                  photos={event.galleryItems}
+                  total={event._count.galleryItems}
                   canUpload={isAdmin}
                 />
               </Section>

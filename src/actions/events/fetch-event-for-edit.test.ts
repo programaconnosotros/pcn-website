@@ -17,7 +17,7 @@ const mockEvent = {
   date: new Date('2026-08-15'),
   deletedAt: new Date('2026-01-01'),
   createdById: null,
-  photos: [],
+  galleryItems: [],
   sponsors: [],
   organizers: [],
 };

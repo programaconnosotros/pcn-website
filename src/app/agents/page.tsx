@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
-import { signPhotoSrc } from '@/lib/photo-signing';
+import { signGallerySrc } from '@/lib/gallery-signing';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
 
@@ -12,7 +12,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export async function generateMetadata(): Promise<Metadata> {
   const event = await prisma.event.findUnique({
     where: { id: EVENT_ID },
-    include: { photos: { select: { src: true }, take: 1 } },
+    include: { galleryItems: { select: { src: true }, take: 1 } },
   });
 
   if (!event) {
@@ -36,8 +36,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const imageUrl =
     event.flyerImages[0] ||
-    (event.photos.length > 0
-      ? signPhotoSrc(event.photos[0].src).url
+    (event.galleryItems.length > 0
+      ? signGallerySrc(event.galleryItems[0].src).url
       : `/eventos/${event.id}/og-image`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 

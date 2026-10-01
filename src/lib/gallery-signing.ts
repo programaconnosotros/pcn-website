@@ -18,7 +18,7 @@ export const isSignedGallerySrc = (src: string) =>
  * así la misma foto tiene la misma URL durante una hora y el navegador y CloudFront la
  * cachean. Las fotos que viven en /public se devuelven tal cual.
  */
-export function signPhotoSrc(src: string, now = Date.now()) {
+export function signGallerySrc(src: string, now = Date.now()) {
   const expiresAt = new Date(Math.ceil(now / HOUR_MS) * HOUR_MS + HOUR_MS);
   if (!isSignedGallerySrc(src)) return { url: src, expiresAt };
   if (!KEY_PAIR_ID || !PRIVATE_KEY) throw new Error('Falta configurar la firma de CloudFront');

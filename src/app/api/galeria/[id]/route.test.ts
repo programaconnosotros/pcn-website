@@ -3,23 +3,23 @@ import { mockHeaders } from '@/test/headers';
 import { resetRateLimits, RATE_LIMITS } from '@/lib/rate-limit';
 import { GET } from './route';
 
-jest.mock('@/lib/photo-signing', () => ({
-  signPhotoSrc: (src: string) => ({
+jest.mock('@/lib/gallery-signing', () => ({
+  signGallerySrc: (src: string) => ({
     url: `${src}?Signature=x`,
     expiresAt: new Date(Date.now() + 60 * 60 * 1000),
   }),
 }));
 
 const request = (size?: string) =>
-  GET(new Request(`http://localhost/api/galeria/fotos/photo-1${size ? `?size=${size}` : ''}`), {
+  GET(new Request(`http://localhost/api/galeria/photo-1${size ? `?size=${size}` : ''}`), {
     params: Promise.resolve({ id: 'photo-1' }),
   });
 
-describe('GET /api/galeria/fotos/[id]', () => {
+describe('GET /api/galeria/[id]', () => {
   beforeEach(() => {
     resetRateLimits();
     mockHeaders({ 'x-forwarded-for': '1.2.3.4' });
-    prismaMock.photo.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
       src: 'https://cdn.example.com/gallery/a/full.webp',
       thumbSrc: 'https://cdn.example.com/gallery/a/thumb.webp',
     } as any);
@@ -42,7 +42,7 @@ describe('GET /api/galeria/fotos/[id]', () => {
   });
 
   it('returns 404 for unknown photos', async () => {
-    prismaMock.photo.findUnique.mockResolvedValue(null);
+    prismaMock.galleryItem.findUnique.mockResolvedValue(null);
 
     expect((await request()).status).toBe(404);
   });

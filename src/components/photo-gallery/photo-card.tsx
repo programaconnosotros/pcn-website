@@ -3,13 +3,13 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { Download, Share2 } from 'lucide-react';
-import type { PhotoTile } from '@/lib/photos';
+import type { GalleryTile } from '@/lib/gallery';
 import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
-import { photoDownloadUrl, photoImageUrl } from '@/lib/photo-urls';
+import { galleryDownloadUrl, galleryImageUrl } from '@/lib/gallery-urls';
 
 interface PhotoCardProps {
-  photo: PhotoTile;
+  photo: GalleryTile;
   index: number;
   total: number;
   href: string;
@@ -40,7 +40,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={photoImageUrl(photo.id)}
+            src={galleryImageUrl(photo.id)}
             alt=""
             loading="lazy"
             decoding="async"
@@ -76,7 +76,12 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       <span aria-hidden className={`${cornerClassName} bottom-1 right-1 border-b-2 border-r-2`} />
 
       <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
-        <a href={photoDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
+        <a
+          href={galleryDownloadUrl(photo.id)}
+          download
+          className={keyCapClassName}
+          title="Descargar"
+        >
           <Download className="size-3.5" />
           <span className="sr-only">Descargar</span>
         </a>

@@ -41,7 +41,7 @@ async function clearSeedData() {
   await prisma.eventRegistration.deleteMany();
   await prisma.sponsor.deleteMany();
   // Las fotos históricas de la galería las carga una migración: solo se borran las de prueba.
-  await prisma.photo.deleteMany({ where: { legacyId: null } });
+  await prisma.galleryItem.deleteMany({ where: { legacyId: null } });
   await prisma.comment.deleteMany();
   await prisma.userLanguage.deleteMany();
   await prisma.like.deleteMany();
@@ -189,7 +189,7 @@ async function main() {
             placeName: 'UTN-FRT',
             latitude: -26.844408,
             longitude: -65.22264,
-            photos: {
+            galleryItems: {
               create: includePhotos
                 ? Array.from({ length: 3 }).map(() => ({
                     src: '/events/Lightning talks flyer.webp',

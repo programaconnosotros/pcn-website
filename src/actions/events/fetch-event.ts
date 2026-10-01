@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { photoOrder } from '@/lib/photos';
+import { galleryOrder } from '@/lib/gallery';
 
 // Cuántas fotos del evento se muestran en su página antes de "ver todas".
 const EVENT_PHOTOS_PREVIEW = 12;
@@ -13,12 +13,12 @@ export const fetchEvent = async (id: string) =>
       deletedAt: null,
     },
     include: {
-      photos: {
+      galleryItems: {
         select: { id: true, src: true, description: true },
-        orderBy: photoOrder,
+        orderBy: galleryOrder,
         take: EVENT_PHOTOS_PREVIEW,
       },
-      _count: { select: { photos: true } },
+      _count: { select: { galleryItems: true } },
       sponsors: true,
       organizers: {
         select: { userId: true, user: { select: { id: true, name: true, image: true } } },

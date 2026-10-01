@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { Gallery } from '@/components/photo-gallery/gallery';
 import { getAdminUser } from '@/lib/admin';
-import { listPhotos } from '@/lib/photos';
+import { listGalleryItems } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
 
 export default async function PhotoGallery(props: {
@@ -14,7 +14,7 @@ export default async function PhotoGallery(props: {
     const legacyId = Number.parseInt(foto, 10);
     const photo = Number.isNaN(legacyId)
       ? null
-      : await prisma.photo.findUnique({ where: { legacyId }, select: { id: true } });
+      : await prisma.galleryItem.findUnique({ where: { legacyId }, select: { id: true } });
     redirect(photo ? `/galeria/${photo.id}` : '/galeria');
   }
 
@@ -26,7 +26,10 @@ export default async function PhotoGallery(props: {
     : null;
   if (evento && !event) notFound();
 
-  const [photos, admin] = await Promise.all([listPhotos({ eventId: event?.id }), getAdminUser()]);
+  const [photos, admin] = await Promise.all([
+    listGalleryItems({ eventId: event?.id }),
+    getAdminUser(),
+  ]);
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">

@@ -1,4 +1,4 @@
-import { signPhotoSrc } from '@/lib/photo-signing';
+import { signGallerySrc } from '@/lib/gallery-signing';
 import { redirect } from 'next/navigation';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import { findNextEventByShortcut, slugToLabel } from '@/lib/event-shortcuts';
@@ -39,7 +39,9 @@ export async function generateMetadata({
   }
 
   const rawImage =
-    event.flyerImages[0] || (event.photos[0] && signPhotoSrc(event.photos[0].src).url) || null;
+    event.flyerImages[0] ||
+    (event.galleryItems[0] && signGallerySrc(event.galleryItems[0].src).url) ||
+    null;
   // Events without a flyer get the generated terminal card.
   const imageUrl = rawImage
     ? optimizedOgImage(rawImage)

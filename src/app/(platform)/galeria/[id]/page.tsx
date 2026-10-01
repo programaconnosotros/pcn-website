@@ -16,9 +16,9 @@ import {
 } from '@/components/photo-gallery/photo-utils';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { optimizedOgImage } from '@/lib/og-image';
-import { signPhotoSrc } from '@/lib/photo-signing';
-import { photoImageUrl } from '@/lib/photo-urls';
-import { getPhoto, getPhotoNeighbours } from '@/lib/photos';
+import { signGallerySrc } from '@/lib/gallery-signing';
+import { galleryImageUrl } from '@/lib/gallery-urls';
+import { getGalleryItem, getGalleryNeighbours } from '@/lib/gallery';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -38,7 +38,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { id } = await props.params;
-  const photo = await getPhoto(id);
+  const photo = await getGalleryItem(id);
   if (!photo) return { title: 'Foto no encontrada' };
 
   const title = photoCaption(photo);
@@ -46,7 +46,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const description = people.length
     ? `Con ${people.join(', ')}. Galería de programaConNosotros.`
     : 'Galería de fotos de la comunidad programaConNosotros.';
-  const images = [{ url: optimizedOgImage(signPhotoSrc(photo.src).url), alt: title }];
+  const images = [{ url: optimizedOgImage(signGallerySrc(photo.src).url), alt: title }];
 
   return {
     title,
@@ -67,14 +67,14 @@ export default async function PhotoPage(props: Props) {
   const { id } = await props.params;
   const { evento } = await props.searchParams;
 
-  const [photo, session] = await Promise.all([getPhoto(id), getCurrentSession()]);
+  const [photo, session] = await Promise.all([getGalleryItem(id), getCurrentSession()]);
   if (!photo) notFound();
   const viewer = session?.user ?? null;
   const isAdmin = viewer?.role === 'ADMIN';
 
   // Browsing an event's photos keeps prev/next within that event.
   const scopeEventId = evento && evento === photo.eventId ? evento : undefined;
-  const { previousId, nextId, index, total } = await getPhotoNeighbours(id, scopeEventId);
+  const { previousId, nextId, index, total } = await getGalleryNeighbours(id, scopeEventId);
   const hrefFor = (photoId: string | null) =>
     photoId && `/galeria/${photoId}${scopeEventId ? `?evento=${scopeEventId}` : ''}`;
   const previousHref = hrefFor(previousId);
@@ -128,7 +128,7 @@ export default async function PhotoPage(props: Props) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={photo.id}
-            src={photoImageUrl(photo.id, 'full')}
+            src={galleryImageUrl(photo.id, 'full')}
             alt={caption}
             width={photo.width ?? undefined}
             height={photo.height ?? undefined}

@@ -9,21 +9,21 @@ jest.mock('@/lib/s3', () => ({
   CLOUDFRONT_URL: 'https://cdn.example.com',
   getObjectBuffer: jest.fn().mockResolvedValue(Buffer.from('webp')),
 }));
-jest.mock('@/lib/photo-signing', () => ({
+jest.mock('@/lib/gallery-signing', () => ({
   isSignedGallerySrc: (src: string) => src.startsWith('https://cdn.example.com/gallery/'),
 }));
 
 const download = () =>
-  GET(new Request('http://localhost/api/galeria/fotos/photo-123456/descargar'), {
+  GET(new Request('http://localhost/api/galeria/photo-123456/descargar'), {
     params: Promise.resolve({ id: 'photo-123456' }),
   });
 
-describe('GET /api/galeria/fotos/[id]/descargar', () => {
+describe('GET /api/galeria/[id]/descargar', () => {
   beforeEach(() => {
     resetRateLimits();
     mockCookies({});
     mockHeaders({ 'x-forwarded-for': '5.6.7.8' });
-    prismaMock.photo.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
       id: 'photo-123456',
       src: 'https://cdn.example.com/gallery/abc/full.webp',
       takenAt: new Date(2026, 4, 12),
@@ -43,7 +43,7 @@ describe('GET /api/galeria/fotos/[id]/descargar', () => {
   });
 
   it('serves the historical photos from /public', async () => {
-    prismaMock.photo.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
       id: 'legacy-5',
       src: '/photos/agus-talk.webp',
       takenAt: new Date(2024, 9, 16),
@@ -56,7 +56,7 @@ describe('GET /api/galeria/fotos/[id]/descargar', () => {
   });
 
   it('never reads outside /public', async () => {
-    prismaMock.photo.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
       id: 'x',
       src: '/../.env',
       takenAt: new Date(),
@@ -73,6 +73,6 @@ describe('GET /api/galeria/fotos/[id]/descargar', () => {
     expect(enforceRateLimit).toHaveBeenCalledWith('photoDownload');
     expect(response.status).toBe(429);
     expect(response.headers.get('retry-after')).toBe('120');
-    expect(prismaMock.photo.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItem.findUnique).not.toHaveBeenCalled();
   });
 });

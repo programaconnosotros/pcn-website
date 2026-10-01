@@ -4,7 +4,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { PhotoEditForm } from '@/components/photo-gallery/photo-edit-form';
 import { photoFileName } from '@/components/photo-gallery/photo-utils';
 import { requireAdminPage } from '@/lib/admin';
-import { getPhoto } from '@/lib/photos';
+import { getGalleryItem } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
 
 export const metadata = { title: 'Editar foto' };
@@ -14,7 +14,7 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
   const { id } = await props.params;
 
   const [photo, events] = await Promise.all([
-    getPhoto(id),
+    getGalleryItem(id),
     prisma.event.findMany({
       where: { deletedAt: null },
       select: { id: true, name: true, date: true },

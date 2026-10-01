@@ -11,7 +11,7 @@ import {
   publicFileUrl,
   putImmutableObject,
 } from '@/lib/s3';
-import { photoDetailsSchema, type PhotoDetailsInput } from './photo-schema';
+import { galleryDetailsSchema, type GalleryDetailsInput } from './gallery-schema';
 
 // Los originales se suben directo a S3 desde el navegador y se borran después de optimizarlos.
 const ORIGINALS_FOLDER = 'gallery/originals';
@@ -24,8 +24,8 @@ const UPLOAD_TYPES = [
   'image/gif',
 ];
 
-const parseDetails = (input: PhotoDetailsInput) => {
-  const parsed = photoDetailsSchema.safeParse(input);
+const parseDetails = (input: GalleryDetailsInput) => {
+  const parsed = galleryDetailsSchema.safeParse(input);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
   return parsed.data;
 };
@@ -60,7 +60,7 @@ export async function getPhotoUploadUrl(fileName: string, contentType: string) {
  * Crea una foto a partir del original ya subido: la optimiza a WebP (grande y miniatura), la
  * guarda en S3 para servirla por CloudFront y borra el original. Solo admins.
  */
-export async function createPhoto(originalKey: string, input: PhotoDetailsInput) {
+export async function createPhoto(originalKey: string, input: GalleryDetailsInput) {
   const admin = await requireAdmin();
   if (!originalKey.startsWith(`${ORIGINALS_FOLDER}/`) || originalKey.includes('..')) {
     throw new Error('Archivo inválido');
@@ -79,7 +79,7 @@ export async function createPhoto(originalKey: string, input: PhotoDetailsInput)
   ]);
   await deleteObjects([originalKey]);
 
-  const photo = await prisma.photo.create({
+  const photo = await prisma.galleryItem.create({
     data: {
       ...details,
       src: publicFileUrl(fullKey),
@@ -97,33 +97,33 @@ export async function createPhoto(originalKey: string, input: PhotoDetailsInput)
 }
 
 /** Cambia la fecha, la descripción o el evento de una foto. Solo admins. */
-export async function updatePhoto(photoId: string, input: PhotoDetailsInput) {
+export async function updateGalleryItem(photoId: string, input: GalleryDetailsInput) {
   await requireAdmin();
   const details = parseDetails(input);
 
-  const photo = await prisma.photo.findUnique({
+  const photo = await prisma.galleryItem.findUnique({
     where: { id: photoId },
     select: { eventId: true },
   });
   if (!photo) throw new Error('Foto no encontrada');
   await assertEventExists(details.eventId);
 
-  await prisma.photo.update({ where: { id: photoId }, data: details });
+  await prisma.galleryItem.update({ where: { id: photoId }, data: details });
   revalidatePhoto(photoId, [photo.eventId, details.eventId]);
   return { success: true };
 }
 
 /** Elimina una foto, sus etiquetas y sus archivos en S3. Solo admins. */
-export async function deletePhoto(photoId: string) {
+export async function deleteGalleryItem(photoId: string) {
   await requireAdmin();
 
-  const photo = await prisma.photo.findUnique({
+  const photo = await prisma.galleryItem.findUnique({
     where: { id: photoId },
     select: { eventId: true, storageKeys: true, tags: { select: { userId: true } } },
   });
   if (!photo) throw new Error('Foto no encontrada');
 
-  await prisma.photo.delete({ where: { id: photoId } });
+  await prisma.galleryItem.delete({ where: { id: photoId } });
   await deleteObjects(photo.storageKeys);
 
   revalidatePhoto(photoId, [photo.eventId]);

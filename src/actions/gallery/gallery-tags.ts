@@ -13,37 +13,37 @@ async function requireTagger(userId: string) {
   return viewer;
 }
 
-const revalidateTag = (photoId: string, userId: string) => {
+const revalidateTag = (itemId: string, userId: string) => {
   revalidatePath('/galeria');
-  revalidatePath(`/galeria/${photoId}`);
+  revalidatePath(`/galeria/${itemId}`);
   revalidatePath(`/perfil/${userId}`);
 };
 
 /** Marca que `userId` aparece en la foto. */
-export async function tagPhotoUser(photoId: string, userId: string) {
+export async function tagGalleryItemUser(itemId: string, userId: string) {
   const viewer = await requireTagger(userId);
 
   const [photo, user] = await Promise.all([
-    prisma.photo.findUnique({ where: { id: photoId }, select: { id: true } }),
+    prisma.galleryItem.findUnique({ where: { id: itemId }, select: { id: true } }),
     prisma.user.findUnique({ where: { id: userId }, select: { id: true } }),
   ]);
   if (!photo) throw new Error('Foto no encontrada');
   if (!user) throw new Error('Usuario no encontrado');
 
-  await prisma.photoTag.upsert({
-    where: { photoId_userId: { photoId, userId } },
-    create: { photoId, userId, taggedById: viewer.id },
+  await prisma.galleryItemTag.upsert({
+    where: { itemId_userId: { itemId, userId } },
+    create: { itemId, userId, taggedById: viewer.id },
     update: {},
   });
-  revalidateTag(photoId, userId);
+  revalidateTag(itemId, userId);
   return { success: true };
 }
 
 /** Quita la etiqueta de `userId` de la foto. */
-export async function untagPhotoUser(photoId: string, userId: string) {
+export async function untagGalleryItemUser(itemId: string, userId: string) {
   await requireTagger(userId);
 
-  await prisma.photoTag.deleteMany({ where: { photoId, userId } });
-  revalidateTag(photoId, userId);
+  await prisma.galleryItemTag.deleteMany({ where: { itemId, userId } });
+  revalidateTag(itemId, userId);
   return { success: true };
 }

@@ -1,7 +1,12 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { deleteObjects, getObjectBuffer, putImmutableObject } from '@/lib/s3';
-import { createPhoto, deletePhoto, getPhotoUploadUrl, updatePhoto } from './photo-actions';
+import {
+  createPhoto,
+  deleteGalleryItem,
+  getPhotoUploadUrl,
+  updateGalleryItem,
+} from './gallery-actions';
 
 jest.mock('@/lib/s3', () => ({
   getPresignedUploadUrl: jest.fn().mockResolvedValue({
@@ -61,7 +66,7 @@ describe('photo uploads', () => {
 
   it('stores the optimized webp files, drops the original and saves the photo', async () => {
     loginAs(admin);
-    prismaMock.photo.create.mockResolvedValue({ id: 'photo-1' } as any);
+    prismaMock.galleryItem.create.mockResolvedValue({ id: 'photo-1' } as any);
 
     await expect(createPhoto('gallery/originals/a.jpg', details)).resolves.toEqual({
       id: 'photo-1',
@@ -71,7 +76,7 @@ describe('photo uploads', () => {
     expect(fullKey).toMatch(/^gallery\/[\w-]+\/full\.webp$/);
     expect(thumbKey).toMatch(/^gallery\/[\w-]+\/thumb\.webp$/);
     expect(deleteObjects).toHaveBeenCalledWith(['gallery/originals/a.jpg']);
-    expect(prismaMock.photo.create).toHaveBeenCalledWith({
+    expect(prismaMock.galleryItem.create).toHaveBeenCalledWith({
       data: {
         takenAt: new Date('2026-05-12T20:30:00.000Z'),
         description: 'Cierre',
@@ -94,7 +99,7 @@ describe('photo uploads', () => {
     await expect(
       createPhoto('gallery/originals/a.jpg', { ...details, eventId: 'ghost' }),
     ).rejects.toThrow('Evento no encontrado');
-    expect(prismaMock.photo.create).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItem.create).not.toHaveBeenCalled();
   });
 });
 
@@ -102,20 +107,20 @@ describe('photo editing', () => {
   it('only lets admins edit or delete photos', async () => {
     loginAs(regular);
 
-    await expect(updatePhoto('photo-1', details)).rejects.toThrow('No autorizado');
-    await expect(deletePhoto('photo-1')).rejects.toThrow('No autorizado');
-    expect(prismaMock.photo.update).not.toHaveBeenCalled();
-    expect(prismaMock.photo.delete).not.toHaveBeenCalled();
+    await expect(updateGalleryItem('photo-1', details)).rejects.toThrow('No autorizado');
+    await expect(deleteGalleryItem('photo-1')).rejects.toThrow('No autorizado');
+    expect(prismaMock.galleryItem.update).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItem.delete).not.toHaveBeenCalled();
   });
 
   it('updates the date, description and event', async () => {
     loginAs(admin);
-    prismaMock.photo.findUnique.mockResolvedValue({ eventId: 'old-event' } as any);
+    prismaMock.galleryItem.findUnique.mockResolvedValue({ eventId: 'old-event' } as any);
     prismaMock.event.findFirst.mockResolvedValue({ id: 'event-2' } as any);
 
-    await updatePhoto('photo-1', { ...details, description: '', eventId: 'event-2' });
+    await updateGalleryItem('photo-1', { ...details, description: '', eventId: 'event-2' });
 
-    expect(prismaMock.photo.update).toHaveBeenCalledWith({
+    expect(prismaMock.galleryItem.update).toHaveBeenCalledWith({
       where: { id: 'photo-1' },
       data: {
         takenAt: new Date('2026-05-12T20:30:00.000Z'),
@@ -127,15 +132,15 @@ describe('photo editing', () => {
 
   it('deletes the photo and its files', async () => {
     loginAs(admin);
-    prismaMock.photo.findUnique.mockResolvedValue({
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
       eventId: null,
       storageKeys: ['gallery/x/full.webp', 'gallery/x/thumb.webp'],
       tags: [],
     } as any);
 
-    await deletePhoto('photo-1');
+    await deleteGalleryItem('photo-1');
 
-    expect(prismaMock.photo.delete).toHaveBeenCalledWith({ where: { id: 'photo-1' } });
+    expect(prismaMock.galleryItem.delete).toHaveBeenCalledWith({ where: { id: 'photo-1' } });
     expect(deleteObjects).toHaveBeenCalledWith(['gallery/x/full.webp', 'gallery/x/thumb.webp']);
   });
 });

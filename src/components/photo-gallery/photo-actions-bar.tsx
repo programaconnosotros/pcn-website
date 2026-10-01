@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Download, Share2 } from 'lucide-react';
 import { keyCapClassName, photoCaption } from './photo-utils';
-import { photoDownloadUrl } from '@/lib/photo-urls';
+import { galleryDownloadUrl } from '@/lib/gallery-urls';
 import { ShareDialog } from './share-dialog';
 
 type Props = {
@@ -22,7 +22,7 @@ export function PhotoActionsBar({ photo }: Props) {
 
   return (
     <div className="flex gap-1">
-      <a href={photoDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
+      <a href={galleryDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
         <Download className="size-3.5" />
         <span className="sr-only">Descargar</span>
       </a>

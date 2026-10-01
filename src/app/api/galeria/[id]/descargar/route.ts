@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import prisma from '@/lib/prisma';
 import { photoFileName } from '@/components/photo-gallery/photo-utils';
-import { isSignedGallerySrc } from '@/lib/photo-signing';
+import { isSignedGallerySrc } from '@/lib/gallery-signing';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { CLOUDFRONT_URL, getObjectBuffer } from '@/lib/s3';
 
@@ -30,7 +30,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const photo = await prisma.photo.findUnique({
+  const photo = await prisma.galleryItem.findUnique({
     where: { id },
     select: { id: true, src: true, takenAt: true },
   });

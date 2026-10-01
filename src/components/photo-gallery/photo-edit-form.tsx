@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { deletePhoto, updatePhoto } from '@/actions/photos/photo-actions';
+import { deleteGalleryItem, updateGalleryItem } from '@/actions/gallery/gallery-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { photoImageUrl } from '@/lib/photo-urls';
+import { galleryImageUrl } from '@/lib/gallery-urls';
 import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
 
@@ -53,7 +53,7 @@ export function PhotoEditForm({ photo, events }: Props) {
   const save = () =>
     startTransition(async () => {
       try {
-        await updatePhoto(photo.id, {
+        await updateGalleryItem(photo.id, {
           takenAt: new Date(takenAt).toISOString(),
           description,
           eventId,
@@ -69,7 +69,7 @@ export function PhotoEditForm({ photo, events }: Props) {
   const remove = () =>
     startTransition(async () => {
       try {
-        await deletePhoto(photo.id);
+        await deleteGalleryItem(photo.id);
         toast.success('Foto eliminada');
         router.push('/galeria');
         router.refresh();
@@ -88,7 +88,7 @@ export function PhotoEditForm({ photo, events }: Props) {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={photoImageUrl(photo.id)}
+        src={galleryImageUrl(photo.id)}
         alt=""
         className="aspect-square w-40 bg-black object-cover"
       />

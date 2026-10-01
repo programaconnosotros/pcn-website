@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Lo que se carga a mano de una foto: cuándo se sacó, una descripción y de qué evento es.
-export const photoDetailsSchema = z.object({
+export const galleryDetailsSchema = z.object({
   takenAt: z
     .union([z.string(), z.date()])
     .transform((value) => new Date(value))
@@ -18,4 +18,4 @@ export const photoDetailsSchema = z.object({
     .transform((value) => value || null),
 });
 
-export type PhotoDetailsInput = z.input<typeof photoDetailsSchema>;
+export type GalleryDetailsInput = z.input<typeof galleryDetailsSchema>;

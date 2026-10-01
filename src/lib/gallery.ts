@@ -2,38 +2,38 @@ import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 
 // What a photo tile needs: the thumbnail, its caption and enough to search it.
-export const photoTileSelect = {
+export const galleryTileSelect = {
   id: true,
   src: true,
   takenAt: true,
   description: true,
   event: { select: { id: true, name: true } },
   tags: { select: { user: { select: { name: true } } } },
-} satisfies Prisma.PhotoSelect;
+} satisfies Prisma.GalleryItemSelect;
 
-export type PhotoTile = Prisma.PhotoGetPayload<{ select: typeof photoTileSelect }>;
+export type GalleryTile = Prisma.GalleryItemGetPayload<{ select: typeof galleryTileSelect }>;
 
 // Newest first; ties (same instant) by upload order so prev/next stay stable.
-export const photoOrder = [
+export const galleryOrder = [
   { takenAt: 'desc' },
   { createdAt: 'desc' },
   { id: 'desc' },
-] satisfies Prisma.PhotoOrderByWithRelationInput[];
+] satisfies Prisma.GalleryItemOrderByWithRelationInput[];
 
 /** Photos of the gallery, optionally only the ones from an event or where a user appears. */
-export const listPhotos = (filter: { eventId?: string; userId?: string } = {}) =>
-  prisma.photo.findMany({
+export const listGalleryItems = (filter: { eventId?: string; userId?: string } = {}) =>
+  prisma.galleryItem.findMany({
     where: {
       ...(filter.eventId && { eventId: filter.eventId }),
       ...(filter.userId && { tags: { some: { userId: filter.userId } } }),
     },
-    select: photoTileSelect,
-    orderBy: photoOrder,
+    select: galleryTileSelect,
+    orderBy: galleryOrder,
   });
 
 /** A photo with everything its page shows: event, people and who tagged them. */
-export const getPhoto = (id: string) =>
-  prisma.photo.findUnique({
+export const getGalleryItem = (id: string) =>
+  prisma.galleryItem.findUnique({
     where: { id },
     include: {
       event: { select: { id: true, name: true, date: true } },
@@ -51,12 +51,12 @@ export const getPhoto = (id: string) =>
  * The photos before and after `id` in the gallery order (wrapping around), within an event
  * when browsing that event's photos.
  */
-export async function getPhotoNeighbours(id: string, eventId?: string) {
+export async function getGalleryNeighbours(id: string, eventId?: string) {
   const ids = (
-    await prisma.photo.findMany({
+    await prisma.galleryItem.findMany({
       where: eventId ? { eventId } : undefined,
       select: { id: true },
-      orderBy: photoOrder,
+      orderBy: galleryOrder,
     })
   ).map((photo) => photo.id);
 
