@@ -20,7 +20,7 @@ export const formatPhotoDate = (date: Date) =>
  * The photo's terminal-style label and download name: the original file name for the photos
  * that live in /public, `pcn-2024-07-30-x1y2z3.webp` for uploaded ones.
  */
-export const photoFileName = (photo: PhotoLike) =>
+export const photoFileName = (photo: Pick<PhotoLike, 'id' | 'src' | 'takenAt'>) =>
   photo.src.startsWith('/')
     ? photo.src.split('/').pop() ?? `${photo.id}.webp`
     : `pcn-${formatPhotoDate(photo.takenAt)}-${photo.id.slice(-6)}.webp`;

@@ -20,13 +20,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { photoImageUrl } from '@/lib/photo-urls';
 import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
 
 type Props = {
   photo: {
     id: string;
-    thumbSrc: string;
     takenAt: Date;
     description: string | null;
     eventId: string | null;
@@ -87,7 +87,11 @@ export function PhotoEditForm({ photo, events }: Props) {
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={photo.thumbSrc} alt="" className="aspect-square w-40 bg-black object-cover" />
+      <img
+        src={photoImageUrl(photo.id)}
+        alt=""
+        className="aspect-square w-40 bg-black object-cover"
+      />
 
       <div className="space-y-4">
         <Field label="fecha">

@@ -14,7 +14,7 @@ export const fetchEvent = async (id: string) =>
     },
     include: {
       photos: {
-        select: { id: true, thumbSrc: true, src: true, description: true },
+        select: { id: true, src: true, description: true },
         orderBy: photoOrder,
         take: EVENT_PHOTOS_PREVIEW,
       },

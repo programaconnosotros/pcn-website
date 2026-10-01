@@ -61,6 +61,8 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
           echo "AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}" >> $GITHUB_ENV
           echo "AWS_CLOUDFRONT_URL=${{ secrets.AWS_CLOUDFRONT_URL }}" >> $GITHUB_ENV
+          echo "AWS_CLOUDFRONT_KEY_PAIR_ID=${{ secrets.AWS_CLOUDFRONT_KEY_PAIR_ID }}" >> $GITHUB_ENV
+          echo "AWS_CLOUDFRONT_PRIVATE_KEY_BASE64=${{ secrets.AWS_CLOUDFRONT_PRIVATE_KEY_BASE64 }}" >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

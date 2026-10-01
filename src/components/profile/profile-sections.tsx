@@ -6,6 +6,7 @@ import { conversationHref } from '@/components/conversations/conversation-utils'
 import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
+import { photoImageUrl } from '@/lib/photo-urls';
 
 export const PROFILE_TABS = [
   { id: 'resumen', label: 'resumen' },
@@ -287,7 +288,7 @@ export const ArticleRows = ({ articles }: { articles: ProfileArticle[] }) => (
   </RuledGrid>
 );
 
-export type ProfilePhoto = { id: string; thumbSrc: string; description: string | null };
+export type ProfilePhoto = { id: string; description: string | null };
 
 // Square thumbnails of the photos the person was tagged in, each opening its gallery page.
 export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
@@ -301,7 +302,7 @@ export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
         <span className="block aspect-square overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={photo.thumbSrc}
+            src={photoImageUrl(photo.id)}
             alt={photo.description ?? 'Foto de la comunidad'}
             loading="lazy"
             decoding="async"

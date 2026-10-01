@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Download, Share2 } from 'lucide-react';
 import { keyCapClassName, photoCaption } from './photo-utils';
-import { usePhotoDownload } from './use-photo-download';
+import { photoDownloadUrl } from '@/lib/photo-urls';
 import { ShareDialog } from './share-dialog';
 
 type Props = {
@@ -18,21 +18,14 @@ type Props = {
 
 // Download and share keys for a photo's page.
 export function PhotoActionsBar({ photo }: Props) {
-  const { download, isDownloading } = usePhotoDownload();
   const [isSharing, setIsSharing] = useState(false);
 
   return (
     <div className="flex gap-1">
-      <button
-        type="button"
-        className={keyCapClassName}
-        onClick={() => download(photo)}
-        disabled={isDownloading}
-        title="Descargar"
-      >
+      <a href={photoDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
         <Download className="size-3.5" />
         <span className="sr-only">Descargar</span>
-      </button>
+      </a>
       <button
         type="button"
         className={keyCapClassName}

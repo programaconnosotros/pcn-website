@@ -327,7 +327,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
       }),
       prisma.photo.findMany({
         where: { tags: { some: { userId: user.id } } },
-        select: { id: true, thumbSrc: true, description: true },
+        select: { id: true, description: true },
         orderBy: photoOrder,
       }),
       prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),

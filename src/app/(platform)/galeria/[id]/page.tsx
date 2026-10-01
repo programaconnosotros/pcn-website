@@ -16,6 +16,8 @@ import {
 } from '@/components/photo-gallery/photo-utils';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { optimizedOgImage } from '@/lib/og-image';
+import { signPhotoSrc } from '@/lib/photo-signing';
+import { photoImageUrl } from '@/lib/photo-urls';
 import { getPhoto, getPhotoNeighbours } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +46,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const description = people.length
     ? `Con ${people.join(', ')}. Galería de programaConNosotros.`
     : 'Galería de fotos de la comunidad programaConNosotros.';
-  const images = [{ url: optimizedOgImage(photo.src), alt: title }];
+  const images = [{ url: optimizedOgImage(signPhotoSrc(photo.src).url), alt: title }];
 
   return {
     title,
@@ -126,7 +128,7 @@ export default async function PhotoPage(props: Props) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={photo.id}
-            src={photo.src}
+            src={photoImageUrl(photo.id, 'full')}
             alt={caption}
             width={photo.width ?? undefined}
             height={photo.height ?? undefined}

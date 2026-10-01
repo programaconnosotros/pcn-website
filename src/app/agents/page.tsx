@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import { signPhotoSrc } from '@/lib/photo-signing';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
 
@@ -35,7 +36,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const imageUrl =
     event.flyerImages[0] ||
-    (event.photos.length > 0 ? event.photos[0].src : `/eventos/${event.id}/og-image`);
+    (event.photos.length > 0
+      ? signPhotoSrc(event.photos[0].src).url
+      : `/eventos/${event.id}/og-image`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   const description =

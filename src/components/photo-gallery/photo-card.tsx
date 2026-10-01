@@ -6,7 +6,7 @@ import { Download, Share2 } from 'lucide-react';
 import type { PhotoTile } from '@/lib/photos';
 import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
-import { usePhotoDownload } from './use-photo-download';
+import { photoDownloadUrl, photoImageUrl } from '@/lib/photo-urls';
 
 interface PhotoCardProps {
   photo: PhotoTile;
@@ -23,7 +23,6 @@ const cornerClassName =
 // file-name caption sliding up from the bottom. The photo is taller than its frame and drifts
 // against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
 export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps) {
-  const { download, isDownloading } = usePhotoDownload();
   const frameRef = useRef<HTMLDivElement>(null);
   useParallax(frameRef);
 
@@ -41,7 +40,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={photo.thumbSrc}
+            src={photoImageUrl(photo.id)}
             alt=""
             loading="lazy"
             decoding="async"
@@ -77,16 +76,10 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       <span aria-hidden className={`${cornerClassName} bottom-1 right-1 border-b-2 border-r-2`} />
 
       <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
-        <button
-          type="button"
-          className={keyCapClassName}
-          onClick={() => download(photo)}
-          disabled={isDownloading}
-          title="Descargar"
-        >
+        <a href={photoDownloadUrl(photo.id)} download className={keyCapClassName} title="Descargar">
           <Download className="size-3.5" />
           <span className="sr-only">Descargar</span>
-        </button>
+        </a>
         <button type="button" className={keyCapClassName} onClick={onShare} title="Compartir">
           <Share2 className="size-3.5" />
           <span className="sr-only">Compartir</span>

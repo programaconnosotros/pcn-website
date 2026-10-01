@@ -5,7 +5,6 @@ import prisma from '@/lib/prisma';
 export const photoTileSelect = {
   id: true,
   src: true,
-  thumbSrc: true,
   takenAt: true,
   description: true,
   event: { select: { id: true, name: true } },

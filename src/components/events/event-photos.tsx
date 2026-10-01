@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { photoImageUrl } from '@/lib/photo-urls';
 
-type EventPhoto = { id: string; thumbSrc: string; description: string | null };
+type EventPhoto = { id: string; description: string | null };
 
 type EventPhotosProps = {
   eventId: string;
@@ -26,7 +27,7 @@ export function EventPhotos({ eventId, photos, total, canUpload }: EventPhotosPr
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={photo.thumbSrc}
+                src={photoImageUrl(photo.id)}
                 alt={photo.description ?? `Foto ${index + 1} del evento`}
                 loading="lazy"
                 decoding="async"
