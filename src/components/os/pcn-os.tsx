@@ -27,7 +27,7 @@ import { useOsMode } from './use-os-mode';
 
 export const MENU_BAR_HEIGHT = 28;
 /** Space kept free at the bottom of the screen for the dock. */
-const DOCK_RESERVED_HEIGHT = 96;
+const DOCK_RESERVED_HEIGHT = 80;
 
 interface Viewport {
   w: number;

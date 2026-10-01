@@ -17,7 +17,7 @@ import { ProgramIcon } from './program-icon';
 import type { OsProgram } from './programs';
 
 /** Widest a dock item gets at rest; items shrink below this so the whole dock fits the screen. */
-const MAX_ITEM_WIDTH = 70;
+const MAX_ITEM_WIDTH = 62;
 const MIN_ITEM_WIDTH = 40;
 /** Screen margin, dock padding and border around the items. */
 const DOCK_CHROME_WIDTH = 16 + 16 + 2;
@@ -26,7 +26,7 @@ const ITEM_GAP = 2;
 /** Most an item grows (as a fraction of its width) when the cursor is right over it. */
 const MAX_MAGNIFICATION = 0.55;
 /** Room the label, the gaps and the activity meter take under each icon. */
-const ITEM_TEXT_HEIGHT = 28;
+const ITEM_TEXT_HEIGHT = 22;
 
 const SCRAMBLE_GLYPHS = '!<>-_\\/[]{}=+*^?#01ｱｲｳｴｵｶｷ';
 
@@ -236,7 +236,7 @@ const DockItem = ({
   const iconControls = useAnimationControls();
   const reduceMotion = useReducedMotion();
 
-  const baseIcon = Math.min(44, baseWidth - 12);
+  const baseIcon = Math.min(36, baseWidth - 12);
   // Read through refs so the fisheye always uses the latest sizes without resubscribing.
   const sizing = useRef({ baseWidth, magnification });
   useEffect(() => {
@@ -290,7 +290,7 @@ const DockItem = ({
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       transition={{ delay: 0.25 + index * 0.035, type: 'spring', stiffness: 260, damping: 20 }}
       style={{ width, height: baseIcon + ITEM_TEXT_HEIGHT }}
-      className="group relative flex shrink-0 flex-col items-center justify-end gap-1 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+      className="group relative flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
     >
       {/* Anchored above the label so the icon grows upwards out of the dock when magnified. */}
       <span
@@ -306,14 +306,14 @@ const DockItem = ({
           <ProgramIcon
             program={program}
             running={running}
-            className="size-full [&>svg]:transition-transform [&>svg]:duration-300 group-hover:[&>svg]:scale-110"
+            className="size-full [&>svg]:size-[62%] [&>svg]:transition-transform [&>svg]:duration-300 group-hover:[&>svg]:scale-110"
           />
           {launches > 0 && <LaunchBurst key={launches} seed={launches} />}
         </motion.span>
       </span>
       <span
         className={cn(
-          'w-full truncate text-center font-mono text-[10px] lowercase leading-tight transition-colors',
+          'w-full truncate text-center font-mono text-[10px] lowercase leading-3 transition-colors',
           hovered || focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-600',
         )}
       >
@@ -327,7 +327,7 @@ const DockItem = ({
 const Divider = () => (
   <span
     aria-hidden
-    className="relative mx-[7px] mb-6 h-9 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
+    className="relative mx-[7px] mb-5 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
   >
     <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen shadow-[0_0_6px_#04f4be]" />
   </span>
@@ -460,7 +460,7 @@ export function OsDock({
         <div
           onMouseMove={onMouseMove}
           onMouseLeave={onMouseLeave}
-          className="relative flex items-end gap-0.5 rounded-md bg-black/85 px-2 pb-1 pt-2.5 backdrop-blur-xl"
+          className="relative flex items-end gap-0.5 rounded-md bg-black/85 px-2 pb-1 pt-2 backdrop-blur-xl"
         >
           {/* Surface effects, clipped to the dock. */}
           <span
