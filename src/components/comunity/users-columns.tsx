@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LocalDate } from '@/components/ui/local-date-time';
 import { TableTag } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { AmbassadorToggle } from './ambassador-toggle';
+import { UserFlagToggle } from './user-flag-toggle';
 
 const relativeFormat = new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' });
 
@@ -146,21 +146,24 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
   {
     accessorKey: 'role',
     header: ({ column }) => <SortableHeader label="Rol" column={column} />,
-    cell: ({ getValue }) =>
-      getValue<'REGULAR' | 'ADMIN'>() === 'ADMIN' ? (
-        <TableTag tone="green">admin</TableTag>
-      ) : (
-        <TableTag>regular</TableTag>
-      ),
+    cell: ({ row }) => (
+      <UserFlagToggle
+        flag="admin"
+        userId={row.original.id}
+        userName={row.original.name}
+        active={row.original.role === 'ADMIN'}
+      />
+    ),
   },
   {
     accessorKey: 'isAmbassador',
     header: ({ column }) => <SortableHeader label="Ambassador" column={column} />,
     cell: ({ row }) => (
-      <AmbassadorToggle
+      <UserFlagToggle
+        flag="ambassador"
         userId={row.original.id}
         userName={row.original.name}
-        isAmbassador={row.original.isAmbassador}
+        active={row.original.isAmbassador}
       />
     ),
   },
