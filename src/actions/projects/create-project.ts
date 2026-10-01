@@ -26,6 +26,9 @@ export const createProject = async (data: ProjectFormData) => {
       url: projectData.url,
       logoUrl: projectData.logoUrl ?? '',
       techStack: projectData.techStack,
+      isOpenSource: projectData.isOpenSource,
+      // Solo un proyecto open-source guarda el link al repo.
+      repoUrl: projectData.isOpenSource ? projectData.repoUrl ?? null : null,
       order: (last._max.order ?? -1) + 1,
       // El autor es siempre quien carga el proyecto, nunca un valor enviado por el cliente.
       authorId: user.id,

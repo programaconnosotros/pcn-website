@@ -34,6 +34,9 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
         url: projectData.url,
         logoUrl: projectData.logoUrl ?? existing.logoUrl,
         techStack: projectData.techStack,
+        isOpenSource: projectData.isOpenSource,
+        // Solo un proyecto open-source guarda el link al repo.
+        repoUrl: projectData.isOpenSource ? projectData.repoUrl ?? null : null,
       },
     }),
     prisma.projectMember.deleteMany({ where: { projectId: id } }),

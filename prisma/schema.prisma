@@ -462,6 +462,10 @@ model Project {
   techStack   String[]
   order       Int      @default(0)
 
+  // Proyectos de código abierto: el repo es opcional y siempre apunta a GitHub.
+  isOpenSource Boolean @default(false)
+  repoUrl      String?
+
   // Usuario que cargó el proyecto. Null solo en proyectos cargados por admins antes de que
   // los usuarios pudieran publicar los suyos.
   authorId String?

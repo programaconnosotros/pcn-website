@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   Check,
   Edit,
+  Github,
   GripVertical,
   MoreVertical,
   Plus,
@@ -184,6 +185,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
   const [items, setItems] = useState(projects);
   const [searchQuery, setSearchQuery] = useState('');
   const [stack, setStack] = useState<string | null>(null);
+  const [openSourceOnly, setOpenSourceOnly] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
@@ -220,6 +222,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
     );
     return {
       people: people.size,
+      openSource: projects.filter((project) => project.isOpenSource).length,
       stack: [...stackCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])),
       newest,
     };
@@ -229,12 +232,15 @@ export function ProjectsList({ projects, currentUser }: Props) {
   const visible = reordering
     ? items
     : items.filter((project) => {
+        if (openSourceOnly && !project.isOpenSource) return false;
         if (stack && !project.techStack.includes(stack)) return false;
         if (!query) return true;
         return [
           project.title,
           project.description,
           project.url,
+          project.repoUrl ?? '',
+          ...(project.isOpenSource ? ['open-source', 'open source', 'oss'] : []),
           ...project.techStack,
           ...peopleOf(project).map((person) => person.name),
         ].some((text) => text.toLowerCase().includes(query));
@@ -344,9 +350,22 @@ export function ProjectsList({ projects, currentUser }: Props) {
               label="Buscar proyectos"
             />
             <div
-              aria-label="Filtrar por tecnología"
+              aria-label="Filtrar proyectos"
               className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
             >
+              {stats.openSource > 0 && (
+                <>
+                  <Flag
+                    active={openSourceOnly}
+                    onClick={() => setOpenSourceOnly((value) => !value)}
+                    count={stats.openSource}
+                  >
+                    <Github className="size-3" />
+                    --open-source
+                  </Flag>
+                  <span aria-hidden className="my-1.5 w-px shrink-0 bg-pcnGreen-200" />
+                </>
+              )}
               {stats.stack.slice(0, TOP_STACK).map(([tech, count]) => (
                 <Flag
                   key={tech}
@@ -369,7 +388,13 @@ export function ProjectsList({ projects, currentUser }: Props) {
           <span className="text-foreground/80">~/proyectos</span>$ ls -la --sort=curado
         </p>
         <RuledGrid className="grid-cols-2 lg:grid-cols-4">
-          <Stat label="proyectos" value={projects.length} hint="en producción o en camino" />
+          <Stat
+            label="proyectos"
+            value={projects.length}
+            hint={
+              stats.openSource > 0 ? `${stats.openSource} open-source` : 'en producción o en camino'
+            }
+          />
           <Stat label="builders" value={stats.people} hint="personas detrás del código" />
           <Stat
             label="tecnologías"
@@ -404,6 +429,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
               para <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
             </>
           )}
+          {openSourceOnly && <> --open-source</>}
           {stack && <> con --{stack.toLowerCase()}</>}
         </p>
       )}
@@ -479,6 +505,11 @@ export function ProjectsList({ projects, currentUser }: Props) {
                   <span className="relative inline-flex size-1.5 rounded-full bg-pcnGreen" />
                 </span>
                 <span className="min-w-0 truncate">{displayUrl(project.url)}</span>
+                {project.isOpenSource && (
+                  <span className="shrink-0 rounded-sm border border-pcnGreen-600 px-1 text-[10px] leading-4 text-pcnGreen">
+                    open-source
+                  </span>
+                )}
 
                 {canManage(project) && !reordering && (
                   <DropdownMenu>
@@ -572,6 +603,20 @@ export function ProjectsList({ projects, currentUser }: Props) {
                     <Terminal className="size-3" />
                     ./run
                   </button>
+                  {project.repoUrl && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={displayUrl(project.repoUrl)}
+                      className="flex items-center rounded-sm border border-pcnGreen-200 p-1 text-muted-foreground transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+                    >
+                      <Github className="size-3.5" />
+                      <span className="sr-only">
+                        Ver el repositorio de {project.title} en GitHub
+                      </span>
+                    </a>
+                  )}
                   <a
                     href={project.url}
                     target="_blank"

@@ -13,6 +13,19 @@ export const projectMemberSchema = z.object({
     .max(200, { message: 'El nombre no puede exceder 200 caracteres' }),
 });
 
+const isGitHubRepoUrl = (value: string) => {
+  try {
+    const { protocol, hostname, pathname } = new URL(value);
+    return (
+      protocol === 'https:' &&
+      ['github.com', 'www.github.com'].includes(hostname) &&
+      pathname.split('/').filter(Boolean).length >= 2
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const projectSchema = z.object({
   title: z
     .string()
@@ -30,6 +43,15 @@ export const projectSchema = z.object({
     .or(z.literal(''))
     .transform((val) => (val === '' ? undefined : val)),
   techStack: z.array(z.string().min(1).max(50)).default([]),
+  isOpenSource: z.boolean().default(false),
+  repoUrl: z
+    .string()
+    .trim()
+    .refine((val) => val === '' || isGitHubRepoUrl(val), {
+      message: 'Ingresá la URL de un repositorio de GitHub (https://github.com/usuario/repo)',
+    })
+    .optional()
+    .transform((val) => (val ? val : undefined)),
   members: z
     .array(projectMemberSchema)
     .max(30, { message: 'Podés agregar hasta 30 compañeros' })

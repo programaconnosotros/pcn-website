@@ -47,6 +47,8 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
       url: project?.url ?? '',
       logoUrl: project?.logoUrl ?? '',
       techStack: project?.techStack ?? [],
+      isOpenSource: project?.isOpenSource ?? false,
+      repoUrl: project?.repoUrl ?? '',
       members: project?.members
         ? project.members.map((m) => ({
             userId: m.userId ?? null,
@@ -63,6 +65,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
   );
 
   const techStack = form.watch('techStack') ?? [];
+  const isOpenSource = form.watch('isOpenSource');
 
   function addTech() {
     const tag = techInput.trim();
@@ -139,7 +142,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
             <FormItem>
               <FormLabel>URL del proyecto</FormLabel>
               <FormControl>
-                <Input placeholder="https://github.com/usuario/proyecto" {...field} />
+                <Input placeholder="https://mi-proyecto.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -163,6 +166,57 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="isOpenSource"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-3">
+                <FormControl>
+                  <input
+                    type="checkbox"
+                    id="isOpenSource"
+                    checked={!!field.value}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                      // El repo solo aplica a proyectos open-source; no lo dejamos validando oculto.
+                      if (!e.target.checked) form.setValue('repoUrl', '', { shouldValidate: true });
+                    }}
+                    className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                  />
+                </FormControl>
+                <FormLabel htmlFor="isOpenSource" className="cursor-pointer">
+                  Es open-source
+                </FormLabel>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {isOpenSource && (
+          <FormField
+            control={form.control}
+            name="repoUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Repositorio en GitHub</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="https://github.com/usuario/proyecto"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Opcional. Así otros miembros pueden leer el código y contribuir.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {/* Tech stack tag input */}
         <FormField

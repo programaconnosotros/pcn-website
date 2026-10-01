@@ -877,6 +877,7 @@ async function main() {
       url: 'https://github.com/programaconnosotros/pcn-website',
       logoUrl: '/software-logos/github.webp',
       techStack: ['Next.js', 'TypeScript', 'Prisma', 'Tailwind'],
+      repoUrl: 'https://github.com/programaconnosotros/pcn-website',
       author: adminUser,
       members: [regularUsers[0], regularUsers[1]],
     },
@@ -910,6 +911,8 @@ async function main() {
         url: project.url,
         logoUrl: project.logoUrl,
         techStack: project.techStack,
+        isOpenSource: 'repoUrl' in project,
+        repoUrl: 'repoUrl' in project ? project.repoUrl : null,
         order,
         authorId: project.author.id,
         members: {

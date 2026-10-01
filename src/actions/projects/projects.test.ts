@@ -101,6 +101,48 @@ describe('createProject', () => {
     });
   });
 
+  it('saves the GitHub repo of an open-source project', async () => {
+    loginAs(baseUser);
+    prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
+
+    await createProject({
+      ...validInput,
+      isOpenSource: true,
+      repoUrl: 'https://github.com/pcn/proyecto',
+    });
+
+    const { data } = prismaMock.project.create.mock.calls[0][0];
+    expect(data.isOpenSource).toBe(true);
+    expect(data.repoUrl).toBe('https://github.com/pcn/proyecto');
+  });
+
+  it('drops the repo of a project that is not open-source', async () => {
+    loginAs(baseUser);
+    prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
+
+    await createProject({
+      ...validInput,
+      isOpenSource: false,
+      repoUrl: 'https://github.com/pcn/proyecto',
+    });
+
+    const { data } = prismaMock.project.create.mock.calls[0][0];
+    expect(data.isOpenSource).toBe(false);
+    expect(data.repoUrl).toBeNull();
+  });
+
+  it('rejects a repo URL that is not a GitHub repository', async () => {
+    loginAs(baseUser);
+
+    await expect(
+      createProject({ ...validInput, isOpenSource: true, repoUrl: 'https://gitlab.com/pcn/x' }),
+    ).rejects.toThrow('repositorio de GitHub');
+    await expect(
+      createProject({ ...validInput, isOpenSource: true, repoUrl: 'https://github.com/pcn' }),
+    ).rejects.toThrow('repositorio de GitHub');
+    expect(prismaMock.project.create).not.toHaveBeenCalled();
+  });
+
   it('puts the first project at the top', async () => {
     loginAs(adminUser);
     prismaMock.project.create.mockResolvedValue({ id: 'project-1' } as any);
