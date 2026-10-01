@@ -238,6 +238,7 @@ export const OS_PROGRAMS: OsProgram[] = [
     icon: History,
     color: 'from-lime-300 to-green-700',
     group: 'Comunidad',
+    pinned: true,
   },
   {
     id: 'admin',
