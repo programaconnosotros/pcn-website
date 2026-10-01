@@ -9,7 +9,7 @@ import {
   ChevronRight,
   GraduationCap,
   Home,
-  Rocket,
+  MessageCircle,
   Search,
   SquareTerminal,
   X,
@@ -37,7 +37,7 @@ const tabItems = [
   { title: 'Inicio', url: '/', icon: Home },
   { title: 'Eventos', url: '/eventos', icon: CalendarDays },
   { title: 'Cursos', url: '/cursos', icon: GraduationCap },
-  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
+  { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
 ];
 
 const tabClassName =
