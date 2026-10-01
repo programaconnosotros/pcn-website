@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -14,7 +14,12 @@ import { ConversationDialog } from '@/components/conversations/conversation-dial
 import { ProfileLinksContext } from '@/components/conversations/participant-chip';
 import type { LinkedUser } from '@/lib/identity-links';
 import Link from 'next/link';
-import { isGroupThread, monthName } from '@/components/conversations/conversation-utils';
+import {
+  CONVERSATION_PARAM,
+  isGroupThread,
+  monthName,
+  shortHash,
+} from '@/components/conversations/conversation-utils';
 import { normalize } from '@/components/conversations/highlight';
 
 const TOP_VOICES = 8;
@@ -92,6 +97,18 @@ export function ConversationsClient({ profiles, isAdmin }: ConversationsClientPr
   const [groupOnly, setGroupOnly] = useState(false);
   const [participant, setParticipant] = useState<string | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  // Profiles and global search link here with `?c=<hash>`: open that conversation's dialog over
+  // the full, unfiltered list, then drop the param so closing it leaves a clean URL.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const hash = url.searchParams.get(CONVERSATION_PARAM);
+    if (!hash) return;
+    const index = sortedConversations.findIndex((c) => shortHash(c) === hash);
+    if (index !== -1) setOpenIndex(index);
+    url.searchParams.delete(CONVERSATION_PARAM);
+    window.history.replaceState(window.history.state, '', url);
+  }, []);
 
   const toggleParticipant = (name: string) =>
     setParticipant((current) => (current === name ? null : name));

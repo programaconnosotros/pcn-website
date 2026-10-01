@@ -15,6 +15,12 @@ export const shortHash = ({ date, title }: Conversation) => {
   return hash.toString(16).padStart(8, '0').slice(0, 7);
 };
 
+/** Links straight to a conversation: /conversaciones opens its dialog on load. */
+export const CONVERSATION_PARAM = 'c';
+
+export const conversationHref = (conversation: Conversation) =>
+  `/conversaciones?${CONVERSATION_PARAM}=${shortHash(conversation)}`;
+
 // Splits a summary into sentences for the log-style reader, without breaking on initials
 // like "Robert C. Martin".
 export const toSentences = (summary: string) =>

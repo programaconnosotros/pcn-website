@@ -4,6 +4,7 @@ import { videos } from '@/components/videos/videos';
 import { specialties } from '@/components/especialidades/specialties';
 import { visiblePrograms } from '@/components/os/programs';
 import { conversations } from '@/data/whatsapp-conversations';
+import { conversationHref } from '@/components/conversations/conversation-utils';
 import type { SearchResult } from './types';
 
 /**
@@ -90,7 +91,7 @@ const buildStaticIndex = (): IndexedEntry[] => [
         type: 'conversacion',
         title: conversation.title,
         subtitle: conversation.date,
-        href: withQuery('/conversaciones', conversation.title),
+        href: conversationHref(conversation),
       },
       conversation.summary,
       conversation.participants.join(' '),

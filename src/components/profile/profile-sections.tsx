@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import type { Conversation } from '@/data/whatsapp-conversations';
+import { conversationHref } from '@/components/conversations/conversation-utils';
 import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -190,7 +191,7 @@ export const ConversationRows = ({ conversations }: { conversations: Conversatio
     {conversations.map((conversation) => (
       <Link
         key={`${conversation.date}-${conversation.title}`}
-        href={`/conversaciones?q=${encodeURIComponent(conversation.title)}`}
+        href={conversationHref(conversation)}
         className={cn(
           ruledCellClassName,
           'group flex flex-col gap-1 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
