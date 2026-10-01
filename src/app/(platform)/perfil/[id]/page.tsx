@@ -1,5 +1,6 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { AmbassadorBadge } from '@/components/profile/ambassador-badge';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -191,6 +192,7 @@ async function getUser(id: string) {
       name: user.name,
       email: user.email,
       image: user.image,
+      isAmbassador: user.isAmbassador,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
       phoneNumber: (user as any).phoneNumber ?? null,
@@ -337,6 +339,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
+                  {user.isAmbassador && <AmbassadorBadge />}
                   <div className="flex flex-wrap items-center gap-x-3 font-mono text-[11px] text-muted-foreground">
                     {user.xAccountUrl && (
                       <a
