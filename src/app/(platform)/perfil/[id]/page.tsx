@@ -256,8 +256,6 @@ export default async function ProfilePage(props: ProfilePageProps) {
   const positions = user.positions.filter((position) => position.jobTitle || position.enterprise);
 
   const profileFacts: { label: string; value: string; href?: string }[] = [
-    { label: 'carrera', value: user.career },
-    { label: 'institución', value: user.studyPlace },
     {
       label: 'ubicación',
       value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
@@ -377,6 +375,25 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {(user.career || user.studyPlace) && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>estudios
+                  </h2>
+                  <div className="border-l-2 border-pcnGreen-200 pl-3">
+                    {user.career && (
+                      <p className="text-sm font-medium leading-snug">{user.career}</p>
+                    )}
+                    {user.studyPlace && (
+                      <p className="font-mono text-xs text-muted-foreground">
+                        <span className="text-pcnGreen-500">@ </span>
+                        {user.studyPlace}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 
