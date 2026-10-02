@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
+import { conversations } from '@/data/whatsapp-conversations';
 import { EMPTY_METRICS, type AchievementMetrics } from '@/lib/achievements';
 
 // The counts behind each achievement (src/lib/achievements), for some users or for everyone.
@@ -31,6 +32,7 @@ export const getAchievementMetrics = async (
   const [
     talkSpeakers,
     githubLogins,
+    whatsappNames,
     githubStats,
     watchedTalks,
     organizers,
@@ -43,6 +45,7 @@ export const getAchievementMetrics = async (
       _count: { _all: true },
     }),
     linkedNames('github', userIds),
+    linkedNames('whatsapp', userIds),
     getCollaborationStats(),
     prisma.contentMark.groupBy({
       by: ['userId'],
@@ -89,6 +92,13 @@ export const getAchievementMetrics = async (
   for (const { userId, _count } of organizers) of(userId).eventsOrganized = _count._all;
   for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
   for (const { userId, _count } of registrations) of(userId).eventsAttended = _count._all;
+
+  for (const [userId, names] of whatsappNames) {
+    const taken = conversations.filter(({ participants }) =>
+      participants.some((name) => names.includes(name)),
+    ).length;
+    if (taken > 0) of(userId).conversations = taken;
+  }
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.
   const contributors = githubStats.topContributors;

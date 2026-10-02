@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
+import { conversations } from '@/data/whatsapp-conversations';
 import { ACHIEVEMENTS, EMPTY_METRICS, earnedAchievements } from './achievements';
 import { getAchievementMetrics, getUserAchievementMetrics } from './achievement-metrics';
 
@@ -47,6 +48,11 @@ describe('earnedAchievements', () => {
 
   it('earns habitué after going to 10 events', () => {
     expect(ids({ ...EMPTY_METRICS, eventsAttended: 10 })).toEqual(['events-attended-10']);
+  });
+
+  it('earns conversador after 100 conversations', () => {
+    expect(ids({ ...EMPTY_METRICS, conversations: 99 })).toEqual([]);
+    expect(ids({ ...EMPTY_METRICS, conversations: 100 })).toEqual(['conversations-100']);
   });
 
   it('caps progress at the target', () => {
@@ -156,6 +162,18 @@ describe('getAchievementMetrics', () => {
         },
       }),
     );
+  });
+
+  it('counts the conversations their linked WhatsApp names took part in', async () => {
+    const [name] = conversations.find(({ participants }) => participants.length > 0)!.participants;
+    prismaMock.identityLink.findMany.mockImplementation((async ({ where }: any) =>
+      where.source === 'whatsapp' ? [{ userId: 'user-1', externalName: name }] : []) as any);
+
+    const metrics = await getAchievementMetrics();
+
+    const expected = conversations.filter(({ participants }) => participants.includes(name));
+    expect(expected.length).toBeGreaterThan(0);
+    expect(metrics.get('user-1')?.conversations).toBe(expected.length);
   });
 
   it('returns empty metrics for a user without activity', async () => {

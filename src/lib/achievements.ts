@@ -21,6 +21,8 @@ export type AchievementMetrics = {
   articlesRead: number;
   /** Past events they signed up for on the platform and did not cancel. */
   eventsAttended: number;
+  /** Conversations from the WhatsApp group (/conversaciones) they took part in. */
+  conversations: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -31,6 +33,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   eventsOrganized: 0,
   articlesRead: 0,
   eventsAttended: 0,
+  conversations: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -145,6 +148,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Anotate en los eventos desde la plataforma y andá: cuentan los que ya pasaron.',
     href: '/eventos',
     progress: count('eventsAttended', 10),
+  },
+  {
+    id: 'conversations-100',
+    name: 'Conversador',
+    description: 'Participó en 100 conversaciones interesantes del grupo de WhatsApp o más.',
+    icon: 'messages',
+    tone: 'red',
+    goal: 'participar en 100 conversaciones',
+    howTo: 'Sumate a las charlas del grupo: las mejores quedan resumidas en /conversaciones.',
+    href: '/conversaciones',
+    progress: count('conversations', 100),
   },
 ];
 
