@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 type HeaderState = 'rest' | 'shown' | 'hidden';
 
@@ -40,6 +40,9 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
   const stateRef = useRef<HeaderState>('rest');
   const [isDesktop, setIsDesktop] = useState(false);
   const isPinned = !!pinnedOnDesktop && isDesktop;
+  // Distance from the top of the page to where the header sits at rest. A pinned header sticks
+  // right there, so it doesn't shift up when the page starts scrolling.
+  const [restTop, setRestTop] = useState(0);
 
   const setHeaderState = (next: HeaderState) => {
     if (next === stateRef.current) return;
@@ -57,7 +60,7 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
     const publish = () =>
       root.style.setProperty(
         '--sticky-header-offset',
-        `${header.offsetHeight + (isPinned ? 0 : PINNED_TOP)}px`,
+        `${header.offsetHeight + (isPinned ? restTop : PINNED_TOP)}px`,
       );
     publish();
     const observer = new ResizeObserver(publish);
@@ -66,7 +69,18 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
       observer.disconnect();
       root.style.removeProperty('--sticky-header-offset');
     };
-  }, [state, isPinned]);
+  }, [state, isPinned, restTop]);
+
+  useEffect(() => {
+    if (!isPinned) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const measure = () => setRestTop(sentinel.getBoundingClientRect().top + window.scrollY);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    return () => observer.disconnect();
+  }, [isPinned]);
 
   useEffect(() => {
     if (!pinnedOnDesktop) return;
@@ -139,6 +153,7 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
         data-state={state}
         // Tabbing into a hidden header brings it back.
         onFocus={() => state === 'hidden' && setHeaderState('shown')}
+        style={isPinned ? ({ '--rest-top': `${restTop}px` } as CSSProperties) : undefined}
         className={cn(
           'relative z-40 -mx-4 px-4 [display:flow-root]',
           // Pinned 0.75rem down, with the backdrop reaching up to the edge, so a title with no top
@@ -149,7 +164,7 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
           state !== 'rest' && animate && 'transition-transform duration-200 ease-out',
           state === 'hidden' && '-translate-y-[calc(100%+0.75rem)]',
           isPinned &&
-            'sticky top-0 before:absolute before:inset-x-0 before:inset-y-0 before:-z-10 before:bg-background/90 before:shadow-[0_1px_0] before:shadow-pcnGreen-200 before:backdrop-blur',
+            'sticky top-[var(--rest-top)] before:absolute before:inset-x-0 before:bottom-0 before:top-[calc(-1*var(--rest-top))] before:-z-10 before:bg-background/90 before:shadow-[0_1px_0] before:shadow-pcnGreen-200 before:backdrop-blur',
           className,
         )}
       >

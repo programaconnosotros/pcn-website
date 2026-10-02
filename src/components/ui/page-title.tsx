@@ -34,8 +34,10 @@ export const PageTitle = ({ path, meta, action, sticky, className }: PageTitlePr
     <div
       className={cn(
         'mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono',
+        // Pinned 1rem down, where the page's top margin leaves it at rest, so it doesn't shift up
+        // when the page starts scrolling; the backdrop reaches up to the edge to hide what passes.
         sticky &&
-          'lg:sticky lg:top-0 lg:z-30 lg:-mx-4 lg:border-b lg:border-pcnGreen-200 lg:bg-background/90 lg:px-4 lg:py-3 lg:backdrop-blur',
+          'lg:sticky lg:top-4 lg:z-30 lg:-mx-4 lg:border-b lg:border-pcnGreen-200 lg:px-4 lg:py-3 lg:before:absolute lg:before:inset-x-0 lg:before:-top-4 lg:before:bottom-0 lg:before:-z-10 lg:before:bg-background/90 lg:before:backdrop-blur',
         className,
       )}
     >
