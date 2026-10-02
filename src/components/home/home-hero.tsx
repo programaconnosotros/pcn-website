@@ -95,7 +95,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                         { tag: '+', text: 'mentores que ya recorrieron el camino' },
                         {
                           tag: '+',
-                          text: 'una red de devs para llevar tu carrera al siguiente nivel',
+                          text: 'una red de ingenieros para llevar tu carrera al siguiente nivel',
                         },
                       ]
                 }
