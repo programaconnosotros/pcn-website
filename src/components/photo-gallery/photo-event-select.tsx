@@ -18,11 +18,13 @@ export function PhotoEventSelect({
   value,
   onChange,
   disabled,
+  'aria-label': ariaLabel,
 }: {
   events: EventOption[];
   value: string | null;
   onChange: (_eventId: string | null) => void;
   disabled?: boolean;
+  'aria-label'?: string;
 }) {
   const selected = events.find((event) => event.id === value);
 
@@ -32,7 +34,7 @@ export function PhotoEventSelect({
       onValueChange={(next) => onChange(next === NONE ? null : next)}
       disabled={disabled}
     >
-      <SelectTrigger className="font-mono text-xs">
+      <SelectTrigger className="font-mono text-xs" aria-label={ariaLabel}>
         <SelectValue>
           <span className="truncate">{selected?.name ?? 'sin evento'}</span>
         </SelectValue>

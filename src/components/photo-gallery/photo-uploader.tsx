@@ -42,6 +42,7 @@ type Item = {
   video: VideoInfo | null;
   takenAt: string;
   description: string;
+  eventId: string | null;
   status: Status;
   // Why the file can't be uploaded at all (HEIC, a video the browser can't read, too big…).
   unsupported?: string;
@@ -57,7 +58,7 @@ const MAX_VIDEO_MB = MAX_VIDEO_BYTES / 1024 / 1024;
 const toMb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1);
 
 // Checks a picked file and reads what the form needs from it.
-async function prepare(file: File): Promise<Item> {
+async function prepare(file: File, eventId: string | null): Promise<Item> {
   const base = {
     key: crypto.randomUUID(),
     file,
@@ -65,6 +66,7 @@ async function prepare(file: File): Promise<Item> {
     video: null,
     takenAt: toDateTimeInput(await readTakenAt(file)),
     description: '',
+    eventId,
     status: 'pending' as Status,
   };
   if (isHeic(file)) return { ...base, unsupported: 'HEIC no está soportado: exportala como JPG.' };
@@ -96,6 +98,8 @@ export function PhotoUploader({
   defaultEventId: string | null;
 }) {
   const [items, setItems] = useState<Item[]>([]);
+  // Event for every file: new files start with it and changing it re-tags the pending ones.
+  // Each file can still be moved to another event on its own.
   const [eventId, setEventId] = useState<string | null>(defaultEventId);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -145,8 +149,15 @@ export function PhotoUploader({
     const media = [...files].filter(
       (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
-    const added = await Promise.all(media.map(prepare));
+    const added = await Promise.all(media.map((file) => prepare(file, eventId)));
     setItems((current) => [...current, ...added]);
+  };
+
+  const setEventForAll = (next: string | null) => {
+    setEventId(next);
+    setItems((current) =>
+      current.map((item) => (item.status === 'done' ? item : { ...item, eventId: next })),
+    );
   };
 
   const remove = (item: Item) => {
@@ -162,7 +173,7 @@ export function PhotoUploader({
     const details = {
       takenAt: new Date(item.takenAt).toISOString(),
       description: item.description,
-      eventId,
+      eventId: item.eventId,
     };
     try {
       let created: { id: string };
@@ -223,7 +234,11 @@ export function PhotoUploader({
   const pendingCount = items.filter(
     (item) => (item.status === 'pending' || item.status === 'error') && !item.unsupported,
   ).length;
-  const doneCount = items.filter((item) => item.status === 'done').length;
+  const done = items.filter((item) => item.status === 'done');
+  const doneEventIds = new Set(done.map((item) => item.eventId));
+  // Link to the event's gallery only when everything uploaded went to the same one.
+  const doneEventId = doneEventIds.size === 1 ? [...doneEventIds][0] : null;
+  const mixedEvents = new Set(items.map((item) => item.eventId)).size > 1;
   const hasPendingVideos = items.some(
     (item) => item.video && !item.unsupported && item.status !== 'done',
   );
@@ -271,12 +286,13 @@ export function PhotoUploader({
 
         <label className="space-y-1">
           <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-            evento
+            evento para todos
+            {mixedEvents && <span className="normal-case tracking-normal"> · hay varios</span>}
           </span>
           <PhotoEventSelect
             events={events}
             value={eventId}
-            onChange={setEventId}
+            onChange={setEventForAll}
             disabled={isUploading}
           />
         </label>
@@ -353,14 +369,23 @@ export function PhotoUploader({
                     </Link>
                   ) : item.unsupported ? null : (
                     <>
-                      <Input
-                        type="datetime-local"
-                        value={item.takenAt}
-                        onChange={(event) => update(item.key, { takenAt: event.target.value })}
-                        disabled={item.status === 'compressing' || item.status === 'uploading'}
-                        aria-label="Fecha"
-                        className="max-w-xs font-mono text-xs"
-                      />
+                      <div className="grid gap-2 sm:grid-cols-2 lg:max-w-2xl">
+                        <Input
+                          type="datetime-local"
+                          value={item.takenAt}
+                          onChange={(event) => update(item.key, { takenAt: event.target.value })}
+                          disabled={item.status === 'compressing' || item.status === 'uploading'}
+                          aria-label="Fecha"
+                          className="font-mono text-xs"
+                        />
+                        <PhotoEventSelect
+                          events={events}
+                          value={item.eventId}
+                          onChange={(next) => update(item.key, { eventId: next })}
+                          aria-label="Evento"
+                          disabled={item.status === 'compressing' || item.status === 'uploading'}
+                        />
+                      </div>
                       <Textarea
                         value={item.description}
                         onChange={(event) => update(item.key, { description: event.target.value })}
@@ -402,12 +427,12 @@ export function PhotoUploader({
           )}
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            {doneCount > 0 && (
+            {done.length > 0 && (
               <Link
-                href={eventId ? `/galeria?evento=${eventId}` : '/galeria'}
+                href={doneEventId ? `/galeria?evento=${doneEventId}` : '/galeria'}
                 className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
               >
-                ver {doneCount} subidas en la galería →
+                ver {done.length} subidas en la galería →
               </Link>
             )}
             <Button
