@@ -197,6 +197,13 @@ const SECTION_CARDS = {
       'Conocé a las personas de programaConNosotros: co-founders, ambassadors, speakers y quienes organizan eventos.',
     meta: [MEMBERS, TALKS, EVENTS],
   },
+  logros: {
+    command: 'achievements --list',
+    title: 'Logros',
+    description:
+      'Badges que se desbloquean participando en la comunidad: dar charlas, organizar eventos, compartir proyectos, aportar código y más.',
+    meta: [MEMBERS, 'badges para tu perfil'],
+  },
   galeria: {
     command: 'open galeria/',
     title: 'Galería',

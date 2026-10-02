@@ -28,6 +28,7 @@ import {
   Rss,
   ScrollText,
   Share2,
+  Trophy,
   Users,
   Wrench,
   Youtube,
@@ -96,6 +97,7 @@ export const socialNetworks = [
 const comunidadItems: NavItem[] = [
   { title: 'Historia', url: '/historia', icon: ScrollText },
   { title: 'Miembros', url: '/miembros', icon: Contact },
+  { title: 'Logros', url: '/logros', icon: Trophy },
   { title: 'Galería', url: '/galeria', icon: Image },
   { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },

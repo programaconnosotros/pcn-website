@@ -21,6 +21,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-02',
+    area: 'logros',
+    title: 'Logros y badges automáticos',
+    description:
+      'Nueva app Logros: badges que se desbloquean participando (dar charlas, organizar y asistir a eventos, leer, ver charlas, compartir proyectos, aportar código y más), cuánto te falta para cada uno y quiénes ya los tienen. Aparecen solos en tu perfil.',
+    authors: ['agustin-sanc'],
+    href: '/logros',
+  },
+  {
     date: '2026-10-01',
     area: 'vinculos',
     title: 'Vincular autores de artículos con miembros',

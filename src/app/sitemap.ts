@@ -32,6 +32,7 @@ const STATIC_ROUTES = [
   '/preguntas-frecuentes',
   '/historia',
   '/miembros',
+  '/logros',
   '/galeria',
   '/partners',
   '/changelog',
