@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'setups',
+    title: 'Compartí tu setup',
+    description:
+      'Nueva sección para mostrar dónde programás: subí una foto de tu escritorio con un título y una descripción, y mirá los setups del resto de la comunidad, ordenados por recientes o por los que tienen más me gusta.',
+    authors: ['nicofuentesg', 'agustin-sanc'],
+    href: '/setups',
+  },
+  {
+    date: '2026-10-02',
     area: 'ui',
     title: 'Instalá PCN como app',
     description:

@@ -30,6 +30,7 @@ const directories = [
     links: [
       { label: 'historia', href: '/historia' },
       { label: 'galería', href: '/galeria' },
+      { label: 'setups', href: '/setups' },
       { label: 'partners', href: '/partners' },
       { label: 'testimonios', href: '/testimonios' },
       { label: 'changelog', href: '/changelog' },

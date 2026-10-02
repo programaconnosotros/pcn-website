@@ -6,6 +6,7 @@ import { requireAdmin } from '@/lib/admin';
 import { optimizePhoto, optimizePoster } from '@/lib/photo-processing';
 import {
   deleteObjects,
+  deleteObjectsOrLog,
   getObjectBuffer,
   getPresignedPost,
   getPresignedUploadUrl,
@@ -114,7 +115,7 @@ export async function createVideo(
   const poster = await optimizePoster(await getObjectBuffer(posterOriginalKey));
   const posterKey = videoKey.replace(/video\.\w+$/, 'poster.webp');
   await putImmutableObject(posterKey, poster, 'image/webp');
-  await deleteObjects([posterOriginalKey]);
+  await deleteObjectsOrLog([posterOriginalKey]);
 
   const item = await prisma.galleryItem.create({
     data: {
@@ -153,7 +154,7 @@ export async function createPhoto(originalKey: string, input: GalleryDetailsInpu
     putImmutableObject(fullKey, full, 'image/webp'),
     putImmutableObject(thumbKey, thumb, 'image/webp'),
   ]);
-  await deleteObjects([originalKey]);
+  await deleteObjectsOrLog([originalKey]);
 
   const photo = await prisma.galleryItem.create({
     data: {
@@ -200,8 +201,9 @@ export async function deleteGalleryItem(photoId: string) {
   });
   if (!photo) throw new Error('Foto no encontrada');
 
-  await prisma.galleryItem.delete({ where: { id: photoId } });
+  // Primero los archivos: si S3 falla, la foto sigue en la galería y se puede reintentar.
   await deleteObjects(photo.storageKeys);
+  await prisma.galleryItem.delete({ where: { id: photoId } });
 
   revalidateItem(photoId, [photo.eventId]);
   photo.tags.forEach(({ userId }) => revalidatePath(`/perfil/${userId}`));

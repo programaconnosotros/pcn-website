@@ -607,6 +607,86 @@ export const dbModels: DbModel[] = [
     uniques: [['itemId', 'userId']],
   },
   {
+    name: 'Setup',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'title',
+        type: 'String',
+      },
+      {
+        name: 'description',
+        type: 'String',
+      },
+      {
+        name: 'imageUrl',
+        type: 'String',
+      },
+      {
+        name: 'thumbUrl',
+        type: 'String',
+      },
+      {
+        name: 'width',
+        type: 'Int',
+      },
+      {
+        name: 'height',
+        type: 'Int',
+      },
+      {
+        name: 'storageKeys',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
+    name: 'SetupLike',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'setupId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['setupId', 'userId']],
+  },
+  {
     name: 'Like',
     domain: 'consejos',
     fields: [
@@ -1064,6 +1144,10 @@ export const dbModels: DbModel[] = [
         type: 'Boolean',
       },
       {
+        name: 'attempts',
+        type: 'Int',
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },
@@ -1094,6 +1178,10 @@ export const dbModels: DbModel[] = [
       {
         name: 'used',
         type: 'Boolean',
+      },
+      {
+        name: 'attempts',
+        type: 'Int',
       },
       {
         name: 'createdAt',
@@ -1772,6 +1860,30 @@ export const dbRelations: DbRelation[] = [
     optional: true,
     many: true,
     onDelete: 'SetNull',
+  },
+  {
+    from: 'Setup',
+    to: 'User',
+    label: 'author',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'SetupLike',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'SetupLike',
+    to: 'Setup',
+    label: 'setup',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
   },
   {
     from: 'Like',
