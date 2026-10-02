@@ -1,7 +1,13 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { revalidatePath } from 'next/cache';
-import { deleteObjects, getObjectBuffer, getPresignedPost, putImmutableObject } from '@/lib/s3';
+import {
+  deleteObjects,
+  deleteObjectsOrLog,
+  getObjectBuffer,
+  getPresignedPost,
+  putImmutableObject,
+} from '@/lib/s3';
 import { optimizePhoto } from '@/lib/photo-processing';
 import {
   createSetup,
@@ -15,6 +21,7 @@ jest.mock('@/lib/s3', () => ({
   getObjectBuffer: jest.fn().mockResolvedValue(Buffer.from('original')),
   putImmutableObject: jest.fn().mockResolvedValue(undefined),
   deleteObjects: jest.fn().mockResolvedValue(undefined),
+  deleteObjectsOrLog: jest.fn().mockResolvedValue(undefined),
   publicFileUrl: (key: string) => `https://cdn.example.com/${key}`,
   getPresignedPost: jest.fn().mockResolvedValue({ url: 'https://s3.example.com', fields: {} }),
 }));
@@ -97,7 +104,7 @@ describe('setup uploads', () => {
     const [[fullKey], [thumbKey]] = (putImmutableObject as jest.Mock).mock.calls;
     expect(fullKey).toMatch(/^setups\/[0-9a-f-]{36}\/full\.webp$/);
     expect(thumbKey).toMatch(/^setups\/[0-9a-f-]{36}\/thumb\.webp$/);
-    expect(deleteObjects).toHaveBeenCalledWith([originalKey]);
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith([originalKey]);
     expect(prismaMock.setup.create).toHaveBeenCalledWith({
       data: {
         title: 'Mi escritorio',
@@ -119,7 +126,7 @@ describe('setup uploads', () => {
     (optimizePhoto as jest.Mock).mockRejectedValueOnce(new Error('unsupported image'));
 
     await expect(createSetup(originalKey, details)).rejects.toThrow('No pudimos leer la foto');
-    expect(deleteObjects).toHaveBeenCalledWith([originalKey]);
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith([originalKey]);
     expect(prismaMock.setup.create).not.toHaveBeenCalled();
   });
 });
@@ -145,7 +152,7 @@ describe('setup editing', () => {
       where: { id: 'setup-1' },
       data: { title: 'Mi escritorio', description: 'Dos monitores y un teclado split.' },
     });
-    expect(deleteObjects).not.toHaveBeenCalled();
+    expect(deleteObjectsOrLog).not.toHaveBeenCalled();
   });
 
   it('replaces the photo and deletes the old files', async () => {
@@ -158,7 +165,7 @@ describe('setup editing', () => {
       where: { id: 'setup-1' },
       data: expect.objectContaining({ width: 2560, height: 1920 }),
     });
-    expect(deleteObjects).toHaveBeenCalledWith(storedSetup.storageKeys);
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith(storedSetup.storageKeys);
   });
 });
 
@@ -182,6 +189,15 @@ describe('setup deletion', () => {
 
     expect(prismaMock.setup.delete).toHaveBeenCalledWith({ where: { id: 'setup-1' } });
     expect(deleteObjects).toHaveBeenCalledWith(storedSetup.storageKeys);
+  });
+
+  it('keeps the setup when S3 cannot delete its files', async () => {
+    loginAs(author);
+    prismaMock.setup.findUnique.mockResolvedValue(storedSetup as any);
+    (deleteObjects as jest.Mock).mockRejectedValueOnce(new Error('No se pudieron borrar de S3'));
+
+    await expect(deleteSetup('setup-1')).rejects.toThrow('No se pudieron borrar de S3');
+    expect(prismaMock.setup.delete).not.toHaveBeenCalled();
   });
 });
 

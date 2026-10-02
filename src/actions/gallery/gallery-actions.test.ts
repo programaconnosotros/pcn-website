@@ -2,6 +2,7 @@ import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import {
   deleteObjects,
+  deleteObjectsOrLog,
   getObjectBuffer,
   getPresignedPost,
   headObject,
@@ -25,6 +26,7 @@ jest.mock('@/lib/s3', () => ({
   getObjectBuffer: jest.fn().mockResolvedValue(Buffer.from('original')),
   putImmutableObject: jest.fn().mockResolvedValue(undefined),
   deleteObjects: jest.fn().mockResolvedValue(undefined),
+  deleteObjectsOrLog: jest.fn().mockResolvedValue(undefined),
   publicFileUrl: (key: string) => `https://cdn.example.com/${key}`,
   getPresignedPost: jest.fn().mockResolvedValue({ url: 'https://s3.example.com', fields: {} }),
   headObject: jest.fn().mockResolvedValue({ size: 1000, contentType: 'video/mp4' }),
@@ -86,7 +88,7 @@ describe('photo uploads', () => {
     const [[fullKey], [thumbKey]] = (putImmutableObject as jest.Mock).mock.calls;
     expect(fullKey).toMatch(/^gallery\/[\w-]+\/full\.webp$/);
     expect(thumbKey).toMatch(/^gallery\/[\w-]+\/thumb\.webp$/);
-    expect(deleteObjects).toHaveBeenCalledWith(['gallery/originals/a.jpg']);
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith(['gallery/originals/a.jpg']);
     expect(prismaMock.galleryItem.create).toHaveBeenCalledWith({
       data: {
         takenAt: new Date('2026-05-12T20:30:00.000Z'),
@@ -155,6 +157,19 @@ describe('photo editing', () => {
     expect(prismaMock.galleryItem.delete).toHaveBeenCalledWith({ where: { id: 'photo-1' } });
     expect(deleteObjects).toHaveBeenCalledWith(['gallery/x/full.webp', 'gallery/x/thumb.webp']);
   });
+
+  it('keeps the photo when S3 cannot delete its files', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
+      eventId: null,
+      storageKeys: ['gallery/x/full.webp'],
+      tags: [],
+    } as any);
+    (deleteObjects as jest.Mock).mockRejectedValueOnce(new Error('No se pudieron borrar de S3'));
+
+    await expect(deleteGalleryItem('photo-1')).rejects.toThrow('No se pudieron borrar de S3');
+    expect(prismaMock.galleryItem.delete).not.toHaveBeenCalled();
+  });
 });
 
 describe('video uploads', () => {
@@ -219,7 +234,7 @@ describe('video uploads', () => {
     await createVideo(videoKey, 'gallery/originals/p.jpg', { ...details, ...metadata });
 
     expect(putImmutableObject).toHaveBeenCalledWith(posterKey, Buffer.from('poster'), 'image/webp');
-    expect(deleteObjects).toHaveBeenCalledWith(['gallery/originals/p.jpg']);
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith(['gallery/originals/p.jpg']);
     expect(prismaMock.galleryItem.create).toHaveBeenCalledWith({
       data: {
         takenAt: new Date('2026-05-12T20:30:00.000Z'),

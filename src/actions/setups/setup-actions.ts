@@ -7,6 +7,7 @@ import { optimizePhoto } from '@/lib/photo-processing';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import {
   deleteObjects,
+  deleteObjectsOrLog,
   getObjectBuffer,
   getPresignedPost,
   publicFileUrl,
@@ -60,7 +61,7 @@ async function storePhoto(originalKey: string) {
     photo = await optimizePhoto(original);
   } catch (error) {
     console.error('setups: could not optimize photo', error);
-    await deleteObjects([originalKey]);
+    await deleteObjectsOrLog([originalKey]);
     throw new Error('No pudimos leer la foto. Probá con otro archivo.');
   }
 
@@ -71,7 +72,7 @@ async function storePhoto(originalKey: string) {
     putImmutableObject(fullKey, photo.full, 'image/webp'),
     putImmutableObject(thumbKey, photo.thumb, 'image/webp'),
   ]);
-  await deleteObjects([originalKey]);
+  await deleteObjectsOrLog([originalKey]);
 
   return {
     imageUrl: publicFileUrl(fullKey),
@@ -133,7 +134,7 @@ export async function updateSetup(
 
   const photo = originalKey ? await storePhoto(originalKey) : null;
   await prisma.setup.update({ where: { id: setupId }, data: { ...details, ...photo } });
-  if (photo) await deleteObjects(setup.storageKeys);
+  if (photo) await deleteObjectsOrLog(setup.storageKeys);
 
   revalidateSetup(setupId, user.id);
 }
@@ -150,8 +151,9 @@ export async function deleteSetup(setupId: string) {
     throw new Error('No tenés permisos para eliminar este setup');
   }
 
-  await prisma.setup.delete({ where: { id: setupId } });
+  // Primero los archivos: si S3 falla, el setup sigue publicado y se puede reintentar.
   await deleteObjects(setup.storageKeys);
+  await prisma.setup.delete({ where: { id: setupId } });
 
   revalidateSetup(setupId, setup.authorId);
 }

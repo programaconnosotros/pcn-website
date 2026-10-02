@@ -102,14 +102,39 @@ export async function putImmutableObject(key: string, body: Buffer, contentType:
   );
 }
 
+// Tope de keys por pedido de DeleteObjects.
+const DELETE_BATCH = 1000;
+
+/**
+ * Borra objetos del bucket y falla si S3 no pudo borrar alguno. Con `Quiet` S3 responde 200
+ * aunque no tenga permiso: los fallos vienen en `Errors`, uno por key.
+ */
 export async function deleteObjects(keys: string[]) {
-  if (keys.length === 0) return;
-  await s3Client.send(
-    new DeleteObjectsCommand({
-      Bucket: S3_BUCKET,
-      Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
-    }),
-  );
+  for (let i = 0; i < keys.length; i += DELETE_BATCH) {
+    const batch = keys.slice(i, i + DELETE_BATCH);
+    const { Errors } = await s3Client.send(
+      new DeleteObjectsCommand({
+        Bucket: S3_BUCKET,
+        Delete: { Objects: batch.map((Key) => ({ Key })), Quiet: true },
+      }),
+    );
+    if (Errors?.length) {
+      const failed = Errors.map(({ Key, Code }) => `${Key} (${Code})`).join(', ');
+      throw new Error(`No se pudieron borrar de S3: ${failed}`);
+    }
+  }
+}
+
+/**
+ * Para limpiezas que no deben frenar lo que hizo el usuario (el original ya optimizado, la foto
+ * reemplazada): si falla, queda en el log del server con las keys, para borrarlas a mano.
+ */
+export async function deleteObjectsOrLog(keys: string[]) {
+  try {
+    await deleteObjects(keys);
+  } catch (error) {
+    console.error('s3: no se pudieron limpiar objetos', error);
+  }
 }
 
 /**
