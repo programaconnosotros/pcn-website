@@ -46,22 +46,21 @@ describe('sendVerificationCode', () => {
     emailLibMock.checkRateLimit.mockReturnValue(0);
   });
 
-  it('throws when the user is not found', async () => {
+  it('answers like a sent code without sending anything when the user is not found', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
-    await expect(sendVerificationCode('unknown@example.com')).rejects.toThrow(
-      'Usuario no encontrado',
-    );
+    const result = await sendVerificationCode('unknown@example.com');
 
+    expect(result).toEqual({ success: true, waitSeconds: 60 });
     expect(prismaMock.emailVerificationToken.create).not.toHaveBeenCalled();
   });
 
-  it('returns alreadyVerified when the user email is already verified', async () => {
+  it('answers like a sent code without sending anything when the email is already verified', async () => {
     prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, emailVerified: true } as any);
 
     const result = await sendVerificationCode('test@example.com');
 
-    expect(result).toEqual({ success: true, alreadyVerified: true, waitSeconds: 0 });
+    expect(result).toEqual({ success: true, waitSeconds: 60 });
     expect(prismaMock.emailVerificationToken.create).not.toHaveBeenCalled();
   });
 
@@ -91,7 +90,7 @@ describe('sendVerificationCode', () => {
 
     const result = await sendVerificationCode('test@example.com');
 
-    expect(result).toEqual({ success: true, alreadyVerified: false, waitSeconds: 60 });
+    expect(result).toEqual({ success: true, waitSeconds: 60 });
     expect(prismaMock.emailVerificationToken.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({ email: 'test@example.com', used: false }),

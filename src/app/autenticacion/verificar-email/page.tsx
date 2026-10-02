@@ -65,11 +65,6 @@ function VerifyEmailContent() {
 
     try {
       const result = await sendVerificationCode(email);
-      if (result.alreadyVerified) {
-        toast.success('Tu email ya está verificado. Redirigiendo...');
-        router.push(redirectTo);
-        return;
-      }
       setResendCooldown(result.waitSeconds || 60);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '';
@@ -112,11 +107,6 @@ function VerifyEmailContent() {
     setIsResending(true);
     try {
       const result = await sendVerificationCode(email);
-      if (result.alreadyVerified) {
-        toast.success('Tu email ya está verificado. Redirigiendo...');
-        router.push(redirectTo);
-        return;
-      }
       setResendCooldown(result.waitSeconds || 60);
       toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
     } catch (error) {
