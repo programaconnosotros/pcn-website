@@ -98,7 +98,9 @@ const Field = ({
   <div className={cn('group/field min-w-0 space-y-1.5', className)}>
     <div className="flex items-baseline justify-between gap-2">
       <Label htmlFor={id}>{label}</Label>
-      {hint && <span className="font-mono text-[10px] text-muted-foreground">{hint}</span>}
+      {hint && (
+        <span className="font-mono text-[10px] leading-none text-muted-foreground">{hint}</span>
+      )}
     </div>
     {children}
   </div>
@@ -464,7 +466,7 @@ export const ProfileForm = ({
                 control={form.control}
                 name="countryOfOrigin"
                 render={({ field }) => (
-                  <FormItem className="space-y-1.5">
+                  <FormItem>
                     <FormLabel>país</FormLabel>
                     <Select
                       onValueChange={(value) => {
@@ -498,7 +500,7 @@ export const ProfileForm = ({
                   control={form.control}
                   name="province"
                   render={({ field }) => (
-                    <FormItem className="space-y-1.5">
+                    <FormItem>
                       <FormLabel>provincia</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <FormControl>

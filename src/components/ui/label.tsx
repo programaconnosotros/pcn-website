@@ -8,9 +8,12 @@ import { cn } from '@/lib/utils';
 
 // Labels read like terminal prompts: a dim `>` that lights up, along with the label itself,
 // while the field inside the same FormItem (`group/field`) has focus.
+// Block-level flex (sized to its text) rather than inline-flex: an inline label picks up its
+// parent's line height, so it would sit a few pixels lower than one laid out in a flex row (a label
+// with a hint next to it), and two fields on the same row would no longer line up.
 const labelVariants = cva(
   [
-    'inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase leading-none tracking-[0.14em] text-pcnGreen-800 transition-colors duration-200',
+    'flex w-fit items-center gap-1.5 font-mono text-[11px] font-medium uppercase leading-none tracking-[0.14em] text-pcnGreen-800 transition-colors duration-200',
     "before:text-pcnGreen-500 before:transition-[color,text-shadow] before:content-['>']",
     'group-focus-within/field:text-pcnGreen group-focus-within/field:before:text-pcnGreen group-focus-within/field:before:text-glow',
     'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
