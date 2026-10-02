@@ -88,21 +88,9 @@ function MemberRow({
       </Avatar>
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="truncate font-mono text-sm font-medium transition-colors group-hover:text-pcnGreen">
-            {member.name}
-          </span>
-          {member.isCofounder && (
-            <span className="shrink-0 border border-amber-400/60 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-amber-400">
-              co-founder
-            </span>
-          )}
-          {member.isAmbassador && (
-            <span className="shrink-0 border border-pcnGreen-200 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-pcnGreen-700">
-              ambassador
-            </span>
-          )}
-        </div>
+        <span className="truncate font-mono text-sm font-medium transition-colors group-hover:text-pcnGreen">
+          {member.name}
+        </span>
         {role && <p className="truncate text-xs text-muted-foreground">{role}</p>}
         {member.slogan && (
           <p className="line-clamp-1 text-xs italic text-muted-foreground/80">
@@ -119,6 +107,22 @@ function MemberRow({
           </p>
         )}
       </div>
+
+      {/* Role tags sit in the corner, so they line up on every card whatever the name's length. */}
+      {(member.isCofounder || member.isAmbassador) && (
+        <div className="flex shrink-0 flex-col items-end gap-1 self-start">
+          {member.isCofounder && (
+            <span className="border border-amber-400/60 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-amber-400">
+              co-founder
+            </span>
+          )}
+          {member.isAmbassador && (
+            <span className="border border-pcnGreen-200 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-pcnGreen-700">
+              ambassador
+            </span>
+          )}
+        </div>
+      )}
     </Link>
   );
 }
