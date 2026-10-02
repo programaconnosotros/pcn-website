@@ -21,7 +21,7 @@ import { ArticleReaderDialog } from './article-reader-dialog';
 import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { SearchBar } from '@/components/ui/search-bar';
-import type { Person } from '@/components/people/person-link';
+import type { Writer } from './article-writers';
 
 interface Book {
   id: string;
@@ -987,7 +987,7 @@ const BookRow = ({ book }: { book: Book }) => {
 
 type ReadingPageProps = {
   // Community members who wrote each article, by article id.
-  articleWriters: Record<string, Person[]>;
+  articleWriters: Record<string, Writer[]>;
   isAdmin: boolean;
 };
 

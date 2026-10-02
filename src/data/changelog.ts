@@ -22,6 +22,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
+    area: 'vinculos',
+    title: 'Vincular autores de artículos con miembros',
+    description:
+      'En vínculos ahora se puede asignar cada autor de /lectura a un miembro: todos sus artículos aparecen en su perfil y figura como escritor en cada uno.',
+    authors: ['agustin-sanc'],
+    href: '/vinculos',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-01',
     area: 'miembros',
     title: 'Nueva app Miembros para conocer a la comunidad',
     description:

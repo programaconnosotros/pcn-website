@@ -16,7 +16,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
 import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
-import { articles as allArticles } from '@/app/(platform)/lectura/articles';
+import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Pencil } from 'lucide-react';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
@@ -336,10 +336,15 @@ export default async function ProfilePage(props: ProfilePageProps) {
       prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),
     ]);
 
-  // Articles from /lectura that an admin marked as written by this user, newest first.
+  // Articles from /lectura that an admin marked as written by this user, one by one or through
+  // an author name linked in /vinculos, newest first.
   const writtenIds = new Set(articleAuthorships.map(({ articleId }) => articleId));
+  const authorNames = new Set(identities.articulos);
   const userArticles = allArticles
-    .filter((article) => writtenIds.has(article.id))
+    .filter(
+      (article) =>
+        writtenIds.has(article.id) || articleAuthors(article).some((name) => authorNames.has(name)),
+    )
     .sort((a, b) => b.date.localeCompare(a.date));
 
   // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.

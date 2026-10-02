@@ -7,9 +7,8 @@ import { MarkToggle } from '@/components/ui/mark-toggle';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { Bookmark, Check, CheckCheck, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import type { Person } from '@/components/people/person-link';
 import { articleAuthors, type Article } from './articles';
-import { ArticleWriters } from './article-writers';
+import { ArticleWriters, type Writer } from './article-writers';
 
 export const ALL_ARTICLE_CATEGORIES = 'Todas las categorías';
 
@@ -57,7 +56,7 @@ interface ArticlesPanelProps {
   status: ReadStatus;
   onStatusChange: (_status: ReadStatus) => void;
   /** Community members who wrote each article, by article id. */
-  writers: Record<string, Person[]>;
+  writers: Record<string, Writer[]>;
   isAdmin: boolean;
 }
 
@@ -136,7 +135,7 @@ const ArticleRow = ({
   onToggleRead: () => void;
   saved: boolean;
   onToggleSaved: () => void;
-  writers: Person[];
+  writers: Writer[];
   isAdmin: boolean;
 }) => {
   const isNew = Date.now() - new Date(article.date).getTime() < NEW_ARTICLE_MS;

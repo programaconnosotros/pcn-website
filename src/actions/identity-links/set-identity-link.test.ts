@@ -34,6 +34,32 @@ describe('setIdentityLink', () => {
     });
   });
 
+  it('links an article author to a user', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+
+    await setIdentityLink({
+      source: 'articulos',
+      externalName: 'Santiago Villada',
+      userId: 'user-2',
+    });
+
+    expect(prismaMock.identityLink.upsert).toHaveBeenCalledWith({
+      where: { source_externalName: { source: 'articulos', externalName: 'Santiago Villada' } },
+      create: { source: 'articulos', externalName: 'Santiago Villada', userId: 'user-2' },
+      update: { userId: 'user-2' },
+    });
+  });
+
+  it('rejects names that did not write any article', async () => {
+    loginAs(admin);
+
+    await expect(
+      setIdentityLink({ source: 'articulos', externalName: 'Alguien Inventado', userId: 'user-2' }),
+    ).rejects.toThrow('Nombre desconocido');
+  });
+
   it('rejects WhatsApp names that are not community members', async () => {
     loginAs(admin);
 

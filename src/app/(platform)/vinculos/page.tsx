@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
+import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
 import { conversations } from '@/data/whatsapp-conversations';
 import { members } from '@/data/whatsapp-conversations/members';
 import { requireAdminPage } from '@/lib/admin';
@@ -16,9 +17,10 @@ export const metadata: Metadata = {
 export default async function VinculosPage() {
   await requireAdminPage();
 
-  const [whatsappLinks, githubLinks, stats] = await Promise.all([
+  const [whatsappLinks, githubLinks, authorLinks, stats] = await Promise.all([
     getIdentityMap('whatsapp'),
     getIdentityMap('github'),
+    getIdentityMap('articulos'),
     getCollaborationStats(),
   ]);
 
@@ -53,6 +55,19 @@ export default async function VinculosPage() {
       .map(([login, user]) => ({ externalName: login, detail: '—', weight: 0, user })),
   ];
 
+  const articleCounts = new Map<string, number>();
+  for (const name of articles.flatMap(articleAuthors)) {
+    articleCounts.set(name, (articleCounts.get(name) ?? 0) + 1);
+  }
+  const authorRows: IdentityRow[] = [...articleCounts]
+    .map(([name, count]) => ({
+      externalName: name,
+      detail: `${count} ${count === 1 ? 'artículo' : 'artículos'}`,
+      weight: count,
+      user: authorLinks[name] ?? null,
+    }))
+    .sort((a, b) => b.weight - a.weight || a.externalName.localeCompare(b.externalName));
+
   const linked = (rows: IdentityRow[]) => rows.filter((row) => row.user).length;
 
   return (
@@ -61,7 +76,7 @@ export default async function VinculosPage() {
         <StickyHeader>
           <PageTitle
             path="vinculos"
-            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github`}
+            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github · ${linked(authorRows)}/${authorRows.length} de artículos`}
           />
         </StickyHeader>
 
@@ -69,7 +84,8 @@ export default async function VinculosPage() {
           <span className="text-pcnGreen-500"># </span>
           Asigná quién es quién. Un miembro de WhatsApp vinculado muestra sus conversaciones en su
           perfil y su nombre en /conversaciones lleva al perfil; un login de GitHub vinculado
-          muestra sus contribuciones al sitio en el perfil y en /desarrollo.
+          muestra sus contribuciones al sitio en el perfil y en /desarrollo; un autor de /lectura
+          vinculado suma todos sus artículos al perfil y figura como escritor en cada uno.
         </p>
 
         <div className="mb-14 grid gap-6 2xl:grid-cols-2">
@@ -87,6 +103,12 @@ export default async function VinculosPage() {
             emptyMessage={
               stats ? 'sin contribuidores' : 'no pudimos conectarnos con GitHub, probá más tarde'
             }
+          />
+          <IdentityLinksTable
+            source="articulos"
+            title="artículos"
+            command="grep author lectura/articles.ts"
+            rows={authorRows}
           />
         </div>
       </div>

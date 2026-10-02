@@ -610,11 +610,11 @@ model ContentMark {
 }
 
 // Ties a name the site knows from outside the platform to a real user, set by an admin: a
-// member as named in the WhatsApp conversation summaries, or a GitHub login that contributed
-// to this website's repository.
+// member as named in the WhatsApp conversation summaries, a GitHub login that contributed to
+// this website's repository, or an author of the /lectura articles.
 model IdentityLink {
   id           String @id @default(cuid())
-  /// "whatsapp" or "github" (validated in src/actions/identity-links).
+  /// "whatsapp", "github" or "articulos" (validated in src/actions/identity-links).
   source       String
   externalName String
   userId       String

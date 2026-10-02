@@ -9,16 +9,19 @@ import { searchCommunityMembers } from '@/actions/users/search-community-members
 import { UserCombobox } from '@/components/admin/user-combobox';
 import { PersonLink, type Person } from '@/components/people/person-link';
 
+/** `linkedAuthor` is set when the writer comes from an author name linked in /vinculos. */
+export type Writer = Person & { linkedAuthor?: string };
+
 type Props = {
   articleId: string;
-  writers: Person[];
+  writers: Writer[];
   isAdmin: boolean;
   isEditing: boolean;
   onEditingChange: (_editing: boolean) => void;
 };
 
 // The community members who wrote the article, linking to their profiles. Admins add and
-// remove them right on the card.
+// remove them right on the card; the ones linked by author name are managed in /vinculos.
 export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditingChange }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -47,7 +50,7 @@ export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditi
         {writers.map((writer) => (
           <span key={writer.id} className="flex items-center gap-1">
             <PersonLink person={writer} />
-            {isAdmin && isEditing && (
+            {isAdmin && isEditing && !writer.linkedAuthor && (
               <button
                 type="button"
                 onClick={() =>

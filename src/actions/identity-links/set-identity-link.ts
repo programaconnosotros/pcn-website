@@ -5,9 +5,17 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
 import { members } from '@/data/whatsapp-conversations/members';
+import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
 import { IDENTITY_SOURCES } from '@/lib/identity-links';
 
 const memberNames = new Set(members.map((member) => member.name));
+const authorNames = new Set(articles.flatMap(articleAuthors));
+
+const REVALIDATED_PAGE = {
+  whatsapp: '/conversaciones',
+  github: '/desarrollo',
+  articulos: '/lectura',
+};
 
 const linkSchema = z
   .object({
@@ -19,12 +27,14 @@ const linkSchema = z
     ({ source, externalName }) =>
       source === 'whatsapp'
         ? memberNames.has(externalName)
-        : /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i.test(externalName),
+        : source === 'articulos'
+          ? authorNames.has(externalName)
+          : /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i.test(externalName),
     { message: 'Nombre desconocido' },
   );
 
 /**
- * Links a WhatsApp member or a GitHub login to a platform user, or unlinks it when `userId` is
+ * Links a WhatsApp member, a GitHub login or an article author to a platform user, or unlinks it when `userId` is
  * null. Admins only.
  */
 export const setIdentityLink = async (input: z.input<typeof linkSchema>) => {
@@ -56,7 +66,7 @@ export const setIdentityLink = async (input: z.input<typeof linkSchema>) => {
   }
 
   revalidatePath('/vinculos');
-  revalidatePath(source === 'whatsapp' ? '/conversaciones' : '/desarrollo');
+  revalidatePath(REVALIDATED_PAGE[source]);
   for (const id of new Set([previous?.userId, userId])) {
     if (id) revalidatePath(`/perfil/${id}`);
   }
