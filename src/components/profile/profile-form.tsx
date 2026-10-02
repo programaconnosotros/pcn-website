@@ -344,7 +344,9 @@ export const ProfileForm = ({
                   ))}
                 </ul>
               ) : (
-                <p className="text-[11px] text-muted-foreground/60">sin puestos cargados</p>
+                <p className="text-[11px] text-muted-foreground/60">
+                  sin trabajo cargado, y está bien
+                </p>
               )}
               {values.slogan && (
                 <p className="line-clamp-2 text-[11px] italic text-muted-foreground">
@@ -405,7 +407,7 @@ export const ProfileForm = ({
             id="identidad"
             index={1}
             title="identidad"
-            description="quién sos y desde dónde"
+            description="contanos un poco de vos"
             {...progress('identidad')}
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -516,7 +518,7 @@ export const ProfileForm = ({
             id="trabajo"
             index={2}
             title="trabajo"
-            description="dónde trabajás hoy, todos los lugares"
+            description="si estás trabajando, sumá cada lugar; si no, dejalo vacío"
             {...progress('trabajo')}
           >
             <PositionsField />
@@ -526,7 +528,7 @@ export const ProfileForm = ({
             id="estudios"
             index={3}
             title="estudios"
-            description="qué y dónde estudiaste"
+            description="si estudiás o estudiaste algo, contanos qué y dónde"
             {...progress('estudios')}
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -553,7 +555,7 @@ export const ProfileForm = ({
             id="enlaces"
             index={4}
             title="enlaces"
-            description="dónde más te encuentran"
+            description="dónde más te pueden encontrar, si querés compartirlo"
             {...progress('enlaces')}
           >
             <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
@@ -588,7 +590,7 @@ export const ProfileForm = ({
             id="stack"
             index={5}
             title="stack"
-            description={`${userLanguages.length} lenguajes marcados`}
+            description="los lenguajes que usás o que te gustan"
             {...progress('stack')}
           >
             {/* Every language as a token: click to mark or unmark it */}

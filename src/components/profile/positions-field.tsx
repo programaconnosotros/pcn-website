@@ -30,7 +30,7 @@ export const PositionsField = () => {
       ) : (
         <p className="font-mono text-xs text-muted-foreground">
           <span className="text-pcnGreen-500">$</span> ls ./trabajo{' '}
-          <span className="text-muted-foreground/60">— vacío</span>
+          <span className="text-muted-foreground/60">— vacío por ahora, no pasa nada</span>
         </p>
       )}
       <ol className="space-y-2">
