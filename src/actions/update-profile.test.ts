@@ -14,6 +14,7 @@ const validProfileData: ProfileFormData = {
   xAccountUrl: null,
   linkedinUrl: null,
   gitHubUrl: null,
+  instagramUrl: null,
   slogan: null,
   positions: [],
   career: null,

@@ -95,6 +95,7 @@ export const ProfileForm = ({
       xAccountUrl: user.xAccountUrl ?? '',
       linkedinUrl: user.linkedinUrl ?? '',
       gitHubUrl: user.gitHubUrl ?? '',
+      instagramUrl: user.instagramUrl ?? '',
       slogan: user.slogan ?? '',
       positions: initialPositions(user),
       career: user.career ?? '',
@@ -396,6 +397,23 @@ export const ProfileForm = ({
                   value={form.watch('gitHubUrl') || ''}
                 />
                 <FormError error={form.formState.errors.gitHubUrl} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="instagramUrl" className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4" />
+                  URL de cuenta de Instagram
+                </Label>
+                <Input
+                  id="instagramUrl"
+                  type="url"
+                  placeholder="https://instagram.com/tu-usuario"
+                  {...form.register('instagramUrl', {
+                    setValueAs: (v) => (v === '' ? null : v),
+                  })}
+                  value={form.watch('instagramUrl') || ''}
+                />
+                <FormError error={form.formState.errors.instagramUrl} />
               </div>
             </div>
           </div>

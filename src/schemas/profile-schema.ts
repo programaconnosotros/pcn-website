@@ -30,6 +30,7 @@ export const profileSchema = z.object({
   xAccountUrl: optionalUrl,
   linkedinUrl: optionalUrl,
   gitHubUrl: optionalUrl,
+  instagramUrl: optionalUrl,
   slogan: z.string().optional().nullable(),
   // Puestos actuales, en orden. Las filas sin cargo se descartan al guardar.
   positions: z

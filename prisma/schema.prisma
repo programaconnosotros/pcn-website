@@ -32,6 +32,7 @@ model User {
   xAccountUrl          String?
   linkedinUrl          String?
   gitHubUrl            String?
+  instagramUrl         String?
   slogan               String?
   // Espejo del primer puesto de `positions`, para las vistas que muestran uno solo.
   jobTitle             String?

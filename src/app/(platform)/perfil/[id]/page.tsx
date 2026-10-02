@@ -233,6 +233,7 @@ async function getUser(id: string) {
       xAccountUrl: user.xAccountUrl,
       linkedinUrl: user.linkedinUrl,
       gitHubUrl: user.gitHubUrl,
+      instagramUrl: user.instagramUrl,
       advises: user.advises,
       languages: user.languages,
     };
@@ -460,6 +461,17 @@ export default async function ProfilePage(props: ProfilePageProps) {
                         aria-label={`Perfil de GitHub de ${user.name}`}
                       >
                         github↗
+                      </a>
+                    )}
+                    {user.instagramUrl && (
+                      <a
+                        href={user.instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-pcnGreen"
+                        aria-label={`Perfil de Instagram de ${user.name}`}
+                      >
+                        instagram↗
                       </a>
                     )}
                     {isOwnProfile && (
