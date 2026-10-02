@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
-import { User } from '@prisma/client';
+import { User, UserPosition } from '@prisma/client';
 import {
   Form,
   FormControl,
@@ -32,6 +32,7 @@ import { LanguageChip } from './language-chip';
 import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { Briefcase, GraduationCap, Link2, User as UserIcon, Code } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
+import { PositionsField } from './positions-field';
 
 // Lista de países
 const COUNTRIES = [
@@ -67,11 +68,19 @@ const FormError = ({ error }: FormErrorProps) => {
   return <p className="text-sm text-red-500">{error.message}</p>;
 };
 
+// Los puestos guardados; si todavía no hay ninguno, el cargo viejo o una fila vacía para arrancar.
+const initialPositions = (user: User & { positions: UserPosition[] }) => {
+  if (user.positions.length > 0) {
+    return user.positions.map((p) => ({ jobTitle: p.jobTitle, enterprise: p.enterprise ?? '' }));
+  }
+  return [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise ?? '' }];
+};
+
 export const ProfileForm = ({
   user,
   languages,
 }: {
-  user: User;
+  user: User & { positions: UserPosition[] };
   languages: UserProgrammingLanguage[];
 }) => {
   const form = useForm<ProfileFormData>({
@@ -87,8 +96,7 @@ export const ProfileForm = ({
       linkedinUrl: user.linkedinUrl ?? '',
       gitHubUrl: user.gitHubUrl ?? '',
       slogan: user.slogan ?? '',
-      jobTitle: user.jobTitle ?? '',
-      enterprise: user.enterprise ?? '',
+      positions: initialPositions(user),
       career: user.career ?? '',
       studyPlace: user.studyPlace ?? '',
       programmingLanguages: languages || [],
@@ -296,20 +304,10 @@ export const ProfileForm = ({
                 opcional
               </Badge>
             </h3>
-            <div className="space-y-2">
-              <Label htmlFor="jobTitle">¿De qué trabajas?</Label>
-              <Input
-                id="jobTitle"
-                placeholder="Ej: Desarrollador Frontend"
-                {...form.register('jobTitle')}
-              />
-              <FormError error={form.formState.errors.jobTitle} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="enterprise">¿En qué empresa trabajas?</Label>
-              <Input id="enterprise" placeholder="Ej: Google" {...form.register('enterprise')} />
-              <FormError error={form.formState.errors.enterprise} />
-            </div>
+            <p className="text-xs text-muted-foreground">
+              ¿Dónde trabajás hoy? Si estás en más de un lugar, agregalos todos.
+            </p>
+            <PositionsField />
           </div>
 
           <div className="space-y-3 p-4">

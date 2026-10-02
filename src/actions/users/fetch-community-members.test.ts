@@ -7,6 +7,7 @@ const row = (overrides = {}) => ({
   image: null,
   jobTitle: null,
   enterprise: null,
+  positions: [],
   slogan: null,
   isCofounder: false,
   isAmbassador: false,

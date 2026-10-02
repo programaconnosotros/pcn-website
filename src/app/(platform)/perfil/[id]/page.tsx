@@ -197,6 +197,10 @@ async function getUser(id: string) {
             logo: true,
           },
         },
+        positions: {
+          select: { jobTitle: true, enterprise: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
@@ -217,8 +221,13 @@ async function getUser(id: string) {
       province: user.province,
       phoneNumber: (user as any).phoneNumber ?? null,
       slogan: user.slogan,
-      jobTitle: user.jobTitle,
-      enterprise: user.enterprise,
+      // Perfiles que todavía no guardaron puestos muestran el cargo único que tenían.
+      positions:
+        user.positions.length > 0
+          ? user.positions
+          : user.jobTitle || user.enterprise
+            ? [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise }]
+            : [],
       career: user.career,
       studyPlace: user.studyPlace,
       xAccountUrl: user.xAccountUrl,
@@ -272,8 +281,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
   ];
 
   const profileFacts: { label: string; value: string; href?: string }[] = [
-    { label: 'cargo', value: user.jobTitle },
-    { label: 'empresa', value: user.enterprise },
+    ...user.positions.map((position) => ({
+      label: 'trabaja',
+      value: [position.jobTitle, position.enterprise].filter(Boolean).join(' @ '),
+    })),
     { label: 'carrera', value: user.career },
     { label: 'institución', value: user.studyPlace },
     {
@@ -478,7 +489,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
               {profileFacts.length > 0 && (
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">
                   {profileFacts.map((fact) => (
-                    <div key={fact.label} className="contents">
+                    <div key={`${fact.label}-${fact.value}`} className="contents">
                       <dt className="font-mono text-pcnGreen-500">{fact.label}</dt>
                       <dd className="min-w-0 break-words">
                         {fact.href ? (

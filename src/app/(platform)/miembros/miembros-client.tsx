@@ -45,6 +45,17 @@ interface Section {
   accent?: 'gold' | 'green';
 }
 
+// Cada puesto actual como "cargo @ empresa"; perfiles sin puestos guardados usan el cargo viejo.
+function memberRoles(member: CommunityMember) {
+  const positions =
+    member.positions.length > 0
+      ? member.positions
+      : [{ jobTitle: member.jobTitle, enterprise: member.enterprise }];
+  return positions
+    .map((p) => [p.jobTitle, p.enterprise].filter(Boolean).join(' @ '))
+    .filter(Boolean);
+}
+
 function MemberRow({
   member,
   stat,
@@ -54,7 +65,7 @@ function MemberRow({
   stat?: Stat;
   accent?: Section['accent'];
 }) {
-  const role = [member.jobTitle, member.enterprise].filter(Boolean).join(' @ ');
+  const role = memberRoles(member).join(' · ');
   const stats = (['talks', 'events', 'projects'] as const).filter((s) => member[s] > 0);
 
   return (
@@ -119,7 +130,7 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
   const filtered = useMemo(() => {
     if (!query) return members;
     return members.filter((member) =>
-      [member.name, member.jobTitle, member.enterprise, member.slogan].some(
+      [member.name, member.slogan, ...memberRoles(member)].some(
         (text) => text && normalize(text).includes(query),
       ),
     );

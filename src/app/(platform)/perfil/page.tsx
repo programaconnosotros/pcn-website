@@ -30,6 +30,7 @@ const Profile = async () => {
     },
     include: {
       languages: true,
+      positions: { orderBy: { order: 'asc' } },
     },
   });
 

@@ -33,8 +33,10 @@ model User {
   linkedinUrl          String?
   gitHubUrl            String?
   slogan               String?
+  // Espejo del primer puesto de `positions`, para las vistas que muestran uno solo.
   jobTitle             String?
   enterprise           String?
+  positions            UserPosition[]
   career               String?
   studyPlace           String? // Dónde estudia (universidad, autodidacta, etc.)
   sessions             Session[]
@@ -69,6 +71,21 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Puestos laborales actuales: una persona puede trabajar en más de un lugar a la vez.
+model UserPosition {
+  id         String  @id @default(cuid())
+  userId     String
+  jobTitle   String
+  enterprise String?
+  order      Int     @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Session {

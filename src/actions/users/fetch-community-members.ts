@@ -12,6 +12,7 @@ export const fetchCommunityMembers = async () => {
       image: true,
       jobTitle: true,
       enterprise: true,
+      positions: { select: { jobTitle: true, enterprise: true }, orderBy: { order: 'asc' } },
       slogan: true,
       isCofounder: true,
       isAmbassador: true,
