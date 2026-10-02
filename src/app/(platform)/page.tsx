@@ -10,6 +10,7 @@ import { LatestTalksSection } from '@/components/home/latest-talks-section';
 import { LatestPhotosSection } from '@/components/home/latest-photos-section';
 import { AmbassadorsSection } from '@/components/home/ambassadors-section';
 import { LatestChangesSection } from '@/components/home/latest-changes-section';
+import { LatestArticlesSection } from '@/components/home/latest-articles';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
 import { findSession, type SessionWithUser } from '@/lib/session';
@@ -77,6 +78,7 @@ const Home = async () => {
       latestTalksSection={<LatestTalksSection />}
       latestPhotosSection={<LatestPhotosSection />}
       latestChangesSection={<LatestChangesSection />}
+      latestArticlesSection={<LatestArticlesSection />}
       ambassadorsSection={<AmbassadorsSection />}
       storyPhotos={storyPhotos}
     />

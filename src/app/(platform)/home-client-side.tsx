@@ -7,7 +7,6 @@ import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
 import { InterviewsSection } from '@/components/home/interviews-section';
 import { JoinSection } from '@/components/home/join-section';
-import { LatestArticlesSection } from '@/components/home/latest-articles';
 import { MusicSection } from '@/components/home/music-section';
 import { RecommendedWatchSection } from '@/components/home/recommended-watch-section';
 import { Reveal } from '@/components/home/reveal';
@@ -30,6 +29,7 @@ interface HomeClientSideProps {
   latestTalksSection: React.ReactNode;
   latestPhotosSection: React.ReactNode;
   latestChangesSection: React.ReactNode;
+  latestArticlesSection: React.ReactNode;
   ambassadorsSection: React.ReactNode;
   storyPhotos: StoryCardPhotos;
 }
@@ -43,6 +43,7 @@ const HomeClientSide = ({
   latestTalksSection,
   latestPhotosSection,
   latestChangesSection,
+  latestArticlesSection,
   ambassadorsSection,
   storyPhotos,
 }: HomeClientSideProps) => (
@@ -64,9 +65,7 @@ const HomeClientSide = ({
 
       {latestPhotosSection && <Reveal>{latestPhotosSection}</Reveal>}
 
-      <Reveal>
-        <LatestArticlesSection />
-      </Reveal>
+      <Reveal>{latestArticlesSection}</Reveal>
 
       <Reveal>
         <InterviewsSection />

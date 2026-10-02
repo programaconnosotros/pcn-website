@@ -21,9 +21,12 @@ const formatArticleDate = (date: string) =>
 export const RelatedArticles = ({
   articles,
   showDate = false,
+  avatars = {},
 }: {
   articles: Article[];
   showDate?: boolean;
+  /** Profile photos of the community members who wrote some of them, by article id. */
+  avatars?: Record<string, string>;
 }) => {
   const [reading, setReading] = useState<Article | null>(null);
 
@@ -41,7 +44,7 @@ export const RelatedArticles = ({
             )}
           >
             <Avatar className="size-9 shrink-0 rounded-sm">
-              <AvatarImage src={article.avatar} alt="" />
+              <AvatarImage src={avatars[article.id] ?? article.avatar} alt="" />
               <AvatarFallback className="rounded-sm text-[10px]">
                 {article.author.slice(0, 2).toUpperCase()}
               </AvatarFallback>
