@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IdCard, LogOut, Search, UserRound } from 'lucide-react';
+import { IdCard, LogOut, Search, UserPen } from 'lucide-react';
 import { toast } from 'sonner';
 import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -179,14 +179,14 @@ export function OsMenuBar({
                 <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem className="gap-2" onSelect={() => onOpenPath(`/perfil/${user.id}`)}>
+                <IdCard className="size-4" /> Ver mi perfil
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2"
                 onSelect={() => onOpenProgram(programById('perfil'))}
               >
-                <UserRound className="size-4" /> Mi cuenta
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2" onSelect={() => onOpenPath(`/perfil/${user.id}`)}>
-                <IdCard className="size-4" /> Ver mi perfil
+                <UserPen className="size-4" /> Editar perfil
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2"
