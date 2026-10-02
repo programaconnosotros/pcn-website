@@ -34,6 +34,7 @@ import { PositionsField } from './positions-field';
 import { cn } from '@/lib/utils';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
 import { FormSection } from '@/components/ui/form-section';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 // Lista de países
 const COUNTRIES = [
@@ -207,7 +208,7 @@ export const ProfileForm = ({
       await toast.promise(updateProfile(data), {
         loading: 'Actualizando perfil...',
         success: 'Perfil actualizado correctamente',
-        error: 'Error al actualizar el perfil',
+        error: (error) => actionErrorMessage(error, 'Error al actualizar el perfil'),
       });
       // Lo guardado pasa a ser el nuevo punto de partida: el contador de cambios vuelve a cero.
       form.reset(form.getValues());

@@ -7,6 +7,7 @@ import { X, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
 import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -71,7 +72,7 @@ export function FileUploadPublic({
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {

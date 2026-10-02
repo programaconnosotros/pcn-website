@@ -7,6 +7,7 @@ import { RegistrationSuccessDialog } from './registration-success-dialog';
 import { RegisterEventButton } from './register-event-button';
 import { CancelRegistrationButton } from './cancel-registration-button';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   eventId: string;
@@ -81,7 +82,7 @@ export function EventDetailClient({
           setJustRegisteredLocally(true);
           setShowSuccessDialog(true);
         } catch (error: any) {
-          toast.error(error.message || 'Error al inscribirse automáticamente');
+          toast.error(actionErrorMessage(error, 'Error al inscribirse automáticamente', true));
           router.replace(`/eventos/${eventId}`, { scroll: false });
         } finally {
           setIsAutoRegistering(false);

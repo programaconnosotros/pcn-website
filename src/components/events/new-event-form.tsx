@@ -5,6 +5,7 @@ import { EventForm } from '@/components/events/event-form';
 import { EventFormData } from '@/schemas/event-schema';
 import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 export function NewEventForm() {
   const onSubmit = async (values: EventFormData) => {
@@ -19,7 +20,7 @@ export function NewEventForm() {
       }
 
       console.error('Error al crear el evento', error);
-      toast.error(error instanceof Error ? error.message : 'Ocurrió un error al crear el evento', {
+      toast.error(actionErrorMessage(error, 'Ocurrió un error al crear el evento', true), {
         id: toastId,
       });
     }

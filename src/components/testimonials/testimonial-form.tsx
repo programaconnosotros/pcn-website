@@ -31,6 +31,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type TestimonialFormProps = {
   defaultValues?: TestimonialFormData;
@@ -66,7 +67,7 @@ export function TestimonialForm({
         success: testimonialId
           ? 'Testimonio actualizado exitosamente'
           : 'Testimonio creado exitosamente',
-        error: (err) => err.message || 'Error al guardar el testimonio',
+        error: (err) => actionErrorMessage(err, 'Error al guardar el testimonio', true),
       });
 
       await promise;
@@ -85,7 +86,7 @@ export function TestimonialForm({
     toast.promise(promise, {
       loading: 'Eliminando testimonio...',
       success: 'Testimonio eliminado exitosamente',
-      error: (err) => err.message || 'Error al eliminar el testimonio',
+      error: (err) => actionErrorMessage(err, 'Error al eliminar el testimonio', true),
     });
 
     try {

@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { createAdvise } from '@actions/advises/create-advise';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -38,7 +39,7 @@ export const AddAdvise = () => {
           form.reset();
           return 'Consejo publicado! 👏';
         },
-        error: 'Ocurrió un error al publicar el consejo',
+        error: (error) => actionErrorMessage(error, 'Ocurrió un error al publicar el consejo'),
       });
       setDialogOpen(false);
     } finally {

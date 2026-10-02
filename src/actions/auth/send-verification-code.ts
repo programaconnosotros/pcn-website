@@ -10,7 +10,7 @@ import {
   sendEmail,
 } from '@/lib/email';
 import { render } from '@react-email/render';
-import { enforceRateLimit } from '@/lib/rate-limit';
+import { RateLimitError, enforceRateLimit } from '@/lib/rate-limit';
 
 export const sendVerificationCode = async (email: string) => {
   await enforceRateLimit('sendCode');
@@ -33,7 +33,7 @@ export const sendVerificationCode = async (email: string) => {
 
   const waitSeconds = checkRateLimit(lastToken?.createdAt ?? null);
   if (waitSeconds > 0) {
-    throw new Error(`RATE_LIMIT:${waitSeconds}`);
+    throw new RateLimitError('sendCode', waitSeconds);
   }
 
   // Invalidar tokens anteriores para este email

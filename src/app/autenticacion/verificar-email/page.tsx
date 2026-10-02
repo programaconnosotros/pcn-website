@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage, parseRateLimitError } from '@/lib/rate-limit-messages';
 
 const codeSchema = z.object({
   code: z
@@ -67,12 +68,9 @@ function VerifyEmailContent() {
       const result = await sendVerificationCode(email);
       setResendCooldown(result.waitSeconds || 60);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '';
-      if (errorMessage.startsWith('RATE_LIMIT:')) {
-        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
-        setResendCooldown(waitSeconds);
-      }
-      // No mostrar error en el envío inicial
+      // Sin aviso en el envío automático; si es el rate limit, el botón de reenviar muestra la espera
+      const rateLimit = parseRateLimitError(error);
+      if (rateLimit) setResendCooldown(rateLimit.waitSeconds);
     }
   };
 
@@ -95,8 +93,8 @@ function VerifyEmailContent() {
       setTimeout(() => {
         router.push(redirectTo);
       }, 1500);
-    } catch {
-      toast.error('Código inválido o expirado. Intentá de nuevo.');
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'Código inválido o expirado. Intentá de nuevo.'));
       setIsVerifying(false);
     }
   };
@@ -110,14 +108,9 @@ function VerifyEmailContent() {
       setResendCooldown(result.waitSeconds || 60);
       toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '';
-      if (errorMessage.startsWith('RATE_LIMIT:')) {
-        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
-        setResendCooldown(waitSeconds);
-        toast.error(`Tenés que esperar ${waitSeconds} segundos antes de reenviar.`);
-      } else {
-        toast.error('Error al reenviar el código.');
-      }
+      const rateLimit = parseRateLimitError(error);
+      if (rateLimit) setResendCooldown(rateLimit.waitSeconds);
+      toast.error(actionErrorMessage(error, 'Error al reenviar el código.'));
     } finally {
       setIsResending(false);
     }

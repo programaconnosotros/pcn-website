@@ -4,7 +4,13 @@ import { mockHeaders } from '@/test/headers';
 
 jest.unmock('@/lib/rate-limit');
 
-import { RATE_LIMITS, consumeRateLimit, enforceRateLimit, resetRateLimits } from './rate-limit';
+import {
+  RATE_LIMITS,
+  RateLimitError,
+  consumeRateLimit,
+  enforceRateLimit,
+  resetRateLimits,
+} from './rate-limit';
 
 const rule = { limit: 2, windowSeconds: 60 };
 
@@ -50,7 +56,7 @@ describe('enforceRateLimit', () => {
     mockHeaders({ 'x-forwarded-for': '1.2.3.4, 10.0.0.1' });
 
     await exhaust('signUp');
-    await expect(enforceRateLimit('signUp')).rejects.toThrow(/^RATE_LIMIT:\d+$/);
+    await expect(enforceRateLimit('signUp')).rejects.toThrow(/^RATE_LIMIT:signUp:\d+$/);
 
     mockHeaders({ 'x-forwarded-for': '5.6.7.8' });
     await expect(enforceRateLimit('signUp')).resolves.toBeUndefined();
@@ -63,7 +69,21 @@ describe('enforceRateLimit', () => {
     await exhaust('signUp');
 
     mockHeaders({ 'x-forwarded-for': '2.2.2.2, 9.9.9.9' });
-    await expect(enforceRateLimit('signUp')).rejects.toThrow(/^RATE_LIMIT:\d+$/);
+    await expect(enforceRateLimit('signUp')).rejects.toThrow(/^RATE_LIMIT:signUp:\d+$/);
+  });
+
+  it('throws a RateLimitError whose digest carries the form and the wait', async () => {
+    // El digest es lo que Next manda al navegador en producción, donde el mensaje no llega
+    mockCookies();
+    mockHeaders({ 'x-forwarded-for': '7.7.7.7' });
+    await exhaust('signUp');
+
+    const error = await enforceRateLimit('signUp').catch((caught) => caught);
+
+    expect(error).toBeInstanceOf(RateLimitError);
+    expect(error.limit).toBe('signUp');
+    expect(error.waitSeconds).toBeGreaterThan(0);
+    expect(error.digest).toBe(`RATE_LIMIT:signUp:${error.waitSeconds}`);
   });
 
   it('limits logged-in users by user id', async () => {
@@ -74,7 +94,7 @@ describe('enforceRateLimit', () => {
     } as never);
 
     await exhaust('comment');
-    await expect(enforceRateLimit('comment')).rejects.toThrow(/^RATE_LIMIT:/);
+    await expect(enforceRateLimit('comment')).rejects.toThrow(/^RATE_LIMIT:comment:\d+$/);
   });
 
   it('never limits admins', async () => {

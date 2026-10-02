@@ -4,6 +4,7 @@ import { requestPasswordReset } from '@/actions/auth/request-password-reset';
 import { verifyResetCode } from '@/actions/auth/verify-reset-code';
 import { completePasswordReset } from '@/actions/auth/complete-password-reset';
 import { newPasswordSchema } from '@/lib/validations/auth-schemas';
+import { rateLimitMessage } from '@/lib/rate-limit-messages';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -44,10 +45,6 @@ const passwordSchema = z
     message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   });
-
-/** "45 segundos" o "3 minutos", para los avisos de espera del rate limit. */
-const formatWait = (seconds: number) =>
-  seconds < 60 ? `${seconds} segundos` : `${Math.ceil(seconds / 60)} minutos`;
 
 type Step = 'email' | 'code' | 'password' | 'success';
 
@@ -98,7 +95,7 @@ export default function ResetPasswordPage() {
       if (!result.success) {
         toast.error(
           result.error === 'RATE_LIMIT'
-            ? `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de pedir otro código.`
+            ? rateLimitMessage('sendCode', result.waitSeconds)
             : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
         );
         return;
@@ -121,7 +118,7 @@ export default function ResetPasswordPage() {
       if (!result.success) {
         toast.error(
           result.error === 'RATE_LIMIT'
-            ? `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de probar de nuevo.`
+            ? rateLimitMessage('verifyCode', result.waitSeconds)
             : 'Código inválido o vencido. Revisalo o pedí uno nuevo.',
         );
         return;
@@ -155,9 +152,7 @@ export default function ResetPasswordPage() {
         setStep('code');
         toast.error('El código venció o ya no es válido. Pedí uno nuevo.');
       } else {
-        toast.error(
-          `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de probar de nuevo.`,
-        );
+        toast.error(rateLimitMessage('verifyCode', result.waitSeconds));
       }
       setIsLoading(false);
     } catch {
@@ -178,7 +173,7 @@ export default function ResetPasswordPage() {
         toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
       } else if (result.error === 'RATE_LIMIT') {
         setResendCooldown(result.waitSeconds);
-        toast.error(`Tenés que esperar ${formatWait(result.waitSeconds)} antes de reenviar.`);
+        toast.error(rateLimitMessage('sendCode', result.waitSeconds));
       } else {
         toast.error('No pudimos reenviar el código. Intentá de nuevo en unos minutos.');
       }

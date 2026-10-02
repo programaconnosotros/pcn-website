@@ -9,6 +9,7 @@ import { tagGalleryItemUser, untagGalleryItemUser } from '@/actions/gallery/gall
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
 import { UserCombobox } from '@/components/admin/user-combobox';
 import { PersonLink, type Person } from '@/components/people/person-link';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   photoId: string;
@@ -31,12 +32,7 @@ export function PhotoPeople({ photoId, people, viewerId, isAdmin }: Props) {
         toast.success(success);
         router.refresh();
       } catch (error) {
-        const message = error instanceof Error ? error.message : '';
-        toast.error(
-          message.startsWith('RATE_LIMIT')
-            ? 'Demasiados cambios seguidos, probá en un rato'
-            : message || 'No se pudo guardar',
-        );
+        toast.error(actionErrorMessage(error, 'No se pudo guardar', true));
       }
     });
 

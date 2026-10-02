@@ -5,7 +5,8 @@ import prisma from '@/lib/prisma';
 import { photoFileName } from '@/components/photo-gallery/photo-utils';
 import { isSignedGallerySrc } from '@/lib/gallery-signing';
 import { visibleGalleryItem } from '@/lib/gallery';
-import { enforceRateLimit } from '@/lib/rate-limit';
+import { getRateLimitWait } from '@/lib/rate-limit';
+import { rateLimitMessage } from '@/lib/rate-limit-messages';
 import { CLOUDFRONT_URL, getPresignedDownloadUrl } from '@/lib/s3';
 
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
@@ -15,13 +16,11 @@ const PUBLIC_DIR = path.join(process.cwd(), 'public');
 // so videos never pass through the server. It isn't a redirect because the production proxy turns
 // 302s into 200s. Photos stored in /public are served from there.
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    await enforceRateLimit('photoDownload');
-  } catch (error) {
-    const waitSeconds = String(error instanceof Error ? error.message : '').split(':')[1];
-    return new Response('Demasiadas descargas, probá en un rato', {
+  const waitSeconds = await getRateLimitWait('photoDownload');
+  if (waitSeconds > 0) {
+    return new Response(rateLimitMessage('photoDownload', waitSeconds), {
       status: 429,
-      headers: waitSeconds ? { 'Retry-After': waitSeconds } : undefined,
+      headers: { 'Retry-After': String(waitSeconds), 'Content-Type': 'text/plain; charset=utf-8' },
     });
   }
 

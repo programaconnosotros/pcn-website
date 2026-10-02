@@ -1,7 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
-import { enforceRateLimit, resetRateLimits } from '@/lib/rate-limit';
+import { getRateLimitWait, resetRateLimits } from '@/lib/rate-limit';
 import { getPresignedDownloadUrl } from '@/lib/s3';
 import { GET } from './route';
 
@@ -84,14 +84,17 @@ describe('GET /api/galeria/[id]/descargar', () => {
     expect((await download()).status).toBe(404);
   });
 
-  it('rate limits downloads', async () => {
-    (enforceRateLimit as jest.Mock).mockRejectedValueOnce(new Error('RATE_LIMIT:120'));
+  it('rate limits downloads with a message that says why and for how long', async () => {
+    (getRateLimitWait as jest.Mock).mockResolvedValueOnce(120);
 
     const response = await download();
 
-    expect(enforceRateLimit).toHaveBeenCalledWith('photoDownload');
+    expect(getRateLimitWait).toHaveBeenCalledWith('photoDownload');
     expect(response.status).toBe(429);
     expect(response.headers.get('retry-after')).toBe('120');
+    expect(await response.text()).toBe(
+      'Descargaste muchas fotos en poco tiempo. Para que la galería ande rápido para todos hay un límite por hora: vas a poder descargar de nuevo en 2 minutos.',
+    );
     expect(prismaMock.galleryItem.findFirst).not.toHaveBeenCalled();
   });
 });

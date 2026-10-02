@@ -1,4 +1,5 @@
 import { cookies, headers } from 'next/headers';
+import { rateLimitDigest } from '@/lib/rate-limit-messages';
 import { findSession } from '@/lib/session';
 
 type RateLimitRule = { limit: number; windowSeconds: number };
@@ -79,13 +80,32 @@ export const getRateLimitWait = async (name: RateLimitName) => {
 };
 
 /**
- * Para server actions de formularios: lanza `RATE_LIMIT:<segundos>` si quien envía superó el
- * límite. Los admins pasan siempre.
+ * Error de rate limit. Lleva el formulario y la espera en el `digest`, que Next respeta y manda
+ * al navegador también en producción (el mensaje de un error lanzado no llega). La UI lo
+ * convierte en un aviso claro con `getRateLimitMessage` de `@/lib/rate-limit-messages`.
+ */
+export class RateLimitError extends Error {
+  readonly digest: string;
+
+  constructor(
+    readonly limit: RateLimitName,
+    readonly waitSeconds: number,
+  ) {
+    const digest = rateLimitDigest(limit, waitSeconds);
+    super(digest);
+    this.name = 'RateLimitError';
+    this.digest = digest;
+  }
+}
+
+/**
+ * Para server actions de formularios: lanza un `RateLimitError` si quien envía superó el límite.
+ * Los admins pasan siempre.
  */
 export const enforceRateLimit = async (name: RateLimitName) => {
   const waitSeconds = await getRateLimitWait(name);
 
   if (waitSeconds > 0) {
-    throw new Error(`RATE_LIMIT:${waitSeconds}`);
+    throw new RateLimitError(name, waitSeconds);
   }
 };

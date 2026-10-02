@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -84,8 +85,10 @@ function SignInContent() {
       // Error desconocido
       toast.error('No pudimos iniciar la sesión.');
       setIsLoading(false);
-    } catch {
-      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
+    } catch (error) {
+      toast.error(
+        actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
+      );
       setIsLoading(false);
     }
   };

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { registerEvent } from '@/actions/events/register-event';
 import { checkEventCapacity } from '@/actions/events/check-event-capacity';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type RegisterEventButtonProps = {
   eventId: string;
@@ -72,7 +73,7 @@ export function RegisterEventButton({
       }
     } catch (error: any) {
       console.error('Error al inscribirse al evento:', error);
-      toast.error(error.message || 'Ocurrió un error al inscribirse al evento');
+      toast.error(actionErrorMessage(error, 'Ocurrió un error al inscribirse al evento', true));
     } finally {
       setIsSubmitting(false);
     }

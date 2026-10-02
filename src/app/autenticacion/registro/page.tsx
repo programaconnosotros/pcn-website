@@ -28,6 +28,7 @@ import { Suspense, useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const formSchema = signUpSchema;
 
@@ -114,9 +115,11 @@ function SignUpContent() {
       } else {
         toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
-    } catch {
+    } catch (error) {
       setIsSubmitting(false);
-      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
+      toast.error(
+        actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
+      );
     }
   };
 

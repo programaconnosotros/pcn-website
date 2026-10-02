@@ -28,6 +28,7 @@ import { createTalkProposal } from '@/actions/talk-proposals/create-talk-proposa
 import { Plus, Save, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   eventId: string;
@@ -304,7 +305,7 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
       toast.success('¡Propuesta enviada! Nos pondremos en contacto pronto.');
       router.push(`/eventos/${eventId}`);
     } catch (error: any) {
-      toast.error(error.message || 'Error al enviar la propuesta');
+      toast.error(actionErrorMessage(error, 'Error al enviar la propuesta', true));
     } finally {
       setIsSubmitting(false);
     }

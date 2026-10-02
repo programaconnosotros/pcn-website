@@ -16,6 +16,7 @@ import { Textarea } from '../ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
 import { Comment } from '@prisma/client';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const commentSchema = z.object({
   content: z
@@ -63,8 +64,8 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
       setReplyingTo(null);
 
       toast.success('Comentario creado');
-    } catch {
-      toast.error('Error al crear el comentario');
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'Error al crear el comentario'));
     } finally {
       setIsSubmitting(false);
     }

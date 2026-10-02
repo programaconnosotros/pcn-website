@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type CancelRegistrationButtonProps = {
   eventId: string;
@@ -34,7 +35,7 @@ export function CancelRegistrationButton({
           success: 'Inscripción cancelada exitosamente',
           error: (error) => {
             console.error('Error al cancelar inscripción', error);
-            return error.message || 'Ocurrió un error al cancelar la inscripción';
+            return actionErrorMessage(error, 'Ocurrió un error al cancelar la inscripción', true);
           },
         },
       );

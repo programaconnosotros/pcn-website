@@ -77,7 +77,9 @@ describe('sendVerificationCode', () => {
     } as any);
     emailLibMock.checkRateLimit.mockReturnValue(30);
 
-    await expect(sendVerificationCode('test@example.com')).rejects.toThrow('RATE_LIMIT:30');
+    await expect(sendVerificationCode('test@example.com')).rejects.toThrow(
+      'RATE_LIMIT:sendCode:30',
+    );
 
     expect(prismaMock.emailVerificationToken.create).not.toHaveBeenCalled();
   });

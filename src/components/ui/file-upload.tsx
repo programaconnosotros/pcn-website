@@ -7,6 +7,7 @@ import { X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
 import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type FileUploadProps = {
   value?: string;
@@ -124,7 +125,7 @@ export function FileUpload({
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {

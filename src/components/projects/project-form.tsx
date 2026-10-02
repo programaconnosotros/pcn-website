@@ -26,6 +26,7 @@ import { createProject } from '@/actions/projects/create-project';
 import { updateProject } from '@/actions/projects/update-project';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
@@ -103,7 +104,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
       }
       onSuccess?.();
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar el proyecto');
+      toast.error(actionErrorMessage(error, 'Error al guardar el proyecto', true));
     } finally {
       setIsSubmitting(false);
     }
