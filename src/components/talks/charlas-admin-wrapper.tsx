@@ -112,7 +112,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
         {/* Talks from other conferences that the community recommends watching. */}
         <TabsContent value="externas" className="mb-14">
-          <VideoGrid videos={externalTalks} />
+          <VideoGrid videos={externalTalks} searchable />
         </TabsContent>
       </Tabs>
 

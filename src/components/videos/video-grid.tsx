@@ -5,12 +5,14 @@ import { ArrowUpRight, Eye, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { MarkToggle } from '@/components/ui/mark-toggle';
+import { SearchBar } from '@/components/ui/search-bar';
 import {
   LanguageFilter,
   matchesLanguage,
   type LanguageFilterValue,
 } from '@/components/ui/language-filter';
 import { useContentMarks } from '@/hooks/use-content-marks';
+import { normalizeSearchText } from '@/lib/search/search-index';
 import { cn } from '@/lib/utils';
 import type { Video } from './videos';
 
@@ -113,20 +115,29 @@ const VideoCell = ({
 export function VideoGrid({
   videos,
   toolbar = true,
+  searchable = false,
 }: {
   videos: Video[];
   /** Shows the watch progress and the watched/unwatched filter above the grid. */
   toolbar?: boolean;
+  /** Adds a search box that filters by title, speaker, channel (the event, for talks) or year. */
+  searchable?: boolean;
 }) {
   const [playing, setPlaying] = useState<Video | null>(null);
   const [filter, setFilter] = useState<WatchFilter>('todos');
   const [language, setLanguage] = useState<LanguageFilterValue>('todos');
+  const [query, setQuery] = useState('');
+  const needle = normalizeSearchText(query).trim();
   const marks = useContentMarks('video');
   const watchedIds = marks.ids('watched');
   const watchedCount = videos.filter((video) => watchedIds.has(video.id)).length;
   const visibleVideos = videos.filter(
     (video) =>
       matchesLanguage(video.language, language) &&
+      (!needle ||
+        normalizeSearchText(
+          [video.title, video.speaker, video.channel, video.date.slice(0, 4)].join(' '),
+        ).includes(needle)) &&
       (filter === 'todos' || (filter === 'vistos') === watchedIds.has(video.id)),
   );
   const barWidth = 16;
@@ -137,6 +148,15 @@ export function VideoGrid({
       {/* Watch progress, the language filter and the watched/unwatched filter. */}
       {toolbar && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px]">
+          {searchable && (
+            <SearchBar
+              searchQuery={query}
+              setSearchQuery={setQuery}
+              placeholder="título, speaker, evento o canal"
+              label="Buscar por título, speaker, evento o canal"
+              className="h-8 max-w-sm flex-1 basis-full sm:basis-auto"
+            />
+          )}
           <span className="flex items-center gap-2 text-muted-foreground">
             vistos
             <span aria-hidden className="tracking-[-0.05em]">
@@ -181,11 +201,13 @@ export function VideoGrid({
       {visibleVideos.length === 0 && (
         <p className="border border-dashed border-pcnGreen-200 py-8 text-center font-mono text-sm text-muted-foreground">
           <span className="text-pcnGreen">404</span> ·{' '}
-          {filter === 'vistos'
-            ? 'todavía no marcaste ningún video como visto'
-            : filter === 'sin-ver'
-              ? '¡ya viste todo!'
-              : 'no hay videos en ese idioma'}
+          {needle
+            ? 'ningún video coincide con la búsqueda'
+            : filter === 'vistos'
+              ? 'todavía no marcaste ningún video como visto'
+              : filter === 'sin-ver'
+                ? '¡ya viste todo!'
+                : 'no hay videos en ese idioma'}
         </p>
       )}
 
