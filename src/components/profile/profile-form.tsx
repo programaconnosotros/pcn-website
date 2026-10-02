@@ -567,7 +567,6 @@ export const ProfileForm = ({
                       className="group-focus-within/field:text-glow flex w-24 shrink-0 items-center rounded-l-sm border border-r-0 border-input bg-pcnGreen/[0.04] px-2 font-mono text-[11px] text-pcnGreen-700 transition-colors group-focus-within/field:text-pcnGreen"
                     >
                       {link.prefix}
-                      <span className="text-pcnGreen-500">:</span>
                     </label>
                     <Input
                       id={link.name}
