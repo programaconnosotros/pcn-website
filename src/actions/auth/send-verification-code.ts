@@ -10,20 +10,19 @@ import {
   sendEmail,
 } from '@/lib/email';
 import { render } from '@react-email/render';
+import { RateLimitError, enforceRateLimit } from '@/lib/rate-limit';
 
 export const sendVerificationCode = async (email: string) => {
-  // Verificar que el usuario existe
+  await enforceRateLimit('sendCode');
+
   const user = await prisma.user.findUnique({
     where: { email },
   });
 
-  if (!user) {
-    throw new Error('Usuario no encontrado');
-  }
-
-  // Si ya está verificado, no hacer nada
-  if (user.emailVerified) {
-    return { success: true, alreadyVerified: true, waitSeconds: 0 };
+  // Si el email no existe o ya está verificado no se envía nada, pero se responde igual que al
+  // enviar: así esta action no sirve para averiguar qué emails tienen cuenta.
+  if (!user || user.emailVerified) {
+    return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
   }
 
   // Verificar rate limiting: buscar el último token enviado
@@ -34,7 +33,7 @@ export const sendVerificationCode = async (email: string) => {
 
   const waitSeconds = checkRateLimit(lastToken?.createdAt ?? null);
   if (waitSeconds > 0) {
-    throw new Error(`RATE_LIMIT:${waitSeconds}`);
+    throw new RateLimitError('sendCode', waitSeconds);
   }
 
   // Invalidar tokens anteriores para este email
@@ -69,5 +68,5 @@ export const sendVerificationCode = async (email: string) => {
     html: emailHtml,
   });
 
-  return { success: true, alreadyVerified: false, waitSeconds: RATE_LIMIT_SECONDS };
+  return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
 };

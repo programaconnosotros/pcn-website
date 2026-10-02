@@ -17,7 +17,7 @@ export const MainSponsorCard = () => (
     </Link>
 
     <Link
-      href="https://bowerystudio.co/en/"
+      href="https://choosebowery.com/"
       target="_blank"
       rel="noopener noreferrer"
       className="block !border-0 outline-none"

@@ -1,9 +1,8 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Bell, Check, CheckCheck, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, Bell, Check, CheckCheck } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { markNotificationAsRead } from '@/actions/notifications/mark-as-read';
 import { markAllNotificationsAsRead } from '@/actions/notifications/mark-all-as-read';
 import { toast } from 'sonner';
@@ -25,15 +24,13 @@ type NotificationsClientProps = {
   notifications: Notification[];
 };
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
-};
+const EVENT_NOTIFICATION_TYPES = [
+  'event_registration_created',
+  'event_registration_cancelled',
+  'event_waitlist_joined',
+  'event_waitlist_cancelled',
+  'event_waitlist_promoted',
+];
 
 const formatRelativeTime = (date: Date) => {
   const now = new Date();
@@ -80,11 +77,12 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     );
   };
 
+  const isEventNotification = (notification: Notification): boolean => {
+    return EVENT_NOTIFICATION_TYPES.includes(notification.type);
+  };
+
   const getEventId = (notification: Notification): string | null => {
-    if (
-      notification.type === 'event_registration_created' ||
-      notification.type === 'event_registration_cancelled'
-    ) {
+    if (isEventNotification(notification)) {
       try {
         const metadata = notification.metadata ? JSON.parse(notification.metadata) : null;
         return metadata?.eventId || null;
@@ -93,13 +91,6 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
       }
     }
     return null;
-  };
-
-  const isEventNotification = (notification: Notification): boolean => {
-    return (
-      notification.type === 'event_registration_created' ||
-      notification.type === 'event_registration_cancelled'
-    );
   };
 
   const handleMarkAsRead = async (notificationId: string) => {
@@ -132,158 +123,113 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
 
   if (notifications.length === 0) {
     return (
-      <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-        <CardContent className="pt-6">
-          <div className="py-8 text-center">
-            <Bell className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground">No tienes notificaciones</p>
-          </div>
-        </CardContent>
-      </Card>
+      <p className="flex items-center gap-2 border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
+        <Bell className="h-3.5 w-3.5 text-pcnGreen-500" />
+        No tienes notificaciones
+      </p>
     );
   }
 
+  const renderRow = (notification: Notification, unread: boolean) => {
+    const testimonialId = getTestimonialId(notification);
+    const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
+    const eventId = getEventId(notification);
+    const hasEventLink = isEventNotification(notification) && eventId;
+    const linkClassName =
+      'flex items-center gap-1 font-mono text-[11px] text-pcnGreen-700 transition-colors hover:text-pcnGreen';
+
+    return (
+      <div
+        key={notification.id}
+        className={cn(
+          'flex items-start gap-3 p-3 transition-colors hover:bg-pcnGreen/[0.04]',
+          unread ? 'shadow-[inset_2px_0_0_0_#04f4be]' : 'opacity-70',
+        )}
+      >
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <div className="flex items-baseline gap-2 font-mono">
+            <h4 className="text-sm font-semibold">{notification.title}</h4>
+            <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">
+              {formatRelativeTime(notification.createdAt)}
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed text-muted-foreground">{notification.message}</p>
+          {(hasTestimonialLink || hasEventLink) && (
+            <div className="flex flex-wrap gap-3">
+              {hasTestimonialLink && (
+                <Link href={`/testimonios/${testimonialId}`} className={linkClassName}>
+                  ver testimonio
+                  <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              )}
+              {hasEventLink && (
+                <>
+                  <Link href={`/eventos/${eventId}`} className={linkClassName}>
+                    ver evento
+                    <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                  <Link href={`/eventos/${eventId}/inscripciones`} className={linkClassName}>
+                    ver inscripciones
+                    <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        {unread && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 shrink-0"
+            title="Marcar como leída"
+            onClick={() => handleMarkAsRead(notification.id)}
+            disabled={markingAsRead === notification.id}
+          >
+            <Check className="h-3.5 w-3.5" />
+          </Button>
+        )}
+      </div>
+    );
+  };
+
+  const sectionTitleClassName =
+    'flex items-center justify-between gap-2 px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground';
+
   return (
-    <div className="space-y-6">
+    <div className="mb-14 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
       {unreadNotifications.length > 0 && (
-        <div>
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Sin leer ({unreadNotifications.length})</h3>
+        <>
+          <div className={sectionTitleClassName}>
+            <span>
+              <span className="text-pcnGreen-500">{'// '}</span>
+              sin leer [{unreadNotifications.length}]
+            </span>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
+              className="h-6 px-2 font-mono text-[11px] normal-case tracking-normal"
               onClick={handleMarkAllAsRead}
               disabled={markingAllAsRead}
             >
-              <CheckCheck className="mr-2 h-4 w-4" />
-              Marcar todas como leídas
+              <CheckCheck className="mr-1 h-3.5 w-3.5" />
+              marcar todas
             </Button>
           </div>
-          <div className="space-y-3">
-            {unreadNotifications.map((notification) => {
-              const testimonialId = getTestimonialId(notification);
-              const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
-              const eventId = getEventId(notification);
-              const hasEventLink = isEventNotification(notification) && eventId;
-
-              return (
-                <Card
-                  key={notification.id}
-                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="mb-2 flex items-center gap-2">
-                          <CardTitle className="m-0 text-base">{notification.title}</CardTitle>
-                          <Badge variant="default">Nuevo</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{notification.message}</p>
-                        {hasTestimonialLink && (
-                          <div className="mt-3">
-                            <Link href={`/testimonios/${testimonialId}`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver testimonio
-                              </Button>
-                            </Link>
-                          </div>
-                        )}
-                        {hasEventLink && (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            <Link href={`/eventos/${eventId}`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver evento
-                              </Button>
-                            </Link>
-                            <Link href={`/eventos/${eventId}/inscripciones`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver inscripciones
-                              </Button>
-                            </Link>
-                          </div>
-                        )}
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          {formatRelativeTime(notification.createdAt)}
-                        </p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => handleMarkAsRead(notification.id)}
-                        disabled={markingAsRead === notification.id}
-                      >
-                        <Check className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+          {unreadNotifications.map((notification) => renderRow(notification, true))}
+        </>
       )}
 
       {readNotifications.length > 0 && (
-        <div>
-          <h3 className="mb-4 text-lg font-semibold">Leídas ({readNotifications.length})</h3>
-          <div className="space-y-3">
-            {readNotifications.map((notification) => {
-              const testimonialId = getTestimonialId(notification);
-              const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
-              const eventId = getEventId(notification);
-              const hasEventLink = isEventNotification(notification) && eventId;
-
-              return (
-                <Card
-                  key={notification.id}
-                  className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 opacity-75 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="m-0 mb-2 text-base">{notification.title}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{notification.message}</p>
-                        {hasTestimonialLink && (
-                          <div className="mt-3">
-                            <Link href={`/testimonios/${testimonialId}`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver testimonio
-                              </Button>
-                            </Link>
-                          </div>
-                        )}
-                        {hasEventLink && (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            <Link href={`/eventos/${eventId}`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver evento
-                              </Button>
-                            </Link>
-                            <Link href={`/eventos/${eventId}/inscripciones`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Ver inscripciones
-                              </Button>
-                            </Link>
-                          </div>
-                        )}
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          {formatRelativeTime(notification.createdAt)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
-              );
-            })}
+        <>
+          <div className={sectionTitleClassName}>
+            <span>
+              <span className="text-pcnGreen-500">{'// '}</span>
+              leídas [{readNotifications.length}]
+            </span>
           </div>
-        </div>
+          {readNotifications.map((notification) => renderRow(notification, false))}
+        </>
       )}
     </div>
   );

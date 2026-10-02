@@ -1,27 +1,39 @@
 'use server';
 
-import { getCapacitySnapshot } from '@/actions/events/event-capacity';
+import prisma from '@/lib/prisma';
 
 export const checkEventCapacity = async (eventId: string) => {
-  const snapshot = await getCapacitySnapshot(eventId);
+  const event = await prisma.event.findFirst({
+    where: {
+      id: eventId,
+      deletedAt: null,
+    },
+  });
 
-  if (!snapshot) {
+  if (!event) {
     return { available: false, message: 'Evento no encontrado' };
   }
 
-  if (snapshot.capacity === null) {
-    return { available: true, current: snapshot.current, capacity: null, waitlistCount: 0 };
+  // Si no tiene cupo definido, está disponible
+  if (event.capacity === null) {
+    return { available: true, current: 0, capacity: null };
   }
 
-  const available = snapshot.available;
+  const currentRegistrations = await prisma.eventRegistration.count({
+    where: {
+      eventId: eventId,
+      cancelledAt: null, // Excluir inscripciones canceladas
+    },
+  });
+
+  const available = currentRegistrations < event.capacity;
 
   return {
     available,
-    current: snapshot.current,
-    capacity: snapshot.capacity,
-    waitlistCount: snapshot.waitlistCount,
+    current: currentRegistrations,
+    capacity: event.capacity,
     message: available
-      ? `Quedan ${snapshot.capacity - snapshot.current} lugares disponibles.`
-      : 'El cupo del evento está completo. Podés sumarte a la lista de espera.',
+      ? `Quedan ${event.capacity - currentRegistrations} lugares disponibles.`
+      : 'El cupo del evento está completo',
   };
 };

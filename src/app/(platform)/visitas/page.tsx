@@ -1,18 +1,9 @@
 'use server';
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator as UISeparator } from '@/components/ui/separator';
-import prisma from '@/lib/prisma';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { fetchPageVisits, getPageVisitStats } from '@/actions/analytics/fetch-page-visits';
@@ -24,8 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Eye, Users, TrendingUp, Calendar, Globe, User, ExternalLink } from 'lucide-react';
+import { findSession } from '@/lib/session';
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('es-AR', {
@@ -34,6 +24,7 @@ const formatDate = (date: Date) => {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
   }).format(date);
 };
 
@@ -52,16 +43,13 @@ const formatRelativeTime = (date: Date) => {
 
 const VisitasPage = async () => {
   // Verificar autenticación y permisos de admin
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     redirect('/home');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/home');
@@ -72,183 +60,110 @@ const VisitasPage = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <UISeparator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Visitas</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6">
-            <Heading2 className="m-0">Visitas</Heading2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Estadísticas y registro de visitas a las páginas principales
-            </p>
-          </div>
+          <StickyHeader>
+            <PageTitle path="visitas" meta="visitas a las páginas principales" />
+          </StickyHeader>
 
-          {/* Estadísticas */}
-          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total de visitas</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.totalVisits.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">Todas las visitas registradas</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Visitas hoy</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.visitsToday.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">últimas 24 horas</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Páginas únicas</CardTitle>
-                <Globe className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.uniquePaths}</div>
-                <p className="text-xs text-muted-foreground">Rutas diferentes visitadas</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Usuarios únicos</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.uniqueUsers.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">Usuarios logueados</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Páginas más visitadas */}
-          <Card className="mb-6 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                Páginas más visitadas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {stats.topPages.map((page, index) => (
-                  <div
-                    key={page.path}
-                    className="flex items-center justify-between border-b py-2 last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 text-sm font-medium text-muted-foreground">
-                        {index + 1}
-                      </span>
-                      <span className="text-sm font-medium">{page.path}</span>
-                    </div>
-                    <Badge variant="outline">{page.count.toLocaleString()} visitas</Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tabla de visitas recientes */}
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
-                Visitas recientes (últimas 500)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {visits.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">
-                  Aún no hay visitas registradas.
+          <RuledGrid className="mb-4 grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                label: 'total',
+                value: stats.totalVisits.toLocaleString(),
+                hint: 'visitas registradas',
+              },
+              { label: 'hoy', value: stats.visitsToday.toLocaleString(), hint: 'últimas 24 horas' },
+              { label: 'páginas', value: stats.uniquePaths, hint: 'rutas únicas' },
+              { label: 'usuarios', value: stats.uniqueUsers.toLocaleString(), hint: 'logueados' },
+            ].map((stat) => (
+              <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <span className="text-pcnGreen-500">{'// '}</span>
+                  {stat.label}
                 </p>
-              ) : (
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Ruta</TableHead>
-                        <TableHead>Usuario</TableHead>
-                        <TableHead>Fecha</TableHead>
-                        <TableHead>Origen</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {visits.map((visit) => (
-                        <TableRow key={visit.id}>
-                          <TableCell className="font-medium">
-                            <div className="flex items-center gap-2">
-                              <Globe className="h-4 w-4 text-muted-foreground" />
-                              <span>{visit.path}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {visit.user ? (
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-muted-foreground" />
-                                <div>
-                                  <p className="text-sm font-medium">{visit.user.name}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {visit.user.email}
-                                  </p>
-                                </div>
-                              </div>
-                            ) : (
-                              <Badge variant="outline">Anónimo</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm">
-                              <p>{formatDate(visit.createdAt)}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {formatRelativeTime(visit.createdAt)}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {visit.referer ? (
-                              <div className="flex items-center gap-2">
-                                <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                                <span className="max-w-[200px] truncate text-xs text-muted-foreground">
-                                  {visit.referer}
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">Directo</span>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                <p className="mt-1 text-2xl font-semibold text-pcnGreen">{stat.value}</p>
+                <p className="text-[11px] text-muted-foreground/70">{stat.hint}</p>
+              </div>
+            ))}
+          </RuledGrid>
+
+          <section className="mb-4 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>páginas más visitadas
+            </h2>
+            <ol className="divide-y divide-pcnGreen-200/60 font-mono text-xs">
+              {stats.topPages.map((page, index) => (
+                <li
+                  key={page.path}
+                  className="flex items-center gap-3 px-3 py-1 transition-colors hover:bg-pcnGreen/[0.05]"
+                >
+                  <span className="w-5 tabular-nums text-muted-foreground/60">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="w-40 shrink-0 truncate sm:w-56" title={page.path}>
+                    {page.path}
+                  </span>
+                  <span aria-hidden className="h-1.5 flex-1 bg-pcnGreen-100">
+                    <span
+                      className="block h-full bg-pcnGreen-600"
+                      style={{ width: `${(page.count / (stats.topPages[0]?.count || 1)) * 100}%` }}
+                    />
+                  </span>
+                  <span className="w-12 text-right tabular-nums text-pcnGreen">
+                    {page.count.toLocaleString()}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="mb-14 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>visitas recientes (últimas 500)
+            </h2>
+            {visits.length === 0 ? (
+              <p className="p-3 font-mono text-sm text-muted-foreground">
+                Aún no hay visitas registradas.
+              </p>
+            ) : (
+              <Table className="text-xs">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ruta</TableHead>
+                    <TableHead>usuario</TableHead>
+                    <TableHead>fecha</TableHead>
+                    <TableHead>origen</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {visits.map((visit) => (
+                    <TableRow key={visit.id}>
+                      <TableCell className="font-mono">{visit.path}</TableCell>
+                      <TableCell>
+                        {visit.user ? (
+                          <span title={visit.user.email}>{visit.user.name}</span>
+                        ) : (
+                          <span className="font-mono text-[11px] text-muted-foreground/60">
+                            anónimo
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap font-mono text-[11px] tabular-nums">
+                        {formatDate(visit.createdAt)}
+                        <span className="ml-2 text-muted-foreground">
+                          {formatRelativeTime(visit.createdAt)}
+                        </span>
+                      </TableCell>
+                      <TableCell className="max-w-[200px] truncate font-mono text-[11px] text-muted-foreground">
+                        {visit.referer ?? 'directo'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </section>
         </div>
       </div>
     </>

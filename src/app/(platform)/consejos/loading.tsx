@@ -1,24 +1,14 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { PageTitleSkeleton, RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 
-const LoadingAdvises = () => {
+export default function Loading() {
   return (
-    <div className="mt-4 md:px-20">
-      <div className="space-y-4">
-        {/* Simulando múltiples consejos */}
-        {[...Array(5)].map((_, index) => (
-          <div key={index} className="space-y-3 rounded-lg border p-4">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-            <div className="flex gap-2">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-8 w-24" />
-            </div>
-          </div>
-        ))}
+    <>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4">
+          <PageTitleSkeleton />
+          <RuledGridSkeleton count={8} className="grid-cols-1 xl:grid-cols-2" />
+        </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default LoadingAdvises;
+}

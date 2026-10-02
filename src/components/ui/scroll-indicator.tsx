@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { ChevronsDown } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { ScrollHudButton } from './scroll-hud-button';
 
 export const ScrollIndicator = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,7 +20,7 @@ export const ScrollIndicator = () => {
     checkScroll();
 
     // Verificar al hacer scroll
-    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('scroll', checkScroll, { passive: true });
 
     // Verificar al cambiar el tamaño de la ventana
     window.addEventListener('resize', checkScroll);
@@ -30,34 +31,27 @@ export const ScrollIndicator = () => {
     };
   }, []);
 
+  const scrollDown = () => {
+    window.scrollBy({ top: window.innerHeight * 0.85, behavior: 'smooth' });
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="pointer-events-none fixed bottom-6 right-6 z-40 flex flex-col items-center gap-2"
-        >
-          <motion.div
-            animate={{
-              y: [0, 8, 0],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="flex flex-col items-center gap-1"
-          >
-            <ChevronDown className="h-6 w-6 text-pcnPurple dark:text-pcnGreen" strokeWidth={2} />
-            <ChevronDown
-              className="-mt-3 h-6 w-6 text-pcnPurple opacity-50 dark:text-pcnGreen"
-              strokeWidth={2}
-            />
-          </motion.div>
-        </motion.div>
+        <ScrollHudButton
+          onClick={scrollDown}
+          label="Bajar"
+          code="DN"
+          icon={
+            <motion.span
+              className="block motion-reduce:!transform-none"
+              animate={{ y: [-2, 2, -2] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ChevronsDown className="h-4 w-4" strokeWidth={2.25} />
+            </motion.span>
+          }
+        />
       )}
     </AnimatePresence>
   );

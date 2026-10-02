@@ -1,36 +1,62 @@
 'use server';
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
-type UserWithoutPassword = {
+export type UserWithoutPassword = {
   id: string;
   name: string;
   email: string;
-  createdAt: Date;
+  emailVerified: boolean;
+  phoneNumber: string | null;
+  role: 'REGULAR' | 'ADMIN';
+  isAmbassador: boolean;
+  isCofounder: boolean;
   image: string | null;
-  languages: {
-    language: string;
-    color: string;
-    logo: string;
-  }[];
-  linkedinUrl: string | null;
-  xAccountUrl: string | null;
-  gitHubUrl: string | null;
   countryOfOrigin: string | null;
+  province: string | null;
+  xAccountUrl: string | null;
+  linkedinUrl: string | null;
+  gitHubUrl: string | null;
   slogan: string | null;
   jobTitle: string | null;
   enterprise: string | null;
   career: string | null;
   studyPlace: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  languages: {
+    language: string;
+    color: string;
+    logo: string;
+  }[];
 };
 
 export const getUsers = async (): Promise<UserWithoutPassword[]> => {
+  await requireAdmin();
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
       name: true,
       email: true,
-      createdAt: true,
+      emailVerified: true,
+      phoneNumber: true,
+      role: true,
+      isAmbassador: true,
+      isCofounder: true,
       image: true,
+      countryOfOrigin: true,
+      province: true,
+      xAccountUrl: true,
+      linkedinUrl: true,
+      gitHubUrl: true,
+      slogan: true,
+      jobTitle: true,
+      enterprise: true,
+      career: true,
+      studyPlace: true,
+      createdAt: true,
+      updatedAt: true,
       languages: {
         select: {
           language: true,
@@ -38,16 +64,8 @@ export const getUsers = async (): Promise<UserWithoutPassword[]> => {
           logo: true,
         },
       },
-      xAccountUrl: true,
-      linkedinUrl: true,
-      gitHubUrl: true,
-      countryOfOrigin: true,
-      slogan: true,
-      jobTitle: true,
-      enterprise: true,
-      career: true,
-      studyPlace: true,
     },
+    orderBy: { createdAt: 'desc' },
   });
 
   return users;

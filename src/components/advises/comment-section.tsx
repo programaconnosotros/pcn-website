@@ -3,17 +3,20 @@
 import { createComment } from '@/actions/comments/create-comment';
 import { formatDate } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Session, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import type { SessionWithUser } from '@/lib/session';
+
+type Author = Pick<User, 'id' | 'name' | 'image'>;
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '../ui/button';
-import { Loader2 } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
 import { Comment } from '@prisma/client';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const commentSchema = z.object({
   content: z
@@ -26,8 +29,8 @@ type CommentFormData = z.infer<typeof commentSchema>;
 
 type CommentSectionProps = {
   adviseId: string;
-  comments: (Comment & { author: User; replies: (Comment & { author: User })[] })[];
-  session: (Session & { user: User }) | null;
+  comments: (Comment & { author: Author; replies: (Comment & { author: Author })[] })[];
+  session: SessionWithUser | null;
 };
 
 export const CommentSection = ({ adviseId, comments, session }: CommentSectionProps) => {
@@ -62,7 +65,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
 
       toast.success('Comentario creado');
     } catch (error) {
-      toast.error('Error al crear el comentario');
+      toast.error(actionErrorMessage(error, 'Error al crear el comentario'));
     } finally {
       setIsSubmitting(false);
     }
@@ -71,19 +74,26 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
   const Comment = ({
     comment,
   }: {
-    comment: Comment & { author: User; replies?: (Comment & { author: User; replies?: any[] })[] };
+    comment: Comment & {
+      author: Author;
+      replies?: (Comment & { author: Author; replies?: any[] })[];
+    };
   }) => (
-    <div className="space-y-4">
-      <div className="flex items-start gap-4">
-        <Avatar className="h-8 w-8">
+    <div className="space-y-3">
+      <div className="flex items-start gap-2">
+        <Avatar className="h-6 w-6 rounded-sm">
           <AvatarImage src={comment.author.image ?? undefined} alt={comment.author.name} />
-          <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
+          <AvatarFallback className="rounded-sm text-[10px]">
+            {comment.author.name.charAt(0)}
+          </AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">{comment.author.name}</span>
-            <span className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</span>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2 font-mono">
+            <span className="text-xs font-semibold">{comment.author.name}</span>
+            <span className="text-[11px] text-muted-foreground">
+              {formatDate(comment.createdAt)}
+            </span>
           </div>
 
           <p className="text-sm">{comment.content}</p>
@@ -101,9 +111,13 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
         </div>
       </div>
 
-      {comment.replies?.map((reply) => (
-        <Comment key={reply.id} comment={{ ...reply, replies: [] }} />
-      ))}
+      {!!comment.replies?.length && (
+        <div className="ml-3 space-y-3 border-l border-pcnGreen-200 pl-5">
+          {comment.replies.map((reply) => (
+            <Comment key={reply.id} comment={{ ...reply, replies: [] }} />
+          ))}
+        </div>
+      )}
 
       {replyingTo === comment.id && (
         <div className="ml-8">
@@ -116,20 +130,14 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
             {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
             <div className="flex gap-2">
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
-                  </>
-                ) : (
-                  'Enviar respuesta'
-                )}
+              <Button type="submit" size="sm" loading={isSubmitting} loadingText="enviando...">
+                enviarRespuesta();
               </Button>
 
               <Button
                 type="button"
                 variant="ghost"
+                size="sm"
                 onClick={() => setReplyingTo(null)}
                 disabled={isSubmitting}
               >
@@ -143,32 +151,28 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
   );
 
   return (
-    <div className="mb-8 mt-4 space-y-6">
-      <h2 className="text-lg font-semibold">Comentarios</h2>
+    <div className="divide-y divide-pcnGreen-200 border-b border-r border-pcnGreen-200">
+      <h2 className="px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="text-pcnGreen-500">{'// '}</span>
+        comentarios
+      </h2>
 
       {session ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 p-3">
           <Textarea
             {...register('content')}
             placeholder="Escribe tu comentario..."
-            className="min-h-[100px] resize-none"
+            className="min-h-[72px] resize-none"
           />
 
           {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
 
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              'Enviar comentario'
-            )}
+          <Button type="submit" size="sm" loading={isSubmitting} loadingText="enviando...">
+            enviarComentario();
           </Button>
         </form>
       ) : (
-        <p className="text-sm text-muted-foreground">
+        <p className="p-3 text-sm text-muted-foreground">
           Debes{' '}
           <Link href="/autenticacion/iniciar-sesion" className="underline hover:text-foreground">
             iniciar sesión
@@ -177,11 +181,11 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
         </p>
       )}
 
-      <div className="space-y-6">
-        {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} />
-        ))}
-      </div>
+      {comments.map((comment) => (
+        <div key={comment.id} className="p-3">
+          <Comment comment={comment} />
+        </div>
+      ))}
     </div>
   );
 };

@@ -1,6 +1,5 @@
 'use client';
 import { signIn } from '@/actions/auth/sign-in';
-import { sendVerificationCode } from '@/actions/auth/send-verification-code';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -12,27 +11,26 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus, Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { LogIn } from 'lucide-react';
+import { AuthLinks, AuthShell } from '@/components/auth/auth-shell';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
-  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
+  password: z.string().min(1, 'Ingresá tu contraseña'),
 });
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { resolvedTheme } = useTheme();
   const emailParam = searchParams.get('email') || '';
-  const passwordParam = searchParams.get('password') || '';
-  const redirectTo = searchParams.get('redirect') || '';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +38,7 @@ export default function SignInPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: emailParam,
-      password: passwordParam,
+      password: '',
     },
   });
 
@@ -88,107 +86,90 @@ export default function SignInPage() {
       toast.error('No pudimos iniciar la sesión.');
       setIsLoading(false);
     } catch (error) {
-      toast.error('Ocurrió un error inesperado. Por favor, intentá nuevamente.');
+      toast.error(
+        actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
+      );
       setIsLoading(false);
     }
   };
 
+  const signUpHref = redirectTo
+    ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+    : '/autenticacion/registro';
+
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[425px]">
-        <div className="flex flex-col items-center gap-6">
-          <img
-            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
-            alt="Logo"
-            className="w-20"
+    <AuthShell command="login" title="Iniciar sesión" description="Qué bueno verte de nuevo.">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Correo electrónico</FormLabel>
+
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    placeholder="correo@ejemplo.com"
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Iniciar sesión</h1>
-          </div>
-        </div>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="••••••"
+                    {...field}
+                  />
+                </FormControl>
 
-                  <FormControl>
-                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                  </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
-
-                  <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Ingresando...
-                </>
-              ) : (
-                <>
-                  Ingresar
-                  <LogIn className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </form>
-        </Form>
-
-        <div className="mt-4 flex flex-row gap-4">
-          <Link
-            href={
-              redirectTo
-                ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-                : '/autenticacion/registro'
-            }
+          <Button
+            type="submit"
+            size="lg"
             className="w-full"
+            loading={isLoading}
+            loadingText="ingresando..."
           >
-            <Button variant="outline" className="w-full">
-              Crear cuenta
-              <UserPlus className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            ingresar();
+            <LogIn className="ml-2 h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
 
-          <Link href="/autenticacion/recuperar-clave" className="w-full">
-            <Button variant="outline" className="w-full">
-              Cambiar contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+      <AuthLinks
+        links={[
+          { href: signUpHref, label: '¿No tenés cuenta? Creá una' },
+          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+        ]}
+      />
+    </AuthShell>
+  );
+}
 
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
-      </div>
-    </div>
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInContent />
+    </Suspense>
   );
 }

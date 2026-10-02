@@ -1,17 +1,18 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { hashPassword, needsRehash } from '@/lib/password';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { createSession } from '@/lib/session';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const formSchema = z.object({
   email: z.string().email({
     message: 'Debe ser un email válido.',
   }),
-  password: z.string().min(4, {
-    message: 'La contraseña debe tener al menos 4 caracteres.',
-  }),
+  password: z.string().min(1, 'Ingresá tu contraseña.').max(200),
   redirectTo: z.string().optional(),
 });
 
@@ -22,12 +23,16 @@ export const signIn = async (
   | { success: false; error: 'INVALID_CREDENTIALS' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
 > => {
+  await enforceRateLimit('signIn');
+
   try {
     const validatedData = formSchema.parse(data);
     const { email, password } = validatedData;
 
     const user = await prisma.user.findUnique({
       where: { email },
+      // El cliente de Prisma omite el hash por defecto; el login es el único que lo necesita
+      omit: { password: false },
     });
 
     if (!user) {
@@ -40,29 +45,29 @@ export const signIn = async (
       return { success: false, error: 'INVALID_CREDENTIALS' };
     }
 
+    // Los hashes con un costo viejo se regeneran ahora, que tenemos la contraseña en claro.
+    // Si falla, el login sigue: se reintenta la próxima vez.
+    if (needsRehash(user.password)) {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password: await hashPassword(password) },
+        });
+      } catch (error) {
+        console.error('Failed to rehash password:', error instanceof Error ? error.message : error);
+      }
+    }
+
     if (!user.emailVerified) {
       return { success: false, error: 'EMAIL_NOT_VERIFIED', email };
     }
 
-    const session = await prisma.session.create({
-      data: {
-        userId: user.id,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      },
-    });
+    await createSession(user.id);
 
-    cookies().set('sessionId', session.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
-
-    const redirectTo = data.redirectTo || '/';
+    const redirectTo = safeRedirectPath(validatedData.redirectTo);
 
     return { success: true, redirectTo };
-  } catch (error) {
+  } catch {
     return { success: false, error: 'INVALID_CREDENTIALS' };
   }
 };

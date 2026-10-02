@@ -13,7 +13,7 @@ export type SortOrder = 'default' | 'date-asc' | 'date-desc';
 
 interface SortSelectorProps {
   sortOrder: SortOrder;
-  onSortChange: (order: SortOrder) => void;
+  onSortChange: (_order: SortOrder) => void;
   className?: string;
 }
 
@@ -25,19 +25,19 @@ export function SortSelector({ sortOrder, onSortChange, className = '' }: SortSe
           {sortOrder === 'default' && (
             <>
               <ArrowDownUp className="h-4 w-4" />
-              <span>Orden predeterminado</span>
+              <span>{"ordenar('predeterminado');"}</span>
             </>
           )}
           {sortOrder === 'date-asc' && (
             <>
               <ArrowUpAZ className="h-4 w-4" />
-              <span>Más antiguas primero</span>
+              <span>{"ordenar('antiguas');"}</span>
             </>
           )}
           {sortOrder === 'date-desc' && (
             <>
               <ArrowDownAZ className="h-4 w-4" />
-              <span>Más recientes primero</span>
+              <span>{"ordenar('recientes');"}</span>
             </>
           )}
         </Button>

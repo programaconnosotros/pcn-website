@@ -1,0 +1,122 @@
+[
+  {
+    "date": "2026-03-02",
+    "title": "Proyecto IoT para federación de powerlifting: ESP32 y luces DMX",
+    "summary": "Un miembro compartió su proyecto de IoT para automatizar el sistema de semáforos de una federación de powerlifting usando ESP32 y el protocolo DMX para controlar las luces de jurado. Explicó el hardware involucrado: un ESP32 que recibía señales desde una tablet del árbitro principal y enviaba comandos DMX al rack de luces RGB de los jueces. El grupo mostró interés técnico en el protocolo DMX y en el uso de ESP32 para control de iluminación en tiempo real. Facundo preguntó sobre la latencia del sistema dado que en competencias de powerlifting los tiempos de señalización eran críticos. El proyecto generó admiración por combinar hardware y software en un dominio no convencional."
+  },
+  {
+    "date": "2026-03-02",
+    "title": "Macch lanza base de conocimiento RAG: feature para asistente con datos propios",
+    "summary": "Facundo García anunció el lanzamiento de la funcionalidad de base de conocimiento con RAG en Macch, el producto del equipo. La feature permitía a los usuarios subir documentos propios (PDFs, páginas web, bases de conocimiento) que el asistente usaba como contexto al responder preguntas. El grupo celebró el lanzamiento. Se discutió la arquitectura de la solución: chunking de documentos, embeddings, búsqueda vectorial y reranking. Agustín preguntó sobre el modelo de embeddings usado y Facundo explicó las decisiones técnicas sobre qué modelo priorizar para español. La conversación derivó en mejores prácticas de RAG y los casos de uso más valorados por los usuarios de Macch."
+  },
+  {
+    "date": "2026-03-02",
+    "title": "Búsqueda de trabajo: LinkedIn, especialización y cold outreach",
+    "summary": "Un miembro que buscaba trabajo como desarrollador preguntó estrategias concretas para conseguir entrevistas. El grupo ofreció consejos prácticos: mantener LinkedIn actualizado con proyectos reales y keywords relevantes, especializarse en un nicho claro en lugar de ser generalista, y hacer cold outreach directo a CTOs y tech leads en empresas de interés. Facundo recomendó enviar mensajes personalizados que mostraran conocimiento real de la empresa o producto, no mensajes genéricos. Se discutió si Glassdoor y Tecnoempleo eran efectivos para el mercado argentino. Alguien mencionó que Twitter/X seguía siendo útil para conectar con devs influyentes que abrían posiciones en sus startups."
+  },
+  {
+    "date": "2026-03-04",
+    "title": "Arquitectura multi-tenant SaaS para sistema de facturación",
+    "summary": "Un miembro presentó el diseño de un sistema de facturación multi-tenant y preguntó sobre las mejores estrategias de aislamiento de datos. El grupo discutió las tres arquitecturas principales: base de datos separada por tenant, schema separado por tenant en la misma base, y tabla compartida con tenant_id más Row Level Security (RLS). Facundo argumentó que RLS en PostgreSQL era la opción más pragmática para la mayoría de los casos: ofrecía aislamiento fuerte sin la complejidad operativa de gestionar múltiples bases de datos. Se mencionó la implementación de RLS en Supabase como referencia. Se discutió cuándo el overhead de múltiples bases de datos se justificaba: compliance estricto, grandes volúmenes de datos por tenant, o SLAs diferenciados."
+  },
+  {
+    "date": "2026-03-05",
+    "title": "Cursor Composer 1.5: el modelo más rápido, barato y confiable del momento",
+    "summary": "El grupo discutió la actualización de Cursor Composer 1.5 que varios miembros habían estado probando. Facundo García reportó que era notablemente más rápido que versiones anteriores y que la tasa de éxito en tareas de código era más alta. Se comparó con Claude Code y con GitHub Copilot en términos de velocidad de respuesta y calidad del código generado. Matías señaló que el precio por token en el API de Cursor había bajado con el nuevo modelo, lo que hacía las sesiones largas más económicas. Agustín comentó que la confiabilidad para no romper código existente era la métrica más importante en su flujo de trabajo y que 1.5 mejoraba en ese aspecto."
+  },
+  {
+    "date": "2026-03-06",
+    "title": "Git worktrees con scripts de clonación de base de datos",
+    "summary": "Facundo García compartió su setup de git worktrees con un script bash que automatizaba la creación de un nuevo worktree junto con la clonación de la base de datos local para esa tarea. El script creaba un directorio de trabajo aislado, hacía una copia de la DB de desarrollo, y configuraba las variables de entorno del worktree para apuntar a esa copia. El grupo mostró gran interés por el enfoque. Se discutió cómo manejar las migraciones de base de datos en un entorno de worktrees múltiples. Matías preguntó cómo se sincronizaban los cambios de schema entre los worktrees cuando múltiples tareas tocaban la misma base de datos. El thread terminó siendo una referencia técnica para trabajo con agentes en paralelo."
+  },
+  {
+    "date": "2026-03-07",
+    "title": "Aleph Hackathon en Salta: anuncio y convocatoria",
+    "summary": "Alguien del grupo compartió el anuncio del Aleph Hackathon que se realizaría en Salta. El evento congregaba a desarrolladores y emprendedores de todo el noroeste argentino. El grupo mostró interés y varios de los miembros de Salta confirmaron que participarían. Se discutió el formato del hackathon y los temas de los desafíos propuestos. Facundo Padilla, que era de Salta, animó a los miembros de Tucumán a sumarse. Se comentó que eventos como este eran importantes para la comunidad tech regional que históricamente había estado muy centralizada en Buenos Aires y Córdoba."
+  },
+  {
+    "date": "2026-03-08",
+    "title": "Claude Sonnet viola el SRP: debate Opus vs Sonnet para código de producción",
+    "summary": "El grupo tuvo un debate técnico extenso sobre la diferencia de calidad entre Claude Opus y Claude Sonnet al escribir código. Alguien observó que Sonnet tendía a violar el principio de responsabilidad única (SRP) creando métodos y clases con demasiadas responsabilidades. Facundo García argumentó que Opus producía diseños más coherentes en proyectos grandes pero era más lento y caro. Se discutió si la diferencia valía el costo adicional para proyectos medianos. Agustín comentó que usaba Sonnet para la mayoría de las tareas y Opus para decisiones de arquitectura importantes. El thread generó una discusión sobre cuándo el quality gate justificaba el overhead de usar modelos más caros."
+  },
+  {
+    "date": "2026-03-09",
+    "title": "Devs que dejaron de escribir código manualmente: el debate de la delegación total",
+    "summary": "El grupo retomó el tema de desarrolladores que delegaban completamente la escritura de código a agentes de IA. Alguien compartió un caso de un desarrollador en su empresa que había declarado no haber escrito una línea de código a mano en dos meses. El debate se polarizó entre quienes veían esto como el futuro natural del trabajo y quienes argumentaban que la comprensión profunda del código seguía siendo esencial para debugging y decisiones de arquitectura. Facundo señaló que en su experiencia los mejores resultados con agentes de IA los obtenían quienes tenían más conocimiento técnico para guiar y revisar al agente. Se discutió si esta tendencia cambiaría los criterios de contratación en los próximos años."
+  },
+  {
+    "date": "2026-03-10",
+    "title": "Git fixup commits y rebase interactivo: flujo de trabajo para código limpio",
+    "summary": "Facundo García compartió su práctica de usar git fixup commits combinados con rebase interactivo para mantener un historial de commits limpio. Explicó el flujo: al hacer una corrección a un commit anterior, usaba `git commit --fixup=<hash>` y luego `git rebase -i --autosquash` para que los fixups se aplastaran automáticamente sobre el commit original. Varios miembros que no conocían la opción `--autosquash` quedaron entusiasmados con el workflow. Se discutió cuándo era apropiado reescribir el historial antes de hacer push y cuándo era mejor preservar los commits individuales. El hilo terminó siendo una clase práctica de git."
+  },
+  {
+    "date": "2026-03-10",
+    "title": "Stitch vs v0: comparación de herramientas de prototipado de UI",
+    "summary": "El grupo comparó Google Stitch y v0 de Vercel como herramientas de prototipado rápido de interfaces. Los que habían usado v0 destacaban su capacidad de generar código React directamente deployable. Los de Stitch valoraban la generación de imágenes de pantallas de alta fidelidad visual como referencia para Claude. Facundo argumentó que para el workflow de 'imagen → Claude Code', Stitch era superior porque producía referencias visuales más claras. Para código directo, v0 tenía ventaja. Se discutió también Bolt y Lovable como herramientas similares. La mayoría acordó que la elección dependía de si el objetivo final era una imagen de referencia o código usable directamente."
+  },
+  {
+    "date": "2026-03-11",
+    "title": "Scripts de git worktree publicados por Facundo García en GitHub",
+    "summary": "Facundo García publicó su colección de scripts bash para gestión de git worktrees en un repositorio público de GitHub. Los scripts automatizaban la creación de worktrees con clonación de base de datos, la limpieza al terminar una tarea y el listado de worktrees activos con su estado. El grupo agradeció mucho la publicación y varios clonaron el repo inmediatamente. Se discutieron posibles mejoras: soporte para múltiples gestores de base de datos, integración con GitHub issues para nombrar los worktrees automáticamente según el número de issue. Agustín propuso un PR con una mejora menor y lo discutió en el thread."
+  },
+  {
+    "date": "2026-03-12",
+    "title": "Devs de Salta ganan hackathon de blockchain y viajan a México",
+    "summary": "El grupo celebró la noticia de que un equipo de desarrolladores de Salta, integrantes de la comunidad PCN, habían ganado un hackathon de blockchain y obtenido viaje a México como premio. Facundo Padilla y otros miembros del equipo contaron el proyecto ganador: una solución de trazabilidad de cadena de suministro usando contratos inteligentes. El grupo felicitó al equipo con entusiasmo. Se discutió la experiencia de participar en hackathons competitivos y cómo habían preparado la solución en 48 horas. Varios miembros del grupo de Tucumán expresaron motivación para participar en el siguiente hackathon."
+  },
+  {
+    "date": "2026-03-13",
+    "title": "Claude Code Artifacts: micro-apps interactivas directamente en el chat",
+    "summary": "Alguien descubrió y compartió la funcionalidad de Artifacts en Claude Code, que permitía generar micro-aplicaciones web interactivas directamente en la interfaz del chat, sin necesidad de deployar nada. El grupo exploró los ejemplos: calculadoras, visualizaciones de datos, juegos simples, y formularios funcionales renderizados dentro del chat. Facundo señaló que era útil para demos rápidas con clientes o para explorar ideas de UI sin crear un proyecto completo. Se discutió cómo Artifacts combinaba con el workflow de Stitch para ir desde boceto visual hasta prototipo interactivo en cuestión de minutos. Varios miembros pasaron tiempo ese día jugando con la feature."
+  },
+  {
+    "date": "2026-03-13",
+    "title": "Programa de embajadores de Claude Code y Cursor: anuncio y debate",
+    "summary": "El grupo discutió el anuncio de los programas de embajadores de Claude Code (Anthropic) y Cursor. Agustín compartió detalles del programa de Anthropic que buscaba developers que usaran Claude Code intensivamente para compartir casos de uso y feedback. Facundo comentó que había recibido invitación al programa de Cursor. Se debatió si participar en estos programas era valioso más allá del acceso anticipado a features. Algunos veían el valor en la conexión con el equipo de producto de las herramientas que usaban diariamente. Otros cuestionaban si el tiempo invertido en ser 'embajador' restaba tiempo al trabajo real."
+  },
+  {
+    "date": "2026-03-14",
+    "title": "Claude Max: contexto de 1 millón de tokens al mismo precio que antes",
+    "summary": "El grupo celebró el anuncio de Anthropic de ampliar el contexto disponible en Claude Max a 1 millón de tokens sin cambiar el precio del plan. Facundo comentó que este cambio era significativo para proyectos con codebases grandes donde antes tenía que usar /compact con frecuencia para no agotar el contexto. Se discutió qué tipos de tareas se beneficiaban más del contexto expandido: análisis de codebases completos, refactors que tocaban muchos archivos, y revisión de documentación extensa. Agustín señaló que el contexto de 1M tokens hacía que Claude Code fuera capaz de mantener la coherencia en proyectos que antes requerían múltiples sesiones."
+  },
+  {
+    "date": "2026-03-14",
+    "title": "Leandro lanza portfolio con Figma Make, Claude Code y Cloudflare",
+    "summary": "Leandro compartió el lanzamiento de su portfolio personal construido usando Figma Make para el diseño, Claude Code para la implementación y Cloudflare Pages para el deploy. El grupo lo felicitó y exploró el sitio. Se discutió el flujo de trabajo: desde el diseño en Figma Make (la nueva herramienta de AI-to-code de Figma) hasta la implementación con Claude Code. Facundo preguntó si Figma Make generaba código limpio o si requería mucha corrección posterior. Leandro explicó que había requerido iteraciones pero que el tiempo total había sido mucho menor que implementar desde cero. Se comparó el workflow con el de Stitch + Claude Code."
+  },
+  {
+    "date": "2026-03-14",
+    "title": "Claude Max vs Cursor: análisis económico y Agustín abandona Cursor",
+    "summary": "Agustín compartió su análisis de costo-beneficio entre mantener los planes de Claude Max y Cursor simultáneamente. Calculó que el costo combinado era alto y que el valor incremental de Cursor sobre Claude Code standalone era marginal para su flujo de trabajo personal. Anunció que cancelaba su suscripción a Cursor para quedarse solo con Claude Max. El grupo debatió la decisión: Facundo García argumentó que Cursor seguía teniendo ventajas para proyectos grandes por su integración con el IDE. Otros coincidieron con Agustín en que Claude Code había madurado lo suficiente para reemplazar Cursor en la mayoría de casos. Se discutió el futuro de Cursor ahora que Anthropic invertía más en Claude Code como producto standalone."
+  },
+  {
+    "date": "2026-03-16",
+    "title": "Curso de certificación MCP de Anthropic: anuncio y primeras impresiones",
+    "summary": "El grupo discutió el anuncio del curso de certificación de MCP (Model Context Protocol) de Anthropic. Facundo compartió que había empezado el curso y que era una introducción sólida al protocolo que permitía conectar herramientas externas con modelos de Claude. Se explicó qué era MCP: un protocolo estándar para que los LLMs pudieran invocar herramientas externas de manera estructurada, similar a como los navegadores web usan HTTP como protocolo estándar. Varios miembros preguntaron si la certificación de Anthropic era reconocida en el mercado. Agustín comentó que más que la certificación en sí, el conocimiento de MCP era valioso para construir integraciones con Claude en productos propios."
+  },
+  {
+    "title": "Cursor debug mode y estrategia de batches para ahorrar tokens",
+    "date": "2026-03-28",
+    "summary": "El grupo discutió el modo de debug de Cursor como herramienta útil para testing. Facundo García Martoni compartió su estrategia personal para optimizar el uso de tokens con modelos grandes: acumular hasta 10 fixes en una lista numerada antes de enviar el prompt, en lugar de mandar cada fix por separado. Señaló que las listas numeradas funcionan mejor que los bullets tradicionales porque el modelo puede trackear mejor cada issue durante el razonamiento. Iñaki Fernando Lozano describió un approach similar pero orientado a módulos completos: para scopes más amplios prefería hacer un único prompt muy elaborado para evitar contaminar el contexto."
+  },
+  {
+    "title": "Cómo pagar suscripciones de IA desde Argentina con dólares",
+    "date": "2026-03-30",
+    "summary": "Gonzalo Morales preguntó cómo pagar Cursor desde Argentina después de que Mercado Pago le rechazara el pago. Iñaki Fernando Lozano explicó en detalle cómo usar Brubank para pagar suscripciones internacionales en dólares al tipo de cambio oficial: comprás los USD desde la app y configurás la tarjeta de débito para que los pagos internacionales se debiten de la cuenta en dólares. Leo confirmó que Brubank funcionaba de diez para esas cosas y que incluso era más barato si se compraban al dólar oficial. La conversación también derivó en otras opciones como Prex, USDT, Fiwind, Lemon y Deel para cobrar del exterior, además de Payoneer, DolarApp/Arq y PayPal que cobra una comisión del 5.5%. Gonzalo pudo finalmente pagar Cursor siguiendo los consejos de Iñaki."
+  },
+  {
+    "title": "PlantUML como diagram-as-code para dar contexto a agentes de IA",
+    "date": "2026-03-30",
+    "summary": "Se discutió en el grupo la idea de usar PlantUML como herramienta de diagram-as-code para incluir diagramas en el contexto que se le pasa a la IA. La propuesta era que al tener los diagramas en formato de texto plano (código), el modelo podía entender la arquitectura del sistema mucho mejor que con imágenes o documentos. Se mencionó que esta práctica era especialmente útil para sistemas con múltiples componentes y relaciones complejas. El grupo valoró positivamente la idea como una forma de mejorar la calidad de las respuestas de los modelos al tener más contexto estructurado disponible."
+  },
+  {
+    "title": "Filtración del código fuente de Claude CLI y ataque supply chain en Axios",
+    "date": "2026-03-31",
+    "summary": "Se discutió la filtración del código fuente de Claude CLI que circuló en la comunidad. El grupo comentó que la comunidad reaccionó rápidamente y portó el CLI a Rust, dando lugar al proyecto openclaw y luego a claw-code. Paralelamente se habló de un ataque de supply chain que afectó a la librería Axios, uno de los paquetes más usados del ecosistema JavaScript. Los miembros del grupo debatieron sobre la seguridad de las dependencias de terceros y la importancia de auditar los paquetes que se usan en producción. Facundo Padilla mencionó que él pasaba todo el código a través de hooks de pre-commit, sonarqube y semgrep para detectar este tipo de problemas antes de que lleguen al repositorio."
+  },
+  {
+    "title": "Degradación deliberada de Claude en horas pico sin comunicación",
+    "date": "2026-03-31",
+    "summary": "Varios miembros del grupo notaron una degradación significativa en la calidad de las respuestas de Claude durante ciertas horas del día. Leandro Contrera expresó su malestar con Anthropic por esta situación. Iñaki Fernando Lozano explicó que Anthropic había confirmado que en horas pico el usage contaba por más de 1x para desincentivar la carga excesiva y equilibrar la demanda. La comunidad criticó fuertemente la falta de transparencia y comunicación apropiada de Anthropic al respecto. Thiago reportó más tarde que la situación se había corregido y que en realidad era un test con el 2% de los nuevos usuarios. El incidente generó desconfianza hacia Anthropic entre varios miembros habituales del grupo."
+  }
+]

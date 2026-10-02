@@ -19,27 +19,16 @@ import {
 } from '@/components/ui/select';
 import { signUpSchema, ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  ArrowLeft,
-  LogIn,
-  Loader2,
-  SquareAsterisk,
-  UserPlus,
-  User,
-  Briefcase,
-  GraduationCap,
-  Camera,
-  Phone,
-} from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { FileUploadPublic } from '@/components/ui/file-upload-public';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
+import { AuthLinks, AuthSection, AuthShell } from '@/components/auth/auth-shell';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { toast } from 'sonner';
-import { useTheme } from 'next-themes';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const formSchema = signUpSchema;
 
@@ -68,11 +57,10 @@ const COUNTRIES = [
   'Otro',
 ];
 
-export default function SignUpPage() {
+function SignUpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { resolvedTheme } = useTheme();
-  const redirectTo = searchParams.get('redirect') || '';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -108,80 +96,70 @@ export default function SignUpPage() {
 
       const result = await signUp({ ...values, redirectTo: finalRedirect });
 
-      toast.success('Usuario creado exitosamente! 🥳');
+      if (result.success) {
+        toast.success('Usuario creado exitosamente! 🥳');
+        // Redirigir a la página de verificación
+        // No llamamos setIsSubmitting(false) aquí para mantener el botón deshabilitado durante la redirección
+        if (result.redirectUrl) {
+          router.push(result.redirectUrl);
+        }
+        return;
+      }
 
-      // Redirigir a la página de verificación
-      // No deshabilitamos isSubmitting aquí para mantener el botón deshabilitado durante la redirección
-      if (result?.redirectUrl) {
-        router.push(result.redirectUrl);
+      // Rehabilitar el botón solo en caso de error
+      setIsSubmitting(false);
+
+      // Manejar errores específicos
+      if (result.error === 'EMAIL_ALREADY_EXISTS') {
+        toast.error('Ya hay un usuario con ese correo electrónico.');
+      } else {
+        toast.error('Error al crear el usuario. Por favor, intentá nuevamente.');
       }
     } catch (error) {
-      console.error('Error al crear el usuario', error);
-
-      if (error instanceof Error) {
-        if (error.message.includes('Unique constraint failed on the fields: (`email`)')) {
-          toast.error('Ya hay un usuario con ese correo electrónico.');
-        } else {
-          toast.error(error.message);
-        }
-      } else {
-        toast.error('Error al crear el usuario');
-      }
-
-      // Solo rehabilitar el botón si hubo un error
       setIsSubmitting(false);
+      toast.error(
+        actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
+      );
     }
   };
 
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[500px]">
-        <div className="flex flex-col items-center gap-6">
-          <img
-            src={resolvedTheme === 'dark' ? '/logo.webp' : '/pcn-purple.png'}
-            alt="Logo"
-            className="w-20"
-          />
+    <AuthShell
+      command="signup"
+      title="Crear cuenta"
+      description="Sumate a la comunidad. Solo los datos principales son obligatorios."
+      wide
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            // Mostrar toast cuando hay errores de validación
+            const firstError = Object.values(errors)[0];
+            if (firstError?.message) {
+              toast.error(firstError.message);
+            } else {
+              toast.error('Por favor, completa todos los campos requeridos correctamente');
+            }
+          })}
+          className="space-y-6"
+        >
+          {/* Sección: Información de cuenta */}
+          <AuthSection title="Datos principales">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre completo</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Lionel Messi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Crear cuenta</h1>
-          </div>
-        </div>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit, (errors) => {
-              // Mostrar toast cuando hay errores de validación
-              const firstError = Object.values(errors)[0];
-              if (firstError?.message) {
-                toast.error(firstError.message);
-              } else {
-                toast.error('Por favor, completa todos los campos requeridos correctamente');
-              }
-            })}
-            className="space-y-6"
-          >
-            {/* Sección: Información de cuenta */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                <User className="h-5 w-5" />
-                Datos principales
-              </h3>
-
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre completo</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Lionel Messi" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="email"
@@ -201,10 +179,7 @@ export default function SignUpPage() {
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
-                      Celular
-                    </FormLabel>
+                    <FormLabel>Celular</FormLabel>
                     <FormControl>
                       <Input type="tel" placeholder="+54 9 11 1234-5678" {...field} />
                     </FormControl>
@@ -212,7 +187,9 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="password"
@@ -220,7 +197,12 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>Contraseña</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="********"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -234,13 +216,20 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>Confirmar contraseña</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="********"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="country"
@@ -312,17 +301,11 @@ export default function SignUpPage() {
                 />
               )}
             </div>
+          </AuthSection>
 
-            {/* Sección: Información profesional */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Briefcase className="h-5 w-5" />
-                Información profesional
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
-
+          {/* Sección: Información profesional */}
+          <AuthSection title="Información profesional" optional>
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="profession"
@@ -330,10 +313,7 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>¿De qué trabajás?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Desarrollador Full Stack, Diseñador UX, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Desarrollador Full Stack" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -345,26 +325,20 @@ export default function SignUpPage() {
                 name="enterprise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿En qué empresa trabajás?</FormLabel>
+                    <FormLabel>¿En qué empresa?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: Google, Microsoft, etc." {...field} />
+                      <Input placeholder="Ej: Google" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+          </AuthSection>
 
-            {/* Sección: Información académica */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <GraduationCap className="h-5 w-5" />
-                Información académica
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
-
+          {/* Sección: Información académica */}
+          <AuthSection title="Información académica" optional>
+            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="studyField"
@@ -372,10 +346,7 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>¿Qué estudiás o estudiaste?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Ingeniería en Sistemas, Desarrollo Web, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Ingeniería en Sistemas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -387,95 +358,70 @@ export default function SignUpPage() {
                 name="studyPlace"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Dónde o cómo estudiás/estudiaste?</FormLabel>
+                    <FormLabel>¿Dónde estudiás?</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ej: Universidad Nacional, Autodidacta, Bootcamp, etc."
-                        {...field}
-                      />
+                      <Input placeholder="Ej: Universidad, autodidacta" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+          </AuthSection>
 
-            {/* Sección: Foto de perfil */}
-            <div className="space-y-4 rounded-md border p-4 transition-all duration-300 hover:border-pcnPurple hover:shadow-[0_0_15px_rgba(80,56,189,0.3)] dark:hover:border-white/20 dark:hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-              <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Camera className="h-5 w-5" />
-                Foto de perfil
-                <Badge variant="secondary" className="text-xs font-normal">
-                  opcional
-                </Badge>
-              </h3>
-
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subí una foto para tu perfil</FormLabel>
-                    <FormControl>
-                      <FileUploadPublic
-                        value={field.value || ''}
-                        onChange={field.onChange}
-                        maxSize={10 * 1024 * 1024}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creando usuario...
-                </>
-              ) : (
-                <>
-                  Crear usuario
-                  <UserPlus className="ml-2 h-4 w-4" />
-                </>
+          {/* Sección: Foto de perfil */}
+          <AuthSection title="Foto de perfil" optional>
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subí una foto para tu perfil</FormLabel>
+                  <FormControl>
+                    <FileUploadPublic
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      maxSize={10 * 1024 * 1024}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </Button>
-          </form>
-        </Form>
+            />
+          </AuthSection>
 
-        <div className="mt-4 flex flex-row gap-4">
-          <Link
-            href={
-              redirectTo
-                ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-                : '/autenticacion/iniciar-sesion'
-            }
+          <Button
+            type="submit"
+            size="lg"
             className="w-full"
+            loading={isSubmitting}
+            loadingText="creando cuenta..."
           >
-            <Button variant="outline" className="w-full">
-              Iniciar sesión
-              <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            crearCuenta();
+            <UserPlus className="ml-2 h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
 
-          <Link href="/autenticacion/recuperar-clave" className="w-full">
-            <Button variant="outline" className="w-full">
-              Recuperar contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+      <AuthLinks
+        links={[
+          {
+            href: redirectTo
+              ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+              : '/autenticacion/iniciar-sesion',
+            label: '¿Ya tenés cuenta? Iniciá sesión',
+          },
+          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+        ]}
+      />
+    </AuthShell>
+  );
+}
 
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
-      </div>
-    </div>
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpContent />
+    </Suspense>
   );
 }

@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Rol QA vs IA: debate sobre el futuro del testing",
+    "date": "2025-11-14",
+    "summary": "Alejo Boga compartió una imagen con la opinión del CEO de una startup argentina (getautonoma.com) de que la IA iba a reemplazar a los QAs, aclarando que el tipo podría estar sesgado por tener un producto de QA con IA. Marcelo Nuñez discrepó fuerte: los buenos QAs piensan en casos que al desarrollador nunca se le ocurren, y el que tiene en su equipo además conoce el negocio mejor que él. David Petersen, como QA, también discrepó y contó que hay empresas entrenando QAs en el uso de IA para complementar, aunque algunas sí creen que el rol es reemplazable y hasta se lo dijeron en entrevistas. Alejo matizó diciendo que el debate no era sobre la calidad de los QAs sino sobre cómo el mercado los percibe. Marcelo predijo que las empresas que hicieron despidos masivos reemplazando QAs por IA van a volver solas a buscarlos, como ya pasó con los devs. El consenso fue que lo más probable es que el mercado pida menos QAs pero ai-powered."
+  },
+  {
+    "title": "Cursor recauda USD 2.300 millones en ronda Serie D",
+    "date": "2025-11-16",
+    "summary": "Benjamin Cortes compartió la noticia de que Cursor levantó una ronda de inversión de 2.300 millones de dólares, calificándola de locura. Exequiel De Freitas señaló una ironía: Cursor recomienda el plan de 60 USD por mes, pero si elegís facturación anual no te hacen ningún descuento. La noticia reforzó en el grupo la percepción de que Cursor seguía siendo el IDE AI líder del mercado, con una trayectoria de crecimiento muy sólida."
+  },
+  {
+    "title": "Caída global de Cloudflare: media internet abajo",
+    "date": "2025-11-18",
+    "summary": "El 18 de noviembre, coincidiendo con el cumpleaños de Agustín Sánchez, se produjo una caída global de Cloudflare que afectó a ChatGPT, Claude, Perplexity, X, Canva, Spotify, Udemy, League of Legends, GitHub, y páginas gubernamentales, entre muchas otras. Julián Vélez (Colombia) compartió un resumen detallado con la lista de servicios afectados y el link al status oficial de Cloudflare. Agustín contó que lo despertaron los clientes calientes porque sus websites se cayeron, y graficó lo loco que es que falle un solo proveedor y caiga media internet. Iñaki Fernando Lozano apuntó que si bien el paradigma original de internet era descentralizado, en la práctica siempre fue centralizado alrededor de providers como Cloudflare y Amazon. Alejo recordó que también se había caído AWS un mes antes, marcando un patrón preocupante de fragilidad en la infraestructura central de internet."
+  },
+  {
+    "title": "Estimación en talles de remera vs story points",
+    "date": "2025-11-21",
+    "summary": "Marcelo Nuñez vio por primera vez una estimación de software en talles de remera y pensó que era un meme. Agustín Sánchez le explicó que es un sistema análogo a los story points de Fibonacci: se usa una abstracción para medir la complejidad de la tarea en lugar de las horas, y la ventaja es que desacopla la estimación del seniority del dev (un senior puede hacer una tarea M en un día y un junior en tres). La desventaja que señaló Agustín es que complica calcular la velocidad por sprint de cada dev individualmente. Agustín también mencionó haber notado que tanto devs como PMs en la industria suelen no entender bien este sistema de estimación."
+  },
+  {
+    "title": "Prettier en Windows: CRLF vs LF y cómo solucionarlo",
+    "date": "2025-11-21",
+    "summary": "Fede Valle tuvo un error de Prettier que no recordaba cómo resolver. Germán Navarro identificó rápidamente el problema: el carácter de fin de línea, y recomendó buscar la opción end of line en el config de Prettier y elegir LF. Fede confirmó el diagnóstico: Prettier y el ecosistema JavaScript esperan LF (Unix), pero VSCode en Windows usa CRLF por defecto. La solución fue configurar endOfLine en el archivo .prettierrc. Marcio B agregó que también se puede configurar en .editorconfig y cambiarlo directamente desde la status bar de VSCode. Germán aclaró que esto es un problema que solo aparece en Windows y que se puede evitar para todo el repo definiendo las reglas en el archivo de configuración."
+  },
+  {
+    "title": "Deploy en VPS vs Vercel: vCPUs, Render y DonWeb",
+    "date": "2025-11-25",
+    "summary": "Fede Valle preguntó recomendaciones para deployar su primer proyecto fullstack de cliente: backend en Render plan Starter (7 USD), base de datos en Supabase (free) y frontend en Vercel (free). El grupo analizó las opciones y Fede se entusiasmó con DonWeb como alternativa más económica donde podía correr Nest, Next y Postgres en un mismo servidor. Iñaki Fernando Lozano advirtió que Next es muy hambriento de RAM. Leandro Contrera preguntó qué eran las vCPUs e Iñaki explicó en detalle: son núcleos virtuales que el proveedor vende como servicio de máquinas virtuales donde una computadora con procesadores de servidor de muchos núcleos se divide en múltiples planes de VPS; la mayoría hace overcommit y asigna poder de cómputo on demand. Iñaki también compartió que él tiene un VPS de 4 vCPUs y 16GB RAM en Hostinger. Matias Gutierrez contó que directamente le pide al cliente que pague Vercel, calificándolo como su mejor decisión."
+  },
+  {
+    "title": "Standing desks: reviews y recomendaciones de la comunidad",
+    "date": "2025-11-29",
+    "summary": "Agustín Sánchez mostró su setup con una silla postural Balans (sin respaldo, con apoyo de rodillas) y un standing desk de Inpro 150x70, y contó que llevaba semanas usándolo feliz alternando entre sentado y parado. Gonzalo Morales preguntó cómo se sentía después de muchas horas, y Agustín dijo que el máximo fue hora y media seguido pero no porque le incomodara, sino porque le gustaba trabajar parado también. Gonzalo aportó que su kinesiólogo lo retó por pasar muchas horas sentado, ya que inhibe el glúteo y genera descompensaciones. Alejo Boga dijo que para él fue un antes y un después para la espalda, hombros y postura cuando empezó a trabajar de pie. Emiliano Grillo mostró su standing desk de Inpro en color nogal con funciones de memory de alturas y timer automático. Agustin Navarro mostró una opción manual de la marca Naku que sale a la mitad de precio. Marcelo Nuñez compartió que había comprado uno de Amazon (marca Huuger) y iba a contar la experiencia cuando llegara. Emiliano recomendó también la marca Neonix como alternativa más barata que Inpro."
+  }
+]

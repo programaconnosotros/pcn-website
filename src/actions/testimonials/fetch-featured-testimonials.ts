@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchFeaturedTestimonials = () =>
+export const fetchFeaturedTestimonials = async () =>
   prisma.testimonial.findMany({
     where: {
       featured: true,
@@ -14,7 +14,6 @@ export const fetchFeaturedTestimonials = () =>
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

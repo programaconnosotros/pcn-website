@@ -3,22 +3,20 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { promoteNextFromWaitlist } from '@/actions/events/event-capacity';
-import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
+import { findSession } from '@/lib/session';
+import { lockEvent, notifyPromotions, promoteFromWaitlist } from '@/lib/event-waitlist';
 
 export const deleteRegistration = async (registrationId: string) => {
-  // Verificar que el usuario es admin
-  const sessionId = cookies().get('sessionId')?.value;
+  // Verificar que el usuario está logueado
+  const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
-  if (!session?.user || session.user.role !== 'ADMIN') {
+  if (!(await canManageSomeEvent(session?.user))) {
     throw new Error('No tienes permisos para realizar esta acción');
   }
 
@@ -31,31 +29,27 @@ export const deleteRegistration = async (registrationId: string) => {
     throw new Error('Inscripción no encontrada');
   }
 
-  // Eliminar la inscripción físicamente
-  await prisma.eventRegistration.delete({
-    where: { id: registrationId },
-  });
+  // Solo quien gestiona el evento elimina inscripciones
+  if (!(await canManageEventById(session?.user, registration.eventId))) {
+    throw new Error('No tienes permisos para realizar esta acción');
+  }
 
-  const event = await prisma.event.findUnique({
-    where: { id: registration.eventId },
-    select: { name: true },
-  });
+  const outcome = await prisma.$transaction(async (tx) => {
+    // Bloquear el evento: la baja y la promoción de quien espera pasan juntas
+    const event = await lockEvent(tx, registration.eventId);
 
-  const promoted = await promoteNextFromWaitlist(registration.eventId);
-  if (promoted && event) {
-    await notifyAdmins({
-      type: 'event_waitlist_promoted',
-      title: 'Promoción automática desde lista de espera',
-      message: `${promoted.userName} obtuvo un cupo en "${event.name}"`,
-      metadata: {
-        eventId: registration.eventId,
-        eventName: event.name,
-        registrationId: promoted.registrationId,
-        userId: promoted.userId,
-        userName: promoted.userName,
-        userEmail: promoted.userEmail,
-      },
+    // Eliminar la inscripción físicamente
+    await tx.eventRegistration.delete({
+      where: { id: registrationId },
     });
+
+    // Si se liberó un lugar, pasa a la próxima persona en la lista de espera
+    if (!event || registration.cancelledAt !== null) return null;
+    return { event, promoted: await promoteFromWaitlist(tx, event) };
+  });
+
+  if (outcome && outcome.promoted.length > 0) {
+    await notifyPromotions(outcome.event, outcome.promoted);
   }
 
   revalidatePath(`/eventos/${registration.eventId}`);

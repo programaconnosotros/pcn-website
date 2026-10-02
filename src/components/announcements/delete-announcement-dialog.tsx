@@ -19,7 +19,7 @@ interface DeleteAnnouncementDialogProps {
   announcementId: string;
   announcementTitle: string;
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (_open: boolean) => void;
 }
 
 export function DeleteAnnouncementDialog({
@@ -60,14 +60,8 @@ export function DeleteAnnouncementDialog({
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isDeleting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Eliminando...
-              </>
-            ) : (
-              'Eliminar'
-            )}
+            {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isDeleting ? 'Eliminando...' : 'Eliminar'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

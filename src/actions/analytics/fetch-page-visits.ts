@@ -1,8 +1,11 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
 export const fetchPageVisits = async (limit: number = 100) => {
+  await requireAdmin();
+
   return prisma.pageVisit.findMany({
     take: limit,
     orderBy: {
@@ -21,6 +24,8 @@ export const fetchPageVisits = async (limit: number = 100) => {
 };
 
 export const getPageVisitStats = async () => {
+  await requireAdmin();
+
   const now = new Date();
   const oneDayAgo = new Date(now);
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);

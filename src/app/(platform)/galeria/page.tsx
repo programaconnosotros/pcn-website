@@ -1,55 +1,27 @@
-'use client';
-
+import { redirect } from 'next/navigation';
 import { Gallery } from '@/components/photo-gallery/gallery';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { getAdminUser } from '@/lib/admin';
+import { getGalleryFilterOptions, listGalleryItems } from '@/lib/gallery';
+import { parseGalleryFilter } from '@/lib/gallery-filters';
 
-export default function PhotoGallery() {
-  const searchParams = useSearchParams();
-  const photoId = searchParams.get('foto');
-  const [initialPhotoId, setInitialPhotoId] = useState<number | null>(null);
+export default async function GalleryPage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const searchParams = await props.searchParams;
 
-  useEffect(() => {
-    if (photoId) {
-      const id = Number.parseInt(photoId);
-      if (!isNaN(id)) {
-        setInitialPhotoId(id);
-      }
-    }
-  }, [photoId]);
+  // Links from the old static gallery (`/galeria?foto=<n>`): its photos are no longer shown.
+  if (searchParams.foto !== undefined) redirect('/galeria');
+
+  const filter = parseGalleryFilter(searchParams);
+  const [items, options, admin] = await Promise.all([
+    listGalleryItems(filter),
+    getGalleryFilterOptions(),
+    getAdminUser(),
+  ]);
 
   return (
-    <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Galería</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col p-0">
-        <Gallery initialPhotoId={initialPhotoId} />
-      </div>
-    </>
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <Gallery items={items} filter={filter} options={options} canUpload={!!admin} />
+    </div>
   );
 }

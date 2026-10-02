@@ -23,7 +23,7 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
-    --radius: 0.3rem;
+    --radius: 0.25rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -39,39 +39,40 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* Terminal palette: near-black phosphor screen, PCN green as the only accent. */
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 72% 50%;
+    --background: 160 30% 2.5%;
+    --foreground: 150 25% 88%;
+    --card: 160 30% 3.5%;
+    --card-foreground: 150 25% 88%;
+    --popover: 160 30% 3.5%;
+    --popover-foreground: 150 25% 88%;
+    --primary: 166 97% 49%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 166 40% 9%;
+    --secondary-foreground: 166 80% 70%;
+    --muted: 166 30% 8%;
+    --muted-foreground: 160 12% 58%;
+    --accent: 166 60% 10%;
+    --accent-foreground: 166 97% 55%;
+    --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 166 55% 14%;
+    --input: 166 55% 16%;
+    --ring: 166 97% 49%;
+    --chart-1: 166 97% 49%;
+    --chart-2: 190 90% 50%;
+    --chart-3: 45 95% 55%;
+    --chart-4: 280 70% 65%;
+    --chart-5: 340 80% 60%;
+    --sidebar-background: 160 30% 2%;
+    --sidebar-foreground: 150 20% 80%;
+    --sidebar-primary: 166 97% 49%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 166 60% 9%;
+    --sidebar-accent-foreground: 166 97% 55%;
+    --sidebar-border: 166 55% 12%;
+    --sidebar-ring: 166 97% 49%;
   }
   .theme {
     --animate-marquee: marquee var(--duration) infinite linear;
@@ -83,8 +84,52 @@
   * {
     @apply border-border;
   }
+  /* Explicit root background: Safari 26 ignores theme-color and tints its translucent
+     status bar / toolbar from the page, so the canvas behind them must never be transparent. */
+  html {
+    @apply bg-background;
+  }
   body {
     @apply bg-background text-foreground;
+    caret-color: #04f4be;
+  }
+  ::selection {
+    background: #04f4be;
+    color: #000;
+  }
+  /* Thin phosphor scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #04f4be4d transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #04f4be4d;
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #04f4be99;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  /* CRT scanlines over the whole screen, barely visible. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(4, 244, 190, 0.025) 2px,
+      rgba(4, 244, 190, 0.025) 3px
+    );
   }
 }
 
@@ -113,5 +158,1263 @@
 
   .animate-marquee-vertical {
     animation: marquee-vertical var(--duration) linear infinite;
+  }
+
+  /* Terminal helpers. */
+  .text-glow {
+    text-shadow: 0 0 8px rgba(4, 244, 190, 0.55);
+  }
+  .box-glow {
+    box-shadow: 0 0 18px -4px rgba(4, 244, 190, 0.45);
+  }
+  .cursor-blink::after {
+    content: '_';
+    margin-left: 0.1em;
+    color: #04f4be;
+    animation: cursor-blink 1s steps(1) infinite;
+  }
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* PCN OS background processes: transform/opacity-only animations. */
+  .os-scan {
+    animation: os-scan 7s linear infinite;
+  }
+  @keyframes os-scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(1200%);
+    }
+  }
+  .os-line-in {
+    animation: os-line-in 0.35s ease-out both;
+  }
+  @keyframes os-line-in {
+    from {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .os-scan,
+    .os-line-in {
+      animation: none;
+    }
+  }
+
+  /* PCN OS dock: two faint light beams drift slowly around the frame, a soft scan sweeps across the
+     surface, the divider carries a data pulse and running programs show a live meter. */
+  .os-dock-frame {
+    padding: 1px;
+    background: conic-gradient(
+        from var(--dock-beam),
+        transparent 0 25%,
+        rgba(4, 244, 190, 0.18) 40%,
+        rgba(180, 255, 240, 0.55) 45%,
+        transparent 50% 75%,
+        rgba(4, 244, 190, 0.18) 90%,
+        rgba(180, 255, 240, 0.55) 95%,
+        transparent 100%
+      ),
+      rgba(4, 244, 190, 0.3);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: dock-beam 24s linear infinite;
+  }
+  @keyframes dock-beam {
+    to {
+      --dock-beam: 360deg;
+    }
+  }
+  .os-dock-sweep {
+    animation: dock-sweep 16s ease-in-out infinite;
+  }
+  @keyframes dock-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    60%,
+    100% {
+      transform: translateX(400%);
+    }
+  }
+  .os-dock-divider {
+    animation: dock-divider 6s ease-in-out infinite;
+  }
+  @keyframes dock-divider {
+    from {
+      transform: translateY(-200%);
+    }
+    to {
+      transform: translateY(500%);
+    }
+  }
+  .os-dock-meter {
+    animation: dock-meter 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes dock-meter {
+    0% {
+      transform: scaleY(0.25);
+    }
+    40% {
+      transform: scaleY(1);
+    }
+    70% {
+      transform: scaleY(0.5);
+    }
+    100% {
+      transform: scaleY(0.85);
+    }
+  }
+  .os-dock-caret {
+    animation: cursor-blink 1s steps(1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .os-dock-frame,
+    .os-dock-sweep,
+    .os-dock-divider,
+    .os-dock-meter,
+    .os-dock-caret {
+      animation: none;
+    }
+    .os-dock-sweep,
+    .os-dock-divider {
+      display: none;
+    }
+  }
+
+  /* Menus and dropdowns (see components/ui/menu-surface.ts): the panel boots open like a CRT,
+     sweeping down with a brightness flash, and its items stream in one after another. */
+  .menu-surface[data-state='open'] {
+    animation: menu-boot 0.3s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+  .menu-surface[data-state='closed'] {
+    animation: menu-off 0.12s ease-in both;
+  }
+  .menu-surface [role='menuitem'],
+  .menu-surface [role='menuitemcheckbox'],
+  .menu-surface [role='menuitemradio'],
+  .menu-surface [role='option'] {
+    animation: menu-item-in 0.28s ease-out both;
+    animation-delay: calc(var(--menu-i, 10) * 22ms + 60ms);
+  }
+  .menu-surface :nth-child(1) {
+    --menu-i: 1;
+  }
+  .menu-surface :nth-child(2) {
+    --menu-i: 2;
+  }
+  .menu-surface :nth-child(3) {
+    --menu-i: 3;
+  }
+  .menu-surface :nth-child(4) {
+    --menu-i: 4;
+  }
+  .menu-surface :nth-child(5) {
+    --menu-i: 5;
+  }
+  .menu-surface :nth-child(6) {
+    --menu-i: 6;
+  }
+  .menu-surface :nth-child(7) {
+    --menu-i: 7;
+  }
+  .menu-surface :nth-child(8) {
+    --menu-i: 8;
+  }
+  .menu-surface :nth-child(9) {
+    --menu-i: 9;
+  }
+  @keyframes menu-boot {
+    0% {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      filter: brightness(2.2) saturate(1.6);
+      transform: translateY(-4px) scaleX(0.97);
+    }
+    55% {
+      opacity: 1;
+      filter: brightness(1.5);
+    }
+    100% {
+      opacity: 1;
+      clip-path: inset(-48px);
+      filter: none;
+      transform: none;
+    }
+  }
+  @keyframes menu-off {
+    to {
+      opacity: 0;
+      transform: scaleY(0.96);
+      filter: brightness(1.8);
+    }
+  }
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-surface[data-state],
+    .menu-surface [role] {
+      animation: none;
+    }
+  }
+
+  /* Dialogs (see components/ui/dialog-surface.ts). The backdrop dims the page behind faint
+     scanlines and a vignette; the panel switches on like a CRT (a bright line that stretches
+     across, then snaps open vertically), a scan beam sweeps down it once and its contents
+     fade in last. Closing collapses it back to a line that shrinks to a dot. */
+  .dialog-overlay {
+    background: repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.025) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.94) 100%);
+  }
+  /* The phone tab bar (z-60) sits above dialogs (z-50) so it stays usable over the menu sheet,
+     but it would cover a dialog's footer buttons: hide it while any dialog is open. */
+  body:has(.dialog-surface[data-state='open']) .mobile-tab-bar {
+    display: none;
+  }
+  .dialog-overlay[data-state='open'] {
+    animation: dialog-fade-in 0.25s ease-out both;
+  }
+  .dialog-overlay[data-state='closed'] {
+    animation: dialog-fade-out 0.22s ease-in both;
+  }
+  .dialog-surface {
+    --dialog-corner: #04f4be;
+    background-color: rgba(0, 0, 0, 0.92);
+    /* Four lit corner brackets and scanlines. Backgrounds stay fixed to the panel's box, so
+       they don't scroll away with long content the way positioned elements would. */
+    background-image: linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.03) 0 1px, transparent 1px 3px);
+    background-size:
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      12px 2px,
+      2px 12px,
+      auto;
+    background-position:
+      top left,
+      top left,
+      top right,
+      top right,
+      bottom left,
+      bottom left,
+      bottom right,
+      bottom right,
+      0 0;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+      no-repeat, repeat;
+  }
+  .dialog-surface::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    opacity: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 44%,
+        rgba(4, 244, 190, 0.08) 49%,
+        rgba(4, 244, 190, 0.5) 50%,
+        transparent 50.5%
+      )
+      0 0 / 100% 300% no-repeat;
+  }
+  .dialog-surface[data-state='open'] {
+    animation: dialog-boot 0.45s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  }
+  .dialog-surface[data-state='open']::after {
+    animation: dialog-beam 0.9s ease-in-out 0.3s both;
+  }
+  .dialog-surface[data-state='open'] > * {
+    animation: dialog-fade-in 0.3s ease-out 0.25s both;
+  }
+  .dialog-surface[data-state='closed'] {
+    animation: dialog-off 0.22s ease-in both;
+  }
+  @keyframes dialog-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes dialog-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes dialog-boot {
+    0% {
+      opacity: 0;
+      scale: 0.15 0.006;
+      filter: brightness(3);
+    }
+    35% {
+      opacity: 1;
+      scale: 1 0.006;
+      filter: brightness(3);
+    }
+    70% {
+      scale: 1 1.015;
+      filter: brightness(1.4);
+    }
+    100% {
+      opacity: 1;
+      scale: 1 1;
+      filter: none;
+    }
+  }
+  @keyframes dialog-beam {
+    0% {
+      opacity: 1;
+      background-position: 0 100%;
+    }
+    100% {
+      opacity: 1;
+      background-position: 0 0;
+    }
+  }
+  @keyframes dialog-off {
+    0% {
+      scale: 1 1;
+    }
+    55% {
+      opacity: 1;
+      scale: 1 0.006;
+      filter: brightness(3);
+    }
+    100% {
+      opacity: 0;
+      scale: 0 0.006;
+      filter: brightness(3);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dialog-overlay[data-state],
+    .dialog-surface[data-state],
+    .dialog-surface[data-state]::after,
+    .dialog-surface[data-state] > * {
+      animation: none;
+    }
+  }
+
+  /* The gallery viewer's photo resolves with a short RGB-split glitch once it has loaded. */
+  .photo-glitch-in {
+    animation: photo-glitch-in 0.45s ease-out both;
+  }
+  @keyframes photo-glitch-in {
+    0% {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      filter: brightness(2.2) saturate(0);
+    }
+    25% {
+      opacity: 1;
+      clip-path: inset(0 0 45% 0);
+      transform: translateX(-6px);
+      filter: drop-shadow(4px 0 0 rgba(255, 0, 90, 0.7))
+        drop-shadow(-4px 0 0 rgba(4, 244, 190, 0.7));
+    }
+    45% {
+      clip-path: inset(30% 0 0 0);
+      transform: translateX(4px);
+      filter: drop-shadow(-3px 0 0 rgba(255, 0, 90, 0.6))
+        drop-shadow(3px 0 0 rgba(4, 244, 190, 0.6));
+    }
+    65% {
+      clip-path: inset(0);
+      transform: translateX(-1px);
+      filter: brightness(1.2);
+    }
+    100% {
+      opacity: 1;
+      clip-path: inset(0);
+      transform: none;
+      filter: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-glitch-in {
+      animation: none;
+    }
+  }
+
+  /* A scan line that sweeps down a row while it is hovered (articles on /lectura). */
+  .group:hover .article-scan {
+    animation: article-scan 1.6s ease-in-out infinite;
+  }
+  @keyframes article-scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(600%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover .article-scan {
+      animation: none;
+    }
+  }
+
+  /* Toasts (components/ui/sonner.tsx): the bottom bar drains over the default 4s duration and
+     pauses while the stack is hovered, like the toasts themselves. */
+  .pcn-toast::after {
+    animation: toast-timer 4s linear forwards;
+  }
+  .toaster:hover .pcn-toast::after,
+  .pcn-toast[data-type='loading']::after {
+    animation-play-state: paused;
+  }
+  @keyframes toast-timer {
+    to {
+      transform: scaleX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pcn-toast::after {
+      animation: none;
+    }
+  }
+
+  /* /proyectos: a project's title splits into RGB ghosts for a moment when its row is hovered.
+     The ghosts are ::before/::after copies of the text from the title's data-text attribute. */
+  .project-glitch {
+    position: relative;
+  }
+  .project-glitch::before,
+  .project-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .project-glitch::before {
+    color: rgb(255 0 90);
+  }
+  .project-glitch::after {
+    color: rgb(4 244 190);
+  }
+  .group:hover .project-glitch::before {
+    animation: project-glitch-a 0.5s steps(2) 1;
+  }
+  .group:hover .project-glitch::after {
+    animation: project-glitch-b 0.5s steps(2) 1;
+  }
+  @keyframes project-glitch-a {
+    0% {
+      opacity: 0.8;
+      transform: translate(-3px, -1px);
+      clip-path: inset(0 0 60% 0);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translate(2px, 1px);
+      clip-path: inset(40% 0 20% 0);
+    }
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  @keyframes project-glitch-b {
+    0% {
+      opacity: 0.8;
+      transform: translate(3px, 1px);
+      clip-path: inset(50% 0 0 0);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translate(-2px, 0);
+      clip-path: inset(10% 0 55% 0);
+    }
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  /* /proyectos: rows boot in one after another, like lines printed by a command. */
+  .project-boot {
+    animation: project-boot 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes project-boot {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: brightness(2.5) saturate(0);
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      clip-path: inset(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover .project-glitch::before,
+    .group:hover .project-glitch::after,
+    .project-boot {
+      animation: none;
+    }
+  }
+
+  /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
+  .bg-grid-fade {
+    background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(4, 244, 190, 0.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
+  }
+}
+
+/* PCN OS: pages rendered inside a desktop window drop the sidebar chrome. */
+html[data-embedded] .peer[data-side],
+html[data-embedded] [data-sidebar='trigger'],
+html[data-embedded] [data-sidebar='trigger'] + [data-orientation='vertical'] {
+  display: none;
+}
+
+/* Hacker cursor (components/ui/hacker-cursor.tsx). The native cursor hides only once the
+   component takes over, so the page never ends up without a pointer; text fields keep the
+   I-beam. */
+html.pcn-cursor,
+html.pcn-cursor * {
+  cursor: none !important;
+}
+html.pcn-cursor
+  :is(
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='button']):not(
+        [type='submit']
+      ),
+    textarea,
+    [contenteditable=''],
+    [contenteditable='true']
+  ) {
+  cursor: text !important;
+}
+.pcn-cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* Difference against the page: accent over dark stays accent, accent over accent goes black. */
+.pcn-cursor-blend {
+  mix-blend-mode: difference;
+}
+/* Inside a PCN OS window the desktop draws the cursor. */
+html[data-embedded] .pcn-cursor-layer {
+  display: none;
+}
+html:not(.pcn-cursor) .pcn-cursor-layer,
+html.pcn-cursor-hidden .pcn-cursor-dot,
+html.pcn-cursor-hidden .pcn-cursor-ring,
+html.pcn-cursor-hidden .pcn-cursor-label {
+  opacity: 0;
+}
+.pcn-cursor-dot,
+.pcn-cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: opacity 0.15s;
+  will-change: transform;
+}
+.pcn-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #04f4be;
+  box-shadow:
+    0 0 6px #04f4be,
+    0 0 14px rgba(4, 244, 190, 0.6);
+}
+.pcn-cursor-ring {
+  width: 26px;
+  height: 26px;
+}
+.pcn-cursor-frame {
+  position: absolute;
+  inset: 0;
+  transition: rotate 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.pcn-cursor-ring[data-hover='true'] .pcn-cursor-frame {
+  rotate: 90deg;
+}
+.pcn-cursor-corner {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: rgba(4, 244, 190, 0.75);
+  transition:
+    border-color 0.2s,
+    width 0.2s,
+    height 0.2s;
+}
+.pcn-cursor-ring[data-hover='true'] .pcn-cursor-corner {
+  width: 10px;
+  height: 10px;
+  border-color: #04f4be;
+  filter: drop-shadow(0 0 4px rgba(4, 244, 190, 0.9));
+}
+.pcn-cursor-ring[data-pressed='true'] .pcn-cursor-corner {
+  border-color: #fff;
+}
+.pcn-cursor-label {
+  position: fixed;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  white-space: nowrap;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  line-height: 1;
+  color: #04f4be;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 2px 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
+  opacity: 1;
+  animation: pcn-cursor-type 0.35s steps(6) both;
+}
+@keyframes pcn-cursor-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+.pcn-cursor-pulse {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #04f4be;
+  translate: -50% -50%;
+  animation: pcn-cursor-pulse 0.5s ease-out forwards;
+}
+@keyframes pcn-cursor-pulse {
+  from {
+    opacity: 1;
+    scale: 1;
+    rotate: 0deg;
+  }
+  to {
+    opacity: 0;
+    scale: 5;
+    rotate: 45deg;
+  }
+}
+.pcn-cursor-particle {
+  position: fixed;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: #04f4be;
+  text-shadow: 0 0 6px rgba(4, 244, 190, 0.9);
+  translate: -50% -50%;
+  animation: pcn-cursor-particle 0.65s cubic-bezier(0.15, 0.8, 0.3, 1) both;
+}
+.pcn-cursor-particle:nth-child(3n) {
+  color: #fff;
+}
+.pcn-cursor-particle:nth-child(4n) {
+  color: #8b7cf0;
+  text-shadow: 0 0 6px rgba(80, 56, 189, 0.9);
+}
+@keyframes pcn-cursor-particle {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1.2);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--spin)) scale(0.6);
+  }
+}
+
+/* PCN loader: the logo booting up while a page loads (see components/ui/pcn-loader.tsx). */
+.pcn-loader {
+  --pcn-loader-cycle: 2.4s;
+  /* The halves come together once; the looping effects start when they lock. */
+  --pcn-loader-assemble: 0.7s;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 8rem;
+  height: 8rem;
+}
+.pcn-loader > * {
+  position: absolute;
+}
+.pcn-loader-core {
+  inset: 22%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(4, 244, 190, 0.55), transparent 70%);
+  filter: blur(10px);
+  animation: pcn-loader-core var(--pcn-loader-cycle) ease-out var(--pcn-loader-assemble) infinite
+    both;
+}
+.pcn-loader-ring {
+  inset: 0;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 55%,
+    rgba(4, 244, 190, 0.15) 70%,
+    #04f4be 99%,
+    transparent 100%
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 1.5px)
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  filter: drop-shadow(0 0 6px #04f4be);
+  animation: pcn-loader-spin 1.1s linear infinite;
+}
+.pcn-loader-ticks {
+  inset: -9%;
+  width: 118%;
+  height: 118%;
+  fill: none;
+  stroke: rgba(4, 244, 190, 0.35);
+  stroke-width: 0.6;
+  stroke-dasharray: 1 4.9;
+  animation: pcn-loader-spin 9s linear infinite reverse;
+}
+.pcn-loader-orbit {
+  inset: -4%;
+  animation: pcn-loader-spin 1.6s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+}
+.pcn-loader-orbit > span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #04f4be;
+  box-shadow: 0 0 8px 1px #04f4be;
+}
+.pcn-loader-orbit--reverse {
+  inset: 10%;
+  animation-duration: 2.3s;
+  animation-direction: reverse;
+}
+.pcn-loader-orbit--reverse > span {
+  width: 3px;
+  height: 3px;
+  background: #8b7cf0;
+  box-shadow: 0 0 8px 1px #5038bd;
+}
+.pcn-loader-logo {
+  inset: 24%;
+  /* On the wrapper: a filter on the clipped halves would be clipped too, drawing a seam. */
+  filter: drop-shadow(0 0 10px rgba(4, 244, 190, 0.6));
+  animation: pcn-loader-tilt var(--pcn-loader-cycle) cubic-bezier(0.6, 0, 0.2, 1)
+    var(--pcn-loader-assemble) infinite;
+}
+.pcn-loader-logo > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pcn-loader-half--left {
+  clip-path: inset(0 50% 0 0);
+  animation: pcn-loader-join-left var(--pcn-loader-assemble) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.pcn-loader-half--right {
+  clip-path: inset(0 0 0 50%);
+  animation: pcn-loader-join-right var(--pcn-loader-assemble) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.pcn-loader-ghost {
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+/* The same magenta/green RGB split as the /proyectos titles (see .project-glitch). */
+.pcn-loader-ghost--a {
+  filter: brightness(0) saturate(100%) invert(18%) sepia(98%) saturate(7000%) hue-rotate(325deg);
+  animation: pcn-loader-glitch-a var(--pcn-loader-cycle) steps(1) var(--pcn-loader-assemble)
+    infinite;
+}
+.pcn-loader-ghost--b {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(62%) saturate(2000%) hue-rotate(115deg);
+  animation: pcn-loader-glitch-b var(--pcn-loader-cycle) steps(1) var(--pcn-loader-assemble)
+    infinite;
+}
+.pcn-loader-beam {
+  left: -30%;
+  right: -30%;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #04f4be 30%, #fff 50%, #04f4be 70%, transparent);
+  box-shadow: 0 0 12px 2px rgba(4, 244, 190, 0.7);
+  mix-blend-mode: screen;
+  animation: pcn-loader-beam var(--pcn-loader-cycle) ease-in-out var(--pcn-loader-assemble) infinite
+    both;
+}
+@keyframes pcn-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pcn-loader-core {
+  0%,
+  55% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+/* The two chevrons slide in from the sides, overshoot slightly and lock together for good. */
+@keyframes pcn-loader-join-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-34%) rotate(-12deg);
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(3%) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pcn-loader-join-right {
+  0% {
+    opacity: 0;
+    transform: translateX(34%) rotate(12deg);
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(-3%) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Once joined, the whole logo turns a little and settles back, in step with the RGB glitch. */
+@keyframes pcn-loader-tilt {
+  0%,
+  50% {
+    transform: none;
+  }
+  56% {
+    transform: rotate(-14deg) scale(1.06);
+  }
+  64% {
+    transform: rotate(5deg) scale(0.98);
+  }
+  72%,
+  100% {
+    transform: none;
+  }
+}
+@keyframes pcn-loader-glitch-a {
+  0%,
+  54% {
+    opacity: 0;
+  }
+  56% {
+    opacity: 0.9;
+    clip-path: inset(12% 0 64% 0);
+    transform: translate(-9%, 0);
+  }
+  58% {
+    clip-path: inset(58% 0 18% 0);
+    transform: translate(7%, 0);
+  }
+  60% {
+    clip-path: inset(34% 0 44% 0);
+    transform: translate(-5%, 0);
+  }
+  62% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(-3%, 0);
+    opacity: 0.6;
+  }
+  64%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pcn-loader-glitch-b {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  57% {
+    opacity: 0.9;
+    clip-path: inset(66% 0 8% 0);
+    transform: translate(8%, 0);
+  }
+  59% {
+    clip-path: inset(20% 0 55% 0);
+    transform: translate(-7%, 0);
+  }
+  61% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(3%, 0);
+    opacity: 0.6;
+  }
+  63%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pcn-loader-beam {
+  0%,
+  20% {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(calc(8rem * 0.52));
+  }
+  55%,
+  100% {
+    opacity: 0;
+    transform: translateY(calc(8rem * 0.52));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcn-loader *,
+  .pcn-loader-ghost,
+  .pcn-loader-beam {
+    animation: none !important;
+  }
+  .pcn-loader-ghost,
+  .pcn-loader-beam {
+    display: none;
+  }
+}
+
+/* Angle of the light beams running around the PCN OS dock frame (see .os-dock-frame). */
+@property --dock-beam {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Periodic light sweep across earned badges (src/components/badges/badge-medal.tsx). */
+@keyframes badge-shine {
+  0%,
+  78% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.badge-shine {
+  animation: badge-shine 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-shine {
+    animation: none;
+  }
+}
+
+/* Form fields (see components/ui/field-surface.ts). Every text input, textarea and select
+   trigger is a terminal prompt: mono text, a block caret, faint scanlines and two lit corner
+   brackets. Focusing it locks on: the frame glows, the brackets go bright and a scan beam keeps
+   sweeping along the bottom edge. An invalid field turns red and glitches once. All of it is
+   painted as backgrounds on the element itself, so callers keep a plain <input> they can size,
+   pad and position like any other. */
+@property --field-beam {
+  syntax: '<percentage>';
+  initial-value: -80%;
+  inherits: false;
+}
+@layer components {
+  .field-surface {
+    --field-corner: rgba(4, 244, 190, 0.55);
+    --field-beam-color: #04f4be;
+    font-family: var(--font-geist-mono), monospace;
+    caret-color: #04f4be;
+    caret-shape: block;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-image: linear-gradient(
+        90deg,
+        transparent,
+        var(--field-beam-color),
+        #d6fff6,
+        var(--field-beam-color),
+        transparent
+      ),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      linear-gradient(var(--field-corner), var(--field-corner)),
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.035) 0 1px, transparent 1px 3px);
+    background-size:
+      40% 1px,
+      8px 2px,
+      2px 8px,
+      8px 2px,
+      2px 8px,
+      auto;
+    background-position:
+      var(--field-beam) 100%,
+      0 0,
+      0 0,
+      100% 100%,
+      100% 100%,
+      0 0;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    background-origin: border-box;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.25s,
+      color 0.2s,
+      --field-beam 0s;
+  }
+  /* Fields that TerminalCaret can't measure (number) keep a native caret; an underscore never
+     covers the character under it. */
+  .field-surface[type='number'] {
+    caret-shape: underscore;
+  }
+  /* Touch devices keep the native caret (see TerminalCaret): a thin bar, so it never hides the
+     character under it and stays easy to spot next to the text. */
+  @media not (pointer: fine) {
+    .field-surface,
+    .field-surface[type='number'] {
+      caret-shape: bar;
+    }
+  }
+  .field-surface::placeholder {
+    color: hsl(var(--muted-foreground) / 0.55);
+    transition: opacity 0.2s;
+  }
+  .field-surface:hover:not(:disabled) {
+    --field-corner: rgba(4, 244, 190, 0.85);
+  }
+  .field-surface:focus-visible,
+  .field-surface[data-state='open'] {
+    --field-corner: #04f4be;
+    outline: none;
+    border-color: rgba(4, 244, 190, 0.7);
+    color: #d6fff6;
+    box-shadow:
+      0 0 0 1px rgba(4, 244, 190, 0.25),
+      0 0 22px -6px rgba(4, 244, 190, 0.7),
+      inset 0 0 18px -10px rgba(4, 244, 190, 0.8);
+    animation: field-beam 3.2s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+  }
+  .field-surface:focus-visible::placeholder {
+    opacity: 0.45;
+  }
+  .field-surface[aria-invalid='true'] {
+    --field-corner: hsl(var(--destructive));
+    --field-beam-color: hsl(var(--destructive));
+    border-color: hsl(var(--destructive) / 0.7);
+    caret-color: hsl(var(--destructive));
+    animation: field-glitch 0.35s steps(2) 1;
+  }
+  .field-surface[aria-invalid='true']:focus-visible {
+    box-shadow:
+      0 0 0 1px hsl(var(--destructive) / 0.3),
+      0 0 22px -6px hsl(var(--destructive) / 0.7);
+    animation: field-beam 3.2s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+  }
+  /* Disabled / read-only fields are hatched like a locked terminal. */
+  .field-surface:disabled,
+  .field-surface[readonly] {
+    --field-corner: rgba(4, 244, 190, 0.2);
+    border-style: dashed;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(4, 244, 190, 0.05) 0 2px,
+      transparent 2px 7px
+    );
+    background-size: auto;
+    background-position: 0 0;
+  }
+  /* Keep autofill from repainting the field in the browser's own colors. */
+  .field-surface:-webkit-autofill,
+  .field-surface:-webkit-autofill:hover,
+  .field-surface:-webkit-autofill:focus {
+    -webkit-text-fill-color: #04f4be;
+    transition: background-color 600000s 0s;
+  }
+  .field-surface::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1) sepia(1) saturate(6) hue-rotate(115deg);
+    opacity: 0.7;
+  }
+  .field-surface::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+  .field-surface::file-selector-button {
+    margin-right: 0.75rem;
+    border: 0;
+    border-right: 1px solid rgba(4, 244, 190, 0.3);
+    background: transparent;
+    color: #04f4be;
+    font: inherit;
+  }
+
+  /* A boxed terminal checkbox: an empty slot that fills with a glowing block when checked. */
+  .field-check {
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    border: 1px solid rgba(4, 244, 190, 0.45);
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.2s;
+  }
+  .field-check::before {
+    content: '';
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #04f4be;
+    box-shadow: 0 0 8px rgba(4, 244, 190, 0.9);
+    transform: scale(0);
+    transition: transform 0.15s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .field-check:checked {
+    border-color: #04f4be;
+    box-shadow: 0 0 12px -3px rgba(4, 244, 190, 0.8);
+  }
+  .field-check:checked::before {
+    transform: scale(1);
+  }
+  .field-check:hover,
+  .field-check:focus-visible {
+    border-color: #04f4be;
+    outline: none;
+  }
+  .field-check:focus-visible {
+    box-shadow: 0 0 0 2px rgba(4, 244, 190, 0.3);
+  }
+  .field-check:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Block caret drawn by components/ui/terminal-caret.tsx: the character under it in black. */
+  .terminal-caret {
+    position: fixed;
+    z-index: 2147483001;
+    pointer-events: none;
+    white-space: pre;
+    overflow: hidden;
+    background: #04f4be;
+    color: #000;
+    box-shadow: 0 0 8px rgba(4, 244, 190, 0.8);
+  }
+  .terminal-caret[data-invalid='true'] {
+    background: hsl(var(--destructive));
+    box-shadow: 0 0 8px hsl(var(--destructive) / 0.8);
+  }
+  .terminal-caret-blink {
+    animation: cursor-blink 1s steps(1) 0.5s infinite;
+  }
+
+  /* Validation messages stream in with a short glitch. */
+  .field-message {
+    animation: field-message-in 0.3s steps(3) both;
+  }
+}
+@keyframes field-beam {
+  0% {
+    --field-beam: -80%;
+  }
+  45%,
+  100% {
+    --field-beam: 180%;
+  }
+}
+@keyframes field-glitch {
+  0% {
+    transform: translateX(-2px);
+    filter: hue-rotate(40deg) brightness(1.4);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes field-message-in {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-surface,
+  .field-surface:focus-visible,
+  .field-surface[data-state='open'],
+  .field-surface[aria-invalid='true'],
+  .field-message,
+  .terminal-caret-blink {
+    animation: none;
   }
 }

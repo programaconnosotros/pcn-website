@@ -1,42 +1,31 @@
-'use server';
-
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Event } from '@prisma/client';
-import { Calendar, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { EventStatusBadge } from '@/components/events/event-status-badge';
+import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
+import { fetchEvents } from '@/actions/events/fetch-events';
+import { ArrowRight, Calendar, MapPin, Video } from 'lucide-react';
 import Link from 'next/link';
+import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 
-export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
+type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
 
-  const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
+export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
+  const isFull =
+    event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
   return (
-    <Card className="flex flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-      {event.flyerSrc && (
-        <div className="relative aspect-square w-full shrink-0 overflow-hidden">
-          <img
-            src={event.flyerSrc}
-            alt={`Flyer de ${event.name}`}
-            className="h-full w-full object-cover"
-          />
-        </div>
-      )}
+    <Card className="group relative flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
+      <div className="relative shrink-0 overflow-hidden">
+        <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
+      </div>
 
       <div className="flex flex-1 flex-col">
         <CardHeader>
-          <CardTitle className="text-lg">{event.name}</CardTitle>
+          <CardTitle className="flex items-start justify-between gap-2 text-lg">
+            <Link href={`/eventos/${event.id}`} className="after:absolute after:inset-0">
+              {event.name}
+            </Link>
+            <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="flex-1">
@@ -47,28 +36,38 @@ export const EventCard: React.FC<{ event: Event }> = ({ event }) => {
           <div className="mt-2 flex items-center gap-2">
             <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
             <p className="text-sm text-muted-foreground">
-              {formatDate(event.date)}
-              {event.endDate && ` - ${formatTime(event.endDate)}`}
+              <LocalDate date={event.date} />
+              {event.date && (
+                <>
+                  {' '}
+                  - <LocalTime date={event.date} />
+                </>
+              )}
             </p>
           </div>
 
-          {(event.city || event.placeName) && (
+          {event.isOnline ? (
             <div className="mt-2 flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-              <p className="text-sm text-muted-foreground">
-                {event.placeName && `${event.placeName}, `}
-                {event.city}, Argentina
-              </p>
+              <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+              <p className="text-sm text-muted-foreground">Online</p>
             </div>
+          ) : (
+            (event.city || event.placeName) && (
+              <div className="mt-2 flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                <p className="text-sm text-muted-foreground">
+                  {event.placeName && `${event.placeName}, `}
+                  {event.city}, Argentina
+                </p>
+              </div>
+            )
           )}
         </CardContent>
 
         <CardFooter className="mt-auto">
-          <Link href={`/eventos/${event.id}`} className="w-full">
-            <Button variant="pcn" className="w-full">
-              Ver evento
-            </Button>
-          </Link>
+          <Button variant="pcn" className="w-full">
+            verEvento(); <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </CardFooter>
       </div>
     </Card>

@@ -6,17 +6,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface EditAdviseDialogProps {
   adviseId: string;
   initialContent: string;
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (_open: boolean) => void;
 }
 
 export const EditAdviseDialog = ({
@@ -43,7 +43,7 @@ export const EditAdviseDialog = ({
           onOpenChange(false);
           return 'Tu consejo fue editado exitosamente.';
         },
-        error: 'Ocurrió un error al editar el consejo',
+        error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
       });
     } finally {
       setIsSubmitting(false);
@@ -72,15 +72,13 @@ export const EditAdviseDialog = ({
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                'Guardar cambios'
-              )}
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="guardando..."
+            >
+              guardarCambios();
             </Button>
           </form>
         </Form>

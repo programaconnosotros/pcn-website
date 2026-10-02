@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+import { GeistMono } from 'geist/font/mono';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
@@ -9,72 +11,124 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
-export function NavMain({
-  items,
-  label,
-}: {
-  items: {
+export interface NavItem {
+  title: string;
+  url?: string;
+  icon: LucideIcon;
+  badge?: number;
+  items?: {
     title: string;
     url: string;
-    icon: LucideIcon;
-    isActive?: boolean;
-    badge?: number;
-    items?: {
-      title: string;
-      url: string;
-    }[];
   }[];
-  label?: string;
-}) {
+}
+
+const isExternal = (url: string) => /^https?:\/\//.test(url);
+
+/** Anchor that uses client navigation for internal routes and a new tab for external ones. */
+const NavLink = ({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className?: string;
+  children: React.ReactNode;
+}) =>
+  isExternal(href) ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+
+export const SidebarSectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <SidebarGroupLabel
+    className={cn(
+      GeistMono.className,
+      'h-7 px-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-pcnGreen-500 before:mr-1.5 before:text-pcnGreen-300 before:content-["##"]',
+    )}
+  >
+    {children}
+  </SidebarGroupLabel>
+);
+
+const menuButtonClassName =
+  'relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors hover:[&>svg]:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
+
+export function NavMain({ items, label }: { items: NavItem[]; label?: string }) {
   const pathname = usePathname();
 
   return (
-    <SidebarGroup>
-      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
-      <SidebarMenu>
+    <SidebarGroup className="py-1.5">
+      {label && <SidebarSectionLabel>{label}</SidebarSectionLabel>}
+      <SidebarMenu className="gap-0.5">
         {items.map((item) => {
-          const isActive =
-            pathname === item.url ||
-            (item.url === '/' ? false : item.url !== '/home' && pathname.startsWith(item.url));
+          const isActive = item.url
+            ? pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url))
+            : false;
           const hasActiveSubItem = item.items?.some((subItem) => pathname === subItem.url);
+          const isToggleOnly = !item.url && !!item.items?.length;
 
           return (
-            <Collapsible key={item.title} asChild defaultOpen={isActive || hasActiveSubItem}>
+            <Collapsible
+              key={item.title}
+              asChild
+              defaultOpen={isActive || hasActiveSubItem}
+              className="group/collapsible"
+            >
               <SidebarMenuItem>
+                {(isActive || hasActiveSubItem) && (
+                  <span
+                    aria-hidden
+                    className="absolute -left-2 top-2.5 h-4 w-[3px] bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.8)]"
+                  />
+                )}
+
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
-                  data-active={isActive}
-                  className={`transition-transform duration-200 hover:scale-105 ${isActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen dark:[&_span]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)] dark:[&_svg]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]' : ''}`}
+                  isActive={isActive}
+                  className={cn(menuButtonClassName, hasActiveSubItem && 'text-sidebar-foreground')}
                 >
-                  <a href={item.url}>
-                    <item.icon />
-                    <span>{item.title}</span>
-                    {item.badge !== undefined && item.badge > 0 && (
-                      <SidebarMenuBadge className="bg-pcnPurple text-white dark:bg-pcnGreen dark:text-black">
-                        {item.badge > 99 ? '99+' : item.badge}
-                      </SidebarMenuBadge>
-                    )}
-                  </a>
+                  {isToggleOnly ? (
+                    <CollapsibleTrigger>
+                      <item.icon className="shrink-0" strokeWidth={1.75} />
+                      <span>{item.title}</span>
+                    </CollapsibleTrigger>
+                  ) : (
+                    <NavLink href={item.url!} className="flex items-center gap-2.5">
+                      <item.icon strokeWidth={1.75} />
+                      <span>{item.title}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold tabular-nums text-black">
+                          {item.badge > 99 ? '99+' : item.badge}
+                        </span>
+                      )}
+                    </NavLink>
+                  )}
                 </SidebarMenuButton>
+
                 {item.items?.length ? (
                   <>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                      <SidebarMenuAction className="top-2 rounded-md text-sidebar-foreground/45 hover:bg-transparent hover:text-sidebar-foreground data-[state=open]:rotate-90 [&>svg]:transition-transform">
                         <ChevronRight />
                         <span className="sr-only">Toggle</span>
                       </SidebarMenuAction>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <SidebarMenuSub>
+                      <SidebarMenuSub className="mx-[1.15rem] my-1 gap-0.5 border-pcnGreen-200 px-2">
                         {item.items?.map((subItem) => {
                           const isSubItemActive = pathname === subItem.url;
                           return (
@@ -82,11 +136,15 @@ export function NavMain({
                               <SidebarMenuSubButton
                                 asChild
                                 isActive={isSubItemActive}
-                                className={`transition-transform duration-200 hover:scale-105 ${isSubItemActive ? 'border-l-2 border-pcnPurple bg-pcnPurple/10 text-pcnPurple dark:border-pcnGreen dark:bg-pcnGreen/10 dark:text-pcnGreen dark:[&_span]:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]' : ''}`}
+                                className={cn(
+                                  'h-8 rounded-sm px-2 text-[13px] text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+                                  isSubItemActive &&
+                                    'bg-transparent font-medium text-pcnGreen hover:bg-transparent hover:text-pcnGreen',
+                                )}
                               >
-                                <a href={subItem.url}>
+                                <NavLink href={subItem.url}>
                                   <span>{subItem.title}</span>
-                                </a>
+                                </NavLink>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           );

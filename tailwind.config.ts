@@ -22,6 +22,14 @@ const config = {
       screens: {
         '3xl': '1920px',
       },
+      // Geist is the only typeface on the site: body copy in Geist Sans, terminal
+      // chrome in Geist Mono. `serif` is remapped to Geist Sans so `font-serif`
+      // can never pull in another family.
+      fontFamily: {
+        sans: ['var(--font-geist-sans)', 'sans-serif'],
+        serif: ['var(--font-geist-sans)', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -136,15 +144,50 @@ const config = {
             transform: 'translateX(200px)',
           },
         },
+        'cta-pulse': {
+          '0%, 100%': {
+            boxShadow:
+              '0 0 0 1px rgba(4,244,190,0.35), 0 0 18px -6px rgba(4,244,190,0.7), inset 0 1px 0 rgba(255,255,255,0.5)',
+          },
+          '50%': {
+            boxShadow:
+              '0 0 0 3px rgba(4,244,190,0.12), 0 0 34px -4px rgba(4,244,190,0.95), inset 0 1px 0 rgba(255,255,255,0.5)',
+          },
+        },
+        'cta-shine': {
+          '0%': { transform: 'translateX(-120%) skewX(-20deg)' },
+          '55%, 100%': { transform: 'translateX(420%) skewX(-20deg)' },
+        },
+        equalizer: {
+          '0%, 100%': { transform: 'scaleY(0.3)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
+        blink: {
+          '0%, 49%': {
+            opacity: '1',
+          },
+          '50%, 100%': {
+            opacity: '0',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         move: 'move 5s linear infinite',
+        blink: 'blink 1s step-end infinite',
+        equalizer: 'equalizer 0.9s ease-in-out infinite',
+        'cta-shine': 'cta-shine 3.6s ease-in-out infinite',
+        'cta-pulse': 'cta-pulse 2.4s ease-in-out infinite',
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), addVariablesForColors],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
+    addVariablesForColors,
+    addPcnOsVariants,
+  ],
 } satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
@@ -158,6 +201,15 @@ function addVariablesForColors({ addBase, theme }: any) {
   addBase({
     ':root': newVars,
   });
+}
+
+// PCN OS variants:
+// - `os:` applies on large screens when the page is the desktop host (not inside a window).
+// - `embedded:` applies when the page is rendered inside a PCN OS window (an iframe).
+// The `data-embedded` attribute is set before paint by the script in the root layout.
+function addPcnOsVariants({ addVariant }: any) {
+  addVariant('os', '@media (min-width: 1024px) { html:not([data-embedded]) & }');
+  addVariant('embedded', 'html[data-embedded] &');
 }
 
 export default config;

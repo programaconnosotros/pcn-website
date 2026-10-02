@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 
-export const fetchAnnouncements = () =>
+export const fetchAnnouncements = async () =>
   prisma.announcement.findMany({
     where: { published: true },
     orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
@@ -17,7 +17,7 @@ export const fetchAnnouncements = () =>
     },
   });
 
-export const fetchAllAnnouncements = () =>
+export const fetchAllAnnouncements = async () =>
   prisma.announcement.findMany({
     orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
     include: {

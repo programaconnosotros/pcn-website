@@ -1,0 +1,22 @@
+interface KamalSVGProps {
+  className?: string;
+}
+
+// Kamal brand mark, single color (currentColor).
+export const KamalSVG = ({ className = '' }: KamalSVGProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden
+      className={className}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="m.585786.585786c-.585786.585784-.585786 1.528594-.585786 3.414214v8c0 1.8856 0 2.8284.585786 3.4142.585784.5858 1.528594.5858 3.414214.5858h8c1.8856 0 2.8284 0 3.4142-.5858s.5858-1.5286.5858-3.4142v-8c0-1.88562 0-2.82843-.5858-3.414214-.5858-.585786-1.5286-.585786-3.4142-.585786h-8c-1.88562 0-2.82843 0-3.414214.585786zm3.414214 2.414214v10h3.13355v-4.8l2.2178 4.8h3.64865l-2.6757-5.04286 2.6042-4.95714h-3.56284l-2.23211 4.71429v-4.71429z"
+      />
+    </svg>
+  );
+};

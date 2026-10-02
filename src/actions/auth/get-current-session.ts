@@ -1,17 +1,10 @@
-import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const getCurrentSession = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) return null;
 
-  return prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-    include: {
-      user: true,
-    },
-  });
+  return findSession(sessionId);
 };

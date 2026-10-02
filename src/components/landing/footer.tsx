@@ -1,7 +1,5 @@
 import { Github } from 'lucide-react';
 import Link from 'next/link';
-import { ThemeToggle } from '@components/themes/theme-toggle';
-
 export const Footer = () => (
   <footer className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
     <div className="flex items-center gap-4">
@@ -18,10 +16,6 @@ export const Footer = () => (
           <span className="sr-only">GitHub</span>
         </Link>
       </div>
-    </div>
-
-    <div className="flex justify-end">
-      <ThemeToggle />
     </div>
   </footer>
 );

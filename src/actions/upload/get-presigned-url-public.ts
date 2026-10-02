@@ -1,11 +1,11 @@
 'use server';
 
-import { getPresignedUploadUrl } from '@/lib/s3';
+import { getImageUploadForm } from '@/lib/s3';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 type GetPresignedUrlPublicParams = {
-  fileName: string;
   contentType: string;
 };
 
@@ -13,10 +13,9 @@ type GetPresignedUrlPublicParams = {
  * Obtiene una URL pre-firmada para subir imágenes de perfil durante el registro.
  * Esta función NO requiere autenticación, pero está limitada a la carpeta 'registration-profiles'.
  */
-export async function getPresignedUrlPublic({
-  fileName,
-  contentType,
-}: GetPresignedUrlPublicParams) {
+export async function getPresignedUrlPublic({ contentType }: GetPresignedUrlPublicParams) {
+  await enforceRateLimit('upload');
+
   if (!ALLOWED_TYPES.includes(contentType)) {
     throw new Error(
       'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)',
@@ -24,11 +23,5 @@ export async function getPresignedUrlPublic({
   }
 
   // Siempre usar la carpeta registration-profiles para mayor seguridad
-  const { uploadUrl, fileUrl } = await getPresignedUploadUrl(
-    fileName,
-    contentType,
-    'registration-profiles',
-  );
-
-  return { uploadUrl, fileUrl };
+  return getImageUploadForm(contentType, 'registration-profiles');
 }

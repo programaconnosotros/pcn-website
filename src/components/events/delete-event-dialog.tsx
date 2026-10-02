@@ -1,5 +1,6 @@
 'use client';
 
+import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
 import { deleteEvent } from '@/actions/events/delete-event';
 import {
@@ -17,7 +18,7 @@ interface DeleteEventDialogProps {
   eventId: string;
   eventName: string;
   isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
+  onOpenChange: (_isOpen: boolean) => void;
 }
 
 export const DeleteEventDialog = ({
@@ -26,18 +27,23 @@ export const DeleteEventDialog = ({
   isOpen,
   onOpenChange,
 }: DeleteEventDialogProps) => {
-  const handleDelete = () => {
-    toast.promise(deleteEvent(eventId), {
-      loading: 'Eliminando evento...',
-      success: () => {
+  const handleDelete = async () => {
+    const toastId = toast.loading('Eliminando evento...');
+
+    try {
+      await deleteEvent(eventId);
+    } catch (error) {
+      if (isRedirectError(error)) {
         onOpenChange(false);
-        return 'Evento eliminado correctamente';
-      },
-      error: (error) => {
-        console.error('Error al eliminar el evento', error);
-        return error.message || 'Error al eliminar el evento';
-      },
-    });
+        toast.success('Evento eliminado correctamente', { id: toastId });
+        throw error;
+      }
+
+      console.error('Error al eliminar el evento', error);
+      toast.error(error instanceof Error ? error.message : 'Error al eliminar el evento', {
+        id: toastId,
+      });
+    }
   };
 
   return (

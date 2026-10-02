@@ -1,23 +1,14 @@
 'use server';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Heading2 } from '@/components/ui/heading-2';
-import { ArrowLeft, Users } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getEventManager } from '@/lib/event-access';
 import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
+import { getEventRegistrations, getEventWaitlist } from '@/actions/events/get-event-registrations';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
+import { RegistrationsDataTable } from '@/components/events/registrations-data-table';
 import {
   Table,
   TableBody,
@@ -26,36 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { DeleteRegistrationButton } from '@/components/events/delete-registration-button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LocalDateTime } from '@/components/ui/local-date-time';
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('es-AR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
-};
-
-const EventRegistrationsPage = async ({ params }: { params: { id: string } }) => {
+const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const id = params.id;
 
-  // Verificar autenticación y permisos de admin
-  const sessionId = cookies().get('sessionId')?.value;
-
-  if (!sessionId) {
-    redirect(`/eventos/${id}`);
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
-
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins del sitio y quienes gestionan este evento
+  if (!(await getEventManager(id))) {
     redirect(`/eventos/${id}`);
   }
 
@@ -66,215 +35,111 @@ const EventRegistrationsPage = async ({ params }: { params: { id: string } }) =>
     redirect('/eventos');
   }
 
-  const [registrations, waitlistEntries] = await Promise.all([
-    prisma.eventRegistration.findMany({
-      where: {
-        eventId: id,
-      },
-      include: {
-        user: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    }),
-    prisma.eventWaitlistEntry.findMany({
-      where: {
-        eventId: id,
-      },
-      include: {
-        user: true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    }),
+  // Obtener todas las inscripciones
+  const [registrations, waitlist] = await Promise.all([
+    getEventRegistrations(id),
+    getEventWaitlist(id),
   ]);
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
   const cancelledRegistrations = registrations.filter((r) => r.cancelledAt !== null);
-  const activeWaitlistEntries = waitlistEntries.filter(
-    (entry) => entry.cancelledAt === null && entry.promotedAt === null,
-  );
+
+  // Contar estudiantes y profesionales (solo inscripciones activas)
+  const studentsCount = activeRegistrations.filter((r) => r.career && r.studyPlace).length;
+  const professionalsCount = activeRegistrations.filter((r) => r.jobTitle && r.enterprise).length;
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/eventos">Eventos</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href={`/eventos/${id}`}>{event.name}</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inscripciones</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Link href={`/eventos/${id}`}>
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Heading2 className="m-0">Inscripciones - {event.name}</Heading2>
-            </div>
-          </div>
+          <StickyHeader>
+            <PageTitle
+              path={[
+                { label: 'eventos', href: '/eventos' },
+                { label: event.name, href: `/eventos/${id}` },
+                { label: 'inscripciones' },
+              ]}
+            />
+          </StickyHeader>
 
-          <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Inscripciones ({registrations.length} total - {activeRegistrations.length} activas,{' '}
-                {cancelledRegistrations.length} canceladas, {activeWaitlistEntries.length} fuera de cupo)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {registrations.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">
-                  Aún no hay inscripciones para este evento.
+          <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-4">
+            {[
+              {
+                label: 'activas',
+                value: activeRegistrations.length,
+                hint: `${cancelledRegistrations.length} cancelada${cancelledRegistrations.length !== 1 ? 's' : ''}`,
+              },
+              {
+                label: 'estudiantes',
+                value: studentsCount,
+                hint: 'con carrera y lugar de estudio',
+              },
+              { label: 'profesionales', value: professionalsCount, hint: 'con cargo y empresa' },
+              {
+                label: 'en espera',
+                value: waitlist.length,
+                hint: event.capacity !== null ? `cupo: ${event.capacity}` : 'sin cupo',
+              },
+            ].map((stat) => (
+              <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <span className="text-pcnGreen-500">{'// '}</span>
+                  {stat.label}
                 </p>
-              ) : (
-                <div className="rounded-md border">
+                <p className="mt-1 text-2xl font-semibold text-pcnGreen">{stat.value}</p>
+                <p className="text-[11px] text-muted-foreground/70">{stat.hint}</p>
+              </div>
+            ))}
+          </RuledGrid>
+
+          {waitlist.length > 0 && (
+            <section className="mb-4 border border-pcnGreen-200">
+              <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                <span className="text-pcnGreen-500">{'// '}</span>
+                lista de espera · {waitlist.length}
+              </h2>
+              <p className="px-3 pt-3 text-xs text-muted-foreground">
+                Cuando se libera un lugar, se inscribe automáticamente a la primera persona de la
+                lista y le llega un email.
+              </p>
+              <div className="p-3">
+                <div className="overflow-x-auto rounded-md border">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Nombre</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Información</TableHead>
-                        <TableHead>Estado</TableHead>
-                        <TableHead>Fecha de inscripción</TableHead>
-                        <TableHead className="text-right">Acciones</TableHead>
+                        <TableHead className="w-12">#</TableHead>
+                        <TableHead className="min-w-[200px]">Nombre</TableHead>
+                        <TableHead className="min-w-[240px]">Email</TableHead>
+                        <TableHead className="whitespace-nowrap">Se sumó</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {registrations.map((registration) => {
-                        const user = registration.user;
-                        const hasProfessionalData = user.jobTitle && user.enterprise;
-                        const hasStudentData = user.career && user.studyPlace;
-
-                        return (
-                          <TableRow
-                            key={registration.id}
-                            className={registration.cancelledAt ? 'opacity-60' : ''}
-                          >
-                            <TableCell className="font-medium">{user.name}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>
-                              {hasProfessionalData ? (
-                                <div className="text-sm text-muted-foreground">
-                                  <Badge variant="outline" className="mb-1">
-                                    Profesional
-                                  </Badge>
-                                  <p>
-                                    <span className="font-medium">Trabaja:</span> {user.jobTitle}
-                                  </p>
-                                  <p>
-                                    <span className="font-medium">En:</span> {user.enterprise}
-                                  </p>
-                                </div>
-                              ) : hasStudentData ? (
-                                <div className="text-sm text-muted-foreground">
-                                  <Badge variant="outline" className="mb-1">
-                                    Estudiante
-                                  </Badge>
-                                  <p>
-                                    <span className="font-medium">Estudia:</span> {user.career}
-                                  </p>
-                                  <p>
-                                    <span className="font-medium">Dónde:</span> {user.studyPlace}
-                                  </p>
-                                </div>
-                              ) : (
-                                <span className="text-sm text-muted-foreground">
-                                  Sin información adicional
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {registration.cancelledAt ? (
-                                <Badge variant="destructive">Cancelada</Badge>
-                              ) : (
-                                <Badge variant="default">Activa</Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-sm text-muted-foreground">
-                              {formatDate(registration.createdAt)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {!registration.cancelledAt && (
-                                <DeleteRegistrationButton
-                                  registrationId={registration.id}
-                                  userName={user.name}
-                                />
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="mt-5 border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:border-pcnPurple hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800 dark:hover:border-pcnGreen dark:hover:shadow-pcnGreen/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Lista de espera ({activeWaitlistEntries.length} activas)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {activeWaitlistEntries.length === 0 ? (
-                <p className="py-4 text-sm text-muted-foreground">
-                  No hay personas en lista de espera para este evento.
-                </p>
-              ) : (
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Posición</TableHead>
-                        <TableHead>Nombre</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Ingreso a lista</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {activeWaitlistEntries.map((entry, index) => (
+                      {waitlist.map((entry) => (
                         <TableRow key={entry.id}>
-                          <TableCell className="font-medium">#{index + 1}</TableCell>
-                          <TableCell>{entry.user.name}</TableCell>
-                          <TableCell>{entry.user.email}</TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {formatDate(entry.createdAt)}
+                          <TableCell className="font-mono text-xs">{entry.position}</TableCell>
+                          <TableCell className="font-medium">{entry.name}</TableCell>
+                          <TableCell className="text-sm">{entry.email}</TableCell>
+                          <TableCell className="whitespace-nowrap text-sm">
+                            <LocalDateTime date={entry.createdAt} />
                           </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            </section>
+          )}
+
+          <section className="mb-14 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              inscripciones · {registrations.length} total
+            </h2>
+            <div className="p-3">
+              <RegistrationsDataTable data={registrations} />
+            </div>
+          </section>
         </div>
       </div>
     </>

@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  LogIn,
-  LogOut,
-  Monitor,
-  Moon,
-  Sun,
-  UserPlus,
-} from 'lucide-react';
+import { ChevronsUpDown, IdCard, LogIn, LogOut, UserPen, UserPlus } from 'lucide-react';
 
 import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,9 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -32,58 +20,60 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { User } from '@prisma/client';
-import { useTheme } from 'next-themes';
+import type { SessionUser } from '@/lib/session';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-export function NavUser({ user }: { user: User | null }) {
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
+
+export function NavUser({ user }: { user: SessionUser | null }) {
   const { isMobile, isCollapsed } = useSidebar();
   const router = useRouter();
-  const { setTheme } = useTheme();
+  const iconOnly = isCollapsed && !isMobile;
 
   if (!user)
     return (
       <SidebarMenu>
-        <div
-          className={`transition-all duration-300 ease-in-out ${
-            isCollapsed && !isMobile
-              ? 'flex flex-col items-center gap-2'
-              : 'translate-x-0 opacity-100'
-          }`}
-        >
-          <SidebarMenuItem className="mb-2 w-full">
-            <Link href="/autenticacion/iniciar-sesion">
-              <Button className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}>
-                {isCollapsed && !isMobile ? (
-                  <LogIn className="h-5 w-5" />
-                ) : (
-                  <>
-                    Iniciar sesión <LogIn className="ml-2 h-4 w-4" />
-                  </>
-                )}
+        <SidebarMenuItem>
+          <div className="rounded-sm border border-pcnGreen-200 bg-black/60 p-2">
+            <div className="flex flex-col gap-1">
+              <Button asChild size="sm" className="w-full">
+                <Link href="/autenticacion/iniciar-sesion">
+                  {iconOnly ? (
+                    <LogIn className="size-4" />
+                  ) : (
+                    <>
+                      iniciarSesion(); <LogIn className="ml-2 size-4" />
+                    </>
+                  )}
+                </Link>
               </Button>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem className="w-full">
-            <Link href="/autenticacion/registro">
               <Button
-                className={`w-full ${isCollapsed && !isMobile ? 'p-2' : ''}`}
-                variant="outline"
+                asChild
+                size="sm"
+                variant="ghost"
+                className="w-full text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
-                {isCollapsed && !isMobile ? (
-                  <UserPlus className="h-5 w-5" />
-                ) : (
-                  <>
-                    Crear cuenta <UserPlus className="ml-2 h-4 w-4" />
-                  </>
-                )}
+                <Link href="/autenticacion/registro">
+                  {iconOnly ? (
+                    <UserPlus className="size-4" />
+                  ) : (
+                    <>
+                      Crear cuenta <UserPlus className="ml-2 size-4" />
+                    </>
+                  )}
+                </Link>
               </Button>
-            </Link>
-          </SidebarMenuItem>
-        </div>
+            </div>
+          </div>
+        </SidebarMenuItem>
       </SidebarMenu>
     );
 
@@ -94,39 +84,54 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`transition-all duration-300 ease-in-out data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground ${
-                isCollapsed && !isMobile ? 'justify-center p-2' : ''
+              className={`h-14 rounded-sm border border-pcnGreen-200 bg-black/60 px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen-500 data-[state=open]:bg-sidebar-accent ${
+                iconOnly ? 'justify-center p-2' : ''
               }`}
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="size-9 rounded-full ring-2 ring-pcnGreen/30">
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                <AvatarFallback className="rounded-lg">{user.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-full bg-pcnGreen/10 text-xs font-semibold text-pcnGreen">
+                  {initials(user.name)}
+                </AvatarFallback>
               </Avatar>
-              {!isCollapsed && (
+              {!iconOnly && (
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="flex items-center gap-1.5 truncate font-semibold">
+                    <span className="truncate">{user.name}</span>
+                    {user.role === 'ADMIN' && (
+                      <span className="shrink-0 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 px-1.5 py-px font-mono text-[9px] font-semibold uppercase tracking-wider text-pcnGreen">
+                        Admin
+                      </span>
+                    )}
+                  </span>
+                  <span className="truncate font-mono text-[11px] text-pcnGreen-600">
+                    {user.email}
+                  </span>
                 </div>
               )}
-              {!isCollapsed && <ChevronsUpDown className="ml-auto size-4" />}
+              {!iconOnly && (
+                <ChevronsUpDown className="ml-auto size-4 text-sidebar-foreground/45" />
+              )}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          {!isCollapsed && (
+          {!iconOnly && (
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
               side={isMobile ? 'bottom' : 'right'}
               align="end"
-              sideOffset={4}
+              sideOffset={8}
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
+                  <Avatar className="size-8 rounded-full">
                     <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">{user.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="rounded-full bg-pcnGreen/10 text-xs font-semibold text-pcnGreen">
+                      {initials(user.name)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -136,36 +141,18 @@ export function NavUser({ user }: { user: User | null }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   className="flex cursor-pointer flex-row gap-2"
+                  onClick={() => router.push(`/perfil/${user.id}`)}
+                >
+                  <IdCard size={16} />
+                  Ver mi perfil
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex cursor-pointer flex-row gap-2"
                   onClick={() => router.push('/perfil')}
                 >
-                  <BadgeCheck size={16} />
-                  Mi cuenta
+                  <UserPen size={16} />
+                  Editar perfil
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuGroup>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="flex cursor-pointer flex-row gap-2">
-                    <Sun size={16} />
-                    Tema
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => setTheme('light')}>
-                      <Sun className="mr-2" size={16} />
-                      Claro
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme('dark')}>
-                      <Moon className="mr-2" size={16} />
-                      Oscuro
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme('system')}>
-                      <Monitor className="mr-2" size={16} />
-                      Sistema
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />

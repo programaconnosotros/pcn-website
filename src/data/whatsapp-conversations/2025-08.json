@@ -1,0 +1,17 @@
+[
+  {
+    "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
+    "date": "2025-08-07",
+    "summary": "Facundo García Martoni hizo un resumen de la conferencia de GPT-5: cambios de colores de chats, el modelo de voz mejoró, se aflojan los guardrails, el creador de Cursor fue invitado a hablar, viene finetuneado para frontend. Facundo fue escéptico: 'el core es igual'. Iñaki Fernando Lozano hizo una review más detallada: es aproximadamente un 40% más barato que Sonnet, hace más caso a las instrucciones, no repite innecesariamente, errorea menos en tool calls. Destacó el mejor performance con contexto largo. Sin embargo, tras una semana de uso intensivo, Facundo García Martoni siguió prefiriendo Claude Sonnet 4. Para la vida diaria apostaba a Gemini, especialmente por Deep Research y la calidad de generación de imágenes/video de Gemini 2.5 Pro."
+  },
+  {
+    "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+    "date": "2025-08-16",
+    "summary": "Facundo García Martoni probó MCP (Model Context Protocol) por primera vez y reaccionó con euforia. Describió el flujo: hizo cambios en Cursor, le pidió al agente que creara el ticket correspondiente en Linear usando el MCP de Linear (sin salir del chat de Cursor), y luego creó la Pull Request. Lo que antes requería moverse entre tres aplicaciones distintas lo hizo en una sola, con un solo prompt. Agustín Sánchez mencionó que el MCP de Stripe parece copado (crea productos, configura webhooks en minutos), que el de Supabase sirve para MVPs rápidos, y que Vercel también sacó el suyo. Iñaki Fernando Lozano mencionó que usó uno de browser devtools y los de MercadoPago."
+  },
+  {
+    "title": "Debate UTN: ¿C o Python para enseñar programación?",
+    "date": "2025-08-26",
+    "summary": "Leandro Contrera informó que la UTN FRT planea dejar de enseñar C en primer año y pasarse a Python. Germán Navarro argumentó que el lenguaje no es lo más determinante; lo importante son los contenidos (algoritmos, estructuras de datos). Marcelo Nuñez discrepó fuerte: prefería mantener C++ o en su defecto aprender Rust. Su argumento fue que arrancar con un lenguaje de bajo nivel obliga al estudiante a pensar como la computadora, entender que la memoria no es infinita y que se puede romper algo. Jeremías Moreno Ivanoff bancó la postura: con C++ aprendés a construir las soluciones, no solo a usar las que ya existen. Marcelo usó la analogía 'es como aprender a manejar en manual antes de pasar al automático'."
+  }
+]

@@ -1,0 +1,157 @@
+[
+  {
+    "title": "Obsidian vs Notion para gestión de conocimiento personal y profesional",
+    "date": "2026-05-02",
+    "summary": "Facundo Padilla y Facundo García Martoni debatieron las ventajas de Obsidian versus Notion para distintos casos de uso. Facundo Padilla recomendó Notion para cosas que necesitás tener a mano en todos tus dispositivos (gastos, QR de pasajes, documentación personal) por ser más friendly y multi-plataforma, y Obsidian para cosas técnicas que querés tener en markdown local y 100% privadas. Facundo García Martoni usaba Obsidian para lo personal (y pagaba Obsidian Sync de USD 4 para tenerlo en múltiples dispositivos) y Notion para lo profesional donde necesitaba colaboración. Facundo Padilla comparó Notion con un Toyota Alphard (para toda la familia, caro para modificar) y Obsidian con un tanque de guerra."
+  },
+  {
+    "title": "Gemma 4 disponible en Vertex: evaluación técnica y limitaciones",
+    "date": "2026-05-03",
+    "summary": "Facundo García Martoni anunció que Gemma 4 había llegado a Vertex AI con un precio muy accesible (1.5x el costo de Gemini 2.5 Flash Lite). Sin embargo, reportó una limitación importante: Gemma 4 no funcionaba bien para salidas estructuradas como JSON o modelos Pydantic, ya que se saltaba claves o cambiaba nombres de campos. La solución que implementó fue usar Gemma 4 como modelo principal pero pasarle el output a Gemini 3.1 Flash Lite como 'outputeador de JSONs'. Facundo Padilla y él debatieron si el problema estaba en el modelo o en la infraestructura de Google. También mencionaron que Google iba a descontinuar Gemini 2.5 Flash en octubre, por lo que había que migrar a Gemini 3.1."
+  },
+  {
+    "title": "Charla de Karpathy sobre Software 3.0 y redes neuronales como hardware",
+    "date": "2026-05-04",
+    "summary": "Facundo García Martoni compartió una charla reciente de Andrej Karpathy que el grupo consideró muy importante para entender la dirección del software. Las dos ideas centrales que extrajo fueron: primero, investigar fine-tuning y frameworks de Reinforcement Learning para escapar de la dependencia de los labs y adaptar los modelos al intent específico del producto; y segundo, el concepto de Software 3.0, donde en lugar de ensamblar código se crean entornos donde los datos pueden fluir y transformarse de maneras infinitamente creativas. Iñaki Fernando Lozano confirmó que Karpathy había introducido el concepto de Software 3.0 años antes en una charla en Y Combinator. Facundo Padilla compartió un resumen en español de la charla."
+  },
+  {
+    "title": "Archicise: plataforma de Agustín Sánchez para practicar arquitectura de sistemas",
+    "date": "2026-05-04",
+    "summary": "Agustín Sánchez presentó Archicise (archicise.com), el proyecto que construyó durante la hackathon Zero to Agent. La plataforma permitía practicar distintas facetas de arquitectura de sistemas: system design, database design, API design, AI design y OOP design. Cada ejercicio guiaba al usuario a través de pasos para resolver un problema de arquitectura, y el usuario podía hacer diagramas con Excalidraw que el agente tomaba como input para la revisión. Al submitear la solución, el sistema daba un score de 0 a 100 con feedback de fortalezas, debilidades y sugerencias de mejora. La visión era hacerlo SaaS y vendérselo tanto a individuos como a empresas de software para subir el nivel de sus engineers en arquitectura."
+  },
+  {
+    "title": "Joel comparte su desorientación: el mercado cambió y no sabe por dónde empezar",
+    "date": "2026-05-05",
+    "summary": "Joel, desarrollador backend con 6 años de experiencia que llevaba 2 meses desempleado, compartió en el grupo su sensación de estar completamente perdido con el nuevo ecosistema de herramientas. Expresó que no entendía de qué hablaban cuando mencionaban agentes, Cursor, Vercel, n8n y demás, y que sentía que el mercado había cambiado radicalmente. Solo había hecho el curso de Copilot de Microsoft pero sentía que el espectro era muchísimo más amplio. El grupo respondió con empatía y recursos: Facundo García Martoni le recomendó una charla específica de YouTube, Nacho Tello recomendó videos de Midudev sobre OpenCode y workflows actuales. El episodio resonó en el grupo como un recordatorio de la brecha que se estaba generando entre quienes seguían el ecosistema de cerca y quienes no habían podido actualizarse."
+  },
+  {
+    "title": "Debate final sobre stacks de suscripciones: Cursor + Codex como combo óptimo",
+    "date": "2026-05-05",
+    "summary": "El grupo cerró la semana con un debate consolidado sobre qué combinación de suscripciones ofrecía el mejor costo-beneficio para un desarrollador activo. La conclusión de Facundo García Martoni, que se volvió el consenso del grupo, fue que el setup ideal era Cursor USD 20 (para usar Composer full-time para tareas livianas e iteración rápida) más Codex USD 100 (para GPT 5.5 Extra High en tareas pesadas de arquitectura y backend). Claude Max de USD 100 seguía siendo apreciado por algunos (Agustín Sánchez seguía usando Claude Code con Opus y Sonnet), pero la narrativa dominante había girado hacia OpenAI como proveedor principal por primera vez en la historia del grupo. Facundo Padilla mantuvo su lealtad a Cursor de USD 20 más la estrategia de usar Hermes con modelos económicos. Iñaki Fernando Lozano migró de Claude USD 200 a Codex USD 100 durante esta semana."
+  },
+  {
+    "title": "Devin vs GPT 5.5 XHigh en un pipeline .NET con SonarQube",
+    "date": "2026-05-06",
+    "summary": "Facundo Padilla comparó Devin (SWE 1.6) contra GPT 5.5 en modo XHigh resolviendo un pipeline de .NET con análisis de SonarQube. En su prueba ganó Devin, que manejó mejor el contexto del proyecto y las correcciones sugeridas por el analizador estático. El grupo discutió en qué casos un agente especializado en tareas largas supera a un modelo de propósito general configurado en su máximo nivel de razonamiento."
+  },
+  {
+    "title": "Diagramas de arquitectura con la generación de imágenes de Codex",
+    "date": "2026-05-06",
+    "summary": "Surgió la idea de usar la generación de imágenes integrada en Codex para producir diagramas de arquitectura directamente desde la descripción del sistema, evitando herramientas externas. Se debatió la utilidad real frente a diagramas hechos a mano y la precisión de los resultados."
+  },
+  {
+    "title": "Karpathy y Software 3.0: SETUP.md como prompt vs Docker",
+    "date": "2026-05-06",
+    "summary": "A partir de las ideas de Karpathy sobre Software 3.0, Facundo García Martoni y Facundo Padilla debatieron si conviene describir el entorno de desarrollo en un SETUP.md legible por el agente (que el agente ejecuta paso a paso) o mantener el enfoque tradicional con Docker. García defendía el archivo de instrucciones como contrato para el agente; Padilla señalaba las ventajas de reproducibilidad de los contenedores."
+  },
+  {
+    "title": "Colossus: el cluster de 300 MW de xAI",
+    "date": "2026-05-06",
+    "summary": "Iñaki Fernando Lozano compartió datos sobre Colossus, el datacenter de 300 MW de xAI, y el grupo conversó sobre la escala de cómputo detrás del entrenamiento de modelos de frontera y lo que implica para la industria."
+  },
+  {
+    "title": "Alternativas a Bugbot para análisis de seguridad en CI",
+    "date": "2026-05-07",
+    "summary": "Ante la búsqueda de alternativas a Cursor Bugbot, el grupo recopiló herramientas de análisis estático y seguridad: SonarQube, Semgrep, Trivy y Bandit, discutiendo cuáles cubren dependencias, código y secretos, y cómo integrarlas en CI."
+  },
+  {
+    "title": "Métodos de pago en USD para suscripciones de IA desde Argentina",
+    "date": "2026-05-07",
+    "summary": "Los miembros compartieron cómo pagan las suscripciones en dólares de herramientas de IA desde Argentina, comparando billeteras y tarjetas virtuales como Brubank, Prex, AstroPay, DolarApp, Lemon, Ripio y RedotPay por comisiones y facilidad de uso para servicios internacionales."
+  },
+  {
+    "title": "Lanzamiento de la sección /conversaciones y sus filtros de privacidad",
+    "date": "2026-05-07",
+    "summary": "Agustín Sánchez presentó al grupo la nueva sección de resúmenes de conversaciones del sitio y explicó el flujo de generación. Aclaró que cada resumen pasa por varios filtros para que no comprometan profesionalmente a los miembros ni los expongan ante un eventual doxeo, e invitó a avisar si alguien quería que se editara o quitara alguna nota que lo pudiera comprometer."
+  },
+  {
+    "title": "Hermes de Padilla: grabar clases de Zoom y clasificar mails",
+    "date": "2026-05-08",
+    "summary": "Facundo Padilla mostró su instancia de Hermes (Nous Research) automatizando tareas reales: se conecta a sus clases de Zoom, las graba, al terminar las sube a GoFile y se las reenvía, además de clasificarle los mails cada cinco minutos. Comentó que quería convertir esto en una skill reutilizable de Hermes para que otros pudieran adoptarla fácilmente."
+  },
+  {
+    "title": "Replicar el Cmd+K de Cursor en Codex con ChatGPT en Mac",
+    "date": "2026-05-09",
+    "summary": "El grupo exploró cómo reproducir la edición inline estilo Cmd+K de Cursor usando la app de ChatGPT en Mac mediante el atajo Option+Spacebar. También se mencionó groq.com como opción de inferencia muy rápida para quienes necesitan velocidad de respuesta por encima de todo."
+  },
+  {
+    "title": "Review de Claude Code Desktop: agentes en paralelo y worktrees",
+    "date": "2026-05-12",
+    "summary": "Tras probar la interfaz de escritorio de Claude Code, los miembros destacaron la posibilidad de correr agentes en paralelo sobre git worktrees y un límite de uso generoso comparado con otras herramientas. Se comparó con el flujo CLI y se discutió cuándo conviene cada uno según el tipo de tarea."
+  },
+  {
+    "title": "Encuesta de herramientas de IA favoritas del grupo",
+    "date": "2026-05-12",
+    "summary": "Una encuesta interna midió qué herramienta de IA usaba principalmente cada miembro: Claude Code lideró, seguido de Cursor y Codex. Sirvió como foto del estado de adopción dentro de la comunidad y disparó una conversación sobre los factores que inclinaban la preferencia hacia una u otra herramienta."
+  },
+  {
+    "title": "Codex /review como alternativa a Bugbot para code review",
+    "date": "2026-05-16",
+    "summary": "Se propuso el comando /review de Codex como alternativa integrada a Bugbot para revisar cambios antes de commitear, sin depender de un bot externo de PR. El grupo discutió su calidad de feedback frente a los bots de PR dedicados y los casos en que cada opción es más conveniente."
+  },
+  {
+    "title": "Skill babysit-pr y el debate prevención vs tracking en PRs",
+    "date": "2026-05-17",
+    "summary": "Facundo García Martoni compartió su skill babysit-pr para acompañar la revisión de pull requests con un agente. Se generó un debate con Facundo Padilla sobre si conviene invertir en prevenir errores antes del PR o en trackearlos y corregirlos durante la revisión, con argumentos a favor de ambas estrategias según el contexto del equipo."
+  },
+  {
+    "title": "Composer 2.5: \"nivel de Opus por dos mangos\"",
+    "date": "2026-05-18",
+    "summary": "Con el lanzamiento de Composer 2.5, el grupo celebró su relación precio-calidad, resumida en la frase \"nivel de Opus por dos mangos\". También se habló de overmind para unificar los dev servers en tmux, del debate AGENTS.md vs CONTEXT.md como archivo de instrucciones para los agentes y de react.review como revisor especializado en código React."
+  },
+  {
+    "title": "Zed vs Neovim y ergonomía del puesto de trabajo",
+    "date": "2026-05-19",
+    "summary": "Conversación sobre editores alternativos (Zed vs Neovim) y sobre la ergonomía del puesto de trabajo: sillas, monitores y mouse, con recomendaciones para largas jornadas frente a la pantalla. También se mencionó la cuenta de Instagram aguslogs de Agustín Sánchez."
+  },
+  {
+    "title": "Ataques a la cadena de suministro: extensión maliciosa de VS Code y tanstack",
+    "date": "2026-05-20",
+    "summary": "El grupo analizó dos incidentes de seguridad ocurridos en mayo: una extensión maliciosa de VS Code relacionada con GitHub/TeamPCP que afectó a miles de repositorios, y un ataque de cadena de suministro sobre el paquete tanstack en npm. Chelo recomendó usar pnpm --frozen-lockfile y correr pnpm audit en CI para mitigar riesgos de dependencias comprometidas. También se mencionó el firewall gratuito de Vercel como capa adicional de protección."
+  },
+  {
+    "title": "Qodo gratis para code review y créditos de tokens de YC",
+    "date": "2026-05-21",
+    "summary": "Se compartió que Qodo ofrece 30 revisiones de PR gratuitas al mes de por vida, junto con comentarios sobre créditos de tokens para startups que participan de YC. La conversación giró en torno a cómo abaratar el code review automatizado combinando herramientas con planes gratuitos generosos."
+  },
+  {
+    "title": "Comparativa detallada Codex vs Cursor y uso de worktrees en Codex",
+    "date": "2026-05-22",
+    "summary": "Facundo García Martoni hizo una comparación detallada de Codex frente a Cursor: a favor de Codex, el uso generoso, el harness y la experiencia en Mac; en contra, el plan mode y la velocidad de respuesta. También se habló de usar git worktrees en Codex junto con un script de configuración del entorno local para aislar tareas largas. Alejo contó que llegó a resolver un sistema completo en una sola sesión con Cursor y Composer 2.5. Se sumó una recomendación de gestores de contraseñas, destacando Bitwarden por ser open source."
+  },
+  {
+    "title": "macch-babysit: cinco revisores de PR concurrentes en minutos",
+    "date": "2026-05-23",
+    "summary": "Facundo García Martoni presentó su skill macch-babysit, que corre cinco proveedores de revisión de código en paralelo (CodeRabbit, Qodo, Bugbot, Vercel y React Review), reduciendo el tiempo de code review de varias horas a unos pocos minutos. También se habló de generar ADRs con grill-with-docs y de usar Sentry para monitoreo de errores en producción."
+  },
+  {
+    "title": "Grammarly para pulir prompts y documentación técnica",
+    "date": "2026-05-25",
+    "summary": "Facundo García Martoni recomendó Grammarly para pulir prompts y textos técnicos en inglés, manteniendo el estilo propio de redacción en lugar de delegarle la generación al modelo. Se comparó con las Writing Tools de Apple como alternativa gratuita disponible en macOS, con opiniones divididas sobre cuál resultaba más útil en el día a día."
+  },
+  {
+    "title": "Docker para React + Node y deploy a un VPS",
+    "date": "2026-05-26",
+    "summary": "Conversación práctica sobre cómo dockerizar un stack React + Node y desplegarlo en un VPS. Iñaki Fernando Lozano y Facundo Padilla compartieron sus experiencias con proveedores como Hostinger y la comparación con Vercel para proyectos que requieren más control sobre la infraestructura. También se compararon GUIs de base de datos como MySQL Workbench frente a opciones para PostgreSQL."
+  },
+  {
+    "title": "Opus 4.8 más agéntico y Codex \"UI-iza\" el git diff por commit",
+    "date": "2026-05-28",
+    "summary": "Con la salida de Opus 4.8, los miembros lo describieron como más agéntico que su predecesor (itera más en tareas largas) aunque todavía con debilidades en casos borde. En paralelo, Facundo García Martoni celebró que Codex agregó la posibilidad de ver el diff por commit en su interfaz —\"UI-izó\" el git diff— lo que le permitió auditar mejor cambios generados durante un rebase. Facundo Padilla también mencionó Composer 2.5 Fast para ganar velocidad sin sacrificar demasiada calidad."
+  },
+  {
+    "title": "Permisos en Codex CLI: bypass de aprobaciones por sesión",
+    "date": "2026-05-29",
+    "summary": "Leandro Contrera preguntó cómo ejecutar cualquier comando sin aprobarlo uno por uno en Codex CLI. Iñaki Fernando Lozano explicó el modo de bypass de permisos por sesión, que permite aprobar comandos durante una sesión sin que persista a la siguiente. Se comentó que la configuración varía bastante según el proveedor, el agente y si se usa la app o el CLI."
+  },
+  {
+    "title": "ModernSysacad: extensión open source para mejorar el Sysacad de la UTN",
+    "date": "2026-05-29",
+    "summary": "Iñaki García compartió ModernSysacad, su extensión de código abierto que mejora la interfaz del Sysacad en varias regionales de la UTN (FRT, FRA, FRGP y FRRE), haciéndolo más práctico y visualmente agradable. Disponible para navegadores Chromium y Firefox, invitó a los miembros del grupo a colaborar en el repositorio."
+  },
+  {
+    "title": "PunaTech 2026: hackathon en Salta y charla sobre ingeniería con agentes",
+    "date": "2026-05-30",
+    "summary": "Se desarrolló PunaTech 2026 en Salta, con un hackathon de dos días y una jornada general que reunió alrededor de 135 personas. Agustín Sánchez dio una charla sobre ingeniería de software con agentes, el workflow de Dizenz para llevar una app desde la idea hasta el release de producción y una guía para sobrevivir a la revolución de la IA en la industria del software. Facundo Padilla y otros miembros del grupo participaron como mentores y organizadores."
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Claude 4.1 Opus para animación CSS compleja y búsqueda de experto",
+    "date": "2025-09-08",
+    "summary": "Facundo García Martoni probó Claude 4.1 Opus para una tarea de CSS bien compleja (animar una mascota) y fue el único modelo que después de varios prompts le dio algo decente. Claude Sonnet 4 y GPT-5 ni se acercaron. Al ver que la IA todavía está lejos de hacer buen CSS drawing, Facundo preguntó en el grupo si había algún experto en CSS que quisiera unos pesos a cambio de la tarea. Nacho Tello sugirió crear una IA entrenada solo con el conocimiento de Manz (reconocido experto en CSS). Matias Gutierrez y Ariel Basabe mencionaron a Julián Vélez como alguien que sabe mucho de CSS."
+  },
+  {
+    "title": "Ataque de supply chain a paquetes populares de NPM (chalk, debug, ansi-regex)",
+    "date": "2025-09-09",
+    "summary": "Facundo Padilla compartió el link a un artículo de socket.dev explicando que la cuenta del autor de varios paquetes populares de NPM fue comprometida mediante phishing y se publicaron versiones maliciosas. La lista de paquetes afectados incluía chalk@5.6.1, chalk-template@1.1.1, color-convert@3.1.1, ansi-regex@6.2.1, ansi-styles@6.2.2, supports-color@10.2.1, debug@4.4.2, entre otros. El hilo fue un alerta importante dado el nivel de dependencia de estos paquetes en el ecosistema JavaScript."
+  },
+  {
+    "title": "Arquitectura ágil y diagramas: debate sobre metodologías de equipos",
+    "date": "2025-09-11",
+    "summary": "Leandro Contrera preguntó si en metodologías ágiles se pone menos énfasis en la arquitectura de software. Agustín Sánchez respondió que la metodología no condiciona la arquitectura. Marcelo Nuñez recomendó escuchar el planteo de Uncle Bob sobre metodologías ágiles: el punto original del manifiesto ágil era tener feedback más rápido con el cliente, no eliminar el diseño. Agustín compartió ejemplos de diagramas que él mismo usa en un MVP de plataforma de streaming (hechos con Excalidraw), mostrando un diagrama de arquitectura física y otro de base de datos con multiplicidad. La discusión también abordó la diferencia entre arquitectura física y lógica, y cuánto nivel de documentación es razonable según la madurez del equipo."
+  },
+  {
+    "title": "Primer proyecto freelance: sistema web para negocio de máquinas de peluches",
+    "date": "2025-09-16",
+    "summary": "Leandro Contrera anunció su primer proyecto para un cliente: una app web para gestionar máquinas de peluches distribuidas en varias sucursales. El sistema incluiría escaneo de QR por máquina, carga manual de datos (tiros realizados, premios entregados), listado de máquinas, login con usuario y contraseña, y generación de reportes (máquina con más tiros, más premios, etc.). Leandro planteó usar JS/TS full stack con arquitectura cliente-servidor. Varios miembros del grupo le dieron consejos: dado que son menos de 20 máquinas no se justifica POO ni arquitecturas complejas; en frontend moderno se trabaja con paradigma funcional y componentes, no con clases. El grupo lo felicitó por el primer proyecto propio."
+  },
+  {
+    "title": "oRPC: alternativa a tRPC para APIs type-safe en TypeScript",
+    "date": "2025-09-16",
+    "summary": "Agustín Sánchez compartió orpc.unnoq.com y un miembro venezolano del grupo dijo que ya lo estaba usando y que era 'mil veces mejor que tRPC': mucho más liviano, más rápido y con mejor sintaxis. Agustín mencionó que no lo había usado todavía pero que le apareció hacía unos días. El miembro venezolano aclaró que no le había encontrado ninguna limitación y que lo estaba usando en una app mobile también."
+  },
+  {
+    "title": "Patrones de diseño de arquitectura: MVC, MVP y MVVM en contexto web y mobile",
+    "date": "2025-09-22",
+    "summary": "A partir del documento sobre el patrón MVC compartido por Leandro Contrera (diapositivas de su materia de paradigmas en la FRT hechas con LaTeX), se armó un debate técnico sobre si React usa MVC. Agustín Sánchez fue categórico: React es una librería para manejar componentes de UI y no implementa MVC por defecto. Marcelo Nuñez propuso que si bien React no lo hace, Next.js con server actions y un ORM como Prisma puede verse como una implementación de MVC: las pages serían vistas, las server actions actuarían como controladores, y el ORM como modelo. El debate derivó en MVP (Modelo-Vista-Presentador), un patrón orientado a desktop donde la vista implementa una interfaz y el presentador no conoce directamente la vista, lo que permite migrar de una vista a otra sin cambiar el presentador. También se mencionó MVVM (muy usado en mobile nativo) y el patrón VIPER. Mauricio Sánchez confirmó que MVVM y VIPER se usan en iOS."
+  },
+  {
+    "title": "Seniority en la industria del software: debate sobre métricas y años de experiencia",
+    "date": "2025-09-25",
+    "summary": "Agustín Sánchez compartió un post de Twitter que generó debate sobre cómo las empresas valoran la experiencia en software. Leandro Contrera desarrolló su punto de vista: los años no son una buena métrica de valor porque 'experiencia' es muy relativa al tipo de proyectos; un senior con 10 años en desktop que salta a mobile puede necesitar empezar casi desde cero en tecnologías pero adaptarse muy rápido. Argumentó que el verdadero valor debería medirse por mérito demostrado, no por antigüedad. Ariel Basabe, con experiencia desde 2005, compartió su perspectiva contraria: la experiencia acumulada sí importa mucho, porque una buena base permite adaptarse más rápido a nuevas tecnologías, y puso el ejemplo de un programador Cobol de 55 años que aprendió ABAP sin dificultad. Agustín cerró explicando que lo que planteaba el post original es que a veces conviene contratar un junior que con un poco de capacitación puede rendir muy bien a un costo mucho menor que un senior."
+  },
+  {
+    "title": "Debate sobre seniority, sueldos y ascensos",
+    "date": "2025-09-25",
+    "summary": "La conversación arrancó con Agustín Sánchez explicando por qué a veces las empresas prefieren contratar juniors sobre seniors: un junior capacitado rinde bien en proyectos repetitivos a un costo mucho más bajo. Agustín detalló cómo funcionan los sistemas de review de performance, señalando que hay empresas donde se sube de seniority dos veces al año y otras donde el sueldo no se toca nunca. Distinguió entre empresas de producto (MercadoLibre, Uala, PedidosYa), que viven de sus usuarios y tienen más margen para aumentar, y consultoras que cobran por hora por dev y deben subir ese rate antes de poder subir un sueldo. Alejo Boga aportó que las big tech suelen apostar por el potencial de los juniors antes que por la seguridad de los seniors, y que borrar experiencia del CV levanta alertas automáticas en los filtros de RRHH. Juan Arismendi preguntó si tener experiencia práctica pero sin título universitario podía compensar en búsquedas que pedían ingeniería, y Alejo le respondió con un orden de importancia: experiencia laboral en empresas similares primero, título y conocimiento autodidacta tercero, freelance al final. La discusión dejó en claro que el filtro humano tampoco suele pasar a quien no encaja en el perfil, salvo que sea la única opción disponible."
+  },
+  {
+    "title": "Resumen de charlas en Nerdearla 2025",
+    "date": "2025-09-27",
+    "summary": "Agustín Sánchez estuvo en Nerdearla en Buenos Aires y al día siguiente compartió un resumen detallado de las charlas que vio. Destacó la charla de cierre de Midudev, quien mostró los avances de la inteligencia artificial y herramientas nuevas, y revisó cómo desde hace 50 años la gente predice la muerte de la programación cada vez que sale algo que 'simplifica' el trabajo, sin que eso ocurra. Mencionó también una charla de Hernán Wilkinson sobre la belleza y la pasión en el desarrollo usando TDD, y otra sobre Vibe Test-Driven Development, que recomendaba commitear frecuentemente cuando se vibe-codea para poder revertir si la IA la caga. Agustín resaltó una charla de un argentino de 23 años que entró a trabajar en Cline (extensión de VS Code tipo Copilot) desde San Francisco gracias a haber colaborado en PRs open-source; el mensaje fue que con IA es más accesible que nunca contribuir a proyectos que pueden cambiar la carrera. También mencionó una charla sobre code smells comunes —nombres malos, funciones largas, falta de tests— donde la oradora dejó claro que los tests automatizados son clave para refactorizar con confianza. Por último, unos devs de Galicia mostraron cómo implementaron microfrontends en React Native. Alejo Boga preguntó de qué había sido la charla de Midu, y Agustín prometió pasar el link cuando se subiera a YouTube, lo que ocurrió el 1 de octubre."
+  },
+  {
+    "title": "Java y Spring: el framework inevitable del backend Java",
+    "date": "2025-09-29",
+    "summary": "Mauricio Chaile preguntó qué tan parecido era Spring a NestJS, ya que ChatGPT le había dicho que eran similares. Marcelo Nuñez confirmó que sí son bastante parecidos y agregó un dato histórico clave: NestJS se inspiró directamente en Spring. Marcelo fue categórico al decir que hoy en día es prácticamente imposible programar Java para APIs REST sin saber Spring, ya que es el framework dominante en ese mundo. Aclaró que Spring también funciona con Kotlin aunque no es tan popular en ese ecosistema. Ariel Basabe y Marcelo coincidieron en que Spring es una belleza para desarrollar de forma ordenada. Nahuel González mencionó que estaba estudiando Java con interés en backend y a futuro en aplicaciones móviles con Kotlin, lo que entusiasmó a Marcelo, declarado fanático de Java."
+  },
+  {
+    "title": "Problemas con Supabase direct connection en proyectos",
+    "date": "2025-09-30",
+    "summary": "Exequiel De Freitas preguntó si alguien tenía experiencia con Supabase usando direct connection string, ya que él y un colega habían pasado horas tratando de configurarlo con el mismo setup y a uno le funcionaba y al otro no, con el error P1001 de Prisma indicando que no podía alcanzar el servidor de base de datos. Kevin Martin respondió que él había tenido los mismos problemas con la conexión directa y que al final lo resolvió cambiando a la conexión pooled. Matias Gutierrez confirmó que le había pasado exactamente lo mismo. Gonzalo Morales sumó que en proyectos con Prisma ORM usaba ambas strings pero con Drizzle usaba solo una y funcionaba; la discusión quedó abierta sobre por qué con la misma config a unos les andaba y a otros no, sin una explicación definitiva."
+  },
+  {
+    "title": "LMS con NestJS/Next y el principio KISS vs SOLID",
+    "date": "2025-09-30",
+    "summary": "Fede Valle compartió que estaba construyendo una LMS (Learning Management System) con NestJS, Postgres y Next.js, ya iba por el 60% del proyecto y le preocupaba que a medida que crecía estuviera tomando malas decisiones técnicas. Marcelo Nuñez le respondió con un consejo desde la experiencia: no abrumarse con las buenas prácticas, porque principios como SOLID son muchas veces sobre-diseño; citó un debate que Hernán Wilkinson le dio a Uncle Bob al respecto. Marcelo recomendó guiarse por el principio KISS (Keep It Simple, Stupid), que aprendió después de años de hacer MVPs con Clean Architecture y SOLID y frustrarse. Exequiel De Freitas sumó que lo importante era que el código funcione, esté ordenado para entenderse meses después, sea razonablemente performante y esté bien documentado. Marcelo también recomendó PlantUML para hacer diagramas y guardarlos en Git como código. Gonzalo Morales cerró el hilo reconociendo que había perdido mucho tiempo queriendo hacer todo perfecto en lugar de hacerlo simple."
+  }
+]

@@ -32,7 +32,7 @@ function safeStringify(arg: any): string {
         }
         return value;
       });
-    } catch (error) {
+    } catch {
       // Si falla la serialización, usar String() como fallback
       return String(arg);
     }
@@ -62,7 +62,7 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
         }).catch(() => {
           // Silenciar errores de logging
         });
-      } catch (error) {
+      } catch {
         // Silenciar errores de serialización
       }
     };
@@ -80,7 +80,7 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
         }).catch(() => {
           // Silenciar errores de logging
         });
-      } catch (error) {
+      } catch {
         // Silenciar errores de serialización
       }
     };
@@ -98,7 +98,7 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
         }).catch(() => {
           // Silenciar errores de logging
         });
-      } catch (error) {
+      } catch {
         // Silenciar errores de serialización
       }
     };
@@ -116,7 +116,7 @@ export function ConsoleInterceptor({ children }: { children: React.ReactNode }) 
         }).catch(() => {
           // Silenciar errores de logging
         });
-      } catch (error) {
+      } catch {
         // Silenciar errores de serialización
       }
     };

@@ -1,22 +1,18 @@
 import { AdviseCard } from '@/components/advises/advise-card';
 import { CommentSection } from '@/components/advises/comment-section';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
   const advise = await prisma.advise.findUnique({
     where: { id: params.id },
     select: {
@@ -31,12 +27,12 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   if (!advise) {
     return {
-      title: 'Consejo no encontrado (PCN)',
+      title: 'Consejo no encontrado',
       description: 'El consejo que buscas no existe.',
     };
   }
 
-  const title = `Consejo de ${advise.author.name} (PCN)`;
+  const title = `Consejo de ${advise.author.name}`;
   const description =
     advise.content.length > 160 ? advise.content.substring(0, 157) + '...' : advise.content;
   const pageUrl = `${SITE_URL}/consejos/${params.id}`;
@@ -47,7 +43,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
       url: pageUrl,
       type: 'article',
       siteName: 'programaConNosotros',
@@ -56,25 +51,20 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       card: 'summary_large_image',
       title,
       description,
-      images: [`${SITE_URL}/pcn-link-preview.png`],
     },
   };
 }
 
-export default async function AdvisePage({ params }: { params: { id: string } }) {
-  const sessionId = cookies().get('sessionId');
+export default async function AdvisePage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const sessionId = (await cookies()).get('sessionId');
 
-  const session = sessionId
-    ? await prisma.session.findUnique({
-        where: { id: sessionId.value },
-        include: { user: true },
-      })
-    : null;
+  const session = sessionId ? await findSession(sessionId.value) : null;
 
   const advise = await prisma.advise.findUnique({
     where: { id: params.id },
     include: {
-      author: true,
+      author: { select: { id: true, name: true, image: true } },
       likes: true,
       comments: {
         where: {
@@ -84,9 +74,9 @@ export default async function AdvisePage({ params }: { params: { id: string } })
           createdAt: 'desc',
         },
         include: {
-          author: true,
+          author: { select: { id: true, name: true, image: true } },
           replies: {
-            include: { author: true },
+            include: { author: { select: { id: true, name: true, image: true } } },
           },
         },
       },
@@ -99,31 +89,18 @@ export default async function AdvisePage({ params }: { params: { id: string } })
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/consejos">Consejos</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Consejo de {advise.author.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <AdviseCard advise={advise} session={session} />
-          <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
+          <StickyHeader>
+            <PageTitle
+              path={`consejos/${advise.id.slice(0, 8)}`}
+              meta={`${advise.comments.length} ${advise.comments.length === 1 ? 'comentario' : 'comentarios'}`}
+            />
+          </StickyHeader>
+          <div className="mb-14 border-l border-t border-pcnGreen-200">
+            <AdviseCard advise={advise} session={session} className="hover:bg-transparent" />
+            <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
+          </div>
         </div>
       </div>
     </>

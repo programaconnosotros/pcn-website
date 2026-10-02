@@ -5,20 +5,21 @@ import { testimonialSchema, TestimonialFormData } from '@/schemas/testimonial-sc
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const createTestimonial = async (data: TestimonialFormData) => {
+  await enforceRateLimit('createContent');
+
   const validatedData = testimonialSchema.parse(data);
 
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     throw new Error('Debes estar autenticado para crear un testimonio');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');

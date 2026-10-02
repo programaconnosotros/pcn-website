@@ -37,7 +37,7 @@ const ReviewCard = ({ img, name, body }: { img: string; name: string; body: stri
   return (
     <figure
       className={cn(
-        'relative h-full w-96 overflow-hidden rounded-xl border p-4',
+        'relative h-full w-96 overflow-hidden rounded-lg border p-4',
         // light styles
         'border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]',
         // dark styles
@@ -45,6 +45,7 @@ const ReviewCard = ({ img, name, body }: { img: string; name: string; body: stri
       )}
     >
       <div className="flex flex-row items-center gap-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rounded-full" width="32" height="32" alt="" src={img} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>

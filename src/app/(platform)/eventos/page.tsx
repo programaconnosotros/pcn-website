@@ -1,102 +1,70 @@
-import { Heading2 } from '@/components/ui/heading-2';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { EventsList } from '@/components/events/events-list';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Plus } from 'lucide-react';
+import { Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { canCreateEvents } from '@/lib/event-permissions';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Eventos (PCN)',
+  title: 'Eventos',
   description:
-    'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
+    'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
   openGraph: {
-    title: 'Eventos (PCN)',
+    title: 'Eventos | programaConNosotros',
     description:
-      'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
     url: `${SITE_URL}/eventos`,
     type: 'website',
     siteName: 'programaConNosotros',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Eventos (PCN)',
+    title: 'Eventos | programaConNosotros',
     description:
-      'Participá de eventos con personas apasionadas por el software y llevá tu carrera al próximo nivel.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
   },
 };
 
 const EventsPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
-
-  let isAdmin = false;
-
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (session?.user.role === 'ADMIN') {
-      isAdmin = true;
-    }
-  }
+  // Admins y ambassadors pueden crear eventos
+  const canCreate = canCreateEvents((await getCurrentSession())?.user);
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Eventos</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 flex flex-col gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:flex-row sm:items-center sm:justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <CalendarDays className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Eventos</span>
-            </Heading2>
-            {isAdmin && (
-              <Link href="/eventos/nuevo" className="w-full sm:w-auto">
-                <Button
-                  variant="pcn"
-                  className="flex w-full items-center justify-center gap-2 sm:w-auto"
+          <StickyHeader>
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+              <PageTitle
+                path="eventos"
+                meta="meetups, hackathons, coworks, etc."
+                className="mb-0 flex-1"
+              />
+              {!canCreate && (
+                <Link
+                  href="https://wa.me/5493815777562"
+                  target="_blank"
+                  className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
                 >
-                  <Plus className="h-4 w-4" />
-                  Crear evento
-                </Button>
-              </Link>
-            )}
-          </div>
+                  <Handshake className="h-3.5 w-3.5" />
+                  quiero organizar algo
+                </Link>
+              )}
+              {canCreate && (
+                <Link href="/eventos/nuevo">
+                  <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                    <Plus className="h-4 w-4" />
+                    crearEvento();
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </StickyHeader>
 
           <EventsList />
         </div>

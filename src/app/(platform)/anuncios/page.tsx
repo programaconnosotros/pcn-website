@@ -1,31 +1,38 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
 import {
   fetchAnnouncements,
   fetchAllAnnouncements,
 } from '@/actions/announcements/get-announcements';
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
+import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export const metadata: Metadata = {
+  title: 'Anuncios',
+  description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+  openGraph: {
+    title: 'Anuncios | programaConNosotros',
+    description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+    url: `${SITE_URL}/anuncios`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Anuncios | programaConNosotros',
+    description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
+  },
+};
 
 const AnunciosPage = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
   let isAdmin = false;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
     isAdmin = session?.user?.role === 'ADMIN';
   }
 
@@ -37,24 +44,7 @@ const AnunciosPage = async () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Anuncios</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
           <AnnouncementsWrapper announcements={announcements} events={events} isAdmin={isAdmin} />
         </div>

@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
 
 // Constantes de configuración
@@ -5,13 +6,27 @@ export const RATE_LIMIT_SECONDS = 60; // 1 minuto entre envíos
 export const CODE_EXPIRATION_MINUTES = 15; // 15 minutos de expiración
 
 /**
- * Crea un transporter de nodemailer para enviar emails
- * @throws Error si las credenciales SMTP no están configuradas
+ * Crea un transporter de nodemailer para enviar emails.
+ * En entorno local (SMTP_HOST definido) se conecta al servidor indicado (ej. MailHog).
+ * En producción (SMTP_HOST no definido) usa Gmail con las credenciales SMTP_USER/SMTP_PASS.
+ * @throws Error si las credenciales SMTP no están configuradas (solo en modo Gmail)
  */
 export const getEmailTransporter = () => {
+  const smtpHost = process.env.SMTP_HOST;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
 
+  // Modo local/MailHog: conecta al host configurado sin requerir credenciales
+  if (smtpHost) {
+    return nodemailer.createTransport({
+      host: smtpHost,
+      port: Number(process.env.SMTP_PORT ?? 1025),
+      secure: false,
+      ...(smtpUser && smtpPass ? { auth: { user: smtpUser, pass: smtpPass } } : {}),
+    });
+  }
+
+  // Modo producción: Gmail requiere credenciales obligatoriamente
   if (!smtpUser || !smtpPass) {
     throw new Error(
       'SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables.',
@@ -31,7 +46,8 @@ export const getEmailTransporter = () => {
  * Genera un código numérico de 6 dígitos
  */
 export const generateVerificationCode = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // randomInt usa el generador criptográfico; Math.random() es predecible
+  return randomInt(100000, 1000000).toString();
 };
 
 /**
@@ -57,6 +73,19 @@ export const checkRateLimit = (lastTokenCreatedAt: Date | null): number => {
   return 0;
 };
 
+const SENDER_NAME = 'Agus de PCN';
+const DEFAULT_SENDER_ADDRESS = 'no-reply@programaconnosotros.com';
+
+/**
+ * Remitente de los emails. Tiene que llevar una dirección: un nombre solo es un `MAIL FROM`
+ * inválido que los servidores SMTP estrictos (como MailHog) rechazan. Con Gmail la dirección es
+ * la cuenta autenticada, la única que Gmail deja usar; en local cualquier dirección sirve.
+ */
+export const getSender = () => ({
+  name: SENDER_NAME,
+  address: process.env.SMTP_USER || DEFAULT_SENDER_ADDRESS,
+});
+
 /**
  * Envía un email usando el transporter configurado
  * @throws Error si falla el envío
@@ -73,7 +102,7 @@ export const sendEmail = async ({
   try {
     const transporter = getEmailTransporter();
     await transporter.sendMail({
-      from: 'Agus de PCN',
+      from: getSender(),
       to,
       subject,
       html,

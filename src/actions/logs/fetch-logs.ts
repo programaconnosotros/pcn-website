@@ -1,8 +1,11 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 
 export const fetchLogs = async (page: number = 1, limit: number = 50, level?: string) => {
+  await requireAdmin();
+
   const skip = (page - 1) * limit;
   const where = level ? { level } : {};
 
@@ -39,6 +42,8 @@ export const fetchLogs = async (page: number = 1, limit: number = 50, level?: st
 };
 
 export const getLogStats = async () => {
+  await requireAdmin();
+
   const [totalLogs, logsToday, logsThisWeek, logsByLevel] = await Promise.all([
     prisma.appLog.count(),
     prisma.appLog.count({

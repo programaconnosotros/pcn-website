@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Django vs FastAPI y ecosistema Python para backend",
+    "date": "2025-07-01",
+    "summary": "Agustín Sánchez abrió el debate preguntando qué opinaban de Django para backend. Facundo Padilla, que lo usó en su primer laburo, lo describió como 'hermoso': ORM fantástico, sistema de migraciones 'una locura', panel de admin 'un golazo', aunque lento comparado con alternativas de alta performance. Como contra señaló que es bastante lerdo si tenés que hacer algo ultra crítico en performance, aunque existían mil formas de hacerlo más performante. Marcelo Nuñez expresó preferencia por FastAPI. El punto de fricción principal fue Django REST Framework, que tanto Marcelo como Facundo describieron como 'un embole'. Facundo mencionó 'django-ninja' como alternativa. Para gestión de dependencias, Facundo y Marcelo recomendaron uv sobre Poetry: uv es más rápido (escrito en Rust), maneja versiones de Python internamente. Facundo García Martoni sumó que Ruff reemplaza a Pylance para linting."
+  },
+  {
+    "title": "Arquitectura FastAPI para sistema de análisis de CVs con IA",
+    "date": "2025-07-01",
+    "summary": "Solano de Zuasnabar describió un sistema que analiza 400-500 CVs usando una base de datos vectorial e IA, con output en tabla con scores de candidatos. Originalmente hecho en Streamlit, el cliente ahora quería un frontend en Angular con un backend Python real. Marcelo Nuñez propuso una arquitectura con FastAPI dividida en cuatro módulos: routes (rutas + estructura de requests/responses), service (operaciones de negocio), model (objetos o dataclasses) y db (lógica de base de datos). Para el stack sugirió FastAPI (genera documentación OpenAPI automáticamente), SQLAlchemy y PostgreSQL. Facundo Padilla recomendó la misma dirección y destacó que FastAPI 'lo hacés en dos patadas'."
+  },
+  {
+    "title": "Flasheo de BIOS con CH341A y Libreboot en ThinkPad",
+    "date": "2025-07-05",
+    "summary": "Facundo García Martoni compartió que le llegó un programador de BIOS CH341A con pinza SOIC8 conseguido en Mercado Libre. Lo usó primero para desbloquear la BIOS de una netbook del gobierno (Juana Manso) y luego para instalar Libreboot en una ThinkPad x220. Explicó en detalle el concepto: los fabricantes ponen limitaciones arbitrarias (la x220 tiene un límite real de 16GB de RAM pero Intel la limita a 8GB por BIOS) para forzar la compra de equipos nuevos. Libreboot elimina esas restricciones, desactiva backdoors y usa lo más moderno disponible para que la máquina arranque más rápido. Facundo brickeó la máquina sin querer pero pudo recuperarla. Roman compartió links para adaptadores de pantalla FHD/2K en la x220 desde AliExpress."
+  },
+  {
+    "title": "Cursor facturación inesperada: el rugpull de Max mode",
+    "date": "2025-07-08",
+    "summary": "Se viralizó una captura donde un usuario de Cursor gastó una fortuna usando el modelo en modo MAX por hacer un reemplazo que podría haberse hecho con sed. Facundo García Martoni aclaró que era totalmente posible si se usaba MAX mode con Opus de manera ineficiente. Iñaki Fernando Lozano reveló que Cursor había prometido uso 'sin límite' para el plan Pro, pero que el 'no limit' aplicaba solo al modo 'auto model', no al modo MAX con Sonnet 4. Cursor publicó un tweet disculpándose y ofreciendo refunds. El consenso fue que el plan Pro del Auto Mode es seguro (aprox. 500 requests/mes), pero activar usage-based pricing y usar MAX con modelos pesados es caro."
+  },
+  {
+    "title": "Tips avanzados de Cursor: prompt queue, voice input y rules",
+    "date": "2025-07-08",
+    "summary": "Iñaki Fernando Lozano compartió varias prácticas avanzadas de Cursor: setear un límite de gasto mensual, poner el SQL schema de las tablas como contexto, y aprovechar la feature de prompt queue (poner varios prompts en cola y alejarse mientras trabaja). Mencionó que usa la app Whispr en MacBook para dictar prompts por voz. Facundo García Martoni discrepó con el dictado por voz: argumentó que escribir permite pensar más despacio, volver atrás e iterar el prompt. Marcelo Nuñez, que usa Cursor principalmente en modo Auto, preguntó cómo aprender a usarlo mejor. Iñaki le recomendó 'entregarse a las vibes'. Facundo también compartió su idea de integrar las mejores features de Cursor en Neovim."
+  },
+  {
+    "title": "Vercel invierte en Nuxt y logros argentinos en el mundo del software",
+    "date": "2025-07-08",
+    "summary": "Exequiel De Freitas comentó que Vercel 'compró' Nuxt. Facundo Padilla aclaró que en realidad Vercel les dio financiamiento para que el equipo de Nuxt pueda dedicarse a la integración, igual que hicieron con otros proyectos. Esto derivó en una discusión sobre los logros argentinos en el mundo del software: Auth0, Vercel, Mongoose (creado por Guillermo Rauch), Muun Wallet, Godot y Aseprite. Germán Navarro confirmó que Rauch creó Mongoose e incluso Socket.IO, lo cual fue celebrado con mucho orgullo."
+  },
+  {
+    "title": "Chrome AI con Gemini Nano corriendo offline en el browser",
+    "date": "2025-07-22",
+    "summary": "Carlos Spagnolo compartió una web que construyó para probar las nuevas funcionalidades de IA integradas en Google Chrome a partir de la versión 138, que incluyen Gemini Nano ejecutándose localmente en el navegador de forma privada (sin peticiones a APIs externas). Las funcionalidades disponibles son: Traductor, Detector de idioma y Resumidor de textos. La demo está en chrome-ai-flame.vercel.app y el repo en github.com/SpagnoloCarlos/chrome-ai. Facundo García Martoni preguntó si funciona offline y Carlos confirmó que sí. Agustín felicitó la UI y Carlos reveló que usó shadcn y que la idea inicial se la tiró v0 y luego la acomodó."
+  },
+  {
+    "title": "Estimación de presupuesto para proyecto freelance complejo",
+    "date": "2025-07-23",
+    "summary": "Nacho Tello recibió una propuesta para desarrollar una app web con geolocalización de bares, sistema de usuarios, PostGIS, soporte para 10.000 usuarios concurrentes como MVP y carga menor a 2 segundos en el 90% de los requests. Preguntó cómo presupuestarlo y con cuánta gente encararlo. Matias Gutierrez recomendó empezar por el core (geolocalización y visualización de bares). Marcelo Nuñez advirtió que el documento de requerimientos puede funcionar como evidencia legal. Germán Navarro recomendó descomponer el documento en features individuales para estimar cada una por separado. Agustín Sánchez explicó la metodología: estimar horas totales, multiplicar por costo/hora, agregar buffer de riesgo del 20%, y hacer primero una estimación 'ballpark' para ver si el cliente está dispuesto a pagar antes de invertir tiempo en un refinamiento detallado."
+  },
+  {
+    "title": "Devin como agente de IA para desarrollo autónomo",
+    "date": "2025-07-23",
+    "summary": "Facundo Padilla comentó que lo pusieron como early adopter de Devin en su laburo. Describió que el agente hace varias cosas simultáneamente: documenta, crea branches, codea, y detecta cuándo una tarea es demasiado compleja (mostrando un indicador de 'salud' de la tarea). Cuando detecta complejidad excesiva, sugiere dividirla en subtareas más manejables. Facundo fue positivo con la experiencia inicial."
+  },
+  {
+    "title": "Tip de Cursor: evitar comandos pager en la terminal",
+    "date": "2025-07-25",
+    "summary": "Facundo García Martoni compartió un tip práctico para usuarios de Cursor: los comandos que generan 'pagers' (como less, more, o git diff que usa less internamente) rompen las terminales que Cursor instancia, porque el agente queda atrapado en la interfaz interactiva del pager y no puede salir ni leer el output. La solución es siempre corregir esos comandos agregando --no-pager (para git) o redirigiendo a | cat. Germán Navarro explicó el concepto para los que no lo conocían. Marcelo Nuñez aclaró que él no deja que Cursor ejecute comandos por este tipo de razones. Facundo también recomendó crear una regla en Cursor para que genere un unit/integration test por cada feature."
+  },
+  {
+    "title": "Debate Cursor vs Windsurf vs Claude Code como herramientas de codeo IA",
+    "date": "2025-07-30",
+    "summary": "Facundo García Martoni dijo que Cursor lo estaba frustrando por un bug donde no logra salir de las consolas que instancia. Preguntó alternativas. Ariel Basabe y Exequiel De Freitas dijeron estar probando Windsurf con buenos resultados. Ariel mencionó que DeepSeek sacó un plugin para VS Code gratis. Diego compartió una comparativa de editores. Facundo mencionó también Trae (muy usado en Asia) y Kiro (propuesta de Amazon). Sobre Claude Code, dijo que la comunidad lo considera 'el peak' pero siente que lo haría más lento por ser terminal. Marcelo preguntó sobre Claude Code y la comunidad lo describió como 'similar a Cursor pero por terminal, más caro por token que GPT-5'."
+  }
+]
