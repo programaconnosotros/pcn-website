@@ -22,6 +22,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'ui',
+    title: 'Instalá PCN como app',
+    description:
+      'La web se puede instalar en el celu o la compu y abre como una app, con accesos directos a eventos, conversaciones, cursos y lectura. Sin conexión muestra una pantalla propia con una trivia de programación y vuelve sola a la página cuando regresa la red.',
+    authors: ['shadownrx', 'agustin-sanc'],
+  },
+  {
+    date: '2026-10-02',
     area: 'inicio',
     title: 'Cartelera de próximos eventos',
     description:
