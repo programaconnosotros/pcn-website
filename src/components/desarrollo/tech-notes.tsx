@@ -55,9 +55,12 @@ const CodeBlock = ({ example }: { example: TechExample }) => (
 const Note = ({ note }: { note: TechNote }) => (
   <details
     id={`nota-${note.id}`}
-    className={cn(ruledCellClassName, 'group min-w-0 scroll-mt-24 open:hover:bg-transparent')}
+    className={cn(
+      ruledCellClassName,
+      'group min-w-0 scroll-mt-32 open:hover:bg-transparent lg:scroll-mt-[4rem]',
+    )}
   >
-    <summary className="flex cursor-pointer list-none items-start gap-2 px-3 py-2.5 font-mono [&::-webkit-details-marker]:hidden">
+    <summary className="flex cursor-pointer list-none items-start gap-2 px-3 py-2.5 font-mono group-open:border-b group-open:border-pcnGreen-200 group-open:bg-background/95 group-open:backdrop-blur lg:group-open:sticky lg:group-open:top-[4rem] lg:group-open:z-[5] [&::-webkit-details-marker]:hidden">
       <span
         aria-hidden
         className="w-3 shrink-0 text-sm text-pcnGreen-500 transition-transform group-open:rotate-90"
@@ -73,7 +76,7 @@ const Note = ({ note }: { note: TechNote }) => (
       </span>
     </summary>
 
-    <div className="space-y-4 border-t border-pcnGreen-200 px-3 py-4 sm:pl-8">
+    <div className="space-y-4 px-3 py-4 sm:pl-8">
       <div>
         <Heading>qué es</Heading>
         <p className="text-sm leading-relaxed text-muted-foreground">{renderInline(note.what)}</p>
@@ -141,7 +144,7 @@ export const TechNotes = ({ groups }: { groups: TechNoteGroup[] }) => (
   <div className="min-w-0 space-y-5">
     {groups.map((group) => (
       <div key={group.id} className="min-w-0">
-        <h3 className="mb-2 font-mono text-xs text-muted-foreground">
+        <h3 className="mb-2 bg-background/95 font-mono text-xs text-muted-foreground backdrop-blur lg:sticky lg:top-9 lg:z-10 lg:py-1.5">
           <span className="text-pcnGreen-500">$ </span>ls notas/{group.id}{' '}
           <span className="text-pcnGreen-700"># {group.title}</span>
         </h3>
