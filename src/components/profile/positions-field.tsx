@@ -14,6 +14,25 @@ export const PositionsField = () => {
 
   return (
     <div className="space-y-2">
+      {fields.length > 0 ? (
+        <div
+          aria-hidden
+          className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-pcnGreen-700 sm:flex"
+        >
+          <span className="w-5 text-right text-pcnGreen-500">#</span>
+          <span className="grid flex-1 grid-cols-[1fr_auto_1fr] gap-2">
+            <span>cargo</span>
+            <span className="invisible">@</span>
+            <span>empresa</span>
+          </span>
+          <span className="w-6" />
+        </div>
+      ) : (
+        <p className="font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">$</span> ls ./trabajo{' '}
+          <span className="text-muted-foreground/60">— vacío</span>
+        </p>
+      )}
       <ol className="space-y-2">
         {fields.map((field, index) => {
           const errors = formState.errors.positions?.[index];
