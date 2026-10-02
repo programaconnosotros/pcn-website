@@ -32,7 +32,7 @@ const VideosPage = () => (
       <StickyHeader>
         <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
       </StickyHeader>
-      <VideoGrid videos={videos} />
+      <VideoGrid videos={videos} searchable />
     </div>
   </div>
 );
