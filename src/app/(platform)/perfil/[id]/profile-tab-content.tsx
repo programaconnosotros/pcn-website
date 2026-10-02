@@ -174,17 +174,17 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
         {contributions.length > 0 && (
           <>
             <ProfileStat
-              label="PRs a pcn"
+              label="PRs en pcn"
               value={github.mergedPrs}
               href={tabHref('contribuciones')}
             />
             <ProfileStat
-              label="commits a pcn"
+              label="commits en pcn"
               value={github.commits.toLocaleString('es-AR')}
               href={tabHref('contribuciones')}
             />
             <ProfileStat
-              label="líneas a pcn"
+              label="líneas en pcn"
               value={github.linesAdded === null ? '—' : github.linesAdded.toLocaleString('es-AR')}
               href={tabHref('contribuciones')}
             />
