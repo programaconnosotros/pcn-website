@@ -413,7 +413,8 @@ export function ArticlesPanel({
       />
 
       {visibleArticles.length > 0 ? (
-        <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+        // As many ~22rem columns as fit the panel: one on phones, three on wide windows.
+        <RuledGrid className="grid-cols-[repeat(auto-fill,minmax(min(100%,22rem),1fr))]">
           {visibleArticles.map((article) => (
             <ArticleRow
               key={article.id}
