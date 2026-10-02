@@ -1335,9 +1335,9 @@ await sendEmail({
               'Las listas vienen de a páginas; el header `Link` trae la URL de la última página, que sirve para contar sin bajar todo.',
           },
           {
-            term: 'revalidate',
+            term: 'snapshot',
             detail:
-              'Cachear la respuesta en Next mantiene el uso de la API muy por debajo del límite.',
+              'En vez de pedirle los números a GitHub en cada visita, un script los baja una vez y los guarda en un JSON que se commitea: la página no depende de que GitHub responda ni del límite de requests.',
           },
           {
             term: 'Promise.all',
@@ -1345,22 +1345,25 @@ await sendEmail({
           },
         ],
         usage: [
-          'La sección "Estadísticas de colaboración" de esta página sale de `src/lib/github-stats.ts`: estrellas, commits, PRs mergeadas, tiempo mediano hasta el merge y el ranking de contribuidores. Si GitHub no responde, la sección se oculta en vez de romper la página.',
+          'La sección "Estadísticas de colaboración" de esta página, las contribuciones de cada perfil y /vinculos leen `src/data/github-stats.json`. Ese archivo lo genera `pnpm github:stats` (`scripts/update-github-stats.mjs`): estrellas, commits, PRs mergeadas, tiempo mediano hasta el merge, lenguajes, líneas de código y el detalle de cada contribuidor. El sitio nunca llama a GitHub mientras renderiza.',
         ],
         examples: [
           {
-            file: 'src/lib/github-stats.ts',
-            lang: 'ts',
-            code: `const response = await fetch(\`\${API}\${path}\`, {
-  headers,
-  next: { revalidate: REVALIDATE_SECONDS },
-  signal: AbortSignal.timeout(8000),
-});
-if (!response.ok) throw new Error(\`GitHub \${path} responded \${response.status}\`);
-// …
+            file: 'scripts/update-github-stats.mjs',
+            lang: 'js',
+            code: `/** A /stats/* endpoint, or \`null\` if GitHub is still computing it after every retry. */
+const githubStats = async (path) => {
+  for (let attempt = 1; attempt <= STATS_ATTEMPTS; attempt++) {
+    const response = await github(path);
+    if (response.status === 200) return response.json();
+    await new Promise((resolve) => setTimeout(resolve, STATS_RETRY_MS));
+  }
+  console.warn(\`! \${path}: GitHub todavía lo está calculando, queda el valor anterior\`);
+  return null;
+};
 
 /** Total item count of a paginated endpoint, read from the \`rel="last"\` page of \`per_page=1\`. */
-const countFromLinkHeader = (response: Response, fallback: number) => {
+const countFromLinkHeader = (response, fallback) => {
   const match = response.headers.get('link')?.match(/[?&]page=(\\d+)>; rel="last"/);
   return match ? Number(match[1]) : fallback;
 };`,

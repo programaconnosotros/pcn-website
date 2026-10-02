@@ -70,11 +70,12 @@ const Stat = ({ label, value, hint }: { label: string; value: string; hint?: str
   </RuledCell>
 );
 
-const WeeklyActivity = ({ weeks }: { weeks: number[] }) => {
+// The weeks end at the snapshot, not today: the numbers only move when it is refreshed.
+const WeeklyActivity = ({ weeks, until }: { weeks: number[]; until: string }) => {
   const max = Math.max(...weeks);
   const total = weeks.reduce((sum, count) => sum + count, 0);
   const activeWeeks = weeks.filter(Boolean).length;
-  const now = Date.now();
+  const now = Date.parse(until);
 
   return (
     <div>
@@ -108,8 +109,8 @@ const WeeklyActivity = ({ weeks }: { weeks: number[] }) => {
         })}
       </div>
       <div className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground/70">
-        <span>hace 1 año</span>
-        <span>hoy</span>
+        <span>{monthFormat.format(new Date(now - weeks.length * WEEK_MS))}</span>
+        <span>{weekFormat.format(new Date(now))}</span>
       </div>
     </div>
   );
@@ -128,7 +129,7 @@ const Languages = ({
         <span className="text-pcnGreen-500">$ </span>git log --numstat | awk &apos;{'{'}a+=$1; d+=$2
         {'}'} END {'{'}print a-d{'}'}&apos;
         <span className="ml-2 text-foreground">{numberFormat.format(linesOfCode)}</span>
-        <span className="ml-2">líneas de código hoy</span>
+        <span className="ml-2">líneas de código</span>
       </p>
     )}
     {languages.length > 0 && (
@@ -179,15 +180,6 @@ export const CollaborationStats = async () => {
     getAdminUser(),
   ]);
 
-  if (!stats) {
-    return (
-      <p className="font-mono text-xs text-muted-foreground">
-        <span className="text-pcnGreen-500">$ </span>
-        No pudimos conectarnos con GitHub en este momento. Probá de nuevo más tarde.
-      </p>
-    );
-  }
-
   const contributors = stats.topContributors;
   const maxMerged = Math.max(...contributors.map((contributor) => contributor.mergedPrs));
 
@@ -210,7 +202,9 @@ export const CollaborationStats = async () => {
         <Stat label="forks" value={numberFormat.format(stats.forks)} />
       </RuledGrid>
 
-      {stats.weeklyCommits.length > 0 && <WeeklyActivity weeks={stats.weeklyCommits} />}
+      {stats.weeklyCommits.length > 0 && (
+        <WeeklyActivity weeks={stats.weeklyCommits} until={stats.updatedAt} />
+      )}
 
       {(stats.languages.length > 0 || stats.linesOfCode !== null) && (
         <Languages languages={stats.languages} linesOfCode={stats.linesOfCode} />
@@ -290,8 +284,8 @@ export const CollaborationStats = async () => {
       </div>
 
       <p className="font-mono text-[11px] text-muted-foreground/70">
-        repo creado {timeAgo(stats.createdAt)} · último push {timeAgo(stats.pushedAt)} · datos de la
-        API de GitHub, se actualizan cada hora
+        repo creado {timeAgo(stats.createdAt)} · datos de GitHub al{' '}
+        {longDateFormat.format(new Date(stats.updatedAt))}
         {admin && (
           <>
             {' · '}
