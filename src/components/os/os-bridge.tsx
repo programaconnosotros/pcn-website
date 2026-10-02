@@ -7,8 +7,9 @@ import { isEmbedded, opensInOwnWindow, postToOsHost as post } from './os-env';
 /**
  * Runs inside a PCN OS window. Tells the desktop host where the window navigated to and when
  * the user interacts with it, so the host can update the title bar and bring it to the front.
- * Links to profiles and event details are handed to the host so they open in a new window, and
- * so is every link clicked on the home page, which stays open as the desktop's starting point.
+ * Links to profiles and event details (except from the /eventos listing) are handed to the host
+ * so they open in a new window, and so is every link clicked on the home page, which stays open
+ * as the desktop's starting point.
  */
 export function OsBridge() {
   const pathname = usePathname();
@@ -45,7 +46,7 @@ export function OsBridge() {
       if (url.origin !== window.location.origin || url.pathname.startsWith('/api/')) return;
       if (url.pathname === window.location.pathname) return;
       const fromHome = window.location.pathname === '/';
-      if (!fromHome && !opensInOwnWindow(url.pathname)) return;
+      if (!fromHome && !opensInOwnWindow(url.pathname, window.location.pathname)) return;
       event.preventDefault();
       post({ type: 'open', path: `${url.pathname}${url.search}` });
     };

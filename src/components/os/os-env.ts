@@ -38,12 +38,14 @@ export const postToOsHost = (message: OutgoingOsMessage) =>
 
 /**
  * Detail pages that PCN OS opens in a window of their own instead of navigating the window the
- * link was clicked in: user profiles and event detail pages.
+ * link was clicked in: user profiles and event detail pages. An event picked from the /eventos
+ * listing opens right there instead, like browsing a catalog.
  */
 const OWN_WINDOW_PATHS = [/^\/perfil\/[^/]+$/, /^\/eventos\/(?!nuevo$)[^/]+$/];
 
-export const opensInOwnWindow = (pathname: string) =>
-  OWN_WINDOW_PATHS.some((pattern) => pattern.test(pathname));
+export const opensInOwnWindow = (pathname: string, fromPathname: string) =>
+  OWN_WINDOW_PATHS.some((pattern) => pattern.test(pathname)) &&
+  !(fromPathname === '/eventos' && pathname.startsWith('/eventos/'));
 
 /**
  * Inline script for the root layout `<head>`. It runs before paint and marks the document as
