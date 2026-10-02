@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
+import { postUploadForm } from '@/lib/upload-form';
 
 type FileUploadProps = {
   value?: string;
@@ -21,25 +22,11 @@ type FileUploadProps = {
 };
 
 async function uploadFile(file: File, folder: string): Promise<string> {
-  // 1. Obtener presigned URL usando Server Action
-  const { uploadUrl, fileUrl } = await getPresignedUrl({
-    fileName: file.name,
-    contentType: file.type,
-    folder,
-  });
+  // 1. Obtener el formulario firmado usando Server Action
+  const { url, fields, fileUrl } = await getPresignedUrl({ contentType: file.type, folder });
 
-  // 2. Subir directamente a S3 con el Content-Type correcto (firmado en la URL)
-  const uploadResponse = await fetch(uploadUrl, {
-    method: 'PUT',
-    body: file,
-    headers: {
-      'Content-Type': file.type,
-    },
-  });
-
-  if (!uploadResponse.ok) {
-    throw new Error('Error al subir el archivo a S3');
-  }
+  // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+  await postUploadForm(url, fields, file);
 
   // 3. Usar la URL de CloudFront/S3
   return fileUrl;

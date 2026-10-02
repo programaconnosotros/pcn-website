@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
+import { postUploadForm } from '@/lib/upload-form';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -60,24 +61,11 @@ export function FileUploadPublic({
     // Subir archivo
     setIsUploading(true);
     try {
-      // 1. Obtener presigned URL usando Server Action pública
-      const { uploadUrl, fileUrl } = await getPresignedUrlPublic({
-        fileName: file.name,
-        contentType: file.type,
-      });
+      // 1. Obtener el formulario firmado usando Server Action pública
+      const { url, fields, fileUrl } = await getPresignedUrlPublic({ contentType: file.type });
 
-      // 2. Subir directamente a S3
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Error al subir el archivo');
-      }
+      // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+      await postUploadForm(url, fields, file);
 
       // 3. Usar la URL de CloudFront/S3
       onChange(fileUrl);

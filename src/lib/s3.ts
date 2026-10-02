@@ -47,6 +47,31 @@ export async function getPresignedUploadUrl(
   return { uploadUrl, fileUrl: publicFileUrl(uniqueFileName), key: uniqueFileName };
 }
 
+/** Tope de las imágenes que suben los usuarios (perfil, logos de proyectos, registro). */
+export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+
+const IMAGE_EXTENSIONS: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+};
+
+/**
+ * Formulario firmado para que un usuario suba una imagen directo a S3. A diferencia del PUT
+ * firmado, S3 rechaza el archivo si pasa de MAX_IMAGE_BYTES, y la extensión sale del tipo y no
+ * del nombre que manda el navegador.
+ */
+export async function getImageUploadForm(contentType: string, folder: string) {
+  const extension = IMAGE_EXTENSIONS[contentType];
+  if (!extension) throw new Error('Tipo de archivo no permitido');
+
+  const key = `${folder}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const { url, fields } = await getPresignedPost(key, contentType, MAX_IMAGE_BYTES);
+
+  return { url, fields, fileUrl: publicFileUrl(key) };
+}
+
 /** URL pública de un objeto del bucket: por CloudFront si está configurado, o directo a S3. */
 export function publicFileUrl(key: string) {
   return CLOUDFRONT_URL

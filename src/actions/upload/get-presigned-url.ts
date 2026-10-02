@@ -1,6 +1,6 @@
 'use server';
 
-import { getPresignedUploadUrl } from '@/lib/s3';
+import { getImageUploadForm } from '@/lib/s3';
 import { cookies } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
@@ -9,16 +9,11 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
 
 type GetPresignedUrlParams = {
-  fileName: string;
   contentType: string;
   folder?: string;
 };
 
-export async function getPresignedUrl({
-  fileName,
-  contentType,
-  folder = 'events',
-}: GetPresignedUrlParams) {
+export async function getPresignedUrl({ contentType, folder = 'events' }: GetPresignedUrlParams) {
   await enforceRateLimit('upload');
 
   // Verificar autenticación
@@ -45,7 +40,5 @@ export async function getPresignedUrl({
     );
   }
 
-  const { uploadUrl, fileUrl } = await getPresignedUploadUrl(fileName, contentType, folder);
-
-  return { uploadUrl, fileUrl };
+  return getImageUploadForm(contentType, folder);
 }
