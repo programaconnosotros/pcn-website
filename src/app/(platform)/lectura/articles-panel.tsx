@@ -8,7 +8,7 @@ import { useContentMarks } from '@/hooks/use-content-marks';
 import { Bookmark, Check, CheckCheck, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import type { Person } from '@/components/people/person-link';
-import type { Article } from './articles';
+import { articleAuthors, type Article } from './articles';
 import { ArticleWriters } from './article-writers';
 
 export const ALL_ARTICLE_CATEGORIES = 'Todas las categorías';
@@ -218,7 +218,7 @@ const ArticleRow = ({
         <div className="mt-auto flex items-center gap-2 pt-0.5 font-mono text-[11px] text-muted-foreground/70">
           <span className="min-w-0 truncate">
             <span className="text-pcnGreen-500">@ </span>
-            {article.author}
+            {articleAuthors(article).join(', ')}
             <span className="text-pcnGreen-500"> ~ </span>
             {article.source}
           </span>
@@ -287,7 +287,7 @@ export function ArticlesPanel({
     );
 
   const sources = new Set(articles.map((article) => article.source)).size;
-  const authors = new Set(articles.map((article) => article.author)).size;
+  const authors = new Set(articles.flatMap(articleAuthors)).size;
   const years = articles.map((article) => Number(article.date.slice(0, 4)));
 
   return (

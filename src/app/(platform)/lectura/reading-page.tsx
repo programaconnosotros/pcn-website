@@ -16,7 +16,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { articles, type Article } from './articles';
+import { articleAuthors, articles, type Article } from './articles';
 import { ArticleReaderDialog } from './article-reader-dialog';
 import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
 import { useContentMarks } from '@/hooks/use-content-marks';
@@ -1035,7 +1035,9 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
     return articles.filter((article) => {
       const matchesSearch =
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        articleAuthors(article).some((author) =>
+          author.toLowerCase().includes(searchTerm.toLowerCase()),
+        ) ||
         article.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.description.toLowerCase().includes(searchTerm.toLowerCase());
 

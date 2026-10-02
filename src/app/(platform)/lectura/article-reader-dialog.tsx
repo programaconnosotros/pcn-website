@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { WebReaderDialog } from '@/components/web-reader/web-reader-dialog';
-import type { Article } from './articles';
+import { articleAuthors, type Article } from './articles';
 
 interface ArticleReaderDialogProps {
   article: Article | null;
@@ -28,7 +28,7 @@ export function ArticleReaderDialog({ article, open, onOpenChange }: ArticleRead
         article && {
           url: article.url,
           title: article.title,
-          subtitle: article.author,
+          subtitle: articleAuthors(article).join(', '),
           embedCheckUrl: `/api/lectura/embed?url=${encodeURIComponent(article.url)}`,
           icon: (
             <Avatar className="size-7 shrink-0 rounded-sm">

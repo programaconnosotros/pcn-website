@@ -2,6 +2,8 @@ export interface Article {
   id: string;
   title: string;
   author: string;
+  /** Other people who signed the article with `author`. */
+  coauthors?: string[];
   source: string;
   category: string;
   description: string;
@@ -1295,4 +1297,129 @@ export const articles: Article[] = [
     avatar: '/lectura/mauricio-sanchez.webp',
     date: '2024-10-16',
   },
+  {
+    id: '108',
+    title: 'Loop Engineering: From Backlog Issue to Shipped Code',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'IA',
+    description:
+      'Cómo cerraron el ciclo del agentic coding en DIZENZ: de un issue crudo del backlog a código desplegado en un entorno de prueba, con dos agentes de Claude Code, una revisión en dos pasadas y un quality gate que corre en la laptop en vez de en GitHub Actions.',
+    url: 'https://www.dizenz.com/blog/loop-engineering',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-17',
+  },
+  {
+    id: '109',
+    title: 'Crashout: A Multiplayer Racing Game Built for Live Events',
+    author: 'Agustín Sánchez',
+    coauthors: ['Santiago Villada'],
+    source: 'dizenz.com',
+    category: 'Arquitectura',
+    description:
+      'Cómo construyeron Crashout, un juego de carreras multijugador para eventos en vivo que se controla desde el celular: un servidor autoritativo en Go, tres pantallas sincronizadas y acceso por QR sin instalar ninguna app.',
+    url: 'https://www.dizenz.com/blog/crashout',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-15',
+  },
+  {
+    id: '110',
+    title: 'Building an AI Agent With the Vercel AI SDK and eve',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'IA',
+    description:
+      'Paso a paso con el agente real que arma quizzes en Qüizo: de una sola llamada a generateObject a un agente de eve con tools y aislado por tenant, salida estructurada con dos schemas y revisión humana antes de guardar.',
+    url: 'https://www.dizenz.com/blog/ai-agents-with-eve',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-23',
+  },
+  {
+    id: '111',
+    title: 'Agent Skills: Teaching an AI Agent What Your Team Already Knows',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'IA',
+    description:
+      'Qué son las Agent Skills, qué problema resuelven y cómo crear, publicar y actualizar una: desde un único SKILL.md hasta un plugin compartido con todo el equipo.',
+    url: 'https://www.dizenz.com/blog/agent-skills',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-23',
+  },
+  {
+    id: '112',
+    title: 'MCP Servers: How AI Agents Connect to Real Tools and Data',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'IA',
+    description:
+      'Qué es el Model Context Protocol, el problema de integración que resuelve y cómo construir, desplegar y conectar un servidor MCP a Claude.',
+    url: 'https://www.dizenz.com/blog/mcp-servers',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-23',
+  },
+  {
+    id: '113',
+    title: 'Agent-Native Architectures: Designing Systems Agents Can Operate',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'Arquitectura',
+    description:
+      'Por qué la próxima generación de software va a tratar a los agentes como operadores de primera clase: las cuatro propiedades que hacen a un sistema agent-native y por qué pensarlo así se vuelve una habilidad central de arquitectura.',
+    url: 'https://www.dizenz.com/blog/agent-native-architectures',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-17',
+  },
+  {
+    id: '114',
+    title: 'Mingüini: Building an All-in-One Productivity Platform',
+    author: 'Agustín Sánchez',
+    coauthors: ['Victoria Grillo'],
+    source: 'dizenz.com',
+    category: 'Arquitectura',
+    description:
+      'Cómo hicieron de Mingüini una plataforma de productividad todo en uno: un solo modelo de datos, un solo límite de autenticación y trece módulos sobre Next.js 16, Server Actions y Prisma, en lugar de cinco apps separadas.',
+    url: 'https://www.dizenz.com/blog/minguini',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-16',
+  },
+  {
+    id: '115',
+    title: 'Qüizo: A Multiplayer Quiz Game Built for Live Events',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'Arquitectura',
+    description:
+      'Cómo construyeron Qüizo, una plataforma de quizzes multijugador para eventos en vivo: un servidor que es dueño del reloj, una capa de SSE que aguanta el wifi del lugar y pruebas de carga para saber cuánta gente entra de verdad en una sala.',
+    url: 'https://www.dizenz.com/blog/quizo',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-16',
+  },
+  {
+    id: '116',
+    title: 'programaConNosotros: Building the Platform for a Community We Co-Founded',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'Producto',
+    description:
+      'Cómo programaConNosotros pasó de ser un grupo de WhatsApp a una plataforma social open source: Next.js 16, Server Actions, Prisma y una base de contribuidores que crece junto con la comunidad.',
+    url: 'https://www.dizenz.com/blog/pcn',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-08-15',
+  },
+  {
+    id: '117',
+    title: 'Agentic Coding: The Multiplier for Engineering Efficiency',
+    author: 'Agustín Sánchez',
+    source: 'dizenz.com',
+    category: 'IA',
+    description:
+      'Cómo el agentic coding cambia el desarrollo de software en DIZENZ: cómo usan Claude Code, cómo eligen el modelo para cada tarea y qué buenas prácticas siguen al programar con IA.',
+    url: 'https://www.dizenz.com/blog/agentic-coding',
+    avatar: '/lectura/agustin-sanchez.webp',
+    date: '2026-02-15',
+  },
 ].sort((a, b) => b.date.localeCompare(a.date));
+
+/** Everyone who signed an article: its author first, then any coauthors. */
+export const articleAuthors = (article: Article) => [article.author, ...(article.coauthors ?? [])];
