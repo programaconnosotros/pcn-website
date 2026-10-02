@@ -33,7 +33,7 @@ export const EventExhibit: React.FC<{ event: EventWithCount; catalogNumber: numb
         <FlyerFrame
           src={event.flyerImages[0]}
           alt={`Flyer de ${event.name}`}
-          className="aspect-[4/5] w-full shadow-md ring-1 ring-black/10 transition-shadow duration-500 group-hover:shadow-xl dark:ring-white/10"
+          className="aspect-[4/5] w-full shadow-md ring-1 ring-black/10 group-hover:shadow-xl dark:ring-white/10"
         />
       </div>
 
