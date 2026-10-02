@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { LocalDate } from '@/components/ui/local-date-time';
@@ -106,6 +106,22 @@ export default async function GalleryItemPage(props: Props) {
 
   const caption = photoCaption(photo);
 
+  // Photos from an event were taken where the event happened.
+  const event = photo.event;
+  const location = event
+    ? [event.isOnline ? 'online' : event.placeName, event.city].filter(Boolean).join(', ')
+    : '';
+  const mapsHref =
+    event && !event.isOnline
+      ? event.latitude !== null && event.longitude !== null
+        ? `https://www.google.com/maps?q=${event.latitude},${event.longitude}`
+        : event.address || event.placeName
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              [event.placeName, event.address, event.city].filter(Boolean).join(', '),
+            )}`
+          : null
+      : null;
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col p-4 pt-0">
       <PhotoKeyboardNav previousHref={previousHref} nextHref={nextHref} />
@@ -206,6 +222,26 @@ export default async function GalleryItemPage(props: Props) {
                     >
                       {photo.event.name}
                     </Link>
+                  </dd>
+                  <dt className="text-muted-foreground">ubicación</dt>
+                  <dd>
+                    {location ? (
+                      mapsHref ? (
+                        <a
+                          href={mapsHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-0.5 hover:text-pcnGreen"
+                        >
+                          {location}
+                          <ArrowUpRight className="size-3 text-muted-foreground" />
+                        </a>
+                      ) : (
+                        location
+                      )
+                    ) : (
+                      <span className="text-muted-foreground">sin datos</span>
+                    )}
                   </dd>
                 </>
               )}

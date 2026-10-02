@@ -87,7 +87,19 @@ export async function getGalleryItem(id: string) {
   const item = await prisma.galleryItem.findFirst({
     where: { id, ...visibleGalleryItem },
     include: {
-      event: { select: { id: true, name: true, date: true } },
+      event: {
+        select: {
+          id: true,
+          name: true,
+          date: true,
+          isOnline: true,
+          placeName: true,
+          address: true,
+          city: true,
+          latitude: true,
+          longitude: true,
+        },
+      },
       tags: {
         select: {
           taggedById: true,
