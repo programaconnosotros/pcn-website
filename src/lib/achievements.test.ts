@@ -55,6 +55,10 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, conversations: 100 })).toEqual(['conversations-100']);
   });
 
+  it('earns builder after sharing a project', () => {
+    expect(ids({ ...EMPTY_METRICS, projectsShared: 1 })).toEqual(['project-shared']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -71,6 +75,7 @@ describe('getAchievementMetrics', () => {
     (prismaMock.contentMark.groupBy as jest.Mock).mockResolvedValue([]);
     (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([]);
     (prismaMock.eventRegistration.groupBy as jest.Mock).mockResolvedValue([]);
+    prismaMock.project.findMany.mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
@@ -174,6 +179,29 @@ describe('getAchievementMetrics', () => {
     const expected = conversations.filter(({ participants }) => participants.includes(name));
     expect(expected.length).toBeGreaterThan(0);
     expect(metrics.get('user-1')?.conversations).toBe(expected.length);
+  });
+
+  it('counts each project once per author or member', async () => {
+    prismaMock.project.findMany.mockResolvedValue([
+      { authorId: 'user-1', members: [{ userId: 'user-1' }, { userId: 'user-2' }] },
+      { authorId: null, members: [{ userId: 'user-2' }] },
+    ] as any);
+
+    const metrics = await getAchievementMetrics();
+
+    expect(metrics.get('user-1')?.projectsShared).toBe(1);
+    expect(metrics.get('user-2')?.projectsShared).toBe(2);
+  });
+
+  it('leaves out the other members of a project when loading some users', async () => {
+    prismaMock.project.findMany.mockResolvedValue([
+      { authorId: 'user-1', members: [{ userId: 'user-2' }] },
+    ] as any);
+
+    const metrics = await getAchievementMetrics(['user-1']);
+
+    expect(metrics.get('user-1')?.projectsShared).toBe(1);
+    expect(metrics.has('user-2')).toBe(false);
   });
 
   it('returns empty metrics for a user without activity', async () => {

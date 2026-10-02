@@ -23,6 +23,8 @@ export type AchievementMetrics = {
   eventsAttended: number;
   /** Conversations from the WhatsApp group (/conversaciones) they took part in. */
   conversations: number;
+  /** Projects on /proyectos they published or are a member of. */
+  projectsShared: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -34,6 +36,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   articlesRead: 0,
   eventsAttended: 0,
   conversations: 0,
+  projectsShared: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -159,6 +162,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Sumate a las charlas del grupo: las mejores quedan resumidas en /conversaciones.',
     href: '/conversaciones',
     progress: count('conversations', 100),
+  },
+  {
+    id: 'project-shared',
+    name: 'Builder',
+    description: 'Compartió un proyecto con la comunidad.',
+    icon: 'folder-git',
+    tone: 'green',
+    goal: 'compartir 1 proyecto',
+    howTo: 'Publicá en /proyectos algo que hayas construido, solo o en equipo.',
+    href: '/proyectos',
+    progress: count('projectsShared', 1),
   },
 ];
 

@@ -38,6 +38,7 @@ export const getAchievementMetrics = async (
     organizers,
     readArticles,
     registrations,
+    projects,
   ] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
@@ -72,6 +73,12 @@ export const getAchievementMetrics = async (
       where: { ...forUsers, cancelledAt: null, event: { deletedAt: null, date: { lte: now } } },
       _count: { _all: true },
     }),
+    prisma.project.findMany({
+      where: userIds
+        ? { OR: [{ authorId: { in: userIds } }, { members: { some: forUsers } }] }
+        : undefined,
+      select: { authorId: true, members: { select: { userId: true } } },
+    }),
   ]);
 
   const metrics = new Map<string, AchievementMetrics>();
@@ -92,6 +99,14 @@ export const getAchievementMetrics = async (
   for (const { userId, _count } of organizers) of(userId).eventsOrganized = _count._all;
   for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
   for (const { userId, _count } of registrations) of(userId).eventsAttended = _count._all;
+
+  for (const { authorId, members } of projects) {
+    // Someone listed both as author and as member still shared the project once.
+    const people = new Set([authorId, ...members.map(({ userId }) => userId)]);
+    for (const userId of people) {
+      if (userId && (!userIds || userIds.includes(userId))) of(userId).projectsShared += 1;
+    }
+  }
 
   for (const [userId, names] of whatsappNames) {
     const taken = conversations.filter(({ participants }) =>
