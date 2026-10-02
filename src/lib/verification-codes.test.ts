@@ -36,12 +36,25 @@ describe('findValidEmailVerificationToken', () => {
     });
   });
 
-  it('returns null and still spends the attempt when the code is wrong', async () => {
+  it('gives the attempt back when the code matches', async () => {
+    prismaMock.emailVerificationToken.findFirst.mockResolvedValue(token);
+    prismaMock.emailVerificationToken.updateMany.mockResolvedValue({ count: 1 });
+
+    await findValidEmailVerificationToken('test@example.com', '123456');
+
+    expect(prismaMock.emailVerificationToken.update).toHaveBeenCalledWith({
+      where: { id: 'token-1' },
+      data: { attempts: { decrement: 1 } },
+    });
+  });
+
+  it('returns null and keeps the attempt spent when the code is wrong', async () => {
     prismaMock.emailVerificationToken.findFirst.mockResolvedValue(token);
     prismaMock.emailVerificationToken.updateMany.mockResolvedValue({ count: 1 });
 
     await expect(findValidEmailVerificationToken('test@example.com', '000000')).resolves.toBeNull();
     expect(prismaMock.emailVerificationToken.updateMany).toHaveBeenCalledTimes(1);
+    expect(prismaMock.emailVerificationToken.update).not.toHaveBeenCalled();
   });
 
   it('rejects even the right code once the attempts are used up', async () => {
@@ -67,6 +80,35 @@ describe('findValidPasswordResetToken', () => {
     prismaMock.passwordResetToken.findFirst.mockResolvedValue(token);
     prismaMock.passwordResetToken.updateMany.mockResolvedValue({ count: 0 });
 
+    await expect(findValidPasswordResetToken('test@example.com', '123456')).resolves.toBeNull();
+  });
+
+  it('lets the same right code pass both reset steps after four wrong guesses', async () => {
+    // Simula la fila real: el tope se aplica sobre `attempts` como lo haría Postgres
+    const row = { ...token, attempts: 0 };
+    (prismaMock.passwordResetToken.findFirst as jest.Mock).mockImplementation(async () => ({
+      ...row,
+    }));
+    (prismaMock.passwordResetToken.updateMany as jest.Mock).mockImplementation(async () => {
+      if (row.attempts >= MAX_CODE_ATTEMPTS) return { count: 0 };
+      row.attempts += 1;
+      return { count: 1 };
+    });
+    (prismaMock.passwordResetToken.update as jest.Mock).mockImplementation(async () => {
+      row.attempts -= 1;
+      return row;
+    });
+
+    for (const wrong of ['000001', '000002', '000003', '000004']) {
+      await expect(findValidPasswordResetToken('test@example.com', wrong)).resolves.toBeNull();
+    }
+
+    // verifyResetCode y después completePasswordReset validan el mismo código
+    await expect(findValidPasswordResetToken('test@example.com', '123456')).resolves.not.toBeNull();
+    await expect(findValidPasswordResetToken('test@example.com', '123456')).resolves.not.toBeNull();
+
+    // Un quinto error agota el código: después ni el correcto pasa
+    await expect(findValidPasswordResetToken('test@example.com', '000005')).resolves.toBeNull();
     await expect(findValidPasswordResetToken('test@example.com', '123456')).resolves.toBeNull();
   });
 });
