@@ -1,5 +1,4 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { AdviseCard } from '@/components/advises/advise-card';
 import { BadgeStrip, ProfileBadges } from '@/components/badges/profile-badges';
 import {
   AMBASSADOR_BADGE,
@@ -12,33 +11,19 @@ import { LanguageCoinsContainer } from '@/components/profile/language-coins-cont
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
-import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
-import { signGalleryItem } from '@/lib/gallery-signing';
-import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
-import { cn } from '@/lib/utils';
-import { ArrowUpRight, Github, Instagram, Linkedin, Pencil } from 'lucide-react';
-import { conversations as allConversations } from '@/data/whatsapp-conversations';
-import { getCollaborationStats } from '@/lib/github-stats';
-import { getUserIdentities } from '@/lib/identity-links';
+import { Github, Instagram, Linkedin, Pencil } from 'lucide-react';
+import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
-  ContributionStats,
-  ConversationRows,
-  EmptyLine,
-  OrganizedEventRows,
-  PhotoGrid,
-  ProfileStat,
+  ProfileTabPanel,
   ProfileTabs,
-  ProjectRows,
-  SectionHeading,
-  isProfileTab,
-  type ProfileProject,
-  type ProfileTab,
-} from '@/components/profile/profile-sections';
-import { ProfileArticles } from '@/components/profile/profile-articles';
+  ProfileTabsProvider,
+} from '@/components/profile/profile-tab-nav';
+import { ProfileTabSkeleton } from '@/components/profile/profile-tab-skeleton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
 
 export const revalidate = 0;
@@ -95,21 +80,6 @@ interface ProfilePageProps {
   searchParams: Promise<{ tab?: string }>;
 }
 
-// How many items of each section the overview shows before "ver todo".
-const PREVIEW = 2;
-const ARTICLES_PREVIEW = 3;
-const CONVERSATIONS_PREVIEW = 4;
-const PHOTOS_PREVIEW = 6;
-
-type ProfileTalk = {
-  id: string;
-  title: string;
-  portraitUrl: string | null;
-  videoUrl: string | null;
-  event: { date: Date; placeName: string | null; city: string | null } | null;
-  speakers: { speakerName: string }[];
-};
-
 // lucide has no X logo; same 24×24 box and `currentColor` fill as its icons.
 const XLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
@@ -117,83 +87,11 @@ const XLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
-  <RuledGrid className="grid-cols-1">
-    {talks.map((talk) => {
-      const location = [talk.event?.placeName, talk.event?.city].filter(Boolean).join(', ');
-      const meta = [
-        talk.event?.date &&
-          new Date(talk.event.date).toLocaleDateString('es-AR', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          }),
-        location,
-      ]
-        .filter(Boolean)
-        .join(' · ');
-      return (
-        <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
-          {talk.portraitUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={talk.portraitUrl}
-              alt={`Foto de la charla "${talk.title}"`}
-              className="h-16 w-16 shrink-0 object-cover"
-            />
-          )}
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <div className="flex items-center gap-2 font-mono text-sm">
-              <h3 className="truncate font-semibold">{talk.title}</h3>
-              {talk.videoUrl && (
-                <a
-                  href={talk.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground hover:text-pcnGreen"
-                >
-                  youtube
-                  <ArrowUpRight className="h-3 w-3" />
-                </a>
-              )}
-            </div>
-            <p className="truncate text-xs text-muted-foreground">
-              {talk.speakers.map((speaker) => speaker.speakerName).join(', ')}
-            </p>
-            {meta && (
-              <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-                <span className="text-pcnGreen-500">@ </span>
-                {meta}
-              </p>
-            )}
-          </div>
-        </div>
-      );
-    })}
-  </RuledGrid>
-);
-
 async function getUser(id: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        advises: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-          include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-                email: true,
-              },
-            },
-            likes: true,
-          },
-        },
         badges: {
           include: { badge: true },
           orderBy: { awardedAt: 'asc' },
@@ -242,7 +140,6 @@ async function getUser(id: string) {
       linkedinUrl: user.linkedinUrl,
       gitHubUrl: user.gitHubUrl,
       instagramUrl: user.instagramUrl,
-      advises: user.advises,
       languages: user.languages,
     };
   } catch (error) {
@@ -335,112 +232,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
-  const [userTalks, projects, identities, organizedEvents, taggedPhotos, articleAuthorships] =
-    await Promise.all([
-      prisma.talk.findMany({
-        where: { speakers: { some: { userId: user.id } } },
-        include: {
-          event: { select: { date: true, placeName: true, city: true } },
-          speakers: { orderBy: { order: 'asc' } },
-        },
-        orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-      }),
-      prisma.project.findMany({
-        where: { OR: [{ authorId: user.id }, { members: { some: { userId: user.id } } }] },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          logoUrl: true,
-          techStack: true,
-          authorId: true,
-          authorRole: true,
-          members: { where: { userId: user.id }, select: { role: true }, take: 1 },
-        },
-        orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      }),
-      getUserIdentities(user.id),
-      prisma.event.findMany({
-        where: { deletedAt: null, organizers: { some: { userId: user.id } } },
-        select: {
-          id: true,
-          name: true,
-          date: true,
-          isOnline: true,
-          placeName: true,
-          city: true,
-          flyerImages: true,
-        },
-        orderBy: { date: 'desc' },
-      }),
-      prisma.galleryItem
-        .findMany({
-          where: { ...visibleGalleryItem, tags: { some: { userId: user.id } } },
-          select: { id: true, kind: true, description: true, src: true, thumbSrc: true },
-          orderBy: galleryOrder,
-        })
-        .then((items) => items.map(signGalleryItem)),
-      prisma.articleAuthor.findMany({ where: { userId: user.id }, select: { articleId: true } }),
-    ]);
-
-  // Articles from /lectura that an admin marked as written by this user, one by one or through
-  // an author name linked in /vinculos, newest first.
-  const writtenIds = new Set(articleAuthorships.map(({ articleId }) => articleId));
-  const authorNames = new Set(identities.articulos);
-  const userArticles = allArticles
-    .filter(
-      (article) =>
-        writtenIds.has(article.id) || articleAuthors(article).some((name) => authorNames.has(name)),
-    )
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .map((article) => ({ article, index: allArticles.indexOf(article) }));
-
-  // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
-  const userProjects: ProfileProject[] = projects.map(({ members, authorRole, ...project }) => ({
-    ...project,
-    role: project.authorId === user.id ? authorRole || 'autor' : members[0]?.role || 'colaborador',
-  }));
-
-  // Conversations where any of the WhatsApp names an admin linked to this user took part.
-  const whatsappNames = new Set(identities.whatsapp);
-  const userConversations = allConversations
-    .filter((conversation) => conversation.participants.some((name) => whatsappNames.has(name)))
-    .sort((a, b) => b.date.localeCompare(a.date));
-
-  // Contributions to this website's repo, from the GitHub logins linked to this user.
-  const githubStats = identities.github.length > 0 ? await getCollaborationStats() : null;
-  const contributions =
-    githubStats?.topContributors.filter((contributor) =>
-      identities.github.includes(contributor.login),
-    ) ?? [];
-  const mergedPrs = contributions.reduce((sum, contributor) => sum + contributor.mergedPrs, 0);
-  const commits = contributions.reduce((sum, contributor) => sum + contributor.commits, 0);
-  const linesAdded = contributions.some((contributor) => contributor.linesAdded === null)
-    ? null
-    : contributions.reduce((sum, contributor) => sum + (contributor.linesAdded ?? 0), 0);
-
-  const counts: Partial<Record<ProfileTab, number>> = {
-    proyectos: userProjects.length,
-    consejos: user.advises.length,
-    charlas: userTalks.length,
-    articulos: userArticles.length,
-    eventos: organizedEvents.length,
-    fotos: taggedPhotos.length,
-    conversaciones: userConversations.length,
-    ...(contributions.length > 0 && { contribuciones: mergedPrs }),
-  };
-  const tabHref = (id: ProfileTab) => `/perfil/${user.id}?tab=${id}`;
   const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
-  const hasActivity =
-    userProjects.length +
-      user.advises.length +
-      userTalks.length +
-      userArticles.length +
-      organizedEvents.length +
-      taggedPhotos.length +
-      userConversations.length +
-      contributions.length >
-    0;
 
   return (
     <>
@@ -548,277 +340,26 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
           {/* Columna derecha: resumen de todo lo que hizo, y una pestaña para ver cada sección */}
           <div className="min-w-0 lg:col-span-2">
-            <StickyHeader className="mb-4">
-              <ProfileTabs userId={user.id} active={tab} counts={counts} />
-            </StickyHeader>
-
-            {tab === 'resumen' && (
-              <div className="mb-14 space-y-8">
-                <RuledGrid
-                  className={cn(
-                    'grid-cols-2',
-                    contributions.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-5',
-                  )}
-                >
-                  <ProfileStat
-                    label="proyectos"
-                    value={userProjects.length}
-                    href={tabHref('proyectos')}
+            <ProfileTabsProvider userId={user.id} active={tab}>
+              <StickyHeader className="mb-4">
+                <ProfileTabs />
+              </StickyHeader>
+              {/* Keyed by tab so a new tab streams in behind its skeleton instead of holding
+                  the page on the previous tab until all of its data is ready. */}
+              <Suspense key={`counts-${tab}`}>
+                <ProfileCountsLoader userId={user.id} />
+              </Suspense>
+              <ProfileTabPanel>
+                <Suspense key={tab} fallback={<ProfileTabSkeleton tab={tab} />}>
+                  <ProfileTabContent
+                    tab={tab}
+                    userId={user.id}
+                    firstName={firstName}
+                    session={session}
                   />
-                  <ProfileStat
-                    label="consejos"
-                    value={user.advises.length}
-                    href={tabHref('consejos')}
-                  />
-                  <ProfileStat label="charlas" value={userTalks.length} href={tabHref('charlas')} />
-                  <ProfileStat
-                    label="artículos publicados"
-                    value={userArticles.length}
-                    href={tabHref('articulos')}
-                  />
-                  {contributions.length > 0 ? (
-                    <>
-                      <ProfileStat
-                        label="conversaciones"
-                        value={userConversations.length}
-                        href={tabHref('conversaciones')}
-                      />
-                      <ProfileStat
-                        label="PRs a pcn"
-                        value={mergedPrs}
-                        href={tabHref('contribuciones')}
-                      />
-                      <ProfileStat
-                        label="commits a pcn"
-                        value={commits.toLocaleString('es-AR')}
-                        href={tabHref('contribuciones')}
-                      />
-                      <ProfileStat
-                        label="líneas a pcn"
-                        value={linesAdded === null ? '—' : linesAdded.toLocaleString('es-AR')}
-                        href={tabHref('contribuciones')}
-                      />
-                    </>
-                  ) : (
-                    <ProfileStat
-                      label="conversaciones"
-                      value={userConversations.length}
-                      href={tabHref('conversaciones')}
-                    />
-                  )}
-                </RuledGrid>
-
-                {!hasActivity && (
-                  <EmptyLine>{firstName} todavía no tiene actividad en la comunidad.</EmptyLine>
-                )}
-
-                {userProjects.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="proyectos"
-                      count={userProjects.length}
-                      href={userProjects.length > PREVIEW ? tabHref('proyectos') : undefined}
-                    />
-                    <ProjectRows projects={userProjects.slice(0, PREVIEW)} />
-                  </section>
-                )}
-
-                {contributions.length > 0 && (
-                  <section>
-                    <SectionHeading label="contribuciones a pcn" href={tabHref('contribuciones')} />
-                    <ContributionStats
-                      contributions={contributions}
-                      totals={{
-                        mergedPrs: githubStats?.mergedPrs ?? 0,
-                        commits: githubStats?.commits ?? 0,
-                      }}
-                    />
-                  </section>
-                )}
-
-                {userTalks.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="charlas"
-                      count={userTalks.length}
-                      href={userTalks.length > PREVIEW ? tabHref('charlas') : undefined}
-                    />
-                    <TalkRows talks={userTalks.slice(0, PREVIEW)} />
-                  </section>
-                )}
-
-                {userArticles.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="artículos"
-                      count={userArticles.length}
-                      href={
-                        userArticles.length > ARTICLES_PREVIEW ? tabHref('articulos') : undefined
-                      }
-                    />
-                    <ProfileArticles articles={userArticles.slice(0, ARTICLES_PREVIEW)} />
-                  </section>
-                )}
-
-                {organizedEvents.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="eventos organizados"
-                      count={organizedEvents.length}
-                      href={organizedEvents.length > PREVIEW ? tabHref('eventos') : undefined}
-                    />
-                    <OrganizedEventRows events={organizedEvents.slice(0, PREVIEW)} />
-                  </section>
-                )}
-
-                {taggedPhotos.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="fotos y videos"
-                      count={taggedPhotos.length}
-                      href={taggedPhotos.length > PHOTOS_PREVIEW ? tabHref('fotos') : undefined}
-                    />
-                    <PhotoGrid photos={taggedPhotos.slice(0, PHOTOS_PREVIEW)} />
-                  </section>
-                )}
-
-                {userConversations.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="conversaciones"
-                      count={userConversations.length}
-                      href={
-                        userConversations.length > CONVERSATIONS_PREVIEW
-                          ? tabHref('conversaciones')
-                          : undefined
-                      }
-                    />
-                    <ConversationRows
-                      conversations={userConversations.slice(0, CONVERSATIONS_PREVIEW)}
-                    />
-                  </section>
-                )}
-
-                {user.advises.length > 0 && (
-                  <section>
-                    <SectionHeading
-                      label="consejos"
-                      count={user.advises.length}
-                      href={user.advises.length > PREVIEW ? tabHref('consejos') : undefined}
-                    />
-                    <RuledGrid className="grid-cols-1">
-                      {user.advises.slice(0, PREVIEW).map((advise) => (
-                        <AdviseCard key={advise.id} session={session} advise={advise} />
-                      ))}
-                    </RuledGrid>
-                  </section>
-                )}
-              </div>
-            )}
-
-            {tab === 'proyectos' && (
-              <div className="mb-14">
-                {userProjects.length > 0 ? (
-                  <ProjectRows projects={userProjects} />
-                ) : (
-                  <EmptyLine>{firstName} todavía no participó en ningún proyecto.</EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'consejos' && (
-              <div className="mb-14">
-                {user.advises.length > 0 ? (
-                  <RuledGrid className="grid-cols-1">
-                    {user.advises.map((advise) => (
-                      <AdviseCard key={advise.id} session={session} advise={advise} />
-                    ))}
-                  </RuledGrid>
-                ) : (
-                  <EmptyLine>{firstName} todavía no compartió ningún consejo.</EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'charlas' && (
-              <div className="mb-14">
-                {userTalks.length > 0 ? (
-                  <TalkRows talks={userTalks} />
-                ) : (
-                  <EmptyLine>{firstName} todavía no dio ninguna charla.</EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'articulos' && (
-              <div className="mb-14">
-                {userArticles.length > 0 ? (
-                  <ProfileArticles articles={userArticles} />
-                ) : (
-                  <EmptyLine>{firstName} todavía no publicó ningún artículo.</EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'eventos' && (
-              <div className="mb-14">
-                {organizedEvents.length > 0 ? (
-                  <OrganizedEventRows events={organizedEvents} />
-                ) : (
-                  <EmptyLine>{firstName} todavía no organizó ningún evento.</EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'fotos' && (
-              <div className="mb-14">
-                {taggedPhotos.length > 0 ? (
-                  <PhotoGrid photos={taggedPhotos} />
-                ) : (
-                  <EmptyLine>
-                    {firstName} todavía no aparece en ninguna foto ni video de la{' '}
-                    <Link href="/galeria" className="text-pcnGreen hover:underline">
-                      galería
-                    </Link>
-                    .
-                  </EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'conversaciones' && (
-              <div className="mb-14">
-                {userConversations.length > 0 ? (
-                  <ConversationRows conversations={userConversations} />
-                ) : (
-                  <EmptyLine>
-                    {identities.whatsapp.length > 0
-                      ? `${firstName} no aparece en las conversaciones destacadas.`
-                      : 'Todavía no vinculamos este perfil con el grupo de WhatsApp.'}
-                  </EmptyLine>
-                )}
-              </div>
-            )}
-
-            {tab === 'contribuciones' && (
-              <div className="mb-14">
-                {contributions.length > 0 ? (
-                  <ContributionStats
-                    contributions={contributions}
-                    totals={{
-                      mergedPrs: githubStats?.mergedPrs ?? 0,
-                      commits: githubStats?.commits ?? 0,
-                    }}
-                  />
-                ) : (
-                  <EmptyLine>
-                    {identities.github.length > 0
-                      ? 'No pudimos traer las contribuciones de GitHub, probá más tarde.'
-                      : `Todavía no vinculamos a ${firstName} con una cuenta que contribuyó al sitio.`}
-                  </EmptyLine>
-                )}
-              </div>
-            )}
+                </Suspense>
+              </ProfileTabPanel>
+            </ProfileTabsProvider>
           </div>
         </div>
       </div>

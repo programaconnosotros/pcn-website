@@ -6,61 +6,10 @@ import { conversationHref } from '@/components/conversations/conversation-utils'
 import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { TabBrackets, tabsListClassName, tabsTriggerClassName } from '@/components/ui/tab-styles';
+import { ProfileTabLink } from './profile-tab-nav';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
 
-export const PROFILE_TABS = [
-  { id: 'resumen', label: 'resumen' },
-  { id: 'proyectos', label: 'proyectos' },
-  { id: 'consejos', label: 'consejos' },
-  { id: 'charlas', label: 'charlas' },
-  { id: 'articulos', label: 'artículos' },
-  { id: 'eventos', label: 'eventos' },
-  { id: 'fotos', label: 'galería' },
-  { id: 'conversaciones', label: 'conversaciones' },
-  { id: 'contribuciones', label: 'contribuciones' },
-] as const;
-
-export type ProfileTab = (typeof PROFILE_TABS)[number]['id'];
-
-export const isProfileTab = (value: unknown): value is ProfileTab =>
-  PROFILE_TABS.some((tab) => tab.id === value);
-
-// The HUD tab strip from `ui/tabs`, but as a row of links so each tab has its own URL.
-// The bar scrolls sideways on narrow screens; the 1px padding keeps its corner ticks unclipped.
-export const ProfileTabs = ({
-  userId,
-  active,
-  counts,
-}: {
-  userId: string;
-  active: ProfileTab;
-  counts: Partial<Record<ProfileTab, number>>;
-}) => (
-  <div className="-mx-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:px-px">
-    <nav aria-label="Secciones del perfil" className={cn(tabsListClassName, 'h-8')}>
-      {PROFILE_TABS.map((tab) => {
-        const isActive = tab.id === active;
-        const count = counts[tab.id];
-        return (
-          <Link
-            key={tab.id}
-            href={tab.id === 'resumen' ? `/perfil/${userId}` : `/perfil/${userId}?tab=${tab.id}`}
-            scroll={false}
-            aria-current={isActive ? 'page' : undefined}
-            data-state={isActive ? 'active' : 'inactive'}
-            className={tabsTriggerClassName}
-          >
-            <TabBrackets>
-              {tab.label}
-              {count !== undefined && <span className="tabular-nums opacity-60">({count})</span>}
-            </TabBrackets>
-          </Link>
-        );
-      })}
-    </nav>
-  </div>
-);
+export { PROFILE_TABS, isProfileTab, type ProfileTab } from './profile-tabs';
 
 export const SectionHeading = ({
   label,
@@ -77,14 +26,13 @@ export const SectionHeading = ({
     {count !== undefined && <span className="text-muted-foreground/60">({count})</span>}
     <span className="h-px flex-1 bg-pcnGreen-200" />
     {href && (
-      <Link
+      <ProfileTabLink
         href={href}
-        scroll={false}
         className="flex items-center gap-0.5 normal-case tracking-normal text-pcnGreen-700 hover:text-pcnGreen"
       >
         ver todo
         <ChevronRight className="size-3" />
-      </Link>
+      </ProfileTabLink>
     )}
   </h2>
 );
@@ -116,13 +64,12 @@ export const ProfileStat = ({
     </>
   );
   return href ? (
-    <Link
+    <ProfileTabLink
       href={href}
-      scroll={false}
       className={cn(ruledCellClassName, 'block px-3 py-2.5 hover:shadow-[inset_2px_0_0_#04f4be]')}
     >
       {content}
-    </Link>
+    </ProfileTabLink>
   ) : (
     <RuledCell className="px-3 py-2.5">{content}</RuledCell>
   );
