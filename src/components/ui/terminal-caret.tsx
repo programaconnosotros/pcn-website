@@ -35,7 +35,12 @@ const MIRRORED = [
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
 
+// Touch keyboards (iOS especially) shift fixed elements around while they're open, so the
+// drawn block lands off the field or not at all. Phones and tablets keep the native caret.
+const hasFinePointer = () => window.matchMedia('(pointer: fine)').matches;
+
 const isField = (target: EventTarget | null): target is Field =>
+  hasFinePointer() &&
   (target instanceof HTMLTextAreaElement ||
     (target instanceof HTMLInputElement && TEXT_TYPES.has(target.type))) &&
   target.matches(FIELD) &&
@@ -49,7 +54,7 @@ const isField = (target: EventTarget | null): target is Field =>
  * without inverting it, so the letter becomes unreadable. Instead the native caret is hidden
  * on the focused field and this draws a green block at the caret position with that character
  * in black on top, measured with an off-screen mirror of the field. While it blinks off, the
- * field's own text shows through.
+ * field's own text shows through. Only on mouse/trackpad devices; see hasFinePointer.
  */
 export function TerminalCaret() {
   const caretRef = useRef<HTMLDivElement>(null);

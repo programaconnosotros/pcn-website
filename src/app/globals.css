@@ -1222,6 +1222,14 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
   .field-surface[type='number'] {
     caret-shape: underscore;
   }
+  /* Touch devices keep the native caret (see TerminalCaret): a thin bar, so it never hides the
+     character under it and stays easy to spot next to the text. */
+  @media not (pointer: fine) {
+    .field-surface,
+    .field-surface[type='number'] {
+      caret-shape: bar;
+    }
+  }
   .field-surface::placeholder {
     color: hsl(var(--muted-foreground) / 0.55);
     transition: opacity 0.2s;
