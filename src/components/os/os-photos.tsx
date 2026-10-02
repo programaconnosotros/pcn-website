@@ -2,19 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { photos } from '@/components/photo-gallery/photos';
+import type { RandomGalleryPhoto } from '@/lib/gallery';
 import { useBackgroundActive } from './os-processes';
 
 const INTERVAL_MS = 2000;
-
-const randomIndex = (except: number) => {
-  const next = Math.floor(Math.random() * (photos.length - 1));
-  return next >= except ? next + 1 : next;
-};
+// Signed thumbnail URLs last at least an hour; a fresh sample comes well before they expire.
+const REFRESH_MS = 30 * 60 * 1000;
 
 /**
- * Desktop widget that flips through random community photos. Clicking the current photo opens
- * it large in the gallery. Pauses with the other background processes.
+ * Desktop widget that flips through random photos uploaded to the gallery. Clicking the current
+ * photo opens its page in the gallery. Pauses with the other background processes.
  */
 export function OsPhotos({
   covered,
@@ -24,34 +21,51 @@ export function OsPhotos({
   onOpen: (path: string) => void;
 }) {
   const active = useBackgroundActive(covered);
-  const [index, setIndex] = useState<number | null>(null);
-  const [next, setNext] = useState<number | null>(null);
+  const [photos, setPhotos] = useState<RandomGalleryPhoto[] | null>(null);
+  const [index, setIndex] = useState(0);
 
-  // Picked on the client so the server and client render the same empty frame.
+  // Fetched on the client so the server and client render the same empty frame.
   useEffect(() => {
-    const first = Math.floor(Math.random() * photos.length);
-    setIndex(first);
-    setNext(randomIndex(first));
+    let cancelled = false;
+    const load = () =>
+      fetch('/api/galeria/aleatorias')
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then(({ photos }: { photos: RandomGalleryPhoto[] }) => {
+          if (cancelled) return;
+          setPhotos(photos);
+          setIndex(0);
+        })
+        .catch(() => {
+          if (!cancelled) setPhotos((current) => current ?? []);
+        });
+    load();
+    const id = window.setInterval(load, REFRESH_MS);
+    return () => {
+      cancelled = true;
+      window.clearInterval(id);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!active || next === null) return;
-    // Warm the cache so the upcoming photo swaps in without a flash.
-    new Image().src = photos[next].image;
-    const id = window.setTimeout(() => {
-      setIndex(next);
-      setNext(randomIndex(next));
-    }, INTERVAL_MS);
-    return () => window.clearTimeout(id);
-  }, [active, next]);
+  const count = photos?.length ?? 0;
 
-  const photo = index === null ? null : photos[index];
+  useEffect(() => {
+    if (!active || count < 2) return;
+    // Warm the cache so the upcoming photo swaps in without a flash.
+    new Image().src = photos![(index + 1) % count].thumbUrl;
+    const id = window.setTimeout(() => setIndex((index + 1) % count), INTERVAL_MS);
+    return () => window.clearTimeout(id);
+  }, [active, index, count, photos]);
+
+  // Nothing uploaded yet: leave the wallpaper clean.
+  if (photos && count === 0) return null;
+
+  const photo = photos?.[index] ?? null;
 
   return (
     <button
       type="button"
       disabled={!photo}
-      onClick={() => photo && onOpen(`/galeria?foto=${photo.id}`)}
+      onClick={() => photo && onOpen(`/galeria/${photo.id}`)}
       aria-label={photo ? 'Ver foto en la galería' : 'Fotos de la comunidad'}
       className="group absolute right-6 top-1/2 hidden w-[300px] -translate-y-1/2 select-none flex-col overflow-hidden border border-pcnGreen-200 bg-black/70 text-left font-mono text-[10px] leading-[1.45] text-pcnGreen-700 opacity-80 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] outline-none transition-[opacity,border-color,box-shadow] duration-200 hover:border-pcnGreen-500 hover:opacity-100 hover:shadow-[0_0_40px_-10px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:opacity-100 xl:bottom-64 xl:top-auto xl:translate-y-0 [@media(min-height:760px)]:flex"
     >
@@ -63,7 +77,9 @@ export function OsPhotos({
         </span>
         <span className="flex-1 truncate">feh --random ~/galeria</span>
         <span className="tabular-nums text-pcnGreen">
-          {photo ? `#${String(photo.id).padStart(2, '0')}` : '--'}
+          {photo
+            ? `${String(index + 1).padStart(2, '0')}/${String(count).padStart(2, '0')}`
+            : '--/--'}
         </span>
       </span>
 
@@ -72,7 +88,7 @@ export function OsPhotos({
           {photo && (
             <motion.img
               key={photo.id}
-              src={photo.image}
+              src={photo.thumbUrl}
               alt=""
               draggable={false}
               initial={{ opacity: 0, scale: 1.06 }}

@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import type { GalleryFilter } from '@/lib/gallery-filters';
-import { signGalleryItem } from '@/lib/gallery-signing';
+import { signGalleryItem, signGallerySrc } from '@/lib/gallery-signing';
 
 /**
  * The items the gallery shows: the photos of the old static gallery (the ones with a
@@ -135,3 +135,26 @@ export const listLatestGalleryItems = async (take: number) =>
       take,
     })
   ).map(signGalleryItem);
+
+/** A random sample of the gallery's photos (no videos), for the PCN OS desktop widget. */
+export async function listRandomGalleryPhotos(take: number) {
+  const where = { ...visibleGalleryItem, kind: 'PHOTO' } satisfies Prisma.GalleryItemWhereInput;
+  const ids = (await prisma.galleryItem.findMany({ where, select: { id: true } })).map(
+    (item) => item.id,
+  );
+  // Partial Fisher–Yates: the first `take` slots end up a uniform random sample.
+  for (let i = 0; i < Math.min(take, ids.length); i++) {
+    const j = i + Math.floor(Math.random() * (ids.length - i));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  const sample = ids.slice(0, take);
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: sample } },
+    select: { id: true, thumbSrc: true },
+  });
+  return items
+    .sort((a, b) => sample.indexOf(a.id) - sample.indexOf(b.id))
+    .map((item) => ({ id: item.id, thumbUrl: signGallerySrc(item.thumbSrc).url }));
+}
+
+export type RandomGalleryPhoto = Awaited<ReturnType<typeof listRandomGalleryPhotos>>[number];
