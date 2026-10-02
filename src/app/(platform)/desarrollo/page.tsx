@@ -9,6 +9,7 @@ import {
   Github,
   Globe,
   Layers,
+  MessageCircle,
   Package,
   Rocket,
   Server,
@@ -254,6 +255,8 @@ const BulletList = ({ items }: { items: string[] }) => (
 );
 
 const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
+// Grupo donde charlamos el desarrollo del sitio; abierto también a quien solo quiera leer.
+const DEV_CHAT_URL = 'https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X';
 
 const techNoteCount = techNoteGroups.reduce((total, group) => total + group.notes.length, 0);
 
@@ -268,12 +271,20 @@ const DesarrolloPage = () => (
               className="flex-1"
               meta="open-source · cualquier persona puede contribuir"
             />
-            <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
-                <Github className="h-4 w-4" />
-                abrirGitHub();
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-end gap-2">
+              <Link href={DEV_CHAT_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="flex flex-row items-center gap-2">
+                  <MessageCircle className="h-4 w-4" />
+                  unirseAlGrupo();
+                </Button>
+              </Link>
+              <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
+                  <Github className="h-4 w-4" />
+                  abrirGitHub();
+                </Button>
+              </Link>
+            </div>
           </div>
         </StickyHeader>
 
@@ -320,6 +331,19 @@ const DesarrolloPage = () => (
                     </li>
                   ))}
                 </ol>
+                <p className="mt-4 border-l-2 border-pcnGreen-500 pl-3 text-xs leading-relaxed text-muted-foreground">
+                  Charlamos el desarrollo del sitio en un{' '}
+                  <a
+                    href={DEV_CHAT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                  >
+                    grupo de WhatsApp ↗
+                  </a>
+                  . No hace falta que vayas a programar: podés sumarte a leer lo que hablamos si te
+                  sirve, o preguntar lo que quieras.
+                </p>
               </Section>
             </div>
           </div>
