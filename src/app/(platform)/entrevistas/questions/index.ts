@@ -9,6 +9,8 @@ import { k6Questions } from './k6';
 import { nodeQuestions } from './node';
 import { playwrightQuestions } from './playwright';
 import { pythonQuestions } from './python';
+import { productEngineeringQuestions } from './product-engineering';
+import { projectManagerQuestions } from './project-manager';
 import { qaQuestions } from './qa';
 import { qaAutomationQuestions } from './qa-automation';
 import { reactNativeQuestions } from './react-native';
@@ -29,6 +31,8 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   ai: aiQuestions,
   agentic: agenticQuestions,
   qa: qaQuestions,
+  'product-engineering': productEngineeringQuestions,
+  'project-manager': projectManagerQuestions,
 };
 
 // Quality engineering adds general automation questions plus one bank per selected tool.

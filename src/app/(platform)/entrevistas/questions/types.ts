@@ -1,4 +1,11 @@
-export type InterviewArea = 'frontend' | 'backend' | 'ai' | 'agentic' | 'qa';
+export type InterviewArea =
+  | 'frontend'
+  | 'backend'
+  | 'ai'
+  | 'agentic'
+  | 'qa'
+  | 'product-engineering'
+  | 'project-manager';
 export type InterviewTrack =
   | 'react'
   | 'ios'
@@ -10,7 +17,9 @@ export type InterviewTrack =
   | 'dotnet'
   | 'ai'
   | 'agentic'
-  | 'qa';
+  | 'qa'
+  | 'product-engineering'
+  | 'project-manager';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
@@ -26,6 +35,12 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
   { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
+  {
+    id: 'product-engineering',
+    label: 'Product engineering',
+    stack: 'qué construir, cómo medirlo',
+  },
+  { id: 'project-manager', label: 'Project manager', stack: 'planificación, riesgos y equipos' },
 ];
 
 // Areas with more than one track (frontend, backend) ask for the technology after picking the area.
@@ -104,6 +119,18 @@ export const TRACKS: {
     area: 'qa',
     label: 'Quality engineering',
     stack: 'testing manual y automatizado',
+  },
+  {
+    id: 'product-engineering',
+    area: 'product-engineering',
+    label: 'Product engineering',
+    stack: 'qué construir, cómo medirlo',
+  },
+  {
+    id: 'project-manager',
+    area: 'project-manager',
+    label: 'Project manager',
+    stack: 'planificación, riesgos y equipos',
   },
 ];
 

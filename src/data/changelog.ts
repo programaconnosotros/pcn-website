@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
     area: 'entrevistas',
+    title: 'Entrevistas de product engineering y project manager',
+    description:
+      'Dos tipos de entrevista nuevos: product engineering, con preguntas armadas a partir de los artículos de producto de /lectura, y project manager, de planificación, riesgos, stakeholders y equipos.',
+    authors: ['agustin-sanc'],
+    href: '/entrevistas',
+  },
+  {
+    date: '2026-10-02',
+    area: 'entrevistas',
     title: 'Entrevistas de iOS, Android y React Native',
     description:
       'Las entrevistas de frontend ahora te dejan elegir la tecnología: React.js, iOS (Swift, SwiftUI), Android (Kotlin, Compose) o React Native, cada una con preguntas para junior, semi-senior y senior.',
