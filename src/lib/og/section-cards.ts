@@ -39,6 +39,13 @@ const SECTION_CARDS = {
       'Meetups, coworks, Lightning Talks y Zero to Agent. Participá presencial u online junto a personas apasionadas por el software.',
     meta: [EVENTS, 'presencial y online'],
   },
+  feed: {
+    command: 'tail -f comunidad.log',
+    title: 'Feed',
+    description:
+      'Lo que pasa en la comunidad: eventos nuevos, charlas, fotos, proyectos y conversaciones del grupo.',
+    meta: [MEMBERS, 'actualizado todos los días'],
+  },
   anuncios: {
     command: 'tail -f anuncios.log',
     title: 'Anuncios',

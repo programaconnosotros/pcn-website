@@ -35,6 +35,7 @@ const STATIC_ROUTES = [
   '/galeria',
   '/partners',
   '/changelog',
+  '/feed',
   '/usuarios',
 ];
 

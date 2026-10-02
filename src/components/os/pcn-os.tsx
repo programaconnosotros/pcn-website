@@ -152,6 +152,27 @@ const newWindowRect = (viewport: Viewport, openCount: number): Rect => {
   };
 };
 
+const WINDOW_GAP = 12;
+/** Narrowest desktop that fits the home and the feed side by side. */
+const SPLIT_MIN_WIDTH = 1200;
+
+/**
+ * Landing on the home page opens it a bit to the left, with the feed in a narrower window at its
+ * right. Null when the desktop is too narrow for both, so the home opens alone as usual.
+ */
+const homeAndFeedRects = (viewport: Viewport): { home: Rect; feed: Rect } | null => {
+  const area = desktopArea(viewport);
+  if (area.w < SPLIT_MIN_WIDTH) return null;
+  const homeW = Math.min(1180, Math.round(area.w * 0.62));
+  const feedW = Math.min(520, area.w - homeW - WINDOW_GAP * 3);
+  const x = Math.round((area.w - homeW - WINDOW_GAP - feedW) / 2);
+  const h = Math.max(MIN_WINDOW_HEIGHT, area.h);
+  return {
+    home: { x, y: area.y, w: homeW, h },
+    feed: { x: x + homeW + WINDOW_GAP, y: area.y, w: feedW, h },
+  };
+};
+
 /**
  * Keeps the whole window inside the desktop, between the menu bar and the dock, so its title
  * bar and controls can never end up hidden. Moving slides the window back in; resizing stops
@@ -238,15 +259,20 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     return () => window.removeEventListener('resize', onResize);
   }, [isOs]);
 
-  // Open the page the visitor landed on (the home page by default) in the first window.
+  // Open the page the visitor landed on (the home page by default) in the first window, and the
+  // feed next to the home.
   useEffect(() => {
     if (!isOs || !viewport || opened.current) return;
     opened.current = true;
-    dispatch({
-      type: 'open',
-      path: `${window.location.pathname}${window.location.search}`,
-      rect: newWindowRect(viewport, 0),
-    });
+    const path = `${window.location.pathname}${window.location.search}`;
+    const split = path === '/' ? homeAndFeedRects(viewport) : null;
+    if (split) {
+      // The feed opens first so the home ends up in front, focused and in the address bar.
+      dispatch({ type: 'open', path: '/feed', rect: split.feed });
+      dispatch({ type: 'open', path, rect: split.home });
+      return;
+    }
+    dispatch({ type: 'open', path, rect: newWindowRect(viewport, 0) });
   }, [isOs, viewport]);
 
   const focusedId = [...state.order]

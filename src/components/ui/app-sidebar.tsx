@@ -25,6 +25,7 @@ import {
   MicVocal,
   Podcast,
   Rocket,
+  Rss,
   ScrollText,
   Share2,
   Users,
@@ -52,7 +53,9 @@ import { NavSecondary } from './nav-secondary';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
-const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }];
+const feedItem: NavItem = { title: 'Feed', url: '/feed', icon: Rss };
+
+const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }, feedItem];
 
 const actividadesItems: NavItem[] = [
   { title: 'Eventos', url: '/eventos', icon: CalendarDays },
@@ -132,7 +135,7 @@ export function AppSidebar(props: AppSidebarProps) {
         sections={[
           { label: 'Actividades', items: actividadesItems },
           { label: 'Recursos', items: recursosItems },
-          { label: 'Comunidad', items: comunidadItems },
+          { label: 'Comunidad', items: [feedItem, ...comunidadItems] },
           ...(user?.role === 'ADMIN'
             ? [{ label: 'Administración', items: getAdminItems(unreadNotificationsCount) }]
             : []),
