@@ -27,7 +27,8 @@ export const getAchievementMetrics = async (
 ): Promise<Map<string, AchievementMetrics>> => {
   const forUsers = userIds ? { userId: { in: userIds } } : {};
 
-  const [talkSpeakers, githubLogins, githubStats, watchedTalks] = await Promise.all([
+  const now = new Date();
+  const [talkSpeakers, githubLogins, githubStats, watchedTalks, organizers] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
       where: { userId: userIds ? { in: userIds } : { not: null } },
@@ -43,6 +44,11 @@ export const getAchievementMetrics = async (
         mark: 'watched',
         contentId: { in: externalTalks.map(({ id }) => id) },
       },
+      _count: { _all: true },
+    }),
+    prisma.eventOrganizer.groupBy({
+      by: ['userId'],
+      where: { ...forUsers, event: { deletedAt: null, date: { lte: now } } },
       _count: { _all: true },
     }),
   ]);
@@ -62,6 +68,7 @@ export const getAchievementMetrics = async (
   }
 
   for (const { userId, _count } of watchedTalks) of(userId).talksWatched = _count._all;
+  for (const { userId, _count } of organizers) of(userId).eventsOrganized = _count._all;
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.
   const contributors = githubStats.topContributors;

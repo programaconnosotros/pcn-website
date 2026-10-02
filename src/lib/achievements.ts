@@ -15,6 +15,8 @@ export type AchievementMetrics = {
   contributorRank: number | null;
   /** Talks from /charlas they marked as watched. */
   talksWatched: number;
+  /** Events they organized that already happened. */
+  eventsOrganized: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -22,6 +24,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   commits: 0,
   contributorRank: null,
   talksWatched: 0,
+  eventsOrganized: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -92,6 +95,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Mirá las charlas de /charlas y marcalas como vistas.',
     href: '/charlas',
     progress: count('talksWatched', 25),
+  },
+  {
+    id: 'event-organizer',
+    name: 'Organizador',
+    description: 'Organizó un evento de la comunidad.',
+    icon: 'megaphone',
+    tone: 'green',
+    goal: 'organizar 1 evento',
+    howTo: 'Proponé una meetup, un cowork o una juntada y organizala con el equipo de PCN.',
+    href: '/eventos',
+    progress: count('eventsOrganized', 1),
   },
 ];
 

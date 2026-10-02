@@ -29,6 +29,10 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, talksWatched: 25 })).toEqual(['talks-watched-25']);
   });
 
+  it('earns organizador after organizing an event', () => {
+    expect(ids({ ...EMPTY_METRICS, eventsOrganized: 1 })).toEqual(['event-organizer']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -43,6 +47,7 @@ describe('getAchievementMetrics', () => {
     (prismaMock.talkSpeaker.groupBy as jest.Mock).mockResolvedValue([]);
     prismaMock.identityLink.findMany.mockResolvedValue([]);
     (prismaMock.contentMark.groupBy as jest.Mock).mockResolvedValue([]);
+    (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
@@ -89,6 +94,21 @@ describe('getAchievementMetrics', () => {
           mark: 'watched',
           contentId: { in: externalTalks.map(({ id }) => id) },
         }),
+      }),
+    );
+  });
+
+  it('counts only organized events that already happened and were not deleted', async () => {
+    (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([
+      { userId: 'user-1', _count: { _all: 3 } },
+    ]);
+
+    const metrics = await getAchievementMetrics();
+
+    expect(metrics.get('user-1')).toMatchObject({ eventsOrganized: 3 });
+    expect(prismaMock.eventOrganizer.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { event: { deletedAt: null, date: { lte: expect.any(Date) } } },
       }),
     );
   });
