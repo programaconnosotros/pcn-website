@@ -28,7 +28,10 @@ export type TechNote = {
   /** "Cómo lo usamos acá": paragraphs about this repo. */
   usage: string[];
   examples: TechExample[];
-  docsUrl: string;
+  /** Official docs of the technology. */
+  docsUrl?: string;
+  /** Folder of this repo where the note's code lives (for notes about the site's own modules). */
+  sourcePath?: string;
 };
 
 export type TechNoteGroup = {
@@ -961,7 +964,7 @@ const session = await prisma.session.create({
         ],
         usage: [
           'Los flyers de eventos, las fotos de perfil, los logos de proyectos y la galería se guardan en S3 y se sirven por CloudFront.',
-          'Las fotos de la galería se optimizan en el servidor con `sharp`: se rotan según el EXIF, se les borran los metadatos (GPS incluido) y se guardan en WebP en dos tamaños. En el navegador, `exifr` lee la fecha en que se sacó cada foto.',
+          'Los archivos de la galería son privados: CloudFront solo los entrega con una URL firmada que generamos al renderizar. Cómo se optimizan las fotos y los videos antes de llegar ahí está en la nota de la galería, más abajo.',
         ],
         examples: [
           {
@@ -983,28 +986,6 @@ const uploadUrl = await getSignedUrl(s3Client, command, {
 });
 
 return { uploadUrl, fileUrl: publicFileUrl(uniqueFileName), key: uniqueFileName };`,
-          },
-          {
-            file: 'src/lib/photo-processing.ts',
-            lang: 'ts',
-            code: `export async function optimizePhoto(input: Buffer) {
-  const image = sharp(input, { failOn: 'none' }).rotate();
-
-  const [full, thumb] = await Promise.all([
-    image
-      .clone()
-      .resize({ width: FULL_SIZE, height: FULL_SIZE, ...resize })
-      .webp({ quality: 80 })
-      .toBuffer({ resolveWithObject: true }),
-    image
-      .clone()
-      .resize({ width: THUMB_SIZE, height: THUMB_SIZE, ...resize })
-      .webp({ quality: 70 })
-      .toBuffer(),
-  ]);
-
-  return { full: full.data, thumb, width: full.info.width, height: full.info.height };
-}`,
           },
           {
             file: 'next.config.mjs',
@@ -1442,6 +1423,249 @@ DB_NAME="pcn_$(echo "$WORKTREE_BASENAME" | tr '[:upper:]' '[:lower:]' | tr -cs '
           },
         ],
         docsUrl: 'https://pnpm.io/motivation',
+      },
+    ],
+  },
+  {
+    id: 'modulos',
+    title: 'módulos del sitio',
+    notes: [
+      {
+        id: 'galeria',
+        name: 'Galería · fotos y videos optimizados',
+        tagline: 'del celular a la CDN: WebP, H.264 y URLs firmadas',
+        what: 'Optimizar medios es achicar lo que baja cada visitante sin que se note: redimensionar al tamaño en que realmente se va a ver, recomprimir en formatos modernos (WebP para fotos, H.264 en MP4 para video), borrar metadatos que no hacen falta y servir una versión chica (thumbnail) en las grillas y la grande solo cuando alguien la abre. Una foto de celular pesa entre 3 y 10 MB y un minuto de video 4K cientos de MB; servidos tal cual, una grilla de fotos se vuelve inusable con datos móviles.',
+        concepts: [
+          {
+            term: 'WebP',
+            detail:
+              'Formato de imagen de Google que pesa bastante menos que JPEG a calidad similar y que hoy soportan todos los navegadores.',
+          },
+          {
+            term: 'EXIF',
+            detail:
+              'Metadatos que la cámara guarda en la foto: fecha, modelo, orientación y, muchas veces, la ubicación GPS exacta. Publicarlos tal cual es un problema de privacidad.',
+          },
+          {
+            term: 'orientación',
+            detail:
+              'El sensor guarda la foto siempre "acostada" y un flag EXIF dice cómo girarla. Si borrás los metadatos sin aplicar antes ese giro, la foto queda de costado.',
+          },
+          {
+            term: 'thumbnail',
+            detail:
+              'Versión chica de la imagen para grillas y listados. La original solo se descarga al abrirla.',
+          },
+          {
+            term: 'WebCodecs',
+            detail:
+              'API del navegador que da acceso a los encoders y decoders de video del sistema: permite recomprimir un video en la compu del que lo sube, sin servidores de transcodificación.',
+          },
+          {
+            term: 'H.264 vs HEVC',
+            detail:
+              'Codecs de video. Los iPhone graban en HEVC, que no todos los navegadores reproducen; H.264 en un MP4 se ve en todos lados.',
+          },
+          {
+            term: 'fast start',
+            detail:
+              'Poner el índice del MP4 (el átomo `moov`) al principio del archivo para que el video arranque mientras se sigue descargando.',
+          },
+          {
+            term: 'presigned POST',
+            detail:
+              'A diferencia del PUT prefirmado, lleva una policy con condiciones que S3 hace cumplir, como `content-length-range` para limitar el tamaño.',
+          },
+          {
+            term: 'URL firmada de CloudFront',
+            detail:
+              'URL con una firma y una fecha de vencimiento: sin ella la CDN no entrega el archivo, así nadie puede listar ni enlazar los archivos para siempre.',
+          },
+          {
+            term: 'loading="lazy"',
+            detail:
+              'El navegador posterga la descarga de una imagen hasta que está por entrar en pantalla.',
+          },
+        ],
+        usage: [
+          'Solo los admins suben contenido, desde `/galeria/subir`. Los archivos nunca pasan por nuestro servidor de ida: el navegador los manda directo a S3 con URLs prefirmadas, de a uno por vez, y después una server action termina el trabajo. Mientras sube, la página pide un wake lock para que el celular no apague la pantalla y avisa antes de cerrar la pestaña.',
+          'Fotos: en el navegador, `exifr` lee la fecha en que se sacó (`DateTimeOriginal` o `CreateDate`, y si no hay EXIF la fecha del archivo) para precompletar el formulario. HEIC se rechaza porque sharp no lo decodifica. El original va a `gallery/originals/` con un PUT prefirmado de 5 minutos; después `createPhoto` lo baja, `optimizePhoto` lo gira según el EXIF y genera dos WebP sin metadatos (GPS incluido): `full` de 2560 px a calidad 80 y `thumb` de 640 px a calidad 70. Se guardan bajo una carpeta con UUID, se borra el original y se crea el `GalleryItem` con el ancho y el alto.',
+          'Videos: antes de subirlo, `readVideo` carga el archivo en un `<video>` oculto para leer duración y medidas y captura un cuadro (al segundo 1, o a un décimo en clips cortos) en un canvas como portada JPEG de hasta 1280 px; si el navegador no puede, la portada es negra. Después `compressVideo` lo recodifica en el navegador con Mediabunny (WebCodecs): H.264 + AAC en MP4 con fast start, lado corto de hasta 1080 px, hasta 30 fps y 5 Mbps, más o menos 40 MB por minuto. Si el navegador no puede (sin `VideoEncoder`, o Firefox, que no codifica AAC y perdería el audio) o el resultado no es más chico, se sube el original.',
+          'El video se sube con un presigned POST de 15 minutos cuya policy rechaza más de 500 MB. `createVideo` verifica con un HEAD que el archivo llegó y convierte la portada a WebP (1280 px, calidad 75) con sharp. No hay ffmpeg ni transcodificación en el servidor: todo el trabajo pesado lo hace el navegador de quien sube.',
+          'Todo lo que está bajo `gallery/` se guarda con `Cache-Control: public, max-age=31536000, immutable` (cada archivo nuevo es una clave nueva, así que nunca hay que invalidar caché) y CloudFront solo lo entrega con URL firmada. `signGalleryItem` firma al renderizar la página, con vencimiento al final de la hora siguiente: la misma foto tiene la misma URL durante toda una hora, así el navegador y la CDN la cachean.',
+          'En la UI, la grilla usa solo los thumbnails de 640 px con `<img loading="lazy" decoding="async">`; al pasar las 94 fotos viejas a thumbnails, la grilla pasó de ~16 MB a 3,3 MB. Cada foto o video tiene su página `/galeria/[id]` con la versión grande o un `<video preload="metadata">` con la portada, que reproduce el MP4 progresivo y salta con range requests. Las flechas del teclado navegan y `router.prefetch` precalienta las vecinas. Los filtros por tipo, evento y persona viven en la URL, y la descarga del original pasa por `/api/galeria/[id]/descargar`, con rate limit de 30 por hora, que devuelve una URL prefirmada de S3 con `Content-Disposition: attachment`.',
+        ],
+        examples: [
+          {
+            file: 'src/lib/photo-processing.ts',
+            lang: 'ts',
+            caption:
+              '`.rotate()` sin argumentos aplica la orientación del EXIF; sharp no copia los metadatos a la salida salvo que se lo pidas, así que el GPS desaparece. `clone()` reusa la misma decodificación para las dos versiones.',
+            code: `export const FULL_SIZE = 2560;
+export const THUMB_SIZE = 640;
+
+const resize = { fit: 'inside', withoutEnlargement: true } as const;
+
+export async function optimizePhoto(input: Buffer) {
+  const image = sharp(input, { failOn: 'none' }).rotate();
+
+  const [full, thumb] = await Promise.all([
+    image
+      .clone()
+      .resize({ width: FULL_SIZE, height: FULL_SIZE, ...resize })
+      .webp({ quality: 80 })
+      .toBuffer({ resolveWithObject: true }),
+    image
+      .clone()
+      .resize({ width: THUMB_SIZE, height: THUMB_SIZE, ...resize })
+      .webp({ quality: 70 })
+      .toBuffer(),
+  ]);
+
+  return { full: full.data, thumb, width: full.info.width, height: full.info.height };
+}`,
+          },
+          {
+            file: 'src/components/photo-gallery/upload-media.ts',
+            lang: 'ts',
+            caption:
+              'La fecha de la foto sale del EXIF en el navegador. `exifr` se importa dinámicamente para no sumarlo al bundle de las páginas que no suben fotos.',
+            code: `export async function readTakenAt(file: File) {
+  if (!isVideo(file)) {
+    try {
+      const { default: exifr } = await import('exifr');
+      const exif = await exifr.parse(file, ['DateTimeOriginal', 'CreateDate']);
+      const date = exif?.DateTimeOriginal ?? exif?.CreateDate;
+      if (date instanceof Date && !Number.isNaN(date.getTime())) return date;
+    } catch {
+      // No EXIF: fall back to the file date.
+    }
+  }
+  return new Date(file.lastModified);
+}`,
+          },
+          {
+            file: 'src/components/photo-gallery/upload-media.ts',
+            lang: 'ts',
+            caption:
+              'La compresión de video corre en el navegador. Si la conversión perdiera una pista (audio o video) o el navegador no puede codificar H.264, devuelve `null` y se sube el original.',
+            code: `// Videos are re-encoded in the browser before uploading: H.264 (plays everywhere, unlike the
+// HEVC iPhones record) with the short side capped at 1080p, at a bitrate that keeps a minute
+// around 40 MB instead of the hundreds a 4K phone clip weighs.
+const COMPRESSED_MAX_SHORT_SIDE = 1080;
+// 60 fps phone clips come out at twice the bitrate; 30 is plenty for event videos.
+const COMPRESSED_MAX_FRAME_RATE = 30;
+const COMPRESSED_VIDEO_BITRATE = 5_000_000;
+const COMPRESSED_AUDIO_BITRATE = 128_000;
+// …
+    if (!(await canEncodeVideo('avc', { ...size, quality }))) return null;
+
+    const target = new BufferTarget();
+    const output = new Output({ format: new Mp4OutputFormat({ fastStart: 'in-memory' }), target });
+    const conversion = await Conversion.init({
+      input,
+      output,
+      tracks: 'primary',
+      video: {
+        codec: 'avc',
+        ...size,
+        fit: 'contain',
+        frameRate,
+        quality,
+        // Bake the phone's rotation into the frames so every player shows it upright.
+        allowTransformationMetadata: false,
+        forceTranscode: true,
+      },
+      audio: { codec: 'aac', quality: new Quality({ bitrate: COMPRESSED_AUDIO_BITRATE }) },
+      showWarnings: false,
+    });
+    // Keep both picture and sound: Firefox, for one, can't encode AAC and would drop the audio.
+    const audioTrack = await input.getPrimaryAudioTrack();
+    const keepsAll = [track, audioTrack].every((t) => !t || conversion.utilizedTracks.includes(t));
+    if (!conversion.isValid || !keepsAll) return null;`,
+          },
+          {
+            file: 'src/components/photo-gallery/photo-uploader.tsx',
+            lang: 'tsx',
+            caption:
+              'El flujo de un video: comprimir, subir con POST firmado, subir la portada y recién ahí crear el registro.',
+            code: `if (item.video) {
+  update(item.key, { status: 'compressing' });
+  const compressed = await compressVideo(item.file, (progress) =>
+    update(item.key, { progress }),
+  ).catch(() => null);
+  const file = compressed?.file ?? item.file;
+
+  update(item.key, { status: 'uploading', progress: 0, uploadedSize: compressed?.file.size });
+  const { url, fields, key } = await getVideoUploadUrl(file.type, file.size);
+  await postFile(url, fields, file, (progress) => update(item.key, { progress }));
+
+  const poster = await getPhotoUploadUrl('poster.jpg', 'image/jpeg');
+  await putFile(poster.uploadUrl, item.video.poster, 'image/jpeg');
+
+  created = await createVideo(key, poster.key, {
+  // …`,
+          },
+          {
+            file: 'src/lib/s3.ts',
+            lang: 'ts',
+            caption:
+              'Con un POST firmado es S3 el que rechaza un archivo de más de `maxBytes`, aunque alguien manipule el navegador.',
+            code: `export async function getPresignedPost(key: string, contentType: string, maxBytes: number) {
+  return createPresignedPost(s3Client, {
+    Bucket: S3_BUCKET,
+    Key: key,
+    Conditions: [
+      ['content-length-range', 1, maxBytes],
+      ['eq', '$Content-Type', contentType],
+    ],
+    Fields: { 'Content-Type': contentType, 'Cache-Control': 'public, max-age=31536000, immutable' },
+    Expires: 15 * 60,
+  });
+}`,
+          },
+          {
+            file: 'src/lib/gallery-signing.ts',
+            lang: 'ts',
+            caption:
+              'El vencimiento se redondea a la hora para que la URL no cambie en cada render y se pueda cachear.',
+            code: `export function signGallerySrc(src: string, now = Date.now()) {
+  const expiresAt = new Date(Math.ceil(now / HOUR_MS) * HOUR_MS + HOUR_MS);
+  if (!isSignedGallerySrc(src)) return { url: src, expiresAt };
+  if (!KEY_PAIR_ID || !PRIVATE_KEY) throw new Error('Falta configurar la firma de CloudFront');
+
+  const url = getSignedUrl({
+    url: src,
+    keyPairId: KEY_PAIR_ID,
+    privateKey: PRIVATE_KEY,
+    dateLessThan: expiresAt.toISOString(),
+  });
+  return { url, expiresAt };
+}
+// …
+export const signGalleryItem = <T extends { src: string; thumbSrc: string }>(item: T) => ({
+  ...item,
+  thumbUrl: signGallerySrc(item.thumbSrc).url,
+  fullUrl: signGallerySrc(item.src).url,
+});`,
+          },
+          {
+            file: 'src/components/photo-gallery/photo-card.tsx',
+            lang: 'tsx',
+            caption:
+              'En la grilla solo se cargan los thumbnails, y recién cuando están por entrar en pantalla.',
+            code: `{/* eslint-disable-next-line @next/next/no-img-element */}
+<img
+  src={photo.thumbUrl}
+  alt=""
+  loading="lazy"
+  decoding="async"
+  className="h-full w-full object-cover object-top brightness-[0.8] saturate-[0.7] …"
+/>`,
+          },
+        ],
+        docsUrl: 'https://sharp.pixelplumbing.com/api-output#webp',
+        sourcePath: 'src/components/photo-gallery',
       },
     ],
   },

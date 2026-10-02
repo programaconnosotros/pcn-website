@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import type { TechExample, TechNote, TechNoteGroup } from '@/app/(platform)/desarrollo/tech-notes';
 
 const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
+const REPO_TREE_URL = 'https://github.com/programaconnosotros/pcn-website/tree/main';
 
 /** Renders `backtick` spans in a note's prose as inline code. */
 const renderInline = (text: string): ReactNode =>
@@ -111,14 +112,28 @@ const Note = ({ note }: { note: TechNote }) => (
         ))}
       </div>
 
-      <a
-        href={note.docsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block font-mono text-xs text-pcnGreen underline-offset-4 hover:underline"
-      >
-        <span className="text-pcnGreen-500">$ </span>man {note.id} → documentación oficial ↗
-      </a>
+      <div className="flex flex-col items-start gap-1 font-mono text-xs">
+        {note.sourcePath && (
+          <a
+            href={`${REPO_TREE_URL}/${note.sourcePath}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="max-w-full break-words text-pcnGreen underline-offset-4 hover:underline"
+          >
+            <span className="text-pcnGreen-500">$ </span>cd {note.sourcePath} → ver el código ↗
+          </a>
+        )}
+        {note.docsUrl && (
+          <a
+            href={note.docsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-pcnGreen underline-offset-4 hover:underline"
+          >
+            <span className="text-pcnGreen-500">$ </span>man {note.id} → documentación oficial ↗
+          </a>
+        )}
+      </div>
     </div>
   </details>
 );
