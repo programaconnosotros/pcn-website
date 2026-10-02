@@ -250,41 +250,6 @@ export const OrganizedEventRows = ({ events }: { events: ProfileEvent[] }) => (
   </RuledGrid>
 );
 
-export type ProfileArticle = {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  source: string;
-  date: string;
-};
-
-// Articles the person wrote, newest first, each opening the original post.
-export const ArticleRows = ({ articles }: { articles: ProfileArticle[] }) => (
-  <RuledGrid className="grid-cols-1">
-    {articles.map((article) => (
-      <a
-        key={article.id}
-        href={article.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cn(ruledCellClassName, 'group flex flex-col gap-1 p-3')}
-      >
-        <div className="flex items-center gap-2 font-mono text-sm">
-          <h3 className="truncate font-semibold group-hover:text-pcnGreen">{article.title}</h3>
-          <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground group-hover:text-pcnGreen" />
-        </div>
-        <p className="line-clamp-2 text-xs text-muted-foreground">{article.description}</p>
-        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-          {article.date.replaceAll('-', '.')}
-          <span className="text-pcnGreen-500"> ~ </span>
-          {article.source}
-        </p>
-      </a>
-    ))}
-  </RuledGrid>
-);
-
 export type ProfilePhoto = {
   id: string;
   kind: 'PHOTO' | 'VIDEO';

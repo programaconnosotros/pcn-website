@@ -117,7 +117,7 @@ const CategoryHistogram = ({
   );
 };
 
-const ArticleRow = ({
+export const ArticleRow = ({
   article,
   index,
   onOpen,

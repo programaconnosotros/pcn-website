@@ -26,7 +26,6 @@ import {
   ContributionStats,
   ConversationRows,
   EmptyLine,
-  ArticleRows,
   OrganizedEventRows,
   PhotoGrid,
   ProfileStat,
@@ -37,6 +36,7 @@ import {
   type ProfileProject,
   type ProfileTab,
 } from '@/components/profile/profile-sections';
+import { ProfileArticles } from '@/components/profile/profile-articles';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -97,6 +97,7 @@ interface ProfilePageProps {
 
 // How many items of each section the overview shows before "ver todo".
 const PREVIEW = 2;
+const ARTICLES_PREVIEW = 3;
 const CONVERSATIONS_PREVIEW = 4;
 const PHOTOS_PREVIEW = 6;
 
@@ -357,7 +358,8 @@ export default async function ProfilePage(props: ProfilePageProps) {
       (article) =>
         writtenIds.has(article.id) || articleAuthors(article).some((name) => authorNames.has(name)),
     )
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((article) => ({ article, index: allArticles.indexOf(article) }));
 
   // El rol que se cargó en el proyecto; si no hay, si es autor o colaborador.
   const userProjects: ProfileProject[] = projects.map(({ members, authorRole, ...project }) => ({
@@ -635,9 +637,11 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     <SectionHeading
                       label="artículos"
                       count={userArticles.length}
-                      href={userArticles.length > PREVIEW ? tabHref('articulos') : undefined}
+                      href={
+                        userArticles.length > ARTICLES_PREVIEW ? tabHref('articulos') : undefined
+                      }
                     />
-                    <ArticleRows articles={userArticles.slice(0, PREVIEW)} />
+                    <ProfileArticles articles={userArticles.slice(0, ARTICLES_PREVIEW)} />
                   </section>
                 )}
 
@@ -734,7 +738,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
             {tab === 'articulos' && (
               <div className="mb-14">
                 {userArticles.length > 0 ? (
-                  <ArticleRows articles={userArticles} />
+                  <ProfileArticles articles={userArticles} />
                 ) : (
                   <EmptyLine>{firstName} todavía no publicó ningún artículo.</EmptyLine>
                 )}
