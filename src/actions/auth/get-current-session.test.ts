@@ -1,4 +1,5 @@
 import { prismaMock } from '@/test/prisma';
+import { hashSessionToken } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
 import { getCurrentSession } from './get-current-session';
 
@@ -52,7 +53,7 @@ describe('getCurrentSession', () => {
 
     expect(result).toEqual(stubSession);
     expect(prismaMock.session.findUnique).toHaveBeenCalledWith({
-      where: { id: 'session-1', expires: { gt: expect.any(Date) } },
+      where: { id: hashSessionToken('session-1'), expires: { gt: expect.any(Date) } },
       include: { user: true },
     });
   });

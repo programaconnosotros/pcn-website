@@ -1180,20 +1180,24 @@ await createSession(user.id);`,
           {
             file: 'src/lib/session.ts',
             lang: 'ts',
-            code: `// Todas las lecturas de sesión pasan por acá: una sesión vencida no sirve en ningún lado
-export const findSession = (sessionId: string) =>
+            code: `// La cookie lleva un token aleatorio; la base guarda solo su hash como id de la sesión
+export const hashSessionToken = (token: string) =>
+  createHash('sha256').update(token).digest('hex');
+
+// Todas las lecturas de sesión pasan por acá: una sesión vencida no sirve en ningún lado
+export const findSession = (token: string) =>
   prisma.session.findUnique({
-    where: { id: sessionId, expires: { gt: new Date() } },
+    where: { id: hashSessionToken(token), expires: { gt: new Date() } },
     include: { user: true },
   });
 
 // Cerrar sesión borra la fila, así la cookie deja de servir aunque alguien la copie
 export const deleteCurrentSession = async () => {
   const cookieStore = await cookies();
-  const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
 
-  if (sessionId) {
-    await prisma.session.deleteMany({ where: { id: sessionId } });
+  if (token) {
+    await prisma.session.deleteMany({ where: { id: hashSessionToken(token) } });
   }
 
   cookieStore.delete(SESSION_COOKIE);

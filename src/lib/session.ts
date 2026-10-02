@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 
@@ -7,12 +8,19 @@ export const SESSION_COOKIE = 'sessionId';
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 /**
- * La sesión vigente para el valor de la cookie, con su usuario. Todas las lecturas de sesión
+ * La cookie lleva un token aleatorio de 256 bits y la base guarda solo su hash como id de la
+ * sesión: quien lea la tabla `Session` (un backup, un log de queries) no puede usar esos ids
+ * para entrar como nadie.
+ */
+export const hashSessionToken = (token: string) => createHash('sha256').update(token).digest('hex');
+
+/**
+ * La sesión vigente para el token de la cookie, con su usuario. Todas las lecturas de sesión
  * pasan por acá para que una sesión vencida no sirva en ningún lado.
  */
-export const findSession = (sessionId: string) =>
+export const findSession = (token: string) =>
   prisma.session.findUnique({
-    where: { id: sessionId, expires: { gt: new Date() } },
+    where: { id: hashSessionToken(token), expires: { gt: new Date() } },
     include: { user: true },
   });
 
@@ -21,11 +29,16 @@ export const createSession = async (userId: string) => {
   // De paso se limpian las sesiones vencidas del usuario, que ya no sirven para nada
   await prisma.session.deleteMany({ where: { userId, expires: { lte: new Date() } } });
 
+  const token = randomBytes(32).toString('base64url');
   const session = await prisma.session.create({
-    data: { userId, expires: new Date(Date.now() + SESSION_MAX_AGE_SECONDS * 1000) },
+    data: {
+      id: hashSessionToken(token),
+      userId,
+      expires: new Date(Date.now() + SESSION_MAX_AGE_SECONDS * 1000),
+    },
   });
 
-  (await cookies()).set(SESSION_COOKIE, session.id, {
+  (await cookies()).set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -39,10 +52,10 @@ export const createSession = async (userId: string) => {
 /** Cierra la sesión actual: borra la fila, así la cookie deja de servir aunque alguien la copie. */
 export const deleteCurrentSession = async () => {
   const cookieStore = await cookies();
-  const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
 
-  if (sessionId) {
-    await prisma.session.deleteMany({ where: { id: sessionId } });
+  if (token) {
+    await prisma.session.deleteMany({ where: { id: hashSessionToken(token) } });
   }
 
   cookieStore.delete(SESSION_COOKIE);

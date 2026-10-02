@@ -81,7 +81,7 @@ describe('verifyEmailCode', () => {
     expect(prismaMock.session.create).toHaveBeenCalledTimes(1);
     expect(store.set).toHaveBeenCalledWith(
       'sessionId',
-      'session-new',
+      expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     );
   });

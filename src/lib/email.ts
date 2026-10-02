@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
 
 // Constantes de configuración
@@ -45,7 +46,8 @@ export const getEmailTransporter = () => {
  * Genera un código numérico de 6 dígitos
  */
 export const generateVerificationCode = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // randomInt usa el generador criptográfico; Math.random() es predecible
+  return randomInt(100000, 1000000).toString();
 };
 
 /**

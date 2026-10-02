@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { prismaMock } from '@/test/prisma';
+import { hashSessionToken } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
 import { signOut } from './sign-out';
 
@@ -9,7 +10,9 @@ describe('signOut', () => {
 
     await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/autenticacion/iniciar-sesion');
 
-    expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({ where: { id: 'abc' } });
+    expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+      where: { id: hashSessionToken('abc') },
+    });
     expect(store.delete).toHaveBeenCalledWith('sessionId');
     expect(redirect).toHaveBeenCalledWith('/autenticacion/iniciar-sesion');
   });

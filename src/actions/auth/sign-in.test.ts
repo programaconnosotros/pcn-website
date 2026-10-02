@@ -89,7 +89,7 @@ describe('signIn', () => {
     );
     expect(set).toHaveBeenCalledWith(
       'sessionId',
-      'session-abc',
+      expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     );
   });
