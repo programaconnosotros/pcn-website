@@ -594,9 +594,11 @@ export function ProjectsList({ projects, currentUser }: Props) {
               </header>
 
               <div className="flex items-start gap-3">
+                {/* App-icon rounding plus a slight zoom clips the square black corners some PNG
+                    logos have baked in around their own rounded artwork. */}
                 <div
                   className={cn(
-                    'relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+                    'relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
                     !project.logoUrl && 'bg-white',
                   )}
                 >
@@ -606,7 +608,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
                       alt={`Logo de ${project.title}`}
                       width={112}
                       height={112}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full scale-[1.06] object-cover"
                     />
                   ) : (
                     <span className="font-mono text-lg font-bold text-black">

@@ -151,7 +151,7 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
       >
         <span
           className={cn(
-            'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-sm transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+            'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
             !project.logoUrl && 'bg-white',
           )}
         >
@@ -161,7 +161,7 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
               alt=""
               width={112}
               height={112}
-              className="h-full w-full object-cover"
+              className="h-full w-full scale-[1.06] object-cover"
             />
           ) : (
             <span className="font-mono text-lg font-bold text-black">
