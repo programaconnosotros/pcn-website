@@ -30,6 +30,7 @@ import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import Link from 'next/link';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
+import { formActionBarClassName } from '@/components/ui/form-action-bar';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -558,7 +559,7 @@ export function EventForm({
           </div>
 
           {/* Botones */}
-          <div className="flex gap-4">
+          <div className={`${formActionBarClassName} flex gap-4 border-t border-pcnGreen-200`}>
             <Button
               type="submit"
               variant="pcn"

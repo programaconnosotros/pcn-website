@@ -32,6 +32,7 @@ import { ARGENTINA_PROVINCES } from '@/lib/validations/auth-schemas';
 import { FileUpload } from '@/components/ui/file-upload';
 import { PositionsField } from './positions-field';
 import { cn } from '@/lib/utils';
+import { formActionBarClassName } from '@/components/ui/form-action-bar';
 
 // Lista de países
 const COUNTRIES = [
@@ -609,7 +610,12 @@ export const ProfileForm = ({
             </div>
           </Section>
 
-          <div className="sticky bottom-0 z-20 flex flex-wrap items-center justify-between gap-3 bg-background/90 px-4 py-3 font-mono text-[11px] backdrop-blur">
+          <div
+            className={cn(
+              formActionBarClassName,
+              'flex flex-wrap items-center justify-between gap-3 px-4 font-mono text-[11px]',
+            )}
+          >
             <span className="flex items-center gap-2">
               {dirtyCount > 0 ? (
                 <>

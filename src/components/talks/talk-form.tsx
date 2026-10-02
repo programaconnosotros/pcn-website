@@ -32,6 +32,7 @@ import { updateTalk } from '@/actions/talks/update-talk';
 import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
+import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
 
 type EventOption = {
   id: string;
@@ -606,7 +607,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="flex gap-4">
+        <div className={`${dialogFormActionBarClassName} flex gap-4`}>
           <Button
             type="submit"
             variant="pcn"

@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 import { createTalkProposal } from '@/actions/talk-proposals/create-talk-proposal';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { formActionBarClassName } from '@/components/ui/form-action-bar';
 
 type Props = {
   eventId: string;
@@ -366,7 +367,7 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
             </Button>
           </div>
 
-          <div className="flex gap-4">
+          <div className={`${formActionBarClassName} flex gap-4 border-t border-pcnGreen-200`}>
             <Button
               type="submit"
               variant="pcn"

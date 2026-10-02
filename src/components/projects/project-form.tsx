@@ -25,6 +25,7 @@ import { projectSchema, ProjectFormData } from '@/schemas/project-schema';
 import { createProject } from '@/actions/projects/create-project';
 import { updateProject } from '@/actions/projects/update-project';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
+import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
@@ -398,7 +399,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
           </div>
         )}
 
-        <div className="flex gap-4">
+        <div className={`${dialogFormActionBarClassName} flex gap-4`}>
           <Button
             type="submit"
             variant="pcn"
