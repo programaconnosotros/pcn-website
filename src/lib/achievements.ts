@@ -13,12 +13,15 @@ export type AchievementMetrics = {
   commits: number;
   /** Their spot among the repo's contributors (1 = top), or `null` if they never contributed. */
   contributorRank: number | null;
+  /** Talks from /charlas they marked as watched. */
+  talksWatched: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
   talksGiven: 0,
   commits: 0,
   contributorRank: null,
+  talksWatched: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -78,6 +81,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Mandá una propuesta de charla cuando un evento abra el call for speakers.',
     href: '/eventos',
     progress: count('talksGiven', 1),
+  },
+  {
+    id: 'talks-watched-25',
+    name: 'Espectador',
+    description: 'Vio 25 charlas recomendadas por la comunidad.',
+    icon: 'monitor-play',
+    tone: 'silver',
+    goal: 'ver 25 charlas',
+    howTo: 'Mirá las charlas de /charlas y marcalas como vistas.',
+    href: '/charlas',
+    progress: count('talksWatched', 25),
   },
 ];
 

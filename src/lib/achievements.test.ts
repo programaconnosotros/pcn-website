@@ -1,5 +1,6 @@
 import { prismaMock } from '@/test/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
+import { externalTalks } from '@/components/videos/videos';
 import { ACHIEVEMENTS, EMPTY_METRICS, earnedAchievements } from './achievements';
 import { getAchievementMetrics, getUserAchievementMetrics } from './achievement-metrics';
 
@@ -23,6 +24,11 @@ describe('earnedAchievements', () => {
     ]);
   });
 
+  it('earns espectador after watching 25 talks', () => {
+    expect(ids({ ...EMPTY_METRICS, talksWatched: 24 })).toEqual([]);
+    expect(ids({ ...EMPTY_METRICS, talksWatched: 25 })).toEqual(['talks-watched-25']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -34,14 +40,15 @@ describe('earnedAchievements', () => {
 
 describe('getAchievementMetrics', () => {
   beforeEach(() => {
-    prismaMock.talkSpeaker.groupBy.mockResolvedValue([] as any);
+    (prismaMock.talkSpeaker.groupBy as jest.Mock).mockResolvedValue([]);
     prismaMock.identityLink.findMany.mockResolvedValue([]);
+    (prismaMock.contentMark.groupBy as jest.Mock).mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
-    prismaMock.talkSpeaker.groupBy.mockResolvedValue([
+    (prismaMock.talkSpeaker.groupBy as jest.Mock).mockResolvedValue([
       { userId: 'user-1', _count: { _all: 2 } },
-    ] as any);
+    ]);
 
     const metrics = await getAchievementMetrics();
 
@@ -64,6 +71,26 @@ describe('getAchievementMetrics', () => {
     expect(metrics.get('user-1')).toMatchObject({ contributorRank: 1, commits: first.commits });
     expect(metrics.get('user-2')).toMatchObject({ contributorRank: 2, commits: second.commits });
     expect(metrics.has('user-3')).toBe(false);
+  });
+
+  it('counts only watched videos that are talks', async () => {
+    (prismaMock.contentMark.groupBy as jest.Mock).mockResolvedValue([
+      { userId: 'user-1', _count: { _all: 25 } },
+    ]);
+
+    const metrics = await getAchievementMetrics(['user-1']);
+
+    expect(metrics.get('user-1')).toMatchObject({ talksWatched: 25 });
+    expect(prismaMock.contentMark.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          userId: { in: ['user-1'] },
+          contentType: 'video',
+          mark: 'watched',
+          contentId: { in: externalTalks.map(({ id }) => id) },
+        }),
+      }),
+    );
   });
 
   it('returns empty metrics for a user without activity', async () => {

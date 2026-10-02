@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
+import { externalTalks } from '@/components/videos/videos';
 import { EMPTY_METRICS, type AchievementMetrics } from '@/lib/achievements';
 
 // The counts behind each achievement (src/lib/achievements), for some users or for everyone.
@@ -24,7 +25,9 @@ const linkedNames = async (source: 'github' | 'whatsapp', userIds?: string[]) =>
 export const getAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
-  const [talkSpeakers, githubLogins, githubStats] = await Promise.all([
+  const forUsers = userIds ? { userId: { in: userIds } } : {};
+
+  const [talkSpeakers, githubLogins, githubStats, watchedTalks] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
       where: { userId: userIds ? { in: userIds } : { not: null } },
@@ -32,6 +35,16 @@ export const getAchievementMetrics = async (
     }),
     linkedNames('github', userIds),
     getCollaborationStats(),
+    prisma.contentMark.groupBy({
+      by: ['userId'],
+      where: {
+        ...forUsers,
+        contentType: 'video',
+        mark: 'watched',
+        contentId: { in: externalTalks.map(({ id }) => id) },
+      },
+      _count: { _all: true },
+    }),
   ]);
 
   const metrics = new Map<string, AchievementMetrics>();
@@ -47,6 +60,8 @@ export const getAchievementMetrics = async (
   for (const { userId, _count } of talkSpeakers) {
     if (userId) of(userId).talksGiven = _count._all;
   }
+
+  for (const { userId, _count } of watchedTalks) of(userId).talksWatched = _count._all;
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.
   const contributors = githubStats.topContributors;
