@@ -33,6 +33,7 @@ import { FileUpload } from '@/components/ui/file-upload';
 import { PositionsField } from './positions-field';
 import { cn } from '@/lib/utils';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
+import { FormSection } from '@/components/ui/form-section';
 
 // Lista de países
 const COUNTRIES = [
@@ -104,53 +105,6 @@ const Field = ({
     </div>
     {children}
   </div>
-);
-
-// Una sección del formulario: cabecera `[01] nombre` con su progreso y el contenido debajo.
-const Section = ({
-  id,
-  index,
-  title,
-  description,
-  done,
-  total,
-  optional,
-  children,
-}: {
-  id: string;
-  index: number;
-  title: string;
-  description?: string;
-  done: number;
-  total: number;
-  /** Optional sections show their count but don't add to the completion bar. */
-  optional?: boolean;
-  children: ReactNode;
-}) => (
-  <section id={id} className="scroll-mt-4">
-    <header className="flex items-center justify-between gap-4 border-b border-pcnGreen-200 bg-pcnGreen/[0.03] px-4 py-2 font-mono">
-      <h2 className="flex min-w-0 items-baseline gap-2 text-sm font-semibold">
-        <span className="text-pcnGreen-500">[{String(index).padStart(2, '0')}]</span>
-        {title}
-        {description && (
-          <span className="truncate text-[11px] font-normal text-muted-foreground max-sm:hidden">
-            {'// '}
-            {description}
-          </span>
-        )}
-      </h2>
-      <span
-        className={cn(
-          'shrink-0 text-[11px] tabular-nums',
-          done === total ? 'text-glow text-pcnGreen' : 'text-muted-foreground',
-        )}
-      >
-        {optional && <span className="text-muted-foreground/60">opcional · </span>}
-        {done}/{total}
-      </span>
-    </header>
-    <div className="p-4">{children}</div>
-  </section>
 );
 
 // Los puestos guardados; si todavía no hay ninguno, el cargo viejo o una fila vacía para arrancar.
@@ -433,7 +387,7 @@ export const ProfileForm = ({
 
         {/* Columna derecha: las secciones del formulario y la barra para guardar */}
         <div className="min-w-0 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
-          <Section
+          <FormSection
             id="identidad"
             index={1}
             title="identidad"
@@ -542,9 +496,9 @@ export const ProfileForm = ({
                 <FormError error={form.formState.errors.slogan} />
               </Field>
             </div>
-          </Section>
+          </FormSection>
 
-          <Section
+          <FormSection
             id="trabajo"
             index={2}
             title="trabajo"
@@ -552,9 +506,9 @@ export const ProfileForm = ({
             {...progress('trabajo')}
           >
             <PositionsField />
-          </Section>
+          </FormSection>
 
-          <Section
+          <FormSection
             id="estudios"
             index={3}
             title="estudios"
@@ -579,9 +533,9 @@ export const ProfileForm = ({
                 <FormError error={form.formState.errors.studyPlace} />
               </Field>
             </div>
-          </Section>
+          </FormSection>
 
-          <Section
+          <FormSection
             id="enlaces"
             index={4}
             title="enlaces"
@@ -613,9 +567,9 @@ export const ProfileForm = ({
                 </div>
               ))}
             </div>
-          </Section>
+          </FormSection>
 
-          <Section
+          <FormSection
             id="stack"
             index={5}
             title="stack"
@@ -637,7 +591,7 @@ export const ProfileForm = ({
                 );
               })}
             </div>
-          </Section>
+          </FormSection>
 
           <div
             className={cn(
