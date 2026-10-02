@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
+import { HighlightedCode } from './highlighted-code';
 import type { TechExample, TechNote, TechNoteGroup } from '@/app/(platform)/desarrollo/tech-notes';
 
 const REPO_BLOB_URL = 'https://github.com/programaconnosotros/pcn-website/blob/main';
@@ -47,9 +48,7 @@ const CodeBlock = ({ example }: { example: TechExample }) => (
         {renderInline(example.caption)}
       </p>
     )}
-    <pre className="overflow-x-auto p-3 font-mono text-[11px] leading-5 text-foreground/90 [tab-size:2] sm:text-xs sm:leading-5">
-      <code>{example.code}</code>
-    </pre>
+    <HighlightedCode code={example.code} lang={example.lang} />
   </figure>
 );
 
