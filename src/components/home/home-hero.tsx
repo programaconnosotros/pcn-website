@@ -64,13 +64,13 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
 
             <motion.h1
               {...fadeUp(0.08)}
-              className="text-balance font-mono text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground md:mt-5 md:text-5xl"
+              className="text-balance font-mono text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-4xl md:mt-4 lg:text-[2.6rem]"
             >
               {firstName ? (
                 <>
-                  Hola, <span className="text-glow text-pcnGreen">{firstName}</span>.
-                  <br />
-                  <span className="cursor-blink">Qué bueno verte.</span>
+                  <span className="cursor-blink">
+                    Hola, <span className="text-glow text-pcnGreen">{firstName}</span>.
+                  </span>
                 </>
               ) : (
                 <>
@@ -81,21 +81,28 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
               )}
             </motion.h1>
 
-            <motion.p
-              {...fadeUp(0.16)}
-              className="mt-6 flex max-w-xl gap-3 border-l border-pcnGreen/30 pl-4 font-mono text-[15px] leading-relaxed text-muted-foreground"
-            >
-              <span aria-hidden className="select-none text-pcnGreen-600">
-                {'//'}
-              </span>
-              <span className="text-pretty">
-                {firstName
-                  ? 'Gracias por ser parte de la comunidad. Hay eventos, charlas y recursos nuevos esperándote.'
-                  : 'Eventos, charlas, mentores y una red de gente apasionada por el software para llevar tu carrera al siguiente nivel.'}
-              </span>
-            </motion.p>
+            <motion.div {...fadeUp(0.16)} className="mt-5 max-w-xl">
+              <TerminalOutput
+                lines={
+                  firstName
+                    ? [
+                        { tag: 'ok', text: `sesión iniciada como ${toShellName(firstName)}@pcn` },
+                        { tag: 'ok', text: 'eventos, charlas y recursos sincronizados' },
+                        { tag: '>>', text: 'hay novedades desde tu último login' },
+                      ]
+                    : [
+                        { tag: '+', text: 'eventos y charlas de ingeniería de software' },
+                        { tag: '+', text: 'mentores que ya recorrieron el camino' },
+                        {
+                          tag: '+',
+                          text: 'una red de devs para llevar tu carrera al siguiente nivel',
+                        },
+                      ]
+                }
+              />
+            </motion.div>
 
-            <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-wrap items-center gap-3">
+            <motion.div {...fadeUp(0.24)} className="mt-7 flex flex-wrap items-center gap-3">
               {firstName ? (
                 <>
                   <Button asChild size="lg">
@@ -184,6 +191,31 @@ const PromptLine = ({ user }: { user: string }) => (
     <span>--fronteras=</span>
     <span className="text-amber-300">none</span>
   </p>
+);
+
+interface OutputLine {
+  tag: 'ok' | '>>' | '+';
+  text: string;
+}
+
+const TAG_STYLES: Record<OutputLine['tag'], string> = {
+  ok: 'text-pcnGreen',
+  '>>': 'text-amber-300',
+  '+': 'text-pcnGreen',
+};
+
+/** Hero copy rendered as command output: status lines when logged in, a diff for guests. */
+const TerminalOutput = ({ lines }: { lines: OutputLine[] }) => (
+  <ul className="space-y-1 border-l border-pcnGreen/30 pl-4 font-mono text-[13px] leading-relaxed text-muted-foreground">
+    {lines.map((line) => (
+      <li key={line.text} className="flex gap-2">
+        <span aria-hidden className={cn('shrink-0 select-none', TAG_STYLES[line.tag])}>
+          {line.tag === '+' ? '+' : `[${line.tag}]`}
+        </span>
+        <span className="text-pretty">{line.text}</span>
+      </li>
+    ))}
+  </ul>
 );
 
 const StatsPanel = () => {
