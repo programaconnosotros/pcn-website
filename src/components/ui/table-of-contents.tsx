@@ -312,8 +312,9 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
         <div className="mt-2">{segments(false)}</div>
       </div>
 
-      {/* Desktop: sticky `tree` pane whose branches light up as you read. */}
-      <aside className="sticky top-24 hidden h-[calc(100vh-7rem)] w-72 shrink-0 flex-col border border-pcnGreen-200 font-mono lg:flex">
+      {/* Desktop: sticky `tree` pane whose branches light up as you read. It stays below a page
+          header pinned to the top (`--sticky-header-offset`). */}
+      <aside className="sticky top-[var(--toc-top)] hidden h-[calc(100vh-var(--toc-top)-1rem)] w-72 shrink-0 flex-col border border-pcnGreen-200 font-mono [--toc-top:max(6rem,calc(var(--sticky-header-offset,0px)+1rem))] lg:flex">
         <div className="flex items-center justify-between gap-2 border-b border-pcnGreen-200 px-3 py-2 text-xs">
           <p className="min-w-0 truncate">
             <span className="text-pcnGreen-500">$ </span>

@@ -13,16 +13,24 @@ const HIDE_DISTANCE = 8;
 const GESTURE_GAP = 100;
 // Pinned offset from the top (top-3), included in the space reserved below the shown header.
 const PINNED_TOP = 12;
+// Tailwind's `lg` breakpoint, where `pinnedOnDesktop` headers stay put.
+const DESKTOP_QUERY = '(min-width: 1024px)';
 
 interface StickyHeaderProps {
   children: ReactNode;
   className?: string;
+  /**
+   * On large screens, keep the header pinned to the top the whole time instead of letting it
+   * scroll away. Its height is published as `--sticky-header-offset` so the page's own sticky
+   * bits can sit below it.
+   */
+  pinnedOnDesktop?: boolean;
 }
 
 // Page header (breadcrumb title plus the page's search and filters) that scrolls away with the
 // content and slides back in, pinned to the top, when scrolling up fast. It must be a direct
 // child of the page's main column so it can stay pinned for the whole page.
-export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
+export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHeaderProps) => {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<HeaderState>('rest');
@@ -30,6 +38,8 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
   // goes straight to `hidden` without flashing back in first.
   const [animate, setAnimate] = useState(false);
   const stateRef = useRef<HeaderState>('rest');
+  const [isDesktop, setIsDesktop] = useState(false);
+  const isPinned = !!pinnedOnDesktop && isDesktop;
 
   const setHeaderState = (next: HeaderState) => {
     if (next === stateRef.current) return;
@@ -42,25 +52,46 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
   // contents) pin below it instead of covering it.
   useEffect(() => {
     const header = headerRef.current;
-    if (state !== 'shown' || !header) return;
+    if (!header || (state !== 'shown' && !isPinned)) return;
     const root = document.documentElement;
-    root.style.setProperty('--sticky-header-offset', `${header.offsetHeight + PINNED_TOP}px`);
+    const publish = () =>
+      root.style.setProperty(
+        '--sticky-header-offset',
+        `${header.offsetHeight + (isPinned ? 0 : PINNED_TOP)}px`,
+      );
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(header);
     return () => {
+      observer.disconnect();
       root.style.removeProperty('--sticky-header-offset');
     };
-  }, [state]);
+  }, [state, isPinned]);
+
+  useEffect(() => {
+    if (!pinnedOnDesktop) return;
+    const query = window.matchMedia(DESKTOP_QUERY);
+    const onChange = () => {
+      setIsDesktop(query.matches);
+      if (query.matches) setHeaderState('rest');
+    };
+    onChange();
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, [pinnedOnDesktop]);
 
   useEffect(() => {
     let lastY = window.scrollY;
     let lastTime = performance.now();
     let speed = 0;
     let frame = 0;
+    const desktop = window.matchMedia(DESKTOP_QUERY);
 
     const update = () => {
       frame = 0;
       const sentinel = sentinelRef.current;
       const header = headerRef.current;
-      if (!sentinel || !header) return;
+      if (!sentinel || !header || (pinnedOnDesktop && desktop.matches)) return;
 
       const now = performance.now();
       const y = window.scrollY;
@@ -98,7 +129,7 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [pinnedOnDesktop]);
 
   return (
     <>
@@ -117,6 +148,8 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
           state === 'shown' && 'before:shadow-[0_1px_0] before:shadow-pcnGreen-200',
           state !== 'rest' && animate && 'transition-transform duration-200 ease-out',
           state === 'hidden' && '-translate-y-[calc(100%+0.75rem)]',
+          isPinned &&
+            'sticky top-0 before:absolute before:inset-x-0 before:inset-y-0 before:-z-10 before:bg-background/90 before:shadow-[0_1px_0] before:shadow-pcnGreen-200 before:backdrop-blur',
           className,
         )}
       >

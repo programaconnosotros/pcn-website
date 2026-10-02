@@ -226,10 +226,14 @@ const Code = ({ children }: { children: ReactNode }) => (
   <code className="bg-pcnGreen-100 px-1 font-mono text-pcnGreen">{children}</code>
 );
 
-// Section titles stay pinned while you read them (on large screens; small ones get the index bar).
+// Section titles stay pinned, just below the page header, while you read them (on large screens;
+// small ones get the index bar).
 const Section = ({ id, title, children }: { id: string; title: string; children: ReactNode }) => (
-  <section id={id} className="scroll-mt-32 p-4 lg:scroll-mt-4">
-    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur lg:sticky lg:top-0 lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
+  <section
+    id={id}
+    className="scroll-mt-32 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
+  >
+    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur lg:sticky lg:top-[var(--sticky-header-offset,0px)] lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
       <span className="text-pcnGreen-500">## </span>
       {title}
     </h2>
@@ -350,7 +354,7 @@ const DesarrolloPage = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <StickyHeader>
+        <StickyHeader pinnedOnDesktop>
           <div className="flex items-start justify-between gap-4">
             <PageTitle
               path="desarrollo"
