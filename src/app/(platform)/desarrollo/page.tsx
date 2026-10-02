@@ -34,6 +34,8 @@ import { GitSVG } from '@/components/logos/GitSVG';
 import { GitHubMarkSVG } from '@/components/logos/GitHubMarkSVG';
 import { AwsSVG } from '@/components/logos/AwsSVG';
 import { KamalSVG } from '@/components/logos/KamalSVG';
+import { TechNotes } from '@/components/desarrollo/tech-notes';
+import { techNoteGroups } from './tech-notes';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -224,6 +226,8 @@ const BulletList = ({ items }: { items: string[] }) => (
 
 const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
 
+const techNoteCount = techNoteGroups.reduce((total, group) => total + group.notes.length, 0);
+
 const DesarrolloPage = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
@@ -265,7 +269,13 @@ const DesarrolloPage = () => (
                 ))}
               </ul>
               <p className="mt-3 text-xs text-muted-foreground">
-                También usamos shadcn/ui para los componentes de interfaz.
+                También usamos shadcn/ui para los componentes de interfaz.{' '}
+                <a
+                  href="#notas"
+                  className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                >
+                  Leé cómo usamos cada una ↓
+                </a>
               </p>
             </Section>
 
@@ -284,6 +294,17 @@ const DesarrolloPage = () => (
               </Section>
             </div>
           </div>
+
+          <section id="notas" className="scroll-mt-24">
+            <Section title={`Notas teóricas del stack (${techNoteCount})`}>
+              <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Una guía para aprender con este proyecto: qué es cada tecnología, los conceptos que
+                tenés que conocer y cómo la usamos acá, con fragmentos reales del código. Tocá el
+                nombre del archivo de cada ejemplo para leerlo completo en GitHub.
+              </p>
+              <TechNotes groups={techNoteGroups} />
+            </Section>
+          </section>
 
           <Section title="Herramientas de desarrollo">
             <DefinitionList
