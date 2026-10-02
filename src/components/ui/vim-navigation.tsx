@@ -16,6 +16,7 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
 
 const SHORTCUTS: { keys: string[]; description: string }[] = [
   { keys: ['j', 'k'], description: 'Bajar / subir' },
+  { keys: ['h', 'l'], description: 'Atrás / adelante, como ← →' },
   { keys: ['d', 'u'], description: 'Media página abajo / arriba' },
   { keys: ['f', 'b'], description: 'Página completa abajo / arriba' },
   { keys: ['gg'], description: 'Ir al principio' },
@@ -46,7 +47,24 @@ const scrollByAmount = (top: number, event: KeyboardEvent) =>
   window.scrollBy({ top, behavior: event.repeat ? 'instant' : 'smooth' });
 
 /**
- * Site-wide vim-style keyboard navigation: `j`/`k` scroll, `d`/`u` and `f`/`b` scroll by half
+ * `h`/`l` behave like the ← / → keys: whatever listens for arrows (the gallery's previous/next
+ * photo, carousels) gets one, and if nothing takes it the page scrolls sideways.
+ */
+const pressArrow = (key: 'ArrowLeft' | 'ArrowRight', event: KeyboardEvent) => {
+  const target =
+    document.activeElement instanceof HTMLElement ? document.activeElement : document.body;
+  const arrow = new KeyboardEvent('keydown', { key, code: key, bubbles: true, cancelable: true });
+  target.dispatchEvent(arrow);
+  if (!arrow.defaultPrevented) {
+    window.scrollBy({
+      left: key === 'ArrowLeft' ? -LINE_STEP : LINE_STEP,
+      behavior: event.repeat ? 'instant' : 'smooth',
+    });
+  }
+};
+
+/**
+ * Site-wide vim-style keyboard navigation: `j`/`k` scroll, `h`/`l` act as ← / →, `d`/`u` and `f`/`b` scroll by half
  * or whole pages, `gg`/`G` jump to the top/bottom, `H`/`L` walk the history, `yy` copies the
  * URL and `?` lists every shortcut. Inside a PCN OS window it drives that window's page.
  */
@@ -86,6 +104,10 @@ export function VimNavigation() {
         scrollByAmount(LINE_STEP, event);
       } else if (key === 'k') {
         scrollByAmount(-LINE_STEP, event);
+      } else if (key === 'h') {
+        pressArrow('ArrowLeft', event);
+      } else if (key === 'l') {
+        pressArrow('ArrowRight', event);
       } else if (key === 'd') {
         scrollByAmount(window.innerHeight / 2, event);
       } else if (key === 'u') {
