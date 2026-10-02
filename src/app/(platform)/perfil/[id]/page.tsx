@@ -7,6 +7,8 @@ import {
   isBadgeTone,
   type DisplayBadge,
 } from '@/lib/badges';
+import { earnedAchievements } from '@/lib/achievements';
+import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -167,8 +169,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
   const params = await props.params;
   const { tab: requestedTab } = await props.searchParams;
   const tab: ProfileTab = isProfileTab(requestedTab) ? requestedTab : 'resumen';
-  const user = await getUser(params.id);
-  const session = await getCurrentSession();
+  const [user, session, achievementMetrics] = await Promise.all([
+    getUser(params.id),
+    getCurrentSession(),
+    getUserAchievementMetrics(params.id),
+  ]);
+  const achievements = earnedAchievements(achievementMetrics);
 
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
@@ -181,10 +187,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
   const isOwnProfile = session?.user?.id === params.id;
   const viewerIsAdmin = session?.user?.role === 'ADMIN';
 
-  // Built-in badges first, then the custom ones an admin awarded, oldest first.
+  // Built-in badges first, then the ones earned through activity, then the custom ones an admin
+  // awarded, oldest first.
   const badges: (DisplayBadge & { custom?: boolean })[] = [
     ...(user.isCofounder ? [COFOUNDER_BADGE] : []),
     ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
+    ...achievements,
     ...user.customBadges.map(({ badge, awardedAt }) => ({
       id: badge.id,
       name: badge.name,
@@ -195,6 +203,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
       custom: true,
     })),
   ];
+  // The header only fits the badges that say who someone is in the community.
+  const headerBadges = badges.filter(
+    (badge) => !achievements.some(({ id, highlight }) => id === badge.id && !highlight),
+  );
 
   const socialLinks = [
     {
@@ -292,7 +304,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex min-w-0 items-center gap-2">
                     <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
-                    <BadgeStrip badges={badges} />
+                    <BadgeStrip badges={headerBadges} />
                   </div>
                   {isOwnProfile && (
                     <Link
