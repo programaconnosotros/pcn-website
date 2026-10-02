@@ -250,12 +250,21 @@ export default async function ProfilePage(props: ProfilePageProps) {
       label: 'ubicación',
       value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
     },
-    { label: 'email', value: user.email, href: user.email ? `mailto:${user.email}` : undefined },
-    {
-      label: 'teléfono',
-      value: user.phoneNumber,
-      href: user.phoneNumber ? `tel:${user.phoneNumber}` : undefined,
-    },
+    // El contacto lo ven solo los miembros logueados: visitantes anónimos y bots no
+    ...(session
+      ? [
+          {
+            label: 'email',
+            value: user.email,
+            href: user.email ? `mailto:${user.email}` : undefined,
+          },
+          {
+            label: 'teléfono',
+            value: user.phoneNumber,
+            href: user.phoneNumber ? `tel:${user.phoneNumber}` : undefined,
+          },
+        ]
+      : []),
   ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
 
   const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
