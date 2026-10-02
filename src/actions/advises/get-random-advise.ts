@@ -11,7 +11,6 @@ export const getRandomAdvise = async () => {
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

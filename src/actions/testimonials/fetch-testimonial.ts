@@ -10,7 +10,6 @@ export const fetchTestimonial = async (id: string) => {
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

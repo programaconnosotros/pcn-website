@@ -14,7 +14,6 @@ export const fetchFeaturedTestimonials = async () =>
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

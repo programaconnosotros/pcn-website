@@ -43,7 +43,7 @@ const AdvicePage = async () => {
       createdAt: 'desc',
     },
     include: {
-      author: true,
+      author: { select: { id: true, name: true, image: true } },
       likes: true,
     },
   });

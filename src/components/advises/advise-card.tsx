@@ -31,7 +31,7 @@ export const AdviseCard = ({
   /** Off where every card is by the same person, like their own profile. */
   showAuthor?: boolean;
   advise: Advise & {
-    author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
+    author: Pick<User, 'id' | 'name' | 'image'>;
     likes: Like[];
   };
   session: SessionWithUser | null;
@@ -55,9 +55,7 @@ export const AdviseCard = ({
     },
   );
 
-  const isAuthor =
-    (session?.user?.id && session.user.id === advise.author.id) ||
-    (session?.user?.email && session.user.email === advise.author.email);
+  const isAuthor = !!session?.user?.id && session.user.id === advise.author.id;
 
   const isAdmin = session?.user?.role === 'ADMIN';
 

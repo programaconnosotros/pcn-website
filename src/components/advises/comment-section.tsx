@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from '@prisma/client';
 import type { SessionWithUser } from '@/lib/session';
 
-type Author = Omit<User, 'password'>;
+type Author = Pick<User, 'id' | 'name' | 'image'>;
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';

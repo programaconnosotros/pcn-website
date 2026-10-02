@@ -64,7 +64,7 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
   const advise = await prisma.advise.findUnique({
     where: { id: params.id },
     include: {
-      author: true,
+      author: { select: { id: true, name: true, image: true } },
       likes: true,
       comments: {
         where: {
@@ -74,9 +74,9 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
           createdAt: 'desc',
         },
         include: {
-          author: true,
+          author: { select: { id: true, name: true, image: true } },
           replies: {
-            include: { author: true },
+            include: { author: { select: { id: true, name: true, image: true } } },
           },
         },
       },

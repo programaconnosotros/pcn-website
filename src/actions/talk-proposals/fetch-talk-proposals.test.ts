@@ -44,7 +44,7 @@ describe('fetchTalkProposals', () => {
       orderBy: { createdAt: 'desc' },
       include: {
         talk: { select: { id: true } },
-        speakers: { orderBy: { order: 'asc' } },
+        speakers: { orderBy: { order: 'asc' }, omit: { speakerPhone: false } },
       },
     });
   });

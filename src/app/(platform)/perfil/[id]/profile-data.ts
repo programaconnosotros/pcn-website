@@ -18,7 +18,7 @@ export const getProfileAdvises = cache((userId: string) =>
     where: { authorId: userId },
     orderBy: { createdAt: 'desc' },
     include: {
-      author: { select: { id: true, name: true, image: true, email: true } },
+      author: { select: { id: true, name: true, image: true } },
       likes: true,
     },
   }),
