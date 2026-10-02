@@ -6,11 +6,19 @@ import { useContentMarks } from '@/hooks/use-content-marks';
 import { ArticleRow } from '@/app/(platform)/lectura/articles-panel';
 import { ArticleReaderDialog } from '@/app/(platform)/lectura/article-reader-dialog';
 import type { Article } from '@/app/(platform)/lectura/articles';
+import type { Writer } from '@/app/(platform)/lectura/article-writers';
 
 // Articles the person wrote, shown and read just like in /lectura: same rows, same read and
 // "para leer" marks, and the reader window instead of a new browser tab. `index` is the
 // article's position in /lectura, so its 0x number matches there.
-export function ProfileArticles({ articles }: { articles: { article: Article; index: number }[] }) {
+export function ProfileArticles({
+  articles,
+  writer,
+}: {
+  articles: { article: Article; index: number }[];
+  /** The profile's owner, who wrote all of them. */
+  writer: Writer;
+}) {
   const marks = useContentMarks('article');
   const readIds = marks.ids('read');
   const savedIds = marks.ids('saved');
@@ -40,7 +48,7 @@ export function ProfileArticles({ articles }: { articles: { article: Article; in
             onToggleRead={() => toggleRead(article.id)}
             saved={savedIds.has(article.id)}
             onToggleSaved={() => marks.toggle(article.id, 'saved')}
-            writers={[]}
+            writers={[writer]}
             isAdmin={false}
           />
         ))}

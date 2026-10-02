@@ -356,6 +356,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     userId={user.id}
                     firstName={firstName}
                     session={session}
+                    person={{ id: user.id, name: user.name ?? '', image: user.image }}
                   />
                 </Suspense>
               </ProfileTabPanel>

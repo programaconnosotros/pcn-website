@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, X } from 'lucide-react';
+import { Pencil, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { addArticleAuthor, removeArticleAuthor } from '@/actions/articles/article-authors';
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
@@ -20,8 +20,9 @@ type Props = {
   onEditingChange: (_editing: boolean) => void;
 };
 
-// The community members who wrote the article, linking to their profiles. Admins add and
-// remove them right on the card; the ones linked by author name are managed in /vinculos.
+// Admin controls to tag the community members who wrote the article right on the card; the
+// ones linked by author name are managed in /vinculos. Everyone else sees the writers through
+// the row's avatar and author names, which link to their profiles.
 export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditingChange }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -37,37 +38,38 @@ export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditi
       }
     });
 
-  if (writers.length === 0 && !isAdmin) return null;
+  if (!isAdmin) return null;
 
   return (
     <div className="relative z-10 space-y-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        {writers.length > 0 && (
+        {isEditing && writers.length > 0 && (
           <span className="font-mono text-[10px] uppercase tracking-wider text-pcnGreen-500">
             escrito por
           </span>
         )}
-        {writers.map((writer) => (
-          <span key={writer.id} className="flex items-center gap-1">
-            <PersonLink person={writer} />
-            {isAdmin && isEditing && !writer.linkedAuthor && (
-              <button
-                type="button"
-                onClick={() =>
-                  run(
-                    () => removeArticleAuthor(articleId, writer.id),
-                    `${writer.name} ya no figura como escritor`,
-                  )
-                }
-                disabled={isPending}
-                aria-label={`Quitar a ${writer.name} como escritor`}
-                className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                <X className="size-3" />
-              </button>
-            )}
-          </span>
-        ))}
+        {isEditing &&
+          writers.map((writer) => (
+            <span key={writer.id} className="flex items-center gap-1">
+              <PersonLink person={writer} />
+              {isAdmin && isEditing && !writer.linkedAuthor && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    run(
+                      () => removeArticleAuthor(articleId, writer.id),
+                      `${writer.name} ya no figura como escritor`,
+                    )
+                  }
+                  disabled={isPending}
+                  aria-label={`Quitar a ${writer.name} como escritor`}
+                  className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </button>
+              )}
+            </span>
+          ))}
         {isAdmin && (
           <button
             type="button"
@@ -76,6 +78,11 @@ export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditi
           >
             {isEditing ? (
               'listo'
+            ) : writers.length > 0 ? (
+              <>
+                <Pencil className="size-2.5" />
+                escritores ({writers.length})
+              </>
             ) : (
               <>
                 <Plus className="size-3" />

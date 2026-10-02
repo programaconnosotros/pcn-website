@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { AdviseCard } from '@/components/advises/advise-card';
@@ -116,9 +117,15 @@ export async function ProfileCountsLoader({ userId }: { userId: string }) {
   return <ProfileTabCounts counts={await getProfileCounts(userId)} />;
 }
 
-type TabProps = { userId: string; firstName: string; session: Session };
+type TabProps = {
+  userId: string;
+  firstName: string;
+  session: Session;
+  /** The profile's owner, credited as the writer of their articles. */
+  person: Person;
+};
 
-async function OverviewTab({ userId, firstName, session }: TabProps) {
+async function OverviewTab({ userId, firstName, session, person }: TabProps) {
   const [projects, advises, talks, articles, events, photos, conversations, github] =
     await Promise.all([
       getProfileProjects(userId),
@@ -225,7 +232,7 @@ async function OverviewTab({ userId, firstName, session }: TabProps) {
             count={articles.length}
             href={articles.length > ARTICLES_PREVIEW ? tabHref('articulos') : undefined}
           />
-          <ProfileArticles articles={articles.slice(0, ARTICLES_PREVIEW)} />
+          <ProfileArticles articles={articles.slice(0, ARTICLES_PREVIEW)} writer={person} />
         </section>
       )}
 
@@ -280,7 +287,7 @@ async function OverviewTab({ userId, firstName, session }: TabProps) {
 
 /** The selected tab's content; each tab only waits for the data it shows. */
 export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: ProfileTab }) {
-  const { userId, firstName, session } = props;
+  const { userId, firstName, session, person } = props;
 
   if (tab === 'resumen') return <OverviewTab {...props} />;
 
@@ -316,7 +323,7 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
     case 'articulos': {
       const articles = await getProfileArticles(userId);
       content = articles.length ? (
-        <ProfileArticles articles={articles} />
+        <ProfileArticles articles={articles} writer={person} />
       ) : (
         <EmptyLine>{firstName} todavía no publicó ningún artículo.</EmptyLine>
       );

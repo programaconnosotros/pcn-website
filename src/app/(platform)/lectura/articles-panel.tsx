@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { Bookmark, Check, CheckCheck, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import Link from 'next/link';
+import { Fragment, useState } from 'react';
 import { articleAuthors, type Article } from './articles';
 import { ArticleWriters, type Writer } from './article-writers';
 
@@ -117,6 +118,37 @@ const CategoryHistogram = ({
   );
 };
 
+// The article's author names, each one linking to the member's profile when they're one of us.
+const AuthorNames = ({ article, writers }: { article: Article; writers: Writer[] }) => {
+  const names = articleAuthors(article);
+  const parts = names.map((name) => ({
+    name,
+    writer: writers.find((writer) => writer.linkedAuthor === name || writer.name === name),
+  }));
+  const unmatched = writers.filter((writer) => !parts.some((part) => part.writer === writer));
+  // A lone author tagged by hand under another spelling is still that same person.
+  if (parts.length === 1 && !parts[0].writer && unmatched.length === 1) {
+    parts[0].writer = unmatched.pop();
+  }
+  const people = [...parts, ...unmatched.map((writer) => ({ name: writer.name, writer }))];
+
+  return people.map(({ name, writer }, i) => (
+    <Fragment key={writer?.id ?? name}>
+      {i > 0 && ', '}
+      {writer ? (
+        <Link
+          href={`/perfil/${writer.id}`}
+          className="relative z-10 text-pcnGreen-600 hover:text-pcnGreen hover:underline"
+        >
+          {name}
+        </Link>
+      ) : (
+        name
+      )}
+    </Fragment>
+  ));
+};
+
 export const ArticleRow = ({
   article,
   index,
@@ -161,7 +193,11 @@ export const ArticleRow = ({
           </span>
         )}
         <Avatar className="size-10 rounded-sm ring-1 ring-pcnGreen-200 transition-[filter,box-shadow] duration-300 [filter:grayscale(0.7)] group-hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.6)] group-hover:ring-pcnGreen-500 group-hover:[filter:none]">
-          <AvatarImage src={article.avatar} alt={article.author} />
+          {/* A writer who's a member shows their profile photo instead of the article's. */}
+          <AvatarImage
+            src={writers.find((writer) => writer.image)?.image ?? article.avatar}
+            alt={writers[0]?.name ?? article.author}
+          />
           <AvatarFallback className="rounded-sm font-mono text-xs">
             {initials(article.author)}
           </AvatarFallback>
@@ -217,7 +253,7 @@ export const ArticleRow = ({
         <div className="mt-auto flex items-center gap-2 pt-0.5 font-mono text-[11px] text-muted-foreground/70">
           <span className="min-w-0 truncate">
             <span className="text-pcnGreen-500">@ </span>
-            {articleAuthors(article).join(', ')}
+            <AuthorNames article={article} writers={writers} />
             <span className="text-pcnGreen-500"> ~ </span>
             {article.source}
           </span>
