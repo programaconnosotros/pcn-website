@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { loadMermaid } from './mermaid';
 import type { DbDomain, DbModel, DbRelation } from '@/app/(platform)/desarrollo/db-schema';
 
 type View = 'todo' | DbDomain;
@@ -57,35 +58,6 @@ const buildSource = (view: View, models: DbModel[], relations: DbRelation[]) => 
   lines.push(...visible.map(relationLine));
   return lines.join('\n');
 };
-
-let mermaidReady: Promise<typeof import('mermaid').default> | undefined;
-const loadMermaid = () =>
-  (mermaidReady ??= import('mermaid').then(({ default: mermaid }) => {
-    mermaid.initialize({
-      startOnLoad: false,
-      securityLevel: 'strict',
-      theme: 'base',
-      fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
-      er: { useMaxWidth: false },
-      themeVariables: {
-        darkMode: true,
-        background: 'transparent',
-        fontSize: '12px',
-        primaryColor: '#05140f',
-        primaryBorderColor: '#04f4be',
-        primaryTextColor: '#e6f2ee',
-        secondaryColor: '#05140f',
-        tertiaryColor: '#05140f',
-        lineColor: '#0bbf95',
-        textColor: '#c7d6d1',
-        mainBkg: '#05140f',
-        nodeBorder: '#04f4be',
-        attributeBackgroundColorOdd: '#07100d',
-        attributeBackgroundColorEven: '#0a1814',
-      },
-    });
-    return mermaid;
-  }));
 
 export const DbDiagram = ({
   models,
