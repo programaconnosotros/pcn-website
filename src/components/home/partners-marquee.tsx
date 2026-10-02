@@ -26,7 +26,13 @@ export const PartnersMarquee = () => (
               target="_blank"
               rel="noopener noreferrer"
               title={partner.name}
-              className="flex h-16 shrink-0 items-center justify-center opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+              className={cn(
+                'flex h-16 shrink-0 items-center justify-center transition-all duration-300',
+                // Bright monochrome with a faint green neon halo; full color and a stronger glow
+                // on hover.
+                'opacity-95 brightness-[1.6] contrast-125 drop-shadow-[0_0_6px_rgba(4,244,190,0.45)] grayscale',
+                'hover:scale-105 hover:opacity-100 hover:brightness-110 hover:drop-shadow-[0_0_12px_rgba(4,244,190,0.85)] hover:grayscale-0',
+              )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
