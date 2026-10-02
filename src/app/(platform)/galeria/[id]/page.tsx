@@ -35,6 +35,26 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
   </section>
 );
 
+const NavKey = ({
+  href,
+  label,
+  icon: Icon,
+}: {
+  href: string | null;
+  label: string;
+  icon: typeof ChevronLeft;
+}) =>
+  href ? (
+    <Link href={href} scroll={false} className={keyCapClassName} title={label}>
+      <Icon className="size-4" />
+      <span className="sr-only">{label}</span>
+    </Link>
+  ) : (
+    <span aria-hidden className={cn(keyCapClassName, 'pointer-events-none opacity-30')}>
+      <Icon className="size-4" />
+    </span>
+  );
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { id } = await props.params;
   const photo = await getGalleryItem(id);
@@ -107,6 +127,13 @@ export default async function GalleryItemPage(props: Props) {
           }
           action={
             <>
+              {/* Prev/next live up here, outside the photo, so they never cover it. */}
+              {(previousHref || nextHref) && (
+                <nav aria-label="Fotos" className="flex gap-1">
+                  <NavKey href={previousHref} label="Anterior" icon={ChevronLeft} />
+                  <NavKey href={nextHref} label="Siguiente" icon={ChevronRight} />
+                </nav>
+              )}
               {isAdmin && (
                 <Link
                   href={`/galeria/${photo.id}/editar`}
@@ -153,26 +180,6 @@ export default async function GalleryItemPage(props: Props) {
               className="photo-glitch-in relative max-h-[calc(100dvh-10rem)] w-auto max-w-full select-none object-contain p-2 sm:p-4"
               draggable={false}
             />
-          )}
-          {previousHref && (
-            <Link
-              href={previousHref}
-              scroll={false}
-              className={cn(keyCapClassName, 'absolute left-2 top-1/2 size-9 -translate-y-1/2')}
-            >
-              <ChevronLeft className="size-5" />
-              <span className="sr-only">Anterior</span>
-            </Link>
-          )}
-          {nextHref && (
-            <Link
-              href={nextHref}
-              scroll={false}
-              className={cn(keyCapClassName, 'absolute right-2 top-1/2 size-9 -translate-y-1/2')}
-            >
-              <ChevronRight className="size-5" />
-              <span className="sr-only">Siguiente</span>
-            </Link>
           )}
         </div>
 
