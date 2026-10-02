@@ -28,30 +28,36 @@ export const getAchievementMetrics = async (
   const forUsers = userIds ? { userId: { in: userIds } } : {};
 
   const now = new Date();
-  const [talkSpeakers, githubLogins, githubStats, watchedTalks, organizers] = await Promise.all([
-    prisma.talkSpeaker.groupBy({
-      by: ['userId'],
-      where: { userId: userIds ? { in: userIds } : { not: null } },
-      _count: { _all: true },
-    }),
-    linkedNames('github', userIds),
-    getCollaborationStats(),
-    prisma.contentMark.groupBy({
-      by: ['userId'],
-      where: {
-        ...forUsers,
-        contentType: 'video',
-        mark: 'watched',
-        contentId: { in: externalTalks.map(({ id }) => id) },
-      },
-      _count: { _all: true },
-    }),
-    prisma.eventOrganizer.groupBy({
-      by: ['userId'],
-      where: { ...forUsers, event: { deletedAt: null, date: { lte: now } } },
-      _count: { _all: true },
-    }),
-  ]);
+  const [talkSpeakers, githubLogins, githubStats, watchedTalks, organizers, readArticles] =
+    await Promise.all([
+      prisma.talkSpeaker.groupBy({
+        by: ['userId'],
+        where: { userId: userIds ? { in: userIds } : { not: null } },
+        _count: { _all: true },
+      }),
+      linkedNames('github', userIds),
+      getCollaborationStats(),
+      prisma.contentMark.groupBy({
+        by: ['userId'],
+        where: {
+          ...forUsers,
+          contentType: 'video',
+          mark: 'watched',
+          contentId: { in: externalTalks.map(({ id }) => id) },
+        },
+        _count: { _all: true },
+      }),
+      prisma.eventOrganizer.groupBy({
+        by: ['userId'],
+        where: { ...forUsers, event: { deletedAt: null, date: { lte: now } } },
+        _count: { _all: true },
+      }),
+      prisma.contentMark.groupBy({
+        by: ['userId'],
+        where: { ...forUsers, contentType: 'article', mark: 'read' },
+        _count: { _all: true },
+      }),
+    ]);
 
   const metrics = new Map<string, AchievementMetrics>();
   const of = (userId: string) => {
@@ -69,6 +75,7 @@ export const getAchievementMetrics = async (
 
   for (const { userId, _count } of watchedTalks) of(userId).talksWatched = _count._all;
   for (const { userId, _count } of organizers) of(userId).eventsOrganized = _count._all;
+  for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.
   const contributors = githubStats.topContributors;

@@ -41,6 +41,10 @@ describe('earnedAchievements', () => {
     ]);
   });
 
+  it('earns lector after reading 25 articles', () => {
+    expect(ids({ ...EMPTY_METRICS, articlesRead: 25 })).toEqual(['articles-read-25']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -119,6 +123,16 @@ describe('getAchievementMetrics', () => {
         where: { event: { deletedAt: null, date: { lte: expect.any(Date) } } },
       }),
     );
+  });
+
+  it('counts the articles marked as read', async () => {
+    (prismaMock.contentMark.groupBy as jest.Mock).mockImplementation(async ({ where }) =>
+      where.contentType === 'article' ? [{ userId: 'user-1', _count: { _all: 30 } }] : [],
+    );
+
+    const metrics = await getAchievementMetrics();
+
+    expect(metrics.get('user-1')).toMatchObject({ articlesRead: 30, talksWatched: 0 });
   });
 
   it('returns empty metrics for a user without activity', async () => {

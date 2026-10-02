@@ -17,6 +17,8 @@ export type AchievementMetrics = {
   talksWatched: number;
   /** Events they organized that already happened. */
   eventsOrganized: number;
+  /** Articles from /lectura they marked as read. */
+  articlesRead: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -25,6 +27,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   contributorRank: null,
   talksWatched: 0,
   eventsOrganized: 0,
+  articlesRead: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -117,6 +120,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Seguí organizando: cada meetup, cowork o jornada que hagas suma.',
     href: '/eventos',
     progress: count('eventsOrganized', 10),
+  },
+  {
+    id: 'articles-read-25',
+    name: 'Lector',
+    description: 'Leyó 25 artículos recomendados por la comunidad.',
+    icon: 'book-open',
+    tone: 'cyan',
+    goal: 'leer 25 artículos',
+    howTo: 'Leé los artículos de /lectura y marcalos como leídos.',
+    href: '/lectura',
+    progress: count('articlesRead', 25),
   },
 ];
 
