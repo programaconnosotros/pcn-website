@@ -213,11 +213,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
     },
   ].filter((link): link is typeof link & { href: string } => !!link.href);
 
+  const positions = user.positions.filter((position) => position.jobTitle || position.enterprise);
+
   const profileFacts: { label: string; value: string; href?: string }[] = [
-    ...user.positions.map((position) => ({
-      label: 'trabaja',
-      value: [position.jobTitle, position.enterprise].filter(Boolean).join(' @ '),
-    })),
     { label: 'carrera', value: user.career },
     { label: 'institución', value: user.studyPlace },
     {
@@ -305,6 +303,32 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 badges={badges}
                 isAdmin={viewerIsAdmin}
               />
+
+              {positions.length > 0 && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>trabajo
+                  </h2>
+                  <ul className="space-y-2">
+                    {positions.map((position, index) => (
+                      <li
+                        key={`${position.jobTitle}-${position.enterprise}-${index}`}
+                        className="border-l-2 border-pcnGreen-200 pl-3"
+                      >
+                        {position.jobTitle && (
+                          <p className="text-sm font-medium leading-snug">{position.jobTitle}</p>
+                        )}
+                        {position.enterprise && (
+                          <p className="font-mono text-xs text-muted-foreground">
+                            <span className="text-pcnGreen-500">@ </span>
+                            {position.enterprise}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {profileFacts.length > 0 && (
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">
