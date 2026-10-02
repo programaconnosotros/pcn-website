@@ -1,8 +1,5 @@
+import { technologies, toolchain } from '@/components/desarrollo/technologies';
 import { GitHubSVG } from '@/components/logos/GitHubSVG';
-import { NextJsSVG } from '@/components/logos/NextJsSVG';
-import { ReactSVG } from '@/components/logos/ReactSVG';
-import { TailwindSVG } from '@/components/logos/TailwindSVG';
-import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
 import { Button } from '@/components/ui/button';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -14,12 +11,12 @@ import { SectionHeader } from './section-header';
 const CONTACT_URL = 'https://wa.me/5493815777562';
 const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
 
-const stack = [
-  { name: 'Next.js', Logo: NextJsSVG },
-  { name: 'React', Logo: ReactSVG },
-  { name: 'TypeScript', Logo: TypescriptSVG },
-  { name: 'Tailwind', Logo: TailwindSVG },
-];
+// Libraries and tools on /desarrollo beyond the main technologies, without repeating any.
+const moreTools = new Set(
+  toolchain
+    .flatMap(({ tools }) => tools)
+    .filter((tool) => !technologies.some(({ name }) => tool.startsWith(name))),
+).size;
 
 const Card = ({
   index,
@@ -95,18 +92,26 @@ export const JoinSection = () => (
         description="Esta plataforma es open-source. Explorá los issues, asignate uno y mandá tu primer PR. Aprendés con código real y fortalecés tu portafolio."
       >
         <div className="flex flex-col gap-3">
-          <ul className="flex items-center gap-2">
-            {stack.map(({ name, Logo }) => (
+          <ul className="flex flex-wrap items-center gap-1.5">
+            {technologies.map(({ name, icon: Logo }) => (
               <li
                 key={name}
                 title={name}
-                className="flex size-7 items-center justify-center rounded-sm ring-1 ring-inset ring-pcnGreen-300 [&_svg]:size-4"
+                className="flex size-7 items-center justify-center rounded-sm ring-1 ring-inset ring-pcnGreen-300 transition-shadow hover:ring-pcnGreen [&_svg]:size-4"
               >
-                <Logo className="size-4" />
+                <Logo className="size-4" aria-label={name} />
               </li>
             ))}
-            <li className={cn(GeistMono.className, 'ml-1 text-[11px] text-muted-foreground')}>
-              + Prisma
+            <li>
+              <Link
+                href="/desarrollo#tecnologias"
+                className={cn(
+                  GeistMono.className,
+                  'ml-1 text-[11px] text-muted-foreground hover:text-pcnGreen',
+                )}
+              >
+                + {moreTools} herramientas
+              </Link>
             </li>
           </ul>
           <Button asChild size="sm" className="w-fit">

@@ -24,18 +24,8 @@ import {
   CollaborationStats,
   CollaborationStatsSkeleton,
 } from '@/components/desarrollo/collaboration-stats';
-import { NextJsSVG } from '@/components/logos/NextJsSVG';
-import { ReactSVG } from '@/components/logos/ReactSVG';
-import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
-import { TailwindSVG } from '@/components/logos/TailwindSVG';
-import { PrismaSVG } from '@/components/logos/PrismaSVG';
-import { PostgresqlSVG } from '@/components/logos/PostgresqlSVG';
-import { DockerSVG } from '@/components/logos/DockerSVG';
-import { GitSVG } from '@/components/logos/GitSVG';
-import { GitHubMarkSVG } from '@/components/logos/GitHubMarkSVG';
-import { AwsSVG } from '@/components/logos/AwsSVG';
-import { KamalSVG } from '@/components/logos/KamalSVG';
 import { TechNotes } from '@/components/desarrollo/tech-notes';
+import { technologies, toolchain } from '@/components/desarrollo/technologies';
 import { techNoteGroups } from './tech-notes';
 import { DesarrolloToc } from '@/components/desarrollo/desarrollo-toc';
 import { DbDiagram } from '@/components/desarrollo/db-diagram';
@@ -63,20 +53,6 @@ export const metadata: Metadata = {
       'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
   },
 };
-
-const technologies = [
-  { name: 'Next.js', icon: NextJsSVG },
-  { name: 'React', icon: ReactSVG },
-  { name: 'TypeScript', icon: TypescriptSVG },
-  { name: 'Tailwind CSS', icon: TailwindSVG },
-  { name: 'Prisma', icon: PrismaSVG },
-  { name: 'PostgreSQL', icon: PostgresqlSVG },
-  { name: 'Docker', icon: DockerSVG },
-  { name: 'Kamal', icon: KamalSVG },
-  { name: 'AWS', icon: AwsSVG },
-  { name: 'Git', icon: GitSVG },
-  { name: 'GitHub', icon: GitHubMarkSVG },
-];
 
 const architectureLayers = [
   {
@@ -126,47 +102,6 @@ const architectureLayers = [
     area: 'Deploy',
     description:
       'Kamal vía GitHub Actions — cada push a main aplica las migraciones pendientes y despliega automáticamente a producción',
-  },
-];
-
-const toolchain = [
-  {
-    category: 'Frontend',
-    tools: [
-      'shadcn/ui + Radix',
-      'React Hook Form',
-      'TanStack Query',
-      'TanStack Table',
-      'Motion',
-      'Sonner',
-      'date-fns',
-      'Embla Carousel',
-      'Lucide',
-    ],
-  },
-  {
-    category: 'Backend & datos',
-    tools: ['Prisma', 'Zod', 'bcryptjs', 'Nodemailer', 'React Email'],
-  },
-  {
-    category: 'Imágenes y video',
-    tools: ['AWS S3', 'CloudFront (URLs firmadas)', 'sharp', 'exifr', 'Mediabunny'],
-  },
-  {
-    category: 'Testing & calidad',
-    tools: [
-      'Jest',
-      'jest-mock-extended',
-      'Playwright',
-      'ESLint',
-      'Prettier',
-      'Husky',
-      'lint-staged',
-    ],
-  },
-  {
-    category: 'Infraestructura & dev',
-    tools: ['Docker Compose', 'Dev Containers', 'Portless', 'Kamal', 'GitHub Actions', 'MailHog'],
   },
 ];
 
