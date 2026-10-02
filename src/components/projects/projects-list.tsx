@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -185,18 +185,22 @@ const People = ({ people }: { people: Person[] }) => {
           );
         })}
       </div>
-      <p className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">
-        <span className="text-pcnGreen-500">@</span>
-        {people[0].user ? (
-          <Link href={`/perfil/${people[0].user.id}`} className="hover:text-pcnGreen">
-            {people[0].name}
-          </Link>
-        ) : (
-          people[0].name
-        )}
-        {people.length > 1 && (
-          <span className="text-muted-foreground/60"> +{people.length - 1}</span>
-        )}
+      <p className="min-w-0 font-mono text-[11px] text-muted-foreground">
+        {people.map((person, index) => (
+          <Fragment key={person.key}>
+            {index > 0 && <span className="text-muted-foreground/60">, </span>}
+            <span className="whitespace-nowrap">
+              <span className="text-pcnGreen-500">@</span>
+              {person.user ? (
+                <Link href={`/perfil/${person.user.id}`} className="hover:text-pcnGreen">
+                  {person.name}
+                </Link>
+              ) : (
+                person.name
+              )}
+            </span>
+          </Fragment>
+        ))}
       </p>
     </div>
   );
