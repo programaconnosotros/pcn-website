@@ -1667,6 +1667,335 @@ export const signGalleryItem = <T extends { src: string; thumbSrc: string }>(ite
         docsUrl: 'https://sharp.pixelplumbing.com/api-output#webp',
         sourcePath: 'src/components/photo-gallery',
       },
+      {
+        id: 'eventos',
+        name: 'Eventos · variantes, permisos y calendario',
+        tagline: 'un solo modelo para meetups, coworks, online y multi-día',
+        what: 'Un módulo de eventos resuelve siempre lo mismo: publicar qué pasa, cuándo y dónde, decidir quién puede crearlo y gestionarlo, y ayudar a la gente a llegar (agendarlo, encontrar el lugar, inscribirse). La clave de diseño es cubrir muchas variantes con un solo modelo y campos opcionales en vez de tablas distintas por tipo de evento.',
+        concepts: [
+          {
+            term: 'campos opcionales como variantes',
+            detail:
+              'Un `endDate` nulo es un evento de un día; `isOnline` cambia la dirección por un link de streaming; `capacity` nulo es cupo ilimitado. La UI y la validación se adaptan a cada combinación.',
+          },
+          {
+            term: 'soft delete',
+            detail:
+              'Borrar un evento solo le pone `deletedAt`: las inscripciones, charlas y fotos quedan, y todas las consultas filtran `deletedAt: null`.',
+          },
+          {
+            term: 'permisos por recurso',
+            detail:
+              'Además de roles globales (admin), hay permisos sobre cada evento: quién lo creó y quiénes lo organizan.',
+          },
+          {
+            term: 'funciones puras de permisos',
+            detail:
+              'Las reglas viven en funciones sin acceso a la base, fáciles de testear; un wrapper aparte busca los datos y las aplica.',
+          },
+          {
+            term: 'iCalendar (.ics)',
+            detail:
+              'Formato estándar (RFC 5545) que entienden Google Calendar, Apple Calendar y Outlook. Es texto plano con líneas `CLAVE:valor` de hasta 75 bytes.',
+          },
+          {
+            term: 'slug reutilizable',
+            detail:
+              'Un atajo como `/cowork` no apunta a un evento fijo sino al próximo que tenga ese slug, ideal para series que se repiten.',
+          },
+        ],
+        usage: [
+          'El modelo `Event` cubre todas las variantes: presencial (con `placeName`, `address`, `city` y coordenadas opcionales para un mapa de Google embebido) u online (`isOnline` + `streamingUrl`); de un día o de varios (`endDate`); con cupo (`capacity`) o sin límite; con inscripción propia o externa (`externalRegistrationUrl`, por ejemplo Luma); con convocatoria de charlas (`callForSpeakersEnabled`); con un "cupo completo" manual (`markedAsFull`); con uno o varios flyers (`flyerImages`, un carrusel que se ordena al subirlo) y sponsors. El schema de Zod pide lugar, ciudad y dirección solo si el evento no es online.',
+          'Hay tres niveles de permisos: los admins pueden todo; los ambassadors (`isAmbassador`) crean eventos y editan o eliminan los que crearon; y cualquier usuario cargado como organizador puede editar el evento y gestionar sus inscripciones, charlas y propuestas. Quien crea un evento queda como organizador automáticamente, y elegir organizadores (con un buscador de miembros) queda para quien lo creó. Los eventos organizados aparecen en el perfil de cada persona.',
+          'Convocatoria de charlas: si está activa, el evento muestra "proponer →" y cualquiera con sesión manda una propuesta con título, descripción y uno o más speakers (precompletado con su perfil). Quienes gestionan el evento la aceptan o rechazan (`PENDING`, `ACCEPTED`, `REJECTED`) y con un clic la convierten en una `Talk`, que también aparece en `/charlas`. Las nuevas propuestas e inscripciones generan notificaciones in-app para los admins.',
+          'Mientras el evento no terminó, la página ofrece "agregar a Google Calendar" (un link de plantilla con fechas en UTC y zona horaria de Buenos Aires; si no hay hora de fin asume una hora y lo avisa) y "descargar .ics", generado por un route handler. Las fechas se muestran en la zona horaria de quien visita, en formato 24 h.',
+          'El campo `shortcut` arma URLs cortas para flyers: `/[shortcut]` busca el próximo evento con ese slug y redirige a él, con sus propias tarjetas de Open Graph. En `/eventos` los próximos se muestran "en cartelera" y los pasados en un "museo" de flyers agrupado por año y numerado desde el Nº 001; el badge de estado ("Inscripciones abiertas", "Cupo completo", "En curso") se recalcula en el cliente cada minuto. Cada evento tiene además sus fotos de la galería, sus anuncios y una imagen de Open Graph generada.',
+        ],
+        examples: [
+          {
+            file: 'prisma/schema.prisma',
+            lang: 'prisma',
+            caption: 'Las variantes son columnas opcionales del mismo modelo.',
+            code: `model Event {
+  id                      String    @id @default(cuid())
+  date                    DateTime
+  endDate                 DateTime?
+  name                    String
+  description             String
+  city                    String? // Nombre de la ciudad
+  address                 String? // Dirección específica (calle, número, etc.)
+  placeName               String? // Nombre del lugar (bar, universidad, etc.)
+  flyerImages             String[]  @default([])
+  latitude                Float?
+  longitude               Float?
+  capacity                Int? // Cupo máximo del evento (opcional)
+  externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
+  markedAsFull            Boolean   @default(false)
+  callForSpeakersEnabled  Boolean   @default(false)
+  isOnline                Boolean   @default(false)
+  streamingUrl            String?
+  shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
+  deletedAt               DateTime? // Eliminación lógica
+  // …
+  createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  organizers    EventOrganizer[]
+  galleryItems  GalleryItem[]
+  registrations EventRegistration[]
+  sponsors      Sponsor[]
+  announcements Announcement[]
+  talkProposals TalkProposal[]
+  talks         Talk[]
+}`,
+          },
+          {
+            file: 'src/schemas/event-schema.ts',
+            lang: 'ts',
+            caption:
+              '`superRefine` valida reglas que dependen de otro campo: la ubicación es obligatoria solo para eventos presenciales.',
+            code: `.superRefine((data, ctx) => {
+  if (!data.isOnline) {
+    if (!data.city || data.city.length < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 2,
+        type: 'string',
+        inclusive: true,
+        message: 'La ciudad debe tener al menos 2 caracteres',
+        path: ['city'],
+      });
+    }
+    // … lo mismo para placeName y address`,
+          },
+          {
+            file: 'src/lib/event-permissions.ts',
+            lang: 'ts',
+            caption: 'Reglas puras, sin base de datos: se testean con objetos armados a mano.',
+            code: `export function canCreateEvents(user: EventUser | null | undefined): user is EventUser {
+  return !!user && (isSiteAdmin(user) || user.isAmbassador);
+}
+
+const isEventCreator = (user: EventUser, event: EventOwnership) =>
+  user.isAmbassador && !event.deletedAt && event.createdById === user.id;
+
+// Editar el evento y gestionar sus inscripciones, charlas y propuestas.
+export function canEditEvent(user: EventUser | null | undefined, event: EventOwnership) {
+  if (isSiteAdmin(user)) return true;
+  if (!user || event.deletedAt) return false;
+  return (
+    isEventCreator(user, event) ||
+    event.organizers.some((organizer) => organizer.userId === user.id)
+  );
+}
+
+// Eliminar el evento y elegir sus organizadores queda para quien lo creó.
+export function canDeleteEvent(user: EventUser | null | undefined, event: EventOwnership) {
+  if (isSiteAdmin(user)) return true;
+  return !!user && isEventCreator(user, event);
+}`,
+          },
+          {
+            file: 'src/lib/event-access.ts',
+            lang: 'ts',
+            caption:
+              'El wrapper que usan las páginas (`getEventManager`) y las server actions (`requireEventManager`).',
+            code: `/** El usuario logueado si puede gestionar el evento, o null. */
+export async function getEventManager(eventId: string) {
+  const user = (await getCurrentSession())?.user;
+  return (await canManageEventById(user, eventId)) ? user! : null;
+}
+
+/** Para Server Actions: lanza un error salvo que quien llama gestione el evento. */
+export async function requireEventManager(eventId: string) {
+  const user = await getEventManager(eventId);
+  if (!user) throw new Error('No autorizado');
+  return user;
+}`,
+          },
+          {
+            file: 'src/app/(platform)/eventos/[id]/calendario.ics/route.ts',
+            lang: 'ts',
+            caption:
+              'Una carpeta con punto en el nombre sirve un archivo: `/eventos/:id/calendario.ics`.',
+            code: `export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const event = await fetchEvent(id);
+
+  if (!event) return new Response('Not found', { status: 404 });
+
+  return new Response(createIcsFile(event), {
+    headers: {
+      'Content-Type': 'text/calendar; charset=utf-8',
+      'Content-Disposition': \`attachment; filename="pcn-evento-\${event.id}.ics"\`,
+      'Cache-Control': 'no-store',
+    },
+  });
+}`,
+          },
+          {
+            file: 'src/lib/google-calendar.ts',
+            lang: 'ts',
+            code: `const location = event.isOnline
+  ? event.streamingUrl
+  : [event.placeName, event.address, event.city].filter(Boolean).join(', ');
+// …
+const url = new URL('https://calendar.google.com/calendar/r/eventedit');
+
+url.searchParams.set('action', 'TEMPLATE');
+url.searchParams.set('dates', \`\${utcDateTime(event.date)}/\${utcDateTime(endDate)}\`);
+url.searchParams.set('stz', EVENT_TIME_ZONE);
+url.searchParams.set('etz', EVENT_TIME_ZONE);
+url.searchParams.set('text', event.name);
+url.searchParams.set('details', details);
+if (location) url.searchParams.set('location', location);`,
+          },
+          {
+            file: 'src/lib/event-shortcuts.ts',
+            lang: 'ts',
+            caption:
+              'Varios eventos comparten el slug (cada cowork usa "cowork"); siempre gana el próximo.',
+            code: `export async function findNextEventByShortcut(slug: string) {
+  const now = new Date();
+
+  return prisma.event.findFirst({
+    where: {
+      deletedAt: null,
+      shortcut: slug.toLowerCase(),
+      OR: [{ date: { gte: now } }, { endDate: { gte: now } }],
+    },
+    orderBy: { date: 'asc' },
+    include: { galleryItems: { where: visibleGalleryItem, select: { src: true }, take: 1 } },
+  });
+}`,
+          },
+        ],
+        sourcePath: 'src/app/(platform)/eventos',
+      },
+      {
+        id: 'inscripciones',
+        name: 'Eventos · inscripciones',
+        tagline: 'cupo, inscripción externa, cancelación y gestión',
+        what: 'Inscribirse parece un simple INSERT, pero tiene varios casos: la persona no tiene sesión, ya estaba inscripta, se había dado de baja y vuelve, el evento se llenó, o la inscripción se maneja en otra plataforma. Además, quien organiza necesita ver la lista y el perfil del público.',
+        concepts: [
+          {
+            term: 'restricción única',
+            detail:
+              '`@@unique([eventId, userId])` garantiza en la base una sola fila por persona y evento, aunque lleguen dos pedidos a la vez.',
+          },
+          {
+            term: 'reactivar en vez de duplicar',
+            detail:
+              'Cancelar pone `cancelledAt`; volver a inscribirse lo vuelve a `null`. Así el historial queda y la restricción única se respeta.',
+          },
+          {
+            term: 'condición de carrera',
+            detail:
+              'Contar los inscriptos y después insertar son dos pasos: dos personas pueden ver el último lugar libre al mismo tiempo. El error `P2002` de Prisma avisa cuando la base frenó un duplicado.',
+          },
+          {
+            term: 'validar en el servidor',
+            detail:
+              'La UI esconde el botón cuando no hay cupo, pero la server action vuelve a contar: el cliente nunca es la fuente de verdad.',
+          },
+          {
+            term: 'redirect con intención',
+            detail:
+              'Si no hay sesión, el botón manda al login con `redirect` y `autoRegister=true`; al volver, la página termina la inscripción sola.',
+          },
+        ],
+        usage: [
+          'Inscripción propia (cuando el evento no tiene `externalRegistrationUrl`): hace falta tener cuenta. Sin sesión, el botón lleva a `/autenticacion/iniciar-sesion?redirect=/eventos/:id&autoRegister=true` (también funciona desde el registro); al volver, `EventDetailClient` llama a `registerEvent` sola y muestra un diálogo de confirmación. Con sesión, primero `checkEventCapacity` informa los lugares que quedan y después `registerEvent` valida todo en el servidor.',
+          '`registerEvent` tiene rate limit (20 cada 10 minutos), rechaza si ya hay una inscripción activa, vuelve a contar las activas contra `capacity`, reactiva una cancelada o crea una nueva, y notifica a los admins. Cancelar (`cancelRegistration`) solo puede hacerlo la propia persona y es un soft delete; quienes gestionan el evento pueden además borrar una inscripción definitivamente.',
+          'Inscripción externa: si el evento tiene `externalRegistrationUrl`, el botón abre esa URL (Luma, por ejemplo) y no se cuenta cupo en el sitio; si está marcado como lleno, el botón pasa a ser `unirmeAListaDeEspera();` y lleva a la lista de espera de esa plataforma. El evento se considera completo si tiene `markedAsFull` o si las inscripciones activas llegaron a `capacity`; la página lo muestra con "Cupo completo" y, si no, con "Quedan N lugares disponibles.".',
+          'Quienes gestionan el evento ven `/eventos/[id]/inscripciones`: totales de activas y canceladas, cuántas son de estudiantes y cuántas de profesionales (según el perfil), y una tabla de TanStack Table con búsqueda, orden por nombre y fecha, y acción para borrar. El panel de admin muestra una barra de inscriptos sobre el cupo para cada evento próximo.',
+          'Lo que todavía no tiene, por si querés contribuir: lista de espera propia, check-in con QR, emails de confirmación o recordatorio y exportar la lista a CSV.',
+        ],
+        examples: [
+          {
+            file: 'prisma/schema.prisma',
+            lang: 'prisma',
+            code: `model EventRegistration {
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String // Usuario registrado (requerido)
+  cancelledAt DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([cancelledAt])
+}`,
+          },
+          {
+            file: 'src/actions/events/register-event.ts',
+            lang: 'ts',
+            caption:
+              'El cupo se vuelve a validar en el servidor justo antes de crear o reactivar la inscripción.',
+            code: `// Si existe una inscripción activa, no permitir
+if (existingRegistration && existingRegistration.cancelledAt === null) {
+  throw new Error('Ya estás registrado en este evento');
+}
+
+// Validar cupo disponible (verificar nuevamente antes de crear/actualizar la inscripción)
+if (event.capacity !== null) {
+  const currentRegistrations = await prisma.eventRegistration.count({
+    where: {
+      eventId: eventId,
+      cancelledAt: null, // Excluir inscripciones canceladas
+    },
+  });
+
+  if (currentRegistrations >= event.capacity) {
+    throw new Error('El cupo del evento está completo. No se pueden aceptar más inscripciones.');
+  }
+}
+
+let registrationId: string;
+try {
+  // Si existe una inscripción cancelada, reactivarla
+  if (existingRegistration && existingRegistration.cancelledAt !== null) {
+    await prisma.eventRegistration.update({
+      where: { id: existingRegistration.id },
+      data: {
+        cancelledAt: null, // Reactivar la inscripción
+      },
+    });
+    // …`,
+          },
+          {
+            file: 'src/components/events/event-detail-client.tsx',
+            lang: 'tsx',
+            caption:
+              'Al volver del login con `autoRegister=true`, la página completa la inscripción una sola vez.',
+            code: `useEffect(() => {
+  if (
+    autoRegister &&
+    isAuthenticated &&
+    !isRegistered &&
+    !hasAutoRegistered &&
+    capacityAvailable &&
+    !externalRegistrationUrl
+  ) {
+    const performAutoRegister = async () => {
+      setHasAutoRegistered(true);
+      setIsAutoRegistering(true);
+
+      try {
+        await registerEvent(eventId, { skipRedirect: true });
+        // …`,
+          },
+          {
+            file: 'src/app/(platform)/eventos/[id]/page.tsx',
+            lang: 'tsx',
+            code: `const isFull = event.markedAsFull || (capacityInfo !== null && !capacityInfo.available);`,
+          },
+        ],
+        sourcePath: 'src/actions/events',
+      },
     ],
   },
 ];
