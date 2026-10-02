@@ -45,6 +45,10 @@ const passwordSchema = z
     path: ['confirmPassword'],
   });
 
+/** "45 segundos" o "3 minutos", para los avisos de espera del rate limit. */
+const formatWait = (seconds: number) =>
+  seconds < 60 ? `${seconds} segundos` : `${Math.ceil(seconds / 60)} minutos`;
+
 type Step = 'email' | 'code' | 'password' | 'success';
 
 const STEPS: { id: Step; label: string }[] = [
@@ -91,21 +95,21 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
     try {
       const result = await requestPasswordReset(values.email);
+      if (!result.success) {
+        toast.error(
+          result.error === 'RATE_LIMIT'
+            ? `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de pedir otro código.`
+            : 'No pudimos enviar el código. Intentá de nuevo en unos minutos.',
+        );
+        return;
+      }
       setEmail(values.email);
       setStep('code');
-      setResendCooldown(result.waitSeconds || 60);
+      setResendCooldown(result.waitSeconds);
       toast.success('Código enviado. Revisá tu correo electrónico.');
-      // Deshabilitar loading después del éxito para permitir interacción en el siguiente paso
-      setIsLoading(false);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '';
-      if (errorMessage.startsWith('RATE_LIMIT:')) {
-        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
-        setResendCooldown(waitSeconds);
-        toast.error(`Tenés que esperar ${waitSeconds} segundos antes de pedir otro código.`);
-      } else {
-        toast.error('Error al enviar el código. Intentá de nuevo.');
-      }
+    } catch {
+      toast.error('Error al enviar el código. Intentá de nuevo.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -113,14 +117,21 @@ export default function ResetPasswordPage() {
   const onCodeSubmit = async (values: z.infer<typeof codeSchema>) => {
     setIsLoading(true);
     try {
-      await verifyResetCode(email, values.code);
+      const result = await verifyResetCode(email, values.code);
+      if (!result.success) {
+        toast.error(
+          result.error === 'RATE_LIMIT'
+            ? `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de probar de nuevo.`
+            : 'Código inválido o vencido. Revisalo o pedí uno nuevo.',
+        );
+        return;
+      }
       setCode(values.code);
       setStep('password');
       toast.success('Código verificado. Ahora podés crear tu nueva contraseña.');
-      // Deshabilitar loading después del éxito para permitir interacción en el siguiente paso
-      setIsLoading(false);
     } catch {
-      toast.error('Código inválido o expirado. Intentá de nuevo.');
+      toast.error('No pudimos verificar el código. Intentá de nuevo.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -128,10 +139,27 @@ export default function ResetPasswordPage() {
   const onPasswordSubmit = async (values: z.infer<typeof passwordSchema>) => {
     setIsLoading(true);
     try {
-      await completePasswordReset(email, code, values.password);
-      setStep('success');
-      toast.success('Contraseña actualizada exitosamente.');
-      // Mantener el botón deshabilitado en el estado de éxito (ya no hay más acciones)
+      const result = await completePasswordReset(email, code, values.password);
+      if (result.success) {
+        setStep('success');
+        toast.success('Contraseña actualizada exitosamente.');
+        // Queda en loading: en el estado de éxito ya no hay más acciones
+        return;
+      }
+      if (result.error === 'WEAK_PASSWORD') {
+        passwordForm.setError('password', { message: result.message });
+      } else if (result.error === 'INVALID_CODE') {
+        // El código venció o se invalidó entre pasos: hay que volver a validarlo
+        setCode('');
+        codeForm.reset({ code: '' });
+        setStep('code');
+        toast.error('El código venció o ya no es válido. Pedí uno nuevo.');
+      } else {
+        toast.error(
+          `Demasiados intentos. Esperá ${formatWait(result.waitSeconds)} antes de probar de nuevo.`,
+        );
+      }
+      setIsLoading(false);
     } catch {
       toast.error('Error al actualizar la contraseña. Intentá de nuevo.');
       setIsLoading(false);
@@ -144,17 +172,18 @@ export default function ResetPasswordPage() {
     setIsResending(true);
     try {
       const result = await requestPasswordReset(email);
-      setResendCooldown(result.waitSeconds || 60);
-      toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '';
-      if (errorMessage.startsWith('RATE_LIMIT:')) {
-        const waitSeconds = parseInt(errorMessage.split(':')[1], 10);
-        setResendCooldown(waitSeconds);
-        toast.error(`Tenés que esperar ${waitSeconds} segundos antes de reenviar.`);
+      if (result.success) {
+        setResendCooldown(result.waitSeconds);
+        codeForm.reset({ code: '' });
+        toast.success('Nuevo código enviado. Revisá tu correo electrónico.');
+      } else if (result.error === 'RATE_LIMIT') {
+        setResendCooldown(result.waitSeconds);
+        toast.error(`Tenés que esperar ${formatWait(result.waitSeconds)} antes de reenviar.`);
       } else {
-        toast.error('Error al reenviar el código.');
+        toast.error('No pudimos reenviar el código. Intentá de nuevo en unos minutos.');
       }
+    } catch {
+      toast.error('Error al reenviar el código.');
     } finally {
       setIsResending(false);
     }

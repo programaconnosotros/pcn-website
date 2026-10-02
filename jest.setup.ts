@@ -42,6 +42,7 @@ jest.mock('next/headers', () => ({
 jest.mock('@/lib/rate-limit', () => ({
   ...jest.requireActual('@/lib/rate-limit'),
   enforceRateLimit: jest.fn(),
+  getRateLimitWait: jest.fn().mockResolvedValue(0),
 }));
 
 // ─── Reset mocks between tests ───────────────────────────────────────────────

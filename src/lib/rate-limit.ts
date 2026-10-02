@@ -62,17 +62,28 @@ export const getClientIp = async () => {
 };
 
 /**
- * Para server actions de formularios: lanza `RATE_LIMIT:<segundos>` si quien envía (usuario
- * logueado, o IP si es anónimo) superó el límite. Los admins pasan siempre.
+ * Segundos que quien envía (usuario logueado, o IP si es anónimo) tiene que esperar para volver a
+ * usar el formulario `name`, registrando el intento si está permitido (0). Los admins no tienen
+ * límite. Sirve para las actions que devuelven el error en vez de lanzarlo: en producción Next
+ * no le pasa al navegador el mensaje de un error lanzado, así que un `RATE_LIMIT:<segundos>`
+ * lanzado llega como un error genérico.
  */
-export const enforceRateLimit = async (name: RateLimitName) => {
+export const getRateLimitWait = async (name: RateLimitName) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
   const session = sessionId ? await findSession(sessionId) : null;
 
-  if (session?.user.role === 'ADMIN') return;
+  if (session?.user.role === 'ADMIN') return 0;
 
   const identity = session ? `user:${session.user.id}` : `ip:${await getClientIp()}`;
-  const waitSeconds = consumeRateLimit(`${name}:${identity}`, RATE_LIMITS[name]);
+  return consumeRateLimit(`${name}:${identity}`, RATE_LIMITS[name]);
+};
+
+/**
+ * Para server actions de formularios: lanza `RATE_LIMIT:<segundos>` si quien envía superó el
+ * límite. Los admins pasan siempre.
+ */
+export const enforceRateLimit = async (name: RateLimitName) => {
+  const waitSeconds = await getRateLimitWait(name);
 
   if (waitSeconds > 0) {
     throw new Error(`RATE_LIMIT:${waitSeconds}`);
