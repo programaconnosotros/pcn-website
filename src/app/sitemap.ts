@@ -31,6 +31,7 @@ const STATIC_ROUTES = [
   '/software-recomendado',
   '/preguntas-frecuentes',
   '/historia',
+  '/miembros',
   '/galeria',
   '/partners',
   '/changelog',

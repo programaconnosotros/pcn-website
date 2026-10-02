@@ -183,6 +183,13 @@ const SECTION_CARDS = {
       'Cómo nació programaConNosotros: de un grupo de estudiantes apasionados a una comunidad de ingeniería de software sin fronteras.',
     meta: ['desde 2020', MEMBERS],
   },
+  miembros: {
+    command: 'ls miembros/',
+    title: 'Miembros',
+    description:
+      'Conocé a las personas de programaConNosotros: co-founders, ambassadors, speakers y quienes organizan eventos.',
+    meta: [MEMBERS, TALKS, EVENTS],
+  },
   galeria: {
     command: 'open galeria/',
     title: 'Galería',

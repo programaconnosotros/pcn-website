@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-01',
+    area: 'miembros',
+    title: 'Nueva app Miembros para conocer a la comunidad',
+    description:
+      'Una página para conocer a las personas de PCN: co-founders, ambassadors, quienes dieron charlas, organizaron eventos o construyeron proyectos, con buscador.',
+    authors: ['agustin-sanc'],
+    href: '/miembros',
+  },
+  {
+    date: '2026-10-01',
     area: 'partners',
     title: 'Partners separados en empresas y organizaciones',
     description: 'La página de partners ahora separa a las empresas de las organizaciones.',

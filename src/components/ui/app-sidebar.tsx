@@ -9,6 +9,7 @@ import {
   BookOpen,
   CalendarDays,
   Code2,
+  Contact,
   Eye,
   GraduationCap,
   Handshake,
@@ -91,6 +92,7 @@ export const socialNetworks = [
 
 const comunidadItems: NavItem[] = [
   { title: 'Historia', url: '/historia', icon: ScrollText },
+  { title: 'Miembros', url: '/miembros', icon: Contact },
   { title: 'Galería', url: '/galeria', icon: Image },
   { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },
