@@ -2,11 +2,11 @@
 
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
 import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
 import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
+import { hashPassword } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 
@@ -42,7 +42,7 @@ export const signUp = async (
       return { success: false, error: 'EMAIL_ALREADY_EXISTS' };
     }
 
-    const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
+    const hashedPassword = await hashPassword(cleanedData.password);
 
     // Crear usuario con emailVerified = false (por defecto)
     const user = await prisma.user.create({

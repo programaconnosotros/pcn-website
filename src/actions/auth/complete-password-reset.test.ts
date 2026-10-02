@@ -83,7 +83,7 @@ describe('completePasswordReset', () => {
     const result = await completePasswordReset('test@example.com', '654321', 'NewP@ss1');
 
     expect(result).toEqual({ success: true });
-    expect(bcryptMock.hash).toHaveBeenCalledWith('NewP@ss1', 10);
+    expect(bcryptMock.hash).toHaveBeenCalledWith('NewP@ss1', 12);
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
   });
 });

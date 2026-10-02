@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { hashPassword, needsRehash } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
 import { safeRedirectPath } from '@/lib/safe-redirect';
@@ -42,6 +43,19 @@ export const signIn = async (
 
     if (!isPasswordValid) {
       return { success: false, error: 'INVALID_CREDENTIALS' };
+    }
+
+    // Los hashes con un costo viejo se regeneran ahora, que tenemos la contraseña en claro.
+    // Si falla, el login sigue: se reintenta la próxima vez.
+    if (needsRehash(user.password)) {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password: await hashPassword(password) },
+        });
+      } catch (error) {
+        console.error('Failed to rehash password:', error instanceof Error ? error.message : error);
+      }
     }
 
     if (!user.emailVerified) {

@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { newPasswordSchema } from '@/lib/validations/auth-schemas';
 import { findValidPasswordResetToken } from '@/lib/verification-codes';
@@ -32,7 +32,7 @@ export const completePasswordReset = async (email: string, code: string, newPass
   }
 
   // Hash de la nueva contraseña
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const hashedPassword = await hashPassword(newPassword);
 
   // Actualizar contraseña y marcar token como usado en una transacción
   await prisma.$transaction([
