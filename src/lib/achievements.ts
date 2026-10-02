@@ -107,6 +107,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     href: '/eventos',
     progress: count('eventsOrganized', 1),
   },
+  {
+    id: 'event-organizer-10',
+    name: 'Productor',
+    description: 'Organizó 10 eventos de la comunidad o más.',
+    icon: 'rocket',
+    tone: 'gold',
+    goal: 'organizar 10 eventos',
+    howTo: 'Seguí organizando: cada meetup, cowork o jornada que hagas suma.',
+    href: '/eventos',
+    progress: count('eventsOrganized', 10),
+  },
 ];
 
 export const isAchieved = (achievement: Achievement, metrics: AchievementMetrics) => {

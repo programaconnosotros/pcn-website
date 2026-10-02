@@ -33,6 +33,14 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, eventsOrganized: 1 })).toEqual(['event-organizer']);
   });
 
+  it('earns productor after organizing 10 events', () => {
+    expect(ids({ ...EMPTY_METRICS, eventsOrganized: 9 })).toEqual(['event-organizer']);
+    expect(ids({ ...EMPTY_METRICS, eventsOrganized: 10 })).toEqual([
+      'event-organizer',
+      'event-organizer-10',
+    ]);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
