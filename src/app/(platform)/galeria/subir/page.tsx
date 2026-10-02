@@ -14,7 +14,7 @@ export default async function UploadPhotosPage(props: {
 
   const events = await prisma.event.findMany({
     where: { deletedAt: null },
-    select: { id: true, name: true, date: true },
+    select: { id: true, name: true, date: true, endDate: true },
     orderBy: { date: 'desc' },
   });
   const defaultEventId = events.some((event) => event.id === evento) ? evento! : null;

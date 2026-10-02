@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { toDateTimeInput } from './date-input';
+import { findEventForDate } from './event-for-date';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
 import {
   VIDEO_TYPES,
@@ -43,6 +44,8 @@ type Item = {
   takenAt: string;
   description: string;
   eventId: string | null;
+  // The event was picked because the file's date falls on it.
+  eventFromDate: boolean;
   status: Status;
   // Why the file can't be uploaded at all (HEIC, a video the browser can't read, too big…).
   unsupported?: string;
@@ -57,16 +60,20 @@ const MAX_VIDEO_MB = MAX_VIDEO_BYTES / 1024 / 1024;
 
 const toMb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1);
 
-// Checks a picked file and reads what the form needs from it.
-async function prepare(file: File, eventId: string | null): Promise<Item> {
+// Checks a picked file and reads what the form needs from it. Files taken during an event
+// start with that event; the rest, with the one chosen for every file.
+async function prepare(file: File, eventId: string | null, events: EventOption[]): Promise<Item> {
+  const takenAt = await readTakenAt(file);
+  const eventOnDate = findEventForDate(events, takenAt);
   const base = {
     key: crypto.randomUUID(),
     file,
     preview: '',
     video: null,
-    takenAt: toDateTimeInput(await readTakenAt(file)),
+    takenAt: toDateTimeInput(takenAt),
     description: '',
-    eventId,
+    eventId: eventOnDate?.id ?? eventId,
+    eventFromDate: !!eventOnDate,
     status: 'pending' as Status,
   };
   if (isHeic(file)) return { ...base, unsupported: 'HEIC no está soportado: exportala como JPG.' };
@@ -149,15 +156,29 @@ export function PhotoUploader({
     const media = [...files].filter(
       (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
-    const added = await Promise.all(media.map((file) => prepare(file, eventId)));
+    const added = await Promise.all(media.map((file) => prepare(file, eventId, events)));
     setItems((current) => [...current, ...added]);
   };
 
   const setEventForAll = (next: string | null) => {
     setEventId(next);
     setItems((current) =>
-      current.map((item) => (item.status === 'done' ? item : { ...item, eventId: next })),
+      current.map((item) =>
+        item.status === 'done' ? item : { ...item, eventId: next, eventFromDate: false },
+      ),
     );
+  };
+
+  // A new date moves the file to the event on that date, unless its event was picked by hand.
+  const changeTakenAt = (item: Item, takenAt: string) => {
+    const eventOnDate = item.eventFromDate ? findEventForDate(events, new Date(takenAt)) : null;
+    update(item.key, {
+      takenAt,
+      ...(item.eventFromDate && {
+        eventId: eventOnDate?.id ?? eventId,
+        eventFromDate: !!eventOnDate,
+      }),
+    });
   };
 
   const remove = (item: Item) => {
@@ -373,7 +394,7 @@ export function PhotoUploader({
                         <Input
                           type="datetime-local"
                           value={item.takenAt}
-                          onChange={(event) => update(item.key, { takenAt: event.target.value })}
+                          onChange={(event) => changeTakenAt(item, event.target.value)}
                           disabled={item.status === 'compressing' || item.status === 'uploading'}
                           aria-label="Fecha"
                           className="font-mono text-xs"
@@ -381,11 +402,18 @@ export function PhotoUploader({
                         <PhotoEventSelect
                           events={events}
                           value={item.eventId}
-                          onChange={(next) => update(item.key, { eventId: next })}
+                          onChange={(next) =>
+                            update(item.key, { eventId: next, eventFromDate: false })
+                          }
                           aria-label="Evento"
                           disabled={item.status === 'compressing' || item.status === 'uploading'}
                         />
                       </div>
+                      {item.eventFromDate && item.eventId && (
+                        <p className="-mt-1 font-mono text-[10px] text-pcnGreen-700">
+                          evento elegido por la fecha del archivo
+                        </p>
+                      )}
                       <Textarea
                         value={item.description}
                         onChange={(event) => update(item.key, { description: event.target.value })}

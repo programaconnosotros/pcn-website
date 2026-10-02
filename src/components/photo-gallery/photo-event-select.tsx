@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export type EventOption = { id: string; name: string; date: Date };
+export type EventOption = { id: string; name: string; date: Date; endDate?: Date | null };
 
 const NONE = 'none';
 
