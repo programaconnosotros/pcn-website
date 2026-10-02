@@ -29,7 +29,6 @@ function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email') || '';
-  const passwordParam = searchParams.get('password') || '';
   const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +37,7 @@ function SignInContent() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: emailParam,
-      password: passwordParam,
+      password: '',
     },
   });
 
