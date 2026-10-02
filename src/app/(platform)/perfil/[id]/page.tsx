@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
-import { Github, Instagram, Linkedin, Pencil } from 'lucide-react';
+import { Github, Instagram, Linkedin, Pencil, Twitch, Youtube } from 'lucide-react';
 import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
   ProfileTabPanel,
@@ -87,6 +87,13 @@ const XLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
+// Same for Kick: its "K" mark in the same box.
+const KickLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M3 3h6v4.5h1.5V6H12V4.5h1.5V3H21v6h-1.5v1.5H18V12h-1.5v1.5H18V15h1.5v1.5H21V21h-7.5v-1.5H12V18h-1.5v-1.5H9V21H3V3Z" />
+  </svg>
+);
+
 async function getUser(id: string) {
   try {
     const user = await prisma.user.findUnique({
@@ -140,6 +147,9 @@ async function getUser(id: string) {
       linkedinUrl: user.linkedinUrl,
       gitHubUrl: user.gitHubUrl,
       instagramUrl: user.instagramUrl,
+      youtubeUrl: user.youtubeUrl,
+      twitchUrl: user.twitchUrl,
+      kickUrl: user.kickUrl,
       languages: user.languages,
     };
   } catch (error) {
@@ -210,6 +220,24 @@ export default async function ProfilePage(props: ProfilePageProps) {
       href: user.instagramUrl,
       icon: Instagram,
       ariaLabel: `Perfil de Instagram de ${user.name}`,
+    },
+    {
+      label: 'youtube',
+      href: user.youtubeUrl,
+      icon: Youtube,
+      ariaLabel: `Canal de YouTube de ${user.name}`,
+    },
+    {
+      label: 'twitch',
+      href: user.twitchUrl,
+      icon: Twitch,
+      ariaLabel: `Canal de Twitch de ${user.name}`,
+    },
+    {
+      label: 'kick',
+      href: user.kickUrl,
+      icon: KickLogo,
+      ariaLabel: `Canal de Kick de ${user.name}`,
     },
   ].filter((link): link is typeof link & { href: string } => !!link.href);
 

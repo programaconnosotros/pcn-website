@@ -67,6 +67,9 @@ const LINKS = [
   { name: 'linkedinUrl', prefix: 'linkedin', placeholder: 'https://linkedin.com/in/tu-usuario' },
   { name: 'xAccountUrl', prefix: 'x', placeholder: 'https://x.com/tu-usuario' },
   { name: 'instagramUrl', prefix: 'instagram', placeholder: 'https://instagram.com/tu-usuario' },
+  { name: 'youtubeUrl', prefix: 'youtube', placeholder: 'https://youtube.com/@tu-canal' },
+  { name: 'twitchUrl', prefix: 'twitch', placeholder: 'https://twitch.tv/tu-canal' },
+  { name: 'kickUrl', prefix: 'kick', placeholder: 'https://kick.com/tu-canal' },
 ] as const;
 
 type FormErrorProps = {
@@ -109,6 +112,7 @@ const Section = ({
   description,
   done,
   total,
+  optional,
   children,
 }: {
   id: string;
@@ -117,6 +121,8 @@ const Section = ({
   description?: string;
   done: number;
   total: number;
+  /** Optional sections show their count but don't add to the completion bar. */
+  optional?: boolean;
   children: ReactNode;
 }) => (
   <section id={id} className="scroll-mt-4">
@@ -137,6 +143,7 @@ const Section = ({
           done === total ? 'text-glow text-pcnGreen' : 'text-muted-foreground',
         )}
       >
+        {optional && <span className="text-muted-foreground/60">opcional · </span>}
         {done}/{total}
       </span>
     </header>
@@ -172,6 +179,9 @@ export const ProfileForm = ({
       linkedinUrl: user.linkedinUrl ?? '',
       gitHubUrl: user.gitHubUrl ?? '',
       instagramUrl: user.instagramUrl ?? '',
+      youtubeUrl: user.youtubeUrl ?? '',
+      twitchUrl: user.twitchUrl ?? '',
+      kickUrl: user.kickUrl ?? '',
       slogan: user.slogan ?? '',
       positions: initialPositions(user),
       career: user.career ?? '',
@@ -267,29 +277,42 @@ export const ProfileForm = ({
   const filledPositions = values.positions.filter((p) => p.jobTitle.trim());
   const filledLinks = LINKS.filter((link) => values[link.name]);
 
-  // Qué tiene cargado cada sección, para los contadores y la barra de completitud.
+  // Qué tiene cargado cada sección, para los contadores y la barra de completitud. Las secciones
+  // opcionales (trabajo, estudios y enlaces se dejan vacíos si no aplican) no suman al porcentaje.
   const sections = [
     {
       id: 'identidad',
       title: 'identidad',
       checks: [!!values.image, !!values.name, !!values.countryOfOrigin, !!values.slogan],
     },
-    { id: 'trabajo', title: 'trabajo', checks: [filledPositions.length > 0] },
-    { id: 'estudios', title: 'estudios', checks: [!!values.career, !!values.studyPlace] },
-    { id: 'enlaces', title: 'enlaces', checks: LINKS.map((link) => !!values[link.name]) },
+    { id: 'trabajo', title: 'trabajo', optional: true, checks: [filledPositions.length > 0] },
+    {
+      id: 'estudios',
+      title: 'estudios',
+      optional: true,
+      checks: [!!values.career, !!values.studyPlace],
+    },
+    {
+      id: 'enlaces',
+      title: 'enlaces',
+      optional: true,
+      checks: LINKS.map((link) => !!values[link.name]),
+    },
     { id: 'stack', title: 'stack', checks: [userLanguages.length > 0] },
   ].map((section) => ({
     ...section,
+    optional: !!section.optional,
     done: section.checks.filter(Boolean).length,
     total: section.checks.length,
   }));
-  const done = sections.reduce((sum, s) => sum + s.done, 0);
-  const total = sections.reduce((sum, s) => sum + s.total, 0);
+  const counted = sections.filter((s) => !s.optional);
+  const done = counted.reduce((sum, s) => sum + s.done, 0);
+  const total = counted.reduce((sum, s) => sum + s.total, 0);
   const percent = Math.round((done / total) * 100);
   const filledBar = Math.round((percent / 100) * BAR_WIDTH);
   const progress = (id: string) => {
-    const { done, total } = sections.find((s) => s.id === id)!;
-    return { done, total };
+    const { done, total, optional } = sections.find((s) => s.id === id)!;
+    return { done, total, optional };
   };
 
   return (
@@ -395,7 +418,11 @@ export const ProfileForm = ({
                     s.done === s.total ? 'text-pcnGreen' : 'text-muted-foreground/60',
                   )}
                 >
-                  {s.done === s.total ? '✓' : `${s.done}/${s.total}`}
+                  {s.done === s.total
+                    ? '✓'
+                    : s.optional && s.done === 0
+                      ? 'opcional'
+                      : `${s.done}/${s.total}`}
                 </span>
               </a>
             ))}

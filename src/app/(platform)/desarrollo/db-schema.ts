@@ -135,6 +135,21 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'youtubeUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'twitchUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'kickUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
         name: 'slogan',
         type: 'String',
         optional: true,
