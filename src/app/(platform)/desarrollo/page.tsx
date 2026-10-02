@@ -328,7 +328,8 @@ const DesarrolloPage = () => (
             <Section title={`Notas teóricas del stack (${techNoteCount})`}>
               <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
                 Una guía para aprender con este proyecto: qué es cada tecnología, los conceptos que
-                tenés que conocer y cómo la usamos acá, con fragmentos reales del código. Tocá el
+                tenés que conocer y cómo la usamos acá, con fragmentos reales del código. Al final,
+                cómo funcionan por dentro módulos del sitio como la galería y los eventos. Tocá el
                 nombre del archivo de cada ejemplo para leerlo completo en GitHub.
               </p>
               <TechNotes groups={techNoteGroups} />

@@ -712,6 +712,278 @@ const mutation = useMutation({
         ],
         docsUrl: 'https://tanstack.com/query/latest/docs/framework/react/overview',
       },
+      {
+        id: 'tanstack-table',
+        name: 'TanStack Table',
+        tagline: 'tablas con búsqueda, orden y paginación sin markup impuesto',
+        what: 'TanStack Table es una librería "headless" para tablas: no dibuja nada, solo calcula. Le pasás los datos y la definición de columnas y te devuelve filas ya filtradas, ordenadas y paginadas; el HTML y los estilos los ponés vos. Es la misma idea que Radix, pero para tablas.',
+        concepts: [
+          {
+            term: 'ColumnDef',
+            detail:
+              'Describe cada columna: de qué campo sale (`accessorKey`), cómo se dibuja su encabezado y su celda, y si se puede ordenar.',
+          },
+          {
+            term: 'row models',
+            detail:
+              'Cada capacidad es un "modelo de filas" que activás a pedido: `getSortedRowModel`, `getFilteredRowModel`, `getPaginationRowModel`. Lo que no usás no pesa.',
+          },
+          {
+            term: 'estado controlado',
+            detail:
+              'El orden y el filtro pueden vivir en tu `useState`, así los conectás con otros componentes como un buscador.',
+          },
+          {
+            term: 'flexRender',
+            detail: 'Dibuja lo que definiste en la columna, sea un string o un componente.',
+          },
+        ],
+        usage: [
+          'La usamos en la lista de inscripciones de cada evento y en la tabla de `/usuarios`. El buscador global es el mismo `SearchBar` estilo `grep` del resto del sitio, conectado al `globalFilter` de la tabla; las filas canceladas se ven atenuadas.',
+        ],
+        examples: [
+          {
+            file: 'src/components/events/registrations-data-table.tsx',
+            lang: 'tsx',
+            code: `const [sorting, setSorting] = useState<SortingState>([]);
+const [globalFilter, setGlobalFilter] = useState('');
+
+const table = useReactTable({
+  data,
+  columns: registrationColumns,
+  state: { sorting, globalFilter },
+  onSortingChange: setSorting,
+  onGlobalFilterChange: setGlobalFilter,
+  getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  initialState: { pagination: { pageSize: 100 } },
+});`,
+          },
+          {
+            file: 'src/components/events/registrations-columns.tsx',
+            lang: 'tsx',
+            code: `export const registrationColumns: ColumnDef<EventRegistrationRow>[] = [
+  {
+    accessorKey: 'name',
+    meta: { className: 'min-w-[260px] whitespace-nowrap' },
+    header: ({ column }) => (
+      <SortableHeader
+        label="Nombre"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      />
+    ),
+    // …`,
+          },
+        ],
+        docsUrl: 'https://tanstack.com/table/latest/docs/introduction',
+      },
+      {
+        id: 'fechas',
+        name: 'Fechas: Intl y date-fns',
+        tagline: 'la hora del evento, en la zona horaria de quien la lee',
+        what: 'Un `Date` de JavaScript es un instante (milisegundos desde 1970 en UTC); la zona horaria aparece recién al mostrarlo. `Intl.DateTimeFormat`, que viene con el navegador y con Node, formatea un instante en un idioma y una zona dados. date-fns es una librería de funciones chicas e inmutables para formatear y calcular con fechas, con traducciones como `es`.',
+        concepts: [
+          {
+            term: 'UTC en la base',
+            detail:
+              'Postgres guarda el instante; mostrarlo en hora argentina, española o mexicana es problema de la UI.',
+          },
+          {
+            term: 'hydration mismatch',
+            detail:
+              'Si el servidor formatea en su zona y el navegador en la del visitante, el texto no coincide y React avisa. `suppressHydrationWarning` acepta esa diferencia puntual.',
+          },
+          {
+            term: '<time dateTime>',
+            detail:
+              'Marca la fecha en formato ISO para lectores de pantalla y buscadores, más allá de cómo se vea.',
+          },
+          {
+            term: 'tree-shaking',
+            detail:
+              'Con date-fns importás solo las funciones que usás (`format`, `formatDistanceToNow`), no toda la librería.',
+          },
+        ],
+        usage: [
+          'Las fechas de los eventos se muestran con `LocalDate`, `LocalTime` y `LocalDateTime`: en el servidor se formatean en la hora de Buenos Aires y en el navegador en la zona de quien visita, en formato 24 h. date-fns se usa para textos más armados, como "hace 3 días" en los anuncios o el horario del flyer.',
+        ],
+        examples: [
+          {
+            file: 'src/components/ui/local-date-time.tsx',
+            lang: 'tsx',
+            code: `const CANONICAL_TZ = 'America/Argentina/Buenos_Aires';
+
+function tz(): string | undefined {
+  return typeof window === 'undefined' ? CANONICAL_TZ : undefined;
+}
+
+export function LocalTime({ date }: { date: Date | string }) {
+  const d = new Date(date);
+  const formatted = new Intl.DateTimeFormat('es-AR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: tz(),
+  }).format(d);
+  return (
+    <time dateTime={d.toISOString()} suppressHydrationWarning>
+      {formatted}
+    </time>
+  );
+}`,
+          },
+          {
+            file: 'src/components/announcements/announcement-card.tsx',
+            lang: 'tsx',
+            code: `{formatDistanceToNow(new Date(announcement.createdAt), {
+  addSuffix: true,
+  locale: es,
+})}`,
+          },
+        ],
+        docsUrl:
+          'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat',
+      },
+      {
+        id: 'motion',
+        name: 'Motion + Embla Carousel',
+        tagline: 'animaciones declarativas y carruseles táctiles',
+        what: 'Motion (antes Framer Motion) anima componentes de React de forma declarativa: le decís el estado inicial, el final y el de salida, y la librería interpola. Su `AnimatePresence` resuelve algo que React solo no puede: animar un componente mientras se desmonta. Embla es un motor de carruseles liviano, con arrastre táctil y snap, sobre el que shadcn/ui arma su `Carousel`.',
+        concepts: [
+          {
+            term: 'initial / animate / exit',
+            detail: 'Los tres estados de un `motion.div`: cómo aparece, cómo queda y cómo se va.',
+          },
+          {
+            term: 'AnimatePresence',
+            detail: 'Mantiene montado al hijo que sale hasta que termina su animación de `exit`.',
+          },
+          {
+            term: 'prefers-reduced-motion',
+            detail:
+              'Preferencia del sistema operativo para reducir animaciones; las respetamos en CSS y en los efectos de scroll.',
+          },
+          {
+            term: 'scroll snap',
+            detail:
+              'El carrusel se acomoda siempre en un slide entero; Embla expone una API (`selectedScrollSnap`) para saber cuál se ve.',
+          },
+        ],
+        usage: [
+          'Motion se importa desde `motion/react` y anima detalles de la interfaz: el botón de volver arriba, el indicador de scroll, las ventanas y el dock de PCN OS, los contadores que suben (`NumberTicker`) y las apariciones al scrollear en la home (`reveal.tsx`). Embla mueve el carrusel de flyers de cada evento y los de charlas y lightning talks.',
+        ],
+        examples: [
+          {
+            file: 'src/components/ui/scroll-hud-button.tsx',
+            lang: 'tsx',
+            code: `<motion.div
+  initial={{ opacity: 0, scale: 0.85, filter: 'blur(4px)' }}
+  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+  exit={{ opacity: 0, scale: 0.85, filter: 'blur(4px)' }}
+  transition={{ duration: 0.18, ease: 'easeOut' }}
+  // …
+>`,
+          },
+          {
+            file: 'src/components/ui/scroll-to-top.tsx',
+            lang: 'tsx',
+            caption: 'Sin `AnimatePresence`, el botón desaparecería de golpe al volver arriba.',
+            code: `<AnimatePresence>
+  {isVisible && (
+    <ScrollHudButton
+      onClick={scrollToTop}
+      label="Volver arriba"
+      code={String(Math.round(progress * 100)).padStart(2, '0')}
+      progress={progress}
+      icon={<ChevronsUp className="h-4 w-4" strokeWidth={2.25} />}
+    />
+  )}
+</AnimatePresence>`,
+          },
+          {
+            file: 'src/components/events/event-flyer-carousel.tsx',
+            lang: 'tsx',
+            code: `const [api, setApi] = React.useState<CarouselApi>();
+const [current, setCurrent] = React.useState(0);
+
+React.useEffect(() => {
+  if (!api) return;
+  setCurrent(api.selectedScrollSnap());
+  const handleSelect = () => setCurrent(api.selectedScrollSnap());
+  api.on('select', handleSelect);
+  return () => {
+    api.off('select', handleSelect);
+  };
+}, [api]);`,
+          },
+        ],
+        docsUrl: 'https://motion.dev/docs/react',
+      },
+      {
+        id: 'layout-raiz',
+        name: 'next/font · next-themes · Sonner',
+        tagline: 'fuentes, tema y notificaciones montados una sola vez',
+        what: '`next/font` descarga las fuentes en el build y las sirve desde tu propio dominio, sin pedidos a terceros ni saltos de layout cuando cargan. next-themes maneja el tema (claro/oscuro) poniendo una clase en `<html>` antes de que se pinte la página. Sonner es una librería de toasts: llamás a `toast.success()` desde cualquier lado y el `<Toaster>` montado en el layout los muestra.',
+        concepts: [
+          {
+            term: 'variables CSS de fuente',
+            detail:
+              '`GeistSans.variable` expone la fuente como variable CSS, que Tailwind usa en `font-sans` y `font-mono`.',
+          },
+          {
+            term: 'forcedTheme',
+            detail:
+              'Fija un tema sin importar la preferencia del sistema: el sitio es siempre oscuro, como una terminal.',
+          },
+          {
+            term: 'toasts imperativos',
+            detail:
+              'No hace falta estado ni contexto propio: `toast()` funciona desde un handler, después de una server action.',
+          },
+        ],
+        usage: [
+          'El layout raíz carga Geist Sans y Geist Mono, fuerza el tema oscuro y monta el `Toaster`, al que le dimos estética de PCN OS: panel con scanlines, borde iluminado del color del toast y un prompt `>` antes del título. Los formularios y acciones avisan el resultado con `toast.success` o `toast.error`.',
+        ],
+        examples: [
+          {
+            file: 'src/app/layout.tsx',
+            lang: 'tsx',
+            code: `<html
+  lang="es"
+  className={\`\${GeistSans.variable} \${GeistMono.variable}\`}
+  suppressHydrationWarning
+>
+  {/* … */}
+  <body className={GeistSans.className}>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      forcedTheme="dark"
+      disableTransitionOnChange
+    >
+      <ReactQueryProvider>{children}</ReactQueryProvider>
+      <Toaster closeButton position="top-right" />
+      {/* … */}
+    </ThemeProvider>
+  </body>
+</html>`,
+          },
+          {
+            file: 'src/app/(platform)/notificaciones/notifications-client.tsx',
+            lang: 'tsx',
+            code: `try {
+  await markNotificationAsRead(notificationId);
+  toast.success('Notificación marcada como leída');
+  router.refresh();
+} catch (error: any) {
+  toast.error(error.message || 'Error al marcar la notificación como leída');
+}`,
+          },
+        ],
+        docsUrl: 'https://nextjs.org/docs/app/getting-started/fonts',
+      },
     ],
   },
   {
@@ -1000,9 +1272,9 @@ return { uploadUrl, fileUrl: publicFileUrl(uniqueFileName), key: uniqueFileName 
       },
       {
         id: 'email',
-        name: 'Nodemailer + MailHog',
+        name: 'Nodemailer + React Email + MailHog',
         tagline: 'emails reales en prod, atrapados en local',
-        what: 'Nodemailer es la librería estándar de Node para mandar emails por SMTP. MailHog es un servidor SMTP falso para desarrollo: acepta todos los emails y los muestra en una interfaz web, así podés probar flujos de verificación sin mandarle nada a nadie.',
+        what: 'Nodemailer es la librería estándar de Node para mandar emails por SMTP. React Email permite escribir el contenido del email como un componente de React y convertirlo a HTML con `render`. MailHog es un servidor SMTP falso para desarrollo: acepta todos los emails y los muestra en una interfaz web, así podés probar flujos de verificación sin mandarle nada a nadie.',
         concepts: [
           {
             term: 'SMTP',
@@ -1015,7 +1287,7 @@ return { uploadUrl, fileUrl: publicFileUrl(uniqueFileName), key: uniqueFileName 
           },
         ],
         usage: [
-          'Los códigos de verificación de cuenta y de recuperación de contraseña se mandan por email. Con Docker Compose, MailHog queda en http://localhost:18025 para ver lo que el sitio "envió".',
+          'Los códigos de verificación de cuenta y de recuperación de contraseña se mandan por email. Las plantillas son componentes en `src/components/auth` con estilos inline (los clientes de email ignoran casi todo el CSS externo) y `@react-email/render` las convierte a HTML. Con Docker Compose, MailHog queda en http://localhost:18025 para ver lo que el sitio "envió".',
         ],
         examples: [
           {
@@ -1035,6 +1307,17 @@ return nodemailer.createTransport({
     user: smtpUser,
     pass: smtpPass,
   },
+});`,
+          },
+          {
+            file: 'src/actions/auth/send-verification-code.ts',
+            lang: 'ts',
+            code: `// Enviar email con el código
+const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
+await sendEmail({
+  to: user.email,
+  subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
+  html: emailHtml,
 });`,
           },
         ],
