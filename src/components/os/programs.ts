@@ -22,6 +22,7 @@ import {
   Layers,
   Lightbulb,
   Megaphone,
+  MonitorSmartphone,
   MessageCircle,
   MicVocal,
   Music,
@@ -252,6 +253,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-lime-300 to-green-600',
     group: 'Comunidad',
     pinned: true,
+  },
+  {
+    id: 'setups',
+    name: 'Setups',
+    url: '/setups',
+    icon: MonitorSmartphone,
+    color: 'from-sky-300 to-indigo-600',
+    group: 'Comunidad',
   },
   {
     id: 'partners',

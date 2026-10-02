@@ -20,6 +20,8 @@ const DOMAINS = {
     'ContentMark',
     'IdentityLink',
     'Notification',
+    'Setup',
+    'SetupLike',
   ],
   consejos: ['Advise', 'Comment', 'Like'],
   eventos: ['Event', 'EventOrganizer', 'EventRegistration', 'Sponsor', 'Announcement'],

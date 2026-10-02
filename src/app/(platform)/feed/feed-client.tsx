@@ -14,6 +14,7 @@ const KINDS: Record<FeedKind, { label: string; tag: string; className: string }>
   evento: { label: 'eventos', tag: 'evento', className: 'border-rose-400/50 text-rose-300' },
   charla: { label: 'charlas', tag: 'charla', className: 'border-fuchsia-400/50 text-fuchsia-300' },
   fotos: { label: 'fotos', tag: 'galería', className: 'border-lime-400/50 text-lime-300' },
+  setup: { label: 'setups', tag: 'setup', className: 'border-amber-400/50 text-amber-300' },
   proyecto: { label: 'proyectos', tag: 'proyecto', className: 'border-pink-400/50 text-pink-300' },
   conversacion: {
     label: 'grupo',

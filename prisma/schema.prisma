@@ -72,6 +72,8 @@ model User {
   galleryTagsAdded     GalleryItemTag[]      @relation("GalleryTagger")
   articles             ArticleAuthor[]
   articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
+  setups               Setup[]
+  setupLikes           SetupLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -258,6 +260,45 @@ model GalleryItemTag {
   createdAt DateTime @default(now())
 
   @@unique([itemId, userId])
+  @@index([userId])
+}
+
+// Foto del lugar de trabajo de un miembro (escritorio, equipo, periféricos). La sube la propia
+// persona: el original va directo a S3 y se guarda optimizado en webp, grande y en miniatura,
+// servido por CloudFront sin firmar (es contenido público).
+model Setup {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String
+  thumbUrl    String
+  width       Int
+  height      Int
+  // Objetos de S3 de la foto, para borrarlos junto con el setup o al reemplazar la foto.
+  storageKeys String[] @default([])
+  authorId    String
+
+  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes  SetupLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model SetupLike {
+  id      String @id @default(cuid())
+  userId  String
+  setupId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  setup Setup @relation(fields: [setupId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([setupId, userId])
   @@index([userId])
 }
 

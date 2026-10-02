@@ -6,7 +6,14 @@ import { visibleGalleryItem } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
 import prisma from '@/lib/prisma';
 
-export type FeedKind = 'evento' | 'charla' | 'fotos' | 'proyecto' | 'conversacion' | 'changelog';
+export type FeedKind =
+  | 'evento'
+  | 'charla'
+  | 'fotos'
+  | 'setup'
+  | 'proyecto'
+  | 'conversacion'
+  | 'changelog';
 
 export interface FeedItem {
   id: string;
@@ -149,6 +156,32 @@ const projectItems = async (): Promise<FeedItem[]> => {
   }));
 };
 
+const setupItems = async (): Promise<FeedItem[]> => {
+  const setups = await prisma.setup.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: PER_SOURCE,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      thumbUrl: true,
+      createdAt: true,
+      author: { select: { name: true } },
+    },
+  });
+  return setups.map((setup) => ({
+    id: `setup-${setup.id}`,
+    kind: 'setup',
+    day: toFeedDay(setup.createdAt),
+    sortKey: setup.createdAt.toISOString(),
+    title: setup.title,
+    meta: setup.author.name,
+    description: setup.description,
+    href: `/setups/${setup.id}`,
+    thumbs: [{ id: setup.id, src: setup.thumbUrl }],
+  }));
+};
+
 const conversationItems = (): FeedItem[] =>
   [...conversations]
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -185,6 +218,7 @@ export const fetchFeed = async (): Promise<FeedItem[]> => {
     eventItems(),
     talkItems(),
     galleryItems(),
+    setupItems(),
     projectItems(),
     conversationItems(),
     changelogItems(),

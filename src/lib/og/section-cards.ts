@@ -135,6 +135,13 @@ const SECTION_CARDS = {
       'Simulá entrevistas de frontend, backend, AI engineering, agentic engineering, quality engineering, product engineering y project management para junior, semi-senior y senior.',
     meta: [`${totalQuestions} preguntas`, 'active recall'],
   },
+  setups: {
+    command: 'neofetch',
+    title: 'Setups',
+    description:
+      'Los lugares de trabajo de la comunidad: escritorios, equipos y periféricos con los que programan los miembros.',
+    meta: ['de la comunidad'],
+  },
   consejos: {
     command: 'fortune',
     title: 'Consejos',
