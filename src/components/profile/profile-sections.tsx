@@ -6,6 +6,7 @@ import { conversationHref } from '@/components/conversations/conversation-utils'
 import type { ContributorStat } from '@/lib/github-stats';
 import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
+import { TabBrackets, tabsListClassName, tabsTriggerClassName } from '@/components/ui/tab-styles';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
 
 export const PROFILE_TABS = [
@@ -25,7 +26,8 @@ export type ProfileTab = (typeof PROFILE_TABS)[number]['id'];
 export const isProfileTab = (value: unknown): value is ProfileTab =>
   PROFILE_TABS.some((tab) => tab.id === value);
 
-// `[resumen] proyectos(3) consejos(12) …` — a row of links, so each tab has its own URL.
+// The HUD tab strip from `ui/tabs`, but as a row of links so each tab has its own URL.
+// The bar scrolls sideways on narrow screens; the 1px padding keeps its corner ticks unclipped.
 export const ProfileTabs = ({
   userId,
   active,
@@ -35,34 +37,29 @@ export const ProfileTabs = ({
   active: ProfileTab;
   counts: Partial<Record<ProfileTab, number>>;
 }) => (
-  <nav
-    aria-label="Secciones del perfil"
-    className="-mx-4 mb-4 flex gap-1 overflow-x-auto border-b border-pcnGreen-200 px-4 font-mono text-xs [scrollbar-width:none] lg:mx-0 lg:px-0"
-  >
-    {PROFILE_TABS.map((tab) => {
-      const isActive = tab.id === active;
-      const count = counts[tab.id];
-      return (
-        <Link
-          key={tab.id}
-          href={tab.id === 'resumen' ? `/perfil/${userId}` : `/perfil/${userId}?tab=${tab.id}`}
-          scroll={false}
-          aria-current={isActive ? 'page' : undefined}
-          className={cn(
-            '-mb-px flex shrink-0 items-center gap-1 border-b-2 px-2 py-2 transition-colors',
-            isActive
-              ? 'border-pcnGreen text-pcnGreen'
-              : 'border-transparent text-muted-foreground hover:text-foreground',
-          )}
-        >
-          {isActive ? `[${tab.label}]` : tab.label}
-          {count !== undefined && (
-            <span className="text-[10px] tabular-nums text-muted-foreground/70">({count})</span>
-          )}
-        </Link>
-      );
-    })}
-  </nav>
+  <div className="-mx-4 mb-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:px-px">
+    <nav aria-label="Secciones del perfil" className={cn(tabsListClassName, 'h-8')}>
+      {PROFILE_TABS.map((tab) => {
+        const isActive = tab.id === active;
+        const count = counts[tab.id];
+        return (
+          <Link
+            key={tab.id}
+            href={tab.id === 'resumen' ? `/perfil/${userId}` : `/perfil/${userId}?tab=${tab.id}`}
+            scroll={false}
+            aria-current={isActive ? 'page' : undefined}
+            data-state={isActive ? 'active' : 'inactive'}
+            className={tabsTriggerClassName}
+          >
+            <TabBrackets>
+              {tab.label}
+              {count !== undefined && <span className="tabular-nums opacity-60">({count})</span>}
+            </TabBrackets>
+          </Link>
+        );
+      })}
+    </nav>
+  </div>
 );
 
 export const SectionHeading = ({
