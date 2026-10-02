@@ -12,7 +12,7 @@ export const FaqSection = () => (
       eyebrow="Preguntas frecuentes"
       title={
         <>
-          Antes de <span className="text-pcnGreen">sumarte</span>
+          <span className="text-pcnGreen">Preguntas</span> antes de sumarte
         </>
       }
       description="Lo que más nos preguntan quienes recién llegan a la comunidad."

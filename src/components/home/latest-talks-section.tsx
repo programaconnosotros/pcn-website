@@ -16,7 +16,7 @@ export const LatestTalksSection = async () => {
         eyebrow="Charlas"
         title={
           <>
-            Últimas charlas <span className="text-pcnGreen">de la comunidad</span>
+            Últimas <span className="text-pcnGreen">charlas</span> de la comunidad
           </>
         }
         description="Charlas dadas por miembros de PCN, con grabaciones y diapositivas."

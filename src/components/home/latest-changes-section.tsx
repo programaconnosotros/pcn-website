@@ -23,7 +23,7 @@ export const LatestChangesSection = () => {
         eyebrow="Changelog"
         title={
           <>
-            Últimas mejoras <span className="text-pcnGreen">en la plataforma</span>
+            Últimas <span className="text-pcnGreen">mejoras</span> en la plataforma
           </>
         }
         description="La plataforma la construimos entre todos y cambia todas las semanas."

@@ -22,7 +22,7 @@ export const LatestConversationsSection = () => (
       eyebrow="Conversaciones"
       title={
         <>
-          Lo último que se habló <span className="text-pcnGreen">en el grupo</span>
+          Últimas <span className="text-pcnGreen">conversaciones</span> del grupo
         </>
       }
       description="Resúmenes de las discusiones técnicas más recientes de la comunidad."

@@ -24,7 +24,7 @@ export const LatestArticlesSection = async () => {
         eyebrow="Lectura"
         title={
           <>
-            Últimos artículos <span className="text-pcnGreen">sugeridos</span>
+            Últimos <span className="text-pcnGreen">artículos</span> agregados
           </>
         }
         description="Lo más reciente que estamos leyendo sobre ingeniería de software, arquitectura y producto."

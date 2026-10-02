@@ -14,7 +14,7 @@ export const RecentlyAddedEventsSection = async () => {
         eyebrow="Eventos"
         title={
           <>
-            Publicados <span className="text-pcnGreen">recientemente</span>
+            <span className="text-pcnGreen">Eventos</span> publicados recientemente
           </>
         }
         description="Presenciales y online, para todo el mundo. Sumate al próximo."

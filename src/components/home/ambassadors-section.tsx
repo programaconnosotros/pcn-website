@@ -38,7 +38,7 @@ export const AmbassadorsSection = async () => {
         eyebrow="PCN Ambassadors"
         title={
           <>
-            Las personas que <span className="text-pcnGreen">hacen que las cosas pasen</span>
+            Los <span className="text-pcnGreen">ambassadors</span> hacen que las cosas pasen
           </>
         }
         description="Ambassadors son miembros que organizan actividades, impulsan iniciativas y mueven la comunidad todos los días."
