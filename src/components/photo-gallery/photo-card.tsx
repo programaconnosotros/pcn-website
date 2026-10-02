@@ -14,7 +14,8 @@ interface PhotoCardProps {
   index: number;
   total: number;
   href: string;
-  onShare: () => void;
+  /** Shows a share key next to the download one. */
+  onShare?: () => void;
 }
 
 const cornerClassName =
@@ -85,10 +86,12 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
 
       <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
         <DownloadKey photoId={photo.id} />
-        <button type="button" className={keyCapClassName} onClick={onShare} title="Compartir">
-          <Share2 className="size-3.5" />
-          <span className="sr-only">Compartir</span>
-        </button>
+        {onShare && (
+          <button type="button" className={keyCapClassName} onClick={onShare} title="Compartir">
+            <Share2 className="size-3.5" />
+            <span className="sr-only">Compartir</span>
+          </button>
+        )}
       </div>
     </div>
   );

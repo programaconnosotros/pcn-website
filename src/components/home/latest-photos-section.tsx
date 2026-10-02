@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { VideoBadge } from '@/components/photo-gallery/video-badge';
-import { photoCaption } from '@/components/photo-gallery/photo-utils';
+import { PhotoCard } from '@/components/photo-gallery/photo-card';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { listLatestGalleryItems } from '@/lib/gallery';
+import { cn } from '@/lib/utils';
 import { SectionHeader } from './section-header';
 
 const LATEST_PHOTOS_COUNT = 8;
@@ -25,33 +25,19 @@ export const LatestPhotosSection = async () => {
         action={{ label: 'Ver toda la galería', href: '/galeria' }}
       />
 
-      <div className="grid grid-cols-2 gap-1 sm:grid-cols-4">
-        {items.map((item) => (
-          <Link
-            key={item.id}
-            href={`/galeria/${item.id}`}
-            className="group relative aspect-square overflow-hidden rounded-sm bg-black"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={item.thumbUrl}
-              alt={photoCaption(item)}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover brightness-[0.85] transition duration-300 group-hover:scale-[1.04] group-hover:brightness-100"
+      {/* Same tiles as /galeria, so the photos look and behave the same in both places. */}
+      <RuledGrid className="grid-cols-2 sm:grid-cols-4">
+        {items.map((item, index) => (
+          <div key={item.id} className={cn(ruledCellClassName, 'p-1')}>
+            <PhotoCard
+              photo={item}
+              index={index}
+              total={items.length}
+              href={`/galeria/${item.id}`}
             />
-            <span
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 translate-y-full truncate bg-gradient-to-t from-black via-black/70 to-transparent px-2 pb-1.5 pt-6 font-mono text-[10px] text-pcnGreen transition-transform duration-300 group-hover:translate-y-0"
-            >
-              {photoCaption(item)}
-            </span>
-            {item.kind === 'VIDEO' && (
-              <VideoBadge className="transition-opacity group-hover:opacity-0" />
-            )}
-          </Link>
+          </div>
         ))}
-      </div>
+      </RuledGrid>
     </section>
   );
 };
