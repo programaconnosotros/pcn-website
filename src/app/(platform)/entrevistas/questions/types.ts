@@ -1,6 +1,9 @@
 export type InterviewArea = 'frontend' | 'backend' | 'ai' | 'agentic' | 'qa';
 export type InterviewTrack =
-  | 'frontend'
+  | 'react'
+  | 'ios'
+  | 'android'
+  | 'react-native'
   | 'node'
   | 'python'
   | 'java'
@@ -18,14 +21,14 @@ export interface InterviewQuestion {
 }
 
 export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
-  { id: 'frontend', label: 'Frontend', stack: 'React.js' },
+  { id: 'frontend', label: 'Frontend', stack: 'React.js · iOS · Android · React Native' },
   { id: 'backend', label: 'Backend', stack: 'Node.js · Python · Java · .NET' },
   { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
   { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
 ];
 
-// Areas with more than one track (backend) ask for the technology after picking the area.
+// Areas with more than one track (frontend, backend) ask for the technology after picking the area.
 export const TRACKS: {
   id: InterviewTrack;
   area: InterviewArea;
@@ -33,7 +36,34 @@ export const TRACKS: {
   technology?: string;
   stack: string;
 }[] = [
-  { id: 'frontend', area: 'frontend', label: 'Frontend', stack: 'React.js' },
+  {
+    id: 'react',
+    area: 'frontend',
+    label: 'Frontend · React.js',
+    technology: 'React.js',
+    stack: 'web, hooks, Next.js',
+  },
+  {
+    id: 'ios',
+    area: 'frontend',
+    label: 'Frontend · iOS',
+    technology: 'iOS',
+    stack: 'Swift, SwiftUI, UIKit',
+  },
+  {
+    id: 'android',
+    area: 'frontend',
+    label: 'Frontend · Android',
+    technology: 'Android',
+    stack: 'Kotlin, Jetpack Compose',
+  },
+  {
+    id: 'react-native',
+    area: 'frontend',
+    label: 'Frontend · React Native',
+    technology: 'React Native',
+    stack: 'Expo, iOS y Android',
+  },
   {
     id: 'node',
     area: 'backend',

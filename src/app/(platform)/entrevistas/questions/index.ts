@@ -1,7 +1,9 @@
 import { agenticQuestions } from './agentic';
 import { aiQuestions } from './ai';
+import { androidQuestions } from './android';
 import { cypressQuestions } from './cypress';
 import { dotnetQuestions } from './dotnet';
+import { iosQuestions } from './ios';
 import { javaQuestions } from './java';
 import { k6Questions } from './k6';
 import { nodeQuestions } from './node';
@@ -9,13 +11,17 @@ import { playwrightQuestions } from './playwright';
 import { pythonQuestions } from './python';
 import { qaQuestions } from './qa';
 import { qaAutomationQuestions } from './qa-automation';
+import { reactNativeQuestions } from './react-native';
 import { frontendQuestions } from './frontend';
 import type { InterviewQuestion, InterviewTrack, QaTool, Seniority } from './types';
 
 export * from './types';
 
 export const interviewQuestions: Record<InterviewTrack, Record<Seniority, InterviewQuestion[]>> = {
-  frontend: frontendQuestions,
+  react: frontendQuestions,
+  ios: iosQuestions,
+  android: androidQuestions,
+  'react-native': reactNativeQuestions,
   node: nodeQuestions,
   python: pythonQuestions,
   java: javaQuestions,

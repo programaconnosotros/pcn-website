@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'entrevistas',
+    title: 'Entrevistas de iOS, Android y React Native',
+    description:
+      'Las entrevistas de frontend ahora te dejan elegir la tecnología: React.js, iOS (Swift, SwiftUI), Android (Kotlin, Compose) o React Native, cada una con preguntas para junior, semi-senior y senior.',
+    authors: ['agustin-sanc'],
+    href: '/entrevistas?tipo=frontend',
+  },
+  {
+    date: '2026-10-02',
     area: 'logros',
     title: 'Logros y badges automáticos',
     description:
