@@ -76,7 +76,7 @@ export async function getPhotoUploadUrl(fileName: string, contentType: string) {
 }
 
 /**
- * Formulario firmado para subir un video directo a S3 (tal cual, hasta 500 MB). Devuelve la
+ * Formulario firmado para subir un video directo a S3 (ya optimizado en el navegador, hasta 500 MB). Devuelve la
  * key, que después se pasa a createVideo. Solo admins.
  */
 export async function getVideoUploadUrl(contentType: string, size: number) {

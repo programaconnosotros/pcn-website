@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Check, ImagePlus, Loader2, Play, Upload, X } from 'lucide-react';
+import { Check, ImagePlus, Loader2, Play, Smartphone, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   createPhoto,
@@ -21,6 +21,7 @@ import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
 import {
   VIDEO_TYPES,
+  compressVideo,
   isHeic,
   isVideo,
   placeholderPoster,
@@ -31,7 +32,7 @@ import {
   type VideoInfo,
 } from './upload-media';
 
-type Status = 'pending' | 'uploading' | 'done' | 'error';
+type Status = 'pending' | 'compressing' | 'uploading' | 'done' | 'error';
 
 type Item = {
   key: string;
@@ -46,10 +47,14 @@ type Item = {
   unsupported?: string;
   error?: string;
   progress?: number;
+  // Size of what was actually uploaded, when the video was compressed first.
+  uploadedSize?: number;
   itemId?: string;
 };
 
 const MAX_VIDEO_MB = MAX_VIDEO_BYTES / 1024 / 1024;
+
+const toMb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1);
 
 // Checks a picked file and reads what the form needs from it.
 async function prepare(file: File): Promise<Item> {
@@ -103,6 +108,36 @@ export function PhotoUploader({
   // Free the previews when leaving the page.
   useEffect(() => () => itemsRef.current.forEach((item) => URL.revokeObjectURL(item.preview)), []);
 
+  // While uploading, keep the screen on (a locked phone suspends the tab and kills the video
+  // compression) and ask before leaving the page.
+  useEffect(() => {
+    if (!isUploading) return;
+    let wakeLock: WakeLockSentinel | null = null;
+    let released = false;
+    const requestWakeLock = async () => {
+      if (document.visibilityState !== 'visible' || !('wakeLock' in navigator)) return;
+      try {
+        const sentinel = await navigator.wakeLock.request('screen');
+        if (released) sentinel.release();
+        else wakeLock = sentinel;
+      } catch {
+        // Denied (low battery, unsupported): the on-screen notice is all we have.
+      }
+    };
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => event.preventDefault();
+
+    requestWakeLock();
+    // The browser drops the lock whenever the tab is hidden; take it again on return.
+    document.addEventListener('visibilitychange', requestWakeLock);
+    window.addEventListener('beforeunload', warnBeforeLeaving);
+    return () => {
+      released = true;
+      wakeLock?.release();
+      document.removeEventListener('visibilitychange', requestWakeLock);
+      window.removeEventListener('beforeunload', warnBeforeLeaving);
+    };
+  }, [isUploading]);
+
   const update = (key: string, patch: Partial<Item>) =>
     setItems((current) => current.map((item) => (item.key === key ? { ...item, ...patch } : item)));
 
@@ -119,10 +154,11 @@ export function PhotoUploader({
     setItems((current) => current.filter(({ key }) => key !== item.key));
   };
 
-  // Photos: PUT the original, the server optimizes it. Videos: POST the file as is (S3 enforces
-  // the size limit), PUT the captured poster, then save both.
+  // Photos: PUT the original, the server optimizes it. Videos: compress them in the browser
+  // (or keep the original when that isn't possible), POST the file (S3 enforces the size
+  // limit), PUT the captured poster, then save both.
   const uploadOne = async (item: Item) => {
-    update(item.key, { status: 'uploading', error: undefined, progress: 0 });
+    update(item.key, { error: undefined, progress: 0 });
     const details = {
       takenAt: new Date(item.takenAt).toISOString(),
       description: item.description,
@@ -131,20 +167,27 @@ export function PhotoUploader({
     try {
       let created: { id: string };
       if (item.video) {
-        const { url, fields, key } = await getVideoUploadUrl(item.file.type, item.file.size);
-        await postFile(url, fields, item.file, (progress) => update(item.key, { progress }));
+        update(item.key, { status: 'compressing' });
+        const compressed = await compressVideo(item.file, (progress) =>
+          update(item.key, { progress }),
+        ).catch(() => null);
+        const file = compressed?.file ?? item.file;
+
+        update(item.key, { status: 'uploading', progress: 0, uploadedSize: compressed?.file.size });
+        const { url, fields, key } = await getVideoUploadUrl(file.type, file.size);
+        await postFile(url, fields, file, (progress) => update(item.key, { progress }));
 
         const poster = await getPhotoUploadUrl('poster.jpg', 'image/jpeg');
         await putFile(poster.uploadUrl, item.video.poster, 'image/jpeg');
 
-        const { durationSeconds, width, height } = item.video;
         created = await createVideo(key, poster.key, {
           ...details,
-          durationSeconds,
-          width,
-          height,
+          durationSeconds: item.video.durationSeconds,
+          width: compressed?.width ?? item.video.width,
+          height: compressed?.height ?? item.video.height,
         });
       } else {
+        update(item.key, { status: 'uploading' });
         const { uploadUrl, key } = await getPhotoUploadUrl(item.file.name, item.file.type);
         await putFile(uploadUrl, item.file, item.file.type);
         created = await createPhoto(key, details);
@@ -181,6 +224,9 @@ export function PhotoUploader({
     (item) => (item.status === 'pending' || item.status === 'error') && !item.unsupported,
   ).length;
   const doneCount = items.filter((item) => item.status === 'done').length;
+  const hasPendingVideos = items.some(
+    (item) => item.video && !item.unsupported && item.status !== 'done',
+  );
 
   return (
     <div className="mb-14 space-y-4">
@@ -208,7 +254,7 @@ export function PhotoUploader({
           <span>arrastrá fotos y videos o hacé click para elegirlos</span>
           <span className="text-[10px] text-muted-foreground/70">
             fotos: JPG, PNG, WebP, AVIF (se optimizan a WebP) · videos: MP4, WebM, MOV hasta{' '}
-            {MAX_VIDEO_MB} MB
+            {MAX_VIDEO_MB} MB (se optimizan a MP4 1080p)
           </span>
         </button>
         <input
@@ -249,7 +295,7 @@ export function PhotoUploader({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.preview} alt="" className="h-full w-full object-cover" />
                   )}
-                  {item.video && item.status !== 'uploading' && item.status !== 'done' && (
+                  {item.video && (item.status === 'pending' || item.status === 'error') && (
                     <span className="absolute bottom-1 left-1 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] text-pcnGreen">
                       <Play className="size-2.5 fill-current" />
                       {item.video.durationSeconds !== null
@@ -257,11 +303,13 @@ export function PhotoUploader({
                         : 'video'}
                     </span>
                   )}
-                  {item.status === 'uploading' && (
+                  {(item.status === 'compressing' || item.status === 'uploading') && (
                     <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60">
                       <Loader2 className="size-5 animate-spin text-pcnGreen" />
                       {item.video && (
-                        <span className="font-mono text-[10px] tabular-nums text-pcnGreen">
+                        <span className="text-center font-mono text-[10px] tabular-nums text-pcnGreen">
+                          {item.status === 'compressing' ? 'optimizando' : 'subiendo'}
+                          <br />
                           {Math.round((item.progress ?? 0) * 100)}%
                         </span>
                       )}
@@ -278,9 +326,12 @@ export function PhotoUploader({
                   <div className="flex items-center gap-2 font-mono text-xs">
                     <span className="min-w-0 flex-1 truncate text-pcnGreen">{item.file.name}</span>
                     <span className="shrink-0 text-muted-foreground">
-                      {(item.file.size / 1024 / 1024).toFixed(1)} MB
+                      {toMb(item.file.size)} MB
+                      {item.uploadedSize !== undefined && (
+                        <span className="text-pcnGreen"> → {toMb(item.uploadedSize)} MB</span>
+                      )}
                     </span>
-                    {item.status !== 'done' && item.status !== 'uploading' && (
+                    {(item.status === 'pending' || item.status === 'error') && (
                       <button
                         type="button"
                         onClick={() => remove(item)}
@@ -306,14 +357,14 @@ export function PhotoUploader({
                         type="datetime-local"
                         value={item.takenAt}
                         onChange={(event) => update(item.key, { takenAt: event.target.value })}
-                        disabled={item.status === 'uploading'}
+                        disabled={item.status === 'compressing' || item.status === 'uploading'}
                         aria-label="Fecha"
                         className="max-w-xs font-mono text-xs"
                       />
                       <Textarea
                         value={item.description}
                         onChange={(event) => update(item.key, { description: event.target.value })}
-                        disabled={item.status === 'uploading'}
+                        disabled={item.status === 'compressing' || item.status === 'uploading'}
                         placeholder="Descripción (opcional)"
                         maxLength={500}
                         rows={2}
@@ -330,6 +381,25 @@ export function PhotoUploader({
               </div>
             ))}
           </RuledGrid>
+
+          {(isUploading || hasPendingVideos) && (
+            <p
+              role="status"
+              className={cn(
+                'flex items-start gap-2 border px-3 py-2 font-mono text-xs',
+                isUploading
+                  ? 'border-pcnGreen bg-pcnGreen/5 text-pcnGreen'
+                  : 'border-pcnGreen-200 text-muted-foreground',
+              )}
+            >
+              <Smartphone className="mt-0.5 size-3.5 shrink-0" />
+              <span>
+                {isUploading
+                  ? 'Subiendo: no bloquees la pantalla, no cambies de app ni cierres esta pestaña hasta que termine. Si el dispositivo se bloquea, la subida se corta.'
+                  : 'Los videos se optimizan en este dispositivo antes de subirse y puede tardar unos minutos. Mientras tanto, no bloquees la pantalla ni salgas de esta página.'}
+              </span>
+            </p>
+          )}
 
           <div className="flex flex-wrap items-center justify-end gap-3">
             {doneCount > 0 && (

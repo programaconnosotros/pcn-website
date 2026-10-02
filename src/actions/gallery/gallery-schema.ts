@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-// Los videos se suben tal cual (sin recomprimir), hasta 500 MB.
+// Los videos se optimizan en el navegador antes de subirse (si puede); el archivo subido pesa
+// hasta 500 MB.
 export const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
 
 // Lo que se carga a mano de una foto: cuándo se sacó, una descripción y de qué evento es.
