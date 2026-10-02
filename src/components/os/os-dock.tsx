@@ -402,7 +402,7 @@ const Divider = () => (
     aria-hidden
     className="relative mx-[5px] mb-3 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
   >
-    <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen shadow-[0_0_6px_#04f4be]" />
+    <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen-500" />
   </span>
 );
 
@@ -554,7 +554,7 @@ export function OsDock({
             />
             <span className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_2px,rgba(4,244,190,0.035)_2px,rgba(4,244,190,0.035)_3px)]" />
             <span className="absolute inset-0 bg-[linear-gradient(rgba(4,244,190,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(4,244,190,0.05)_1px,transparent_1px)] bg-[size:12px_12px] [mask-image:linear-gradient(to_top,black,transparent_80%)]" />
-            <span className="os-dock-sweep absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-pcnGreen-200 to-transparent" />
+            <span className="os-dock-sweep absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-pcnGreen-50 to-transparent" />
           </span>
 
           {pinned.map((program, index) => (

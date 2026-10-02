@@ -207,19 +207,19 @@
     }
   }
 
-  /* PCN OS dock: two light beams chase each other around the frame, a scan sweeps across the
+  /* PCN OS dock: two faint light beams drift slowly around the frame, a soft scan sweeps across the
      surface, the divider carries a data pulse and running programs show a live meter. */
   .os-dock-frame {
     padding: 1px;
     background: conic-gradient(
         from var(--dock-beam),
-        transparent 0 30%,
-        rgba(4, 244, 190, 0.35) 40%,
-        #b4fff0 44%,
-        transparent 46% 80%,
-        rgba(4, 244, 190, 0.35) 90%,
-        #b4fff0 94%,
-        transparent 96%
+        transparent 0 25%,
+        rgba(4, 244, 190, 0.18) 40%,
+        rgba(180, 255, 240, 0.55) 45%,
+        transparent 50% 75%,
+        rgba(4, 244, 190, 0.18) 90%,
+        rgba(180, 255, 240, 0.55) 95%,
+        transparent 100%
       ),
       rgba(4, 244, 190, 0.3);
     -webkit-mask:
@@ -227,7 +227,7 @@
       linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    animation: dock-beam 7s linear infinite;
+    animation: dock-beam 24s linear infinite;
   }
   @keyframes dock-beam {
     to {
@@ -235,7 +235,7 @@
     }
   }
   .os-dock-sweep {
-    animation: dock-sweep 6s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    animation: dock-sweep 16s ease-in-out infinite;
   }
   @keyframes dock-sweep {
     0% {
@@ -247,7 +247,7 @@
     }
   }
   .os-dock-divider {
-    animation: dock-divider 2.4s ease-in-out infinite;
+    animation: dock-divider 6s ease-in-out infinite;
   }
   @keyframes dock-divider {
     from {
