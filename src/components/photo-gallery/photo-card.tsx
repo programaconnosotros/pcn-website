@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { Play, Share2 } from 'lucide-react';
 import type { GalleryTile } from '@/lib/gallery';
-import { subtleParallaxStyle, useParallax } from './use-parallax';
+import { parallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
 import { DownloadKey } from './download-key';
 import { formatDuration } from '@/lib/gallery-filters';
@@ -36,7 +36,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       >
         <span
           aria-hidden
-          style={subtleParallaxStyle}
+          style={parallaxStyle}
           className="absolute inset-x-0 -top-[5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -131,7 +131,7 @@ export const TalkCell = ({
         <span
           aria-hidden
           style={parallaxStyle}
-          className="absolute inset-x-0 -top-[12%] block h-[124%] transition-transform duration-150 ease-out will-change-transform"
+          className="absolute inset-x-0 -top-[5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
         >
           {talk.portraitUrl ? (
             // Portraits are square flyers with their own text, so they're shown whole.
