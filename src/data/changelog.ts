@@ -22,6 +22,65 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'inicio',
+    title: 'Cartelera de próximos eventos',
+    description:
+      'La sección de eventos del inicio es una cartelera: el próximo evento va adelante con su flyer, cuenta regresiva, lugar e inscripción, y al lado los que siguen. Si no hay eventos próximos muestra los últimos tres.',
+    authors: ['agustin-sanc'],
+    href: '/',
+  },
+  {
+    date: '2026-10-02',
+    area: 'inicio',
+    title: 'Inicio con más vida',
+    description:
+      'Las tarjetas de historia y galería rotan fotos de la comunidad, los artículos sugeridos muestran la foto de perfil de quien los escribió, las entrevistas muestran cada tipo y tecnología con link directo, se presentan los logros y los logos de partners brillan con efecto neón.',
+    authors: ['agustin-sanc'],
+    href: '/',
+  },
+  {
+    date: '2026-10-02',
+    area: 'galería',
+    title: 'Dónde se sacó cada foto',
+    description:
+      'Las fotos de un evento muestran el lugar y la ciudad con link al mapa (u "online"). Las flechas para pasar de foto ya no tapan la imagen y la página de una foto carga con su propio esqueleto.',
+    authors: ['agustin-sanc'],
+    href: '/galeria',
+  },
+  {
+    date: '2026-10-02',
+    area: 'ui',
+    title: 'Atajos h y l',
+    description:
+      'h y l funcionan como las flechas ← y →: pasan de foto en la galería, mueven carruseles y hacen scroll horizontal.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-02',
+    area: 'perfil',
+    title: 'Estudios en su propio bloque',
+    description:
+      'Carrera e institución se muestran en un bloque de estudios, igual que trabajo; las redes sociales pasan a ser solo íconos para que entren todas y los badges dejan de repetirse al lado del nombre.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-02',
+    area: 'autenticación',
+    title: 'Límites que explican por qué',
+    description:
+      'Cuando un formulario te frena por hacer muchos intentos seguidos, ahora te dice qué se limitó, por qué y en cuánto tiempo podés volver a intentar.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-02',
+    area: 'autenticación',
+    title: 'Cuentas y datos más protegidos',
+    description:
+      'Las contraseñas se guardan con un hash más fuerte, el email y el teléfono de los perfiles solo los ven miembros con sesión iniciada y se reforzaron el ingreso, el registro y la recuperación de contraseña.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-02',
     area: 'metricas',
     title: 'Métricas de producto',
     description:
