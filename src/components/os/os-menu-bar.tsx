@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { LogOut, Search, UserRound } from 'lucide-react';
+import { IdCard, LogOut, Search, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,6 +25,7 @@ import { OsMusicControl } from './os-music-control';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
 export interface OsUser {
+  id: string;
   name: string;
   email: string;
   image: string | null;
@@ -35,6 +36,7 @@ interface OsMenuBarProps {
   focusedProgram: OsProgram | null;
   musicPlayer: MusicPlayer;
   onOpenProgram: (program: OsProgram) => void;
+  onOpenPath: (path: string) => void;
   onOpenLauncher: () => void;
 }
 
@@ -82,6 +84,7 @@ export function OsMenuBar({
   focusedProgram,
   musicPlayer,
   onOpenProgram,
+  onOpenPath,
   onOpenLauncher,
 }: OsMenuBarProps) {
   const shortcutLabel = useSearchShortcutLabel();
@@ -181,6 +184,9 @@ export function OsMenuBar({
                 onSelect={() => onOpenProgram(programById('perfil'))}
               >
                 <UserRound className="size-4" /> Mi cuenta
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2" onSelect={() => onOpenPath(`/perfil/${user.id}`)}>
+                <IdCard className="size-4" /> Ver mi perfil
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2"

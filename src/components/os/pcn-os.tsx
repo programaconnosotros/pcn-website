@@ -393,6 +393,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           focusedProgram={focusedProgram}
           musicPlayer={musicPlayer}
           onOpenProgram={openProgram}
+          onOpenPath={(path) => viewport && dispatch({ type: 'openPath', path, viewport })}
           onOpenLauncher={() => setLauncherOpen(true)}
         />
 

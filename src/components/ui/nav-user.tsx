@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, ChevronsUpDown, LogIn, LogOut, UserPlus } from 'lucide-react';
+import { BadgeCheck, ChevronsUpDown, IdCard, LogIn, LogOut, UserPlus } from 'lucide-react';
 
 import { signOut } from '@/actions/auth/sign-out';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -145,6 +145,13 @@ export function NavUser({ user }: { user: User | null }) {
                 >
                   <BadgeCheck size={16} />
                   Mi cuenta
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex cursor-pointer flex-row gap-2"
+                  onClick={() => router.push(`/perfil/${user.id}`)}
+                >
+                  <IdCard size={16} />
+                  Ver mi perfil
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 

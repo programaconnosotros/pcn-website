@@ -44,7 +44,7 @@ const PlatformLayout = async ({
     <>
       {/* Pantallas grandes: PCN OS, un escritorio con dock y ventanas movibles. */}
       <PcnOs
-        user={user ? { name: user.name, email: user.email, image: user.image } : null}
+        user={user ? { id: user.id, name: user.name, email: user.email, image: user.image } : null}
         isAdmin={user?.role === 'ADMIN'}
       />
       <PageVisitTracker />
