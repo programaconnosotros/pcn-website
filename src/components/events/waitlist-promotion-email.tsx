@@ -51,8 +51,8 @@ export const WaitlistPromotionEmail = ({
       </p>
 
       <p style={{ fontSize: '16px', lineHeight: '1.5', color: '#ffffff' }}>
-        Se liberó un lugar en el evento y, como estabas en la lista de espera, ya quedaste inscripto
-        automáticamente.
+        Se liberó un lugar en el evento y, como estabas en la lista de espera, tu inscripción ya
+        quedó confirmada.
       </p>
 
       <div
