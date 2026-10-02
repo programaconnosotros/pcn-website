@@ -357,14 +357,22 @@ export const ContributionStats = ({
 }) => {
   const mergedPrs = contributions.reduce((sum, c) => sum + c.mergedPrs, 0);
   const commits = contributions.reduce((sum, c) => sum + c.commits, 0);
+  // `null` while GitHub is still computing the per-author stats.
+  const linesAdded = contributions.some((c) => c.linesAdded === null)
+    ? null
+    : contributions.reduce((sum, c) => sum + (c.linesAdded ?? 0), 0);
   const share = totals.mergedPrs > 0 ? mergedPrs / totals.mergedPrs : 0;
   const filled = Math.round(share * BAR_WIDTH);
 
   return (
     <div className="space-y-3">
-      <RuledGrid className="grid-cols-3">
+      <RuledGrid className="grid-cols-2 sm:grid-cols-4">
         <ProfileStat label="PRs mergeadas" value={mergedPrs} />
-        <ProfileStat label="commits" value={commits} />
+        <ProfileStat label="commits" value={commits.toLocaleString('es-AR')} />
+        <ProfileStat
+          label="líneas agregadas"
+          value={linesAdded === null ? '—' : `+${linesAdded.toLocaleString('es-AR')}`}
+        />
         <ProfileStat label="del total" value={`${Math.round(share * 100)}%`} />
       </RuledGrid>
       <p className="font-mono text-xs text-muted-foreground">
