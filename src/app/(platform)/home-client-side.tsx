@@ -1,5 +1,6 @@
 'use client';
 
+import { AchievementsSection } from '@/components/home/achievements-section';
 import { FaqSection } from '@/components/home/faq-section';
 import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
@@ -66,6 +67,10 @@ const HomeClientSide = ({
 
       <Reveal>
         <InterviewsSection />
+      </Reveal>
+
+      <Reveal>
+        <AchievementsSection />
       </Reveal>
 
       <Reveal>
