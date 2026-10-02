@@ -184,7 +184,7 @@ function SpeakerFields({
       />
 
       {isProfessional && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.jobTitle`}
@@ -239,7 +239,7 @@ function SpeakerFields({
       />
 
       {isStudent && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.career`}
@@ -262,7 +262,7 @@ function SpeakerFields({
             name={`speakers.${index}.studyPlace`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Universidad / Institución</FormLabel>
+                <FormLabel>Institución</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Universidad Nacional de Tucumán"
@@ -444,7 +444,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
             name="manualEventLocation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ubicación del evento</FormLabel>
+                <FormLabel>Ubicación</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Once57, San Miguel de Tucumán"
@@ -532,7 +532,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="order"

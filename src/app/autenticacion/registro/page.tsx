@@ -321,7 +321,7 @@ function SignUpContent() {
                 name="enterprise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿En qué empresa trabajás?</FormLabel>
+                    <FormLabel>¿En qué empresa?</FormLabel>
                     <FormControl>
                       <Input placeholder="Ej: Google" {...field} />
                     </FormControl>
@@ -354,7 +354,7 @@ function SignUpContent() {
                 name="studyPlace"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Dónde o cómo estudiás/estudiaste?</FormLabel>
+                    <FormLabel>¿Dónde estudiás?</FormLabel>
                     <FormControl>
                       <Input placeholder="Ej: Universidad, autodidacta" {...field} />
                     </FormControl>

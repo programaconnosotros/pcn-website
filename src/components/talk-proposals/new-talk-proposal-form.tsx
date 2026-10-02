@@ -121,7 +121,7 @@ function SpeakerFields({
         )}
       />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField
           control={control}
           name={`speakers.${index}.speakerName`}
@@ -180,7 +180,7 @@ function SpeakerFields({
       />
 
       {isProfessional && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.jobTitle`}
@@ -238,7 +238,7 @@ function SpeakerFields({
       />
 
       {isStudent && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.career`}
@@ -261,7 +261,7 @@ function SpeakerFields({
             name={`speakers.${index}.studyPlace`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Universidad / Institución</FormLabel>
+                <FormLabel>Institución</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Universidad Nacional de Tucumán"
