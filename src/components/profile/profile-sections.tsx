@@ -37,7 +37,7 @@ export const ProfileTabs = ({
   active: ProfileTab;
   counts: Partial<Record<ProfileTab, number>>;
 }) => (
-  <div className="-mx-4 mb-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:px-px">
+  <div className="-mx-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:px-px">
     <nav aria-label="Secciones del perfil" className={cn(tabsListClassName, 'h-8')}>
       {PROFILE_TABS.map((tab) => {
         const isActive = tab.id === active;

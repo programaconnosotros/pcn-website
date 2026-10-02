@@ -411,11 +411,12 @@ export default async function ProfilePage(props: ProfilePageProps) {
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <StickyHeader className="mt-4">
+        {/* Al subir rápido vuelven las pestañas, no el título, así no se apilan dos barras. */}
+        <div className="mt-4">
           <PageTitle
             path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
           />
-        </StickyHeader>
+        </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes, y con scroll
               propio cuando no entra en la pantalla) */}
@@ -535,7 +536,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
 
           {/* Columna derecha: resumen de todo lo que hizo, y una pestaña para ver cada sección */}
           <div className="min-w-0 lg:col-span-2">
-            <ProfileTabs userId={user.id} active={tab} counts={counts} />
+            <StickyHeader className="mb-4">
+              <ProfileTabs userId={user.id} active={tab} counts={counts} />
+            </StickyHeader>
 
             {tab === 'resumen' && (
               <div className="mb-14 space-y-8">
