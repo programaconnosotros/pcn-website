@@ -19,6 +19,8 @@ export type AchievementMetrics = {
   eventsOrganized: number;
   /** Articles from /lectura they marked as read. */
   articlesRead: number;
+  /** Past events they signed up for on the platform and did not cancel. */
+  eventsAttended: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -28,6 +30,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   talksWatched: 0,
   eventsOrganized: 0,
   articlesRead: 0,
+  eventsAttended: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -131,6 +134,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Leé los artículos de /lectura y marcalos como leídos.',
     href: '/lectura',
     progress: count('articlesRead', 25),
+  },
+  {
+    id: 'events-attended-10',
+    name: 'Habitué',
+    description: 'Fue a 10 eventos de la comunidad o más.',
+    icon: 'ticket',
+    tone: 'purple',
+    goal: 'ir a 10 eventos',
+    howTo: 'Anotate en los eventos desde la plataforma y andá: cuentan los que ya pasaron.',
+    href: '/eventos',
+    progress: count('eventsAttended', 10),
   },
 ];
 

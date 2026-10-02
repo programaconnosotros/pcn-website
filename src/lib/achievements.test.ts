@@ -45,6 +45,10 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, articlesRead: 25 })).toEqual(['articles-read-25']);
   });
 
+  it('earns habitué after going to 10 events', () => {
+    expect(ids({ ...EMPTY_METRICS, eventsAttended: 10 })).toEqual(['events-attended-10']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -60,6 +64,7 @@ describe('getAchievementMetrics', () => {
     prismaMock.identityLink.findMany.mockResolvedValue([]);
     (prismaMock.contentMark.groupBy as jest.Mock).mockResolvedValue([]);
     (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([]);
+    (prismaMock.eventRegistration.groupBy as jest.Mock).mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
@@ -133,6 +138,24 @@ describe('getAchievementMetrics', () => {
     const metrics = await getAchievementMetrics();
 
     expect(metrics.get('user-1')).toMatchObject({ articlesRead: 30, talksWatched: 0 });
+  });
+
+  it('counts registrations to past events that were not cancelled', async () => {
+    (prismaMock.eventRegistration.groupBy as jest.Mock).mockResolvedValue([
+      { userId: 'user-1', _count: { _all: 12 } },
+    ]);
+
+    const metrics = await getAchievementMetrics();
+
+    expect(metrics.get('user-1')).toMatchObject({ eventsAttended: 12 });
+    expect(prismaMock.eventRegistration.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          cancelledAt: null,
+          event: { deletedAt: null, date: { lte: expect.any(Date) } },
+        },
+      }),
+    );
   });
 
   it('returns empty metrics for a user without activity', async () => {
