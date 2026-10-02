@@ -1,22 +1,13 @@
 'use server';
 
-import prisma from '@/lib/prisma';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findValidPasswordResetToken } from '@/lib/verification-codes';
 
 export const verifyResetCode = async (email: string, code: string) => {
   await enforceRateLimit('verifyCode');
 
   // Buscar token válido
-  const token = await prisma.passwordResetToken.findFirst({
-    where: {
-      email,
-      code,
-      used: false,
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
-  });
+  const token = await findValidPasswordResetToken(email, code);
 
   if (!token) {
     throw new Error('Código inválido o expirado');

@@ -436,6 +436,7 @@ model PasswordResetToken {
   code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])
@@ -448,6 +449,7 @@ model EmailVerificationToken {
   code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])

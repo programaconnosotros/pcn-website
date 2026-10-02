@@ -3,21 +3,13 @@
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findValidPasswordResetToken } from '@/lib/verification-codes';
 
 export const completePasswordReset = async (email: string, code: string, newPassword: string) => {
   await enforceRateLimit('verifyCode');
 
   // Verificar el token nuevamente
-  const token = await prisma.passwordResetToken.findFirst({
-    where: {
-      email,
-      code,
-      used: false,
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
-  });
+  const token = await findValidPasswordResetToken(email, code);
 
   if (!token) {
     throw new Error('Código inválido o expirado. Solicitá un nuevo código.');

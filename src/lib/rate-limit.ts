@@ -46,10 +46,15 @@ export const consumeRateLimit = (key: string, { limit, windowSeconds }: RateLimi
 
 export const resetRateLimits = () => hits.clear();
 
-const getClientIp = async () => {
+/**
+ * IP de quien hace el request. Se toma la última entrada de `x-forwarded-for`, la que agrega
+ * kamal-proxy con la IP real de la conexión: las anteriores las puede escribir el cliente, y
+ * confiar en ellas permitiría esquivar el límite cambiando el header en cada intento.
+ */
+export const getClientIp = async () => {
   const headerStore = await headers();
   return (
-    headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headerStore.get('x-forwarded-for')?.split(',').at(-1)?.trim() ||
     headerStore.get('x-real-ip') ||
     'unknown'
   );

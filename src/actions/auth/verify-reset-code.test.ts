@@ -12,6 +12,10 @@ const validToken = {
 };
 
 describe('verifyResetCode', () => {
+  beforeEach(() => {
+    prismaMock.passwordResetToken.updateMany.mockResolvedValue({ count: 1 });
+  });
+
   it('throws when the token is not found', async () => {
     prismaMock.passwordResetToken.findFirst.mockResolvedValue(null);
 

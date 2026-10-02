@@ -56,6 +56,16 @@ describe('enforceRateLimit', () => {
     await expect(enforceRateLimit('signUp')).resolves.toBeUndefined();
   });
 
+  it('ignores client-written x-forwarded-for entries before the proxy hop', async () => {
+    mockCookies();
+    mockHeaders({ 'x-forwarded-for': '1.1.1.1, 9.9.9.9' });
+
+    await exhaust('signUp');
+
+    mockHeaders({ 'x-forwarded-for': '2.2.2.2, 9.9.9.9' });
+    await expect(enforceRateLimit('signUp')).rejects.toThrow(/^RATE_LIMIT:\d+$/);
+  });
+
   it('limits logged-in users by user id', async () => {
     mockCookies({ sessionId: 'session-1' });
     mockHeaders();

@@ -3,21 +3,13 @@
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findValidEmailVerificationToken } from '@/lib/verification-codes';
 
 export const verifyEmailCode = async (email: string, code: string) => {
   await enforceRateLimit('verifyCode');
 
   // Buscar token válido
-  const token = await prisma.emailVerificationToken.findFirst({
-    where: {
-      email,
-      code,
-      used: false,
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
-  });
+  const token = await findValidEmailVerificationToken(email, code);
 
   if (!token) {
     throw new Error('Código inválido o expirado');
