@@ -88,9 +88,9 @@ const SECTION_CARDS = {
   },
   lectura: {
     command: 'cat lecturas.md',
-    title: 'Club de lectura',
+    title: 'Lectura',
     description:
-      'Libros y artículos que la comunidad lee y discute. Profundizá en los clásicos y en lo nuevo de la ingeniería de software.',
+      'Artículos y libros recomendados para leer sobre ingeniería de software. Llevá registro de lo que vas leyendo y marcá lo que te interesa leer.',
     meta: [`${articles.length} artículos`, 'libros'],
   },
   videos: {

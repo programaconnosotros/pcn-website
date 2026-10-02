@@ -54,7 +54,7 @@ const features: Feature[] = [
   {
     title: 'Lectura',
     description:
-      'Club de lectura con libros y artículos sobre programación, tecnología y carrera profesional.',
+      'Artículos y libros recomendados sobre programación, tecnología y carrera, con registro de lo que leíste.',
     href: '/lectura',
     icon: BookOpen,
   },
