@@ -21,6 +21,7 @@ import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
 import { findSession } from '@/lib/session';
+import { activeWaitlistWhere, getWaitlistPosition } from '@/lib/event-waitlist';
 
 type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
 
@@ -172,6 +173,16 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
   const isFull = event.markedAsFull || (capacityInfo !== null && !capacityInfo.available);
 
+  // Lista de espera: cuántos esperan y, si el usuario está esperando, en qué lugar
+  let waitlistCount = 0;
+  let waitlistPosition: number | null = null;
+  if (!isExternalEvent) {
+    waitlistCount = await prisma.eventWaitlistEntry.count({ where: activeWaitlistWhere(id) });
+    if (userId && !isRegistered && waitlistCount > 0) {
+      waitlistPosition = await getWaitlistPosition(id, userId);
+    }
+  }
+
   // Obtener inscripciones si el usuario es admin (solo para eventos con inscripción interna)
   let registrations: Array<{
     id: string;
@@ -305,6 +316,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                     capacityInfo={capacityInfo}
                     externalRegistrationUrl={event.externalRegistrationUrl}
                     isFull={isFull}
+                    waitlistPosition={waitlistPosition}
+                    waitlistCount={waitlistCount}
                   />
                 </Suspense>
               </div>
@@ -429,6 +442,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                     <Users className="h-3.5 w-3.5" />
                     {registrations.filter((r) => r.cancelledAt === null).length} activas ·{' '}
                     {registrations.length} total
+                    {waitlistCount > 0 && <> · {waitlistCount} en espera</>}
                   </span>
                   <span>ver todas →</span>
                 </Link>

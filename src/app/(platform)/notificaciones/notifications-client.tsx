@@ -24,6 +24,14 @@ type NotificationsClientProps = {
   notifications: Notification[];
 };
 
+const EVENT_NOTIFICATION_TYPES = [
+  'event_registration_created',
+  'event_registration_cancelled',
+  'event_waitlist_joined',
+  'event_waitlist_cancelled',
+  'event_waitlist_promoted',
+];
+
 const formatRelativeTime = (date: Date) => {
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -69,11 +77,12 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     );
   };
 
+  const isEventNotification = (notification: Notification): boolean => {
+    return EVENT_NOTIFICATION_TYPES.includes(notification.type);
+  };
+
   const getEventId = (notification: Notification): string | null => {
-    if (
-      notification.type === 'event_registration_created' ||
-      notification.type === 'event_registration_cancelled'
-    ) {
+    if (isEventNotification(notification)) {
       try {
         const metadata = notification.metadata ? JSON.parse(notification.metadata) : null;
         return metadata?.eventId || null;
@@ -82,13 +91,6 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
       }
     }
     return null;
-  };
-
-  const isEventNotification = (notification: Notification): boolean => {
-    return (
-      notification.type === 'event_registration_created' ||
-      notification.type === 'event_registration_cancelled'
-    );
   };
 
   const handleMarkAsRead = async (notificationId: string) => {

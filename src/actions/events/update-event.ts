@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { canEditEvent } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { fillFromWaitlist } from '@/lib/event-waitlist';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
   await enforceRateLimit('editContent');
@@ -77,6 +78,9 @@ export const updateEvent = async (id: string, data: EventFormData) => {
       },
     }),
   ]);
+
+  // Si el cambio liberó lugares (más cupo o ya no está marcado como lleno), pasan a quienes esperan
+  await fillFromWaitlist(id);
 
   revalidatePath('/eventos');
   revalidatePath(`/eventos/${id}`);

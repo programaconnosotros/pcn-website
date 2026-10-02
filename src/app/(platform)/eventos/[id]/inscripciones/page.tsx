@@ -5,10 +5,19 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { getEventManager } from '@/lib/event-access';
 import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
-import { getEventRegistrations } from '@/actions/events/get-event-registrations';
+import { getEventRegistrations, getEventWaitlist } from '@/actions/events/get-event-registrations';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { RegistrationsDataTable } from '@/components/events/registrations-data-table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { LocalDateTime } from '@/components/ui/local-date-time';
 
 const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
@@ -27,7 +36,10 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
   }
 
   // Obtener todas las inscripciones
-  const registrations = await getEventRegistrations(id);
+  const [registrations, waitlist] = await Promise.all([
+    getEventRegistrations(id),
+    getEventWaitlist(id),
+  ]);
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
   const cancelledRegistrations = registrations.filter((r) => r.cancelledAt !== null);
@@ -50,7 +62,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
             />
           </StickyHeader>
 
-          <RuledGrid className="mb-4 grid-cols-1 sm:grid-cols-3">
+          <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-4">
             {[
               {
                 label: 'activas',
@@ -63,6 +75,11 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
                 hint: 'con carrera y lugar de estudio',
               },
               { label: 'profesionales', value: professionalsCount, hint: 'con cargo y empresa' },
+              {
+                label: 'en espera',
+                value: waitlist.length,
+                hint: event.capacity !== null ? `cupo: ${event.capacity}` : 'sin cupo',
+              },
             ].map((stat) => (
               <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -74,6 +91,45 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
               </div>
             ))}
           </RuledGrid>
+
+          {waitlist.length > 0 && (
+            <section className="mb-4 border border-pcnGreen-200">
+              <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                <span className="text-pcnGreen-500">{'// '}</span>
+                lista de espera · {waitlist.length}
+              </h2>
+              <p className="px-3 pt-3 text-xs text-muted-foreground">
+                Cuando se libera un lugar, se inscribe automáticamente a la primera persona de la
+                lista y le llega un email.
+              </p>
+              <div className="p-3">
+                <div className="overflow-x-auto rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-12">#</TableHead>
+                        <TableHead className="min-w-[200px]">Nombre</TableHead>
+                        <TableHead className="min-w-[240px]">Email</TableHead>
+                        <TableHead className="whitespace-nowrap">Se sumó</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {waitlist.map((entry) => (
+                        <TableRow key={entry.id}>
+                          <TableCell className="font-mono text-xs">{entry.position}</TableCell>
+                          <TableCell className="font-medium">{entry.name}</TableCell>
+                          <TableCell className="text-sm">{entry.email}</TableCell>
+                          <TableCell className="whitespace-nowrap text-sm">
+                            <LocalDateTime date={entry.createdAt} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </section>
+          )}
 
           <section className="mb-14 border border-pcnGreen-200">
             <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">

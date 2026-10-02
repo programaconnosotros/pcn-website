@@ -49,6 +49,7 @@ model User {
   comments             Comment[]
   likes                Like[]
   eventRegistrations   EventRegistration[]
+  eventWaitlistEntries EventWaitlistEntry[]
   talkProposals        TalkProposal[]
   speakerTalks         TalkSpeaker[]         @relation("UserTalkSpeakers")
   talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
@@ -175,14 +176,15 @@ model Event {
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
 
-  createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
-  organizers    EventOrganizer[]
-  galleryItems  GalleryItem[]
-  registrations EventRegistration[]
-  sponsors      Sponsor[]
-  announcements Announcement[]
-  talkProposals TalkProposal[]
-  talks         Talk[]
+  createdBy       User?                @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  organizers      EventOrganizer[]
+  galleryItems    GalleryItem[]
+  registrations   EventRegistration[]
+  waitlistEntries EventWaitlistEntry[]
+  sponsors        Sponsor[]
+  announcements   Announcement[]
+  talkProposals   TalkProposal[]
+  talks           Talk[]
 
   @@index([shortcut])
   @@index([createdById])
@@ -366,6 +368,25 @@ model EventRegistration {
   @@index([eventId])
   @@index([userId])
   @@index([cancelledAt])
+}
+
+// Lista de espera de un evento con cupo lleno. El orden de la fila es createdAt; al conseguir
+// lugar se marca promotedAt y al salir de la lista, cancelledAt (las filas no se borran).
+model EventWaitlistEntry {
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String
+  cancelledAt DateTime?
+  promotedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, cancelledAt, promotedAt, createdAt])
+  @@index([userId])
 }
 
 model Sponsor {

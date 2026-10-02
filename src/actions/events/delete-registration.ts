@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { findSession } from '@/lib/session';
+import { lockEvent, notifyPromotions, promoteFromWaitlist } from '@/lib/event-waitlist';
 
 export const deleteRegistration = async (registrationId: string) => {
   // Verificar que el usuario está logueado
@@ -33,10 +34,23 @@ export const deleteRegistration = async (registrationId: string) => {
     throw new Error('No tienes permisos para realizar esta acción');
   }
 
-  // Eliminar la inscripción físicamente
-  await prisma.eventRegistration.delete({
-    where: { id: registrationId },
+  const outcome = await prisma.$transaction(async (tx) => {
+    // Bloquear el evento: la baja y la promoción de quien espera pasan juntas
+    const event = await lockEvent(tx, registration.eventId);
+
+    // Eliminar la inscripción físicamente
+    await tx.eventRegistration.delete({
+      where: { id: registrationId },
+    });
+
+    // Si se liberó un lugar, pasa a la próxima persona en la lista de espera
+    if (!event || registration.cancelledAt !== null) return null;
+    return { event, promoted: await promoteFromWaitlist(tx, event) };
   });
+
+  if (outcome && outcome.promoted.length > 0) {
+    await notifyPromotions(outcome.event, outcome.promoted);
+  }
 
   revalidatePath(`/eventos/${registration.eventId}`);
   return { success: true };

@@ -6,6 +6,12 @@ import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import {
+  activeWaitlistWhere,
+  lockEvent,
+  notifyPromotions,
+  promoteFromWaitlist,
+} from '@/lib/event-waitlist';
 
 type CancelRegistrationParams = {
   registrationId?: string;
@@ -29,72 +35,99 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
     throw new Error('No autorizado');
   }
 
-  // Verificar que el evento existe
-  const event = await prisma.event.findFirst({
-    where: {
-      id: eventId,
-      deletedAt: null,
-    },
-  });
+  const userName = session.user.name;
+  const userEmail = session.user.email;
 
-  if (!event) {
-    throw new Error('Evento no encontrado');
-  }
+  const outcome = await prisma.$transaction(async (tx) => {
+    // Bloquear el evento: la baja y la promoción de quien espera pasan juntas
+    const event = await lockEvent(tx, eventId);
 
-  let registration = null;
+    if (!event) {
+      throw new Error('Evento no encontrado');
+    }
 
-  // Si hay registrationId, verificar que pertenece al usuario
-  if (registrationId) {
-    registration = await prisma.eventRegistration.findFirst({
+    // Si hay registrationId, verificar que pertenece al usuario
+    const registration = await tx.eventRegistration.findFirst({
       where: {
-        id: registrationId,
-        eventId: eventId,
+        ...(registrationId ? { id: registrationId } : {}),
+        eventId,
         userId: session.userId,
         cancelledAt: null, // Solo cancelar si no está ya cancelada
       },
-      include: { user: true },
     });
-  } else {
-    // Buscar inscripción del usuario actual
-    registration = await prisma.eventRegistration.findFirst({
-      where: {
-        eventId: eventId,
-        userId: session.userId,
-        cancelledAt: null,
-      },
-      include: { user: true },
+
+    if (registration) {
+      // Marcar como cancelada (no eliminar)
+      await tx.eventRegistration.update({
+        where: { id: registration.id },
+        data: { cancelledAt: new Date() },
+      });
+
+      return {
+        event,
+        status: 'cancelled_registration' as const,
+        id: registration.id,
+        promoted: await promoteFromWaitlist(tx, event),
+      };
+    }
+
+    // Sin inscripción activa: puede que esté saliendo de la lista de espera
+    const waitlistEntry = await tx.eventWaitlistEntry.findFirst({
+      where: { ...activeWaitlistWhere(eventId), userId: session.userId },
     });
-  }
 
-  if (!registration) {
-    throw new Error('Inscripción no encontrada o ya cancelada');
-  }
+    if (!waitlistEntry) {
+      throw new Error('Inscripción no encontrada o ya cancelada');
+    }
 
-  const userName = registration.user.name;
-  const userEmail = registration.user.email;
+    await tx.eventWaitlistEntry.update({
+      where: { id: waitlistEntry.id },
+      data: { cancelledAt: new Date() },
+    });
 
-  // Marcar como cancelada (no eliminar)
-  await prisma.eventRegistration.update({
-    where: { id: registration.id },
-    data: {
-      cancelledAt: new Date(),
-    },
+    return {
+      event,
+      status: 'cancelled_waitlist' as const,
+      id: waitlistEntry.id,
+      promoted: [],
+    };
   });
+
+  const { event, status, id, promoted } = outcome;
 
   // Notificar a los admins sobre la cancelación
-  await notifyAdmins({
-    type: 'event_registration_cancelled',
-    title: 'Inscripción cancelada',
-    message: `${userName} ha cancelado su inscripción al evento "${event.name}"`,
-    metadata: {
-      eventId: eventId,
-      eventName: event.name,
-      registrationId: registration.id,
-      userName: userName,
-      userEmail: userEmail,
-    },
-  });
+  if (status === 'cancelled_registration') {
+    await notifyAdmins({
+      type: 'event_registration_cancelled',
+      title: 'Inscripción cancelada',
+      message: `${userName} ha cancelado su inscripción al evento "${event.name}"`,
+      metadata: {
+        eventId,
+        eventName: event.name,
+        registrationId: id,
+        userName,
+        userEmail,
+      },
+    });
+  } else {
+    await notifyAdmins({
+      type: 'event_waitlist_cancelled',
+      title: 'Salida de lista de espera',
+      message: `${userName} salió de la lista de espera del evento "${event.name}"`,
+      metadata: {
+        eventId,
+        eventName: event.name,
+        waitlistId: id,
+        userName,
+        userEmail,
+      },
+    });
+  }
+
+  if (promoted.length > 0) {
+    await notifyPromotions(event, promoted);
+  }
 
   revalidatePath(`/eventos/${eventId}`);
-  return { success: true };
+  return { success: true, status };
 };

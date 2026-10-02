@@ -2184,11 +2184,12 @@ if (location) url.searchParams.set('location', location);`,
           },
         ],
         usage: [
-          'Inscripción propia (cuando el evento no tiene `externalRegistrationUrl`): hace falta tener cuenta. Sin sesión, el botón lleva a `/autenticacion/iniciar-sesion?redirect=/eventos/:id&autoRegister=true` (también funciona desde el registro); al volver, `EventDetailClient` llama a `registerEvent` sola y muestra un diálogo de confirmación. Con sesión, primero `checkEventCapacity` informa los lugares que quedan y después `registerEvent` valida todo en el servidor.',
-          '`registerEvent` tiene rate limit (20 cada 10 minutos), rechaza si ya hay una inscripción activa, vuelve a contar las activas contra `capacity`, reactiva una cancelada o crea una nueva, y notifica a los admins. Cancelar (`cancelRegistration`) solo puede hacerlo la propia persona y es un soft delete; quienes gestionan el evento pueden además borrar una inscripción definitivamente.',
+          'Inscripción propia (cuando el evento no tiene `externalRegistrationUrl`): hace falta tener cuenta. Sin sesión, el botón lleva a `/autenticacion/iniciar-sesion?redirect=/eventos/:id&autoRegister=true` (también funciona desde el registro); al volver, `EventDetailClient` llama a `registerEvent` sola y muestra un diálogo de confirmación. Con sesión, el botón llama directo a `registerEvent`, que decide en el servidor si hay lugar o si la persona va a la lista de espera.',
+          '`registerEvent` tiene rate limit (20 cada 10 minutos) y corre en una transacción que bloquea la fila del evento (`SELECT … FOR UPDATE`), así dos personas no se quedan con el último lugar. Rechaza si ya hay una inscripción activa o si ya está esperando, cuenta las activas contra `capacity` (o respeta `markedAsFull`), reactiva una cancelada o crea una nueva, y notifica a los admins. Cancelar (`cancelRegistration`) solo puede hacerlo la propia persona y es un soft delete; quienes gestionan el evento pueden además borrar una inscripción definitivamente.',
+          'Lista de espera propia (`EventWaitlistEntry`): si no hay lugar, `registerEvent` suma a la persona al final de la fila y le muestra su posición. Cuando se libera un lugar (alguien cancela, se borra una inscripción o se edita el cupo), `promoteFromWaitlist` en `src/lib/event-waitlist.ts` inscribe en orden de llegada a quienes esperan, dentro de la misma transacción, y `notifyPromotions` les manda un email y avisa a los admins. Las filas no se borran: `promotedAt` y `cancelledAt` guardan quién consiguió lugar y quién se bajó. No promueve si el evento está marcado como lleno a mano o ya terminó.',
           'Inscripción externa: si el evento tiene `externalRegistrationUrl`, el botón abre esa URL (Luma, por ejemplo) y no se cuenta cupo en el sitio; si está marcado como lleno, el botón pasa a ser `unirmeAListaDeEspera();` y lleva a la lista de espera de esa plataforma. El evento se considera completo si tiene `markedAsFull` o si las inscripciones activas llegaron a `capacity`; la página lo muestra con "Cupo completo" y, si no, con "Quedan N lugares disponibles.".',
-          'Quienes gestionan el evento ven `/eventos/[id]/inscripciones`: totales de activas y canceladas, cuántas son de estudiantes y cuántas de profesionales (según el perfil), y una tabla de TanStack Table con búsqueda, orden por nombre y fecha, y acción para borrar. El panel de admin muestra una barra de inscriptos sobre el cupo para cada evento próximo.',
-          'Lo que todavía no tiene, por si querés contribuir: lista de espera propia, check-in con QR, emails de confirmación o recordatorio y exportar la lista a CSV.',
+          'Quienes gestionan el evento ven `/eventos/[id]/inscripciones`: totales de activas y canceladas, cuántas son de estudiantes y cuántas de profesionales (según el perfil), una tabla de TanStack Table con búsqueda, orden por nombre y fecha, y acción para borrar, y la lista de espera en el orden en que se va a promover. El panel de admin muestra una barra de inscriptos sobre el cupo para cada evento próximo.',
+          'Lo que todavía no tiene, por si querés contribuir: check-in con QR, emails de confirmación o recordatorio y exportar la lista a CSV.',
         ],
         examples: [
           {
@@ -2212,40 +2213,25 @@ if (location) url.searchParams.set('location', location);`,
 }`,
           },
           {
-            file: 'src/actions/events/register-event.ts',
+            file: 'src/lib/event-waitlist.ts',
             lang: 'ts',
             caption:
-              'El cupo se vuelve a validar en el servidor justo antes de crear o reactivar la inscripción.',
-            code: `// Si existe una inscripción activa, no permitir
-if (existingRegistration && existingRegistration.cancelledAt === null) {
-  throw new Error('Ya estás registrado en este evento');
-}
-
-// Validar cupo disponible (verificar nuevamente antes de crear/actualizar la inscripción)
-if (event.capacity !== null) {
-  const currentRegistrations = await prisma.eventRegistration.count({
-    where: {
-      eventId: eventId,
-      cancelledAt: null, // Excluir inscripciones canceladas
-    },
-  });
-
-  if (currentRegistrations >= event.capacity) {
-    throw new Error('El cupo del evento está completo. No se pueden aceptar más inscripciones.');
-  }
-}
-
-let registrationId: string;
-try {
-  // Si existe una inscripción cancelada, reactivarla
-  if (existingRegistration && existingRegistration.cancelledAt !== null) {
-    await prisma.eventRegistration.update({
-      where: { id: existingRegistration.id },
-      data: {
-        cancelledAt: null, // Reactivar la inscripción
-      },
+              'Con la fila del evento bloqueada, los lugares libres pasan a quienes esperan, en orden de llegada.',
+            code: `for (;;) {
+  if (event.capacity !== null) {
+    const active = await tx.eventRegistration.count({
+      where: { eventId: event.id, cancelledAt: null },
     });
-    // …`,
+    if (active >= event.capacity) break;
+  }
+
+  const next = await tx.eventWaitlistEntry.findFirst({
+    where: activeWaitlistWhere(event.id),
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    include: { user: { select: { name: true, email: true } } },
+  });
+  if (!next) break;
+  // …`,
           },
           {
             file: 'src/components/events/event-detail-client.tsx',
@@ -2257,8 +2243,8 @@ try {
     autoRegister &&
     isAuthenticated &&
     !isRegistered &&
+    !isWaitlisted &&
     !hasAutoRegistered &&
-    capacityAvailable &&
     !externalRegistrationUrl
   ) {
     const performAutoRegister = async () => {

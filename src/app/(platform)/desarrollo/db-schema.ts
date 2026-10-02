@@ -852,6 +852,46 @@ export const dbModels: DbModel[] = [
     uniques: [['eventId', 'userId']],
   },
   {
+    name: 'EventWaitlistEntry',
+    domain: 'eventos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'eventId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'cancelledAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'promotedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['eventId', 'userId']],
+  },
+  {
     name: 'Sponsor',
     domain: 'eventos',
     fields: [
@@ -1927,6 +1967,22 @@ export const dbRelations: DbRelation[] = [
   },
   {
     from: 'EventRegistration',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'EventWaitlistEntry',
+    to: 'Event',
+    label: 'event',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'EventWaitlistEntry',
     to: 'User',
     label: 'user',
     optional: false,

@@ -3,7 +3,12 @@ import { redirect } from 'next/navigation';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import type { EventFormData } from '@/schemas/event-schema';
+import { fillFromWaitlist } from '@/lib/event-waitlist';
 import { updateEvent } from './update-event';
+
+jest.mock('@/lib/event-waitlist', () => ({
+  fillFromWaitlist: jest.fn().mockResolvedValue([]),
+}));
 
 const validEventData: EventFormData = {
   name: 'Tech Talk Buenos Aires',
@@ -133,6 +138,8 @@ describe('updateEvent', () => {
     );
 
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+    // Más cupo o desmarcar "lleno" puede liberar lugares para quienes esperan
+    expect(fillFromWaitlist).toHaveBeenCalledWith('event-1');
     expect(revalidatePath).toHaveBeenCalledWith('/eventos');
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/event-1');
     expect(redirect).toHaveBeenCalledWith('/eventos/event-1');

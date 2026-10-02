@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'eventos',
+    title: 'Lista de espera en los eventos',
+    description:
+      'Si un evento se llena, ahora podés sumarte a la lista de espera y ver en qué lugar de la fila estás. Cuando alguien cancela, la primera persona de la lista queda inscripta sola y le llega un email avisándole.',
+    authors: ['FedericoV21', 'gmanavarro', 'agustin-sanc'],
+    href: '/eventos',
+  },
+  {
+    date: '2026-10-02',
     area: 'setups',
     title: 'Compartí tu setup',
     description:

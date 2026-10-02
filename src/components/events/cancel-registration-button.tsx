@@ -12,13 +12,17 @@ type CancelRegistrationButtonProps = {
   eventId: string;
   registrationId?: string;
   onCancel?: () => void;
+  // 'waitlist' para salir de la lista de espera en vez de cancelar una inscripción
+  mode?: 'registration' | 'waitlist';
 };
 
 export function CancelRegistrationButton({
   eventId,
   registrationId,
   onCancel,
+  mode = 'registration',
 }: CancelRegistrationButtonProps) {
+  const isWaitlist = mode === 'waitlist';
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -31,8 +35,10 @@ export function CancelRegistrationButton({
           eventId,
         }),
         {
-          loading: 'Cancelando inscripción...',
-          success: 'Inscripción cancelada exitosamente',
+          loading: isWaitlist ? 'Saliendo de la lista de espera...' : 'Cancelando inscripción...',
+          success: isWaitlist
+            ? 'Saliste de la lista de espera'
+            : 'Inscripción cancelada exitosamente',
           error: (error) => {
             console.error('Error al cancelar inscripción', error);
             return actionErrorMessage(error, 'Ocurrió un error al cancelar la inscripción', true);
@@ -57,10 +63,10 @@ export function CancelRegistrationButton({
       className="w-full"
       onClick={handleCancel}
       loading={isLoading}
-      loadingText="cancelando..."
+      loadingText={isWaitlist ? 'saliendo...' : 'cancelando...'}
     >
       <X className="mr-2 h-4 w-4" />
-      cancelarInscripcion();
+      {isWaitlist ? 'salirDeLaListaDeEspera();' : 'cancelarInscripcion();'}
     </Button>
   );
 }

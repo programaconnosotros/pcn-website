@@ -1,7 +1,14 @@
 import { revalidatePath } from 'next/cache';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
+import { lockEvent, notifyPromotions, promoteFromWaitlist } from '@/lib/event-waitlist';
 import { deleteRegistration } from './delete-registration';
+
+jest.mock('@/lib/event-waitlist', () => ({
+  lockEvent: jest.fn(),
+  promoteFromWaitlist: jest.fn(),
+  notifyPromotions: jest.fn(),
+}));
 
 const adminUser = {
   id: 'user-admin',
@@ -41,6 +48,25 @@ const mockRegistration = {
   userId: 'user-admin',
   cancelledAt: null,
   createdAt: new Date('2025-06-01'),
+};
+
+const lockedEvent = {
+  id: 'event-1',
+  name: 'Tech Talk',
+  date: new Date('2099-06-01T21:00:00Z'),
+  endDate: null,
+  capacity: 2,
+  markedAsFull: false,
+  externalRegistrationUrl: null,
+};
+
+const signedInAsAdmin = () => {
+  mockCookies({ sessionId: 'session-admin' });
+  prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+  prismaMock.$transaction.mockImplementation(((fn: (_tx: unknown) => unknown) =>
+    fn(prismaMock)) as any);
+  jest.mocked(lockEvent).mockResolvedValue(lockedEvent as any);
+  jest.mocked(promoteFromWaitlist).mockResolvedValue([]);
 };
 
 describe('deleteRegistration', () => {
@@ -86,10 +112,8 @@ describe('deleteRegistration', () => {
   });
 
   it('deletes the registration, revalidates the event path, and returns success', async () => {
-    mockCookies({ sessionId: 'session-admin' });
-    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    signedInAsAdmin();
     prismaMock.eventRegistration.findUnique.mockResolvedValue(mockRegistration as any);
-    prismaMock.eventRegistration.delete.mockResolvedValue(mockRegistration as any);
 
     const result = await deleteRegistration('reg-1');
 
@@ -98,5 +122,32 @@ describe('deleteRegistration', () => {
       where: { id: 'reg-1' },
     });
     expect(revalidatePath).toHaveBeenCalledWith('/eventos/event-1');
+  });
+
+  it('gives the freed spot to the next person waiting', async () => {
+    signedInAsAdmin();
+    prismaMock.eventRegistration.findUnique.mockResolvedValue(mockRegistration as any);
+    const promoted = [
+      { registrationId: 'reg-9', userId: 'user-9', userName: 'Ada', userEmail: 'ada@pcn.com' },
+    ];
+    jest.mocked(promoteFromWaitlist).mockResolvedValue(promoted);
+
+    await deleteRegistration('reg-1');
+
+    expect(promoteFromWaitlist).toHaveBeenCalledWith(prismaMock, lockedEvent);
+    expect(notifyPromotions).toHaveBeenCalledWith(lockedEvent, promoted);
+  });
+
+  it('does not promote anyone when the deleted registration was already cancelled', async () => {
+    signedInAsAdmin();
+    prismaMock.eventRegistration.findUnique.mockResolvedValue({
+      ...mockRegistration,
+      cancelledAt: new Date('2025-06-02'),
+    } as any);
+
+    await deleteRegistration('reg-1');
+
+    expect(promoteFromWaitlist).not.toHaveBeenCalled();
+    expect(notifyPromotions).not.toHaveBeenCalled();
   });
 });
