@@ -19,7 +19,7 @@ export const galleryTileSelect = {
   takenAt: true,
   description: true,
   event: { select: { id: true, name: true } },
-  tags: { select: { user: { select: { name: true } } } },
+  tags: { select: { user: { select: { id: true, name: true } } } },
 } satisfies Prisma.GalleryItemSelect;
 
 export type GalleryTile = ReturnType<

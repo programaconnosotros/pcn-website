@@ -9,6 +9,8 @@ import {
   putImmutableObject,
 } from '@/lib/s3';
 import {
+  bulkDeleteGalleryItems,
+  bulkSetGalleryItemsEvent,
   createPhoto,
   createVideo,
   deleteGalleryItem,
@@ -169,6 +171,78 @@ describe('photo editing', () => {
 
     await expect(deleteGalleryItem('photo-1')).rejects.toThrow('No se pudieron borrar de S3');
     expect(prismaMock.galleryItem.delete).not.toHaveBeenCalled();
+  });
+});
+
+describe('bulk editing', () => {
+  it('only lets admins edit or delete many items at once', async () => {
+    loginAs(regular);
+
+    await expect(bulkSetGalleryItemsEvent(['a'], null)).rejects.toThrow('No autorizado');
+    await expect(bulkDeleteGalleryItems(['a'])).rejects.toThrow('No autorizado');
+    expect(prismaMock.galleryItem.updateMany).not.toHaveBeenCalled();
+    expect(prismaMock.galleryItem.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it('requires a selection', async () => {
+    loginAs(admin);
+
+    await expect(bulkSetGalleryItemsEvent([], null)).rejects.toThrow('No hay nada seleccionado');
+  });
+
+  it('moves the existing items to the event', async () => {
+    loginAs(admin);
+    prismaMock.event.findFirst.mockResolvedValue({ id: 'event-2' } as any);
+    prismaMock.galleryItem.findMany.mockResolvedValue([
+      { id: 'a', eventId: 'event-1' },
+      { id: 'b', eventId: null },
+    ] as any);
+
+    const result = await bulkSetGalleryItemsEvent(['a', 'b', 'a', 'ghost'], 'event-2');
+
+    expect(prismaMock.galleryItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: { in: ['a', 'b', 'ghost'] } } }),
+    );
+    expect(prismaMock.galleryItem.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ['a', 'b'] } },
+      data: { eventId: 'event-2' },
+    });
+    expect(result).toEqual({ updated: 2 });
+  });
+
+  it('does not move items to unknown events', async () => {
+    loginAs(admin);
+    prismaMock.event.findFirst.mockResolvedValue(null);
+
+    await expect(bulkSetGalleryItemsEvent(['a'], 'ghost')).rejects.toThrow('Evento no encontrado');
+    expect(prismaMock.galleryItem.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('deletes the items and all their files', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([
+      { id: 'a', eventId: null, storageKeys: ['gallery/a/full.webp'], tags: [] },
+      { id: 'b', eventId: 'e', storageKeys: ['gallery/b/video.mp4'], tags: [{ userId: 'u' }] },
+    ] as any);
+
+    const result = await bulkDeleteGalleryItems(['a', 'b']);
+
+    expect(deleteObjects).toHaveBeenCalledWith(['gallery/a/full.webp', 'gallery/b/video.mp4']);
+    expect(prismaMock.galleryItem.deleteMany).toHaveBeenCalledWith({
+      where: { id: { in: ['a', 'b'] } },
+    });
+    expect(result).toEqual({ deleted: 2 });
+  });
+
+  it('keeps the items when S3 cannot delete their files', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([
+      { id: 'a', eventId: null, storageKeys: ['gallery/a/full.webp'], tags: [] },
+    ] as any);
+    (deleteObjects as jest.Mock).mockRejectedValueOnce(new Error('No se pudieron borrar de S3'));
+
+    await expect(bulkDeleteGalleryItems(['a'])).rejects.toThrow('No se pudieron borrar de S3');
+    expect(prismaMock.galleryItem.deleteMany).not.toHaveBeenCalled();
   });
 });
 

@@ -37,3 +37,17 @@ export const videoMetadataSchema = z.object({
 });
 
 export type VideoMetadataInput = z.input<typeof videoMetadataSchema>;
+
+// The items an admin edits at once from the gallery.
+export const MAX_BULK_ITEMS = 500;
+export const galleryItemIdsSchema = z
+  .array(z.string().min(1))
+  .min(1, 'No hay nada seleccionado')
+  .max(MAX_BULK_ITEMS, `Máximo ${MAX_BULK_ITEMS} a la vez`)
+  .transform((ids) => [...new Set(ids)]);
+
+export const parseGalleryItemIds = (ids: string[]) => {
+  const parsed = galleryItemIdsSchema.safeParse(ids);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Selección inválida');
+  return parsed.data;
+};
