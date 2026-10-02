@@ -137,7 +137,7 @@ export default async function GalleryItemPage(props: Props) {
           meta={
             total > 1 && (
               <span className="tabular-nums">
-                [<span className="text-pcnGreen">{padIndex(index + 1, total)}</span>/{total}]
+                [<span className="text-pcnGreen">{padIndex(total - index, total)}</span>/{total}]
               </span>
             )
           }

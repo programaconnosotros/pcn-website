@@ -57,7 +57,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
           aria-hidden
           className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm"
         >
-          #{padIndex(index + 1, total)}
+          #{padIndex(total - index, total)}
         </span>
         {photo.kind === 'VIDEO' && (
           <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen backdrop-blur-sm transition-opacity group-hover:opacity-0">
