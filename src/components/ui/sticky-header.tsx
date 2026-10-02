@@ -11,6 +11,8 @@ const REVEAL_SPEED = 0.5;
 const HIDE_DISTANCE = 8;
 // Scroll events further apart than this (ms) start a new gesture.
 const GESTURE_GAP = 100;
+// Pinned offset from the top (top-3), included in the space reserved below the shown header.
+const PINNED_TOP = 12;
 
 interface StickyHeaderProps {
   children: ReactNode;
@@ -35,6 +37,18 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
     stateRef.current = next;
     setState(next);
   };
+
+  // While shown, publish the space the header takes so other sticky bars (the mobile table of
+  // contents) pin below it instead of covering it.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (state !== 'shown' || !header) return;
+    const root = document.documentElement;
+    root.style.setProperty('--sticky-header-offset', `${header.offsetHeight + PINNED_TOP}px`);
+    return () => {
+      root.style.removeProperty('--sticky-header-offset');
+    };
+  }, [state]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -95,7 +109,7 @@ export const StickyHeader = ({ children, className }: StickyHeaderProps) => {
         // Tabbing into a hidden header brings it back.
         onFocus={() => state === 'hidden' && setHeaderState('shown')}
         className={cn(
-          'relative z-30 -mx-4 px-4 [display:flow-root]',
+          'relative z-40 -mx-4 px-4 [display:flow-root]',
           // Pinned 0.75rem down, with the backdrop reaching up to the edge, so a title with no top
           // margin still gets breathing room without changing the header's height in the flow.
           state !== 'rest' &&

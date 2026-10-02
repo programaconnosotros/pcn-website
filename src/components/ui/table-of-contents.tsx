@@ -234,8 +234,9 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
 
   return (
     <>
-      {/* Mobile: sticky prompt bar with prev/next and a dropdown listing every section. */}
-      <div className="sticky top-0 z-30 -mx-4 border-b border-pcnGreen-200 bg-background/95 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] font-mono backdrop-blur lg:hidden">
+      {/* Mobile: sticky prompt bar with prev/next and a dropdown listing every section. It drops
+          below the page's StickyHeader while that one is shown. */}
+      <div className="sticky top-[var(--sticky-header-offset,0px)] z-30 -mx-4 border-b border-pcnGreen-200 bg-background/95 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] font-mono backdrop-blur transition-[top] duration-200 ease-out lg:hidden">
         <div className="flex items-center gap-1.5">
           <button
             type="button"
