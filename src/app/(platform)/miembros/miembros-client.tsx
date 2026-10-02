@@ -170,7 +170,7 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
         {
           id: 'builders',
           title: 'builders',
-          description: 'Construyeron proyectos junto a la comunidad.',
+          description: 'Construyeron proyectos que compartieron con la comunidad.',
           members: filtered.filter((m) => m.projects > 0).sort(byStat('projects')),
           stat: 'projects' as const,
         },
