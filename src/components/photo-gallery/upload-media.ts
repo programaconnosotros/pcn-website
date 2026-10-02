@@ -47,9 +47,34 @@ const once = (target: EventTarget, event: string) =>
     target.addEventListener('error', () => reject(new Error(event)), { once: true });
   });
 
+// Posters are only thumbnails: cap them so a 4K frame doesn't become a multi-MB JPEG (and stays
+// under iOS Safari's canvas size limit).
+const POSTER_MAX_SIDE = 1280;
+
+const canvasToJpeg = (canvas: HTMLCanvasElement) =>
+  new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error('poster'))),
+      'image/jpeg',
+      0.85,
+    ),
+  );
+
+/** A plain black poster, for videos whose frames the browser can't grab. */
+export function placeholderPoster(width = 640, height = 360) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext('2d')!;
+  context.fillStyle = '#000';
+  context.fillRect(0, 0, width, height);
+  return canvasToJpeg(canvas);
+}
+
 /**
  * Reads a video's duration and size and grabs a frame (a second in, or a tenth of the way for
- * short clips) as its poster. Fails when the browser can't decode the format.
+ * short clips) as its poster. Fails when the browser can't read the file at all; when it can
+ * read the metadata but not a frame, the poster is a black placeholder.
  */
 export async function readVideo(file: File): Promise<VideoInfo> {
   const url = URL.createObjectURL(file);
@@ -59,32 +84,43 @@ export async function readVideo(file: File): Promise<VideoInfo> {
   video.preload = 'auto';
   try {
     video.src = url;
-    await once(video, 'loadeddata');
+    video.load();
+    // iOS Safari only fires `loadedmetadata` for a video that isn't playing, never `loadeddata`.
+    await once(video, 'loadedmetadata');
 
     const duration = Number.isFinite(video.duration) ? video.duration : 0;
-    video.currentTime = Math.min(1, duration / 10);
-    await once(video, 'seeked');
+    const width = video.videoWidth || null;
+    const height = video.videoHeight || null;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')!.drawImage(video, 0, 0);
-    const poster = await new Promise<Blob>((resolve, reject) =>
-      canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error('poster'))),
-        'image/jpeg',
-        0.9,
-      ),
-    );
+    let poster: Blob;
+    try {
+      // iOS Safari doesn't buffer any frame until playback starts; muted inline play is allowed
+      // without a user gesture.
+      await video.play().catch(() => {});
+      video.pause();
+      const seeked = once(video, 'seeked');
+      video.currentTime = Math.max(0.1, Math.min(1, duration / 10));
+      await seeked;
+
+      const scale = Math.min(1, POSTER_MAX_SIDE / Math.max(video.videoWidth, video.videoHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(video.videoWidth * scale);
+      canvas.height = Math.round(video.videoHeight * scale);
+      canvas.getContext('2d')!.drawImage(video, 0, 0, canvas.width, canvas.height);
+      poster = await canvasToJpeg(canvas);
+    } catch {
+      poster = await placeholderPoster();
+    }
 
     return {
       durationSeconds: duration ? Math.round(duration) : null,
-      width: video.videoWidth || null,
-      height: video.videoHeight || null,
+      width,
+      height,
       poster,
     };
   } finally {
     video.removeAttribute('src');
+    video.load();
     URL.revokeObjectURL(url);
   }
 }

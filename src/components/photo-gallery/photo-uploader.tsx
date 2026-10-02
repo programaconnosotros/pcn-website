@@ -23,6 +23,7 @@ import {
   VIDEO_TYPES,
   isHeic,
   isVideo,
+  placeholderPoster,
   postFile,
   putFile,
   readTakenAt,
@@ -74,10 +75,11 @@ async function prepare(file: File): Promise<Item> {
     const video = await readVideo(file);
     return { ...base, video, preview: URL.createObjectURL(video.poster) };
   } catch {
-    return {
-      ...base,
-      unsupported: 'Este navegador no puede leer el video. Probá exportarlo como MP4 (H.264).',
-    };
+    // The browser can't read it (e.g. HEVC on a desktop without the codec), but the file itself
+    // is fine: upload it anyway, with a placeholder poster and no metadata.
+    const poster = await placeholderPoster();
+    const video = { durationSeconds: null, width: null, height: null, poster };
+    return { ...base, video, preview: URL.createObjectURL(poster) };
   }
 }
 
