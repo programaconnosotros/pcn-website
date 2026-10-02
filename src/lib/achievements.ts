@@ -49,7 +49,7 @@ export type Achievement = DisplayBadge & {
   /** Also shown next to the name on the profile header, not only in the badges block. */
   highlight?: boolean;
   /** How far along a user is: `current` out of `target`. */
-  progress: (metrics: AchievementMetrics) => { current: number; target: number };
+  progress: (_metrics: AchievementMetrics) => { current: number; target: number };
 };
 
 type CountMetric = Exclude<keyof AchievementMetrics, 'contributorRank'>;
