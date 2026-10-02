@@ -1,17 +1,12 @@
-import {
-  PageHeaderSkeleton,
-  TitleRowSkeleton,
-  CardListSkeleton,
-} from '@/components/skeletons/page-skeletons';
+import { PageTitleSkeleton, RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 
 export default function Loading() {
   return (
     <>
-      <PageHeaderSkeleton breadcrumbs={2} />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <TitleRowSkeleton />
-          <CardListSkeleton count={1} variant="row" />
+          <PageTitleSkeleton />
+          <RuledGridSkeleton count={1} className="grid-cols-1" />
         </div>
       </div>
     </>

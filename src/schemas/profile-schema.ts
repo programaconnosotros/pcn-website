@@ -30,9 +30,20 @@ export const profileSchema = z.object({
   xAccountUrl: optionalUrl,
   linkedinUrl: optionalUrl,
   gitHubUrl: optionalUrl,
+  instagramUrl: optionalUrl,
+  youtubeUrl: optionalUrl,
+  twitchUrl: optionalUrl,
+  kickUrl: optionalUrl,
   slogan: z.string().optional().nullable(),
-  jobTitle: z.string().optional().nullable(),
-  enterprise: z.string().optional().nullable(),
+  // Puestos actuales, en orden. Las filas sin cargo se descartan al guardar.
+  positions: z
+    .array(
+      z.object({
+        jobTitle: z.string().trim().max(80, { message: 'Máximo 80 caracteres' }),
+        enterprise: z.string().trim().max(80, { message: 'Máximo 80 caracteres' }),
+      }),
+    )
+    .max(5, { message: 'Podés cargar hasta 5 puestos' }),
   career: z.string().optional().nullable(),
   studyPlace: z.string().optional().nullable(),
   programmingLanguages: z.array(

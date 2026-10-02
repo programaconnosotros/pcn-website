@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface EditAdviseDialogProps {
   adviseId: string;
@@ -42,7 +43,7 @@ export const EditAdviseDialog = ({
           onOpenChange(false);
           return 'Tu consejo fue editado exitosamente.';
         },
-        error: 'Ocurrió un error al editar el consejo',
+        error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
       });
     } finally {
       setIsSubmitting(false);
@@ -75,9 +76,9 @@ export const EditAdviseDialog = ({
               type="submit"
               className="w-full"
               loading={isSubmitting}
-              loadingText="Guardando..."
+              loadingText="guardando..."
             >
-              Guardar cambios
+              guardarCambios();
             </Button>
           </form>
         </Form>

@@ -3,15 +3,18 @@
 import { toggleLike } from '@/actions/advises/like-advise';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { formatDate } from '@/lib/utils';
-import { Advise, Session, User, Like } from '@prisma/client';
+import { cn, formatDate } from '@/lib/utils';
+import { Advise, User, Like } from '@prisma/client';
+import type { SessionWithUser } from '@/lib/session';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useState } from 'react';
@@ -21,12 +24,17 @@ import { EditAdviseDialog } from './edit-advise-dialog';
 export const AdviseCard = ({
   advise,
   session,
+  className,
+  showAuthor = true,
 }: {
+  className?: string;
+  /** Off where every card is by the same person, like their own profile. */
+  showAuthor?: boolean;
   advise: Advise & {
-    author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
+    author: Pick<User, 'id' | 'name' | 'image'>;
     likes: Like[];
   };
-  session: (Session & { user: User }) | null;
+  session: SessionWithUser | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -47,9 +55,7 @@ export const AdviseCard = ({
     },
   );
 
-  const isAuthor =
-    (session?.user?.id && session.user.id === advise.author.id) ||
-    (session?.user?.email && session.user.email === advise.author.email);
+  const isAuthor = !!session?.user?.id && session.user.id === advise.author.id;
 
   const isAdmin = session?.user?.role === 'ADMIN';
 
@@ -78,26 +84,11 @@ export const AdviseCard = ({
     }
   };
 
-  const Author = (
-    <div className="flex items-center gap-3">
-      <Avatar className="h-10 w-10">
-        <AvatarImage src={advise.author.image ?? undefined} alt={advise.author.name ?? undefined} />
-        <AvatarFallback>{advise.author?.name?.charAt(0)}</AvatarFallback>
-      </Avatar>
-
-      <div className="flex flex-col">
-        <Link href={`/perfil/${advise.author.id}`} className="hover:underline">
-          <h3 className="text-base font-semibold leading-tight">{advise.author.name}</h3>
-        </Link>
-      </div>
-    </div>
-  );
-
   const Options = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="h-6 w-6">
+          <MoreVertical className="h-3.5 w-3.5" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -116,29 +107,77 @@ export const AdviseCard = ({
   );
 
   return (
-    <Card
-      key={advise.id}
-      className="w-full border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
-    >
-      <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
-        {Author}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}
+    <article className={cn(ruledCellClassName, 'group/advise flex flex-col gap-4 p-4', className)}>
+      <Link
+        href={`/consejos/${advise.id}`}
+        className="relative flex-1 border-l-2 border-pcnGreen-200 pl-4 pr-6 text-[15px] leading-relaxed text-foreground/90 transition-colors hover:text-foreground group-hover/advise:border-pcnGreen-500"
+      >
+        <span
+          aria-hidden
+          className="absolute -top-1 right-0 font-serif text-4xl leading-none text-pcnGreen/15"
+        >
+          &rdquo;
+        </span>
+        {advise.content}
+      </Link>
+
+      <footer className="flex items-center gap-2">
+        {showAuthor && (
+          <Link
+            href={`/perfil/${advise.author.id}`}
+            className="group/author flex min-w-0 items-center gap-2"
+          >
+            <Avatar className="h-6 w-6 rounded-sm">
+              <AvatarImage
+                src={advise.author.image ?? undefined}
+                alt={advise.author.name ?? undefined}
+              />
+              <AvatarFallback className="rounded-sm text-[10px]">
+                {advise.author?.name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate font-mono text-xs font-semibold transition-colors group-hover/author:text-pcnGreen">
+              {advise.author.name}
+            </span>
+          </Link>
+        )}
+
+        <time
+          dateTime={new Date(advise.createdAt).toISOString()}
+          title={formatDate(advise.createdAt)}
+          className={cn(
+            'shrink-0 font-mono text-[11px] text-muted-foreground',
+            showAuthor && 'hidden sm:inline',
+          )}
+          suppressHydrationWarning
+        >
+          {showAuthor && <span className="text-pcnGreen-500/60">· </span>}
+          {format(advise.createdAt, 'd MMM yyyy', { locale: es })}
+        </time>
+
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            aria-pressed={isLiked}
+            className={cn(
+              'flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] tabular-nums transition-colors',
+              isLiked
+                ? 'border-red-500/40 bg-red-500/10 text-red-500 hover:text-red-400'
+                : 'border-transparent text-muted-foreground hover:border-red-500/30 hover:text-red-500',
+            )}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               handleLike();
             }}
           >
-            <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
+            <Heart className="h-3.5 w-3.5" fill={isLiked ? 'currentColor' : 'none'} />
+            {optimisticLikes.length}
             <span className="sr-only">Me gusta</span>
-          </Button>
+          </button>
           {canEditOrDelete && Options}
         </div>
-      </CardHeader>
+      </footer>
 
       <DeleteAdviseDialog
         adviseId={advise.id}
@@ -152,20 +191,6 @@ export const AdviseCard = ({
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
       />
-
-      <Link href={`/consejos/${advise.id}`} className="block">
-        <CardContent className="px-4 pb-6 pt-2">
-          <p>{advise.content}</p>
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-gray-500" suppressHydrationWarning>
-              {formatDate(advise.createdAt)}
-            </p>
-            <p className="text-xs text-gray-500">
-              {optimisticLikes.length} {optimisticLikes.length === 1 ? 'like' : 'likes'}
-            </p>
-          </div>
-        </CardContent>
-      </Link>
-    </Card>
+    </article>
   );
 };

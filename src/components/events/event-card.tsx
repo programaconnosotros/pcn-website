@@ -13,7 +13,7 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
   const isFull =
     event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
   return (
-    <Card className="group relative flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+    <Card className="group relative flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
       <div className="relative shrink-0 overflow-hidden">
         <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
       </div>
@@ -66,7 +66,7 @@ export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
 
         <CardFooter className="mt-auto">
           <Button variant="pcn" className="w-full">
-            Ver evento <ArrowRight className="ml-2 h-4 w-4" />
+            verEvento(); <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
       </div>

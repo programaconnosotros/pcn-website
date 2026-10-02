@@ -32,6 +32,7 @@ import { updateTalk } from '@/actions/talks/update-talk';
 import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
+import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
 
 type EventOption = {
   id: string;
@@ -89,7 +90,7 @@ function SpeakerFields({
   const isStudent = !!useWatch({ control, name: `speakers.${index}.isStudent` });
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
+    <div className="space-y-4 border border-pcnGreen-200 p-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">Orador {index + 1}</h3>
         {canRemove && (
@@ -183,7 +184,7 @@ function SpeakerFields({
       />
 
       {isProfessional && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.jobTitle`}
@@ -238,7 +239,7 @@ function SpeakerFields({
       />
 
       {isStudent && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.career`}
@@ -261,7 +262,7 @@ function SpeakerFields({
             name={`speakers.${index}.studyPlace`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Universidad / Institución</FormLabel>
+                <FormLabel>Institución</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Universidad Nacional de Tucumán"
@@ -443,7 +444,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
             name="manualEventLocation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ubicación del evento</FormLabel>
+                <FormLabel>Ubicación</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Once57, San Miguel de Tucumán"
@@ -500,7 +501,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               onClick={() => append({ ...EMPTY_SPEAKER })}
             >
               <Plus className="mr-1 h-4 w-4" />
-              Agregar orador
+              agregarOrador();
             </Button>
           </div>
           {fields.map((field, idx) => (
@@ -531,7 +532,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="order"
@@ -606,16 +607,16 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
           )}
         />
 
-        <div className="flex gap-4">
+        <div className={`${dialogFormActionBarClassName} flex gap-4`}>
           <Button
             type="submit"
             variant="pcn"
             className="flex-1"
             loading={isSubmitting}
-            loadingText="Guardando..."
+            loadingText="guardando..."
           >
             <Save className="mr-2 h-4 w-4" />
-            {talk ? 'Actualizar charla' : 'Crear charla'}
+            {talk ? 'actualizarCharla();' : 'crearCharla();'}
           </Button>
           {onCancel && (
             <Button
@@ -625,7 +626,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               disabled={isSubmitting}
               onClick={onCancel}
             >
-              Cancelar
+              cancelar();
             </Button>
           )}
         </div>

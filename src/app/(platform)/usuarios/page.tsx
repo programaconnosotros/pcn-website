@@ -1,56 +1,58 @@
-import { Heading2 } from '@/components/ui/heading-2';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Users } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledCell, RuledGrid } from '@/components/ui/ruled-grid';
 import { getUsers } from '@/actions/users/get-users';
 import { DataTable } from '@/components/comunity/data-table';
 import { columns } from '@/components/comunity/users-columns';
 
+const DAY_MS = 86_400_000;
+
+const Stat = ({ label, value, hint }: { label: string; value: string | number; hint: string }) => (
+  <RuledCell className="px-3 py-2">
+    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+    <p className="text-glow font-mono text-xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+    <p className="truncate font-mono text-[10px] text-muted-foreground/70">{hint}</p>
+  </RuledCell>
+);
+
 const CommunityPage = async () => {
   const users = await getUsers();
 
-  return (
-    <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Usuarios</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4">
-          <div className="mb-6">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Users className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Usuarios</span>
-            </Heading2>
-          </div>
+  const now = Date.now();
+  const newThisMonth = users.filter(
+    (user) => now - new Date(user.createdAt).getTime() < 30 * DAY_MS,
+  ).length;
+  const verified = users.filter((user) => user.emailVerified).length;
+  const admins = users.filter((user) => user.role === 'ADMIN').length;
+  const ambassadors = users.filter((user) => user.isAmbassador).length;
+  const withProfile = users.filter(
+    (user) => user.jobTitle || user.career || user.slogan || user.languages.length > 0,
+  ).length;
+  const percent = (value: number) =>
+    users.length ? `${Math.round((value / users.length) * 100)}%` : '—';
 
-          <DataTable columns={columns} data={users} />
-        </div>
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        <DataTable
+          header={<PageTitle path="usuarios" meta={`${users.length} usuarios registrados`} />}
+          intro={
+            <RuledGrid className="mb-4 grid-cols-2 sm:grid-cols-5">
+              <Stat label="nuevos" value={`+${newThisMonth}`} hint="últimos 30 días" />
+              <Stat label="verificados" value={percent(verified)} hint={`${verified} emails`} />
+              <Stat
+                label="perfil completo"
+                value={percent(withProfile)}
+                hint="cargo, estudios o bio"
+              />
+              <Stat label="admins" value={admins} hint="con acceso de administración" />
+              <Stat label="ambassadors" value={ambassadors} hint="programa PCN Ambassadors" />
+            </RuledGrid>
+          }
+          columns={columns}
+          data={users}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

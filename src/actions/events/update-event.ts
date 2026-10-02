@@ -5,8 +5,13 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { canEditEvent } from '@/lib/event-permissions';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
+  await enforceRateLimit('editContent');
+
   const validatedData = eventSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -15,26 +20,24 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('Usuario no autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');
   }
 
-  if (session.user.role !== 'ADMIN') {
-    throw new Error('No tienes permisos para editar eventos');
-  }
-
   // Verificar que el evento existe
   const existingEvent = await prisma.event.findUnique({
     where: { id },
+    include: { organizers: { select: { userId: true } } },
   });
 
   if (!existingEvent) {
     throw new Error('Evento no encontrado');
+  }
+
+  if (!canEditEvent(session.user, existingEvent)) {
+    throw new Error('No tienes permisos para editar este evento');
   }
 
   // Convertir las fechas de string a Date
@@ -48,7 +51,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
 
   const { sponsors, ...eventData } = validatedData;
 
-  // Eliminar sponsors existentes y crear los nuevos
+  // Reemplazar sponsors existentes por los nuevos
   await prisma.$transaction([
     prisma.sponsor.deleteMany({
       where: { eventId: id },

@@ -15,6 +15,11 @@ Each worktree gets an isolated Postgres database (provisioned automatically by t
 
 No port conflicts, no extra config needed.
 
+## Generated data
+
+- GitHub numbers shown on the site come from the committed snapshot `src/data/github-stats.json`; the site never calls the GitHub API at render time. Refresh with `pnpm github:stats` (skill: `actualizar-stats-github`).
+- After changing `prisma/schema.prisma`, run `pnpm db:diagram` to regenerate the ER diagram data on `/desarrollo` (`src/app/(platform)/desarrollo/db-schema.ts`).
+
 ## Pull requests
 
 When opening a PR that changes any UI, include screenshots in the description:

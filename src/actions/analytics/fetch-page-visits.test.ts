@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchPageVisits, getPageVisitStats } from './fetch-page-visits';
+import { requireAdmin } from '@/lib/admin';
+
+// Admin-only data: every test runs as an admin unless it says otherwise.
+jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
 
 const sampleVisit = {
   id: 'visit-1',
@@ -73,7 +77,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(80) // visitsThisWeek
       .mockResolvedValueOnce(300); // visitsThisMonth
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/home', _count: { path: 200 } },
         { path: '/about', _count: { path: 100 } },
@@ -111,7 +115,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(5)
       .mockResolvedValueOnce(8);
 
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([
         { path: '/a', _count: { path: 1 } },
         { path: '/b', _count: { path: 2 } },
@@ -134,7 +138,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);
@@ -155,7 +159,7 @@ describe('getPageVisitStats', () => {
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0)
       .mockResolvedValueOnce(0);
-    prismaMock.pageVisit.groupBy
+    (prismaMock.pageVisit.groupBy as jest.Mock)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any)
       .mockResolvedValueOnce([] as any);
@@ -168,5 +172,13 @@ describe('getPageVisitStats', () => {
         where: { userId: { not: null } },
       }),
     );
+  });
+});
+
+describe('fetchPageVisits access', () => {
+  it('rejects anyone who is not an admin', async () => {
+    (requireAdmin as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchPageVisits()).rejects.toThrow('No autorizado');
   });
 });

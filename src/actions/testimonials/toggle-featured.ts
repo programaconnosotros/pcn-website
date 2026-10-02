@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const toggleFeatured = async (id: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -10,10 +11,7 @@ export const toggleFeatured = async (id: string) => {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     throw new Error('Solo los administradores pueden marcar testimonios como destacados');

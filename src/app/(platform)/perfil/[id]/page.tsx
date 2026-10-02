@@ -1,40 +1,31 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { AdviseCard } from '@/components/advises/advise-card';
+import { ProfileBadges } from '@/components/badges/profile-badges';
+import {
+  AMBASSADOR_BADGE,
+  COFOUNDER_BADGE,
+  isBadgeIcon,
+  isBadgeTone,
+  type DisplayBadge,
+} from '@/lib/badges';
+import { earnedAchievements } from '@/lib/achievements';
+import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
+import { Github, Instagram, Linkedin, Pencil, Twitch, Youtube } from 'lucide-react';
+import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
-  Github,
-  Linkedin,
-  Pencil,
-  Twitter,
-  Briefcase,
-  GraduationCap,
-  MapPin,
-  Quote,
-  Lightbulb,
-  Images,
-  MicVocal,
-  Phone,
-  Mail,
-  Contact,
-} from 'lucide-react';
+  ProfileTabPanel,
+  ProfileTabs,
+  ProfileTabsProvider,
+} from '@/components/profile/profile-tab-nav';
+import { ProfileTabSkeleton } from '@/components/profile/profile-tab-skeleton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
 
 export const revalidate = 0;
@@ -50,7 +41,6 @@ export async function generateMetadata(props: {
     select: {
       name: true,
       slogan: true,
-      image: true,
     },
   });
 
@@ -65,11 +55,6 @@ export async function generateMetadata(props: {
   const description = user.slogan
     ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
     : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;
-  const imageUrl = user.image
-    ? user.image.startsWith('http')
-      ? user.image
-      : `${SITE_URL}${user.image}`
-    : `${SITE_URL}/pcn-link-preview.png`;
   const pageUrl = `${SITE_URL}/perfil/${params.id}`;
 
   return {
@@ -78,7 +63,6 @@ export async function generateMetadata(props: {
     openGraph: {
       title,
       description: description.length > 160 ? description.substring(0, 157) + '...' : description,
-      images: [imageUrl],
       url: pageUrl,
       type: 'profile',
       siteName: 'programaConNosotros',
@@ -87,7 +71,6 @@ export async function generateMetadata(props: {
       card: 'summary_large_image',
       title,
       description: description.length > 160 ? description.substring(0, 157) + '...' : description,
-      images: [imageUrl],
     },
   };
 }
@@ -96,28 +79,31 @@ interface ProfilePageProps {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ tab?: string }>;
 }
+
+// lucide has no X logo; same 24×24 box and `currentColor` fill as its icons.
+const XLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.17h1.7L7.4 4.73H5.58l11.1 14.44Z" />
+  </svg>
+);
+
+// Same for Kick: its "K" mark in the same box.
+const KickLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M3 3h6v4.5h1.5V6H12V4.5h1.5V3H21v6h-1.5v1.5H18V12h-1.5v1.5H18V15h1.5v1.5H21V21h-7.5v-1.5H12V18h-1.5v-1.5H9V21H3V3Z" />
+  </svg>
+);
 
 async function getUser(id: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        advises: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-          include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-                email: true,
-              },
-            },
-            likes: true,
-          },
+        badges: {
+          include: { badge: true },
+          orderBy: { awardedAt: 'asc' },
         },
         languages: {
           select: {
@@ -125,6 +111,10 @@ async function getUser(id: string) {
             color: true,
             logo: true,
           },
+        },
+        positions: {
+          select: { jobTitle: true, enterprise: true },
+          orderBy: { order: 'asc' },
         },
       },
     });
@@ -139,18 +129,29 @@ async function getUser(id: string) {
       name: user.name,
       email: user.email,
       image: user.image,
+      isAmbassador: user.isAmbassador,
+      isCofounder: user.isCofounder,
+      customBadges: user.badges,
       countryOfOrigin: user.countryOfOrigin,
       province: user.province,
       phoneNumber: (user as any).phoneNumber ?? null,
       slogan: user.slogan,
-      jobTitle: user.jobTitle,
-      enterprise: user.enterprise,
+      // Perfiles que todavía no guardaron puestos muestran el cargo único que tenían.
+      positions:
+        user.positions.length > 0
+          ? user.positions
+          : user.jobTitle || user.enterprise
+            ? [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise }]
+            : [],
       career: user.career,
       studyPlace: user.studyPlace,
       xAccountUrl: user.xAccountUrl,
       linkedinUrl: user.linkedinUrl,
       gitHubUrl: user.gitHubUrl,
-      advises: user.advises,
+      instagramUrl: user.instagramUrl,
+      youtubeUrl: user.youtubeUrl,
+      twitchUrl: user.twitchUrl,
+      kickUrl: user.kickUrl,
       languages: user.languages,
     };
   } catch (error) {
@@ -166,8 +167,14 @@ async function getUser(id: string) {
 
 export default async function ProfilePage(props: ProfilePageProps) {
   const params = await props.params;
-  const user = await getUser(params.id);
-  const session = await getCurrentSession();
+  const { tab: requestedTab } = await props.searchParams;
+  const tab: ProfileTab = isProfileTab(requestedTab) ? requestedTab : 'resumen';
+  const [user, session, achievementMetrics] = await Promise.all([
+    getUser(params.id),
+    getCurrentSession(),
+    getUserAchievementMetrics(params.id),
+  ]);
+  const achievements = earnedAchievements(achievementMetrics);
 
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
@@ -178,333 +185,266 @@ export default async function ProfilePage(props: ProfilePageProps) {
     : [];
 
   const isOwnProfile = session?.user?.id === params.id;
+  const viewerIsAdmin = session?.user?.role === 'ADMIN';
 
-  const userTalks = await prisma.talk.findMany({
-    where: { speakers: { some: { userId: user.id } } },
-    include: {
-      event: { select: { date: true, placeName: true, city: true } },
-      speakers: { orderBy: { order: 'asc' } },
+  // Built-in badges first, then the ones earned through activity, then the custom ones an admin
+  // awarded, oldest first.
+  const badges: (DisplayBadge & { custom?: boolean })[] = [
+    ...(user.isCofounder ? [COFOUNDER_BADGE] : []),
+    ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
+    ...achievements,
+    ...user.customBadges.map(({ badge, awardedAt }) => ({
+      id: badge.id,
+      name: badge.name,
+      description: badge.description,
+      icon: isBadgeIcon(badge.icon) ? badge.icon : 'award',
+      tone: isBadgeTone(badge.tone) ? badge.tone : 'green',
+      awardedAt,
+      custom: true,
+    })),
+  ];
+
+  const socialLinks = [
+    {
+      label: 'x',
+      href: user.xAccountUrl,
+      icon: XLogo,
+      ariaLabel: `Perfil de X (anteriormente Twitter) de ${user.name}`,
     },
-    orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-  });
+    {
+      label: 'linkedin',
+      href: user.linkedinUrl,
+      icon: Linkedin,
+      ariaLabel: `Perfil de LinkedIn de ${user.name}`,
+    },
+    {
+      label: 'github',
+      href: user.gitHubUrl,
+      icon: Github,
+      ariaLabel: `Perfil de GitHub de ${user.name}`,
+    },
+    {
+      label: 'instagram',
+      href: user.instagramUrl,
+      icon: Instagram,
+      ariaLabel: `Perfil de Instagram de ${user.name}`,
+    },
+    {
+      label: 'youtube',
+      href: user.youtubeUrl,
+      icon: Youtube,
+      ariaLabel: `Canal de YouTube de ${user.name}`,
+    },
+    {
+      label: 'twitch',
+      href: user.twitchUrl,
+      icon: Twitch,
+      ariaLabel: `Canal de Twitch de ${user.name}`,
+    },
+    {
+      label: 'kick',
+      href: user.kickUrl,
+      icon: KickLogo,
+      ariaLabel: `Canal de Kick de ${user.name}`,
+    },
+  ].filter((link): link is typeof link & { href: string } => !!link.href);
+
+  const positions = user.positions.filter((position) => position.jobTitle || position.enterprise);
+
+  const profileFacts: { label: string; value: string; href?: string }[] = [
+    {
+      label: 'ubicación',
+      value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
+    },
+    // El contacto lo ven solo los miembros logueados: visitantes anónimos y bots no
+    ...(session
+      ? [
+          {
+            label: 'email',
+            value: user.email,
+            href: user.email ? `mailto:${user.email}` : undefined,
+          },
+          {
+            label: 'teléfono',
+            value: user.phoneNumber,
+            href: user.phoneNumber ? `tel:${user.phoneNumber}` : undefined,
+          },
+        ]
+      : []),
+  ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
+
+  const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{user.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        {/* Al subir rápido vuelven las pestañas, no el título, así no se apilan dos barras. */}
+        <div className="mt-4">
+          <PageTitle
+            path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+          />
         </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Columna izquierda: Información del usuario (fija en pantallas grandes) */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          {/* Columna izquierda: Información del usuario (fija en pantallas grandes, y con scroll
+              propio cuando no entra en la pantalla) */}
           <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-4">
-              <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-                <CardHeader className="flex flex-col items-center gap-4 pb-6">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-                    <AvatarFallback className="text-lg">{user.name?.[0] ?? 'U'}</AvatarFallback>
-                  </Avatar>
+            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto">
+              <div className="flex items-center gap-3 p-4">
+                <Avatar className="h-12 w-12 rounded-sm">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                  <AvatarFallback className="rounded-sm">{user.name?.[0] ?? 'U'}</AvatarFallback>
+                </Avatar>
 
-                  <div className="flex flex-col items-center gap-2">
-                    <h1 className="text-center text-lg font-semibold">{user.name}</h1>
-                    {isOwnProfile && (
-                      <Link href="/perfil">
-                        <Button
-                          variant="link"
-                          className="flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
-                        >
-                          <Pencil className="h-3 w-3" />
-                          <span>Editar perfil</span>
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-
-                  {(user.xAccountUrl || user.linkedinUrl || user.gitHubUrl) && (
-                    <div className="flex items-center gap-3">
-                      {user.xAccountUrl && (
-                        <a
-                          href={user.xAccountUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-                        >
-                          <Twitter className="h-5 w-5" />
-                        </a>
-                      )}
-
-                      {user.linkedinUrl && (
-                        <a
-                          href={user.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de LinkedIn de ${user.name}`}
-                        >
-                          <Linkedin className="h-5 w-5" />
-                        </a>
-                      )}
-
-                      {user.gitHubUrl && (
-                        <a
-                          href={user.gitHubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:underline"
-                          aria-label={`Perfil de GitHub de ${user.name}`}
-                        >
-                          <Github className="h-5 w-5" />
-                        </a>
-                      )}
-                    </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
+                  {isOwnProfile && (
+                    <Link
+                      href="/perfil"
+                      className="flex w-fit items-center gap-1 border border-dashed border-pcnGreen-200 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen"
+                    >
+                      <Pencil className="size-2.5" />
+                      editar perfil
+                    </Link>
                   )}
-                </CardHeader>
+                </div>
+              </div>
 
-                <CardContent>
-                  <div className="grid grid-cols-1 gap-6">
-                    {/* Slogan */}
-                    {user.slogan && (
-                      <div className="flex items-start gap-3">
-                        <Quote className="mt-1 h-5 w-5 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                        <p className="text-sm italic leading-relaxed text-muted-foreground">
-                          {user.slogan}
-                        </p>
-                      </div>
+              {socialLinks.length > 0 && (
+                <nav
+                  aria-label={`Redes de ${user.name}`}
+                  className="flex divide-x divide-pcnGreen-200"
+                >
+                  {/* Icons only: with several networks the labels no longer fit on one line. */}
+                  {socialLinks.map(({ label, href, icon: Icon, ariaLabel }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={ariaLabel}
+                      title={label}
+                      className="group flex min-w-0 flex-1 items-center justify-center py-2.5 transition-colors hover:bg-pcnGreen/[0.04] hover:shadow-[inset_0_-2px_0_#04f4be]"
+                    >
+                      <Icon className="size-4 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
+                    </a>
+                  ))}
+                </nav>
+              )}
+
+              {user.slogan && (
+                <p className="p-4 text-sm italic leading-relaxed text-muted-foreground">
+                  <span className="not-italic text-pcnGreen-500">&gt; </span>
+                  {user.slogan}
+                </p>
+              )}
+
+              <ProfileBadges
+                userId={user.id}
+                userName={user.name}
+                badges={badges}
+                isAdmin={viewerIsAdmin}
+              />
+
+              {positions.length > 0 && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>trabajo
+                  </h2>
+                  <ul className="space-y-2">
+                    {positions.map((position, index) => (
+                      <li
+                        key={`${position.jobTitle}-${position.enterprise}-${index}`}
+                        className="border-l-2 border-pcnGreen-200 pl-3"
+                      >
+                        {position.jobTitle && (
+                          <p className="text-sm font-medium leading-snug">{position.jobTitle}</p>
+                        )}
+                        {position.enterprise && (
+                          <p className="font-mono text-xs text-muted-foreground">
+                            <span className="text-pcnGreen-500">@ </span>
+                            {position.enterprise}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(user.career || user.studyPlace) && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>estudios
+                  </h2>
+                  <div className="border-l-2 border-pcnGreen-200 pl-3">
+                    {user.career && (
+                      <p className="text-sm font-medium leading-snug">{user.career}</p>
                     )}
-
-                    {/* Información laboral */}
-                    {(user.jobTitle || user.enterprise) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <Briefcase className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Información laboral</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.jobTitle && (
-                            <p>
-                              <span className="font-medium">Cargo:</span> {user.jobTitle}
-                            </p>
-                          )}
-                          {user.enterprise && (
-                            <p>
-                              <span className="font-medium">Empresa:</span> {user.enterprise}
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                    {user.studyPlace && (
+                      <p className="font-mono text-xs text-muted-foreground">
+                        <span className="text-pcnGreen-500">@ </span>
+                        {user.studyPlace}
+                      </p>
                     )}
-
-                    {/* Información académica */}
-                    {(user.career || user.studyPlace) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <GraduationCap className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Información académica</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.career && (
-                            <p>
-                              <span className="font-medium">Carrera:</span> {user.career}
-                            </p>
-                          )}
-                          {user.studyPlace && (
-                            <p>
-                              <span className="font-medium">Institución:</span> {user.studyPlace}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Ubicación */}
-                    {(user.countryOfOrigin || user.province) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <MapPin className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Ubicación</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.countryOfOrigin && <p>{user.countryOfOrigin}</p>}
-                          {user.province && (
-                            <p className="text-sm text-muted-foreground">{user.province}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contacto */}
-                    {(user.email || user.phoneNumber) && (
-                      <div>
-                        <div className="mb-2 flex items-center gap-2">
-                          <Contact className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                          <h2 className="text-lg font-semibold">Contacto</h2>
-                        </div>
-                        <div className="space-y-1 pl-7 text-sm">
-                          {user.email && (
-                            <div className="flex items-center gap-2">
-                              <Mail className="h-4 w-4 text-muted-foreground" />
-                              <a
-                                href={`mailto:${user.email}`}
-                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
-                              >
-                                {user.email}
-                              </a>
-                            </div>
-                          )}
-                          {user.phoneNumber && (
-                            <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-muted-foreground" />
-                              <a
-                                href={`tel:${user.phoneNumber}`}
-                                className="text-sm text-pcnPurple hover:underline dark:text-pcnGreen"
-                              >
-                                {user.phoneNumber}
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Lenguajes de programación */}
-                    <div>
-                      <h2 className="mb-2 text-lg font-semibold">Lenguajes de programación</h2>
-                      {userLanguages.length > 0 ? (
-                        <LanguageCoinsContainer languages={userLanguages} />
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          No hay lenguajes registrados
-                        </p>
-                      )}
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              )}
+
+              {profileFacts.length > 0 && (
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">
+                  {profileFacts.map((fact) => (
+                    <div key={`${fact.label}-${fact.value}`} className="contents">
+                      <dt className="font-mono text-pcnGreen-500">{fact.label}</dt>
+                      <dd className="min-w-0 break-words">
+                        {fact.href ? (
+                          <a href={fact.href} className="text-pcnGreen hover:underline">
+                            {fact.value}
+                          </a>
+                        ) : (
+                          fact.value
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+
+              <div className="p-4">
+                <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                  <span className="text-pcnGreen-500">## </span>lenguajes
+                </h2>
+                {userLanguages.length > 0 ? (
+                  <LanguageCoinsContainer languages={userLanguages} />
+                ) : (
+                  <p className="text-xs text-muted-foreground">No hay lenguajes registrados</p>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Columna derecha: Tabs con Consejos, Fotos y Charlas */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="consejos" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="consejos" className="gap-2">
-                  <Lightbulb className="h-4 w-4" />
-                  Consejos
-                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                    {user.advises.length}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value="fotos" className="gap-2">
-                  <Images className="h-4 w-4" />
-                  Fotos
-                </TabsTrigger>
-                <TabsTrigger value="charlas" className="gap-2">
-                  <MicVocal className="h-4 w-4" />
-                  Charlas
-                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5">
-                    {userTalks.length}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="consejos" className="mt-4">
-                {user.advises.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    Este usuario aún no ha compartido ningún consejo.
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {user.advises.map((advise) => (
-                      <AdviseCard key={advise.id} session={session} advise={advise} />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="fotos" className="mt-4">
-                <p className="text-sm text-muted-foreground">
-                  Las fotos estarán disponibles próximamente.
-                </p>
-              </TabsContent>
-
-              <TabsContent value="charlas" className="mt-4">
-                {userTalks.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    Este usuario aún no ha dado ninguna charla.
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {userTalks.map((talk) => {
-                      const location = [talk.event?.placeName, talk.event?.city]
-                        .filter(Boolean)
-                        .join(', ');
-                      return (
-                        <Card
-                          key={talk.id}
-                          className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
-                        >
-                          <CardContent className="p-6">
-                            <div className="flex flex-col gap-4 md:flex-row">
-                              {talk.portraitUrl && (
-                                <div className="aspect-square w-full shrink-0 overflow-hidden rounded-lg md:w-48">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={talk.portraitUrl}
-                                    alt={`Foto de la charla "${talk.title}"`}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                              )}
-                              <div className="flex flex-1 flex-col gap-2">
-                                <h3 className="text-lg font-semibold">{talk.title}</h3>
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                                  <span>{talk.speakers.map((s) => s.speakerName).join(', ')}</span>
-                                  {talk.event?.date && (
-                                    <span>
-                                      {new Date(talk.event.date).toLocaleDateString('es-AR', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                      })}
-                                    </span>
-                                  )}
-                                  {location && <span>{location}</span>}
-                                </div>
-                                {talk.videoUrl && (
-                                  <a
-                                    href={talk.videoUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-2 inline-flex items-center gap-2 text-pcnPurple hover:underline dark:text-pcnGreen"
-                                  >
-                                    Ver en YouTube
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+          {/* Columna derecha: resumen de todo lo que hizo, y una pestaña para ver cada sección */}
+          <div className="min-w-0 lg:col-span-2">
+            <ProfileTabsProvider userId={user.id} active={tab}>
+              <StickyHeader className="mb-4">
+                <ProfileTabs />
+              </StickyHeader>
+              {/* Keyed by tab so a new tab streams in behind its skeleton instead of holding
+                  the page on the previous tab until all of its data is ready. */}
+              <Suspense key={`counts-${tab}`}>
+                <ProfileCountsLoader userId={user.id} />
+              </Suspense>
+              <ProfileTabPanel>
+                <Suspense key={tab} fallback={<ProfileTabSkeleton tab={tab} />}>
+                  <ProfileTabContent
+                    tab={tab}
+                    userId={user.id}
+                    firstName={firstName}
+                    session={session}
+                    person={{ id: user.id, name: user.name ?? '', image: user.image }}
+                  />
+                </Suspense>
+              </ProfileTabPanel>
+            </ProfileTabsProvider>
           </div>
         </div>
       </div>

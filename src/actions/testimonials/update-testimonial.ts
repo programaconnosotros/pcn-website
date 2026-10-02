@@ -5,8 +5,12 @@ import { testimonialSchema, TestimonialFormData } from '@/schemas/testimonial-sc
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const updateTestimonial = async (id: string, data: TestimonialFormData) => {
+  await enforceRateLimit('editContent');
+
   const validatedData = testimonialSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -14,10 +18,7 @@ export const updateTestimonial = async (id: string, data: TestimonialFormData) =
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('No autorizado');

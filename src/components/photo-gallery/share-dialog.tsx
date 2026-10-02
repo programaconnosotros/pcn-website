@@ -43,15 +43,15 @@ export function ShareDialog({ isOpen, onClose, url, title }: ShareDialogProps) {
           <DialogTitle>Compartir foto</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
-          <p className="text-sm text-gray-500">
-            Compartí el link directo a la foto &quot;{title}&quot;
+          <p className="text-xs text-muted-foreground">
+            Link directo a <span className="text-pcnGreen-700">&quot;{title}&quot;</span>
           </p>
           <div className="flex items-center gap-2">
             <Input
               ref={inputRef}
               value={url}
               readOnly
-              className="flex-1"
+              className="flex-1 font-mono text-xs text-pcnGreen"
               onClick={handleSelectAll}
             />
             <Button variant="outline" size="icon" onClick={handleCopy}>
@@ -60,12 +60,12 @@ export function ShareDialog({ isOpen, onClose, url, title }: ShareDialogProps) {
             </Button>
           </div>
           {copied && (
-            <p className="text-sm font-medium text-green-600">¡Link copiado al portapapeles!</p>
+            <p className="text-glow text-xs text-pcnGreen">[ok] link copiado al portapapeles</p>
           )}
         </div>
         <div className="flex justify-end">
           <Button variant="outline" onClick={onClose}>
-            Cerrar
+            cerrar();
           </Button>
         </div>
       </DialogContent>

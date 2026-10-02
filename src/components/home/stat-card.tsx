@@ -12,15 +12,15 @@ interface StatCardProps {
 
 export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
   <Link href={href} className="block">
-    <Card className="cursor-pointer transition-shadow hover:shadow-md">
+    <Card className="cursor-pointer transition-all hover:border-pcnGreen-500 hover:shadow-[0_0_20px_-8px_#04f4be]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <Icon className="h-4 w-4 text-pcnGreen-600" />
       </CardHeader>
       <CardContent>
         <NumberTicker
           value={value}
-          className="whitespace-pre-wrap text-2xl font-medium tracking-tighter text-black dark:text-white"
+          className="whitespace-pre-wrap font-mono text-2xl font-medium tracking-tighter text-pcnGreen"
         />
       </CardContent>
     </Card>

@@ -16,7 +16,7 @@ function EventFlyerPlaceholder({ variant }: { variant: 'card' | 'detail' }) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-900',
+        'flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-[#04130f] dark:to-black',
         variant === 'card' ? 'aspect-square w-full' : 'aspect-video w-full',
       )}
     >

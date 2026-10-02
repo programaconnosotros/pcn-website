@@ -33,7 +33,7 @@ export function RegistrationSuccessDialog({ open, onClose, eventName }: Props) {
         </DialogHeader>
         <div className="flex justify-center pt-4">
           <Button variant="pcn" onClick={onClose}>
-            Entendido
+            entendido();
           </Button>
         </div>
       </DialogContent>

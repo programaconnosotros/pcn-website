@@ -55,7 +55,7 @@ export function AnnouncementForm({
   onSubmit,
   onCancel,
   isLoading = false,
-  submitLabel = 'Guardar',
+  submitLabel = 'guardar();',
 }: AnnouncementFormProps) {
   const form = useForm<AnnouncementFormData>({
     resolver: zodResolver(announcementSchema),
@@ -222,9 +222,9 @@ export function AnnouncementForm({
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-            Cancelar
+            cancelar();
           </Button>
-          <Button type="submit" loading={isLoading} loadingText="Guardando...">
+          <Button type="submit" loading={isLoading} loadingText="guardando...">
             {submitLabel}
           </Button>
         </div>

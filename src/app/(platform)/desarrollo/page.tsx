@@ -1,47 +1,36 @@
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Heading3 } from '@/components/ui/heading-3';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import type { Metadata } from 'next';
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import {
-  CheckCircle2,
-  Code2,
   Database,
-  FlaskConical,
-  Github,
   GitBranch,
   GitPullRequest,
+  Github,
   Globe,
   Layers,
+  MessageCircle,
   Package,
   Rocket,
   Server,
   ShieldCheck,
   Sparkles,
-  Terminal,
   Wrench,
 } from 'lucide-react';
+import { Suspense, type ReactNode } from 'react';
 import Link from 'next/link';
-import { Team } from '@/components/landing/team';
-import { NextJsSVG } from '@/components/logos/NextJsSVG';
-import { ReactSVG } from '@/components/logos/ReactSVG';
-import { TypescriptSVG } from '@/components/logos/TypescriptSVG';
-import { TailwindSVG } from '@/components/logos/TailwindSVG';
-import { PrismaSVG } from '@/components/logos/PrismaSVG';
-import { PostgresqlSVG } from '@/components/logos/PostgresqlSVG';
-import { DockerSVG } from '@/components/logos/DockerSVG';
-import { GitSVG } from '@/components/logos/GitSVG';
+import { Team, teamSize } from '@/components/landing/team';
+import {
+  CollaborationStats,
+  CollaborationStatsSkeleton,
+} from '@/components/desarrollo/collaboration-stats';
+import { TechNotes } from '@/components/desarrollo/tech-notes';
+import { technologies, toolchain } from '@/components/desarrollo/technologies';
+import { techNoteGroups } from './tech-notes';
+import { DesarrolloToc } from '@/components/desarrollo/desarrollo-toc';
+import { DbDiagram } from '@/components/desarrollo/db-diagram';
+import { DB_SCHEMA_UPDATED_AT, dbEnums, dbModels, dbRelations } from './db-schema';
+import type { TocSection } from '@/components/ui/table-of-contents';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -53,7 +42,6 @@ export const metadata: Metadata = {
     title: 'Desarrollá el proyecto | programaConNosotros',
     description:
       'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/desarrollo`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -63,39 +51,27 @@ export const metadata: Metadata = {
     title: 'Desarrollá el proyecto | programaConNosotros',
     description:
       'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
-
-const technologies = [
-  { name: 'Next.js', icon: NextJsSVG },
-  { name: 'React', icon: ReactSVG },
-  { name: 'TypeScript', icon: TypescriptSVG },
-  { name: 'Tailwind CSS', icon: TailwindSVG },
-  { name: 'Prisma', icon: PrismaSVG },
-  { name: 'PostgreSQL', icon: PostgresqlSVG },
-  { name: 'Docker', icon: DockerSVG },
-  { name: 'Git', icon: GitSVG },
-];
 
 const architectureLayers = [
   {
     icon: Globe,
     area: 'App Router & páginas',
     description:
-      'src/app — rutas organizadas en grupos (platform), autenticacion y api usando el App Router de Next.js',
+      'src/app — App Router de Next.js: el grupo (platform) con las secciones de la comunidad, autenticacion para login y registro, api para los route handlers, y archivos especiales como sitemap.ts, robots.ts, feed.xml y [shortcut] (atajos como /cowork que llevan al próximo evento)',
   },
   {
     icon: Server,
     area: 'Server actions',
     description:
-      'src/actions — lógica de servidor agrupada por dominio: auth, events, talks, testimonials, users y más',
+      'src/actions — lógica de servidor agrupada por dominio: auth, events, gallery, talks, talk-proposals, articles, comments, notifications, badges, users y más',
   },
   {
     icon: Database,
     area: 'Base de datos',
     description:
-      'Prisma ORM sobre PostgreSQL; esquema en prisma/schema.prisma con más de 50 migraciones versionadas',
+      'Prisma ORM sobre PostgreSQL; esquema en prisma/schema.prisma con más de 70 migraciones versionadas',
   },
   {
     icon: ShieldCheck,
@@ -113,32 +89,19 @@ const architectureLayers = [
     icon: Wrench,
     area: 'Utilidades',
     description:
-      'src/lib — funciones compartidas: Prisma client, S3, email, utils y validaciones reutilizables',
+      'src/lib — funciones compartidas: Prisma client, S3 y firma de CloudFront, procesamiento de fotos, email, calendario (ICS y Google Calendar), permisos de eventos, rate limiting, índice de búsqueda e imágenes de Open Graph',
+  },
+  {
+    icon: Package,
+    area: 'Hooks y contenido',
+    description:
+      'src/hooks — custom hooks de React; src/data — contenido estático versionado: changelog, preguntas frecuentes, partners y conversaciones',
   },
   {
     icon: Rocket,
     area: 'Deploy',
     description:
-      'Kamal vía GitHub Actions — cada push a main dispara un deploy automático a producción',
-  },
-];
-
-const toolchain = [
-  {
-    category: 'Frontend',
-    tools: ['React Hook Form', 'TanStack Query', 'TanStack Table', 'Framer Motion', 'shadcn/ui'],
-  },
-  {
-    category: 'Backend & datos',
-    tools: ['AWS S3', 'Nodemailer', 'Zod', 'bcryptjs'],
-  },
-  {
-    category: 'Testing & calidad',
-    tools: ['Jest', 'Playwright', 'ESLint', 'Prettier', 'Husky'],
-  },
-  {
-    category: 'Infraestructura & dev',
-    tools: ['Docker Compose', 'Portless', 'Kamal', 'MailHog'],
+      'Kamal vía GitHub Actions — cada push a main aplica las migraciones pendientes y despliega automáticamente a producción',
   },
 ];
 
@@ -146,11 +109,12 @@ const contributionSteps = [
   'Instalar Docker y Docker Compose',
   'Clonar el repositorio desde GitHub',
   'Crear el archivo .env usando .env.template como base',
-  'Levantar los contenedores con docker-compose up -d (incluye base de datos y web)',
+  'Levantar todo con docker-compose up -d: Postgres, MailHog (localhost:18025) y la web en localhost:3000, que aplica las migraciones al arrancar',
+  'Alternativa sin el contenedor web (Node 24+): pnpm install, docker-compose up -d database mailhog y pnpm dev, que sirve el sitio en https://pcn-website.localhost vía portless',
   'Opcional: si usás VS Code, abrí el proyecto con Dev Containers para desarrollar dentro del contenedor',
-  'Aplicar las migraciones con make apply-migrations (o pnpm apply-migrations en Windows)',
+  'Cuando bajes migraciones nuevas, aplicalas con make apply-migrations (o pnpm apply-migrations)',
   'Opcional: poblar la base de datos con datos de prueba ejecutando pnpm populate-database',
-  'Crear una branch, hacer los cambios y enviar una PR hacia testing',
+  'Crear una branch, hacer los cambios y enviar una PR hacia testing; si cambia la UI, sumá capturas con pnpm screenshot',
 ];
 
 const conventions = [
@@ -193,299 +157,324 @@ const benefits = [
   'Ayudá a otros desarrolladores a crecer en su carrera',
 ];
 
-const CARD_CLASS =
-  'border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800';
+const Code = ({ children }: { children: ReactNode }) => (
+  <code className="bg-pcnGreen-100 px-1 font-mono text-pcnGreen">{children}</code>
+);
 
-const LAYER_ITEM_CLASS =
-  'flex items-start gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800';
+// Section titles stay pinned, just below the page header, while you read them (on large screens;
+// small ones get the index bar).
+const Section = ({ id, title, children }: { id: string; title: string; children: ReactNode }) => (
+  <section
+    id={id}
+    className="scroll-mt-32 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
+  >
+    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur lg:sticky lg:top-[var(--sticky-header-offset,0px)] lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
+      <span className="text-pcnGreen-500">## </span>
+      {title}
+    </h2>
+    {children}
+  </section>
+);
 
-const ICON_CHIP_CLASS =
-  'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10';
+const DefinitionList = ({ items }: { items: { term: string; detail: string }[] }) => (
+  <dl className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[200px_1fr]">
+    {items.map((item) => (
+      <div key={item.term} className="contents">
+        <dt className="font-mono text-pcnGreen">{item.term}</dt>
+        <dd className="leading-relaxed text-muted-foreground">{item.detail}</dd>
+      </div>
+    ))}
+  </dl>
+);
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <ul className="grid gap-x-6 gap-y-1 md:grid-cols-2">
+    {items.map((item) => (
+      <li key={item} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+        <span className="shrink-0 font-mono text-pcnGreen-500">›</span>
+        {item}
+      </li>
+    ))}
+  </ul>
+);
+
+const REPO_URL = 'https://github.com/programaconnosotros/pcn-website';
+// Grupo donde charlamos el desarrollo del sitio; abierto también a quien solo quiera leer.
+const DEV_CHAT_URL = 'https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X';
+
+const techNoteCount = techNoteGroups.reduce((total, group) => total + group.notes.length, 0);
+
+const relationsToUser = dbRelations.filter((relation) => relation.to === 'User').length;
+// Many-to-many tables: a composite unique made of two foreign keys.
+const joinTables = dbModels
+  .filter((model) =>
+    model.uniques.some(
+      (columns) =>
+        columns.filter((column) => model.fields.some((f) => f.name === column && f.fk)).length >= 2,
+    ),
+  )
+  .map((model) => model.name);
+const schemaUpdatedAt = new Date(`${DB_SCHEMA_UPDATED_AT}T12:00:00Z`).toLocaleDateString('es-AR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const databaseDesign = [
+  {
+    term: 'Identificadores',
+    detail:
+      'Todas las tablas usan un id de texto generado con cuid(): no revela cuántas filas hay ni en qué orden se crearon, y se puede generar sin consultar la base.',
+  },
+  {
+    term: 'User en el centro',
+    detail: `Casi todo cuelga de un usuario: ${relationsToUser} de las ${dbRelations.length} relaciones apuntan a User (autor de un consejo, inscripto a un evento, orador de una charla, quien subió una foto…).`,
+  },
+  {
+    term: 'Tablas intermedias',
+    detail: `Las relaciones muchos a muchos tienen su propia tabla con una restricción única compuesta, así no se puede, por ejemplo, inscribir dos veces a la misma persona: ${joinTables.join(', ')}.`,
+  },
+  {
+    term: 'Qué pasa al borrar',
+    detail:
+      'Cascade cuando la fila no tiene sentido sin su padre (likes, inscripciones, sesiones); SetNull cuando la historia tiene que sobrevivir aunque se borre el usuario (fotos subidas, oradores de charlas, logs de errores).',
+  },
+  {
+    term: 'Gente sin cuenta',
+    detail:
+      'Los oradores de charlas y propuestas y los miembros de proyectos tienen userId opcional y guardan su nombre aparte: una charla puede tener un orador que no tiene cuenta en el sitio.',
+  },
+  {
+    term: 'Contenido en el código',
+    detail:
+      'Los artículos de /lectura viven en el repo, no en la base: ArticleAuthor y ContentMark los referencian por id (articleId, contentType + contentId) sin clave foránea.',
+  },
+  {
+    term: 'Enums',
+    detail: dbEnums.map((e) => `${e.name} (${e.values.join(', ')})`).join(' · '),
+  },
+  {
+    term: 'Migraciones',
+    detail:
+      'Cada cambio al esquema es una migración SQL versionada en prisma/migrations; el deploy aplica las pendientes antes de levantar la versión nueva.',
+  },
+];
+
+const section = (id: string, title: string): TocSection => ({ id, title });
+
+// Index on the left: the page's sections, with every stack note under its group.
+const tocSections: TocSection[] = [
+  section('arquitectura', 'Arquitectura'),
+  section('tecnologias', 'Tecnologías'),
+  section('contribuir', 'Cómo contribuir'),
+  section('base-de-datos', 'Base de datos'),
+  section('notas', 'Notas del stack'),
+  ...techNoteGroups.flatMap((group) =>
+    group.notes.map((note) => ({
+      id: `nota-${note.id}`,
+      title: note.name,
+      group: `notas/${group.id}`,
+    })),
+  ),
+  section('herramientas', 'Herramientas'),
+  section('convenciones', 'Convenciones'),
+  section('testing', 'Testing y calidad'),
+  section('estadisticas', 'Estadísticas'),
+  section('team', 'Team de desarrollo'),
+  section('por-que-contribuir', 'Por qué contribuir'),
+];
 
 const DesarrolloPage = () => (
   <>
-    <header className="flex h-16 shrink-0 items-center gap-2">
-      <div className="flex items-center gap-2 px-4">
-        <SidebarTrigger />
-        <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Desarrollo</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-    </header>
-
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        {/* Title row */}
-        <div className="mb-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Code2 className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Desarrollo</span>
-            </Heading2>
-
-            <Link
-              href="https://github.com/programaconnosotros/pcn-website"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="pcn" className="flex flex-row items-center gap-2">
-                Ver repositorio en GitHub
-                <Github className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Intro */}
-        <p className="mb-6 max-w-3xl text-lg text-muted-foreground">
-          Este sitio web es un proyecto open-source y cualquier persona puede contribuir al
-          desarrollo. En esta página encontrás todo lo que necesitás saber: el stack tecnológico, la
-          arquitectura del proyecto, las convenciones de trabajo y cómo empezar.
-        </p>
-
-        {/* Arquitectura del proyecto */}
-        <Card className={`mb-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Arquitectura del proyecto
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-sm text-muted-foreground">
-              El proyecto sigue las convenciones del App Router de Next.js. Cada capa tiene una
-              responsabilidad clara:
-            </p>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {architectureLayers.map((layer) => (
-                <div key={layer.area} className={LAYER_ITEM_CLASS}>
-                  <div className={ICON_CHIP_CLASS}>
-                    <layer.icon className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{layer.area}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{layer.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Tech stack + setup steps (2-col) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Card className={CARD_CLASS}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Terminal className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                Tecnologías que usamos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {technologies.map((tech) => (
-                  <div
-                    key={tech.name}
-                    className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800"
-                  >
-                    <tech.icon className="h-6 w-6 text-pcnPurple dark:text-pcnGreen" />
-                    <span className="font-medium">{tech.name}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                También usamos shadcn/ui para los componentes de interfaz.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className={CARD_CLASS}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <GitBranch className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-                Cómo contribuir
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ol className="space-y-2">
-                {contributionSteps.map((step, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pcnPurple/10 text-xs font-medium text-pcnPurple dark:bg-pcnGreen/10 dark:text-pcnGreen">
-                      {index + 1}
-                    </span>
-                    <span className="text-sm text-muted-foreground">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Herramientas de desarrollo */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wrench className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Herramientas de desarrollo
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {toolchain.map((group) => (
-                <div key={group.category}>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    {group.category}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {group.tools.map((tool) => (
-                      <Badge
-                        key={tool}
-                        variant="secondary"
-                        className="border border-pcnPurple/20 bg-pcnPurple/5 text-pcnPurple dark:border-pcnGreen/20 dark:bg-pcnGreen/5 dark:text-pcnGreen"
-                      >
-                        {tool}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-5 text-sm text-muted-foreground">
-              ¿Querés conocer más herramientas del ecosistema?{' '}
-              <Link
-                href="/herramientas"
-                className="font-medium text-pcnPurple underline-offset-4 hover:underline dark:text-pcnGreen"
-              >
-                Explorá el catálogo completo →
+        <StickyHeader pinnedOnDesktop>
+          <div className="flex items-start justify-between gap-4">
+            <PageTitle
+              path="desarrollo"
+              className="flex-1"
+              meta="open-source · cualquier persona puede contribuir"
+            />
+            <div className="flex flex-wrap justify-end gap-2">
+              <Link href={DEV_CHAT_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="flex flex-row items-center gap-2">
+                  <MessageCircle className="h-4 w-4" />
+                  unirseAlGrupo();
+                </Button>
               </Link>
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Convenciones de contribución */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Convenciones de contribución
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {conventions.map((item) => (
-                <div key={item.title} className={LAYER_ITEM_CLASS}>
-                  <div className={ICON_CHIP_CLASS}>
-                    <item.icon className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{item.detail}</p>
-                  </div>
-                </div>
-              ))}
+              <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="pcn" size="sm" className="flex flex-row items-center gap-2">
+                  <Github className="h-4 w-4" />
+                  abrirGitHub();
+                </Button>
+              </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </StickyHeader>
 
-        {/* Testing y calidad */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FlaskConical className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Testing y calidad
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
-                <p className="text-sm font-semibold">Tests unitarios (Jest)</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Más de 70 tests colocalizados junto a los server actions (
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">*.test.ts</code>
-                  ). Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
-                    pnpm test
-                  </code>{' '}
-                  o en modo watch con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
-                    pnpm test:watch
-                  </code>
-                  .
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+          <DesarrolloToc sections={tocSections} />
+          <div className="min-w-0 flex-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+            <Section id="arquitectura" title="Arquitectura del proyecto">
+              <DefinitionList
+                items={architectureLayers.map((layer) => ({
+                  term: layer.area,
+                  detail: layer.description,
+                }))}
+              />
+            </Section>
+
+            <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-pcnGreen-200">
+              <Section id="tecnologias" title="Tecnologías que usamos">
+                <ul className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-sm">
+                  {technologies.map((tech) => (
+                    <li key={tech.name} className="flex items-center gap-2">
+                      <tech.icon className="h-4 w-4 text-pcnGreen" />
+                      {tech.name}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  También usamos shadcn/ui para los componentes de interfaz.{' '}
+                  <a
+                    href="#notas"
+                    className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                  >
+                    Leé cómo usamos cada una ↓
+                  </a>
                 </p>
+              </Section>
+
+              <div className="border-t border-pcnGreen-200 lg:border-t-0">
+                <Section id="contribuir" title="Cómo contribuir">
+                  <ol className="space-y-1">
+                    {contributionSteps.map((step, index) => (
+                      <li key={step} className="flex items-start gap-2 text-sm leading-6">
+                        <span className="shrink-0 font-mono text-pcnGreen-500">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-muted-foreground">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-4 border-l-2 border-pcnGreen-500 pl-3 text-xs leading-relaxed text-muted-foreground">
+                    Charlamos el desarrollo del sitio en un{' '}
+                    <a
+                      href={DEV_CHAT_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                    >
+                      grupo de WhatsApp ↗
+                    </a>
+                    . No hace falta que vayas a programar: podés sumarte a leer lo que hablamos si
+                    te sirve, o preguntar lo que quieras.
+                  </p>
+                </Section>
               </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
-                <p className="text-sm font-semibold">Tests E2E (Playwright)</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Tests end-to-end en{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">tests/</code>{' '}
-                  que corren en Chromium, Firefox y WebKit. Se ejecutan con{' '}
-                  <code className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
-                    npx playwright test
-                  </code>
-                  .
-                </p>
+            </div>
+
+            <Section id="base-de-datos" title="Diseño de la base de datos">
+              <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                PostgreSQL con Prisma: {dbModels.length} modelos y {dbRelations.length} relaciones,
+                definidos en <Code>prisma/schema.prisma</Code>. Estas son las decisiones que dan
+                forma al esquema, y abajo el diagrama completo de entidades y relaciones.
+              </p>
+              <DefinitionList items={databaseDesign} />
+              <div className="mt-4">
+                <DbDiagram models={dbModels} relations={dbRelations} />
               </div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800">
-                <p className="text-sm font-semibold">Calidad automatizada</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>pnpm db:diagram{' '}
+                <span className="text-pcnGreen-700"># regenera el diagrama desde el schema</span> ·
+                última actualización: {schemaUpdatedAt}
+              </p>
+            </Section>
+
+            <Section id="notas" title={`Notas teóricas del stack (${techNoteCount})`}>
+              <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Una guía para aprender con este proyecto: qué es cada tecnología, los conceptos que
+                tenés que conocer y cómo la usamos acá, con fragmentos reales del código. Al final,
+                cómo funcionan por dentro módulos del sitio como la galería y los eventos. Tocá el
+                nombre del archivo de cada ejemplo para leerlo completo en GitHub.
+              </p>
+              <TechNotes groups={techNoteGroups} />
+            </Section>
+
+            <Section id="herramientas" title="Herramientas de desarrollo">
+              <DefinitionList
+                items={toolchain.map((group) => ({
+                  term: group.category,
+                  detail: group.tools.join(' · '),
+                }))}
+              />
+              <p className="mt-3 text-xs text-muted-foreground">
+                ¿Querés conocer más herramientas del ecosistema?{' '}
+                <Link
+                  href="/herramientas"
+                  className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                >
+                  ~/herramientas →
+                </Link>
+              </p>
+            </Section>
+
+            <Section id="convenciones" title="Convenciones de contribución">
+              <DefinitionList
+                items={conventions.map((item) => ({ term: item.title, detail: item.detail }))}
+              />
+            </Section>
+
+            <Section id="testing" title="Testing y calidad">
+              <dl className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[200px_1fr]">
+                <dt className="font-mono text-pcnGreen">Tests unitarios (Jest)</dt>
+                <dd className="leading-relaxed text-muted-foreground">
+                  Más de 90 archivos de test (<Code>*.test.ts</Code>) colocalizados junto al código
+                  que prueban: server actions, <Code>src/lib</Code>, schemas y route handlers. Se
+                  ejecutan con <Code>pnpm test</Code> o en modo watch con{' '}
+                  <Code>pnpm test:watch</Code>.
+                </dd>
+                <dt className="font-mono text-pcnGreen">Tests E2E (Playwright)</dt>
+                <dd className="leading-relaxed text-muted-foreground">
+                  Tests end-to-end en <Code>tests/</Code> que corren en Chromium, Firefox y WebKit.
+                  Se ejecutan con <Code>npx playwright test</Code>.
+                </dd>
+                <dt className="font-mono text-pcnGreen">Calidad automatizada</dt>
+                <dd className="leading-relaxed text-muted-foreground">
                   El hook pre-push de Husky ejecuta lint, format check, tests y build antes de cada
                   push. No se puede pushear código que rompa alguno de estos checks.
-                </p>
-              </div>
+                </dd>
+              </dl>
+            </Section>
+
+            <Section id="estadisticas" title="Estadísticas de colaboración">
+              <Suspense fallback={<CollaborationStatsSkeleton />}>
+                <CollaborationStats />
+              </Suspense>
+            </Section>
+
+            <Section id="team" title={`Team de desarrollo (${teamSize})`}>
+              <Team />
+            </Section>
+
+            <Section id="por-que-contribuir" title="Por qué contribuir">
+              <BulletList items={benefits} />
+            </Section>
+
+            <div className="flex flex-col items-start justify-between gap-3 p-4 sm:flex-row sm:items-center">
+              <p className="font-mono text-sm">
+                <span className="text-pcnGreen-500">$ </span>
+                ¿Listo para empezar? Elegí un issue o proponé una mejora.
+              </p>
+              <Link href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="pcn" size="sm" className="flex items-center gap-2">
+                  <Github className="h-4 w-4" />
+                  irAlRepositorio();
+                </Button>
+              </Link>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Por qué contribuir */}
-        <Card className={`mt-6 ${CARD_CLASS}`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-pcnPurple dark:text-pcnGreen" />
-              Por qué contribuir
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {benefits.map((benefit, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-pcnPurple dark:text-pcnGreen" />
-                  <span className="text-muted-foreground">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Team />
-
-        {/* CTA */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-pcnPurple/30 bg-pcnPurple/5 p-8 dark:border-pcnGreen/30 dark:bg-pcnGreen/5">
-          <Heading3 className="m-0 text-center">¿Listo para empezar?</Heading3>
-          <p className="max-w-md text-center text-muted-foreground">
-            Revisá el repositorio, elegí un issue que te interese, o proponé una mejora. Toda
-            contribución es bienvenida.
-          </p>
-          <Link
-            href="https://github.com/programaconnosotros/pcn-website"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="pcn" size="lg" className="flex items-center gap-2">
-              <Github className="h-5 w-5" />
-              Ir al repositorio
-            </Button>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

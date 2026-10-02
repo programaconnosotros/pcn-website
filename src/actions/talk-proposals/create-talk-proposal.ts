@@ -5,8 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { talkProposalSchema, TalkProposalFormData } from '@/schemas/talk-proposal-schema';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const createTalkProposal = async (eventId: string, data: TalkProposalFormData) => {
+  await enforceRateLimit('createContent');
+
   const event = await prisma.event.findFirst({
     where: { id: eventId, deletedAt: null },
   });
@@ -24,10 +28,7 @@ export const createTalkProposal = async (eventId: string, data: TalkProposalForm
     throw new Error('Debes estar autenticado para proponer una charla');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no válida. Por favor, inicia sesión nuevamente');

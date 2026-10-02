@@ -26,7 +26,7 @@ export const Testimonial = () => (
         </div>
         <div className="col-end-1 w-16 lg:row-span-4 lg:w-72">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" src="/IMG_3297.webp" className="rounded-xl bg-indigo-50 lg:rounded-3xl" />
+          <img alt="" src="/IMG_3297.webp" className="rounded-lg bg-indigo-50 lg:rounded-lg" />
         </div>
         <figcaption className="text-base lg:col-start-1 lg:row-start-3">
           <div className="font-semibold text-gray-900">Agustín Sánchez</div>

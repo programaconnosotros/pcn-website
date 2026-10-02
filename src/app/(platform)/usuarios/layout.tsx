@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import prisma from '@/lib/prisma';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/usuarios`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Usuarios',
     description: 'Conocé a los miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 
@@ -31,10 +29,7 @@ export default async function UsuariosLayout({ children }: { children: React.Rea
     redirect('/home');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/home');

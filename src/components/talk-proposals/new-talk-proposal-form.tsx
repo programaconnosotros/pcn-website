@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { checkboxClassName } from '@/components/ui/field-surface';
 import { Textarea } from '@/components/ui/textarea';
 import {
   talkProposalSchema,
@@ -26,6 +27,8 @@ import { toast } from 'sonner';
 import { createTalkProposal } from '@/actions/talk-proposals/create-talk-proposal';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { formActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   eventId: string;
@@ -60,7 +63,7 @@ function SpeakerFields({
   const isStudent = !!useWatch({ control, name: `speakers.${index}.isStudent` });
 
   return (
-    <div className="space-y-4 rounded-lg border p-4">
+    <div className="space-y-4 border border-pcnGreen-200 p-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">Orador {index + 1}</h3>
         {canRemove && (
@@ -119,7 +122,7 @@ function SpeakerFields({
         )}
       />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField
           control={control}
           name={`speakers.${index}.speakerName`}
@@ -162,10 +165,13 @@ function SpeakerFields({
                   id={`isProfessional-${index}`}
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                  className={checkboxClassName}
                 />
               </FormControl>
-              <FormLabel htmlFor={`isProfessional-${index}`} className="cursor-pointer">
+              <FormLabel
+                htmlFor={`isProfessional-${index}`}
+                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+              >
                 Soy profesional
               </FormLabel>
             </div>
@@ -175,7 +181,7 @@ function SpeakerFields({
       />
 
       {isProfessional && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.jobTitle`}
@@ -217,10 +223,13 @@ function SpeakerFields({
                   id={`isStudent-${index}`}
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-input accent-pcnPurple dark:accent-pcnGreen"
+                  className={checkboxClassName}
                 />
               </FormControl>
-              <FormLabel htmlFor={`isStudent-${index}`} className="cursor-pointer">
+              <FormLabel
+                htmlFor={`isStudent-${index}`}
+                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+              >
                 Soy estudiante
               </FormLabel>
             </div>
@@ -230,7 +239,7 @@ function SpeakerFields({
       />
 
       {isStudent && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={control}
             name={`speakers.${index}.career`}
@@ -253,7 +262,7 @@ function SpeakerFields({
             name={`speakers.${index}.studyPlace`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Universidad / Institución</FormLabel>
+                <FormLabel>Institución</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Ej: Universidad Nacional de Tucumán"
@@ -296,7 +305,7 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
       toast.success('¡Propuesta enviada! Nos pondremos en contacto pronto.');
       router.push(`/eventos/${eventId}`);
     } catch (error: any) {
-      toast.error(error.message || 'Error al enviar la propuesta');
+      toast.error(actionErrorMessage(error, 'Error al enviar la propuesta', true));
     } finally {
       setIsSubmitting(false);
     }
@@ -355,24 +364,24 @@ export function NewTalkProposalForm({ eventId, defaults }: Props) {
               onClick={() => append({ ...EMPTY_SPEAKER })}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Agregar orador
+              agregarOrador();
             </Button>
           </div>
 
-          <div className="flex gap-4">
+          <div className={`${formActionBarClassName} flex gap-4 border-t border-pcnGreen-200`}>
             <Button
               type="submit"
               variant="pcn"
               className="flex-1"
               loading={isSubmitting}
-              loadingText="Enviando..."
+              loadingText="enviando..."
             >
               <Save className="mr-2 h-4 w-4" />
-              Enviar propuesta
+              enviarPropuesta();
             </Button>
             <Link href={`/eventos/${eventId}`} className="flex-1">
               <Button type="button" variant="outline" className="w-full" disabled={isSubmitting}>
-                Cancelar
+                cancelar();
               </Button>
             </Link>
           </div>

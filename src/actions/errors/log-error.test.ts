@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import { logError, logClientError } from './log-error';
 
 const adminUser = {
@@ -104,7 +105,7 @@ describe('logError', () => {
       expect.objectContaining({
         data: expect.objectContaining({
           message: 'plain string error',
-          stack: undefined,
+          stack: null,
         }),
       }),
     );
@@ -150,6 +151,25 @@ describe('logError', () => {
 });
 
 describe('logClientError', () => {
+  it('drops the error silently once the caller hits the rate limit', async () => {
+    (enforceRateLimit as jest.Mock).mockRejectedValueOnce(new Error('RATE_LIMIT:30'));
+
+    await expect(logClientError({ message: 'boom' })).resolves.toBeUndefined();
+
+    expect(prismaMock.errorLog.create).not.toHaveBeenCalled();
+  });
+
+  it('clips an oversized stack before storing it', async () => {
+    mockCookies();
+    mockHeaders();
+    prismaMock.errorLog.create.mockResolvedValue({} as any);
+
+    await logClientError({ message: 'boom', stack: 'x'.repeat(50_000) });
+
+    const { data } = prismaMock.errorLog.create.mock.calls[0][0];
+    expect(data.stack).toHaveLength(10000);
+  });
+
   it('creates an error log without userId for an anonymous request', async () => {
     mockCookies();
     mockHeaders({ 'user-agent': 'Jest/1.0', 'x-forwarded-for': '5.6.7.8' });

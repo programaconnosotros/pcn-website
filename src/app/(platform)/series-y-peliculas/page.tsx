@@ -1,18 +1,5 @@
 'use client';
 
-import { Heading2 } from '@/components/ui/heading-2';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -20,12 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Clapperboard, MessageCircle, Search, X } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
 
 interface Title {
   id: string;
@@ -265,139 +254,88 @@ const SeriesYPeliculasPage = () => {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center justify-between gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Series y Películas</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <div className="px-4">
-          <Link
-            href="https://chat.whatsapp.com/FX1o4keOhJbFgB8mS1Sxem"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="pcn" size="sm" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Unirme al grupo
-            </Button>
-          </Link>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <Clapperboard className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">
-                Series y Películas
-              </span>
-            </Heading2>
-          </div>
+          <div className="mb-14">
+            <StickyHeader>
+              <PageTitle
+                path="series-y-peliculas"
+                meta={`${titles.filter((t) => t.type === 'Serie').length} series · ${
+                  titles.filter((t) => t.type === 'Película').length
+                } películas`}
+              />
 
-          <div className="mb-6">
-            <h3 className="mb-4 text-xl font-semibold">Series y películas recomendadas</h3>
-
-            {/* Filtros */}
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
-              {/* Búsqueda */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por título, director o descripción..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+              {/* Filtros */}
+              <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
+                {/* Búsqueda */}
+                <SearchBar
+                  searchQuery={searchTerm}
+                  setSearchQuery={setSearchTerm}
+                  placeholder="título, director o descripción"
+                  label="Buscar por título, director o descripción"
+                  className="max-w-none flex-1"
                 />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
 
-              {/* Filtro por género */}
-              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
-                <SelectTrigger className="w-full md:w-[200px]">
-                  <SelectValue placeholder="Todos los géneros" />
-                </SelectTrigger>
-                <SelectContent>
-                  {genres.map((genre) => (
-                    <SelectItem key={genre} value={genre}>
-                      {genre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                {/* Filtro por género */}
+                <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+                  <SelectTrigger className="w-full md:w-[200px]">
+                    <SelectValue placeholder="Todos los géneros" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {genres.map((genre) => (
+                      <SelectItem key={genre} value={genre}>
+                        {genre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </StickyHeader>
 
             {/* Grid de títulos */}
             {filteredTitles.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
                 {filteredTitles.map((item) => (
-                  <Card
-                    key={item.id}
-                    className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800"
-                  >
-                    {/* Poster */}
-                    <div className="relative h-56 w-full overflow-hidden rounded-t-lg bg-muted">
+                  <div key={item.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+                    <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-sm bg-muted">
                       <Image
                         src={item.poster}
                         alt={`Póster de ${item.title}`}
                         fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                        sizes="40px"
                       />
                     </div>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="mb-2 text-lg">{item.title}</CardTitle>
-                          <CardDescription className="text-sm">
-                            {item.director}
-                            {item.year && ` (${item.year})`}
-                          </CardDescription>
-                        </div>
+
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <div className="flex items-center gap-2 font-mono text-sm">
+                        <h2 className="truncate font-semibold">{item.title}</h2>
+                        {item.type === 'Serie' && (
+                          <Badge className="px-1.5 py-0 text-[10px]">serie</Badge>
+                        )}
+                        <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">
+                          {item.year}
+                        </span>
                       </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        <Badge
-                          variant={item.type === 'Serie' ? 'default' : 'secondary'}
-                          className="w-fit"
-                        >
-                          {item.type}
-                        </Badge>
-                        <Badge variant="outline" className="w-fit">
-                          {item.genre}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="flex-1">
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                    </CardContent>
-                  </Card>
+
+                      <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                        {item.description}
+                      </p>
+
+                      <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+                        <span className="text-pcnGreen-500">@ </span>
+                        {item.director}
+                        <span className="text-pcnGreen-500"> # </span>
+                        {item.genre.toLowerCase()}
+                      </p>
+                    </div>
+                  </div>
                 ))}
-              </div>
+              </RuledGrid>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg text-muted-foreground">
-                  No se encontraron títulos con los filtros seleccionados.
-                </p>
-              </div>
+              <p className="py-8 text-center font-mono text-sm text-muted-foreground">
+                No se encontraron títulos con los filtros seleccionados.
+              </p>
             )}
           </div>
         </div>

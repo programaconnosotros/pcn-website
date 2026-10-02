@@ -6,6 +6,7 @@ import { EventFormData } from '@/schemas/event-schema';
 import { useEffect, useState } from 'react';
 import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type EditEventFormProps = {
   eventId: string;
@@ -43,10 +44,9 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
       }
 
       console.error('Error al actualizar el evento', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Ocurrió un error al actualizar el evento',
-        { id: toastId },
-      );
+      toast.error(actionErrorMessage(error, 'Ocurrió un error al actualizar el evento', true), {
+        id: toastId,
+      });
     }
   };
 
@@ -56,7 +56,7 @@ export function EditEventForm({ eventId, defaultValues }: EditEventFormProps) {
     <EventForm
       defaultValues={formDefaults}
       onSubmit={onSubmit}
-      submitLabel="Guardar cambios"
+      submitLabel="guardarCambios();"
       cancelHref={`/eventos/${eventId}`}
     />
   );

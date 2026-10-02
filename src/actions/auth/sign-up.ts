@@ -2,11 +2,13 @@
 
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
 import { signUpActionSchema } from '@/lib/validations/auth-schemas';
 import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
 import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
+import { hashPassword } from '@/lib/password';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 export const signUp = async (
   data: z.infer<typeof signUpActionSchema>,
@@ -15,9 +17,11 @@ export const signUp = async (
   | { success: false; error: 'EMAIL_ALREADY_EXISTS' }
   | { success: false; error: 'UNKNOWN_ERROR' }
 > => {
+  await enforceRateLimit('signUp');
+
   const {
     confirmPassword: _confirmPassword,
-    redirectTo,
+    redirectTo: rawRedirectTo,
     country,
     profession,
     studyField,
@@ -38,7 +42,7 @@ export const signUp = async (
       return { success: false, error: 'EMAIL_ALREADY_EXISTS' };
     }
 
-    const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
+    const hashedPassword = await hashPassword(cleanedData.password);
 
     // Crear usuario con emailVerified = false (por defecto)
     const user = await prisma.user.create({
@@ -85,6 +89,8 @@ export const signUp = async (
       // No lanzar error para no bloquear el registro
       // El usuario podrá reenviar el código desde la página de verificación
     }
+
+    const redirectTo = safeRedirectPath(rawRedirectTo, '');
 
     // Devolver la URL de verificación para que el cliente redirija
     const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;

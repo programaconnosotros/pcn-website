@@ -53,6 +53,8 @@ Este es el repositorio del website de PCN. El website está construido con Next.
 
 > [!NOTE]
 > Tenemos un channel en Discord para coordinar el desarrollo del website. Si no estás en el Discord, podes sumarte haciendo click [acá](https://discord.gg/tPZExRnbBP).
+>
+> También charlamos el desarrollo en un [grupo de WhatsApp](https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X): aunque no vayas a programar, podés sumarte a leer o a preguntar lo que quieras.
 
 ## Trabajo con la base de datos
 
@@ -78,6 +80,14 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   pnpm create-migration NOMBRE_DE_LA_MIGRACION
   ```
 
+  Después regenerá el diagrama de entidades y relaciones que se muestra en [/desarrollo](https://programaconnosotros.com/desarrollo#base-de-datos), así refleja el esquema nuevo:
+
+  ```bash
+  pnpm db:diagram
+  ```
+
+  El script (`scripts/generate-db-schema.mjs`) lee el esquema de Prisma y escribe `src/app/(platform)/desarrollo/db-schema.ts` con la fecha de hoy como última actualización. Si agregaste un modelo nuevo, sumalo a la parte del sitio que le corresponde en `DOMAINS` dentro del script; si no, falla avisándote.
+
 - Si pulleaste los cambios de GitHub y hay nuevas migraciones, vas a tener que aplicarlas con el siguiente comando:
 
   ```bash
@@ -93,6 +103,18 @@ Este es el repositorio del website de PCN. El website está construido con Next.
   Luego vas a poder acceder a la URL [http://localhost:5555](http://localhost:5555) en el navegador web y vas a poder ver la base de datos.
 
   <img src="./public/prisma-studio-screenshot.webp" alt="Screenshot del Prisma Studio"/>
+
+## 📊 Estadísticas de GitHub
+
+Los números de GitHub que muestra el sitio (estadísticas de colaboración en `/desarrollo`, contribuciones en los perfiles y `/vinculos`) no se piden a la API de GitHub mientras se renderiza: salen de un snapshot versionado en `src/data/github-stats.json`. Para actualizarlo:
+
+```bash
+pnpm github:stats
+```
+
+El script (`scripts/update-github-stats.mjs`) usa `GITHUB_TOKEN` o el token del CLI `gh` si hay alguno, y funciona sin token también. Algunas estadísticas GitHub las calcula en segundo plano: si el script avisa con un `!` que alguna todavía no estaba lista, esperá un minuto y corrélo de nuevo. Después commiteá el JSON.
+
+Con Claude Code podés pedirle "actualizá las stats de GitHub": la skill `actualizar-stats-github` corre el script, revisa que los números tengan sentido y commitea el snapshot.
 
 ## 🌿 Trabajo con worktrees (Claude Code)
 

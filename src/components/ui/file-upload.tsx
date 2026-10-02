@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
+import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type FileUploadProps = {
   value?: string;
@@ -16,7 +18,20 @@ type FileUploadProps = {
   className?: string;
   disabled?: boolean;
   variant?: 'default' | 'profile'; // Variante para fotos de perfil más pequeñas
+  // Si se pasa, permite seleccionar varios archivos a la vez y recibe todas las URLs subidas
+  onChangeMultiple?: (_urls: string[]) => void;
 };
+
+async function uploadFile(file: File, folder: string): Promise<string> {
+  // 1. Obtener el formulario firmado usando Server Action
+  const { url, fields, fileUrl } = await getPresignedUrl({ contentType: file.type, folder });
+
+  // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+  await postUploadForm(url, fields, file);
+
+  // 3. Usar la URL de CloudFront/S3
+  return fileUrl;
+}
 
 export function FileUpload({
   value,
@@ -27,6 +42,7 @@ export function FileUpload({
   className,
   disabled = false,
   variant = 'default',
+  onChangeMultiple,
 }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +57,52 @@ export function FileUpload({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const resetInput = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
+
+  const handleMultipleFiles = async (files: File[]) => {
+    setError(null);
+
+    const tooLarge = files.filter((file) => file.size > maxSize);
+    const valid = files.filter((file) => file.size <= maxSize);
+    const errors: string[] = [];
+    if (tooLarge.length > 0) {
+      errors.push(
+        `${tooLarge.map((f) => f.name).join(', ')}: demasiado grande (máx. ${Math.round(maxSize / 1024 / 1024)}MB)`,
+      );
+    }
+
+    if (valid.length > 0) {
+      setPreview(URL.createObjectURL(valid[0]));
+      setIsUploading(true);
+      const results = await Promise.allSettled(valid.map((file) => uploadFile(file, folder)));
+      const urls = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+      const failed = valid.filter((_, i) => results[i].status === 'rejected');
+      if (failed.length > 0) {
+        errors.push(`${failed.map((f) => f.name).join(', ')}: error al subir`);
+      }
+      if (urls.length > 0) {
+        onChangeMultiple?.(urls);
+      }
+      setIsUploading(false);
+      setPreview(null);
+    }
+
+    if (errors.length > 0) {
+      setError(errors.join('. '));
+    }
+    resetInput();
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChangeMultiple) {
+      await handleMultipleFiles(Array.from(e.target.files ?? []));
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -60,39 +121,17 @@ export function FileUpload({
     // Subir archivo
     setIsUploading(true);
     try {
-      // 1. Obtener presigned URL usando Server Action
-      const { uploadUrl, fileUrl } = await getPresignedUrl({
-        fileName: file.name,
-        contentType: file.type,
-        folder,
-      });
-
-      // 2. Subir directamente a S3 con el Content-Type correcto (firmado en la URL)
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Error al subir el archivo a S3');
-      }
-
-      // 3. Usar la URL de CloudFront/S3
+      const fileUrl = await uploadFile(file, folder);
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {
       setIsUploading(false);
       // Limpiar el input para permitir subir el mismo archivo de nuevo
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
+      resetInput();
     }
   };
 
@@ -111,6 +150,7 @@ export function FileUpload({
         ref={inputRef}
         type="file"
         accept={accept}
+        multiple={!!onChangeMultiple}
         onChange={handleFileChange}
         disabled={disabled || isUploading}
         className="hidden"
@@ -187,7 +227,9 @@ export function FileUpload({
               {variant !== 'profile' && (
                 <>
                   <span className="text-sm text-muted-foreground">
-                    Haz clic para subir una imagen
+                    {onChangeMultiple
+                      ? 'Haz clic para subir una o más imágenes'
+                      : 'Haz clic para subir una imagen'}
                   </span>
                   <span className="text-xs text-muted-foreground/70">
                     JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)

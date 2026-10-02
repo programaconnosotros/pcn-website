@@ -40,7 +40,8 @@ async function clearSeedData() {
   await prisma.notification.deleteMany();
   await prisma.eventRegistration.deleteMany();
   await prisma.sponsor.deleteMany();
-  await prisma.image.deleteMany();
+  // Las fotos históricas de la galería las carga una migración: solo se borran las de prueba.
+  await prisma.galleryItem.deleteMany({ where: { legacyId: null } });
   await prisma.comment.deleteMany();
   await prisma.userLanguage.deleteMany();
   await prisma.like.deleteMany();
@@ -50,6 +51,8 @@ async function clearSeedData() {
   await prisma.appLog.deleteMany();
   await prisma.jobOffers.deleteMany();
   await prisma.event.deleteMany();
+  await prisma.projectMember.deleteMany();
+  await prisma.project.deleteMany();
 }
 
 async function main() {
@@ -172,19 +175,7 @@ async function main() {
         const endDate = new Date(startDate);
         endDate.setHours(startDate.getHours() + 4);
 
-        const includeImages = index % 2 === 0;
-        const imageIds: string[] = [];
-
-        if (includeImages) {
-          await Promise.all(
-            Array.from({ length: 3 }).map(async () => {
-              const image = await prisma.image.create({
-                data: { imgSrc: '/events/Lightning talks flyer.webp' },
-              });
-              imageIds.push(image.id);
-            }),
-          );
-        }
+        const includePhotos = index % 2 === 0;
 
         return prisma.event.create({
           data: {
@@ -198,8 +189,14 @@ async function main() {
             placeName: 'UTN-FRT',
             latitude: -26.844408,
             longitude: -65.22264,
-            images: {
-              connect: imageIds.length > 0 ? imageIds.map((id) => ({ id })) : [],
+            galleryItems: {
+              create: includePhotos
+                ? Array.from({ length: 3 }).map(() => ({
+                    src: '/events/Lightning talks flyer.webp',
+                    thumbSrc: '/events/Lightning talks flyer.webp',
+                    takenAt: startDate,
+                  }))
+                : [],
             },
           },
         });
@@ -864,6 +861,68 @@ async function main() {
       },
     ],
   });
+
+  // Projects, in the order an admin curated them; the last ones have collaborators without
+  // an account.
+  const projectsData = [
+    {
+      title: 'PCN Website',
+      description:
+        'El sitio de la comunidad: eventos, charlas, cursos, lecturas y PCN OS, un escritorio en el navegador.',
+      url: 'https://github.com/programaconnosotros/pcn-website',
+      logoUrl: '/software-logos/github.webp',
+      techStack: ['Next.js', 'TypeScript', 'Prisma', 'Tailwind'],
+      repoUrl: 'https://github.com/programaconnosotros/pcn-website',
+      author: adminUser,
+      members: [regularUsers[0], regularUsers[1]],
+    },
+    {
+      title: 'Turnos UTN',
+      description:
+        'Reservá turnos de consulta con docentes sin grupos de WhatsApp: calendario, avisos por mail y lista de espera.',
+      url: 'https://example.com',
+      logoUrl: '/software-logos/vim.svg',
+      techStack: ['React', 'Node.js', 'PostgreSQL'],
+      author: regularUsers[1],
+      members: [regularUsers[2]],
+    },
+    {
+      title: 'Bot de ofertas laborales',
+      description:
+        'Un bot que junta ofertas de trabajo IT de varias fuentes, las filtra por seniority y las publica en el grupo.',
+      url: 'https://github.com/programaconnosotros',
+      logoUrl: '',
+      techStack: ['Python', 'PostgreSQL'],
+      author: regularUsers[2],
+      members: [],
+    },
+  ];
+
+  for (const [order, project] of projectsData.entries()) {
+    await prisma.project.create({
+      data: {
+        title: project.title,
+        description: project.description,
+        url: project.url,
+        logoUrl: project.logoUrl,
+        techStack: project.techStack,
+        isOpenSource: 'repoUrl' in project,
+        repoUrl: 'repoUrl' in project ? project.repoUrl : null,
+        order,
+        authorId: project.author.id,
+        members: {
+          create: [
+            ...project.members.map((member, index) => ({
+              userId: member.id,
+              memberName: member.name,
+              order: index,
+            })),
+            { memberName: 'Invitada sin cuenta', order: project.members.length },
+          ],
+        },
+      },
+    });
+  }
 
   const visitPaths = ['/charlas', '/eventos', '/testimonios', '/advises', '/job-offers'];
   await prisma.pageVisit.createMany({

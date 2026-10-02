@@ -33,7 +33,7 @@ describe('getBestAdvises', () => {
       include: {
         likes: true,
         author: {
-          select: { id: true, name: true, email: true, image: true },
+          select: { id: true, name: true, image: true },
         },
       },
       orderBy: {

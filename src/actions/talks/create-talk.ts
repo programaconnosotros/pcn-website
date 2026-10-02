@@ -3,7 +3,9 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
+import { findSession } from '@/lib/session';
 
 export const createTalk = async (data: TalkFormData) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -11,12 +13,10 @@ export const createTalk = async (data: TalkFormData) => {
     throw new Error('Debes estar autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
-  if (!session || session.user.role !== 'ADMIN') {
+  // Admins y quienes gestionan eventos; el evento puntual se valida más abajo
+  if (!session || !(await canManageSomeEvent(session.user))) {
     throw new Error('No tenés permisos para realizar esta acción');
   }
 
@@ -26,6 +26,11 @@ export const createTalk = async (data: TalkFormData) => {
   }
 
   const talkData = parsed.data;
+
+  // Admins cargan cualquier charla; quien gestiona un evento, solo las de ese evento
+  if (!(await canManageEventById(session.user, talkData.eventId))) {
+    throw new Error('No tenés permisos para realizar esta acción');
+  }
 
   const talk = await prisma.talk.create({
     data: {

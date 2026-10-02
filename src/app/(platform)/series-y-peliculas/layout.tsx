@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     title: 'Series y Películas | programaConNosotros',
     description:
       'Series y películas sobre ingeniería de software y cultura tech recomendadas por la comunidad. Desde Silicon Valley hasta The Social Network.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/series-y-peliculas`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     title: 'Series y Películas | programaConNosotros',
     description:
       'Series y películas sobre ingeniería de software y cultura tech recomendadas por la comunidad. Desde Silicon Valley hasta The Social Network.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

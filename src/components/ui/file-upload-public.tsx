@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { X, Loader2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
+import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -60,30 +62,17 @@ export function FileUploadPublic({
     // Subir archivo
     setIsUploading(true);
     try {
-      // 1. Obtener presigned URL usando Server Action pública
-      const { uploadUrl, fileUrl } = await getPresignedUrlPublic({
-        fileName: file.name,
-        contentType: file.type,
-      });
+      // 1. Obtener el formulario firmado usando Server Action pública
+      const { url, fields, fileUrl } = await getPresignedUrlPublic({ contentType: file.type });
 
-      // 2. Subir directamente a S3
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Error al subir el archivo');
-      }
+      // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+      await postUploadForm(url, fields, file);
 
       // 3. Usar la URL de CloudFront/S3
       onChange(fileUrl);
       setPreview(fileUrl);
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
       setPreview(null);
       onChange('');
     } finally {
@@ -116,11 +105,11 @@ export function FileUploadPublic({
 
       {preview ? (
         <div className="relative inline-block">
-          <div className="relative h-32 w-32 overflow-hidden rounded-xl border bg-muted">
+          <div className="relative h-32 w-32 overflow-hidden rounded-lg border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="Preview" className="h-full w-full object-cover" />
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
                 <Loader2 className="h-6 w-6 animate-spin text-white" />
               </div>
             )}
@@ -144,7 +133,7 @@ export function FileUploadPublic({
           onClick={() => inputRef.current?.click()}
           disabled={disabled || isUploading}
           className={cn(
-            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            'flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
             disabled && 'cursor-not-allowed opacity-50',
             isUploading && 'cursor-wait',
           )}

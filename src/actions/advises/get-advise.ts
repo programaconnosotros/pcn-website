@@ -7,7 +7,6 @@ type Content = {
   createdAt: Date;
   author: {
     id: string;
-    email: string;
     name: string;
     image: string | null;
   };
@@ -39,7 +38,6 @@ const getReplies = async (commentId: string): Promise<Comment[]> => {
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },
@@ -66,7 +64,7 @@ export const getAdviseById = async (
   const advise = await prisma.advise.findUnique({
     where: { id },
     include: {
-      author: true,
+      author: { select: { id: true, name: true, image: true } },
       likes: true,
     },
   });
@@ -98,7 +96,6 @@ export const getAdviseById = async (
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

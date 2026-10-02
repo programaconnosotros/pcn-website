@@ -2,16 +2,14 @@
 
 import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const trackPageVisit = async (path: string) => {
   try {
     const sessionId = (await cookies()).get('sessionId')?.value;
     let userId: string | undefined = undefined;
     if (sessionId) {
-      const session = await prisma.session.findUnique({
-        where: { id: sessionId },
-        include: { user: true },
-      });
+      const session = await findSession(sessionId);
       if (session) {
         // Si el usuario es admin, no registrar la visita
         if (session.user.role === 'ADMIN') {

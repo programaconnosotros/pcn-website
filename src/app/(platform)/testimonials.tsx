@@ -37,7 +37,7 @@ const ReviewCard = ({ img, name, body }: { img: string; name: string; body: stri
   return (
     <figure
       className={cn(
-        'relative h-full w-96 overflow-hidden rounded-xl border p-4',
+        'relative h-full w-96 overflow-hidden rounded-lg border p-4',
         // light styles
         'border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]',
         // dark styles

@@ -5,8 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const registerEvent = async (eventId: string, options?: { skipRedirect?: boolean }) => {
+  await enforceRateLimit('eventRegistration');
+
   // Verificar que el evento existe y no está eliminado
   const event = await prisma.event.findFirst({
     where: {
@@ -25,10 +29,7 @@ export const registerEvent = async (eventId: string, options?: { skipRedirect?: 
     throw new Error('Debes estar autenticado para inscribirte a un evento');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no válida. Por favor, inicia sesión nuevamente');

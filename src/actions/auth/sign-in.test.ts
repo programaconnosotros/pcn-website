@@ -45,7 +45,7 @@ describe('signIn', () => {
 
   it('returns INVALID_CREDENTIALS when password is wrong', async () => {
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(false);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(false);
 
     const result = await signIn(validInput);
 
@@ -55,7 +55,7 @@ describe('signIn', () => {
 
   it('returns EMAIL_NOT_VERIFIED when email is not yet verified', async () => {
     prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, emailVerified: false } as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
 
     const result = await signIn(validInput);
 
@@ -70,7 +70,7 @@ describe('signIn', () => {
   it('creates a session, sets the cookie, and returns success', async () => {
     const { set } = mockCookies();
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
     prismaMock.session.create.mockResolvedValue({
       id: 'session-abc',
       userId: 'user-1',
@@ -89,7 +89,7 @@ describe('signIn', () => {
     );
     expect(set).toHaveBeenCalledWith(
       'sessionId',
-      'session-abc',
+      expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     );
   });
@@ -97,7 +97,7 @@ describe('signIn', () => {
   it('includes the redirectTo value from input in the success response', async () => {
     mockCookies();
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
-    bcryptMock.compare.mockResolvedValue(true);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
     prismaMock.session.create.mockResolvedValue({
       id: 'session-xyz',
       userId: 'user-1',
@@ -109,6 +109,47 @@ describe('signIn', () => {
     const result = await signIn({ ...validInput, redirectTo: '/dashboard' });
 
     expect(result).toEqual({ success: true, redirectTo: '/dashboard' });
+  });
+
+  it('rehashes a password stored with an older bcrypt cost', async () => {
+    mockCookies();
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+    (bcryptMock.getRounds as jest.Mock).mockReturnValue(10);
+    (bcryptMock.hash as jest.Mock).mockResolvedValue('new-hash');
+    prismaMock.session.create.mockResolvedValue({ id: 'session-xyz' } as any);
+
+    const result = await signIn(validInput);
+
+    expect(result).toEqual({ success: true, redirectTo: '/' });
+    expect(bcryptMock.hash).toHaveBeenCalledWith(validInput.password, 12);
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-1' },
+      data: { password: 'new-hash' },
+    });
+  });
+
+  it('does not rehash a password that already uses the current cost', async () => {
+    mockCookies();
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+    (bcryptMock.getRounds as jest.Mock).mockReturnValue(12);
+    prismaMock.session.create.mockResolvedValue({ id: 'session-xyz' } as any);
+
+    await signIn(validInput);
+
+    expect(prismaMock.user.update).not.toHaveBeenCalled();
+  });
+
+  it('falls back to the home page when redirectTo points to another site', async () => {
+    mockCookies();
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+    prismaMock.session.create.mockResolvedValue({ id: 'session-xyz' } as any);
+
+    const result = await signIn({ ...validInput, redirectTo: '//evil.example' });
+
+    expect(result).toEqual({ success: true, redirectTo: '/' });
   });
 
   it('returns INVALID_CREDENTIALS on invalid input (zod failure)', async () => {

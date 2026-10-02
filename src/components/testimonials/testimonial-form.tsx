@@ -31,6 +31,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type TestimonialFormProps = {
   defaultValues?: TestimonialFormData;
@@ -66,7 +67,7 @@ export function TestimonialForm({
         success: testimonialId
           ? 'Testimonio actualizado exitosamente'
           : 'Testimonio creado exitosamente',
-        error: (err) => err.message || 'Error al guardar el testimonio',
+        error: (err) => actionErrorMessage(err, 'Error al guardar el testimonio', true),
       });
 
       await promise;
@@ -85,7 +86,7 @@ export function TestimonialForm({
     toast.promise(promise, {
       loading: 'Eliminando testimonio...',
       success: 'Testimonio eliminado exitosamente',
-      error: (err) => err.message || 'Error al eliminar el testimonio',
+      error: (err) => actionErrorMessage(err, 'Error al eliminar el testimonio', true),
     });
 
     try {
@@ -126,7 +127,7 @@ export function TestimonialForm({
               <AlertDialogTrigger asChild>
                 <Button type="button" variant="destructive" disabled={isDeleting}>
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Eliminar
+                  eliminar();
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -137,12 +138,12 @@ export function TestimonialForm({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>cancelar();</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Eliminar
+                    eliminar();
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -151,16 +152,16 @@ export function TestimonialForm({
           <div className="ml-auto flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>
               <X className="mr-2 h-4 w-4" />
-              Cancelar
+              cancelar();
             </Button>
             <Button
               type="submit"
               variant="pcn"
               loading={isSubmitting}
-              loadingText={testimonialId ? 'Actualizando...' : 'Creando...'}
+              loadingText={testimonialId ? 'actualizando...' : 'creando...'}
             >
               <Save className="mr-2 h-4 w-4" />
-              {testimonialId ? 'Actualizar' : 'Crear'}
+              {testimonialId ? 'actualizar();' : 'crear();'}
             </Button>
           </div>
         </div>

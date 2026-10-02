@@ -5,12 +5,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export const metadata: Metadata = {
   title: 'Galería',
   description:
-    'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
+    'Fotos y videos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
   openGraph: {
     title: 'Galería | programaConNosotros',
     description:
-      'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Fotos y videos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
     url: `${SITE_URL}/galeria`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -19,8 +18,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Galería | programaConNosotros',
     description:
-      'Fotos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
+      'Fotos y videos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
   },
 };
 

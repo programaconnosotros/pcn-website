@@ -1,23 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
-
-export function PageHeaderSkeleton({ breadcrumbs = 1 }: { breadcrumbs?: number }) {
-  return (
-    <header className="flex h-16 shrink-0 items-center gap-2">
-      <div className="flex items-center gap-2 px-4">
-        <Skeleton className="h-7 w-7" />
-        <div className="mx-2 h-4 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          {Array.from({ length: breadcrumbs }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2">
-              {i > 0 && <div className="h-3 w-3 rounded-sm bg-muted" />}
-              <Skeleton className="h-4 w-20" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </header>
-  );
-}
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 
 export function TitleRowSkeleton({ withAction = false }: { withAction?: boolean }) {
   return (
@@ -221,15 +204,16 @@ export function AccordionSkeleton({ rows = 6 }: { rows?: number }) {
 
 export function GalleryGridSkeleton({ tiles = 12 }: { tiles?: number }) {
   return (
-    <div className="columns-2 gap-4 md:columns-3 lg:columns-4">
-      {Array.from({ length: tiles }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className="mb-4 w-full rounded-lg"
-          style={{ height: `${120 + (i % 3) * 60}px` }}
-        />
-      ))}
-    </div>
+    <>
+      <Skeleton className="mb-4 h-9 w-full max-w-md rounded-sm" />
+      <RuledGrid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        {Array.from({ length: tiles }).map((_, i) => (
+          <div key={i} className={cn(ruledCellClassName, 'p-1')}>
+            <Skeleton className="aspect-square w-full rounded-none" />
+          </div>
+        ))}
+      </RuledGrid>
+    </>
   );
 }
 
@@ -254,6 +238,38 @@ export function DashboardSkeleton() {
           <Skeleton className="h-48 w-full rounded-md" />
         </div>
       </div>
+    </div>
+  );
+}
+
+export function RuledGridSkeleton({
+  count = 6,
+  className = 'grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3',
+}: {
+  count?: number;
+  className?: string;
+}) {
+  return (
+    <div className={`grid border-l border-t border-pcnGreen-200 ${className}`}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="flex gap-3 border-b border-r border-pcnGreen-200 p-3">
+          <Skeleton className="h-9 w-9 shrink-0 rounded-sm" />
+          <div className="flex flex-1 flex-col gap-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function PageTitleSkeleton() {
+  return (
+    <div className="mb-4 flex items-center justify-between">
+      <Skeleton className="h-6 w-32" />
+      <Skeleton className="h-3 w-40" />
     </div>
   );
 }

@@ -1,77 +1,74 @@
 import bcrypt from 'bcryptjs';
 import { prismaMock } from '@/test/prisma';
+import { getRateLimitWait } from '@/lib/rate-limit';
+import { findValidPasswordResetToken } from '@/lib/verification-codes';
 import { completePasswordReset } from './complete-password-reset';
 
 jest.mock('bcryptjs');
+jest.mock('@/lib/verification-codes', () => ({ findValidPasswordResetToken: jest.fn() }));
 
 const bcryptMock = bcrypt as jest.Mocked<typeof bcrypt>;
 
-const baseUser = {
-  id: 'user-1',
-  name: 'Test User',
-  email: 'test@example.com',
-  password: 'old-hash',
-  emailVerified: true,
-  role: 'REGULAR' as const,
-  phoneNumber: null,
-  image: null,
-  countryOfOrigin: null,
-  province: null,
-  xAccountUrl: null,
-  linkedinUrl: null,
-  gitHubUrl: null,
-  slogan: null,
-  jobTitle: null,
-  enterprise: null,
-  career: null,
-  studyPlace: null,
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-01'),
-};
-
-const validToken = {
-  id: 'token-reset-1',
-  email: 'test@example.com',
-  code: '654321',
-  used: false,
-  expiresAt: new Date('2027-01-01'),
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-01'),
-};
-
 describe('completePasswordReset', () => {
-  it('throws when the token is not found', async () => {
-    prismaMock.passwordResetToken.findFirst.mockResolvedValue(null);
+  beforeEach(() => {
+    (getRateLimitWait as jest.Mock).mockResolvedValue(0);
+    (findValidPasswordResetToken as jest.Mock).mockResolvedValue({ id: 'token-reset-1' });
+  });
 
-    await expect(completePasswordReset('test@example.com', '000000', 'NewP@ss1')).rejects.toThrow(
-      'Código inválido o expirado. Solicitá un nuevo código.',
+  it('rejects a new password shorter than 8 characters before touching the token', async () => {
+    await expect(completePasswordReset('test@example.com', '654321', 'short')).resolves.toEqual({
+      success: false,
+      error: 'WEAK_PASSWORD',
+      message: 'La contraseña debe tener al menos 8 caracteres',
+    });
+    expect(findValidPasswordResetToken).not.toHaveBeenCalled();
+  });
+
+  it('returns INVALID_CODE when the code is no longer valid', async () => {
+    (findValidPasswordResetToken as jest.Mock).mockResolvedValue(null);
+
+    await expect(completePasswordReset('test@example.com', '000000', 'NewP@ss12')).resolves.toEqual(
+      { success: false, error: 'INVALID_CODE' },
     );
-
-    expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
 
-  it('throws when the user is not found despite a valid token', async () => {
-    prismaMock.passwordResetToken.findFirst.mockResolvedValue(validToken as any);
+  it('returns INVALID_CODE when the account no longer exists', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
-    await expect(completePasswordReset('test@example.com', '654321', 'NewP@ss1')).rejects.toThrow(
-      'Usuario no encontrado',
+    await expect(completePasswordReset('test@example.com', '654321', 'NewP@ss12')).resolves.toEqual(
+      { success: false, error: 'INVALID_CODE' },
     );
-
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
 
-  it('hashes the password, runs the transaction, and returns success', async () => {
-    prismaMock.passwordResetToken.findFirst.mockResolvedValue(validToken as any);
-    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+  it('hashes the password at cost 12, uses the token, signs out everywhere and succeeds', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-1' } as any);
     bcryptMock.hash.mockResolvedValue('new-hash' as never);
-    prismaMock.$transaction.mockResolvedValue([undefined, undefined, undefined] as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
 
-    const result = await completePasswordReset('test@example.com', '654321', 'NewP@ss1');
+    const result = await completePasswordReset('test@example.com', '654321', 'NewP@ss12');
 
     expect(result).toEqual({ success: true });
-    expect(bcryptMock.hash).toHaveBeenCalledWith('NewP@ss1', 10);
+    expect(bcryptMock.hash).toHaveBeenCalledWith('NewP@ss12', 12);
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-1' },
+      data: { password: 'new-hash' },
+    });
+    expect(prismaMock.passwordResetToken.update).toHaveBeenCalledWith({
+      where: { id: 'token-reset-1' },
+      data: { used: true },
+    });
+    expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({ where: { userId: 'user-1' } });
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns RATE_LIMIT before doing anything when the caller is over the limit', async () => {
+    (getRateLimitWait as jest.Mock).mockResolvedValue(30);
+
+    await expect(completePasswordReset('test@example.com', '654321', 'NewP@ss12')).resolves.toEqual(
+      { success: false, error: 'RATE_LIMIT', waitSeconds: 30 },
+    );
+    expect(findValidPasswordResetToken).not.toHaveBeenCalled();
   });
 });

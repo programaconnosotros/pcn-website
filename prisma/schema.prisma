@@ -14,43 +14,82 @@ enum Role {
 }
 
 model User {
-  id              String         @id @default(cuid())
-  name            String
-  email           String         @unique
-  password        String
-  emailVerified   Boolean        @default(false)
-  phoneNumber     String?
-  role            Role           @default(REGULAR)
-  image           String?
-  countryOfOrigin String?
-  province        String? // Provincia (opcional)
-  xAccountUrl     String?
-  linkedinUrl     String?
-  gitHubUrl       String?
-  slogan          String?
-  jobTitle        String?
-  enterprise      String?
-  career          String?
-  studyPlace      String? // Dónde estudia (universidad, autodidacta, etc.)
-  sessions        Session[]
-  advises         Advise[]
-  languages       UserLanguage[]
-  comments        Comment[]
-  likes           Like[]
-  eventRegistrations EventRegistration[]
-  talkProposals            TalkProposal[]
-  speakerTalks             TalkSpeaker[]         @relation("UserTalkSpeakers")
-  talkProposalSpeakers     TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
-  pageVisits      PageVisit[]
-  testimonials    Testimonial[]
-  notifications   Notification[]
-  errorLogs       ErrorLog[]
-  resolvedErrors  ErrorLog[] @relation("ErrorLogResolver")
-  appLogs         AppLog[]
-  announcements   Announcement[]
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String                @unique
+  password             String
+  emailVerified        Boolean               @default(false)
+  phoneNumber          String?
+  role                 Role                  @default(REGULAR)
+  // Miembro del programa PCN Ambassadors (personas que organizan actividades e iniciativas).
+  // Lo asigna un admin.
+  isAmbassador         Boolean               @default(false)
+  // Co-founder de PCN. Lo marca un admin.
+  isCofounder          Boolean               @default(false)
+  image                String?
+  countryOfOrigin      String?
+  province             String? // Provincia (opcional)
+  xAccountUrl          String?
+  linkedinUrl          String?
+  gitHubUrl            String?
+  instagramUrl         String?
+  youtubeUrl           String?
+  twitchUrl            String?
+  kickUrl              String?
+  slogan               String?
+  // Espejo del primer puesto de `positions`, para las vistas que muestran uno solo.
+  jobTitle             String?
+  enterprise           String?
+  positions            UserPosition[]
+  career               String?
+  studyPlace           String? // Dónde estudia (universidad, autodidacta, etc.)
+  sessions             Session[]
+  advises              Advise[]
+  languages            UserLanguage[]
+  comments             Comment[]
+  likes                Like[]
+  eventRegistrations   EventRegistration[]
+  talkProposals        TalkProposal[]
+  speakerTalks         TalkSpeaker[]         @relation("UserTalkSpeakers")
+  talkProposalSpeakers TalkProposalSpeaker[] @relation("UserTalkProposalSpeakers")
+  pageVisits           PageVisit[]
+  testimonials         Testimonial[]
+  notifications        Notification[]
+  errorLogs            ErrorLog[]
+  resolvedErrors       ErrorLog[]            @relation("ErrorLogResolver")
+  appLogs              AppLog[]
+  announcements        Announcement[]
+  projectMemberships   ProjectMember[]       @relation("UserProjectMembers")
+  authoredProjects     Project[]             @relation("UserAuthoredProjects")
+  contentMarks         ContentMark[]
+  identityLinks        IdentityLink[]
+  createdEvents        Event[]               @relation("UserCreatedEvents")
+  organizedEvents      EventOrganizer[]
+  badges               UserBadge[]
+  awardedBadges        UserBadge[]           @relation("BadgeAwarder")
+  uploadedGalleryItems GalleryItem[]         @relation("UserUploadedGalleryItems")
+  galleryTags          GalleryItemTag[]
+  galleryTagsAdded     GalleryItemTag[]      @relation("GalleryTagger")
+  articles             ArticleAuthor[]
+  articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Puestos laborales actuales: una persona puede trabajar en más de un lugar a la vez.
+model UserPosition {
+  id         String  @id @default(cuid())
+  userId     String
+  jobTitle   String
+  enterprise String?
+  order      Int     @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Session {
@@ -110,17 +149,17 @@ model UserLanguage {
 }
 
 model Event {
-  id          String    @id @default(cuid())
-  date        DateTime
-  endDate     DateTime?
-  name        String
-  description String
-  city        String? // Nombre de la ciudad
-  address     String? // Dirección específica (calle, número, etc.)
-  placeName   String? // Nombre del lugar (bar, universidad, etc.)
-  flyerImages String[] @default([])
-  latitude    Float?
-  longitude   Float?
+  id                      String    @id @default(cuid())
+  date                    DateTime
+  endDate                 DateTime?
+  name                    String
+  description             String
+  city                    String? // Nombre de la ciudad
+  address                 String? // Dirección específica (calle, número, etc.)
+  placeName               String? // Nombre del lugar (bar, universidad, etc.)
+  flyerImages             String[]  @default([])
+  latitude                Float?
+  longitude               Float?
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)
@@ -129,10 +168,14 @@ model Event {
   streamingUrl            String?
   shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
   deletedAt               DateTime? // Eliminación lógica
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  // Usuario que creó el evento. Null en eventos cargados antes de que se guardara.
+  createdById             String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
-  images        Image[]
+  createdBy     User?               @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  organizers    EventOrganizer[]
+  galleryItems  GalleryItem[]
   registrations EventRegistration[]
   sponsors      Sponsor[]
   announcements Announcement[]
@@ -140,13 +183,82 @@ model Event {
   talks         Talk[]
 
   @@index([shortcut])
+  @@index([createdById])
 }
 
-model Image {
-  id      String  @id @default(cuid())
-  imgSrc  String
-  event   Event?  @relation(fields: [eventId], references: [id])
-  eventId String?
+// Personas que organizan un evento (ambassadors o no). Pueden editarlo y gestionarlo, y el
+// evento aparece en su perfil. Quien crea el evento queda como organizador.
+model EventOrganizer {
+  id      String @id @default(cuid())
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([userId])
+}
+
+// Foto o video de la galería. Lo que suben los admins se guarda en S3 (las fotos como webp, una
+// grande y una miniatura; los videos tal cual, con una portada) y se sirve por CloudFront con
+// URLs firmadas. Las fotos históricas viven en /public.
+enum GalleryItemKind {
+  PHOTO
+  VIDEO
+}
+
+model GalleryItem {
+  id              String          @id @default(cuid())
+  kind            GalleryItemKind @default(PHOTO)
+  // La foto (webp) o el video tal cual se subió.
+  src             String
+  // Miniatura de la foto, o portada del video (webp).
+  thumbSrc        String
+  // Tipo MIME del archivo de `src` (video/mp4, image/webp…).
+  mimeType        String?
+  // Duración de los videos, en segundos.
+  durationSeconds Int?
+  width           Int?
+  height          Int?
+  // Objetos de S3 del ítem, para borrarlos junto con él. Vacío en las fotos de /public.
+  storageKeys     String[]        @default([])
+  // Cuándo se sacó o grabó (por defecto, la fecha del archivo).
+  takenAt         DateTime
+  description     String?
+  eventId         String?
+  uploadedById    String?
+  // Id en la galería estática anterior, para que sigan andando los links `/galeria?foto=<n>`.
+  legacyId        Int?            @unique
+
+  event      Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  uploadedBy User?            @relation("UserUploadedGalleryItems", fields: [uploadedById], references: [id], onDelete: SetNull)
+  tags       GalleryItemTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([takenAt])
+  @@index([eventId])
+}
+
+// Persona que aparece en una foto o video. La etiquetan los admins o la propia persona.
+model GalleryItemTag {
+  id         String  @id @default(cuid())
+  itemId     String
+  userId     String
+  taggedById String?
+
+  item     GalleryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taggedBy User?       @relation("GalleryTagger", fields: [taggedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([itemId, userId])
+  @@index([userId])
 }
 
 model Like {
@@ -178,19 +290,19 @@ model JobOffers {
 }
 
 model Announcement {
-  id          String   @id @default(cuid())
-  title       String
-  content     String
-  category    String   // ej: "general", "evento", "noticia", "importante"
-  pinned      Boolean  @default(false) // Para destacar anuncios importantes
-  published   Boolean  @default(true)
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  eventId     String?  // Evento relacionado (solo para categoría "evento")
-  event       Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  id        String  @id @default(cuid())
+  title     String
+  content   String
+  category  String // ej: "general", "evento", "noticia", "importante"
+  pinned    Boolean @default(false) // Para destacar anuncios importantes
+  published Boolean @default(true)
+  authorId  String
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  eventId   String? // Evento relacionado (solo para categoría "evento")
+  event     Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([authorId])
   @@index([published])
@@ -199,15 +311,15 @@ model Announcement {
 }
 
 model EventRegistration {
-  id              String    @id @default(cuid())
-  eventId         String
-  userId          String    // Usuario registrado (requerido)
-  cancelledAt     DateTime? // Fecha de cancelación (si fue cancelada)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String    @id @default(cuid())
+  eventId     String
+  userId      String // Usuario registrado (requerido)
+  cancelledAt DateTime? // Fecha de cancelación (si fue cancelada)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
   @@index([eventId])
@@ -223,21 +335,21 @@ model Sponsor {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
 }
 
 model PageVisit {
   id        String   @id @default(cuid())
-  path      String   // Ruta de la página visitada
-  userId    String?  // Usuario que visitó (si está logueado)
-  ipAddress String?  // Dirección IP (opcional, para privacidad)
-  userAgent String?  // User agent del navegador
-  referer   String?  // Página de origen
+  path      String // Ruta de la página visitada
+  userId    String? // Usuario que visitó (si está logueado)
+  ipAddress String? // Dirección IP (opcional, para privacidad)
+  userAgent String? // User agent del navegador
+  referer   String? // Página de origen
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([path])
   @@index([userId])
@@ -247,12 +359,12 @@ model PageVisit {
 model Testimonial {
   id        String   @id @default(cuid())
   body      String
-  userId    String   // Usuario que creó el testimonio (requerido)
+  userId    String // Usuario que creó el testimonio (requerido)
   featured  Boolean  @default(false) // Si aparece en la home page
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([createdAt])
@@ -261,15 +373,15 @@ model Testimonial {
 
 model Notification {
   id        String   @id @default(cuid())
-  type      String   // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
-  title     String   // Título de la notificación
-  message   String   // Mensaje de la notificación
-  userId    String?  // Usuario destinatario (null = todos los admins)
+  type      String // Tipo de notificación (testimonial_created, testimonial_updated, testimonial_deleted, etc.)
+  title     String // Título de la notificación
+  message   String // Mensaje de la notificación
+  userId    String? // Usuario destinatario (null = todos los admins)
   read      Boolean  @default(false)
-  metadata  String?  // JSON con información adicional
+  metadata  String? // JSON con información adicional
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([read])
@@ -277,21 +389,21 @@ model Notification {
 }
 
 model ErrorLog {
-  id          String   @id @default(cuid())
-  message     String   // Mensaje del error
-  stack       String?  // Stack trace del error
-  path        String?  // Ruta donde ocurrió el error
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del error
-  resolved    Boolean  @default(false) // Si el error fue resuelto
-  resolvedAt  DateTime? // Fecha en que se resolvió
-  resolvedBy  String?  // ID del admin que lo resolvió
-  createdAt   DateTime @default(now())
+  id         String    @id @default(cuid())
+  message    String // Mensaje del error
+  stack      String? // Stack trace del error
+  path       String? // Ruta donde ocurrió el error
+  userId     String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent  String? // User agent del navegador
+  ipAddress  String? // Dirección IP
+  metadata   String? // JSON con información adicional del error
+  resolved   Boolean   @default(false) // Si el error fue resuelto
+  resolvedAt DateTime? // Fecha en que se resolvió
+  resolvedBy String? // ID del admin que lo resolvió
+  createdAt  DateTime  @default(now())
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  resolver    User?    @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  user     User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resolver User? @relation("ErrorLogResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -300,17 +412,17 @@ model ErrorLog {
 }
 
 model AppLog {
-  id          String   @id @default(cuid())
-  level       String   // Nivel del log: info, warn, error, debug
-  message     String   // Mensaje del log
-  path        String?  // Ruta donde ocurrió el log
-  userId      String?  // Usuario que estaba usando la app cuando ocurrió (si está logueado)
-  userAgent   String?  // User agent del navegador
-  ipAddress   String?  // Dirección IP
-  metadata    String?  // JSON con información adicional del log
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  level     String // Nivel del log: info, warn, error, debug
+  message   String // Mensaje del log
+  path      String? // Ruta donde ocurrió el log
+  userId    String? // Usuario que estaba usando la app cuando ocurrió (si está logueado)
+  userAgent String? // User agent del navegador
+  ipAddress String? // Dirección IP
+  metadata  String? // JSON con información adicional del log
+  createdAt DateTime @default(now())
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([path])
@@ -321,9 +433,10 @@ model AppLog {
 model PasswordResetToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])
@@ -333,9 +446,10 @@ model PasswordResetToken {
 model EmailVerificationToken {
   id        String   @id @default(cuid())
   email     String
-  code      String   // Código de 6 dígitos
+  code      String // Código de 6 dígitos
   expiresAt DateTime // Expira en 15 minutos
   used      Boolean  @default(false)
+  attempts  Int      @default(0) // Intentos de validación, con tope
   createdAt DateTime @default(now())
 
   @@index([email])
@@ -447,4 +561,141 @@ model TalkSpeaker {
   @@index([talkId])
   @@index([userId])
   @@index([talkId, order])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  url         String
+  logoUrl     String
+  techStack   String[]
+  order       Int      @default(0)
+
+  // Proyectos de código abierto: el repo es opcional y siempre apunta a GitHub.
+  isOpenSource Boolean @default(false)
+  repoUrl      String?
+
+  // Años en que arrancó y (si terminó) cerró el proyecto. Ambos opcionales.
+  startYear Int?
+  endYear   Int?
+
+  // Usuario que cargó el proyecto. Null solo en proyectos cargados por admins antes de que
+  // los usuarios pudieran publicar los suyos.
+  authorId   String?
+  author     User?   @relation("UserAuthoredProjects", fields: [authorId], references: [id], onDelete: Cascade)
+  // Rol del autor en el equipo (texto libre).
+  authorRole String?
+
+  members ProjectMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+}
+
+model ProjectMember {
+  id         String  @id @default(cuid())
+  projectId  String
+  userId     String?
+  memberName String
+  // Rol en el equipo (texto libre). Solo el autor del proyecto lo edita.
+  role       String?
+  order      Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User?   @relation("UserProjectMembers", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([projectId, order])
+}
+
+// A personal mark a user leaves on static content listed on the site, like an article they
+// already read. `contentType`/`mark` pairs are validated in src/actions/content-marks.
+model ContentMark {
+  id          String @id @default(cuid())
+  userId      String
+  contentType String
+  contentId   String
+  mark        String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, contentType, contentId, mark])
+  @@index([userId, contentType])
+}
+
+// Ties a name the site knows from outside the platform to a real user, set by an admin: a
+// member as named in the WhatsApp conversation summaries, a GitHub login that contributed to
+// this website's repository, or an author of the /lectura articles.
+model IdentityLink {
+  id           String @id @default(cuid())
+  /// "whatsapp", "github" or "articulos" (validated in src/actions/identity-links).
+  source       String
+  externalName String
+  userId       String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([source, externalName])
+  @@index([userId])
+}
+
+// Badge custom que un admin crea y otorga a miembros de la comunidad.
+model Badge {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  // Ícono y color del badge, validados en src/lib/badges.
+  icon        String
+  tone        String
+
+  awards UserBadge[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserBadge {
+  id          String  @id @default(cuid())
+  userId      String
+  badgeId     String
+  awardedById String?
+
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedBy User? @relation("BadgeAwarder", fields: [awardedById], references: [id], onDelete: SetNull)
+
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([badgeId])
+}
+
+// Miembro de la comunidad que escribió uno de los artículos de /lectura (que son contenido
+// estático: `articleId` es el id del artículo en src/app/(platform)/lectura/articles.ts). Lo
+// asigna un admin y el artículo aparece en su perfil.
+model ArticleAuthor {
+  id        String  @id @default(cuid())
+  articleId String
+  userId    String
+  addedById String?
+
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedBy User? @relation("ArticleAuthorAdder", fields: [addedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, userId])
+  @@index([userId])
 }

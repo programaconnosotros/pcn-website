@@ -1,0 +1,95 @@
+import type { RateLimitName } from '@/lib/rate-limit';
+
+// Sin imports de servidor: lo usan tanto las actions como los componentes de cliente.
+
+const PREFIX = 'RATE_LIMIT';
+
+/**
+ * Lo que viaja en el `digest` (y en el mensaje) de un error de rate limit. En producción Next no
+ * le pasa al navegador el mensaje de un error lanzado por una server action, pero sí respeta el
+ * `digest` si el error ya trae uno, así que es la forma de que la UI sepa qué pasó y cuánto falta.
+ */
+export const rateLimitDigest = (name: RateLimitName, waitSeconds: number) =>
+  `${PREFIX}:${name}:${waitSeconds}`;
+
+/** "45 segundos", "1 minuto", "9 minutos" o "1 hora". */
+export const formatWait = (seconds: number) => {
+  if (seconds < 60) return seconds === 1 ? '1 segundo' : `${seconds} segundos`;
+  if (seconds < 3600) {
+    const minutes = Math.ceil(seconds / 60);
+    return minutes === 1 ? '1 minuto' : `${minutes} minutos`;
+  }
+  const hours = Math.ceil(seconds / 3600);
+  return hours === 1 ? '1 hora' : `${hours} horas`;
+};
+
+/**
+ * Qué se limitó y por qué, para cada formulario. Cada mensaje explica el motivo (seguridad o
+ * evitar spam) y cuánto falta, así nadie piensa que el sitio está roto o que hizo algo mal.
+ */
+const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
+  signIn: (wait) =>
+    `Hubo demasiados intentos de inicio de sesión seguidos. Para proteger tu cuenta pausamos los intentos por un rato: probá de nuevo en ${wait}.`,
+  signUp: (wait) =>
+    `Se crearon varias cuentas desde tu conexión en poco tiempo. Para frenar cuentas falsas pausamos los registros: probá de nuevo en ${wait}.`,
+  sendCode: (wait) =>
+    `Ya pediste varios códigos en los últimos minutos. Para evitar que se usen tus emails para mandar spam, esperá ${wait} antes de pedir otro. Mientras tanto, revisá también la carpeta de spam.`,
+  verifyCode: (wait) =>
+    `Probaste demasiados códigos seguidos. Para que nadie pueda adivinar un código pausamos los intentos: probá de nuevo en ${wait}.`,
+  createContent: (wait) =>
+    `Publicaste mucho contenido en poco tiempo. Para evitar spam en la comunidad hay un límite por hora: vas a poder publicar de nuevo en ${wait}.`,
+  comment: (wait) =>
+    `Estás comentando muy seguido. Para evitar spam hay un límite de comentarios: vas a poder comentar de nuevo en ${wait}.`,
+  editContent: (wait) =>
+    `Hiciste muchos cambios seguidos. Para proteger el sitio hay un límite de ediciones: vas a poder guardar de nuevo en ${wait}.`,
+  eventRegistration: (wait) =>
+    `Hiciste muchas inscripciones o cancelaciones seguidas. Para cuidar los cupos de los eventos hay un límite: probá de nuevo en ${wait}.`,
+  upload: (wait) =>
+    `Subiste muchos archivos en poco tiempo. Para cuidar el almacenamiento hay un límite de subidas: vas a poder subir de nuevo en ${wait}.`,
+  photoDownload: (wait) =>
+    `Descargaste muchas fotos en poco tiempo. Para que la galería ande rápido para todos hay un límite por hora: vas a poder descargar de nuevo en ${wait}.`,
+  log: (wait) => `Demasiados registros seguidos. Probá de nuevo en ${wait}.`,
+};
+
+/** El mensaje para mostrarle a quien llegó al límite de `name`. */
+export const rateLimitMessage = (name: RateLimitName, waitSeconds: number) =>
+  MESSAGES[name](formatWait(waitSeconds));
+
+const isRateLimitName = (value: string): value is RateLimitName => value in MESSAGES;
+
+/** El formulario y la espera si `error` es un rate limit (por digest o mensaje); null si no. */
+export const parseRateLimitError = (error: unknown) => {
+  if (!error || typeof error !== 'object') return null;
+  const { digest, message } = error as { digest?: unknown; message?: unknown };
+
+  for (const value of [digest, message]) {
+    const match = typeof value === 'string' && /^RATE_LIMIT:(\w+):(\d+)$/.exec(value);
+    if (match && isRateLimitName(match[1])) {
+      return { name: match[1], waitSeconds: Number(match[2]) };
+    }
+  }
+  return null;
+};
+
+/** El mensaje para mostrar si `error` es un rate limit; null si es cualquier otro error. */
+export const getRateLimitMessage = (error: unknown) => {
+  const rateLimit = parseRateLimitError(error);
+  return rateLimit ? rateLimitMessage(rateLimit.name, rateLimit.waitSeconds) : null;
+};
+
+// Lo que Next pone en lugar del mensaje real de un error de server action en producción
+const REDACTED_MESSAGE = 'An error occurred in the Server Components render';
+
+/**
+ * Texto para avisar que falló una server action: el aviso de rate limit si corresponde; si no,
+ * el mensaje del error cuando `showMessage` (las actions que lanzan textos pensados para el
+ * usuario) o `fallback`. El mensaje genérico en inglés que Next usa en producción nunca se muestra.
+ */
+export const actionErrorMessage = (error: unknown, fallback: string, showMessage = false) => {
+  const rateLimit = getRateLimitMessage(error);
+  if (rateLimit) return rateLimit;
+
+  const message = error instanceof Error ? error.message : '';
+  if (showMessage && message && !message.startsWith(REDACTED_MESSAGE)) return message;
+  return fallback;
+};

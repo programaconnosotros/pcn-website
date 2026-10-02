@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -13,7 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Mic, Plus, Pencil, ExternalLink } from 'lucide-react';
+import { Plus, Pencil, ExternalLink } from 'lucide-react';
 import { DeleteTalkButton } from './delete-talk-button';
 import { TalkForm } from './talk-form';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
@@ -30,22 +29,20 @@ export function TalksList({ talks, eventId }: Props) {
   const [editingTalk, setEditingTalk] = useState<TalkWithSpeakers | null>(null);
 
   return (
-    <Card className="border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Mic className="h-5 w-5" />
-            Charlas ({talks.length} total)
-          </CardTitle>
-          <Button size="sm" variant="pcn" onClick={() => setShowCreate(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            Nueva charla
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
+    <section className="mb-14 border border-pcnGreen-200">
+      <div className="flex items-center justify-between border-b border-pcnGreen-200 px-3 py-2">
+        <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          <span className="text-pcnGreen-500">{'// '}</span>
+          charlas · {talks.length} total
+        </h2>
+        <Button size="sm" variant="pcn" onClick={() => setShowCreate(true)}>
+          <Plus className="mr-1 h-4 w-4" />
+          nuevaCharla();
+        </Button>
+      </div>
+      <div className="p-3">
         {talks.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
+          <p className="py-4 font-mono text-sm text-muted-foreground">
             Aún no hay charlas para este evento.
           </p>
         ) : (
@@ -134,7 +131,7 @@ export function TalksList({ talks, eventId }: Props) {
                               href={talk.slidesUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                              className="flex items-center gap-1 text-sm text-pcnGreen hover:underline"
                             >
                               <ExternalLink className="h-3 w-3" />
                               Slides
@@ -145,7 +142,7 @@ export function TalksList({ talks, eventId }: Props) {
                               href={talk.videoUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                              className="flex items-center gap-1 text-sm text-pcnGreen hover:underline"
                             >
                               <ExternalLink className="h-3 w-3" />
                               Video
@@ -171,10 +168,10 @@ export function TalksList({ talks, eventId }: Props) {
             </Table>
           </div>
         )}
-      </CardContent>
+      </div>
 
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
@@ -187,12 +184,13 @@ export function TalksList({ talks, eventId }: Props) {
       </Dialog>
 
       <Dialog open={!!editingTalk} onOpenChange={(open) => !open && setEditingTalk(null)}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Editar charla</DialogTitle>
           </DialogHeader>
           {editingTalk && (
             <TalkForm
+              eventId={eventId}
               talk={editingTalk}
               onSuccess={() => setEditingTalk(null)}
               onCancel={() => setEditingTalk(null)}
@@ -200,6 +198,6 @@ export function TalksList({ talks, eventId }: Props) {
           )}
         </DialogContent>
       </Dialog>
-    </Card>
+    </section>
   );
 }

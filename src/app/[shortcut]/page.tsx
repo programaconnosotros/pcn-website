@@ -1,3 +1,4 @@
+import { signGallerySrc } from '@/lib/gallery-signing';
 import { redirect } from 'next/navigation';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import { findNextEventByShortcut, slugToLabel } from '@/lib/event-shortcuts';
@@ -16,7 +17,7 @@ export async function generateMetadata({
   const { shortcut } = await params;
   const label = slugToLabel(shortcut);
 
-  const event = await findNextEventByShortcut(shortcut, { includeImages: true });
+  const event = await findNextEventByShortcut(shortcut);
 
   if (!event) {
     return {
@@ -25,7 +26,6 @@ export async function generateMetadata({
       openGraph: {
         title: 'programaConNosotros',
         description: 'Participá de los próximos eventos de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/${shortcut}`,
         type: 'website',
         siteName: 'programaConNosotros',
@@ -34,15 +34,18 @@ export async function generateMetadata({
         card: 'summary_large_image',
         title: 'programaConNosotros',
         description: 'Participá de los próximos eventos de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
       },
     };
   }
 
   const rawImage =
     event.flyerImages[0] ||
-    ((event as any).images?.length > 0 ? (event as any).images[0].imgSrc : null);
-  const imageUrl = rawImage ? optimizedOgImage(rawImage) : `${SITE_URL}/pcn-link-preview.png`;
+    (event.galleryItems[0] && signGallerySrc(event.galleryItems[0].src).url) ||
+    null;
+  // Events without a flyer get the generated terminal card.
+  const imageUrl = rawImage
+    ? optimizedOgImage(rawImage)
+    : `${SITE_URL}/eventos/${event.id}/og-image`;
 
   return {
     title: event.name,

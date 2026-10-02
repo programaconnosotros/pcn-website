@@ -3,20 +3,19 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
+import { findSession } from '@/lib/session';
 
 export const deleteRegistration = async (registrationId: string) => {
-  // Verificar que el usuario es admin
+  // Verificar que el usuario está logueado
   const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
-  if (!session?.user || session.user.role !== 'ADMIN') {
+  if (!(await canManageSomeEvent(session?.user))) {
     throw new Error('No tienes permisos para realizar esta acción');
   }
 
@@ -27,6 +26,11 @@ export const deleteRegistration = async (registrationId: string) => {
 
   if (!registration) {
     throw new Error('Inscripción no encontrada');
+  }
+
+  // Solo quien gestiona el evento elimina inscripciones
+  if (!(await canManageEventById(session?.user, registration.eventId))) {
+    throw new Error('No tienes permisos para realizar esta acción');
   }
 
   // Eliminar la inscripción físicamente

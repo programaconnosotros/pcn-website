@@ -52,6 +52,13 @@ const adminSession = {
   updatedAt: new Date('2025-01-01'),
 };
 
+const ambassadorSession = {
+  ...adminSession,
+  id: 'session-amb',
+  userId: 'user-amb',
+  user: { ...adminUser, id: 'user-amb', role: 'REGULAR' as const, isAmbassador: true },
+};
+
 describe('createEvent', () => {
   it('throws when there is no sessionId cookie', async () => {
     mockCookies(); // no sessionId
@@ -110,6 +117,35 @@ describe('createEvent', () => {
           city: 'Buenos Aires',
         }),
       }),
+    );
+  });
+
+  it('records the creator as the first organizer', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-3' } as any);
+
+    await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT:');
+
+    expect(prismaMock.event.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          createdById: 'user-admin',
+          organizers: { create: { userId: 'user-admin' } },
+        }),
+      }),
+    );
+  });
+
+  it('lets ambassadors create events', async () => {
+    mockCookies({ sessionId: 'session-amb' });
+    prismaMock.session.findUnique.mockResolvedValue(ambassadorSession as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-4' } as any);
+
+    await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT:/eventos/event-4');
+
+    expect(prismaMock.event.create).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ createdById: 'user-amb' }) }),
     );
   });
 });

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { Heading2 } from '@/components/ui/heading-2';
+import { Plus, Rss } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid } from '@/components/ui/ruled-grid';
 import {
   Dialog,
   DialogContent,
@@ -57,19 +59,32 @@ export function AnnouncementsWrapper({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <Heading2 className="m-0">Anuncios</Heading2>
-        {isAdmin && (
-          <Button onClick={() => setIsCreateOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nuevo anuncio
-          </Button>
-        )}
-      </div>
+      <StickyHeader>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <PageTitle
+            path="anuncios"
+            meta={`${announcements.length} anuncios de la comunidad`}
+            className="mb-0 flex-1"
+          />
+          <a
+            href="/feed.xml"
+            title="Suscribite a las novedades con tu lector de RSS"
+            className="inline-flex shrink-0 items-center gap-1.5 self-center font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+          >
+            <Rss className="h-3.5 w-3.5" />
+            rss
+          </a>
+          {isAdmin && (
+            <Button size="sm" onClick={() => setIsCreateOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              nuevoAnuncio();
+            </Button>
+          )}
+        </div>
+      </StickyHeader>
 
-      {/* Announcements list */}
       {announcements.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <RuledGrid className="mb-14 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
           {announcements.map((announcement) => (
             <AnnouncementCard
               key={announcement.id}
@@ -78,16 +93,17 @@ export function AnnouncementsWrapper({
               isAdmin={isAdmin}
             />
           ))}
-        </div>
+        </RuledGrid>
       ) : (
-        <p className="py-12 text-center text-muted-foreground">
+        <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>
           Aún no se han publicado anuncios en la comunidad.
         </p>
       )}
 
       {/* Dialog para crear nuevo anuncio */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nuevo anuncio</DialogTitle>
             <DialogDescription>Crea un nuevo anuncio para la comunidad.</DialogDescription>
@@ -97,7 +113,7 @@ export function AnnouncementsWrapper({
             onSubmit={handleCreate}
             onCancel={() => setIsCreateOpen(false)}
             isLoading={isCreating}
-            submitLabel="Crear anuncio"
+            submitLabel="crearAnuncio();"
           />
         </DialogContent>
       </Dialog>

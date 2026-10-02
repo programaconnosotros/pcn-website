@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { getEventRegistrations } from './get-event-registrations';
+import { requireEventManager } from '@/lib/event-access';
+
+// Event managers only: every test runs as one unless it says otherwise.
+jest.mock('@/lib/event-access', () => ({ requireEventManager: jest.fn() }));
 
 const mockUser = {
   id: 'user-1',
@@ -48,5 +52,13 @@ describe('getEventRegistrations', () => {
     const result = await getEventRegistrations('event-1');
 
     expect(result).toEqual([]);
+  });
+});
+
+describe('getEventRegistrations access', () => {
+  it('rejects anyone who does not manage the event', async () => {
+    (requireEventManager as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(getEventRegistrations('event-1')).rejects.toThrow('No autorizado');
   });
 });

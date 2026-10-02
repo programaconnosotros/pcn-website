@@ -22,7 +22,7 @@ export const Discord = () => (
         </p>
 
         <Link href="https://discord.gg/dTQexKw56S" target="_blank">
-          <Button className="mt-8">Ir a Discord</Button>
+          <Button className="mt-8">abrirDiscord();</Button>
         </Link>
       </div>
     </div>

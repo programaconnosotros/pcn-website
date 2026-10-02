@@ -14,9 +14,12 @@ const validProfileData: ProfileFormData = {
   xAccountUrl: null,
   linkedinUrl: null,
   gitHubUrl: null,
+  instagramUrl: null,
+  youtubeUrl: null,
+  twitchUrl: null,
+  kickUrl: null,
   slogan: null,
-  jobTitle: null,
-  enterprise: null,
+  positions: [],
   career: null,
   studyPlace: null,
   programmingLanguages: [],
@@ -36,6 +39,15 @@ const baseSession = {
   expires: new Date('2027-01-01'),
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
+};
+
+const validProfileDataWithPositions: ProfileFormData = {
+  ...validProfileData,
+  positions: [
+    { jobTitle: 'Frontend Developer', enterprise: 'Acme' },
+    { jobTitle: '', enterprise: 'Ignored' },
+    { jobTitle: 'Docente', enterprise: '' },
+  ],
 };
 
 describe('updateProfile', () => {
@@ -95,5 +107,48 @@ describe('updateProfile', () => {
       }),
     );
     expect(revalidatePath).toHaveBeenCalledWith('/perfil');
+  });
+
+  it('replaces the positions, skipping rows without a job title, and mirrors the first one', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.user.update.mockResolvedValue({} as any);
+    prismaMock.userLanguage.deleteMany.mockResolvedValue({ count: 0 } as any);
+    prismaMock.userPosition.deleteMany.mockResolvedValue({ count: 1 } as any);
+    prismaMock.userPosition.createMany.mockResolvedValue({ count: 2 } as any);
+
+    await updateProfile(validProfileDataWithPositions);
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ jobTitle: 'Frontend Developer', enterprise: 'Acme' }),
+      }),
+    );
+    expect(prismaMock.userPosition.deleteMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1' },
+    });
+    expect(prismaMock.userPosition.createMany).toHaveBeenCalledWith({
+      data: [
+        { userId: 'user-1', jobTitle: 'Frontend Developer', enterprise: 'Acme', order: 0 },
+        { userId: 'user-1', jobTitle: 'Docente', enterprise: null, order: 1 },
+      ],
+    });
+  });
+
+  it('clears the mirrored job fields when there are no positions', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.user.update.mockResolvedValue({} as any);
+    prismaMock.userLanguage.deleteMany.mockResolvedValue({ count: 0 } as any);
+    prismaMock.userPosition.deleteMany.mockResolvedValue({ count: 0 } as any);
+
+    await updateProfile(validProfileData);
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ jobTitle: null, enterprise: null }),
+      }),
+    );
+    expect(prismaMock.userPosition.createMany).not.toHaveBeenCalled();
   });
 });

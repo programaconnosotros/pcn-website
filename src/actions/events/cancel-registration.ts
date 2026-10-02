@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 type CancelRegistrationParams = {
   registrationId?: string;
@@ -11,6 +13,8 @@ type CancelRegistrationParams = {
 };
 
 export const cancelRegistration = async (params: CancelRegistrationParams) => {
+  await enforceRateLimit('eventRegistration');
+
   const { registrationId, eventId } = params;
 
   // Verificar autenticación
@@ -19,10 +23,7 @@ export const cancelRegistration = async (params: CancelRegistrationParams) => {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session?.user) {
     throw new Error('No autorizado');

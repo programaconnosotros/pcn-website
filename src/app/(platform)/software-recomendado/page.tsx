@@ -1,23 +1,14 @@
 'use client';
 import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ExternalLink, Search, X } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface SoftwareRecommendation {
   name: string;
@@ -43,63 +34,49 @@ function SoftwareRecommendationCard({
   isPopular = false,
 }: SoftwareRecommendationCardProps) {
   return (
-    <Card className="flex flex-col border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border bg-white p-2 dark:bg-neutral-800">
-              <Image
-                src={logo || '/placeholder.svg?height=48&width=48'}
-                alt={`${name} logo`}
-                width={40}
-                height={40}
-                className="h-10 w-10 object-contain"
-              />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold">{name}</h3>
-              <p className="text-sm text-muted-foreground">{category}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1">
-            {isFree && (
-              <Badge className="border-green-500/30 bg-green-500/20 text-green-700 dark:text-green-300">
-                Gratis
-              </Badge>
-            )}
-            {isPopular && (
-              <Badge className="border-orange-500/30 bg-orange-500/20 text-orange-700 dark:text-orange-300">
-                Popular
-              </Badge>
-            )}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
-        <p className="mb-4 flex-1 text-sm text-muted-foreground">{description}</p>
+    <a
+      href={website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(ruledCellClassName, 'group flex gap-3 p-3')}
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+        <Image
+          src={logo || '/placeholder.svg?height=48&width=48'}
+          alt={`${name} logo`}
+          width={28}
+          height={28}
+          className="h-full w-full object-contain"
+        />
+      </div>
 
-        <div className="mb-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h3 className="truncate font-semibold group-hover:text-pcnGreen">{name}</h3>
+          {isPopular && <Badge className="px-1.5 py-0 text-[10px]">popular</Badge>}
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+            {isFree ? 'gratis' : category.toLowerCase()}
+            <ArrowUpRight className="h-3 w-3" />
+          </span>
         </div>
 
-        <Button size="sm" className="w-full" onClick={() => window.open(website, '_blank')}>
-          <ExternalLink className="mr-2 h-4 w-4" />
-          Visitar sitio
-        </Button>
-      </CardContent>
-    </Card>
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{description}</p>
+
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500"># </span>
+          {tags.join(' · ')}
+        </p>
+      </div>
+    </a>
   );
 }
 
 interface RecommendationsListProps {
+  header: ReactNode;
   recommendations: SoftwareRecommendation[];
 }
 
-function RecommendationsList({ recommendations }: RecommendationsListProps) {
+function RecommendationsList({ header, recommendations }: RecommendationsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredRecommendations = recommendations.filter((software) => {
@@ -115,34 +92,26 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
   return (
     <>
-      {/* Search */}
-      <div className="mb-6 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-          <Input
-            placeholder="Buscar software, categoría o tecnología..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+      <StickyHeader>
+        {header}
+        {/* Search */}
+        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+          <SearchBar
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
+            placeholder="software, categoría o tecnología"
+            label="Buscar software, categoría o tecnología"
           />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
         </div>
-      </div>
+      </StickyHeader>
 
       {/* Software Grid or Empty State */}
       {filteredRecommendations.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredRecommendations.map((software, index) => (
-            <SoftwareRecommendationCard key={index} {...software} />
+        <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+          {filteredRecommendations.map((software) => (
+            <SoftwareRecommendationCard key={software.name} {...software} />
           ))}
-        </div>
+        </RuledGrid>
       ) : (
         <EmptyState
           title="No se encontró software útil"
@@ -234,35 +203,17 @@ const softwareRecommendations = [
 export default function SoftwareRecommendationsPage() {
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Software útil</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between">
-            <Heading2 className="m-0">Software útil</Heading2>
-          </div>
-
-          <p className="mb-6 text-muted-foreground">
-            Acá podés encontrar una lista de software útil recomendado por la comunidad de PCN. Si
-            querés sumar alguno, ¡avisanos!
-          </p>
-
-          <RecommendationsList recommendations={softwareRecommendations} />
+          <RecommendationsList
+            header={
+              <PageTitle
+                path="software-recomendado"
+                meta={`${softwareRecommendations.length} apps recomendadas por la comunidad`}
+              />
+            }
+            recommendations={softwareRecommendations}
+          />
         </div>
       </div>
     </>

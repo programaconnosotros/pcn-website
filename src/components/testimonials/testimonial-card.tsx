@@ -1,6 +1,7 @@
 'use client';
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Star, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
@@ -32,7 +33,6 @@ type TestimonialCardProps = {
     user: {
       id: string;
       name: string;
-      email: string;
       image: string | null;
     };
   };
@@ -84,85 +84,84 @@ export function TestimonialCard({
   };
 
   return (
-    <Card
-      className={`flex flex-col border-2 transition-all duration-300 hover:scale-[1.015] ${
-        isOwnTestimonial
-          ? 'border-pcnPurple bg-gradient-to-br from-white to-pcnPurple/5 shadow-lg shadow-pcnPurple/20 dark:border-pcnGreen dark:from-neutral-900 dark:to-pcnGreen/10 dark:shadow-pcnGreen/20'
-          : 'border-transparent bg-gradient-to-br from-white to-gray-50 hover:shadow-xl dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800'
-      }`}
+    <div
+      className={cn(
+        ruledCellClassName,
+        'flex flex-col gap-2 p-3',
+        isOwnTestimonial && 'bg-pcnGreen-50 shadow-[inset_2px_0_0_0_#04f4be]',
+      )}
     >
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={testimonial.user.image || undefined} alt={testimonial.user.name} />
-              <AvatarFallback className="text-sm">
-                {testimonial.user.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')
-                  .toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/perfil/${testimonial.user.id}`}
-                className="text-lg font-semibold transition-colors hover:text-pcnPurple hover:underline dark:hover:text-pcnGreen"
-              >
-                {testimonial.user.name}
-              </Link>
-              {isAdmin && testimonial.featured && (
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+      <div className="flex items-center gap-2">
+        <Avatar className="h-7 w-7 rounded-sm">
+          <AvatarImage src={testimonial.user.image || undefined} alt={testimonial.user.name} />
+          <AvatarFallback className="rounded-sm text-[10px]">
+            {testimonial.user.name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <Link
+          href={`/perfil/${testimonial.user.id}`}
+          className="truncate font-mono text-sm font-semibold transition-colors hover:text-pcnGreen"
+        >
+          {testimonial.user.name}
+        </Link>
+        {isOwnTestimonial && (
+          <span className="shrink-0 font-mono text-[10px] text-pcnGreen">(vos)</span>
+        )}
+        {isAdmin && testimonial.featured && (
+          <Star className="h-3.5 w-3.5 shrink-0 fill-yellow-400 text-yellow-400" />
+        )}
+        {(isAdmin || canEdit) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="ml-auto h-6 w-6 shrink-0">
+                <MoreVertical className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {isAdmin && (
+                <DropdownMenuItem
+                  onClick={handleToggleFeatured}
+                  disabled={isToggling}
+                  className={testimonial.featured ? 'text-yellow-500' : ''}
+                >
+                  <Star
+                    className={`mr-2 h-4 w-4 ${
+                      testimonial.featured ? 'fill-yellow-400 text-yellow-400' : ''
+                    }`}
+                  />
+                  <span>
+                    {testimonial.featured ? 'Remover de home page' : 'Mostrar en home page'}
+                  </span>
+                </DropdownMenuItem>
               )}
-            </div>
-          </div>
-          {(isAdmin || canEdit) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {isAdmin && (
-                  <DropdownMenuItem
-                    onClick={handleToggleFeatured}
-                    disabled={isToggling}
-                    className={testimonial.featured ? 'text-yellow-500' : ''}
-                  >
-                    <Star
-                      className={`mr-2 h-4 w-4 ${
-                        testimonial.featured ? 'fill-yellow-400 text-yellow-400' : ''
-                      }`}
-                    />
-                    <span>
-                      {testimonial.featured ? 'Remover de home page' : 'Mostrar en home page'}
-                    </span>
+              {canEdit && (
+                <>
+                  <DropdownMenuItem onClick={() => onEdit(testimonial)}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    <span>Editar</span>
                   </DropdownMenuItem>
-                )}
-                {canEdit && (
-                  <>
-                    <DropdownMenuItem onClick={() => onEdit(testimonial)}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      <span>Editar</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setIsDeleteDialogOpen(true)}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      <span>Eliminar</span>
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <p className="text-sm text-muted-foreground">{testimonial.body}</p>
-      </CardContent>
+                  <DropdownMenuItem
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    <span>Eliminar</span>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        <span className="font-mono text-pcnGreen-500">&gt; </span>
+        {testimonial.body}
+      </p>
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
@@ -175,13 +174,13 @@ export function TestimonialCard({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>cancelar();</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
-              Eliminar
+              eliminar();
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Card>
+    </div>
   );
 }

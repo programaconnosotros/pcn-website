@@ -36,6 +36,10 @@ const validToken = {
 };
 
 describe('verifyEmailCode', () => {
+  beforeEach(() => {
+    prismaMock.emailVerificationToken.updateMany.mockResolvedValue({ count: 1 });
+  });
+
   it('throws when the token is not found', async () => {
     prismaMock.emailVerificationToken.findFirst.mockResolvedValue(null);
 
@@ -77,7 +81,7 @@ describe('verifyEmailCode', () => {
     expect(prismaMock.session.create).toHaveBeenCalledTimes(1);
     expect(store.set).toHaveBeenCalledWith(
       'sessionId',
-      'session-new',
+      expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     );
   });

@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     title: 'Software recomendado | programaConNosotros',
     description:
       'Software que la comunidad recomienda: herramientas, apps y servicios probados por miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
     url: `${SITE_URL}/software-recomendado`,
     type: 'website',
     siteName: 'programaConNosotros',
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
     title: 'Software recomendado | programaConNosotros',
     description:
       'Software que la comunidad recomienda: herramientas, apps y servicios probados por miembros de programaConNosotros.',
-    images: [`${SITE_URL}/pcn-link-preview.png`],
   },
 };
 

@@ -37,14 +37,14 @@ export const Hero = () => (
           <div className="flex w-full flex-row justify-center gap-4">
             <Link href="/autenticacion/iniciar-sesion" passHref>
               <Button className="flex flex-row items-center justify-center gap-2">
-                <span>Ingresar</span>
+                <span>ingresar();</span>
                 <LogIn className="h-4 w-4" />
               </Button>
             </Link>
 
             <Link href="/autenticacion/registro" passHref>
               <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
-                <span>Crear cuenta</span>
+                <span>crearCuenta();</span>
                 <UserPlus className="h-4 w-4" />
               </Button>
             </Link>
@@ -52,7 +52,7 @@ export const Hero = () => (
 
           <Link href="/home" passHref className="flex w-full justify-center">
             <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
-              <span>Chusmear sin cuenta</span>
+              <span>chusmearSinCuenta();</span>
               <Eye className="h-4 w-4" />
             </Button>
           </Link>

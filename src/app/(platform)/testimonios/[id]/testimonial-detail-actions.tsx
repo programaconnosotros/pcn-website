@@ -93,6 +93,7 @@ export function TestimonialDetailActions({
         {isAdmin && (
           <Button
             variant="outline"
+            size="sm"
             onClick={handleToggleFeatured}
             disabled={isToggling}
             className={testimonial.featured ? 'border-yellow-500 text-yellow-500' : ''}
@@ -102,20 +103,20 @@ export function TestimonialDetailActions({
                 testimonial.featured ? 'fill-yellow-400 text-yellow-400' : ''
               }`}
             />
-            {testimonial.featured ? 'Remover de destacados' : 'Destacar'}
+            {testimonial.featured ? 'quitarDestacado();' : 'destacar();'}
           </Button>
         )}
         {canEdit && (
           <>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
+            <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
               <Edit className="mr-2 h-4 w-4" />
-              Editar
+              editar();
             </Button>
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">
+                <Button variant="destructive" size="sm">
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Eliminar
+                  eliminar();
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -128,13 +129,13 @@ export function TestimonialDetailActions({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>cancelar();</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
                     disabled={isDeleting}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Eliminar
+                    eliminar();
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

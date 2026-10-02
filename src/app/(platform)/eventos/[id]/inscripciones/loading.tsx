@@ -1,16 +1,11 @@
-import {
-  PageHeaderSkeleton,
-  TitleRowSkeleton,
-  TableSkeleton,
-} from '@/components/skeletons/page-skeletons';
+import { PageTitleSkeleton, TableSkeleton } from '@/components/skeletons/page-skeletons';
 
 export default function Loading() {
   return (
     <>
-      <PageHeaderSkeleton breadcrumbs={4} />
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <TitleRowSkeleton />
+          <PageTitleSkeleton />
           <TableSkeleton rows={10} cols={4} />
         </div>
       </div>

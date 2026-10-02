@@ -5,8 +5,12 @@ import { ProfileFormData } from '@/schemas/profile-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const updateProfile = async (data: ProfileFormData) => {
+  await enforceRateLimit('editContent');
+
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
@@ -14,24 +18,39 @@ export const updateProfile = async (data: ProfileFormData) => {
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
     redirect('/');
   }
 
-  const { programmingLanguages, ...userData } = data;
+  const { programmingLanguages, positions: rawPositions, ...userData } = data;
+  const positions = rawPositions
+    .filter((position) => position.jobTitle)
+    .map((position) => ({ jobTitle: position.jobTitle, enterprise: position.enterprise || null }));
 
-  // Actualizamos primero los datos del usuario
+  // Actualizamos primero los datos del usuario. jobTitle/enterprise espejan el primer puesto
+  // para las vistas que muestran uno solo.
   await prisma.user.update({
     where: { id: session.userId },
-    data: userData,
+    data: {
+      ...userData,
+      jobTitle: positions[0]?.jobTitle ?? null,
+      enterprise: positions[0]?.enterprise ?? null,
+    },
   });
+
+  // Reemplazamos los puestos actuales
+  await prisma.userPosition.deleteMany({
+    where: { userId: session.userId },
+  });
+
+  if (positions.length > 0) {
+    await prisma.userPosition.createMany({
+      data: positions.map((position, order) => ({ userId: session.userId, ...position, order })),
+    });
+  }
 
   // Eliminamos los lenguajes existentes
   await prisma.userLanguage.deleteMany({

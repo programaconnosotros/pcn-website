@@ -5,8 +5,13 @@ import { eventSchema, EventFormData } from '@/schemas/event-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { canCreateEvents } from '@/lib/event-permissions';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const createEvent = async (data: EventFormData) => {
+  await enforceRateLimit('createContent');
+
   const validatedData = eventSchema.parse(data);
 
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -15,16 +20,13 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('Usuario no autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');
   }
 
-  if (session.user.role !== 'ADMIN') {
+  if (!canCreateEvents(session.user)) {
     throw new Error('No tienes permisos para crear eventos');
   }
 
@@ -47,6 +49,9 @@ export const createEvent = async (data: EventFormData) => {
       latitude: validatedData.latitude ?? null,
       longitude: validatedData.longitude ?? null,
       capacity: validatedData.capacity ?? null,
+      createdById: session.user.id,
+      // Quien crea el evento queda como organizador; el resto se suma desde su página.
+      organizers: { create: { userId: session.user.id } },
       sponsors: {
         create:
           sponsors

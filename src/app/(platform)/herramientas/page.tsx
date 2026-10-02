@@ -1,24 +1,15 @@
 'use client';
 import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Heading2 } from '@/components/ui/heading-2';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, Search, SquareMousePointer, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 type PricingTier = 'free' | 'freemium' | 'paid';
 type SoftwareType = 'app' | 'library' | 'language';
@@ -41,38 +32,17 @@ interface SoftwareRecommendation {
 
 interface SoftwareRecommendationCardProps extends SoftwareRecommendation {}
 
-const PRICING_BADGE: Record<PricingTier, { label: string; className: string }> = {
-  free: {
-    label: 'Gratis',
-    className: 'border-green-500/30 bg-green-500/20 text-green-700 dark:text-green-300',
-  },
-  freemium: {
-    label: 'Freemium',
-    className: 'border-blue-500/30 bg-blue-500/20 text-blue-700 dark:text-blue-300',
-  },
-  paid: {
-    label: 'De pago',
-    className: 'border-amber-500/30 bg-amber-500/20 text-amber-700 dark:text-amber-300',
-  },
+const PRICING_LABEL: Record<PricingTier, string> = {
+  free: 'gratis',
+  freemium: 'freemium',
+  paid: 'de pago',
 };
 
-const TYPING_BADGE: Record<TypingDiscipline, { label: string; className: string }> = {
-  static: {
-    label: 'Tipado estático',
-    className: 'border-blue-500/30 bg-blue-500/20 text-blue-700 dark:text-blue-300',
-  },
-  dynamic: {
-    label: 'Tipado dinámico',
-    className: 'border-orange-500/30 bg-orange-500/20 text-orange-700 dark:text-orange-300',
-  },
-  mixed: {
-    label: 'Tipado mixto',
-    className: 'border-purple-500/30 bg-purple-500/20 text-purple-700 dark:text-purple-300',
-  },
+const TYPING_LABEL: Record<TypingDiscipline, string> = {
+  static: 'tipado estático',
+  dynamic: 'tipado dinámico',
+  mixed: 'tipado mixto',
 };
-
-const PARADIGM_BADGE_CLASS =
-  'border-pcnPurple/30 bg-pcnPurple/15 text-pcnPurple dark:border-pcnGreen/30 dark:bg-pcnGreen/15 dark:text-pcnGreen';
 
 function SoftwareRecommendationCard({
   name,
@@ -88,81 +58,55 @@ function SoftwareRecommendationCard({
   typing,
   paradigms,
 }: SoftwareRecommendationCardProps) {
-  const badge = PRICING_BADGE[pricing];
   const isLanguage = type === 'language';
+  const chips = isLanguage
+    ? [...(typing ? [TYPING_LABEL[typing]] : []), ...(paradigms ?? [])]
+    : tags;
+
   return (
-    <Card
-      className={`relative flex flex-col overflow-hidden bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl dark:from-neutral-900 dark:to-neutral-800 ${
-        usedHere
-          ? 'border-2 border-pcnPurple/40 dark:border-pcnGreen/40'
-          : 'border-2 border-transparent dark:border-neutral-800'
-      }`}
+    <a
+      href={website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(ruledCellClassName, 'group flex gap-3 p-3')}
     >
-      {usedHere && (
-        <div className="absolute -right-8 top-5 z-10 rotate-45 bg-pcnPurple px-10 py-0.5 text-center text-[9px] font-bold uppercase tracking-wider text-white shadow-sm dark:bg-pcnGreen dark:text-black">
-          Usado acá
-        </div>
-      )}
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border bg-white p-2 dark:bg-neutral-800">
-              <Image
-                src={logo || '/placeholder.svg?height=48&width=48'}
-                alt={`${name} logo`}
-                width={40}
-                height={40}
-                className="h-10 w-10 object-contain"
-              />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold">{name}</h3>
-              <p className="text-sm text-muted-foreground">{category}</p>
-            </div>
-          </div>
-          {!isLanguage && (
-            <div className="flex flex-wrap gap-1">
-              <Badge className={badge.className}>{badge.label}</Badge>
-            </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
-        <p className="mb-4 flex-1 text-sm text-muted-foreground">{description}</p>
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+        <Image
+          src={logo || '/placeholder.svg?height=48&width=48'}
+          alt={`${name} logo`}
+          width={28}
+          height={28}
+          className="h-full w-full object-contain"
+        />
+      </div>
 
-        <div className="mb-4 flex flex-wrap gap-2">
-          {isLanguage && typing && (
-            <Badge className={`text-xs ${TYPING_BADGE[typing].className}`}>
-              {TYPING_BADGE[typing].label}
-            </Badge>
-          )}
-          {isLanguage &&
-            paradigms?.map((paradigm) => (
-              <Badge key={paradigm} className={`text-xs ${PARADIGM_BADGE_CLASS}`}>
-                {paradigm}
-              </Badge>
-            ))}
-          {tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h3 className="truncate font-semibold group-hover:text-pcnGreen">{name}</h3>
+          {usedHere && <Badge className="px-1.5 py-0 text-[10px]">usado acá</Badge>}
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+            {isLanguage ? category.toLowerCase() : PRICING_LABEL[pricing]}
+            <ArrowUpRight className="h-3 w-3" />
+          </span>
         </div>
 
-        <Button size="sm" className="w-full" onClick={() => window.open(website, '_blank')}>
-          <ExternalLink className="mr-2 h-4 w-4" />
-          Visitar sitio
-        </Button>
-      </CardContent>
-    </Card>
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{description}</p>
+
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500"># </span>
+          {chips.join(' · ')}
+        </p>
+      </div>
+    </a>
   );
 }
 
 interface RecommendationsListProps {
+  header: ReactNode;
   recommendations: SoftwareRecommendation[];
 }
 
-function RecommendationsList({ recommendations }: RecommendationsListProps) {
+function RecommendationsList({ header, recommendations }: RecommendationsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<SoftwareType>('app');
 
@@ -181,41 +125,33 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
   return (
     <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as SoftwareType)}>
-      <TabsList className="mb-4">
-        <TabsTrigger value="app">Apps</TabsTrigger>
-        <TabsTrigger value="library">Librerías</TabsTrigger>
-        <TabsTrigger value="language">Lenguajes</TabsTrigger>
-      </TabsList>
+      <StickyHeader>
+        {header}
+        <TabsList className="mb-4">
+          <TabsTrigger value="app">Apps</TabsTrigger>
+          <TabsTrigger value="library">Librerías</TabsTrigger>
+          <TabsTrigger value="language">Lenguajes</TabsTrigger>
+        </TabsList>
 
-      {/* Search — shared across all tabs */}
-      <div className="mb-6 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nombre, categoría o tecnología..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+        {/* Search — shared across all tabs */}
+        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+          <SearchBar
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
+            placeholder="nombre, categoría o tecnología"
+            label="Buscar por nombre, categoría o tecnología"
           />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
         </div>
-      </div>
+      </StickyHeader>
 
       {(['app', 'library', 'language'] as SoftwareType[]).map((tab) => (
         <TabsContent key={tab} value={tab}>
           {filteredRecommendations.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-              {filteredRecommendations.map((software, index) => (
-                <SoftwareRecommendationCard key={index} {...software} />
+            <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+              {filteredRecommendations.map((software) => (
+                <SoftwareRecommendationCard key={software.name} {...software} />
               ))}
-            </div>
+            </RuledGrid>
           ) : (
             <EmptyState
               title="No se encontraron resultados"
@@ -967,40 +903,17 @@ const softwareRecommendations: SoftwareRecommendation[] = [
 export default function SoftwareRecommendationsPage() {
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Herramientas</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="mt-4">
-          <div className="mb-6 flex items-center justify-between">
-            <Heading2 className="m-0 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-pcnPurple/30 bg-pcnPurple/10 dark:border-pcnGreen/50 dark:bg-pcnGreen/10 dark:shadow-[0_0_10px_rgba(4,244,190,0.4)]">
-                <SquareMousePointer className="h-5 w-5 text-pcnPurple dark:text-pcnGreen dark:drop-shadow-[0_0_8px_rgba(4,244,190,0.8)]" />
-              </div>
-              <span className="dark:drop-shadow-[0_0_12px_rgba(4,244,190,0.8)]">Herramientas</span>
-            </Heading2>
-          </div>
-
-          <p className="mb-6 text-muted-foreground">
-            Acá podés encontrar una lista de herramientas recomendadas por la comunidad de PCN. Si
-            querés sumar alguna, ¡avisanos!
-          </p>
-
-          <RecommendationsList recommendations={softwareRecommendations} />
+          <RecommendationsList
+            header={
+              <PageTitle
+                path="herramientas"
+                meta={`${softwareRecommendations.length} herramientas recomendadas por la comunidad`}
+              />
+            }
+            recommendations={softwareRecommendations}
+          />
         </div>
       </div>
     </>

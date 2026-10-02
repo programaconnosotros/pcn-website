@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
 
 // Constantes de configuración
@@ -45,7 +46,8 @@ export const getEmailTransporter = () => {
  * Genera un código numérico de 6 dígitos
  */
 export const generateVerificationCode = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // randomInt usa el generador criptográfico; Math.random() es predecible
+  return randomInt(100000, 1000000).toString();
 };
 
 /**
@@ -71,6 +73,19 @@ export const checkRateLimit = (lastTokenCreatedAt: Date | null): number => {
   return 0;
 };
 
+const SENDER_NAME = 'Agus de PCN';
+const DEFAULT_SENDER_ADDRESS = 'no-reply@programaconnosotros.com';
+
+/**
+ * Remitente de los emails. Tiene que llevar una dirección: un nombre solo es un `MAIL FROM`
+ * inválido que los servidores SMTP estrictos (como MailHog) rechazan. Con Gmail la dirección es
+ * la cuenta autenticada, la única que Gmail deja usar; en local cualquier dirección sirve.
+ */
+export const getSender = () => ({
+  name: SENDER_NAME,
+  address: process.env.SMTP_USER || DEFAULT_SENDER_ADDRESS,
+});
+
 /**
  * Envía un email usando el transporter configurado
  * @throws Error si falla el envío
@@ -87,7 +102,7 @@ export const sendEmail = async ({
   try {
     const transporter = getEmailTransporter();
     await transporter.sendMail({
-      from: 'Agus de PCN',
+      from: getSender(),
       to,
       subject,
       html,

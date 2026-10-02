@@ -37,6 +37,14 @@ jest.mock('next/headers', () => ({
   headers: jest.fn(),
 }));
 
+// Rate limiting is covered by src/lib/rate-limit.test.ts; everywhere else it
+// is a no-op so action tests don't consume their Prisma/cookie mocks on it.
+jest.mock('@/lib/rate-limit', () => ({
+  ...jest.requireActual('@/lib/rate-limit'),
+  enforceRateLimit: jest.fn(),
+  getRateLimitWait: jest.fn().mockResolvedValue(0),
+}));
+
 // ─── Reset mocks between tests ───────────────────────────────────────────────
 beforeEach(() => {
   mockReset(prismaMock);

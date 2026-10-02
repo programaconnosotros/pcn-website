@@ -1,5 +1,9 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchTalkProposals } from './fetch-talk-proposals';
+import { requireEventManager } from '@/lib/event-access';
+
+// Event managers only: every test runs as one unless it says otherwise.
+jest.mock('@/lib/event-access', () => ({ requireEventManager: jest.fn() }));
 
 const mockProposals = [
   {
@@ -20,7 +24,7 @@ const mockProposals = [
     userId: 'user-2',
     title: 'Testing con Jest',
     description: 'Cómo hacer unit tests en Next.js',
-    status: 'APPROVED',
+    status: 'ACCEPTED',
     createdAt: new Date('2025-06-02'),
     updatedAt: new Date('2025-06-02'),
     talk: { id: 'talk-1' },
@@ -40,7 +44,7 @@ describe('fetchTalkProposals', () => {
       orderBy: { createdAt: 'desc' },
       include: {
         talk: { select: { id: true } },
-        speakers: { orderBy: { order: 'asc' } },
+        speakers: { orderBy: { order: 'asc' }, omit: { speakerPhone: false } },
       },
     });
   });
@@ -54,5 +58,13 @@ describe('fetchTalkProposals', () => {
     expect(prismaMock.talkProposal.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { eventId: 'event-empty' } }),
     );
+  });
+});
+
+describe('fetchTalkProposals access', () => {
+  it('rejects anyone who does not manage the event', async () => {
+    (requireEventManager as jest.Mock).mockRejectedValueOnce(new Error('No autorizado'));
+
+    await expect(fetchTalkProposals('event-1')).rejects.toThrow('No autorizado');
   });
 });

@@ -1,7 +1,7 @@
 export const PasswordResetCodeEmail = ({ userName, code }: { userName: string; code: string }) => (
   <div
     style={{
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: "Geist, 'Geist Sans', sans-serif",
       maxWidth: '600px',
       margin: '0 auto',
       padding: '20px',
@@ -55,7 +55,7 @@ export const PasswordResetCodeEmail = ({ userName, code }: { userName: string; c
       >
         <p
           style={{
-            fontFamily: 'monospace',
+            fontFamily: "'Geist Mono', monospace",
             fontSize: '32px',
             fontWeight: 'bold',
             margin: '0',

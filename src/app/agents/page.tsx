@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import { signGallerySrc } from '@/lib/gallery-signing';
+import { visibleGalleryItem } from '@/lib/gallery';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
 
@@ -11,7 +13,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotro
 export async function generateMetadata(): Promise<Metadata> {
   const event = await prisma.event.findUnique({
     where: { id: EVENT_ID },
-    include: { images: true },
+    include: { galleryItems: { where: visibleGalleryItem, select: { src: true }, take: 1 } },
   });
 
   if (!event) {
@@ -21,7 +23,6 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: 'Eventos',
         description: 'Participá del próximo evento de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
         url: `${SITE_URL}/agents`,
         type: 'website',
         siteName: 'programaConNosotros',
@@ -30,14 +31,15 @@ export async function generateMetadata(): Promise<Metadata> {
         card: 'summary_large_image',
         title: 'Eventos',
         description: 'Participá del próximo evento de PCN.',
-        images: [`${SITE_URL}/pcn-link-preview.png`],
       },
     };
   }
 
   const imageUrl =
     event.flyerImages[0] ||
-    (event.images.length > 0 ? event.images[0].imgSrc : `${SITE_URL}/pcn-link-preview.png`);
+    (event.galleryItems.length > 0
+      ? signGallerySrc(event.galleryItems[0].src).url
+      : `/eventos/${event.id}/og-image`);
   const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
 
   const description =
