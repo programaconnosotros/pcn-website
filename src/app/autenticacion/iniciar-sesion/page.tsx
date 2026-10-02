@@ -22,7 +22,7 @@ import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
-  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
+  password: z.string().min(1, 'Ingresá tu contraseña'),
 });
 
 function SignInContent() {

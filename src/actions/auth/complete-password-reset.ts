@@ -3,10 +3,17 @@
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { newPasswordSchema } from '@/lib/validations/auth-schemas';
 import { findValidPasswordResetToken } from '@/lib/verification-codes';
 
 export const completePasswordReset = async (email: string, code: string, newPassword: string) => {
   await enforceRateLimit('verifyCode');
+
+  // El formulario ya valida, pero la action se puede llamar directo
+  const parsedPassword = newPasswordSchema.safeParse(newPassword);
+  if (!parsedPassword.success) {
+    throw new Error(parsedPassword.error.errors[0].message);
+  }
 
   // Verificar el token nuevamente
   const token = await findValidPasswordResetToken(email, code);

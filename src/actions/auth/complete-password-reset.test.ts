@@ -44,6 +44,14 @@ describe('completePasswordReset', () => {
     prismaMock.passwordResetToken.updateMany.mockResolvedValue({ count: 1 });
   });
 
+  it('rejects a new password shorter than 8 characters before touching the token', async () => {
+    await expect(completePasswordReset('test@example.com', '654321', 'short')).rejects.toThrow(
+      'La contraseña debe tener al menos 8 caracteres',
+    );
+
+    expect(prismaMock.passwordResetToken.findFirst).not.toHaveBeenCalled();
+  });
+
   it('throws when the token is not found', async () => {
     prismaMock.passwordResetToken.findFirst.mockResolvedValue(null);
 

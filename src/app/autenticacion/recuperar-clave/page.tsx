@@ -3,6 +3,7 @@
 import { requestPasswordReset } from '@/actions/auth/request-password-reset';
 import { verifyResetCode } from '@/actions/auth/verify-reset-code';
 import { completePasswordReset } from '@/actions/auth/complete-password-reset';
+import { newPasswordSchema } from '@/lib/validations/auth-schemas';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -36,7 +37,7 @@ const codeSchema = z.object({
 
 const passwordSchema = z
   .object({
-    password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    password: newPasswordSchema,
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

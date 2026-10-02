@@ -27,6 +27,15 @@ const ARGENTINA_PROVINCES = [
 ] as const;
 
 // Schema base sin refines (para poder extenderlo)
+/**
+ * Reglas para una contraseña nueva (registro y reseteo). El tope de 72 es el largo máximo que
+ * bcrypt tiene en cuenta: más allá, el resto se ignoraría sin avisar.
+ */
+export const newPasswordSchema = z
+  .string({ required_error: 'Campo obligatorio' })
+  .min(8, 'La contraseña debe tener al menos 8 caracteres')
+  .max(72, 'La contraseña no puede tener más de 72 caracteres');
+
 const signUpSchemaBaseObject = z.object({
   name: z
     .string()
@@ -38,9 +47,7 @@ const signUpSchemaBaseObject = z.object({
       'El nombre solo puede contener letras (a-z, A-Z) y espacios. No se permiten números ni caracteres especiales',
     ),
   email: z.string().email('Correo electrónico inválido'),
-  password: z
-    .string({ required_error: 'Campo obligatorio' })
-    .min(8, 'La contraseña debe tener al menos 8 caracteres'),
+  password: newPasswordSchema,
   confirmPassword: z.string(),
   phoneNumber: z.string().optional(),
   country: z.string().min(1, 'El país es requerido'),
