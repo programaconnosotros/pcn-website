@@ -38,6 +38,8 @@ import { KamalSVG } from '@/components/logos/KamalSVG';
 import { TechNotes } from '@/components/desarrollo/tech-notes';
 import { techNoteGroups } from './tech-notes';
 import { DesarrolloToc } from '@/components/desarrollo/desarrollo-toc';
+import { DbDiagram } from '@/components/desarrollo/db-diagram';
+import { DB_SCHEMA_UPDATED_AT, dbEnums, dbModels, dbRelations } from './db-schema';
 import type { TocSection } from '@/components/ui/table-of-contents';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -263,6 +265,63 @@ const DEV_CHAT_URL = 'https://chat.whatsapp.com/LAHHq1vtgY6ApnPCyZXX4X';
 
 const techNoteCount = techNoteGroups.reduce((total, group) => total + group.notes.length, 0);
 
+const relationsToUser = dbRelations.filter((relation) => relation.to === 'User').length;
+// Many-to-many tables: a composite unique made of two foreign keys.
+const joinTables = dbModels
+  .filter((model) =>
+    model.uniques.some(
+      (columns) =>
+        columns.filter((column) => model.fields.some((f) => f.name === column && f.fk)).length >= 2,
+    ),
+  )
+  .map((model) => model.name);
+const schemaUpdatedAt = new Date(`${DB_SCHEMA_UPDATED_AT}T12:00:00Z`).toLocaleDateString('es-AR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const databaseDesign = [
+  {
+    term: 'Identificadores',
+    detail:
+      'Todas las tablas usan un id de texto generado con cuid(): no revela cuántas filas hay ni en qué orden se crearon, y se puede generar sin consultar la base.',
+  },
+  {
+    term: 'User en el centro',
+    detail: `Casi todo cuelga de un usuario: ${relationsToUser} de las ${dbRelations.length} relaciones apuntan a User (autor de un consejo, inscripto a un evento, orador de una charla, quien subió una foto…).`,
+  },
+  {
+    term: 'Tablas intermedias',
+    detail: `Las relaciones muchos a muchos tienen su propia tabla con una restricción única compuesta, así no se puede, por ejemplo, inscribir dos veces a la misma persona: ${joinTables.join(', ')}.`,
+  },
+  {
+    term: 'Qué pasa al borrar',
+    detail:
+      'Cascade cuando la fila no tiene sentido sin su padre (likes, inscripciones, sesiones); SetNull cuando la historia tiene que sobrevivir aunque se borre el usuario (fotos subidas, oradores de charlas, logs de errores).',
+  },
+  {
+    term: 'Gente sin cuenta',
+    detail:
+      'Los oradores de charlas y propuestas y los miembros de proyectos tienen userId opcional y guardan su nombre aparte: una charla puede tener un orador que no tiene cuenta en el sitio.',
+  },
+  {
+    term: 'Contenido en el código',
+    detail:
+      'Los artículos de /lectura viven en el repo, no en la base: ArticleAuthor y ContentMark los referencian por id (articleId, contentType + contentId) sin clave foránea.',
+  },
+  {
+    term: 'Enums',
+    detail: dbEnums.map((e) => `${e.name} (${e.values.join(', ')})`).join(' · '),
+  },
+  {
+    term: 'Migraciones',
+    detail:
+      'Cada cambio al esquema es una migración SQL versionada en prisma/migrations; el deploy aplica las pendientes antes de levantar la versión nueva.',
+  },
+];
+
 const section = (id: string, title: string): TocSection => ({ id, title });
 
 // Index on the left: the page's sections, with every stack note under its group.
@@ -270,6 +329,7 @@ const tocSections: TocSection[] = [
   section('arquitectura', 'Arquitectura'),
   section('tecnologias', 'Tecnologías'),
   section('contribuir', 'Cómo contribuir'),
+  section('base-de-datos', 'Base de datos'),
   section('notas', 'Notas del stack'),
   ...techNoteGroups.flatMap((group) =>
     group.notes.map((note) => ({
@@ -375,6 +435,23 @@ const DesarrolloPage = () => (
                 </Section>
               </div>
             </div>
+
+            <Section id="base-de-datos" title="Diseño de la base de datos">
+              <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                PostgreSQL con Prisma: {dbModels.length} modelos y {dbRelations.length} relaciones,
+                definidos en <Code>prisma/schema.prisma</Code>. Estas son las decisiones que dan
+                forma al esquema, y abajo el diagrama completo de entidades y relaciones.
+              </p>
+              <DefinitionList items={databaseDesign} />
+              <div className="mt-4">
+                <DbDiagram models={dbModels} relations={dbRelations} />
+              </div>
+              <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>pnpm db:diagram{' '}
+                <span className="text-pcnGreen-700"># regenera el diagrama desde el schema</span> ·
+                última actualización: {schemaUpdatedAt}
+              </p>
+            </Section>
 
             <Section id="notas" title={`Notas teóricas del stack (${techNoteCount})`}>
               <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
