@@ -47,7 +47,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { MobileNav } from '@/components/ui/mobile-nav';
-import { User } from '@prisma/client';
+import type { SessionUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
 import { SearchTrigger } from '@/components/search/search-trigger';
@@ -118,7 +118,7 @@ export const secondaryItems = [
 ];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User | null;
+  user: SessionUser | null;
   upcomingEvents?: UpcomingEvent[];
   unreadNotificationsCount?: number;
 }

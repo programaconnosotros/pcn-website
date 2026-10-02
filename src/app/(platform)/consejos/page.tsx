@@ -2,12 +2,11 @@ import { AdviseCard } from '@/components/advises/advise-card';
 import { AddAdvise } from '@/components/advises/add-advise';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { Session, User } from '@prisma/client';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import type { Metadata } from 'next';
-import { findSession } from '@/lib/session';
+import { findSession, type SessionWithUser } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
 
 const AdvicePage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  let session: (Session & { user: User }) | null = null;
+  let session: SessionWithUser | null = null;
 
   if (sessionId) {
     session = await findSession(sessionId);

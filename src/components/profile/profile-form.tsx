@@ -108,7 +108,7 @@ const Field = ({
 );
 
 // Los puestos guardados; si todavía no hay ninguno, el cargo viejo o una fila vacía para arrancar.
-const initialPositions = (user: User & { positions: UserPosition[] }) => {
+const initialPositions = (user: Omit<User, 'password'> & { positions: UserPosition[] }) => {
   if (user.positions.length > 0) {
     return user.positions.map((p) => ({ jobTitle: p.jobTitle, enterprise: p.enterprise ?? '' }));
   }
@@ -119,7 +119,7 @@ export const ProfileForm = ({
   user,
   languages,
 }: {
-  user: User & { positions: UserPosition[] };
+  user: Omit<User, 'password'> & { positions: UserPosition[] };
   languages: UserProgrammingLanguage[];
 }) => {
   const form = useForm<ProfileFormData>({

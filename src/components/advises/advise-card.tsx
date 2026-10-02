@@ -11,7 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn, formatDate } from '@/lib/utils';
-import { Advise, Session, User, Like } from '@prisma/client';
+import { Advise, User, Like } from '@prisma/client';
+import type { SessionWithUser } from '@/lib/session';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
@@ -33,7 +34,7 @@ export const AdviseCard = ({
     author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
     likes: Like[];
   };
-  session: (Session & { user: User }) | null;
+  session: SessionWithUser | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

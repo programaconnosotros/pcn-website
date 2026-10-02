@@ -1,6 +1,11 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
+import type { Session, User } from '@prisma/client';
 import prisma from '@/lib/prisma';
+
+/** El usuario logueado tal como lo devuelve la sesión: todo menos el hash de la contraseña. */
+export type SessionUser = Omit<User, 'password'>;
+export type SessionWithUser = Session & { user: SessionUser };
 
 export const SESSION_COOKIE = 'sessionId';
 

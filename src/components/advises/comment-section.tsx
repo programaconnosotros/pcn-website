@@ -3,7 +3,10 @@
 import { createComment } from '@/actions/comments/create-comment';
 import { formatDate } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Session, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import type { SessionWithUser } from '@/lib/session';
+
+type Author = Omit<User, 'password'>;
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -25,8 +28,8 @@ type CommentFormData = z.infer<typeof commentSchema>;
 
 type CommentSectionProps = {
   adviseId: string;
-  comments: (Comment & { author: User; replies: (Comment & { author: User })[] })[];
-  session: (Session & { user: User }) | null;
+  comments: (Comment & { author: Author; replies: (Comment & { author: Author })[] })[];
+  session: SessionWithUser | null;
 };
 
 export const CommentSection = ({ adviseId, comments, session }: CommentSectionProps) => {
@@ -70,7 +73,10 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
   const Comment = ({
     comment,
   }: {
-    comment: Comment & { author: User; replies?: (Comment & { author: User; replies?: any[] })[] };
+    comment: Comment & {
+      author: Author;
+      replies?: (Comment & { author: Author; replies?: any[] })[];
+    };
   }) => (
     <div className="space-y-3">
       <div className="flex items-start gap-2">

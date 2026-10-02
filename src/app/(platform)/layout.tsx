@@ -1,6 +1,5 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
-import { User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
@@ -10,7 +9,7 @@ import { OsBridge } from '@/components/os/os-bridge';
 import { OsGate } from '@/components/os/os-gate';
 import { PcnOs } from '@/components/os/pcn-os';
 import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
-import { findSession } from '@/lib/session';
+import { findSession, type SessionUser } from '@/lib/session';
 
 const PlatformLayout = async ({
   children,
@@ -21,7 +20,7 @@ const PlatformLayout = async ({
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
   const sessionId = cookieStore.get('sessionId')?.value;
 
-  let user: User | null = null;
+  let user: SessionUser | null = null;
 
   if (sessionId) {
     const session = await findSession(sessionId);

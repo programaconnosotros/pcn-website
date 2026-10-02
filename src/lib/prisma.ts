@@ -1,7 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  // El hash de la contraseña no sale de la base salvo que una consulta lo pida con
+  // `omit: { password: false }` (solo el login). Así un `include: { author: true }` que termina
+  // en un componente de cliente no puede filtrarlo.
+  return new PrismaClient({ omit: { user: { password: true } } });
 };
 
 declare const globalThis: {

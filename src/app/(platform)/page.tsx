@@ -1,4 +1,3 @@
-import { Session, User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
@@ -13,7 +12,7 @@ import { AmbassadorsSection } from '@/components/home/ambassadors-section';
 import { LatestChangesSection } from '@/components/home/latest-changes-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
-import { findSession } from '@/lib/session';
+import { findSession, type SessionWithUser } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -40,7 +39,7 @@ export const metadata: Metadata = {
 const Home = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
-  let session: (Session & { user: User }) | null = null;
+  let session: SessionWithUser | null = null;
 
   if (sessionId) {
     session = await findSession(sessionId);

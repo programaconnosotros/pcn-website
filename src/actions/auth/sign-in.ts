@@ -30,6 +30,8 @@ export const signIn = async (
 
     const user = await prisma.user.findUnique({
       where: { email },
+      // El cliente de Prisma omite el hash por defecto; el login es el único que lo necesita
+      omit: { password: false },
     });
 
     if (!user) {

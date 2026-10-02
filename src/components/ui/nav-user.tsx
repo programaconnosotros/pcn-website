@@ -20,7 +20,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { User } from '@prisma/client';
+import type { SessionUser } from '@/lib/session';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -33,7 +33,7 @@ const initials = (name: string) =>
     .map((part) => part[0]?.toUpperCase())
     .join('');
 
-export function NavUser({ user }: { user: User | null }) {
+export function NavUser({ user }: { user: SessionUser | null }) {
   const { isMobile, isCollapsed } = useSidebar();
   const router = useRouter();
   const iconOnly = isCollapsed && !isMobile;

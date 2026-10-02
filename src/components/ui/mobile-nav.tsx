@@ -14,7 +14,7 @@ import {
   SquareTerminal,
   X,
 } from 'lucide-react';
-import { User } from '@prisma/client';
+import type { SessionUser } from '@/lib/session';
 
 import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useSidebar } from '@/components/ui/sidebar';
@@ -227,7 +227,7 @@ const MenuPanel = ({
   onClose,
 }: {
   groups: MenuGroup[];
-  user: User | null;
+  user: SessionUser | null;
   onClose: () => void;
 }) => {
   const pathname = usePathname();
@@ -413,7 +413,7 @@ export function MobileNav({
 }: {
   sections: NavSection[];
   footerItems: NavItem[];
-  user: User | null;
+  user: SessionUser | null;
 }) {
   const pathname = usePathname();
   const { openMobile, setOpenMobile } = useSidebar();
