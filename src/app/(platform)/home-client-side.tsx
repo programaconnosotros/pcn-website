@@ -14,6 +14,7 @@ import { Reveal } from '@/components/home/reveal';
 import { SocialLinks } from '@/components/home/social-links';
 import { PartnersMarquee } from '@/components/home/partners-marquee';
 import { StoryCards } from '@/components/home/story-cards';
+import type { StoryCardPhotos } from '@/lib/gallery';
 import {
   TestimonialsSection,
   type FeaturedTestimonial,
@@ -30,6 +31,7 @@ interface HomeClientSideProps {
   latestPhotosSection: React.ReactNode;
   latestChangesSection: React.ReactNode;
   ambassadorsSection: React.ReactNode;
+  storyPhotos: StoryCardPhotos;
 }
 
 const HomeClientSide = ({
@@ -42,6 +44,7 @@ const HomeClientSide = ({
   latestPhotosSection,
   latestChangesSection,
   ambassadorsSection,
+  storyPhotos,
 }: HomeClientSideProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
@@ -82,7 +85,7 @@ const HomeClientSide = ({
       </Reveal>
 
       <Reveal>
-        <StoryCards />
+        <StoryCards photos={storyPhotos} />
       </Reveal>
 
       <Reveal>

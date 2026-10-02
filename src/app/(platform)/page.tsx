@@ -13,6 +13,7 @@ import { LatestChangesSection } from '@/components/home/latest-changes-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
 import { findSession, type SessionWithUser } from '@/lib/session';
+import { listStoryCardPhotos } from '@/lib/gallery';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -45,7 +46,10 @@ const Home = async () => {
     session = await findSession(sessionId);
   }
 
-  const featuredTestimonials = await fetchFeaturedTestimonials();
+  const [featuredTestimonials, storyPhotos] = await Promise.all([
+    fetchFeaturedTestimonials(),
+    listStoryCardPhotos(),
+  ]);
 
   return (
     <HomeClientSide
@@ -74,6 +78,7 @@ const Home = async () => {
       latestPhotosSection={<LatestPhotosSection />}
       latestChangesSection={<LatestChangesSection />}
       ambassadorsSection={<AmbassadorsSection />}
+      storyPhotos={storyPhotos}
     />
   );
 };

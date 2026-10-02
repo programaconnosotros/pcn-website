@@ -158,3 +158,27 @@ export async function listRandomGalleryPhotos(take: number) {
 }
 
 export type RandomGalleryPhoto = Awaited<ReturnType<typeof listRandomGalleryPhotos>>[number];
+
+/**
+ * Gallery photos for the home's story cards, shuffled and dealt into two pools that never share
+ * a photo: one rotates behind "historia", the other behind "galería".
+ */
+export async function listStoryCardPhotos(perCard = 20) {
+  const items = await prisma.galleryItem.findMany({
+    where: { ...visibleGalleryItem, kind: 'PHOTO' },
+    select: { src: true },
+  });
+  // One entry per image file, so the two pools can't end up showing the same picture.
+  const sources = [...new Set(items.map((item) => item.src))];
+  for (let i = sources.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sources[i], sources[j]] = [sources[j], sources[i]];
+  }
+  const urls = sources.slice(0, perCard * 2).map((src) => signGallerySrc(src).url);
+  return {
+    historia: urls.filter((_, index) => index % 2 === 0),
+    galeria: urls.filter((_, index) => index % 2 === 1),
+  };
+}
+
+export type StoryCardPhotos = Awaited<ReturnType<typeof listStoryCardPhotos>>;

@@ -1,33 +1,116 @@
+'use client';
+
 import { ArrowUpRight } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { Eyebrow } from './section-header';
 
+// How long each photo stays before the next one fades in.
+const PHOTO_MS = 2000;
+
 const cards = [
   {
+    id: 'historia',
     eyebrow: 'Historia',
     title: 'Cómo llegamos hasta acá',
     description:
       'Por qué decidimos crear la comunidad y todos los pasos que dimos para llegar a donde estamos hoy.',
     href: '/historia',
-    image: '/IMG_8959.webp',
+    fallback: '/IMG_8959.webp',
     cta: 'Leer la historia',
   },
   {
+    id: 'galeria',
     eyebrow: 'Galería',
     title: 'Recuerdos de la comunidad',
     description: 'Charlas, juntadas y eventos. Conocé a la gente que hace PCN.',
     href: '/galeria',
-    image: '/pcn-header.webp',
+    fallback: '/pcn-header.webp',
     cta: 'Ver galería',
   },
-];
+] as const;
 
-export const StoryCards = () => (
+const shuffle = (items: string[]) => {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
+/**
+ * Cycles through `photos` in random order, every photo once before any repeats, and never the
+ * same one twice in a row. `delay` staggers it against the other card.
+ */
+function useRotatingPhoto(photos: string[], delay: number) {
+  // The server already shuffled the photos, so the first round can use them as they come.
+  const [state, setState] = useState({ deck: photos, index: 0, previous: null as string | null });
+
+  useEffect(() => {
+    if (photos.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let interval: ReturnType<typeof setInterval>;
+    const timeout = setTimeout(() => {
+      interval = setInterval(() => {
+        setState(({ deck, index }) => {
+          const previous = deck[index];
+          if (index + 1 < deck.length) return { deck, index: index + 1, previous };
+          // New round: reshuffle, but don't open it with the photo that just closed the last one.
+          const next = shuffle(photos);
+          if (next[0] === previous) next.push(next.shift()!);
+          return { deck: next, index: 0, previous };
+        });
+      }, PHOTO_MS);
+    }, delay);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, [photos, delay]);
+
+  return state;
+}
+
+function CardBackground({
+  photos,
+  fallback,
+  delay,
+}: {
+  photos: string[];
+  fallback: string;
+  delay: number;
+}) {
+  const { deck, index, previous } = useRotatingPhoto(photos, delay);
+  const current = deck[index] ?? fallback;
+  const next = deck.length > 1 ? deck[(index + 1) % deck.length] : null;
+  // The outgoing photo fades out over the incoming one, and the upcoming one preloads hidden.
+  const layers = [...new Set([previous, current, next].filter((src): src is string => !!src))];
+
+  return (
+    <>
+      {layers.map((src) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={src}
+          src={src}
+          alt=""
+          aria-hidden
+          className={cn(
+            'absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out',
+            src === current ? 'opacity-70 group-hover:opacity-90' : 'opacity-0',
+          )}
+        />
+      ))}
+    </>
+  );
+}
+
+export const StoryCards = ({ photos }: { photos: { historia: string[]; galeria: string[] } }) => (
   <RuledGrid className="md:grid-cols-2">
-    {cards.map((card) => (
+    {cards.map((card, cardIndex) => (
       <Link
         key={card.href}
         href={card.href}
@@ -36,12 +119,11 @@ export const StoryCards = () => (
           'group relative flex min-h-[220px] flex-col justify-end overflow-hidden md:min-h-[260px]',
         )}
       >
-        <Image
-          src={card.image}
-          alt={card.title}
-          fill
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-cover opacity-70 transition-opacity duration-500 group-hover:opacity-90"
+        {/* The two cards change one second apart, so they never flip at the same time. */}
+        <CardBackground
+          photos={photos[card.id]}
+          fallback={card.fallback}
+          delay={cardIndex * (PHOTO_MS / 2)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
         <div className="absolute inset-0 bg-pcnGreen/0 transition-colors duration-500 group-hover:bg-pcnGreen/[0.04]" />
