@@ -84,7 +84,7 @@ const VideoCell = ({
       >
         {video.title}
       </button>
-      <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground max-sm:hidden">
+      <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
         {formatDate(video.date)}
       </span>
     </span>
