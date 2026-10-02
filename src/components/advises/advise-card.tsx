@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn, formatDate } from '@/lib/utils';
 import { Advise, Session, User, Like } from '@prisma/client';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useState } from 'react';
@@ -22,8 +24,11 @@ export const AdviseCard = ({
   advise,
   session,
   className,
+  showAuthor = true,
 }: {
   className?: string;
+  /** Off where every card is by the same person, like their own profile. */
+  showAuthor?: boolean;
   advise: Advise & {
     author: Pick<User, 'id' | 'name' | 'image' | 'email'>;
     likes: Like[];
@@ -103,40 +108,63 @@ export const AdviseCard = ({
   );
 
   return (
-    <div className={cn(ruledCellClassName, 'flex flex-col gap-2 p-3', className)}>
-      <div className="flex items-center gap-2">
-        <Avatar className="h-7 w-7 rounded-sm">
-          <AvatarImage
-            src={advise.author.image ?? undefined}
-            alt={advise.author.name ?? undefined}
-          />
-          <AvatarFallback className="rounded-sm text-[10px]">
-            {advise.author?.name?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-
-        <Link
-          href={`/perfil/${advise.author.id}`}
-          className="truncate font-mono text-sm font-semibold transition-colors hover:text-pcnGreen"
-        >
-          {advise.author.name}
-        </Link>
-
+    <article className={cn(ruledCellClassName, 'group/advise flex flex-col gap-4 p-4', className)}>
+      <Link
+        href={`/consejos/${advise.id}`}
+        className="relative flex-1 border-l-2 border-pcnGreen-200 pl-4 pr-6 text-[15px] leading-relaxed text-foreground/90 transition-colors hover:text-foreground group-hover/advise:border-pcnGreen-500"
+      >
         <span
-          className="hidden shrink-0 font-mono text-[11px] text-muted-foreground sm:inline"
+          aria-hidden
+          className="absolute -top-1 right-0 font-serif text-4xl leading-none text-pcnGreen/15"
+        >
+          &rdquo;
+        </span>
+        {advise.content}
+      </Link>
+
+      <footer className="flex items-center gap-2">
+        {showAuthor && (
+          <Link
+            href={`/perfil/${advise.author.id}`}
+            className="group/author flex min-w-0 items-center gap-2"
+          >
+            <Avatar className="h-6 w-6 rounded-sm">
+              <AvatarImage
+                src={advise.author.image ?? undefined}
+                alt={advise.author.name ?? undefined}
+              />
+              <AvatarFallback className="rounded-sm text-[10px]">
+                {advise.author?.name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate font-mono text-xs font-semibold transition-colors group-hover/author:text-pcnGreen">
+              {advise.author.name}
+            </span>
+          </Link>
+        )}
+
+        <time
+          dateTime={new Date(advise.createdAt).toISOString()}
+          title={formatDate(advise.createdAt)}
+          className={cn(
+            'shrink-0 font-mono text-[11px] text-muted-foreground',
+            showAuthor && 'hidden sm:inline',
+          )}
           suppressHydrationWarning
         >
-          {formatDate(advise.createdAt)}
-        </span>
+          {showAuthor && <span className="text-pcnGreen-500/60">· </span>}
+          {format(advise.createdAt, 'd MMM yyyy', { locale: es })}
+        </time>
 
         <div className="ml-auto flex shrink-0 items-center gap-1">
           <button
             type="button"
+            aria-pressed={isLiked}
             className={cn(
-              'flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-[11px] transition-colors',
+              'flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] tabular-nums transition-colors',
               isLiked
-                ? 'text-red-500 hover:text-red-600'
-                : 'text-muted-foreground hover:text-red-500',
+                ? 'border-red-500/40 bg-red-500/10 text-red-500 hover:text-red-400'
+                : 'border-transparent text-muted-foreground hover:border-red-500/30 hover:text-red-500',
             )}
             onClick={(e) => {
               e.preventDefault();
@@ -150,7 +178,7 @@ export const AdviseCard = ({
           </button>
           {canEditOrDelete && Options}
         </div>
-      </div>
+      </footer>
 
       <DeleteAdviseDialog
         adviseId={advise.id}
@@ -164,14 +192,6 @@ export const AdviseCard = ({
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
       />
-
-      <Link
-        href={`/consejos/${advise.id}`}
-        className="text-sm leading-relaxed text-foreground/90 transition-colors hover:text-foreground"
-      >
-        <span className="font-mono text-pcnGreen-500">&gt; </span>
-        {advise.content}
-      </Link>
-    </div>
+    </article>
   );
 };

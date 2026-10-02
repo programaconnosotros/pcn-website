@@ -105,9 +105,9 @@ const AdviseRows = ({
   advises: Awaited<ReturnType<typeof getProfileAdvises>>;
   session: Session;
 }) => (
-  <RuledGrid className="grid-cols-1">
+  <RuledGrid className="grid-cols-1 md:grid-cols-2">
     {advises.map((advise) => (
-      <AdviseCard key={advise.id} session={session} advise={advise} />
+      <AdviseCard key={advise.id} session={session} advise={advise} showAuthor={false} />
     ))}
   </RuledGrid>
 );

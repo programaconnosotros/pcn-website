@@ -76,7 +76,7 @@ const AdvicePage = async () => {
               No hay consejos para ver aún.
             </p>
           ) : (
-            <RuledGrid className="mb-14 grid-cols-1 xl:grid-cols-2">
+            <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
               {advises.map((advise) => (
                 <AdviseCard key={advise.id} advise={advise} session={session} />
               ))}
