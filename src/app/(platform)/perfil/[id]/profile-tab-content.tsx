@@ -161,11 +161,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
         <ProfileStat label="proyectos" value={projects.length} href={tabHref('proyectos')} />
         <ProfileStat label="consejos" value={advises.length} href={tabHref('consejos')} />
         <ProfileStat label="charlas" value={talks.length} href={tabHref('charlas')} />
-        <ProfileStat
-          label="artículos publicados"
-          value={articles.length}
-          href={tabHref('articulos')}
-        />
+        <ProfileStat label="artículos" value={articles.length} href={tabHref('articulos')} />
         <ProfileStat
           label="conversaciones"
           value={conversations.length}
