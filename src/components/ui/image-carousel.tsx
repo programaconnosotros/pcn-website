@@ -49,6 +49,7 @@ export function ImageCarousel({ images, className }: ImageCarouselProps) {
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => router.push('/photos')}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={images[currentIndex]}
         alt={`Imagen ${currentIndex + 1}`}

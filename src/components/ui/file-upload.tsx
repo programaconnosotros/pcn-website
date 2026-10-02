@@ -1,0 +1,250 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { X, Loader2, Image as ImageIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
+import { postUploadForm } from '@/lib/upload-form';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
+
+type FileUploadProps = {
+  value?: string;
+  onChange: (_url: string) => void;
+  folder?: string;
+  accept?: string;
+  maxSize?: number; // en bytes
+  className?: string;
+  disabled?: boolean;
+  variant?: 'default' | 'profile'; // Variante para fotos de perfil más pequeñas
+  // Si se pasa, permite seleccionar varios archivos a la vez y recibe todas las URLs subidas
+  onChangeMultiple?: (_urls: string[]) => void;
+};
+
+async function uploadFile(file: File, folder: string): Promise<string> {
+  // 1. Obtener el formulario firmado usando Server Action
+  const { url, fields, fileUrl } = await getPresignedUrl({ contentType: file.type, folder });
+
+  // 2. Subir directamente a S3 (rechaza el archivo si pasa del tamaño firmado)
+  await postUploadForm(url, fields, file);
+
+  // 3. Usar la URL de CloudFront/S3
+  return fileUrl;
+}
+
+export function FileUpload({
+  value,
+  onChange,
+  folder = 'events',
+  accept = 'image/jpeg,image/png,image/webp,image/gif',
+  maxSize = 10 * 1024 * 1024, // 10MB por defecto
+  className,
+  disabled = false,
+  variant = 'default',
+  onChangeMultiple,
+}: FileUploadProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(value || null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sincronizar preview con value cuando cambie (para edición)
+  useEffect(() => {
+    if (value && value !== preview) {
+      setPreview(value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const resetInput = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
+
+  const handleMultipleFiles = async (files: File[]) => {
+    setError(null);
+
+    const tooLarge = files.filter((file) => file.size > maxSize);
+    const valid = files.filter((file) => file.size <= maxSize);
+    const errors: string[] = [];
+    if (tooLarge.length > 0) {
+      errors.push(
+        `${tooLarge.map((f) => f.name).join(', ')}: demasiado grande (máx. ${Math.round(maxSize / 1024 / 1024)}MB)`,
+      );
+    }
+
+    if (valid.length > 0) {
+      setPreview(URL.createObjectURL(valid[0]));
+      setIsUploading(true);
+      const results = await Promise.allSettled(valid.map((file) => uploadFile(file, folder)));
+      const urls = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+      const failed = valid.filter((_, i) => results[i].status === 'rejected');
+      if (failed.length > 0) {
+        errors.push(`${failed.map((f) => f.name).join(', ')}: error al subir`);
+      }
+      if (urls.length > 0) {
+        onChangeMultiple?.(urls);
+      }
+      setIsUploading(false);
+      setPreview(null);
+    }
+
+    if (errors.length > 0) {
+      setError(errors.join('. '));
+    }
+    resetInput();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChangeMultiple) {
+      await handleMultipleFiles(Array.from(e.target.files ?? []));
+      return;
+    }
+
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError(null);
+
+    // Validar tamaño
+    if (file.size > maxSize) {
+      setError(`El archivo es demasiado grande. Máximo ${Math.round(maxSize / 1024 / 1024)}MB`);
+      return;
+    }
+
+    // Mostrar preview local
+    const localPreview = URL.createObjectURL(file);
+    setPreview(localPreview);
+
+    // Subir archivo
+    setIsUploading(true);
+    try {
+      const fileUrl = await uploadFile(file, folder);
+      onChange(fileUrl);
+      setPreview(fileUrl);
+    } catch (err: any) {
+      setError(actionErrorMessage(err, 'Error al subir el archivo', true));
+      setPreview(null);
+      onChange('');
+    } finally {
+      setIsUploading(false);
+      // Limpiar el input para permitir subir el mismo archivo de nuevo
+      resetInput();
+    }
+  };
+
+  const handleRemove = () => {
+    setPreview(null);
+    onChange('');
+    setError(null);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
+
+  return (
+    <div className={cn('space-y-2', className)}>
+      <Input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple={!!onChangeMultiple}
+        onChange={handleFileChange}
+        disabled={disabled || isUploading}
+        className="hidden"
+      />
+
+      {preview ? (
+        <div className="relative inline-block">
+          <div
+            className={cn(
+              'relative overflow-hidden border bg-muted',
+              variant === 'profile' ? 'h-32 w-32 rounded-lg' : 'aspect-video w-full rounded-lg',
+            )}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={preview}
+              alt="Preview"
+              className={cn('h-full w-full object-cover', variant === 'profile' && 'rounded-lg')}
+            />
+            {isUploading && (
+              <div
+                className={cn(
+                  'absolute inset-0 flex items-center justify-center bg-black/50',
+                  variant === 'profile' ? 'rounded-lg' : 'rounded-lg',
+                )}
+              >
+                <Loader2 className="h-6 w-6 animate-spin text-white" />
+              </div>
+            )}
+          </div>
+          {!isUploading && (
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              className={cn(
+                'absolute z-10 h-6 w-6',
+                variant === 'profile' ? '-right-1 -top-1' : '-right-2 -top-2',
+              )}
+              onClick={handleRemove}
+              disabled={disabled}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={disabled || isUploading}
+          className={cn(
+            'flex flex-col items-center justify-center gap-2 border-2 border-dashed border-muted-foreground/25 bg-muted/50 transition-colors hover:border-muted-foreground/50 hover:bg-muted',
+            variant === 'profile' ? 'h-32 w-32 rounded-lg' : 'aspect-video w-full rounded-lg',
+            disabled && 'cursor-not-allowed opacity-50',
+            isUploading && 'cursor-wait',
+          )}
+        >
+          {isUploading ? (
+            <Loader2
+              className={cn(
+                'animate-spin text-muted-foreground',
+                variant === 'profile' ? 'h-6 w-6' : 'h-8 w-8',
+              )}
+            />
+          ) : (
+            <>
+              <ImageIcon
+                className={cn(
+                  'text-muted-foreground',
+                  variant === 'profile' ? 'h-6 w-6' : 'h-8 w-8',
+                )}
+              />
+              {variant !== 'profile' && (
+                <>
+                  <span className="text-sm text-muted-foreground">
+                    {onChangeMultiple
+                      ? 'Haz clic para subir una o más imágenes'
+                      : 'Haz clic para subir una imagen'}
+                  </span>
+                  <span className="text-xs text-muted-foreground/70">
+                    JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+                  </span>
+                </>
+              )}
+            </>
+          )}
+        </button>
+      )}
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {/* Input oculto para mantener el valor de la URL */}
+      {value && <input type="hidden" value={value} />}
+    </div>
+  );
+}

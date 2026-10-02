@@ -11,118 +11,165 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LogIn, SquareAsterisk, UserPlus } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { LogIn } from 'lucide-react';
+import { AuthLinks, AuthShell } from '@/components/auth/auth-shell';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
-  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
+  password: z.string().min(1, 'Ingresá tu contraseña'),
 });
 
-export default function SignInPage() {
+function SignInContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email') || '';
-  const passwordParam = searchParams.get('password') || '';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
+  const autoRegister = searchParams.get('autoRegister') === 'true';
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: emailParam,
-      password: passwordParam,
+      password: '',
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    console.log('[SignInPage] onSubmit iniciado');
+
+    // Construir redirectTo con autoRegister si es necesario
+    let finalRedirect = redirectTo;
+    if (autoRegister && redirectTo) {
+      const separator = redirectTo.includes('?') ? '&' : '?';
+      finalRedirect = `${redirectTo}${separator}autoRegister=true`;
+    }
+
     try {
-      await toast.promise(signIn(values), {
-        loading: 'Ingresando...',
-        success: 'Bienvenido! 👋',
-        error: 'No pudimos iniciar la sesión.',
-      });
+      const result = await signIn({ ...values, redirectTo: finalRedirect });
+
+      if (result.success) {
+        toast.success('Hola! 👋');
+        router.push(result.redirectTo);
+        return;
+      }
+
+      // Manejar errores específicos
+      if (result.error === 'EMAIL_NOT_VERIFIED') {
+        const email = result.email || values.email;
+        toast.info(
+          'Detectamos que tu email no está verificado. Por favor, verificá tu cuenta para continuar.',
+        );
+
+        // Redirigir a la página de verificación
+        const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
+        router.push(verifyUrl);
+        return;
+      }
+
+      // Error de credenciales
+      if (result.error === 'INVALID_CREDENTIALS') {
+        toast.error('Credenciales incorrectas.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Error desconocido
+      toast.error('No pudimos iniciar la sesión.');
+      setIsLoading(false);
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      toast.error(
+        actionErrorMessage(error, 'Ocurrió un error inesperado. Por favor, intentá nuevamente.'),
+      );
+      setIsLoading(false);
     }
   };
 
+  const signUpHref = redirectTo
+    ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+    : '/autenticacion/registro';
+
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-[425px]">
-        <div className="flex flex-col items-center gap-6">
-          <img src="/logo.webp" alt="Logo" className="w-10" />
+    <AuthShell command="login" title="Iniciar sesión" description="Qué bueno verte de nuevo.">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Correo electrónico</FormLabel>
 
-          <div className="space-y-2 text-center">
-            <h1 className="mb-8 text-2xl font-semibold tracking-tight">Iniciar sesión</h1>
-          </div>
-        </div>
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    placeholder="correo@ejemplo.com"
+                    {...field}
+                  />
+                </FormControl>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                  <FormControl>
-                    <Input type="email" placeholder="correo@ejemplo.com" {...field} />
-                  </FormControl>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormControl>
+                  <Input
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="••••••"
+                    {...field}
+                  />
+                </FormControl>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                  <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
-                  </FormControl>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            loading={isLoading}
+            loadingText="ingresando..."
+          >
+            ingresar();
+            <LogIn className="ml-2 h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <AuthLinks
+        links={[
+          { href: signUpHref, label: '¿No tenés cuenta? Creá una' },
+          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+        ]}
+      />
+    </AuthShell>
+  );
+}
 
-            <Button type="submit" className="w-full">
-              Ingresar <LogIn className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-        </Form>
-
-        <div className="mt-4 flex flex-row gap-4">
-          <Link href="/autenticacion/registro" className="w-full">
-            <Button variant="outline" className="w-full">
-              Crear cuenta
-              <UserPlus className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-
-          <Link href="/autenticacion/recuperar-clave" className="w-full">
-            <Button variant="outline" className="w-full">
-              Cambiar contraseña
-              <SquareAsterisk className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-
-        <Link
-          href="/"
-          className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la página principal
-        </Link>
-      </div>
-    </div>
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInContent />
+    </Suspense>
   );
 }

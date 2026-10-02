@@ -1,10 +1,9 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ExternalLink, Github, Globe, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { ruledCellClassName } from '@/components/ui/ruled-grid';
+import { cn } from '@/lib/utils';
+import { ExternalLink, Github, Globe, Instagram, Linkedin, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -29,10 +28,19 @@ interface Influencer {
 const PlatformIcon: Record<string, React.ComponentType<any>> = {
   youtube: Youtube,
   instagram: Instagram,
-  twitter: Twitter,
+  twitter: Globe,
   linkedin: Linkedin,
   github: Github,
   page: Globe,
+};
+
+const PlatformLabel: Record<string, string> = {
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+  twitter: 'X',
+  linkedin: 'LinkedIn',
+  github: 'GitHub',
+  page: 'Página',
 };
 
 export function InfluencerCard({ influencer }: { influencer: Influencer }) {
@@ -42,45 +50,47 @@ export function InfluencerCard({ influencer }: { influencer: Influencer }) {
     : `/influencers/${influencer.image}`;
 
   return (
-    <Card className="w-full bg-gray-50 dark:bg-transparent">
-      <CardHeader className="flex flex-row items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={imagePath} alt={influencer.name} />
-            <AvatarFallback>{influencer.name.charAt(0)}</AvatarFallback>
-          </Avatar>
+    <div className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
+      <Avatar className="h-9 w-9 shrink-0 rounded-sm">
+        <AvatarImage src={imagePath} alt={influencer.name} />
+        <AvatarFallback className="rounded-sm font-mono text-xs">
+          {influencer.name.charAt(0)}
+        </AvatarFallback>
+      </Avatar>
 
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold leading-tight">{influencer.name}</h3>
-            <div className="mt-1 flex flex-wrap gap-1">
-              {influencer.specialties.map((specialty: string, index: number) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {specialty}
-                </Badge>
-              ))}
-            </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h3 className="truncate font-semibold">{influencer.name}</h3>
+          <div className="ml-auto flex shrink-0 items-center gap-1.5">
+            {Object.entries(influencer.platforms).map(([platform, url]) => {
+              if (!url) return null;
+              const Icon = PlatformIcon[platform] || ExternalLink;
+              return (
+                <Link
+                  key={platform}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={PlatformLabel[platform] || platform}
+                  title={PlatformLabel[platform] || platform}
+                  className="text-muted-foreground transition-colors hover:text-pcnGreen"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </Link>
+              );
+            })}
           </div>
         </div>
-      </CardHeader>
 
-      <CardContent className="px-4 py-3">
-        <p className="mb-4 text-sm">{influencer.description}</p>
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {influencer.description}
+        </p>
 
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(influencer.platforms).map(([platform, url]) => {
-            if (!url) return null;
-            const Icon = PlatformIcon[platform] || ExternalLink;
-            return (
-              <Link key={platform} href={url} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <Icon className="h-4 w-4" />
-                  <span className="capitalize">{platform}</span>
-                </Button>
-              </Link>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500"># </span>
+          {influencer.specialties.join(' · ')}
+        </p>
+      </div>
+    </div>
   );
 }

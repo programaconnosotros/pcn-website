@@ -1,229 +1,146 @@
 'use client';
 
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import { SearchBar } from '@/components/ui/search-bar';
+import { Button } from '@/components/ui/button';
 import { dateContainsString } from '@/lib/date-formatter';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import type { GalleryFilterOptions, GalleryTile } from '@/lib/gallery';
+import { galleryQuery, isFiltered, type GalleryFilter } from '@/lib/gallery-filters';
+import { cn } from '@/lib/utils';
+import { ImagePlus } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+import { GalleryFilters } from './gallery-filters';
 import { PhotoCard } from './photo-card';
-import { PhotoDialog } from './photo-dialog';
-import { SearchBar } from './search-bar';
-import { SortSelector, type SortOrder } from './sort-selector';
+import { photoCaption } from './photo-utils';
+import { ShareDialog } from './share-dialog';
 
-// Sample gallery photos with Date objects and Spanish titles
-const photos = [
-  {
-    id: 1,
-    title: 'Agustín y Chelo dando una charla de ingeniería de softwareen Tafí Viejo',
-    image: '/gallery-photos/agus-chelo-talk.webp',
-    date: new Date(2023, 11, 24),
-  },
-  {
-    id: 2,
-    title: 'Agustín, Chelo y Tobías resolviendo problemas con Docker en la web de PCN',
-    image: '/gallery-photos/agus-chelo-tobias-watch-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 3,
-    title: 'Agustín luego de dar una lightning talk virtual en la pandemia',
-    image: '/gallery-photos/agus-init.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 4,
-    title: 'Agustín desarrollando la web de PCN',
-    image: '/gallery-photos/agus-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 5,
-    title: 'Agustín dando una charla de DDD y arquitectura hexagonal en la UTN-FRT',
-    image: '/gallery-photos/agus-talk.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 6,
-    title: 'Cena de founders de PCN',
-    image: '/gallery-photos/boys-having-a-snack.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 7,
-    title: 'Chelo dando una charla de paradigmas de programación en la UTN-FRT',
-    image: '/gallery-photos/chelo-watch-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 8,
-    title: 'Noche de hamburguesas en la casa de Tobi',
-    image: '/gallery-photos/leno-time.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 9,
-    title: 'Mauricio dando una charla sobre diseño en la UTN-FRT',
-    image: '/gallery-photos/mauricio-talk.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 10,
-    title: 'Agustín, Facundo y Chelo luego de una charla en Tafí Viejo',
-    image: '/gallery-photos/photo-casual.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 11,
-    title: 'Esteban enseñando algoritmos de ordenamiento en la UTN-FRT',
-    image: '/gallery-photos/talk-class.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 12,
-    title: 'Tobías dando una charla sobre unit testing en la UTN-FRT',
-    image: '/gallery-photos/tobias-talk.webp',
-    date: new Date(2024, 2, 15),
-  },
-  {
-    id: 13,
-    title: 'Tobías dando una charla sobre depuración de código en la UTN-FRT',
-    image: '/gallery-photos/tobias-watch-pc.webp',
-    date: new Date(2024, 2, 15),
-  },
-];
+// Lowercase without accents, so `tafi` finds `Tafí`.
+const normalize = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
 interface GalleryProps {
-  initialPhotoId?: number | null;
+  items: GalleryTile[];
+  filter: GalleryFilter;
+  options: GalleryFilterOptions;
+  canUpload: boolean;
 }
 
-export function Gallery({ initialPhotoId }: GalleryProps) {
-  const router = useRouter();
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
+// The community's photos and videos, mixed and newest first, filterable by type, event and
+// person (in the URL) and searchable by text.
+export function Gallery({ items, filter, options, canUpload }: GalleryProps) {
+  const [sharedItem, setSharedItem] = useState<GalleryTile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('default');
-  const isDialogOpen = selectedPhotoIndex !== -1;
 
-  // Filter photos based on search query
-  const filteredPhotos = useMemo(() => {
-    if (!searchQuery.trim()) return [...photos];
+  const event = options.events.find(({ id }) => id === filter.eventId) ?? null;
+  const query = galleryQuery(filter);
 
-    const query = searchQuery.toLowerCase().trim();
-    return photos.filter(
-      (photo) =>
-        photo.title.toLowerCase().includes(query) ||
-        (photo.date && dateContainsString(photo.date, query)),
+  const filteredItems = useMemo(() => {
+    const search = normalize(searchQuery.trim());
+    if (!search) return items;
+
+    return items.filter(
+      (item) =>
+        normalize(item.description ?? '').includes(search) ||
+        normalize(item.event?.name ?? '').includes(search) ||
+        item.tags.some((tag) => normalize(tag.user.name).includes(search)) ||
+        dateContainsString(item.takenAt, search),
     );
-  }, [searchQuery]);
+  }, [items, searchQuery]);
 
-  // Sort photos based on sort order
-  const sortedPhotos = useMemo(() => {
-    const photosToSort = [...filteredPhotos];
-
-    switch (sortOrder) {
-      case 'date-asc':
-        return photosToSort.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-          return a.date.getTime() - b.date.getTime();
-        });
-      case 'date-desc':
-        return photosToSort.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-          return b.date.getTime() - a.date.getTime();
-        });
-      default:
-        // For default order, we need to restore the original order
-        // We can do this by sorting based on the index in the original array
-        return photosToSort.sort((a, b) => {
-          const indexA = photos.findIndex((p) => p.id === a.id);
-          const indexB = photos.findIndex((p) => p.id === b.id);
-          return indexA - indexB;
-        });
-    }
-  }, [filteredPhotos, sortOrder]);
-
-  // Open photo dialog when initialPhotoId is provided
-  useEffect(() => {
-    if (initialPhotoId) {
-      const photoIndex = sortedPhotos.findIndex((photo) => photo.id === initialPhotoId);
-      if (photoIndex !== -1) {
-        setSelectedPhotoIndex(photoIndex);
-      }
-    }
-  }, [initialPhotoId, sortedPhotos]);
-
-  const handlePhotoClick = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with photo ID
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
-  };
-
-  const handleCloseDialog = () => {
-    // Remove photo ID from URL
-    router.push('/galeria', { scroll: false });
-    setSelectedPhotoIndex(-1);
-  };
-
-  const handleNavigate = (index: number) => {
-    const photo = sortedPhotos[index];
-    // Update URL with new photo ID
-    router.push(`?foto=${photo.id}`, { scroll: false });
-    setSelectedPhotoIndex(index);
-  };
-
-  const handleSortChange = (order: SortOrder) => {
-    setSortOrder(order);
-  };
-
-  const getShareUrl = (photoId: number) => {
-    // Create absolute URL for sharing
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/galeria?foto=${photoId}`;
-  };
+  const photoCount = items.filter((item) => item.kind === 'PHOTO').length;
+  const videoCount = items.length - photoCount;
 
   return (
     <>
-      <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="Buscar por título o fecha..."
+      <StickyHeader className="mt-4">
+        <PageTitle
+          path={event ? [{ label: 'galeria', href: '/galeria' }, { label: event.name }] : 'galeria'}
+          meta={`${plural(photoCount, 'foto', 'fotos')} · ${plural(videoCount, 'video', 'videos')}`}
+          action={
+            canUpload && (
+              <Link href={event ? `/galeria/subir?evento=${event.id}` : '/galeria/subir'}>
+                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                  <ImagePlus className="h-4 w-4" />
+                  subir();
+                </Button>
+              </Link>
+            )
+          }
         />
-        <SortSelector
-          sortOrder={sortOrder}
-          onSortChange={handleSortChange}
-          className="w-full max-w-md sm:w-auto"
-        />
-      </div>
 
-      {sortedPhotos.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">
-            No se encontraron fotos que coincidan con &quot;{searchQuery}&quot;
-          </p>
+        <div className="mb-4 flex flex-col gap-2">
+          <GalleryFilters filter={filter} options={options} />
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="descripción, evento, persona o fecha"
+              label="Buscar en la galería"
+            />
+            <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
+              {searchQuery.trim() ? (
+                <>
+                  <span className="text-pcnGreen">{filteredItems.length}</span>/{items.length}{' '}
+                  coincidencias
+                </>
+              ) : (
+                <>
+                  ls -la <span className="text-pcnGreen-600">./galeria{query}</span>
+                </>
+              )}
+            </p>
+          </div>
         </div>
+      </StickyHeader>
+
+      {items.length === 0 ? (
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          {isFiltered(filter) ? (
+            <>
+              No hay nada con estos filtros.{' '}
+              <Link href="/galeria" className="text-pcnGreen hover:underline">
+                ver todo
+              </Link>
+            </>
+          ) : (
+            'Todavía no hay fotos ni videos.'
+          )}
+        </p>
+      ) : filteredItems.length === 0 ? (
+        <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+          grep: sin coincidencias para{' '}
+          <span className="text-pcnGreen">&quot;{searchQuery}&quot;</span>
+        </p>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {sortedPhotos.map((photo, index) => (
-            <div key={photo.id} className="cursor-pointer">
+        <RuledGrid className="mb-14 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {filteredItems.map((item, index) => (
+            <div key={item.id} className={cn(ruledCellClassName, 'p-1')}>
               <PhotoCard
-                photo={photo}
-                getShareUrl={getShareUrl}
-                onCardClick={() => handlePhotoClick(index)}
+                photo={item}
+                index={index}
+                total={filteredItems.length}
+                href={`/galeria/${item.id}${query}`}
+                onShare={() => setSharedItem(item)}
               />
             </div>
           ))}
-        </div>
+        </RuledGrid>
       )}
 
-      {isDialogOpen && (
-        <PhotoDialog
-          photos={sortedPhotos}
-          currentPhotoIndex={selectedPhotoIndex}
-          isOpen={isDialogOpen}
-          onClose={handleCloseDialog}
-          onNavigate={handleNavigate}
-          getShareUrl={getShareUrl}
+      {sharedItem && (
+        <ShareDialog
+          isOpen
+          onClose={() => setSharedItem(null)}
+          url={`${window.location.origin}/galeria/${sharedItem.id}`}
+          title={photoCaption(sharedItem)}
         />
       )}
     </>

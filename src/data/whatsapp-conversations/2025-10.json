@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Cómo conseguir clientes como freelancer",
+    "date": "2025-10-01",
+    "summary": "Alejo preguntó por tips para arrancar como freelancer haciendo landings y dashboards, ya que conseguir clientes era su mayor dificultad; mencionó que trabajaba para una agencia extranjera por hora pero sin proyectos no cobraba. Fede Valle compartió su experiencia desde enero: primero construyó una marca personal junto a un amigo, y a partir de proyectos bien presentados en el portfolio la marca les daba confianza a los referidos para cerrar tratos. Fede destacó que la solidez de la marca les permitió además cobrar precios más elevados que antes. Mencionó que hay plataformas como Upwork para postularse a trabajos, aunque él personalmente no las usaba. Alejo había empezado a diseñar una landing mostrando proyectos, servicios y el proceso de trabajo, lo que Fede validó como buen comienzo, recomendando meterse a fondo en la marca personal."
+  },
+  {
+    "title": "Taller de diseño de sistemas de Marcelo y Mauricio Sánchez",
+    "date": "2025-10-01",
+    "summary": "Leandro Contrera agradeció públicamente a Marcelo Nuñez y Mauricio Sánchez por un taller que habían dado, elogiando la oratoria, didáctica y profundidad de las preguntas de Marcelo que lo dejaron pensando. Álvaro Toledo también valoró el taller como muy completo, útil para recuperar conceptos y articular el desarrollo de un MVP, destacando la sencillez con la que los disertantes explicaban conceptos complejos. Mauricio Sánchez aclaró que fue un taller de diseño de sistemas en general, con una segunda parte planificada. El intercambio generó mucho reconocimiento en la comunidad, con Germán Navarro calificando a los dos de 'cracks'."
+  },
+  {
+    "title": "Recomendaciones de teclado, mouse y pad con USD 500",
+    "date": "2025-10-02",
+    "summary": "Juan Farber anunció que su empresa le dio un budget de USD 500 para renovar sus periféricos (teclado, mouse y mousepad) y pidió recomendaciones considerando que usa macOS. Facundo Padilla recomendó periféricos específicos para Mac y compartió su experiencia con el Logitech g603, un mouse inalámbrico con Bluetooth que le duraba más de un año con pilas. Exequiel De Freitas mencionó el Logitech g213 Prodigy como un teclado cómodo y silencioso. Facundo García Martoni recomendó el Logitech Proteus Spectrum como el mejor mouse de la historia, y para teclados mencionó el HHKB como la opción premium, los Aula como buena relación calidad-precio, y Keychron para Mac; para pad recomendó cualquier XL de Redragon. Facundo Padilla también mencionó que había comprado un teclado 60% de la marca Solarmax a 60 mil pesos, con Wireless 2.4, USB-C y Bluetooth por tres canales, cuya calidad le sorprendió para el precio."
+  },
+  {
+    "title": "Claude Sonnet 4.5 en modo thinking y vibe coding",
+    "date": "2025-10-02",
+    "summary": "Facundo García Martoni pasó por el chat para compartir que estaba teniendo una racha de 10 one-shots seguidos programando con Sonnet 4.5, calificándolo de un deleite. Exequiel De Freitas preguntó si usaban el 4.5 solo o el thinking, y Facundo aclaró que en Cursor solo está disponible el thinking, y que siempre prefería thinking porque el problema de que el modelo se 'pase' en razonamientos estaba prácticamente resuelto. Facundo García Martoni también armó en 2 horas con vibe coding una app usando Claude.ai artifacts para el diseño (Sonnet 4.5), React con Tailwind y localStorage para la data, Cursor para ajustes, Gemini 2.5 Flash para el logo, Photopea para editar el logo, y GitHub Pages como deploy en modo PWA con exportación a JSON. Facundo destacó que el modelo permitía incluso corregir algo, pensarlo mejor y darse cuenta de que en realidad estaba bien, llegando al punto de querer pedirle perdón al modelo."
+  },
+  {
+    "title": "Proyectos propios de la comunidad: SaaS, IA y apps",
+    "date": "2025-10-04",
+    "summary": "Alejo preguntó qué andaban desarrollando los integrantes del grupo y se generó un intercambio rico sobre proyectos personales. Exequiel De Freitas contó que con otros dos socios estaba armando CitaUp, un SaaS de gestión de turnos donde negocios como estéticas o peluquerías registran sus empleados, servicios y horarios y eso genera una mini landing page para que los clientes saquen turnos. Leandro Contrera estaba diseñando un prototipo de app que analiza imágenes de interfaces con IA y tira feedback sobre usabilidad basado en métricas de IHC (Interacción Humano-Computadora). Alejo compartió que llevaba tiempo con una app de productividad personal que abarca rutinas, gestión de conocimiento y proyectos, con IA que genera estadísticas y recomendaciones; había lanzado una waitlist en Reddit y había conseguido más de 300 registrados. Facundo García Martoni reflexionó que estaban en el medio de un cambio fundamental en el desarrollo de software donde escribir código manualmente se estaba volviendo obsoleto, comparando al programador con el conductor de un auto: sigue siendo necesario conocer la ruta aunque no camine."
+  },
+  {
+    "title": "Reddit como canal de validación de startups",
+    "date": "2025-10-04",
+    "summary": "A partir de la mención de Alejo sobre su waitlist en Reddit, Exequiel De Freitas preguntó cómo era eso de publicar en Reddit para validar ideas y si había un foro específico. Alejo explicó que entró directamente al nicho de su app y publicó en el subreddit /r/productivityApps, donde tuvo bastante tracción. También probó publicidad para Latinoamérica pero no llamó tanto la atención. Recomendó meterse donde están los potenciales clientes en lugar de publicitar de forma genérica. Ariel Basabe hizo una analogía con Tinder, cuya fundadora fue a preparatorias a promocionar el producto en sus inicios. Alejo Boga sumó que los batches de Y Combinator (ycombinator.com/companies) son una buena fuente para ver qué nichos están recibiendo inversión y descubrir oportunidades de mercado."
+  },
+  {
+    "title": "n8n: herramienta de automatización intermedia entre código y no-code",
+    "date": "2025-10-12",
+    "summary": "Facundo García Martoni compartió que estaba probando n8n por primera vez y pidió feedback sobre la herramienta. Alejo mencionó haber visto un video donde se guardaban emails de una waitlist en Google Sheets automáticamente. Facundo destacó que lo que le parecía increíble era poder crear un web form directamente desde n8n y llevar las respuestas a Slack, Sheets o Telegram sin código manual; lo calificó como un intermedio entre código y no-code que lo hace divertido. El mismo día terminó su primer proyecto: un widget en Android que mostraba su balance de cierto asset en Binance. El flujo era recibir una request en un webhook de n8n, pegarle a la API de Binance con firma HMAC, limpiar y filtrar el JSON, sumar los montos, y responder al webhook; en Android usaba la app KWGT para consumir ese endpoint y mostrarlo en la pantalla de inicio con un cron job que corría 3 veces al día. Nacho preguntó por el 'killer de n8n' que mencionó Midudev, y Facundo identificó que era el nuevo Agent mode de OpenAI, aunque dijo no confiar en OpenAI como empresa desde hacía tiempo."
+  },
+  {
+    "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
+    "date": "2025-10-14",
+    "summary": "Fede Valle consultó sobre Stripe al crear su cuenta y encontrar que Argentina no estaba disponible como país. Josefina Japaze confirmó que Stripe no está disponible para pesos argentinos, y Ariel Basabe agregó que tampoco para su app de turnos podían usarlo. Ariel recomendó Lemon Squeezy como alternativa, pero un integrante venezolano del grupo advirtió que no lo usaran porque se caía constantemente, y recomendó en cambio Polar.sh. Facundo García Martoni mencionó DLocal Go como opción que había funcionado en su caso. El grupo migró al tema de MercadoPago Checkout Pro: Josefina tenía dos problemas en sandbox, las tarjetas de prueba no le dejaban hacer pagos y los pagos que sí pasaban no llegaban al webhook. Germán Navarro confirmó que ese era un problema famoso de MP desde hace años. Marcelo Nuñez declaró odiar los webhooks profundamente, aunque aclaró que los de Stripe andaban mucho mejor y hasta se podían probar con la CLI de Stripe. Fede Valle finalmente logró hacerlo funcionar."
+  },
+  {
+    "title": "Scrum Master: un rol en extinción",
+    "date": "2025-10-23",
+    "summary": "Leandro Contrera preguntó por el rol del Scrum Master, recordando que en el grupo había opiniones negativas al respecto y queriendo entender dónde encajaba dado que parecía un rol más de habilidades blandas que técnicas. Alejo Boga respondió que el Scrum Master, renombrado como Agile Leader, estaba en proceso de desaparición; hoy es más común ver PMs facilitando las ceremonias de Scrum. Alejo también observó que las metodologías ágiles en general están de salida, aunque las consultoras las mantienen más por tener equipos ya armados para ese modo de trabajo. Iñaki Fernando Lozano aportó que la organización estaba evolucionando: se tomó lo bueno de Scrum (respuesta rápida al cambio, colaboración, entregas incrementales) y se dejó el garbage de las formalidades que agregaban carga sin utilidad. Cuando Scrum se volvió más ceremonia que mindset, tuvo que mutar o morir. Iñaki destacó que ahora se ven PMs más metidos en producto con mejor comunicación con el equipo de desarrollo."
+  },
+  {
+    "title": "Extensiones para reducir distracciones en el browser",
+    "date": "2025-10-26",
+    "summary": "Leandro Contrera compartió Unhook, una extensión para Chrome, Firefox y Edge que elimina features de YouTube para reducir distracciones. Facundo García Martoni sumó en la misma línea Undistracted (bloquea features adictivas de redes sociales en Chrome y Firefox), Social Focus (para Safari en iPhone y Mac), y One Sec (para apps nativas del teléfono que frena el impulso de abrir apps adictivas). Juan Arismendi recomendó StayFree, que tiene app desktop, Android y extensiones que se pueden sincronizar. Ariel Basabe agradeció los datos."
+  },
+  {
+    "title": "Focus y la trampa de hacer demasiadas cosas a la vez",
+    "date": "2025-10-29",
+    "summary": "Facundo García Martoni compartió una reflexión sobre el focus a partir de hablar de proyectos múltiples: contó que en distintos momentos de su vida tuvo que aplicar la regla de 'elegir una cosa'. Se entusiasmó con el boxeo al punto de sacar la licencia amateur y preparar peleas, lo que lo hizo estancarse en su carrera de software. Después le pasó lo mismo con el tiro deportivo. En ambos casos tuvo que decirse a sí mismo que su pasión real era la tecnología y cortar con lo nuevo. Fue claro en que no está mal tener hobbies, pero que para ser excelente en un campo o emprender con éxito hay que hacer sacrificios. Tobías Paz Posse reconoció que le pasaba algo similar. Facundo recomendó el libro 'The Molecule of More' de Daniel Z. Lieberman, que explica los mecanismos de dopamina detrás de videojuegos, casinos, redes sociales y relaciones. Leandro Contrera comentó que él tiene un control parental de 30 minutos diarios para Lichess para no perderse horas en el ajedrez."
+  }
+]

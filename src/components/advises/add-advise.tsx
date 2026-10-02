@@ -17,9 +17,11 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { createAdvise } from '@actions/advises/create-advise';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
-export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
+export const AddAdvise = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
@@ -28,26 +30,29 @@ export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
     },
   });
 
-  function onSubmit({ content }: AdviseFormData) {
-    toast.promise(createAdvise(content), {
-      loading: 'Publicando consejo...',
-      success: () => {
-        form.reset();
-        refetch();
-        return 'Consejo publicado! 👏';
-      },
-      error: 'Ocurrió un error al publicar el consejo',
-    });
-
-    setDialogOpen(false);
+  async function onSubmit({ content }: AdviseFormData) {
+    setIsSubmitting(true);
+    try {
+      await toast.promise(createAdvise(content), {
+        loading: 'Publicando consejo...',
+        success: () => {
+          form.reset();
+          return 'Consejo publicado! 👏';
+        },
+        error: (error) => actionErrorMessage(error, 'Ocurrió un error al publicar el consejo'),
+      });
+      setDialogOpen(false);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="pcn" size="sm">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Publicar un consejo
+          publicarConsejo();
         </Button>
       </DialogTrigger>
 
@@ -72,8 +77,13 @@ export const AddAdvise = ({ refetch }: { refetch: () => void }) => {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Publicar
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="publicando..."
+            >
+              publicar();
             </Button>
           </form>
         </Form>

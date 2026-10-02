@@ -1,0 +1,167 @@
+[
+  {
+    "date": "2025-05-02",
+    "title": "IDEs sin IA: Neovim, Sublime Text y Zed como alternativas puras",
+    "summary": "Un debate surgió sobre si era valioso usar IDEs sin asistencia de IA para mantener y agudizar las habilidades de programación. Matías mencionó que usaba Neovim como editor principal y que la configuración desde cero le había enseñado mucho sobre cómo funcionaban los editores. Otros recomendaron Sublime Text por su velocidad y simplicidad. Alguien mencionó Zed como el editor más rápido del mercado, construido en Rust. Facundo argumentó que la elección del editor era personal pero que conocer las herramientas sin IA hacía mejor programador. El hilo generó debate sobre si el enfoque sin IA era productivismo o romanticismo innecesario."
+  },
+  {
+    "date": "2025-05-03",
+    "title": "Go para principiantes: recursos y primeros pasos en el lenguaje",
+    "summary": "Sebastián preguntó por dónde empezar a aprender Go. El grupo recomendó el tour oficial en tour.golang.org como primer paso, seguido del libro 'The Go Programming Language'. Facundo mencionó que Go tenía una curva de aprendizaje muy baja para quien ya sabía algún lenguaje compilado. Se destacaron las goroutines y channels como el concepto más importante a entender de Go para aprovechar su modelo de concurrencia. Alguien compartió el repositorio awesome-go como colección de librerías y recursos. Se discutió en qué contextos brillaba Go: CLIs, APIs de alto rendimiento y herramientas de infraestructura como Docker y Kubernetes que estaban escritas en Go."
+  },
+  {
+    "date": "2025-05-03",
+    "title": "LeetCode: solución de sorted squares en O(n) con two pointers",
+    "summary": "Uno de los miembros compartió un problema de LeetCode que había resuelto recientemente: el de squares of a sorted array. Explicó que la solución naive era elevar al cuadrado y ordenar en O(n log n), pero que con la técnica de two pointers desde los extremos del array se podía resolver en O(n) aprovechando que el array estaba ordenado. El grupo siguió la explicación con interés y algunos propusieron variantes del problema. Facundo comentó que los dos pointers era uno de los patrones más útiles para dominar en entrevistas técnicas. Se discutió cuándo y cómo practicar LeetCode de manera efectiva sin gastar meses en problemas irrelevantes."
+  },
+  {
+    "date": "2025-05-04",
+    "title": "Workshop de Microsoft sobre CVs técnicos para desarrolladores",
+    "summary": "Alguien compartió un workshop gratuito organizado por Microsoft sobre cómo armar un CV efectivo para posiciones técnicas. El grupo discutió los consejos del evento: cuantificar logros con métricas, adaptar el CV al puesto específico, y enfocarse en el impacto más que en las responsabilidades. Facundo mencionó que los CV de desarrolladores argentinos tendían a listar tecnologías sin contextualizar proyectos. Alguien recomendó el formato Harvard de una página como estándar preferido por recruiters internacionales. Se compartieron ejemplos de bullets bien escritos versus formulaciones genéricas a evitar."
+  },
+  {
+    "date": "2025-05-06",
+    "title": "Uncle Bob y SOLID: crítica al dogmatismo técnico",
+    "summary": "Facundo Gelatti compartió sus reflexiones críticas sobre el dogmatismo en torno a Uncle Bob y los principios SOLID. Argumentó que muchos desarrolladores aplicaban SOLID mecánicamente sin entender el contexto en que cada principio tenía sentido. Varios miembros debatieron los límites del principio de responsabilidad única y cuándo la sobre-abstracción hacía el código más difícil de entender. Se mencionó que el propio Martin Fowler había dicho que el SRP era el más malinterpretado de los SOLID. Agustín señaló que los principios eran guías, no reglas absolutas, y que el pragmatismo dependía del tamaño y ciclo de vida del proyecto. La conversación fue técnicamente rica y generó múltiples perspectivas sobre el rol de los patrones en el diseño de software real."
+  },
+  {
+    "date": "2025-05-07",
+    "title": "Posiciones abiertas en Bowery: empresa que contrataba en Argentina",
+    "summary": "Alguien compartió que Bowery, una empresa del exterior, estaba buscando desarrolladores en Argentina. El grupo mostró interés y varios preguntaron sobre el stack, el salario y si era remoto o presencial. Los que tenían más información explicaron que era trabajo 100% remoto con pagos en dólares. Se discutió cómo aplicar y qué perfil buscaban. Facundo señaló la importancia de tener el perfil de LinkedIn en inglés y con proyectos bien documentados antes de aplicar. Alguien que había pasado por el proceso compartió cómo era el proceso de selección de la empresa."
+  },
+  {
+    "date": "2025-05-08",
+    "title": "Tipado estático vs dinámico: el debate eterno en la comunidad",
+    "summary": "El grupo tuvo una discusión extensa sobre las ventajas y desventajas de los lenguajes con tipado estático versus dinámico. Los defensores del tipado estático (TypeScript, Java, Go, Rust) argumentaron que los errores se capturaban en compilación, el refactoring era más seguro y el autocomplete era más preciso. Los que preferían dinámico (Python, JavaScript, Ruby) señalaban mayor velocidad de prototipado y código más conciso. Facundo trajo el punto de que TypeScript había probado que la comunidad JavaScript valoraba el tipado cuando estaba bien hecho. Se mencionó el gradual typing de Python con mypy como punto intermedio. La conclusión fue que para proyectos de equipo y largo plazo el tipado estático pagaba su overhead."
+  },
+  {
+    "date": "2025-05-08",
+    "title": "bcrypt y hashing: por qué las contraseñas no se pueden revertir",
+    "summary": "Un miembro preguntó por qué era imposible recuperar una contraseña hasheada con bcrypt si el algoritmo era conocido. El grupo explicó el concepto de función de hash unidireccional: el proceso era fácil en un sentido pero computacionalmente inviable en el otro. Facundo aclaró la diferencia entre hashing (unidireccional) y encriptación (bidireccional con clave). Se explicó por qué bcrypt era preferido sobre MD5 o SHA para contraseñas: el factor de costo (work factor) hacía que cada verificación tomara tiempo deliberadamente, lo que hacía impráctica la búsqueda por fuerza bruta. Se mencionó también el concepto de salt para evitar rainbow tables. La discusión fue didáctica y varios principiantes agradecieron la explicación."
+  },
+  {
+    "date": "2025-05-08",
+    "title": "iOS: cómo decidir el target mínimo de versión para una app",
+    "summary": "Un miembro que estaba desarrollando su primera app iOS preguntó cómo decidir el iOS mínimo a soportar. El grupo explicó que había que balancear el porcentaje de usuarios en cada versión (disponible en las estadísticas de Apple) contra las APIs disponibles. Facundo recomendó revisar los datos de adopción de iOS en el App Store Connect antes de tomar la decisión. Se comentó que la adopción de iOS era mucho más rápida que la de Android, con más del 90% de usuarios en la última o penúltima versión. Alguien mencionó que las apps de nicho podían permitirse targets más altos que las apps de consumo masivo. La recomendación fue apuntar a iOS 16 o 17 en proyectos nuevos."
+  },
+  {
+    "date": "2025-05-08",
+    "title": "Outage de Mercado Pago y chistes sobre la fiabilidad de PHP",
+    "summary": "Se reportó una caída de los servicios de Mercado Pago que afectaba a varias apps del grupo. Varios miembros bromearon sobre que Mercado Pago estaba construido sobre PHP, lo que generó un hilo de chistes sobre PHP como lenguaje. Algunos defendieron que PHP moderno (8.x con tipado) era un lenguaje perfectamente válido para producción y que el prejuicio era injusto. Facundo trajo el argumento de que Facebook, WordPress y muchos sistemas de alto tráfico corrían en PHP exitosamente. El debate derivó en la diferencia entre el estado actual de un lenguaje y su reputación heredada de versiones anteriores. El outage se resolvió en pocas horas."
+  },
+  {
+    "date": "2025-05-09",
+    "title": "Arch Linux con Hyprland: setup minimalista de Matías",
+    "summary": "Matías compartió fotos de su setup con Arch Linux y el compositor de ventanas Hyprland, que había configurado desde cero. El grupo quedó impresionado con la estética del escritorio personalizado con colores, fuentes y animaciones. Se discutió la curva de aprendizaje de Arch Linux y si valía la pena el tiempo de configuración versus usar una distro como Manjaro o Fedora que venían más listas. Matías argumentó que la instalación manual de Arch le había enseñado cómo funcionaba Linux internamente. Varios preguntaron por su configuración de Neovim y los dotfiles. Facundo comentó que Hyprland era bonito pero que prefería algo más estable para trabajo."
+  },
+  {
+    "date": "2025-05-09",
+    "title": "Tracking de usuarios anónimos: UUID vs device token",
+    "summary": "Un miembro que construía una app sin autenticación preguntó cómo trackear usuarios anónimos para analytics. El grupo discutió las opciones: generar un UUID en el primer uso y guardarlo en localStorage o AsyncStorage (React Native), usar el device ID que ofrecían plataformas como Expo, o implementar fingerprinting del browser. Facundo explicó que el UUID era la solución más simple y respetuosa de la privacidad, pero que se perdía cuando el usuario limpiaba el storage. Se mencionó la diferencia entre identificación para analytics versus para personalización. Alguien señaló que en iOS el acceso al device ID requería permiso explícito del usuario desde iOS 14."
+  },
+  {
+    "date": "2025-05-12",
+    "title": "Dilema de proyecto WordPress: rediseñar o migrar a otra tecnología",
+    "summary": "Un miembro con un proyecto heredado en WordPress preguntó si convenía rediseñar el sitio en WordPress o migrar a otra tecnología como Next.js con un CMS headless. El grupo debatió los costos y beneficios de cada opción. Facundo argumentó que si el cliente usaba WordPress activamente para crear contenido, migrar el CMS era un proyecto separado del rediseño visual y no siempre valía la pena. Otros señalaron que WordPress headless con un frontend moderno era una opción intermedia viable. Se discutió también el tiempo de migración de contenido y el costo de capacitar al cliente en un nuevo sistema. La conclusión fue que dependía mucho de si el dolor con WordPress era de performance, seguridad o de experiencia de edición."
+  },
+  {
+    "date": "2025-05-12",
+    "title": "Mouse para Mac: Magic Mouse vs Logitech MX Master",
+    "summary": "Agustín preguntó por recomendaciones de mouse para usar con Mac. El debate se polarizó entre el Magic Mouse de Apple y el Logitech MX Master 3. Los defensores del Magic Mouse destacaban la integración con los gestos de macOS y la superficie multitouch. Los del MX Master señalaban la ergonomía superior para jornadas largas, la rueda de desplazamiento MagSpeed y los botones programables. Facundo confesó que había probado ambos y que el Magic Mouse era incómodo para uso intensivo a pesar de la buena integración con el sistema. Se recomendó también el Logitech MX Master 3S como la versión más silenciosa. La mayoría se inclinó por el MX Master para trabajo."
+  },
+  {
+    "date": "2025-05-12",
+    "title": "Repositorio para aprender TypeScript: recursos recomendados",
+    "summary": "Alguien preguntó por recursos para aprender TypeScript de manera sistemática más allá de la documentación oficial. El grupo recomendó el repositorio type-challenges en GitHub como colección de ejercicios progresivos sobre el sistema de tipos. Se mencionó el curso de TypeScript de Matt Pocock como uno de los más actualizados. Facundo compartió que el error más común era usar TypeScript como si fuera JavaScript con anotaciones, sin aprovechar el sistema de tipos avanzado. Se recomendó también el handbook oficial y el playground de TypeScript para experimentar con tipos complejos en el browser sin configurar nada."
+  },
+  {
+    "date": "2025-05-13",
+    "title": "Firefox y Zen Browser vs Chrome y Brave: debate de navegadores",
+    "summary": "El grupo debatió qué navegador usar para desarrollo web. Firefox fue recomendado por sus herramientas de developer tools, especialmente el inspector de layout CSS que se consideraba superior al de Chrome. Zen Browser, un fork de Firefox con UI personalizada, fue mencionado como alternativa estética. Brave fue elogiado por el bloqueo de ads integrado y la privacidad, aunque algunos señalaban inconsistencias en la compatibilidad con sitios. Chrome fue defendido por ser el estándar de facto y representar mejor la experiencia de la mayoría de usuarios. Facundo mencionó que usaba Chrome para trabajo y Firefox como navegador de uso general por la privacidad."
+  },
+  {
+    "date": "2025-05-14",
+    "title": "Dia: el nuevo browser de los creadores de Arc",
+    "summary": "Alguien compartió el anuncio de Dia, el nuevo navegador de The Browser Company, los creadores de Arc. El grupo que había usado Arc reaccionó con curiosidad sobre el nuevo proyecto. Facundo explicó que los creadores de Arc habían decidido pivotear a un browser con IA integrada como concepto central, alejándose del diseño de espacios y sidebar de Arc. Se debatió si Dia sería un salto real en la experiencia del navegador o solo otro browser con IA encima. Alguien señaló que Arc había tenido problemas de rendimiento y bugs que nunca se resolvieron bien. El grupo acordó esperar a la versión pública para probarlo."
+  },
+  {
+    "date": "2025-05-16",
+    "title": "Curso de system design de LeetCode: análisis y recomendación",
+    "summary": "Un miembro compartió que había empezado el curso de system design de LeetCode y preguntó si otros lo habían hecho. El grupo discutió el contenido del curso que cubría temas como consistent hashing, bases de datos distribuidas, caching con Redis y diseño de sistemas como URL shorteners y feeds de redes sociales. Facundo señaló que el system design era el área que más diferenciaba a ingenieros senior en entrevistas. Se comparó con otros recursos como Designing Data-Intensive Applications de Kleppmann, que el grupo consideraba la biblia del sistema distribuido. Alguien mencionó los videos de Gaurav Sen en YouTube como recurso gratuito de calidad."
+  },
+  {
+    "date": "2025-05-16",
+    "title": "Jack Dorsey en Block recorta 50% del staff por IA: debate sobre el impacto",
+    "summary": "El grupo discutió la noticia de que Jack Dorsey había anunciado recortes significativos en Block argumentando que la IA reemplazaría muchas de las funciones de los empleados. Varios miembros expresaron preocupación por la tendencia. Facundo argumentó que los recortes de empleados por IA en empresas como Block eran una decisión de management que mezclaba optimización real con narrativa para inversores. Se debatió si los desarrolladores que usaban IA eran 10x más productivos o si la calidad del output de IA requería igualmente tiempo humano para revisión. La discusión fue intensa y polarizada, con posiciones que iban desde el optimismo tecnológico hasta la preocupación por el mercado laboral."
+  },
+  {
+    "date": "2025-05-19",
+    "title": "Galería de setups de escritorio para desarrollo",
+    "summary": "Varios miembros del grupo compartieron fotos de sus setups de trabajo para desarrollo. Matías mostró su Arch Linux con Hyprland con una configuración actualizada. Otros compartieron setups con macOS con monitores externos, stands y teclados mecánicos. Se compararon las ventajas de tener monitor vertical (portrait mode) para leer código largo. Alguien mostró un setup minimalista con solo la laptop y elogios a la portabilidad. Facundo compartió su setup dual monitor. El hilo fue festivo y muchos miembros participaron con fotos o comentando las de otros."
+  },
+  {
+    "date": "2025-05-19",
+    "title": "IA e impacto en el empleo tech: debate generacional y de carrera",
+    "summary": "El grupo tuvo una discusión profunda sobre el impacto de la IA en el empleo de desarrolladores. Algunos miembros recién empezando la carrera expresaron preocupación por si tenía sentido seguir aprendiendo a programar. Facundo y otros miembros más experimentados argumentaron que la IA era una herramienta que amplificaba capacidades, no que reemplazaba el pensamiento. Se debatió si los desarrolladores que sabían usar IA efectivamente reemplazarían a los que no. Alguien señaló la paradoja de que cada vez más las empresas querían desarrolladores que supieran usar IA, pero también que entendieran el código que la IA generaba. La conclusión mayoritaria fue que había que adaptarse y aprender a trabajar con IA como habilidad central."
+  },
+  {
+    "date": "2025-05-19",
+    "title": "UTN Tucumán intenta patentar un framework: debate sobre privatización de software académico",
+    "summary": "Alguien compartió la noticia de que la UTN Tucumán estaba intentando patentar un framework de software desarrollado en el ámbito académico. El grupo reaccionó con críticas a la iniciativa. Facundo y otros argumentaron que el software académico debería ser open source por defecto, y que intentar patentarlo contradecía los valores de la comunidad científica y de los contribuyentes que financiaban la universidad pública. Se discutió el concepto de RIA (Red de Innovación Argentina) como contexto. Algunos pusieron en duda si la patente era viable legalmente dado que el software tenía antecedentes publicados. El hilo generó bastante debate sobre la relación entre universidad pública y propiedad intelectual."
+  },
+  {
+    "date": "2025-05-19",
+    "title": "Feedback de entrevista de system design: lección aprendida",
+    "summary": "Un miembro compartió su experiencia en una entrevista de system design en una empresa que buscaba perfiles senior. Contó que le habían pedido diseñar un sistema de notificaciones escalable y que había fallado en considerar la idempotencia de los mensajes y el manejo de duplicados. El grupo analizó el problema juntos: cómo garantizar que una notificación se enviara exactamente una vez usando message queues como SQS con deduplication. Facundo mencionó el patrón de exactly-once delivery y sus limitaciones. Se discutió la diferencia entre at-least-once y at-most-once delivery. El miembro agradeció el análisis y varios aprendieron del hilo."
+  },
+  {
+    "title": "Debate sobre arquitectura monolítica vs distribuida",
+    "date": "2025-05-20",
+    "summary": "Facundo García Martoni compartió una propuesta de system design y la comunidad debatió qué hace que un sistema sea monolítico o distribuido. Facundo explicó que Inertia.js permitía tener front y back en la misma codebase sin usar una API REST explícita, algo que Agustín Sánchez clarificó que Next.js también hacía internamente con sus server actions, aunque por detrás igual generaba endpoints REST. Alejo Boga sumó que un monolito puede perfectamente exponer APIs sin dejar de ser monolítico, y que la arquitectura distribuida implica separar servicios independientes. Agustín propuso sumarle Docker y Kubernetes para escalar en lugar de levantar VMs manualmente, y Facundo lo bancó. Benjamín Cortés planteó que para él un sistema distribuido requería filas y workers, lo que generó un pequeño debate sobre si la asincronía era condición necesaria. Agustín citó a ChatGPT para zanjar: si todo corre en un proceso es monolito, si son dos procesos separados ya es distribuido, y cualquier API externa suma al criterio de distribución."
+  },
+  {
+    "title": "Cómo guardar imágenes en la base de datos sin nube",
+    "date": "2025-05-20",
+    "summary": "Un integrante del grupo preguntó cómo mandar imágenes desde el front a la base de datos sin usar servicios cloud, manifestando que Base64 le parecía horrible. Marcelo Nuñez confirmó que guardar en base64 era posible pero no recomendable, y que técnicamente lo que se guardaba eran bits codificados. Agustín Sánchez aclaró que Base64 en sí no tiene límite de tamaño: el problema real es el payload máximo de una request HTTP, que varía según la configuración del servidor. Iñaki Fernando Lozano puntualizó que el límite lo pone el servidor o el navegador, no el protocolo en sí, y que rondaba los 20kb dependiendo del caso. La solución recomendada por Iñaki fue guardar el archivo en el sistema de archivos del backend y almacenar solo el path en la base de datos, con posibilidad de aplicar optimización de imágenes como la que ofrece Next.js. Agustín también mencionó que se podían usar CDNs propios o servicios de object storage como alternativa escalable."
+  },
+  {
+    "title": "App de escritorio Windows para empresa de eventos: stack recomendado",
+    "date": "2025-05-20",
+    "summary": "Un desarrollador mobile contó que un amigo con una empresa de eventos le pidió un programa para Windows que gestionara turnos de empleadas, sumara montos cobrados por turno y permitiera al administrador ver los totales diarios. El sistema existente estaba hecho en WinForms con C#. El desarrollador nunca había trabajado con escritorio y preguntó qué stack usar. Iñaki Fernando Lozano recomendó Electron para quienes vienen de JS, ya que permite usar frameworks web y tiene acceso a Node para funcionalidades nativas: Visual Studio Code y Postman están hechos con Electron. Juan Arismendi confirmó que Electron andaba bien pero recomendó usar React solo en lugar de Next.js dentro de Electron, porque las rutas dinámicas de Next dan problemas. Juan también mencionó Tauri como alternativa similar pero con la parte de aplicación escrita en Rust. Agustín Sánchez recomendó entender bien qué quería el cliente antes de elegir tecnología, estimar horas de desarrollo y agregar un 20% de buffer de riesgo al presupuesto. El desarrollador se inclinó por Electron o WinForms, lo que tuviera menor curva de aprendizaje dado que ya usaba JS y algo de C#."
+  },
+  {
+    "title": "Copilot open source y nueva feature: asignar GitHub issues a la IA",
+    "date": "2025-05-20",
+    "summary": "Luciano Gallardini comentó que Microsoft había hecho open source la extensión de Copilot para VS Code, con algo de ironía porque no pudieron hacerlo bien pagando empleados. Agustín Sánchez destacó una nueva feature de Copilot: podés asignarle directamente un issue del repo en GitHub y la IA lo desarrolla y crea la pull request sola. Agustín valoró la idea especialmente para features chicas, aunque aclaró que seguía prefiriendo Cursor. Juan Arismendi contó que Copilot tiene una capa gratuita con límite de completions y ediciones que él rara vez alcanzaba, haciéndolo muy atractivo para quienes no pagan. La discusión sobre si Cursor o Copilot era mejor terminó con un consenso de que la competencia entre ambos beneficia a los usuarios, y que cada uno seguía con lo que ya usaba."
+  },
+  {
+    "title": "Auriculares inalámbricos: recomendaciones y experiencias",
+    "date": "2025-05-21",
+    "summary": "Germán Navarro preguntó recomendaciones de auriculares inalámbricos con buen micrófono para reuniones, ya que tenía unos Skullcandy con micro de baja calidad. Facundo García Martoni recomendó fervientemente los Sony WH-1000XM4. Iñaki Fernando Lozano contó que le llegaron unos Soundcore con ANC que le gustaron mucho, aunque los Samsung Galaxy Buds 2 Pro que tenía tenían mejor cancelación de ruido. Ariel Basabe recomendó Bose o Sennheiser. Agustín Sánchez recomendó los AirPods Pro como la opción más cómoda que tuvo, cargándolos solo cada 10 días. Sin embargo, Agustín advirtió que sus XM4 tuvieron problemas de Bluetooth con la Mac M1: al levantar uno del oído y volvérselo a poner se cortaba la conexión y había que salir y volver a entrar a las llamadas. Facundo explicó que ese era un bug ya conocido, documentado en Reddit, causado por una incompatibilidad entre el rango de frecuencia que esperaba la Mac y los Sony. Germán encontró los XM4 en TiendaMia a menos de $400 USD."
+  },
+  {
+    "title": "N8N para automatizar agentes de IA en WhatsApp como freelance",
+    "date": "2025-05-21",
+    "summary": "Mateo Lohezic preguntó por cursos de N8N que no fueran marketing vacío sobre 'hacerse millonario sin código'. Agustín Sánchez compartió un video de YouTube y Ariel Basabe recomendó un curso de Udemy ('Curso N8N: Crea agentes de IA sin programar') con link gratuito de Telegram. La suscripción de N8N cuesta $20/mes e incluye 5 workflows activos y 2500 ejecuciones, con lo que se puede atender a un cliente pagante. La API de OpenAI funciona por créditos (aprox $5/mes para un negocio chico), haciendo el costo total de un agente de IA rondear los $50 USD mensuales o menos. Matias Gutierrez mencionó que él usaba ManyChat con un cliente inmobiliario por $15/mes: asignación automática de chats según disponibilidad de agentes inmobiliarios, detección de palabras clave y derivación. Mateo criticó que ManyChat era solo un menú de opciones predefinidas y no un agente con IA real. Se discutieron casos de uso como bots de atención para gimnasios con múltiples sucursales, filtrado de leads y creación automática de entradas en CRMs."
+  },
+  {
+    "title": "NotebookLM de Google: resúmenes y podcasts con IA",
+    "date": "2025-05-22",
+    "summary": "Mauricio Chaile compartió NotebookLM de Google como una herramienta para hacer resúmenes e interactuar con documentos usando IA. Facundo García Martoni dijo que ya lo usaba y que su feature estrella era la generación de podcasts, y que recientemente había añadido soporte en español, lo que abría posibilidades enormes para estudiantes que no sabían inglés. Mauricio probó la generación de podcast con un libro de patrones y compartió el link de audio. Agustín Sánchez preguntó si generaba el podcast con voz y todo para ayudar a estudiar, Facundo y Mauricio confirmaron que sí, y que también podía generar mapas conceptuales. Mauricio señaló que el soporte en español todavía estaba limitado al momento. La herramienta fue especialmente recomendada para compartirla con conocidos fuera del mundo IT que estuvieran estudiando, como forma de revolucionar su manera de repasar contenido."
+  },
+  {
+    "title": "Facundo García Martoni consiguió trabajo como Senior Full-Stack Engineer",
+    "date": "2025-05-23",
+    "summary": "Facundo García Martoni anunció con emoción que cerró un contrato como Senior Full-Stack Engineer para el proyecto Exec de la mano de Bowery, con inicio el lunes siguiente. Agradeció especialmente a Agustín Sánchez por la oportunidad de estar en el grupo, por la ayuda con el tema de system design que habían trabajado juntos, y por haber publicado la oferta laboral. También agradeció a Marcelo Nuñez por la recomendación que le hizo. La comunidad celebró con mensajes de felicitaciones de Agustín, Diego, Marcelo, Matias Gutierrez, Ariel Basabe, Mateo Lohezic, Germán Navarro y otros. Fue un momento emotivo que ejemplificó el valor concreto de la comunidad PCN para el desarrollo profesional de sus integrantes."
+  },
+  {
+    "title": "Git merge vs rebase: diferencias y cuándo usar cada uno",
+    "date": "2025-05-28",
+    "summary": "Marcelo Nuñez preguntó con humildad la diferencia entre merge y rebase en Git. Ariel Basabe dio una explicación completa: el rebase reescribe el historial de commits moviendo la secuencia a una nueva base, obteniendo un historial más lineal y limpio, a diferencia del merge que crea un nuevo commit de fusión visible. Explicó que el rebase interactivo (git rebase --interactive) permite editar, combinar (squash) o eliminar commits, y que su principal precaución es no hacer rebase de commits ya pusheados a un repositorio público porque reescribe la historia y complica la colaboración. Diego destacó que el rebase puede generar conflictos que requieren resolución manual. Ariel compartió también un video de YouTube explicativo. Días después, Facundo García Martoni compartió su flujo modernizado de Git: usar git switch en lugar de checkout, git rebase origin/main en lugar de pull para mantener historia lineal, y un ejemplo de su laburo donde usó rebase entre ramas dependientes para no bloquear trabajo mientras esperaba revisión de una PR."
+  },
+  {
+    "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",
+    "date": "2025-05-31",
+    "summary": "Jeremías preguntó qué stack de backend usar para un proyecto de tres personas: él haría el back y sus dos compañeros el front con React y React Bootstrap. El sistema necesitaba un dashboard de administración, login, y pagos con Mercado Pago o PayPal. Jeremias tenía algo de experiencia con PHP y lo consideraba, pero tenía dudas sobre si PHP era suficiente para pagos y sesiones seguras. Iñaki Fernando Lozano recomendó PHP con Codeigniter por su curva de aprendizaje tranquila y autenticación incluida. Juan Farber dijo que cualquier lenguaje conocido sirve para hacer algo seguro, y sugirió que si los compañeros usaban JS en el front quizás conviniera hacer el back también en JS. Facundo García Martoni recomendó Django, destacando que el admin dashboard es la feature estrella del framework. Marcelo Nuñez dio un resumen completo: JS/TS tiene más demanda comercial y soporte, PHP es leyenda con mucho soporte pero menos demanda actual, Python es rápido de aprender, Java tiene la mejor performance pero es overkill para este caso; recomendó TS o Python."
+  }
+]

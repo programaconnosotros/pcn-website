@@ -27,6 +27,7 @@ export const ContentCard = ({
       <div className="relative z-10 flex h-full flex-col justify-between p-4">
         <div className="z-10 flex flex-row items-center space-x-4">
           {authorImage && (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               alt={`Avatar de ${author}`}
               src={authorImage}

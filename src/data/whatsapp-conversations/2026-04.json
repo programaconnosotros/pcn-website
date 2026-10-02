@@ -1,0 +1,132 @@
+[
+  {
+    "title": "depot.dev redujo CI de 54 minutos a 1 minuto 49 segundos",
+    "date": "2026-04-06",
+    "summary": "Se compartió en el grupo la historia de una empresa que reemplazó GitHub Actions con depot.dev para su pipeline de integración continua y logró reducir el tiempo de build de 54 minutos a 1 minuto y 49 segundos. El grupo reaccionó con entusiasmo ante este resultado y discutió qué técnicas usaba depot.dev para lograr semejante mejora, mencionando la caché inteligente de dependencias, los runners propios y la paralelización agresiva de tareas. Varios miembros expresaron interés en probarlo en sus propios proyectos. La discusión derivó en una conversación más amplia sobre optimización de pipelines de CI/CD y el impacto que tiene el tiempo de feedback en la productividad de los equipos de desarrollo."
+  },
+  {
+    "title": "Debate sobre viabilidad económica de Anthropic y sus planes de precios",
+    "date": "2026-04-07",
+    "summary": "El grupo tuvo un debate profundo sobre la sustentabilidad económica de Anthropic. Se mencionó que el costo de cómputo por usuario del plan Max de USD 100 era de aproximadamente USD 5000, lo que implicaba que la empresa subsidiaba masivamente a sus usuarios y operaba con pérdidas enormes. Varios miembros cuestionaron si ese modelo de negocio era sostenible a largo plazo y si eventualmente los precios subirían drásticamente. Facundo García Martoni señaló que Cursor era más conveniente que Claude Max a USD 20 en términos de valor entregado porque el modelo Composer era prácticamente ilimitado. El debate también tocó la estrategia de OpenAI versus Anthropic y quién tenía mejores chances de sobrevivir a la carrera por monetizar la IA."
+  },
+  {
+    "title": "GPT 5.4 se convirtió en alternativa fuerte a Claude degradado",
+    "date": "2026-04-07",
+    "summary": "Ante la degradación de Claude, varios miembros del grupo comenzaron a explorar GPT 5.4 como alternativa. Facundo García Martoni reportó que GPT 5.4 en modo Extra High era muy bueno para encontrar bugs en backend. Sin embargo, señaló que el modelo tenía una tendencia a priorizar código que funciona sobre código legible, prefiriendo soluciones que resuelven el problema aunque sean difíciles de mantener. La solución fue complementarlo con un buen archivo coderules.mdc y la skill de Karpathy para guiar el estilo de código. El grupo discutió las diferencias entre los modelos de OpenAI y Anthropic para distintos casos de uso, y varios empezaron a migrar parte de su workflow hacia GPT 5.4."
+  },
+  {
+    "title": "Cursor Composer 2 se convirtió en el favorito del grupo para desarrollo",
+    "date": "2026-04-07",
+    "summary": "Cursor Composer 2 emergió como el modelo favorito del grupo para el día a día de desarrollo. Varios miembros reportaron que era significativamente mejor que cualquier modelo de Claude o GPT a la misma escala de costo, con usage prácticamente ilimitado en el plan de USD 20. La teoría que circuló era que Composer era en realidad Kimi K2.5 con fine-tuning por parte de Cursor, lo que explicaba tanto la velocidad como el bajo costo. Facundo García Martoni y Facundo Padilla lo recomendaron especialmente para tareas de frontend, iteración rápida, investigación de codebases y mensajes de commit. El grupo en general adoptó una estrategia de usar Composer para la mayoría de las tareas y reservar los modelos más pesados solo para arquitectura o tareas muy complejas."
+  },
+  {
+    "title": "Crashout: juego multiplayer de carreras hecho con Go y Next.js",
+    "date": "2026-04-08",
+    "summary": "Agustín Sánchez compartió el progreso del juego Crashout, un juego multiplayer de carreras que venía desarrollando con una arquitectura interesante: el servidor (Go con WebSockets) actuaba como fuente de verdad del estado del juego, y el frontend (Next.js) solo mostraba lo que el servidor dictaba. Esta arquitectura era clave para evitar cheating en el lado del cliente. El grupo discutió las implicancias técnicas de este diseño, comparando con otros enfoques como el rollback netcode usado en juegos de pelea. Varios miembros expresaron interés en el proyecto."
+  },
+  {
+    "title": "Meetup PCN en Xetro: charla sobre agentes de IA en producción",
+    "date": "2026-04-10",
+    "summary": "Se realizó un meetup de PCN en el cowork Xetro donde Facundo García Martoni dio una charla sobre el uso de agentes de IA en producción en Macch, su startup. La charla cubrió conceptos como el modelo de router de agentes, la diferencia entre un 'God agent' y una flota de subagentes con responsabilidades específicas, y cómo diseñar el contexto y las herramientas para que los agentes sean más efectivos. Facundo habló también sobre la metáfora del Ford: así como un cliente que compra un Ford no necesita entender el motor para usarlo, los agentes necesitan entender los objetivos de negocio pero no necesariamente los detalles técnicos de implementación. El evento fue bien recibido y generó discusiones interesantes en el grupo posterior al meetup."
+  },
+  {
+    "title": "Salvador Juárez creó Windows OS en web con React y Tailwind",
+    "date": "2026-04-10",
+    "summary": "Salvador Juárez mostró al grupo un proyecto llamativo que había construido: una simulación completa de Windows en el navegador, implementada con React, Tailwind CSS y Lucide Icons desde cero. El proyecto incluía un bootmanager, ventanas arrastrables, y reproducía la estética de distintas versiones de Windows. El grupo reaccionó con entusiasmo ante el nivel de detalle y la creatividad del proyecto. Salvador compartió tanto el demo online como el repositorio en GitHub. Facundo García Martoni lo felicitó reiteradamente por la capacidad de construcción que demostraba, señalando que no dejaba de sorprenderle lo que hacía."
+  },
+  {
+    "title": "Debate GraphQL vs REST vs tRPC en proyectos modernos de 2026",
+    "date": "2026-04-16",
+    "summary": "El grupo debatió el estado de las distintas tecnologías para diseñar APIs en 2026. Se mencionó que tRPC había ganado terreno significativo en proyectos TypeScript full-stack por la type-safety end-to-end entre frontend y backend sin necesidad de generar código. Agustín Sánchez explicó el concepto de Server Functions de Next.js (antes llamadas Server Actions), que ofrecían una experiencia similar a invocar una función local aunque por debajo hacían una llamada HTTP. Se señaló que el website de PCN usaba Next.js full-stack de esta manera. GraphQL se mencionó como una opción que seguía siendo válida para APIs públicas o con múltiples clientes con necesidades diferentes, pero que en proyectos internos tRPC o REST directo solían ser más simples de mantener."
+  },
+  {
+    "title": "Lanzamiento de Claude Opus 4.7 y debate Cursor vs Claude Max",
+    "date": "2026-04-16",
+    "summary": "Se anunció el lanzamiento de Claude Opus 4.7, que llegó con un descuento del 50% en Cursor por tiempo limitado. El grupo aprovechó para debatir si valía más la pena pagar USD 20 de Cursor o USD 20 de Claude directamente. La conclusión generalizada fue que Cursor era claramente superior en valor: por el mismo precio daba acceso a Composer casi ilimitado más el acceso a múltiples modelos en API. El plan de Claude a USD 20 se consideró insuficiente porque se agotaba en pocos mensajes. Facundo García Martoni también señaló que el Cursor Ultra a USD 200 se podía gastar en 9 días si se usaba intensivamente con modelos de frontera como Opus."
+  },
+  {
+    "title": "Blockchain y Stellar: Franco Pérez hace desarrollo en Tucumán",
+    "date": "2026-04-17",
+    "summary": "Franco Pérez se presentó como desarrollador de blockchain en Tucumán y compartió información sobre el ecosistema de Stellar. Facundo Padilla mostró fotos y videos de un meetup que se había hecho en Salta con la comunidad de Stellar. También se habló de fud.markets, un proyecto cripto de nicho para el mercado 'degen CT' (crypto Twitter) que Thiago y Marc estaban por lanzar a mainnet después de haberlo construido en la hackathon de Aleph. Facundo Padilla sugirió automatizar la distribución de contenido a múltiples idiomas usando postiz para publicar en varias cuentas de X simultáneamente."
+  },
+  {
+    "title": "Debate sobre estimación de precios freelance en la era de la IA",
+    "date": "2026-04-17",
+    "summary": "El grupo tuvo una conversación sobre cómo había cambiado la estimación de precios para proyectos freelance dado que la IA aceleró enormemente los tiempos de desarrollo. Varios miembros debatieron si era correcto cobrar lo mismo que antes cuando ahora un proyecto que tardaba tres semanas podía hacerse en tres días. Algunos argumentaban que el valor estaba en el resultado para el cliente, no en las horas invertidas, por lo que cobrar igual o más era perfectamente legítimo. Otros señalaban que la competencia iba a bajar los precios inevitablemente y que había que adaptarse. Se mencionó que la diferenciación pasaba por la calidad del diseño de soluciones, la velocidad de entrega y el criterio de arquitectura, cosas que la IA por sí sola no proveía."
+  },
+  {
+    "title": "Sueldos del mercado para desarrolladores en Argentina en 2026",
+    "date": "2026-04-18",
+    "summary": "Se compartieron referencias actualizadas de sueldos del mercado para desarrolladores argentinos trabajando para empresas del exterior. Los rangos mencionados fueron: Junior entre USD 800 y 1500, Semi-senior entre USD 1500 y 2500, Senior entre USD 3500 y 20000. También se habló de la empresa Truelogic que trabaja con Tesla, OpenAI y Amazon, y que pagaba entre USD 6000 y 8000 por posición. Salvador Juárez compartió su experiencia con el proceso de selección de esa empresa, que requería un video explicativo del código. Juan Arismendi preguntó sobre su caso particular con 1.5-2 años de experiencia tomando responsabilidades de SSR, y el grupo le recomendó apuntar siempre hacia el seniority más alto y dejar que el mercado lo corrija."
+  },
+  {
+    "title": "Hackathon Zero to Agents de Vercel: PCN como nodo local",
+    "date": "2026-04-19",
+    "summary": "Agustín Sánchez anunció que ProgramaConNosotros fue aceptado como nodo local de la hackathon global Zero to Agent de Vercel, programada para el 30 de abril en el cowork Once57. El evento consistía en construir agentes usando v0 de Vercel y submittear los proyectos a la plataforma global antes del 4 de mayo. Se distribuyeron créditos de v0 a los inscriptos confirmados. Agustín anunció que daría una charla introductoria al comienzo del evento. Facundo García Martoni liberó open-source sus skills de diseño de tools y prompts para que la gente las aprovechara durante la hackathon. Arturo Grande desde Salta también participó y submitteó su proyecto desafia.tech, un preguntados para indie hackers con actualización diaria automática."
+  },
+  {
+    "title": "Claude Design lanzado con design systems y slide decks integrados",
+    "date": "2026-04-19",
+    "summary": "Anthropic lanzó Claude Design, una herramienta de diseño visual que varios miembros del grupo probaron casi de inmediato. Agustín Sánchez la describió como muy buena a pesar de estar en research preview con usage limitado. La característica más valorada fue la capacidad de crear un design system propio y luego generar proyectos o slide decks coherentes con ese sistema. Facundo García Martoni destacó la utilidad para hacer presentaciones de negocios. Iñaki Fernando Lozano señaló que seguía mejor las instrucciones que Stitch. Gonzalo Morales mostró resultados de antes/después donde Claude Design mejoró visiblemente el diseño de una de sus apps. Ceci también la usó con prompts vagos y obtuvo resultados impresionantes."
+  },
+  {
+    "title": "Claude Code habilitado para el plan Pro de Anthropic",
+    "date": "2026-04-21",
+    "summary": "Anthropic habilitó Claude Code para el plan Pro de USD 20, lo que generó reacciones mixtas en el grupo. Algunos vieron como una buena noticia la democratización del acceso a Claude Code. Sin embargo, Thiago confirmó más tarde que en realidad era un test con el 2% de los nuevos usuarios que había durado solo unas horas antes de que lo revirtieran. La situación se enmarcó en el contexto de las críticas que el grupo venía haciendo a Anthropic por su falta de transparencia y sus decisiones inconsistentes sobre usage y pricing."
+  },
+  {
+    "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
+    "date": "2026-04-23",
+    "summary": "El lanzamiento de GPT 5.5 generó una conversión significativa de miembros del grupo desde el ecosistema Anthropic hacia OpenAI. Facundo García Martoni fue el caso más notable: después de años despreciando los modelos GPT para codeo, adoptó GPT 5.5 Extra High en Codex como su modelo principal. Describió el código generado como muy limpio, con funciones y nombres descriptivos. Alejo verificó los resultados tras un refactor grande con GPT 5.5 en modo High y confirmó que había reducido líneas de código, reorganizado archivos y quedado todo funcionando. Sin embargo, también hubo casos donde el modelo falló en frontend: Facundo Padilla reportó que produjo resultados malos con un carousel y Juan Arismendi lo usó para planificar pero al ejecutar con Composer el resultado fue incorrecto. La discusión reveló que el modelo brillaba en backend y arquitectura pero era inconsistente en frontend."
+  },
+  {
+    "title": "Guía de LinkedIn y búsqueda de empleo tecnológico compartida por Alejo",
+    "date": "2026-04-24",
+    "summary": "Alejo compartió una guía detallada de 7 pasos para buscar trabajo en el mercado tecnológico a través de LinkedIn, especialmente orientada a conseguir posiciones en empresas del exterior. Los puntos clave incluían: armar el perfil en inglés con un buen headline con las tecnologías que manejás, nunca poner el seniority en el perfil, describir qué valor aportás en lugar de adjetivos genéricos, listar todas las experiencias con descripciones y links, hacer reposteos de contenido del nicho para aumentar visibilidad, conectar masivamente con reclutadores y CEOs, y postularse a cientos de posiciones por día. También recomendó ser honesto en las entrevistas sobre lo que no sabés y mostrar disposición para aprender. Agustín Sánchez complementó con el tip de contactar directamente a los reclutadores de las empresas que te interesan."
+  },
+  {
+    "title": "Anthropic publicó bugs en Claude Code que degradaban el modelo",
+    "date": "2026-04-24",
+    "summary": "Anthropic publicó una comunicación reconociendo que habían tenido bugs en Claude Code que hacían que el modelo se comportara de forma más limitada durante las semanas previas. Según la explicación, los modelos en otros harnesses funcionaban bien, pero el harness específico de Claude Code tenía problemas. El grupo reaccionó con algo de escepticismo: Facundo García Martoni señaló que Cursor no tenía ese problema porque no aplicaba ventanas de tiempo tan restrictivas. Iñaki Fernando Lozano explicó que Cursor incluso llegaba a contar el usage por más de 1x en horas pico para desincentivar la demanda excesiva. El incidente reforzó la percepción negativa que tenía parte del grupo sobre la comunicación y gestión de Anthropic."
+  },
+  {
+    "title": "Debate: IA matando al desarrollador frontend y code review",
+    "date": "2026-04-26",
+    "summary": "Facundo García Martoni abrió un debate controversial sobre si la IA había 'matado al frontend developer', argumentando que en Macch llevaba meses haciendo code review del frontend de manera extremadamente superficial porque los modelos rara vez se equivocaban en tecnologías battle-tested como shadcn y React. Propuso que el frontend era un 'leaf node' del producto y por ende candidato al skip del code review. Alejo defendió el valor del criterio humano en frontend: la IA fallaba en manejo de espacios blancos, proporciones dimensionales, uso de inline styles, decisiones entre flex y grid, y agregaba clases de Tailwind innecesarias. Agustín Sánchez señaló que si el frontend crashea la app, el producto falla independientemente del backend. El veredicto de Facundo fue skipear el code review de la implementación frontend (no del diseño UX/UI) apostando al 'embrace the exponentials'."
+  },
+  {
+    "title": "Herramientas de code review con agentes: BugBot, CodeRabbit y SonarQube",
+    "date": "2026-04-26",
+    "summary": "La discusión sobre code review derivó en una conversación sobre herramientas de revisión automatizada. Facundo Padilla compartió su stack en el trabajo: pre-commit hooks + SonarQube (análisis de código estático) + Trivy (seguridad de paquetes) + Semgrep (análisis orientado a cyberseguridad). Agustín Sánchez recomendó BugBot de Cursor (USD 40/mes con reviews ilimitadas y free trial de 2 semanas) como su favorito, y también usaba Copilot y CodeRabbit. Señaló que Greptile no lo convencía porque a veces no tiraba ningún comentario en PRs donde Cursor detectaba 8 issues. Facundo García Martoni tomó nota de agregar BugBot y señaló que en Macch usaban Biome y TSC en el pre-commit. También se discutió el uso de worktrees para ser más productivo mientras se espera la revisión."
+  },
+  {
+    "title": "Debate sobre uso de Hermes como alternativa a openclaw para agentes autónomos",
+    "date": "2026-04-26",
+    "summary": "Facundo Padilla impulsó activamente el reemplazo de openclaw por Hermes Agent de NousResearch en el grupo. Argumentó que openclaw funcionaba mal y gastaba tokens innecesariamente, mientras que Hermes tenía mejor arquitectura, consumía menos recursos (apenas 200MB en un VPS de 4GB de RAM) y la comunidad estaba construyendo cosas muy interesantes encima de él. Compartió que lo usaba con GPT 5.4 mini via GitHub Copilot por USD 10 mensuales ilimitados. Demostró capacidades avanzadas: Hermes con agent-browser de Vercel le permitió navegar la web desde Telegram tomando screenshots del browser headless, se conectó a una reunión de Zoom y hasta grabó la pantalla a 5fps. La comunidad reaccionó con entusiasmo y varios miembros comenzaron a probarlo."
+  },
+  {
+    "title": "Debate: repo de PCN open-source vs closed-source por seguridad",
+    "date": "2026-04-27",
+    "summary": "Agustín Sánchez planteó la duda de si hacer el repositorio de PCN closed-source por razones de seguridad, argumentando que alguien podría analizar las vulnerabilidades del código con IA más fácilmente si era público. Victor Figueredo respondió que mantenerlo open-source tenía más ventajas: cerrado no garantiza seguridad porque el riesgo se reduce pero no se elimina, y en cambio open-source permite que miembros de la comunidad usen IA para descubrir y parchear vulnerabilidades antes de que las explote alguien externo. Facundo García Martoni coincidió y propuso incentivos para que la gente contribuya: remeras o tazas de PCN para quienes tengan una PR mergeada. Iñaki Fernando Lozano recomendó verificar que no hubiera datos críticos expuestos y tener buenos backups. La decisión fue mantenerlo open-source."
+  },
+  {
+    "title": "Charla de Matt Pocock sobre diseño de sistemas y skills de desarrollo agéntico",
+    "date": "2026-04-27",
+    "summary": "Agustín Sánchez compartió una charla de Matt Pocock sobre desarrollo de software en la era de los agentes, que generó bastante discusión en el grupo. Facundo García Martoni compartió sus notas: usar la skill /grill-me antes del modo plan para llegar a un concepto de diseño compartido, desarrollar un glosario del lenguaje ubicuo del dominio, aprovechar TDD definiendo las unidades y qué mockear antes de implementar, y favorecer 'deep modules' sobre módulos superficiales. Citó a Kent Beck: 'Invest in the design of the system every day'. Facundo García Martoni también compartió las skills de Matt en GitHub (mattpocock/skills) y anunció que empezaría a usar /improve-codebase-architecture en Macch día por medio."
+  },
+  {
+    "title": "Martin Uslenghi se presenta: IA en municipalidad de Tucumán y academia",
+    "date": "2026-04-28",
+    "summary": "Facundo García Martoni presentó a Martín Uslenghi como uno de los tipos más inteligentes que conocía. Martín se presentó con un perfil interdisciplinario en el intersticio entre IA y Física: a nivel académico se especializaba en redes neuronales físicamente informadas (PINNs), y a nivel laboral trabajaba en la Dirección de Inteligencia Artificial de la municipalidad de Tucumán y como coordinador académico del área de IA en INI Capacitación. Su trabajo en INI consistía en construir integraciones entre marketing, CRM y agentes de IA para asesoría y ventas, usando embeddings en Chroma DB para sistemas multiagente con bases de conocimiento indexadas."
+  },
+  {
+    "title": "Comparativa Cursor vs Codex tras primeras horas de uso intensivo",
+    "date": "2026-04-29",
+    "summary": "Facundo García Martoni compartió una comparativa detallada tras sus primeras horas usando Codex después de haberse quedado sin usage en Cursor Ultra. Listó los pros de Codex: el 'browser use' para debuggear frontend ya estaba implementado, un filtro de rama para ver los cambios de la rama actual, la posibilidad de referenciar partes del chat al estilo Canvas de ChatGPT, y un modo de anotaciones que hacía batch de comentarios antes de largarlos. Como contra principal: el Design Mode requería dos clicks en lugar de uno. También destacó el tema de accesibilidad para daltónicos: Codex marcaba las líneas agregadas/eliminadas con íconos además de color. Terminó haciendo downgrade de Cursor Ultra a Cursor Pro."
+  },
+  {
+    "title": "Zero to Agent Hackathon en Once57: proyectos del grupo PCN",
+    "date": "2026-04-30",
+    "summary": "Se realizó el evento Zero to Agent en el cowork Once57, con buena participación de la comunidad PCN. Iván Taddei creó un agente orquestador para validar ideas de negocio con subagentes especializados (Analista de Mercado, CFO, Tech Architect) que generaban dashboards en tiempo real. Salvador Juárez desarrolló un entrenador de algoritmos con visualizaciones interactivas. Marcelo Álvarez construyó un Centro de Monitoreo de Crisis Climáticas que analizaba reportes de redes sociales con LLMs para despachar recursos de emergencia. Arturo Grande submitteó su proyecto desafia.tech (preguntados para indie hackers). Agustín Sánchez presentó Archicise (archicise.com), una plataforma para practicar arquitectura de sistemas con feedback de IA y diagramas de Excalidraw. Los proyectos podían submittearse hasta el lunes a las 4am."
+  }
+]

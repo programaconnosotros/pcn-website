@@ -6,15 +6,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { editAdvise } from '@/actions/advises/edit-advise';
 import { toast } from 'sonner';
 import { adviseSchema, AdviseFormData } from '@/schemas/advise-schema';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface EditAdviseDialogProps {
   adviseId: string;
   initialContent: string;
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (_open: boolean) => void;
 }
 
 export const EditAdviseDialog = ({
@@ -23,6 +25,7 @@ export const EditAdviseDialog = ({
   isOpen,
   onOpenChange,
 }: EditAdviseDialogProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<AdviseFormData>({
     resolver: zodResolver(adviseSchema),
     defaultValues: {
@@ -30,16 +33,21 @@ export const EditAdviseDialog = ({
     },
   });
 
-  const onSubmitEditAdvise = ({ content }: AdviseFormData) => {
-    toast.promise(editAdvise({ id: adviseId, content }), {
-      loading: 'Editando consejo...',
-      success: () => {
-        form.reset({ content });
-        onOpenChange(false);
-        return 'Tu consejo fue editado exitosamente.';
-      },
-      error: 'Ocurrió un error al editar el consejo',
-    });
+  const onSubmitEditAdvise = async ({ content }: AdviseFormData) => {
+    setIsSubmitting(true);
+    try {
+      await toast.promise(editAdvise({ id: adviseId, content }), {
+        loading: 'Editando consejo...',
+        success: () => {
+          form.reset({ content });
+          onOpenChange(false);
+          return 'Tu consejo fue editado exitosamente.';
+        },
+        error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,8 +72,13 @@ export const EditAdviseDialog = ({
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Guardar cambios
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isSubmitting}
+              loadingText="guardando..."
+            >
+              guardarCambios();
             </Button>
           </form>
         </Form>

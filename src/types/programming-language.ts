@@ -1,7 +1,9 @@
 export interface ProgrammingLanguage {
   id: string;
   name: string;
-  logo: string;
+  /** File extension shown in the token, e.g. `ts`. */
+  ext: string;
+  /** Accent color, bright enough to read on the dark theme. */
   color: string;
 }
 
@@ -12,32 +14,32 @@ export interface UserProgrammingLanguage {
   experienceLevel?: number;
 }
 
+// Lenguajes que un usuario puede marcar en su perfil. Se muestran como tokens de terminal:
+// la extensión de archivo en el color del lenguaje, sin logos de imagen.
 export const programmingLanguages: ProgrammingLanguage[] = [
-  {
-    id: 'javascript',
-    name: 'JavaScript',
-    logo: '/language-logo/javascript-svgrepo-com.webp',
-    color: '#F7DF1E',
-  },
-  {
-    id: 'typescript',
-    name: 'TypeScript',
-    logo: '/language-logo/typescript-icon-svgrepo-com.webp',
-    color: '#0D1B2A',
-  },
-  {
-    id: 'python',
-    name: 'Python',
-    logo: '/language-logo/python-svgrepo-com.webp',
-    color: '#1C3D6B',
-  },
-  { id: 'java', name: 'Java', logo: '/language-logo/java-logo-svgrepo-com.webp', color: '#003D5B' },
-  { id: 'csharp', name: 'C#', logo: '/language-logo/php-svgrepo-com.webp', color: '#1A2E1A' },
-  { id: 'cpp', name: 'C++', logo: '/language-logo/cplusplus.webp', color: '#003F73' },
-  { id: 'php', name: 'PHP', logo: '/language-logo/php-svgrepo-com.webp', color: '#3A3A3A' },
-  { id: 'ruby', name: 'Ruby', logo: '/language-logo/ruby-svgrepo-com.webp', color: '#2A1E1D' },
-  { id: 'swift', name: 'Swift', logo: '/language-logo/swift-svgrepo-com.webp', color: '#5C3D2E' },
-  { id: 'go', name: 'Go', logo: '/language-logo/go-svgrepo-com.webp', color: '#003F5C' },
-  { id: 'rust', name: 'Rust', logo: '/language-logo/rust-svgrepo-com.webp', color: '#222222' },
-  { id: 'kotlin', name: 'Kotlin', logo: '/language-logo/kotlin.webp', color: '#2D1B4F' },
+  { id: 'javascript', name: 'JavaScript', ext: 'js', color: '#f7df1e' },
+  { id: 'typescript', name: 'TypeScript', ext: 'ts', color: '#4aa3ff' },
+  { id: 'python', name: 'Python', ext: 'py', color: '#ffd43b' },
+  { id: 'java', name: 'Java', ext: 'java', color: '#f89820' },
+  { id: 'csharp', name: 'C#', ext: 'cs', color: '#b48cf2' },
+  { id: 'cpp', name: 'C++', ext: 'cpp', color: '#6fb1ff' },
+  { id: 'c', name: 'C', ext: 'c', color: '#a8b9cc' },
+  { id: 'go', name: 'Go', ext: 'go', color: '#00c8e8' },
+  { id: 'rust', name: 'Rust', ext: 'rs', color: '#f2a477' },
+  { id: 'kotlin', name: 'Kotlin', ext: 'kt', color: '#a97bff' },
+  { id: 'swift', name: 'Swift', ext: 'swift', color: '#ff6b45' },
+  { id: 'php', name: 'PHP', ext: 'php', color: '#9aa5e0' },
+  { id: 'ruby', name: 'Ruby', ext: 'rb', color: '#ff4f7b' },
+  { id: 'dart', name: 'Dart', ext: 'dart', color: '#2dd4c4' },
+  { id: 'elixir', name: 'Elixir', ext: 'ex', color: '#c49cf0' },
+  { id: 'scala', name: 'Scala', ext: 'scala', color: '#ff6161' },
+  { id: 'haskell', name: 'Haskell', ext: 'hs', color: '#b49be6' },
+  { id: 'lua', name: 'Lua', ext: 'lua', color: '#7d96ff' },
+  { id: 'zig', name: 'Zig', ext: 'zig', color: '#f7a41d' },
+  { id: 'r', name: 'R', ext: 'r', color: '#5aa9f0' },
+  { id: 'sql', name: 'SQL', ext: 'sql', color: '#f0a030' },
+  { id: 'bash', name: 'Bash', ext: 'sh', color: '#5fd35a' },
 ];
+
+export const findProgrammingLanguage = (id: string) =>
+  programmingLanguages.find((language) => language.id === id);

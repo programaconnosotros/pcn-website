@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 const commentSchema = z.object({
   content: z
@@ -19,15 +21,15 @@ export const createComment = async ({
   adviseId,
   parentCommentId,
 }: z.infer<typeof commentSchema>) => {
+  await enforceRateLimit('comment');
+
   const validatedData = commentSchema.parse({ content, adviseId, parentCommentId });
 
-  const sessionId = cookies().get('sessionId');
+  const sessionId = (await cookies()).get('sessionId');
 
   if (!sessionId) throw new Error('No autenticado');
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId.value },
-  });
+  const session = await findSession(sessionId.value);
 
   if (!session) throw new Error('Sesión no encontrada');
 
@@ -43,7 +45,6 @@ export const createComment = async ({
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

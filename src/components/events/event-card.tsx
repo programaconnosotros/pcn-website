@@ -1,39 +1,75 @@
-'use server';
-
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Event } from '@prisma/client';
-import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { BreadcrumbLink } from '../ui/breadcrumb';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { EventStatusBadge } from '@/components/events/event-status-badge';
+import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
+import { fetchEvents } from '@/actions/events/fetch-events';
+import { ArrowRight, Calendar, MapPin, Video } from 'lucide-react';
+import Link from 'next/link';
+import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 
-export const EventCard: React.FC<{ event: Event }> = ({ event }) => (
-  <Card key={event.id} className="flex h-full flex-col">
-    <img
-      src={event.flyerSrc}
-      alt={`Flyer for ${event.name}`}
-      className="h-[200px] w-full object-cover"
-    />
+type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
 
-    <CardContent className="px-4 py-2">
-      <div className="mt-1 flex justify-between">
-        <p className="mt-2 text-xs text-gray-500">
-          {format(new Date(event.date), 'EEE, d MMM, HH:mm', { locale: es })}
-          {event.endDate && ` - ${format(new Date(event.endDate), 'HH:mm', { locale: es })}`}
-        </p>
+export const EventCard: React.FC<{ event: EventWithCount }> = ({ event }) => {
+  const isFull =
+    event.markedAsFull || (event.capacity !== null && event._count.registrations >= event.capacity);
+  return (
+    <Card className="group relative flex h-full flex-col overflow-hidden border-2 border-transparent bg-gradient-to-br from-white to-gray-50 transition-all duration-300 hover:shadow-xl dark:border-pcnGreen-200 dark:from-black dark:to-[#04130f]">
+      <div className="relative shrink-0 overflow-hidden">
+        <EventFlyerCarousel images={event.flyerImages} eventName={event.name} variant="card" />
       </div>
 
-      <CardHeader className="px-0 py-2">{event.name}</CardHeader>
+      <div className="flex flex-1 flex-col">
+        <CardHeader>
+          <CardTitle className="flex items-start justify-between gap-2 text-lg">
+            <Link href={`/eventos/${event.id}`} className="after:absolute after:inset-0">
+              {event.name}
+            </Link>
+            <EventStatusBadge date={event.date} endDate={event.endDate} isFull={isFull} />
+          </CardTitle>
+        </CardHeader>
 
-      <div className="flex">
-        <MapPin className="mt-4 h-4 w-4 text-gray-500" />
-        <p className="ml-1 mt-4 text-xs text-gray-500">{event.city}, AR</p>
+        <CardContent className="flex-1">
+          {event.description && (
+            <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
+          )}
+
+          <div className="mt-2 flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+            <p className="text-sm text-muted-foreground">
+              <LocalDate date={event.date} />
+              {event.date && (
+                <>
+                  {' '}
+                  - <LocalTime date={event.date} />
+                </>
+              )}
+            </p>
+          </div>
+
+          {event.isOnline ? (
+            <div className="mt-2 flex items-center gap-2">
+              <Video className="h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+              <p className="text-sm text-muted-foreground">Online</p>
+            </div>
+          ) : (
+            (event.city || event.placeName) && (
+              <div className="mt-2 flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 text-pcnPurple dark:text-pcnGreen" />
+                <p className="text-sm text-muted-foreground">
+                  {event.placeName && `${event.placeName}, `}
+                  {event.city}, Argentina
+                </p>
+              </div>
+            )
+          )}
+        </CardContent>
+
+        <CardFooter className="mt-auto">
+          <Button variant="pcn" className="w-full">
+            verEvento(); <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardFooter>
       </div>
-    </CardContent>
-
-    <BreadcrumbLink href={`events/${event.id}`} className="mt-auto">
-      <Button className="mb-4 ml-4 mt-1">Ver evento</Button>
-    </BreadcrumbLink>
-  </Card>
-);
+    </Card>
+  );
+};

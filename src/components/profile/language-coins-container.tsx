@@ -1,19 +1,8 @@
-'use client';
-
 import { UserProgrammingLanguage } from '@/types/programming-language';
-import { LanguageCoin } from './language-coin';
+import { LanguageChip } from './language-chip';
 
-interface LanguageCoinsContainerProps {
-  languages: UserProgrammingLanguage[];
-  editable?: boolean;
-  onRemoveLanguage?: (languageId: string) => void;
-}
-
-export function LanguageCoinsContainer({
-  languages,
-  editable = false,
-  onRemoveLanguage,
-}: LanguageCoinsContainerProps) {
+/** The languages a user marked on their profile, as terminal tokens. */
+export function LanguageCoinsContainer({ languages }: { languages: UserProgrammingLanguage[] }) {
   if (!languages || languages.length === 0) {
     return (
       <p className="text-sm italic text-muted-foreground">
@@ -23,14 +12,9 @@ export function LanguageCoinsContainer({
   }
 
   return (
-    <div className="mt-2 flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-1.5">
       {languages.map((language) => (
-        <LanguageCoin
-          key={language.languageId}
-          language={language}
-          editable={editable}
-          onRemove={onRemoveLanguage ? () => onRemoveLanguage(language.languageId) : undefined}
-        />
+        <LanguageChip key={language.languageId} languageId={language.languageId} />
       ))}
     </div>
   );

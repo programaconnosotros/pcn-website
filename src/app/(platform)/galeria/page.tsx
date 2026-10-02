@@ -1,35 +1,27 @@
-'use client';
-
+import { redirect } from 'next/navigation';
 import { Gallery } from '@/components/photo-gallery/gallery';
-import { Heading2 } from '@/components/ui/heading-2';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { getAdminUser } from '@/lib/admin';
+import { getGalleryFilterOptions, listGalleryItems } from '@/lib/gallery';
+import { parseGalleryFilter } from '@/lib/gallery-filters';
 
-export default function PhotoGallery() {
-  const searchParams = useSearchParams();
-  const photoId = searchParams.get('foto');
-  const [initialPhotoId, setInitialPhotoId] = useState<number | null>(null);
+export default async function GalleryPage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const searchParams = await props.searchParams;
 
-  useEffect(() => {
-    if (photoId) {
-      const id = Number.parseInt(photoId);
-      if (!isNaN(id)) {
-        setInitialPhotoId(id);
-      }
-    }
-  }, [photoId]);
+  // Links from the old static gallery (`/galeria?foto=<n>`): its photos are no longer shown.
+  if (searchParams.foto !== undefined) redirect('/galeria');
+
+  const filter = parseGalleryFilter(searchParams);
+  const [items, options, admin] = await Promise.all([
+    listGalleryItems(filter),
+    getGalleryFilterOptions(),
+    getAdminUser(),
+  ]);
 
   return (
-    <div className="mt-4 md:px-20">
-      <div className="sticky top-0 z-10 bg-background/95 pb-3 pt-1 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex w-full flex-row justify-between">
-          <Heading2 className="m-0">Galería</Heading2>
-        </div>
-      </div>
-
-      <main className="mx-auto mt-4">
-        <Gallery initialPhotoId={initialPhotoId} />
-      </main>
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <Gallery items={items} filter={filter} options={options} canUpload={!!admin} />
     </div>
   );
 }

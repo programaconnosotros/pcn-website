@@ -2,36 +2,105 @@
 
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { signUpSchema } from '@/lib/validations/auth-schemas';
+import { signUpActionSchema } from '@/lib/validations/auth-schemas';
+import { EmailVerificationEmail } from '@/components/auth/verification-email';
+import { render } from '@react-email/render';
+import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
+import { hashPassword } from '@/lib/password';
+import { enforceRateLimit } from '@/lib/rate-limit';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
-const formSchema = signUpSchema;
+export const signUp = async (
+  data: z.infer<typeof signUpActionSchema>,
+): Promise<
+  | { success: true; redirectUrl: string }
+  | { success: false; error: 'EMAIL_ALREADY_EXISTS' }
+  | { success: false; error: 'UNKNOWN_ERROR' }
+> => {
+  await enforceRateLimit('signUp');
 
-export const signUp = async (data: z.infer<typeof formSchema>) => {
-  const { confirmPassword, ...cleanedData } = formSchema.parse(data);
+  const {
+    confirmPassword: _confirmPassword,
+    redirectTo: rawRedirectTo,
+    country,
+    profession,
+    studyField,
+    enterprise,
+    studyPlace,
+    image,
+    phoneNumber,
+    ...cleanedData
+  } = signUpActionSchema.parse(data);
 
-  const hashedPassword = await bcrypt.hash(cleanedData.password, 10);
+  try {
+    // Verificar si el email ya existe antes de intentar crear
+    const existingUser = await prisma.user.findUnique({
+      where: { email: cleanedData.email },
+    });
 
-  const user = await prisma.user.create({
-    data: { ...cleanedData, password: hashedPassword },
-  });
+    if (existingUser) {
+      return { success: false, error: 'EMAIL_ALREADY_EXISTS' };
+    }
 
-  const session = await prisma.session.create({
-    data: {
-      userId: user.id,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-    },
-  });
+    const hashedPassword = await hashPassword(cleanedData.password);
 
-  cookies().set('sessionId', session.id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365,
-  });
+    // Crear usuario con emailVerified = false (por defecto)
+    const user = await prisma.user.create({
+      data: {
+        ...cleanedData,
+        password: hashedPassword,
+        countryOfOrigin: country,
+        jobTitle: profession || null,
+        career: studyField || null,
+        enterprise: enterprise || null,
+        studyPlace: studyPlace || null,
+        image: image || null,
+        phoneNumber: phoneNumber || null,
+        emailVerified: false,
+      },
+    });
 
-  redirect('/');
+    // Generar código de verificación
+    const code = generateVerificationCode();
+    const expiresAt = getCodeExpirationDate();
+
+    // Guardar token de verificación
+    await prisma.emailVerificationToken.create({
+      data: {
+        email: user.email,
+        code,
+        expiresAt,
+      },
+    });
+
+    // Enviar email con el código
+    try {
+      const emailHtml = await render(EmailVerificationEmail({ userName: user.name, code }));
+      await sendEmail({
+        to: user.email,
+        subject: 'Verificá tu correo electrónico - Programa Con Nosotros',
+        html: emailHtml,
+      });
+    } catch (error) {
+      console.error(
+        'Failed to send verification email:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+      // No lanzar error para no bloquear el registro
+      // El usuario podrá reenviar el código desde la página de verificación
+    }
+
+    const redirectTo = safeRedirectPath(rawRedirectTo, '');
+
+    // Devolver la URL de verificación para que el cliente redirija
+    const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;
+    return { success: true, redirectUrl: verifyUrl };
+  } catch (error: any) {
+    // Capturar error de Prisma P2002 (unique constraint) como fallback
+    if (error?.code === 'P2002' && error?.meta?.target?.includes('email')) {
+      return { success: false, error: 'EMAIL_ALREADY_EXISTS' };
+    }
+    console.error('Error en signUp:', error);
+    return { success: false, error: 'UNKNOWN_ERROR' };
+  }
 };

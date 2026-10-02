@@ -1,244 +1,206 @@
-import { GitHubSVG } from '../logos/GitHubSVG';
-import { LinkedInSVG } from '../logos/LinkedInSVG';
-import { XLogoSVG } from '../logos/XLogoSVG';
+import { Github, Linkedin } from 'lucide-react';
 
 type Person = {
   name: string;
-  role: string | JSX.Element;
+  role: string;
+  company?: string;
   imageUrl: string;
-  xUrl?: string;
   linkedinUrl?: string;
   githubUrl?: string;
 };
 
+// Ordered by lines changed in the website (excluding lockfiles and data dumps).
 const people: Person[] = [
   {
     name: 'Agus',
-    role: (
-      <p>
-        Team Leader & Sr. Full-Stack Engineer (JS/TS) en{' '}
-        <span className="underline">Eagerworks</span>
-      </p>
-    ),
+    role: 'Tech Lead & Sr. Full-Stack Engineer',
+    company: 'Dizenz & Eagerworks',
     imageUrl: '/colaborators/agus.webp',
     linkedinUrl: 'https://www.linkedin.com/in/agustinsanc/',
     githubUrl: 'https://github.com/agustin-sanc',
   },
   {
-    name: 'Mauri',
-    role: (
-      <p>
-        Sr. Frontend Engineer (iOS) en <span className="underline">PedidosYa</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/mauris.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/mauriciosnchz/',
-    githubUrl: 'https://github.com/mausnchz',
-  },
-  {
-    name: 'Esteban',
-    role: (
-      <p>
-        Sr. Frontend Engineer (iOS) en <span className="underline">Compass</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/esteban.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/esteban-nicolas-sanchez-79b428172/',
-  },
-  {
-    name: 'Chelo',
-    role: (
-      <p>
-        Sr. Backend Engineer (Python & Java) en <span className="underline">Bowery</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/chelo.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
-    githubUrl: 'https://github.com/Chelo154',
-  },
-  {
-    name: 'Germán',
-    role: (
-      <p>
-        Sr. Backend Engineer (JS/TS) en <span className="underline">Entropy</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/german.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
-    githubUrl: 'https://github.com/gmanavarro',
-  },
-  {
-    name: 'Chino',
-    role: (
-      <p>
-        CTO & Sr. Frontend Engineer (JS/TS) en <span className="underline">NotNini</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/chino.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/ivantaddei/',
-    githubUrl: 'https://github.com/ivantaddei',
-  },
-  {
-    name: 'Carlos',
-    role: (
-      <p>
-        Sr. Frontend Engineer (JS/TS) en <span className="underline">WebExport</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/carlos.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/carlos-spagnolo-andres/',
-    githubUrl: 'https://github.com/SpagnoloCarlos',
-  },
-  {
-    name: 'Benja',
-    role: <p>Sr. Full-Stack Engineer</p>,
-    imageUrl: '/colaborators/benja.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
-    githubUrl: 'https://github.com/cortesjpb',
-  },
-  {
-    name: 'Alejo',
-    role: (
-      <p>
-        Sr. Full-Stack Engineer (TS/Python) en <span className="underline">Pendo.io</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/alejo.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/alejoboga/',
-    githubUrl: 'https://github.com/Alejoboga20',
-  },
-  {
     name: 'Facu',
-    role: (
-      <p>
-        Ssr. Backend Engineer (JS/TS) en <span className="underline">C&S Informática</span>
-      </p>
-    ),
+    role: 'Ssr. Backend (JS/TS)',
+    company: 'C&S Informática',
     imageUrl: '/colaborators/facu.webp',
     linkedinUrl: 'https://www.linkedin.com/in/juanfacundobazanalvarez/',
     githubUrl: 'https://github.com/FacuBzn',
   },
   {
-    name: 'Lemi',
-    role: (
-      <p>
-        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/lemi.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/emiliano-grillo-905895296/',
-  },
-  {
-    name: 'Vicky',
-    role: (
-      <p>
-        Jr. QA Engineer (JS/TS) en <span className="underline">ASZ Software</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/vicky.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/maria-victoria-grillo/',
-  },
-  {
-    name: 'Mati',
-    role: (
-      <p>
-        Sr. Backend Engineer (Python) en <span className="underline">ASZ Software</span>
-      </p>
-    ),
-    imageUrl: '/colaborators/mati.webp',
-    linkedinUrl: 'https://www.linkedin.com/in/matias-daniel-gutierrez/',
-    githubUrl: 'https://github.com/MatiasDG539',
-  },
-  {
     name: 'Mauri',
-    role: (
-      <p>
-        Ssr. Full-Stack Engineer (JS/TS) en <span className="underline">ASZ Software</span>
-      </p>
-    ),
+    role: 'Ssr. Full-Stack (JS/TS)',
+    company: 'Dizenz',
     imageUrl: '/colaborators/mauric.webp',
     linkedinUrl: 'https://www.linkedin.com/in/mauriciojavierchaile/',
     githubUrl: 'https://github.com/MauriJC',
   },
   {
+    name: 'Germán',
+    role: 'Sr. Backend (JS/TS)',
+    company: 'Entropy',
+    imageUrl: '/colaborators/german.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/germanavarro/',
+    githubUrl: 'https://github.com/gmanavarro',
+  },
+  {
     name: 'Nico',
-    role: (
-      <p>
-        Ssr. Frontend Engineer (JS/TS) en <span className="underline">ASZ Software</span>
-      </p>
-    ),
+    role: 'Ssr. Frontend (JS/TS)',
+    company: 'Dizenz',
     imageUrl: '/colaborators/nico.webp',
     linkedinUrl: 'https://www.linkedin.com/in/nicolas-fuentes-garcia-7997a1236/',
     githubUrl: 'https://github.com/nicofuentesg',
   },
+  {
+    name: 'Mati',
+    role: 'Jr. Engineer',
+    company: 'Eagerworks',
+    imageUrl: '/colaborators/mati.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/matias-daniel-gutierrez/',
+    githubUrl: 'https://github.com/MatiasDG539',
+  },
+  {
+    name: 'Lemi',
+    role: 'Ssr. QA Engineer',
+    company: 'Dizenz',
+    imageUrl: '/colaborators/lemi.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/emiliano-grillo-905895296/',
+    githubUrl: 'https://github.com/emilianogsh',
+  },
+  {
+    name: 'Alejo',
+    role: 'Sr. Full-Stack (TS/Python)',
+    company: 'Pendo.io',
+    imageUrl: '/colaborators/alejo.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/alejoboga/',
+    githubUrl: 'https://github.com/Alejoboga20',
+  },
+  {
+    name: 'Carlos',
+    role: 'Sr. Frontend (JS/TS)',
+    company: 'WebExport',
+    imageUrl: '/colaborators/carlos.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/carlos-spagnolo-andres/',
+    githubUrl: 'https://github.com/SpagnoloCarlos',
+  },
+  {
+    name: 'Maxi',
+    role: 'Contributor',
+    imageUrl: 'https://avatars.githubusercontent.com/u/55162138?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/maxi-rebolo/',
+    githubUrl: 'https://github.com/MaxiR23',
+  },
+  {
+    name: 'Lean',
+    role: 'Contributor',
+    imageUrl: 'https://avatars.githubusercontent.com/u/92434825?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/contrera-lean',
+    githubUrl: 'https://github.com/contrera-lean',
+  },
+  {
+    name: 'Facu M.',
+    role: 'Sr. Full-Stack & AI Engineer',
+    imageUrl: 'https://avatars.githubusercontent.com/u/43690718?v=4',
+    linkedinUrl: 'https://www.linkedin.com/in/facundo-garcia-martoni/',
+    githubUrl: 'https://github.com/facmartoni',
+  },
+  {
+    name: 'Chelo',
+    role: 'Sr. Backend (Python & Java)',
+    company: 'Bowery',
+    imageUrl: '/colaborators/chelo.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/marcelo-de-jes%C3%BAs-nu%C3%B1ez-490b05191/',
+    githubUrl: 'https://github.com/Chelo154',
+  },
+  {
+    name: 'Benja',
+    role: 'Sr. Full-Stack Engineer',
+    imageUrl: '/colaborators/benja.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/jpbenjamin-cortes/',
+    githubUrl: 'https://github.com/cortesjpb',
+  },
+  {
+    name: 'Vicky',
+    role: 'Ssr. QA Engineer',
+    company: 'Dizenz',
+    imageUrl: '/colaborators/vicky.webp',
+    linkedinUrl: 'https://www.linkedin.com/in/maria-victoria-grillo/',
+    githubUrl: 'https://github.com/vickygrillo',
+  },
 ];
 
+const handleOf = (person: Person) =>
+  person.githubUrl?.split('/').pop() ?? person.name.toLowerCase();
+
+const iconLinkClassName =
+  'text-muted-foreground transition-colors hover:text-pcnGreen focus-visible:text-pcnGreen';
+
+export const teamSize = people.length;
+
+// Terminal-style roster: every cell shares hairlines with its neighbours and
+// the avatar stays tinted until hover, like a process coming back to life.
 export const Team = () => (
-  <div className="py-8">
-    <div className="mx-auto max-w-7xl px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl lg:mx-0">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Nuestros colaboradores</h2>
-
-        <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Conocé a las personas que hacen posible esta comunidad. Desde profesionales experimentados
-          hasta estudiantes apasionados, todos contribuyen a crear un espacio de aprendizaje y
-          crecimiento.
-        </p>
-      </div>
-
-      <ul
-        role="list"
-        className="mx-auto mt-20 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-16 text-center sm:grid-cols-3 md:grid-cols-4 lg:mx-0 lg:max-w-none lg:grid-cols-5 xl:grid-cols-6"
+  <ul
+    role="list"
+    className="grid grid-cols-1 border-l border-t border-pcnGreen-200 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+  >
+    {people.map((person, index) => (
+      <li
+        key={person.name}
+        className="group flex items-center gap-3 border-b border-r border-pcnGreen-200 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
       >
-        {people.map((person) => (
-          <li key={person.name}>
-            <img
-              alt=""
-              src={person.imageUrl}
-              className="mx-auto h-24 w-24 rounded-full grayscale transition-all duration-300 hover:grayscale-0"
-            />
+        <span className="w-5 shrink-0 font-mono text-[10px] text-pcnGreen-500/70">
+          {String(index + 1).padStart(2, '0')}
+        </span>
 
-            <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight">{person.name}</h3>
+        <div className="relative h-9 w-9 shrink-0 overflow-hidden border border-pcnGreen-200">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt={person.name}
+            src={person.imageUrl}
+            loading="lazy"
+            className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+          />
+          <div className="absolute inset-0 bg-pcnGreen/40 mix-blend-color transition-opacity duration-300 group-hover:opacity-0" />
+        </div>
 
-            <div className="text-sm leading-6 text-muted-foreground">{person.role}</div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-mono text-sm">
+            {person.name}
+            <span className="ml-1.5 text-xs text-pcnGreen-500">@{handleOf(person)}</span>
+            <span className="ml-0.5 hidden animate-blink text-pcnGreen group-hover:inline">_</span>
+          </p>
+          <p className="truncate text-xs text-muted-foreground">
+            {person.role}
+            {person.company && <span className="text-pcnGreen/80"> · {person.company}</span>}
+          </p>
+        </div>
 
-            <ul role="list" className="mt-6 flex justify-center gap-x-6">
-              {person.xUrl && (
-                <li>
-                  <a href={person.xUrl} className="text-muted-foreground hover:text-foreground">
-                    <span className="sr-only">X</span>
-                    <XLogoSVG />
-                  </a>
-                </li>
-              )}
-
-              {person.linkedinUrl && (
-                <li>
-                  <a
-                    href={person.linkedinUrl}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <span className="sr-only">LinkedIn</span>
-                    <LinkedInSVG />
-                  </a>
-                </li>
-              )}
-
-              {person.githubUrl && (
-                <li>
-                  <a
-                    href={person.githubUrl}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <span className="sr-only">GitHub</span>
-                    <GitHubSVG />
-                  </a>
-                </li>
-              )}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {person.githubUrl && (
+            <a
+              href={person.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`GitHub de ${person.name}`}
+              className={iconLinkClassName}
+            >
+              <Github className="h-3.5 w-3.5" />
+            </a>
+          )}
+          {person.linkedinUrl && (
+            <a
+              href={person.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`LinkedIn de ${person.name}`}
+              className={iconLinkClassName}
+            >
+              <Linkedin className="h-3.5 w-3.5" />
+            </a>
+          )}
+        </div>
+      </li>
+    ))}
+  </ul>
 );

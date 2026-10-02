@@ -1,22 +1,20 @@
 import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
-import { Heading2 } from '@components/ui/heading-2';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { findSession } from '@/lib/session';
 
 const Profile = async () => {
-  const sessionId = cookies().get('sessionId')?.value;
+  const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
     console.error('Usuario no autenticado, redireccionando a /home');
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');
@@ -29,6 +27,7 @@ const Profile = async () => {
     },
     include: {
       languages: true,
+      positions: { orderBy: { order: 'asc' } },
     },
   });
 
@@ -46,22 +45,15 @@ const Profile = async () => {
     : [];
 
   return (
-    <div className="mt-4 px-6 md:px-20">
-      <div className="mb-4 flex items-center gap-4">
-        {user.image && (
-          <img
-            src={user.image}
-            alt="Profile picture"
-            style={{ width: '40px', height: '40px' }}
-            className="rounded-full"
-          />
-        )}
+    <>
+      <div className="mt-4 px-4 md:px-10">
+        <StickyHeader className="md:-mx-10 md:px-10">
+          <PageTitle path="perfil" meta={user.email} />
+        </StickyHeader>
 
-        <Heading2>Mi perfil</Heading2>
+        <ProfileForm user={user} languages={userLanguages} />
       </div>
-
-      <ProfileForm user={user} languages={userLanguages} />
-    </div>
+    </>
   );
 };
 

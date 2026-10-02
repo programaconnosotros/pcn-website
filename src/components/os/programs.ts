@@ -1,0 +1,422 @@
+import {
+  Activity,
+  AlertTriangle,
+  Bell,
+  BriefcaseBusiness,
+  BookOpen,
+  CalendarDays,
+  CircleHelp,
+  Clapperboard,
+  Code2,
+  Contact,
+  Eye,
+  Gauge,
+  Globe,
+  GraduationCap,
+  Handshake,
+  History,
+  Home,
+  Image,
+  LayoutDashboard,
+  Link2,
+  Layers,
+  Lightbulb,
+  Megaphone,
+  MessageCircle,
+  MicVocal,
+  Music,
+  Podcast,
+  Quote,
+  Rss,
+  Rocket,
+  ScrollText,
+  Sparkles,
+  Trophy,
+  UserRound,
+  Users,
+  Wrench,
+  Youtube,
+  type LucideIcon,
+} from 'lucide-react';
+
+export type OsProgramGroup = 'Inicio' | 'Actividades' | 'Recursos' | 'Comunidad' | 'Administración';
+
+export interface OsProgram {
+  id: string;
+  /** Short name shown under the dock icon and in the window title bar. */
+  name: string;
+  url: string;
+  icon: LucideIcon;
+  /** Tailwind gradient classes for the program icon tile. */
+  color: string;
+  group: OsProgramGroup;
+  /** Pinned programs always show in the dock. The rest live in the launcher. */
+  pinned?: boolean;
+  adminOnly?: boolean;
+  /** Hidden programs never show in the dock or launcher; they only name windows. */
+  hidden?: boolean;
+}
+
+export const OS_PROGRAMS: OsProgram[] = [
+  {
+    id: 'inicio',
+    name: 'Inicio',
+    url: '/',
+    icon: Home,
+    color: 'from-pcnGreen to-emerald-700',
+    group: 'Inicio',
+    pinned: true,
+  },
+  {
+    id: 'feed',
+    name: 'Feed',
+    url: '/feed',
+    icon: Rss,
+    color: 'from-orange-400 to-pcnGreen',
+    group: 'Inicio',
+    pinned: true,
+  },
+  {
+    id: 'eventos',
+    name: 'Eventos',
+    url: '/eventos',
+    icon: CalendarDays,
+    color: 'from-rose-400 to-red-600',
+    group: 'Actividades',
+    pinned: true,
+  },
+  {
+    id: 'conversaciones',
+    name: 'Conversaciones',
+    url: '/conversaciones',
+    icon: MessageCircle,
+    color: 'from-sky-400 to-blue-600',
+    group: 'Actividades',
+    pinned: true,
+  },
+  {
+    id: 'charlas',
+    name: 'Charlas',
+    url: '/charlas',
+    icon: MicVocal,
+    color: 'from-fuchsia-400 to-purple-700',
+    group: 'Actividades',
+    pinned: true,
+  },
+  {
+    id: 'podcast',
+    name: 'Podcast',
+    url: '/podcast',
+    icon: Podcast,
+    color: 'from-violet-400 to-indigo-700',
+    group: 'Actividades',
+    pinned: true,
+  },
+  {
+    id: 'desarrollo',
+    name: 'Desarrollo',
+    url: '/desarrollo',
+    icon: Code2,
+    color: 'from-zinc-600 to-zinc-900',
+    group: 'Actividades',
+    pinned: true,
+  },
+  {
+    id: 'cursos',
+    name: 'Cursos',
+    url: '/cursos',
+    icon: GraduationCap,
+    color: 'from-amber-300 to-orange-600',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'lectura',
+    name: 'Lectura',
+    url: '/lectura',
+    icon: BookOpen,
+    color: 'from-orange-300 to-amber-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'videos',
+    name: 'Videos',
+    url: '/videos',
+    icon: Youtube,
+    color: 'from-rose-400 to-red-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'especialidades',
+    name: 'Especialidades',
+    url: '/especialidades',
+    icon: Layers,
+    color: 'from-cyan-400 to-sky-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'herramientas',
+    name: 'Herramientas',
+    url: '/herramientas',
+    icon: Wrench,
+    color: 'from-slate-400 to-slate-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'proyectos',
+    name: 'Proyectos',
+    url: '/proyectos',
+    icon: Rocket,
+    color: 'from-pink-400 to-rose-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'entrevistas',
+    name: 'Entrevistas',
+    url: '/entrevistas',
+    icon: BriefcaseBusiness,
+    color: 'from-amber-400 to-orange-700',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'influencers',
+    name: 'Influencers',
+    url: '/influencers',
+    icon: Sparkles,
+    color: 'from-yellow-300 to-pink-500',
+    group: 'Recursos',
+  },
+  {
+    id: 'music',
+    name: 'Música',
+    url: '/music',
+    icon: Music,
+    color: 'from-red-400 to-pink-600',
+    group: 'Recursos',
+    pinned: true,
+  },
+  {
+    id: 'series-y-peliculas',
+    name: 'Series y películas',
+    url: '/series-y-peliculas',
+    icon: Clapperboard,
+    color: 'from-neutral-500 to-neutral-800',
+    group: 'Recursos',
+  },
+  {
+    id: 'preguntas-frecuentes',
+    name: 'Preguntas frecuentes',
+    url: '/preguntas-frecuentes',
+    icon: CircleHelp,
+    color: 'from-blue-300 to-blue-600',
+    group: 'Recursos',
+  },
+  {
+    id: 'historia',
+    name: 'Historia',
+    url: '/historia',
+    icon: ScrollText,
+    color: 'from-yellow-300 to-amber-600',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'miembros',
+    name: 'Miembros',
+    url: '/miembros',
+    icon: Contact,
+    color: 'from-emerald-300 to-cyan-700',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'logros',
+    name: 'Logros',
+    url: '/logros',
+    icon: Trophy,
+    color: 'from-yellow-300 to-amber-600',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'galeria',
+    name: 'Galería',
+    url: '/galeria',
+    icon: Image,
+    color: 'from-lime-300 to-green-600',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'partners',
+    name: 'Partners',
+    url: '/partners',
+    icon: Handshake,
+    color: 'from-teal-300 to-emerald-700',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'changelog',
+    name: 'Changelog',
+    url: '/changelog',
+    icon: History,
+    color: 'from-lime-300 to-green-700',
+    group: 'Comunidad',
+    pinned: true,
+  },
+  {
+    id: 'admin',
+    name: 'Panel',
+    url: '/admin',
+    icon: Gauge,
+    color: 'from-pcnGreen to-cyan-700',
+    group: 'Administración',
+    pinned: true,
+    adminOnly: true,
+  },
+  {
+    id: 'usuarios',
+    name: 'Usuarios',
+    url: '/usuarios',
+    icon: Users,
+    color: 'from-indigo-400 to-indigo-700',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'analiticas',
+    name: 'Analíticas',
+    url: '/analiticas',
+    icon: LayoutDashboard,
+    color: 'from-emerald-400 to-teal-700',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'metricas',
+    name: 'Métricas',
+    url: '/metricas',
+    icon: Activity,
+    color: 'from-pcnGreen to-teal-800',
+    group: 'Administración',
+    pinned: true,
+    adminOnly: true,
+  },
+  {
+    id: 'visitas',
+    name: 'Visitas',
+    url: '/visitas',
+    icon: Eye,
+    color: 'from-sky-300 to-cyan-600',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'notificaciones',
+    name: 'Notificaciones',
+    url: '/notificaciones',
+    icon: Bell,
+    color: 'from-red-400 to-orange-600',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'monitoreo',
+    name: 'Monitoreo',
+    url: '/monitoreo',
+    icon: AlertTriangle,
+    color: 'from-amber-400 to-red-600',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'vinculos',
+    name: 'Vínculos',
+    url: '/vinculos',
+    icon: Link2,
+    color: 'from-fuchsia-400 to-purple-700',
+    group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'perfil',
+    name: 'Perfil',
+    url: '/perfil',
+    icon: UserRound,
+    color: 'from-zinc-400 to-zinc-700',
+    group: 'Comunidad',
+    hidden: true,
+  },
+  {
+    id: 'consejos',
+    name: 'Consejos',
+    url: '/consejos',
+    icon: Lightbulb,
+    color: 'from-yellow-300 to-orange-500',
+    group: 'Comunidad',
+    hidden: true,
+  },
+  {
+    id: 'testimonios',
+    name: 'Testimonios',
+    url: '/testimonios',
+    icon: Quote,
+    color: 'from-purple-300 to-purple-700',
+    group: 'Comunidad',
+    hidden: true,
+  },
+  {
+    id: 'anuncios',
+    name: 'Anuncios',
+    url: '/anuncios',
+    icon: Megaphone,
+    color: 'from-orange-400 to-red-600',
+    group: 'Comunidad',
+    hidden: true,
+  },
+];
+
+/** Fallback for routes that are not registered as a program. */
+export const GENERIC_PROGRAM: OsProgram = {
+  id: 'navegador',
+  name: 'PCN',
+  url: '/',
+  icon: Globe,
+  color: 'from-zinc-500 to-zinc-800',
+  group: 'Comunidad',
+  hidden: true,
+};
+
+export const OS_PROGRAM_GROUPS: OsProgramGroup[] = [
+  'Inicio',
+  'Actividades',
+  'Recursos',
+  'Comunidad',
+  'Administración',
+];
+
+const pathnameOf = (path: string) => path.split(/[?#]/)[0] || '/';
+
+/** The program that owns a path: the registered program with the longest matching route prefix. */
+export const findProgramForPath = (path: string): OsProgram => {
+  const pathname = pathnameOf(path);
+  let match: OsProgram | undefined;
+  for (const program of OS_PROGRAMS) {
+    const owns =
+      program.url === '/'
+        ? pathname === '/'
+        : pathname === program.url || pathname.startsWith(`${program.url}/`);
+    if (owns && (!match || program.url.length > match.url.length)) match = program;
+  }
+  return match ?? GENERIC_PROGRAM;
+};
+
+export const visiblePrograms = (isAdmin: boolean) =>
+  OS_PROGRAMS.filter((program) => !program.hidden && (!program.adminOnly || isAdmin));

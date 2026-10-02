@@ -1,0 +1,107 @@
+[
+  {
+    "date": "2025-04-06",
+    "title": "IntelliJ Community para proyectos Spring Boot",
+    "summary": "Nico preguntó si IntelliJ Community era suficiente para trabajar con Spring Boot o si era necesaria la versión Ultimate. Varios miembros respondieron que la edición Community cubría la mayoría de los casos para proyectos Spring, aunque la Ultimate ofrecía soporte nativo para el framework con asistencias de autocompletado más ricas. Agustín comentó que en su trabajo usaban Community sin problemas. Facundo mencionó que el soporte de Spring en Ultimate justificaba el costo si la empresa lo pagaba, pero que para aprendizaje personal la versión gratuita era más que suficiente."
+  },
+  {
+    "date": "2025-04-08",
+    "title": "Notebooks para data science: qué conviene comprar en Argentina",
+    "summary": "Sebastián consultó qué notebook convenía comprar para data science con presupuesto limitado en Argentina. El grupo debatió entre opciones con GPU dedicada versus procesadores Apple Silicon. Matías recomendó las MacBook con chip M por la eficiencia energética y el rendimiento en tareas de machine learning usando Metal. Otros señalaron que una notebook con GPU NVIDIA permitía usar CUDA directamente con frameworks como PyTorch. Se mencionaron modelos de Lenovo ThinkPad y Dell XPS como alternativas intermedias. La discusión concluyó que el chip M de Apple ofrecía la mejor relación rendimiento/precio en el mercado actual argentino a pesar del costo en dólares."
+  },
+  {
+    "date": "2025-04-08",
+    "title": "Monetización de apps en Argentina: LLC, monotributo y cobro en dólares",
+    "summary": "Lucas preguntó cómo monetizar una app en Argentina y cobrar en dólares sin complicaciones legales. El grupo discutió las opciones de abrir una LLC en Estados Unidos, usar Stripe con entidad extranjera, y la alternativa de facturar como monotributista de servicios digitales al exterior. Facundo García explicó su experiencia abriendo una LLC en Wyoming a través de servicios como Stripe Atlas o FirstBase, lo que permitía cobrar internacionalmente sin los límites del cepo cambiario. Otros mencionaron que el monotributo permitía facturar servicios al exterior con el beneficio cambiario del dólar exportación. Se discutió la complejidad impositiva de cada opción y la conveniencia de asesorarse con un contador especializado en tech."
+  },
+  {
+    "date": "2025-04-11",
+    "title": "Vercel AI SDK con Grok y Astro: integración y casos de uso",
+    "summary": "Rodrigo compartió que estaba experimentando con el Vercel AI SDK para integrar Grok de xAI en un proyecto con Astro. El grupo mostró interés por el SDK de Vercel como abstracción para trabajar con múltiples modelos de lenguaje. Agustín comentó que el SDK simplificaba mucho el streaming de respuestas y el manejo de herramientas. Se discutió la compatibilidad de Astro con islands architecture para proyectos que mezclaban contenido estático con componentes reactivos. Facundo mencionó que Grok tenía un contexto de un millón de tokens que lo hacía interesante para tareas de análisis de documentos largos."
+  },
+  {
+    "date": "2025-04-11",
+    "title": "Cepo cambiario argentino: Argentina pasa al sistema de bandas",
+    "summary": "El grupo discutió el anuncio del gobierno argentino de reemplazar el cepo cambiario con un sistema de bandas de flotación. Varios miembros celebraron la medida como un paso hacia la normalización cambiaria. Se debatió el impacto en los salarios en dólares de quienes cobraban del exterior y los que trabajaban en empresas locales. Facundo comentó que la incertidumbre sobre el tipo de cambio seguía siendo un factor determinante para decidir entre trabajar para una empresa local o remoto para el exterior. Matías señaló que el nuevo sistema generaba dudas sobre si el dólar blue convergería con el oficial en el corto plazo."
+  },
+  {
+    "date": "2025-04-13",
+    "title": "Recursos de Git para principiantes: canal de Exequiel y Ariel en YouTube",
+    "summary": "Exequiel compartió su canal de YouTube con tutoriales de Git orientados a principiantes. Ariel también mencionó su propio canal con contenido similar. Varios miembros del grupo felicitaron la iniciativa de crear contenido en español para la comunidad local. Se discutió qué temas eran los más confusos para quienes empezaban con Git, mencionando el manejo de branches, merge conflicts y el flujo de trabajo con pull requests. El grupo recomendó los recursos a quienes recién empezaban en el programa."
+  },
+  {
+    "date": "2025-04-14",
+    "title": "Electron vs alternativas: consumo de recursos en apps de escritorio",
+    "summary": "Marco trajo el debate sobre el alto consumo de RAM de las apps construidas con Electron como Slack, VS Code y Discord. Varios miembros criticaron el overhead de empaquetar Chromium con cada aplicación. Se mencionaron alternativas como Tauri (que usa el webview del sistema operativo), Flutter para desktop, y aplicaciones nativas. Facundo argumentó que VS Code justificaba el consumo por la extensibilidad que ofrecía. Se discutió que Tauri con Rust ofrecía bundles mucho más livianos pero requería conocer Rust para la parte del backend. La conclusión fue que Electron seguía siendo la opción pragmática para apps cross-platform a pesar del consumo de memoria."
+  },
+  {
+    "date": "2025-04-16",
+    "title": "ChatGPT desktop app: contexto de pantalla y análisis visual",
+    "summary": "Rodrigo compartió que había descubierto que la app de escritorio de ChatGPT podía ver el contenido de la pantalla en tiempo real cuando se le daba permiso. El grupo discutió las implicaciones de privacidad de esta funcionalidad. Facundo probó la feature y contó que ChatGPT podía responder preguntas sobre lo que aparecía en la pantalla sin necesidad de hacer capturas manuales. Se comparó con Copilot de Microsoft que tenía una funcionalidad similar en Windows. Algunos vieron el potencial para asistencia en vivo durante debugging o revisión de código, mientras otros expresaron preocupaciones sobre qué datos se enviaban a los servidores."
+  },
+  {
+    "date": "2025-04-17",
+    "title": "Matías Gutiérrez lanza app de cefalometría: hito de proyecto personal",
+    "summary": "Matías Gutiérrez compartió con el grupo que había terminado una funcionalidad clave de su aplicación de cefalometría para uso odontológico. El grupo lo felicitó por el hito. Matías explicó que la app permitía hacer análisis cefalométricos digitalmente, reemplazando un proceso manual que los odontólogos hacían sobre radiografías. Comentó los desafíos técnicos de implementar los algoritmos de medición de ángulos y distancias sobre imágenes médicas. Varios miembros preguntaron sobre la stack elegida y el plan de monetización. La historia fue recibida con entusiasmo como ejemplo de aplicación con dominio específico y cliente real."
+  },
+  {
+    "date": "2025-04-18",
+    "title": "OriginUI: librería de componentes accesibles y modernos",
+    "summary": "Agustín compartió OriginUI, una librería de componentes para React con enfoque en accesibilidad y diseño moderno. El grupo exploró los ejemplos de la librería y comparó con otras opciones como shadcn/ui, Radix UI y Headless UI. Facundo señaló que OriginUI tenía componentes que shadcn no incluía por defecto. Se discutió la tendencia de construir sobre Radix primitives para garantizar accesibilidad sin tener que implementarla desde cero. Varios miembros marcaron el recurso como favorito para futuros proyectos frontend."
+  },
+  {
+    "date": "2025-04-21",
+    "title": "Comprar PC en Buenos Aires: precios y tiendas recomendadas",
+    "summary": "Matías consultó sobre dónde comprar componentes para armar una PC en Buenos Aires con buen precio. El grupo compartió tiendas de Parque Patricios y Once conocidas por precios competitivos en hardware. Se discutió la diferencia de precios entre comprar armado versus armar uno mismo. Varios recomendaron revisar las publicaciones en MercadoLibre de vendedores con calificación alta para conseguir mejores ofertas. Alguien mencionó que los precios en Buenos Aires solían ser mejores que en Tucumán por mayor competencia entre vendedores. Se compartieron links de tiendas específicas en Palermo y Congreso."
+  },
+  {
+    "date": "2025-04-21",
+    "title": "Fede Valle lanza GinkgoDevs: agencia con sitio en Three.js",
+    "summary": "Fede Valle anunció el lanzamiento de GinkgoDevs, su agencia de desarrollo, con un sitio web construido en Three.js con efectos visuales 3D. El grupo quedó impresionado con el diseño del sitio. Se discutió la elección de Three.js para el sitio de una agencia como estrategia de diferenciación visual. Facundo preguntó sobre el proceso de construcción y el tiempo invertido. Fede explicó los desafíos de optimizar la carga del sitio con Three.js para que fuera rápido en móviles. El grupo felicitó el emprendimiento y la propuesta visual del sitio."
+  },
+  {
+    "date": "2025-04-21",
+    "title": "Dilema de migración de base de datos en producción sin downtime",
+    "summary": "Un miembro trajo el problema de cómo migrar el schema de una base de datos en producción sin tiempo de inactividad. El grupo discutió estrategias como expand-contract pattern, blue-green deployments y feature flags para activar el nuevo schema gradualmente. Facundo explicó la técnica de crear las nuevas columnas como nullable primero, actualizar el código para escribir en ambas columnas, migrar los datos históricos en background, y finalmente eliminar las columnas antiguas. Se mencionó el uso de Flyway y Liquibase para gestionar migraciones versionadas. La discusión fue técnicamente detallada y varios guardaron el hilo como referencia."
+  },
+  {
+    "date": "2025-04-21",
+    "title": "React Native con backend .NET y túnel ngrok para desarrollo local",
+    "summary": "Un miembro que estaba aprendiendo React Native preguntó cómo conectar su app móvil con un backend en .NET que corría localmente en su máquina. El grupo recomendó usar ngrok para exponer el servidor local mediante un túnel HTTPS que fuera accesible desde el dispositivo físico. Se explicó la diferencia entre usar el emulador (que puede acceder a localhost) versus un dispositivo real (que necesita la IP de la red o un túnel). Facundo mencionó que ngrok tenía un plan gratuito suficiente para desarrollo. También se recomendó Expo para simplificar el desarrollo de React Native evitando la complejidad de configurar Android Studio y Xcode."
+  },
+  {
+    "date": "2025-04-22",
+    "title": "Mercado freelance en Tucumán: dificultades y estrategias",
+    "summary": "Lucas preguntó sobre el mercado freelance local en Tucumán y si era viable conseguir clientes como desarrollador independiente. El grupo compartió experiencias mixtas: algunos habían conseguido clientes locales para proyectos WordPress o aplicaciones simples, pero los precios del mercado local eran significativamente más bajos que los del mercado internacional. Facundo recomendó apuntar directamente al mercado de habla inglesa en plataformas como Toptal, Contra o LinkedIn, evitando Upwork por su saturación. Otros sugirieron construir un nicho específico en lugar de competir genéricamente. Se discutió la importancia del portafolio en GitHub y proyectos propios con usuarios reales."
+  },
+  {
+    "date": "2025-04-22",
+    "title": "Subdominios en DonWeb y configuración de nginx wildcard",
+    "summary": "Un miembro preguntó cómo configurar subdominios wildcard en DonWeb para redirigir a un servidor propio con nginx. El grupo explicó los pasos: crear un registro DNS wildcard (*.dominio.com) apuntando al servidor, luego configurar un server block en nginx que matcheara cualquier subdominio. Facundo compartió un snippet de configuración de nginx con `server_name *.dominio.com` y la directiva `proxy_pass` para redirigir al servicio backend. Se discutió la diferencia entre wildcards en DNS versus el manejo en el servidor web. Alguien mencionó que DonWeb a veces tardaba hasta 48 horas en propagar los cambios de DNS."
+  },
+  {
+    "date": "2025-04-26",
+    "title": "Vibe coding: el término y la cultura de programar con IA sin entender el código",
+    "summary": "El grupo debatió el término 'vibe coding' acuñado por Andrej Karpathy, que describe la práctica de programar con IA sin entender completamente el código que se genera. Algunos miembros criticaron la tendencia como peligrosa para la profesión y para la calidad del software. Otros argumentaron que era una evolución natural de la abstracción, comparándolo con cómo los programadores modernos no necesitan escribir assembler. Facundo señaló que la distinción importante era entre usarlo como herramienta de productividad (con comprensión) versus delegar completamente sin entender nada. Se debatió si el vibe coding era apropiado solo para prototipos o también para producción."
+  },
+  {
+    "date": "2025-04-29",
+    "title": "Canva Code: la herramienta no-code y el debate sobre democratización",
+    "summary": "El grupo discutió el lanzamiento de Canva Code, una herramienta que prometía generar código desde diseños de Canva sin conocimientos de programación. Varios miembros fueron críticos con la calidad del código generado y las limitaciones para proyectos reales. Facundo argumentó que estas herramientas eran útiles para prototipado rápido pero no reemplazaban el desarrollo profesional. Otros compararon con Webflow y Framer como alternativas más maduras para no-code con resultados más predecibles. Se debatió si estas herramientas competían con los desarrolladores junior o si más bien expandían el mercado al habilitar a no-técnicos a construir cosas simples."
+  },
+  {
+    "date": "2025-04-30",
+    "title": "Trabajo remoto vs presencial: debate sobre productividad y carrera",
+    "summary": "El grupo tuvo un debate extenso sobre las ventajas y desventajas del trabajo remoto versus presencial u híbrido. Quienes preferían remoto destacaron la flexibilidad, el ahorro en traslados y la posibilidad de trabajar para empresas fuera de Tucumán. Quienes valoraban lo presencial señalaban la importancia del contexto compartido, el aprendizaje informal y las relaciones con colegas. Facundo comentó que para los primeros años de carrera la presencialidad aceleraba el aprendizaje notablemente. Lucas mencionó que en Tucumán las empresas que pagaban bien solían ser remotas o tener sede en Buenos Aires. Se discutió el efecto de las diferentes zonas horarias en el trabajo remoto internacional."
+  },
+  {
+    "date": "2025-04-30",
+    "title": "Mercado Pago + Node.js: metadata en webhooks de pagos",
+    "summary": "Un miembro preguntó cómo pasar metadata personalizada en los webhooks de Mercado Pago para identificar a qué usuario o pedido correspondía un pago. El grupo explicó que Mercado Pago permitía enviar un campo `external_reference` al crear la preferencia de pago, que luego llegaba en el webhook. Facundo compartió un ejemplo de código en Node.js mostrando cómo setear el `external_reference` y luego leerlo en el handler del webhook. Se discutió también cómo verificar la autenticidad del webhook usando el header de firma que mandaba Mercado Pago para evitar pagos fraudulentos simulados. Varios guardaron el snippet como referencia."
+  },
+  {
+    "date": "2025-04-30",
+    "title": "Feature flags para A/B testing: implementación en backend",
+    "summary": "Agustín preguntó sobre estrategias para implementar feature flags y A/B testing en una aplicación backend. El grupo discutió opciones desde implementaciones caseras con una tabla en la base de datos hasta servicios como LaunchDarkly, PostHog y Growthbook. Facundo explicó un diseño simple donde los flags se guardaban en Redis con TTL corto para evitar queries constantes a la DB. Se discutió la importancia de poder rollback rápidamente en producción usando flags en lugar de deployments. Alguien mencionó que PostHog era open source y podía hostearse en infraestructura propia. La conversación cubrió también el targeting de flags por usuario, porcentaje de tráfico y atributos del request."
+  }
+]

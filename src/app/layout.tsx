@@ -1,16 +1,60 @@
 import { ReactQueryProvider } from '@/components/react-query-provider';
 import { ThemeProvider } from '@/components/themes/theme-provider';
+import { PwaProvider } from '@/components/pwa-provider';
 import { Toaster } from '@/components/ui/sonner';
-import prisma from '@/lib/prisma';
-import { User } from '@prisma/client';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { ScrollIndicator } from '@/components/ui/scroll-indicator';
+import { HackerCursor } from '@/components/ui/hacker-cursor';
+import { TerminalCaret } from '@/components/ui/terminal-caret';
+import { VimNavigation } from '@/components/ui/vim-navigation';
 import { GeistSans } from 'geist/font/sans';
-import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
+import { GeistMono } from 'geist/font/mono';
+import type { Metadata, Viewport } from 'next';
+import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
 import './globals.css';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
 export const metadata: Metadata = {
-  title: 'programaConNosotros',
-  description: 'Desarrollado y mantenido para y por la comunidad.',
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'programaConNosotros',
+    template: '%s - PCN',
+  },
+  description: 'Comunidad de apasionados por la ingeniería de software.',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  // Installed from Safari (Compartir → Agregar a inicio) it opens full screen, like on Android.
+  appleWebApp: {
+    capable: true,
+    title: 'PCN',
+    statusBarStyle: 'black',
+  },
+  alternates: {
+    types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'programaConNosotros' }] },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_AR',
+    url: SITE_URL,
+    siteName: 'programaConNosotros',
+    title: 'programaConNosotros',
+    description: 'Comunidad de apasionados por la ingeniería de software.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'programaConNosotros',
+    description: 'Comunidad de apasionados por la ingeniería de software.',
+  },
+};
+
+// `cover` lets fixed bottom UI (the mobile tab bar) extend under the iOS home indicator /
+// Safari toolbar; without it `env(safe-area-inset-*)` is always 0.
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+  themeColor: '#000000',
 };
 
 const RootLayout = async ({
@@ -18,33 +62,31 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const defaultOpen = (await cookies().get('sidebar_state')?.value) === 'true';
-  const sessionId = await cookies().get('sessionId')?.value;
-
-  let user: User | null = null;
-
-  if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
-
-    if (session) {
-      user = session.user;
-    }
-  }
-
   return (
-    <html lang="es">
+    <html
+      lang="es"
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
+      </head>
       <body className={GeistSans.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-center" />
+          <PwaProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <Toaster closeButton position="top-right" />
+            <ScrollToTop />
+            <ScrollIndicator />
+            <HackerCursor />
+            <TerminalCaret />
+            <VimNavigation />
+          </PwaProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,12 +1,14 @@
 'use client';
 import { EmptyState } from '@/components/empty-state';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { PageTitle } from '@/components/ui/page-title';
+import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ExternalLink, Search, X } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
+import { SearchBar } from '@/components/ui/search-bar';
+import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface SoftwareRecommendation {
   name: string;
@@ -31,94 +33,50 @@ function SoftwareRecommendationCard({
   isFree = false,
   isPopular = false,
 }: SoftwareRecommendationCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <div className="group relative overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-6 text-gray-900 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-gray-700 dark:bg-black dark:text-white">
-      {/* Background gradient */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-500/5 to-blue-500/5 dark:from-gray-500/10"></div>
-
-      {/* Animated background on hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-500/10 to-blue-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500/20"></div>
-
-      <div className="relative z-10">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-gray-400/40 bg-white p-2 transition-colors duration-300 group-hover:border-gray-300 dark:bg-gray-800">
-                <Image
-                  src={logo || '/placeholder.svg?height=48&width=48'}
-                  alt={`${name} logo`}
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 object-contain"
-                />
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold transition-colors duration-300">{name}</h3>
-              <p className="text-sm font-medium text-gray-600/60 dark:text-gray-300">{category}</p>
-              {isFree && (
-                <Badge className="mt-1 border-green-500/30 bg-green-500/20 text-green-700 dark:text-green-300">
-                  Gratis
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {isPopular && (
-              <Badge className="border-orange-500/30 bg-orange-500/20 text-orange-700 hover:bg-orange-500/30 dark:text-orange-300">
-                Popular
-              </Badge>
-            )}
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-          {description}
-        </p>
-
-        {/* Tags */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="border-gray-200 bg-gray-100 text-gray-700 transition-colors duration-200 hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
-
-        {/* Action Button */}
-        <div className="bg-r flex w-full justify-center">
-          <Button
-            size="sm"
-            className="flex w-full transform items-center justify-center space-x-2 bg-gray-600/10 text-black transition-all duration-200 hover:scale-105 hover:bg-gray-700/10 hover:shadow-lg hover:shadow-gray-500/25 dark:bg-gray-600/50 dark:text-white"
-            onClick={() => window.open(website, '_blank')}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <ExternalLink
-              className={cn('h-4 w-4 transition-transform duration-200', isHovered && 'rotate-12')}
-            />
-            <span>Visitar sitio</span>
-          </Button>
-        </div>
+    <a
+      href={website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(ruledCellClassName, 'group flex gap-3 p-3')}
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
+        <Image
+          src={logo || '/placeholder.svg?height=48&width=48'}
+          alt={`${name} logo`}
+          width={28}
+          height={28}
+          className="h-full w-full object-contain"
+        />
       </div>
-    </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2 font-mono text-sm">
+          <h3 className="truncate font-semibold group-hover:text-pcnGreen">{name}</h3>
+          {isPopular && <Badge className="px-1.5 py-0 text-[10px]">popular</Badge>}
+          <span className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground group-hover:text-pcnGreen">
+            {isFree ? 'gratis' : category.toLowerCase()}
+            <ArrowUpRight className="h-3 w-3" />
+          </span>
+        </div>
+
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{description}</p>
+
+        <p className="truncate font-mono text-[11px] text-muted-foreground/70">
+          <span className="text-pcnGreen-500"># </span>
+          {tags.join(' · ')}
+        </p>
+      </div>
+    </a>
   );
 }
 
 interface RecommendationsListProps {
+  header: ReactNode;
   recommendations: SoftwareRecommendation[];
 }
 
-function RecommendationsList({ recommendations }: RecommendationsListProps) {
+function RecommendationsList({ header, recommendations }: RecommendationsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredRecommendations = recommendations.filter((software) => {
@@ -134,39 +92,29 @@ function RecommendationsList({ recommendations }: RecommendationsListProps) {
 
   return (
     <>
-      {/* Search */}
-      <div className="mb-8 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-
-          <Input
-            placeholder="Buscar software, categoría o tecnología..."
-            className="pl-10 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+      <StickyHeader>
+        {header}
+        {/* Search */}
+        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+          <SearchBar
+            searchQuery={searchTerm}
+            setSearchQuery={setSearchTerm}
+            placeholder="software, categoría o tecnología"
+            label="Buscar software, categoría o tecnología"
           />
-
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
         </div>
-      </div>
+      </StickyHeader>
 
       {/* Software Grid or Empty State */}
       {filteredRecommendations.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 pb-4 lg:grid-cols-2">
-          {filteredRecommendations.map((software, index) => (
-            <SoftwareRecommendationCard key={index} {...software} />
+        <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+          {filteredRecommendations.map((software) => (
+            <SoftwareRecommendationCard key={software.name} {...software} />
           ))}
-        </div>
+        </RuledGrid>
       ) : (
         <EmptyState
-          title="No se encontró software recomendado"
+          title="No se encontró software útil"
           description="No pudimos encontrar ningún software que coincida con tus criterios de búsqueda. Intenta ajustar los filtros o buscar con otros términos."
           onRefresh={() => setSearchTerm('')}
         />
@@ -254,20 +202,20 @@ const softwareRecommendations = [
 
 export default function SoftwareRecommendationsPage() {
   return (
-    <div className="mt-4 md:px-20">
-      <div className="mb-8">
-        <div className="mb-2 flex items-center space-x-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Recomendaciones de Software
-          </h1>
+    <>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4">
+          <RecommendationsList
+            header={
+              <PageTitle
+                path="software-recomendado"
+                meta={`${softwareRecommendations.length} apps recomendadas por la comunidad`}
+              />
+            }
+            recommendations={softwareRecommendations}
+          />
         </div>
-
-        <p className="text-gray-600">
-          Descubre las mejores herramientas recomendadas por nuestra comunidad de desarrolladores
-        </p>
       </div>
-
-      <RecommendationsList recommendations={softwareRecommendations} />
-    </div>
+    </>
   );
 }

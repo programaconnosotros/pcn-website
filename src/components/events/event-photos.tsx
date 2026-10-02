@@ -1,89 +1,69 @@
-'use client';
+import Link from 'next/link';
+import { VideoBadge } from '@/components/photo-gallery/video-badge';
 
-import React, { useState } from 'react';
-import { Heading3 } from '../ui/heading-3';
-import { Image as Images } from '@prisma/client';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-
-type EventPhotosProps = {
-  images: Images[];
+type EventPhoto = {
+  id: string;
+  kind: 'PHOTO' | 'VIDEO';
+  description: string | null;
+  thumbUrl: string;
 };
 
-const EventPhotos: React.FC<EventPhotosProps> = ({ images }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+type EventPhotosProps = {
+  eventId: string;
+  photos: EventPhoto[];
+  total: number;
+  canUpload: boolean;
+};
 
+// Thumbnails of the event's photos, each opening the photo's page in the gallery (browsing
+// stays within the event), plus links to all of them and, for admins, to upload more.
+export function EventPhotos({ eventId, photos, total, canUpload }: EventPhotosProps) {
   return (
-    <div>
-      <Heading3 className="mb-4 mt-8 text-2xl font-semibold">Fotos</Heading3>
-
-      {images.length === 0 && (
-        <p className="mt-4 w-full text-center text-sm text-muted-foreground">
-          No hay imágenes aún.
-        </p>
-      )}
-
-      {images.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {images.map((image, index) => (
-            <Dialog key={index}>
-              <DialogTrigger asChild>
-                <div className="group relative cursor-pointer">
-                  <img
-                    src={image.imgSrc}
-                    alt={`Imagen ${index + 1}`}
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = '/placeholder-image.webp';
-                      e.currentTarget.alt = 'Error al cargar la imagen';
-                    }}
-                    className="h-full w-full transform rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
-                    onClick={() => setCurrentImageIndex(index)}
-                  />
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl px-6 py-4">
-                <DialogHeader>
-                  <DialogTitle>Galería de Imágenes</DialogTitle>
-                </DialogHeader>
-                <Carousel
-                  opts={{
-                    startIndex: currentImageIndex,
-                  }}
-                >
-                  <CarouselContent>
-                    {images.map((img, i) => (
-                      <CarouselItem key={i} className="flex items-center justify-center">
-                        <img
-                          src={img.imgSrc}
-                          alt={`Imagen ${i + 1}`}
-                          className="w-full rounded-lg shadow-lg"
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious aria-label="Ver imagen anterior" />
-                  <CarouselNext aria-label="Ver siguiente imagen" />
-                </Carousel>
-              </DialogContent>
-            </Dialog>
+    <>
+      {photos.length === 0 ? (
+        <p className="font-mono text-xs text-muted-foreground">Todavía no hay fotos ni videos.</p>
+      ) : (
+        <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
+          {photos.map((photo, index) => (
+            <Link
+              key={photo.id}
+              href={`/galeria/${photo.id}?evento=${eventId}`}
+              className="group relative aspect-square overflow-hidden rounded-sm bg-black"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo.thumbUrl}
+                alt={
+                  photo.description ??
+                  `${photo.kind === 'VIDEO' ? 'Video' : 'Foto'} ${index + 1} del evento`
+                }
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04] group-hover:opacity-90"
+              />
+              {photo.kind === 'VIDEO' && <VideoBadge />}
+            </Link>
           ))}
         </div>
       )}
-    </div>
+      <div className="mt-2 flex flex-wrap justify-end gap-x-4 font-mono text-xs">
+        {canUpload && (
+          <Link
+            href={`/galeria/subir?evento=${eventId}`}
+            className="text-muted-foreground hover:text-pcnGreen"
+          >
+            subir fotos y videos →
+          </Link>
+        )}
+        {total > 0 && (
+          <Link
+            href={`/galeria?evento=${eventId}`}
+            className="text-pcnGreen-700 hover:text-pcnGreen"
+          >
+            ver {total === 1 ? 'todo' : `los ${total}`} en la galería →
+          </Link>
+        )}
+      </div>
+    </>
   );
-};
-
-export default EventPhotos;
+}

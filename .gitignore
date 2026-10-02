@@ -42,6 +42,8 @@ next-env.d.ts
 # environment
 .env
 .env.development
+.env.production
+.env.production.json
 
 # Playwright
 node_modules/
@@ -51,3 +53,13 @@ node_modules/
 /playwright/.cache/
 
 dist
+.vscode
+
+# Claude Code
+.claude/worktrees/
+
+# PR screenshots (local capture dir; PNGs are published to the pr-screenshots branch)
+.pr-screenshots/
+# WhatsApp chat exports are private: never commit them (see .claude/skills/agregar-conversaciones)
+whatsapp-chat*.txt
+_chat.txt

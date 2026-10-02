@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { Like } from '@prisma/client';
 
 type Content = {
   id: string;
@@ -6,7 +7,6 @@ type Content = {
   createdAt: Date;
   author: {
     id: string;
-    email: string;
     name: string;
     image: string | null;
   };
@@ -18,9 +18,7 @@ type Comment = Content & {
 
 export type Advise = Content & {
   comments?: Comment[];
-  likes: {
-    userId: string;
-  }[];
+  likes: Like[];
 };
 
 export type GetAdviseOptions = {
@@ -40,7 +38,6 @@ const getReplies = async (commentId: string): Promise<Comment[]> => {
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },
@@ -67,19 +64,8 @@ export const getAdviseById = async (
   const advise = await prisma.advise.findUnique({
     where: { id },
     include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          image: true,
-        },
-      },
-      likes: {
-        select: {
-          userId: true,
-        },
-      },
+      author: { select: { id: true, name: true, image: true } },
+      likes: true,
     },
   });
 
@@ -110,7 +96,6 @@ export const getAdviseById = async (
         select: {
           id: true,
           name: true,
-          email: true,
           image: true,
         },
       },

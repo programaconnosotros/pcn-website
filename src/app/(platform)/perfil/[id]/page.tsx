@@ -1,50 +1,109 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { AdviseCard } from '@/components/advises/advise-card';
+import { ProfileBadges } from '@/components/badges/profile-badges';
+import {
+  AMBASSADOR_BADGE,
+  COFOUNDER_BADGE,
+  isBadgeIcon,
+  isBadgeTone,
+  type DisplayBadge,
+} from '@/lib/badges';
+import { earnedAchievements } from '@/lib/achievements';
+import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
-import { Linkedin, Pencil, Twitter } from 'lucide-react';
+import { Github, Instagram, Linkedin, Pencil, Twitch, Youtube } from 'lucide-react';
+import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
+import {
+  ProfileTabPanel,
+  ProfileTabs,
+  ProfileTabsProvider,
+} from '@/components/profile/profile-tab-nav';
+import { ProfileTabSkeleton } from '@/components/profile/profile-tab-skeleton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
+import type { Metadata } from 'next';
 
 export const revalidate = 0;
 
-interface ProfilePageProps {
-  params: {
-    id: string;
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  const user = await prisma.user.findUnique({
+    where: { id: params.id },
+    select: {
+      name: true,
+      slogan: true,
+    },
+  });
+
+  if (!user) {
+    return {
+      title: 'Perfil no encontrado',
+      description: 'El perfil que buscas no existe.',
+    };
+  }
+
+  const title = user.name;
+  const description = user.slogan
+    ? `Perfil de ${user.name} en programaConNosotros. ${user.slogan}`
+    : `Perfil de ${user.name} en programaConNosotros. Miembro de la comunidad.`;
+  const pageUrl = `${SITE_URL}/perfil/${params.id}`;
+
+  return {
+    title,
+    description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+    openGraph: {
+      title,
+      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+      url: pageUrl,
+      type: 'profile',
+      siteName: 'programaConNosotros',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+    },
   };
 }
+
+interface ProfilePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+  searchParams: Promise<{ tab?: string }>;
+}
+
+// lucide has no X logo; same 24×24 box and `currentColor` fill as its icons.
+const XLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.17h1.7L7.4 4.73H5.58l11.1 14.44Z" />
+  </svg>
+);
+
+// Same for Kick: its "K" mark in the same box.
+const KickLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M3 3h6v4.5h1.5V6H12V4.5h1.5V3H21v6h-1.5v1.5H18V12h-1.5v1.5H18V15h1.5v1.5H21V21h-7.5v-1.5H12V18h-1.5v-1.5H9V21H3V3Z" />
+  </svg>
+);
 
 async function getUser(id: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        countryOfOrigin: true,
-        xAccountUrl: true,
-        linkedinUrl: true,
-        advises: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            updatedAt: true,
-            authorId: true,
-            likes: {
-              select: {
-                userId: true,
-              },
-            },
-          },
+      include: {
+        badges: {
+          include: { badge: true },
+          orderBy: { awardedAt: 'asc' },
         },
         languages: {
           select: {
@@ -53,6 +112,10 @@ async function getUser(id: string) {
             logo: true,
           },
         },
+        positions: {
+          select: { jobTitle: true, enterprise: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
@@ -60,16 +123,59 @@ async function getUser(id: string) {
       notFound();
     }
 
-    return user;
+    // Seleccionar solo los campos necesarios del usuario
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      isAmbassador: user.isAmbassador,
+      isCofounder: user.isCofounder,
+      customBadges: user.badges,
+      countryOfOrigin: user.countryOfOrigin,
+      province: user.province,
+      phoneNumber: (user as any).phoneNumber ?? null,
+      slogan: user.slogan,
+      // Perfiles que todavía no guardaron puestos muestran el cargo único que tenían.
+      positions:
+        user.positions.length > 0
+          ? user.positions
+          : user.jobTitle || user.enterprise
+            ? [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise }]
+            : [],
+      career: user.career,
+      studyPlace: user.studyPlace,
+      xAccountUrl: user.xAccountUrl,
+      linkedinUrl: user.linkedinUrl,
+      gitHubUrl: user.gitHubUrl,
+      instagramUrl: user.instagramUrl,
+      youtubeUrl: user.youtubeUrl,
+      twitchUrl: user.twitchUrl,
+      kickUrl: user.kickUrl,
+      languages: user.languages,
+    };
   } catch (error) {
     console.error('Error fetching user:', error);
-    throw new Error('Failed to fetch user profile');
+    // Si el error es porque el usuario no existe, usar notFound
+    if (error instanceof Error && error.message.includes('Record to find does not exist')) {
+      notFound();
+    }
+    // Re-lanzar el error original para debugging
+    throw error;
   }
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
-  const user = await getUser(params.id);
-  const session = await getCurrentSession();
+export default async function ProfilePage(props: ProfilePageProps) {
+  const params = await props.params;
+  const { tab: requestedTab } = await props.searchParams;
+  const tab: ProfileTab = isProfileTab(requestedTab) ? requestedTab : 'resumen';
+  const [user, session, achievementMetrics] = await Promise.all([
+    getUser(params.id),
+    getCurrentSession(),
+    getUserAchievementMetrics(params.id),
+  ]);
+  const achievements = earnedAchievements(achievementMetrics);
+
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
         languageId: language.language,
@@ -79,100 +185,269 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     : [];
 
   const isOwnProfile = session?.user?.id === params.id;
+  const viewerIsAdmin = session?.user?.role === 'ADMIN';
+
+  // Built-in badges first, then the ones earned through activity, then the custom ones an admin
+  // awarded, oldest first.
+  const badges: (DisplayBadge & { custom?: boolean })[] = [
+    ...(user.isCofounder ? [COFOUNDER_BADGE] : []),
+    ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
+    ...achievements,
+    ...user.customBadges.map(({ badge, awardedAt }) => ({
+      id: badge.id,
+      name: badge.name,
+      description: badge.description,
+      icon: isBadgeIcon(badge.icon) ? badge.icon : 'award',
+      tone: isBadgeTone(badge.tone) ? badge.tone : 'green',
+      awardedAt,
+      custom: true,
+    })),
+  ];
+
+  const socialLinks = [
+    {
+      label: 'x',
+      href: user.xAccountUrl,
+      icon: XLogo,
+      ariaLabel: `Perfil de X (anteriormente Twitter) de ${user.name}`,
+    },
+    {
+      label: 'linkedin',
+      href: user.linkedinUrl,
+      icon: Linkedin,
+      ariaLabel: `Perfil de LinkedIn de ${user.name}`,
+    },
+    {
+      label: 'github',
+      href: user.gitHubUrl,
+      icon: Github,
+      ariaLabel: `Perfil de GitHub de ${user.name}`,
+    },
+    {
+      label: 'instagram',
+      href: user.instagramUrl,
+      icon: Instagram,
+      ariaLabel: `Perfil de Instagram de ${user.name}`,
+    },
+    {
+      label: 'youtube',
+      href: user.youtubeUrl,
+      icon: Youtube,
+      ariaLabel: `Canal de YouTube de ${user.name}`,
+    },
+    {
+      label: 'twitch',
+      href: user.twitchUrl,
+      icon: Twitch,
+      ariaLabel: `Canal de Twitch de ${user.name}`,
+    },
+    {
+      label: 'kick',
+      href: user.kickUrl,
+      icon: KickLogo,
+      ariaLabel: `Canal de Kick de ${user.name}`,
+    },
+  ].filter((link): link is typeof link & { href: string } => !!link.href);
+
+  const positions = user.positions.filter((position) => position.jobTitle || position.enterprise);
+
+  const profileFacts: { label: string; value: string; href?: string }[] = [
+    {
+      label: 'ubicación',
+      value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
+    },
+    // El contacto lo ven solo los miembros logueados: visitantes anónimos y bots no
+    ...(session
+      ? [
+          {
+            label: 'email',
+            value: user.email,
+            href: user.email ? `mailto:${user.email}` : undefined,
+          },
+          {
+            label: 'teléfono',
+            value: user.phoneNumber,
+            href: user.phoneNumber ? `tel:${user.phoneNumber}` : undefined,
+          },
+        ]
+      : []),
+  ].filter((fact): fact is { label: string; value: string; href?: string } => !!fact.value);
+
+  const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
 
   return (
-    <div className="mt-4 md:max-w-screen-xl md:px-20">
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-4 pb-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
-              <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
-            </Avatar>
+    <>
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        {/* Al subir rápido vuelven las pestañas, no el título, así no se apilan dos barras. */}
+        <div className="mt-4">
+          <PageTitle
+            path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          {/* Columna izquierda: Información del usuario (fija en pantallas grandes, y con scroll
+              propio cuando no entra en la pantalla) */}
+          <div className="lg:col-span-1">
+            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto">
+              <div className="flex items-center gap-3 p-4">
+                <Avatar className="h-12 w-12 rounded-sm">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />
+                  <AvatarFallback className="rounded-sm">{user.name?.[0] ?? 'U'}</AvatarFallback>
+                </Avatar>
 
-            <div>
-              <h1 className="text-2xl font-bold">{user.name}</h1>
-              {isOwnProfile && (
-                <Link href="/perfil">
-                  <Button
-                    variant="link"
-                    className="mt-1 flex h-auto items-center gap-1 p-0 text-sm text-gray-400 hover:text-white"
-                  >
-                    <Pencil className="h-3 w-3" />
-                    <span>Editar perfil</span>
-                  </Button>
-                </Link>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
+                  {isOwnProfile && (
+                    <Link
+                      href="/perfil"
+                      className="flex w-fit items-center gap-1 border border-dashed border-pcnGreen-200 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen"
+                    >
+                      <Pencil className="size-2.5" />
+                      editar perfil
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              {socialLinks.length > 0 && (
+                <nav
+                  aria-label={`Redes de ${user.name}`}
+                  className="flex divide-x divide-pcnGreen-200"
+                >
+                  {/* Icons only: with several networks the labels no longer fit on one line. */}
+                  {socialLinks.map(({ label, href, icon: Icon, ariaLabel }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={ariaLabel}
+                      title={label}
+                      className="group flex min-w-0 flex-1 items-center justify-center py-2.5 transition-colors hover:bg-pcnGreen/[0.04] hover:shadow-[inset_0_-2px_0_#04f4be]"
+                    >
+                      <Icon className="size-4 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
+                    </a>
+                  ))}
+                </nav>
               )}
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            {user.xAccountUrl && (
-              <a
-                href={user.xAccountUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
-                aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-            )}
+              {user.slogan && (
+                <p className="p-4 text-sm italic leading-relaxed text-muted-foreground">
+                  <span className="not-italic text-pcnGreen-500">&gt; </span>
+                  {user.slogan}
+                </p>
+              )}
 
-            {user.linkedinUrl && (
-              <a
-                href={user.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
-                aria-label={`Perfil de LinkedIn de ${user.name}`}
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-            )}
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <h2 className="font-semibold">País de origen</h2>
-              <p>{user.countryOfOrigin || '-'}</p>
-            </div>
-
-            <div>
-              <h2 className="mb-2 font-semibold">Lenguajes de programación</h2>
-              <LanguageCoinsContainer languages={userLanguages} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="mt-8">
-        <h2 className="mb-4 text-2xl font-bold">Consejos compartidos</h2>
-        {user.advises.length === 0 ? (
-          <p className="text-gray-500">Este usuario aún no ha compartido ningún consejo.</p>
-        ) : (
-          <div className="space-y-4">
-            {user.advises.map((advise) => (
-              <AdviseCard
-                key={advise.id}
-                session={session}
-                advise={{
-                  ...advise,
-                  author: {
-                    id: user.id,
-                    name: user.name || '',
-                    email: '',
-                    image: user.image,
-                  },
-                  likes: advise.likes,
-                }}
+              <ProfileBadges
+                userId={user.id}
+                userName={user.name}
+                badges={badges}
+                isAdmin={viewerIsAdmin}
               />
-            ))}
+
+              {positions.length > 0 && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>trabajo
+                  </h2>
+                  <ul className="space-y-2">
+                    {positions.map((position, index) => (
+                      <li
+                        key={`${position.jobTitle}-${position.enterprise}-${index}`}
+                        className="border-l-2 border-pcnGreen-200 pl-3"
+                      >
+                        {position.jobTitle && (
+                          <p className="text-sm font-medium leading-snug">{position.jobTitle}</p>
+                        )}
+                        {position.enterprise && (
+                          <p className="font-mono text-xs text-muted-foreground">
+                            <span className="text-pcnGreen-500">@ </span>
+                            {position.enterprise}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(user.career || user.studyPlace) && (
+                <div className="p-4">
+                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                    <span className="text-pcnGreen-500">## </span>estudios
+                  </h2>
+                  <div className="border-l-2 border-pcnGreen-200 pl-3">
+                    {user.career && (
+                      <p className="text-sm font-medium leading-snug">{user.career}</p>
+                    )}
+                    {user.studyPlace && (
+                      <p className="font-mono text-xs text-muted-foreground">
+                        <span className="text-pcnGreen-500">@ </span>
+                        {user.studyPlace}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {profileFacts.length > 0 && (
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 p-4 text-xs">
+                  {profileFacts.map((fact) => (
+                    <div key={`${fact.label}-${fact.value}`} className="contents">
+                      <dt className="font-mono text-pcnGreen-500">{fact.label}</dt>
+                      <dd className="min-w-0 break-words">
+                        {fact.href ? (
+                          <a href={fact.href} className="text-pcnGreen hover:underline">
+                            {fact.value}
+                          </a>
+                        ) : (
+                          fact.value
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+
+              <div className="p-4">
+                <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                  <span className="text-pcnGreen-500">## </span>lenguajes
+                </h2>
+                {userLanguages.length > 0 ? (
+                  <LanguageCoinsContainer languages={userLanguages} />
+                ) : (
+                  <p className="text-xs text-muted-foreground">No hay lenguajes registrados</p>
+                )}
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Columna derecha: resumen de todo lo que hizo, y una pestaña para ver cada sección */}
+          <div className="min-w-0 lg:col-span-2">
+            <ProfileTabsProvider userId={user.id} active={tab}>
+              <StickyHeader className="mb-4">
+                <ProfileTabs />
+              </StickyHeader>
+              {/* Keyed by tab so a new tab streams in behind its skeleton instead of holding
+                  the page on the previous tab until all of its data is ready. */}
+              <Suspense key={`counts-${tab}`}>
+                <ProfileCountsLoader userId={user.id} />
+              </Suspense>
+              <ProfileTabPanel>
+                <Suspense key={tab} fallback={<ProfileTabSkeleton tab={tab} />}>
+                  <ProfileTabContent
+                    tab={tab}
+                    userId={user.id}
+                    firstName={firstName}
+                    session={session}
+                    person={{ id: user.id, name: user.name ?? '', image: user.image }}
+                  />
+                </Suspense>
+              </ProfileTabPanel>
+            </ProfileTabsProvider>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

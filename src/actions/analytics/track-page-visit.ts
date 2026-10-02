@@ -1,0 +1,42 @@
+'use server';
+
+import prisma from '@/lib/prisma';
+import { cookies, headers } from 'next/headers';
+import { findSession } from '@/lib/session';
+
+export const trackPageVisit = async (path: string) => {
+  try {
+    const sessionId = (await cookies()).get('sessionId')?.value;
+    let userId: string | undefined = undefined;
+    if (sessionId) {
+      const session = await findSession(sessionId);
+      if (session) {
+        // Si el usuario es admin, no registrar la visita
+        if (session.user.role === 'ADMIN') {
+          return;
+        }
+        userId = session.userId;
+      }
+    }
+
+    // Obtener información del request
+    const headersList = await headers();
+    const userAgent = headersList.get('user-agent') || null;
+    const referer = headersList.get('referer') || null;
+    const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null;
+
+    // Registrar la visita (solo para usuarios no-admin o anónimos)
+    await prisma.pageVisit.create({
+      data: {
+        path,
+        userId: userId || null,
+        userAgent,
+        referer,
+        ipAddress,
+      },
+    });
+  } catch (error) {
+    // Silenciar errores de tracking para no afectar la experiencia del usuario
+    console.error('Error tracking page visit:', error);
+  }
+};

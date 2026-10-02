@@ -1,46 +1,37 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { articles } from '@/app/(platform)/lectura/articles';
+import { RelatedArticles } from '@/components/courses/related-articles';
+import { getArticleWriters } from '@/lib/article-writers';
+import { SectionHeader } from './section-header';
 
-const articles = [
-  {
-    title: 'Cómo nació nuestra comunidad',
-    author: 'Agustín Sánchez',
-    readTime: '5 min',
-  },
-];
+const LATEST_ARTICLES_COUNT = 6;
 
-export const LatestArticles = () => (
-  <div className="mt-6">
-    <Card>
-      <CardHeader>
-        <CardTitle>Últimos artículos publicados</CardTitle>
-        <CardDescription> Mantente al día con las novedades de nuestra comunidad</CardDescription>
-      </CardHeader>
+// `articles` is already sorted newest first.
+const latestArticles = articles.slice(0, LATEST_ARTICLES_COUNT);
 
-      <CardContent>
-        {articles.length === 0 ? (
-          <p>No hay artículos publicados aún.</p>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-            {articles.map((article, index) => (
-              <div key={index} className="flex items-start space-x-4">
-                <Avatar>
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                  <AvatarFallback>{article.author.slice(0, 2)}</AvatarFallback>
-                </Avatar>
+export const LatestArticlesSection = async () => {
+  const writers = await getArticleWriters();
+  // Articles written by community members show the member's profile photo, not the one that
+  // came with the article.
+  const avatars: Record<string, string> = {};
+  for (const article of latestArticles) {
+    const image = writers[article.id]?.find((writer) => writer.image)?.image;
+    if (image) avatars[article.id] = image;
+  }
 
-                <div className="space-y-2">
-                  <h3 className="font-medium leading-none">{article.title}</h3>
+  return (
+    <section>
+      <SectionHeader
+        eyebrow="Lectura"
+        title={
+          <>
+            Últimos <span className="text-pcnGreen">artículos</span> agregados
+          </>
+        }
+        description="Lo más reciente que estamos leyendo sobre ingeniería de software, arquitectura y producto."
+        action={{ label: 'Ver todos los artículos', href: '/lectura' }}
+      />
 
-                  <p className="text-sm text-muted-foreground">
-                    Publicado por {article.author} • Lectura de {article.readTime}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  </div>
-);
+      <RelatedArticles articles={latestArticles} avatars={avatars} showDate />
+    </section>
+  );
+};

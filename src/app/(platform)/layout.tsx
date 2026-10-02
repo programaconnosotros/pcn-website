@@ -1,44 +1,69 @@
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
-import { User } from '@prisma/client';
-import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
+import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
+import { getUnreadNotificationsCount } from '@/actions/notifications/get-unread-count';
+import { ConsoleInterceptor } from '@/components/logs/console-interceptor';
+import { OsBridge } from '@/components/os/os-bridge';
+import { OsGate } from '@/components/os/os-gate';
+import { PcnOs } from '@/components/os/pcn-os';
+import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
+import { findSession, type SessionUser } from '@/lib/session';
 
 const PlatformLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const defaultOpen = (await cookies().get('sidebar_state')?.value) === 'true';
-  const sessionId = await cookies().get('sessionId')?.value;
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
+  const sessionId = cookieStore.get('sessionId')?.value;
 
-  let user: User | null = null;
+  let user: SessionUser | null = null;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
 
     if (session) {
       user = session.user;
     }
   }
 
+  // Obtener próximos eventos para la sidebar
+  const upcomingEvents = await fetchUpcomingEvents(5);
+
+  // Obtener contador de notificaciones no leídas (solo para admins)
+  const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
+
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar user={user} />
-
-      <div className="fixed left-0 top-0 z-50 mb-4 flex h-12 w-full items-center gap-3 border-b border-border bg-background px-4 md:hidden">
-        <SidebarTrigger />
-        <span className="text-sm font-semibold">programaConNosotros</span>
+    <>
+      {/* Pantallas grandes: PCN OS, un escritorio con dock y ventanas movibles. */}
+      <PcnOs
+        user={user ? { id: user.id, name: user.name, email: user.email, image: user.image } : null}
+        isAdmin={user?.role === 'ADMIN'}
+      />
+      <PageVisitTracker />
+      <OsBridge />
+      {/* Resto de pantallas (y páginas dentro de una ventana): sidebar + página. */}
+      <div className="os:hidden">
+        <OsGate>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <AppSidebar
+              user={user}
+              upcomingEvents={upcomingEvents}
+              unreadNotificationsCount={unreadNotificationsCount}
+            />
+            <ConsoleInterceptor>
+              <SidebarInset className="min-w-0 px-1 pb-[calc(5rem+env(safe-area-inset-bottom))] embedded:pb-0 md:px-6 md:pb-0">
+                {children}
+              </SidebarInset>
+            </ConsoleInterceptor>
+          </SidebarProvider>
+          <ClassicGlobalSearch />
+        </OsGate>
       </div>
-
-      <main className="relative w-full p-4 pt-16 md:p-0 md:pt-1">
-        <SidebarTrigger className="absolute hidden md:left-6 md:top-6 md:block" />
-        <div className="mx-auto max-w-7xl">{children}</div>
-      </main>
-    </SidebarProvider>
+    </>
   );
 };
 
