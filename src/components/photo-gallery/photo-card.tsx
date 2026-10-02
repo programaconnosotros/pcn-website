@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { Play, Share2 } from 'lucide-react';
 import type { GalleryTile } from '@/lib/gallery';
-import { parallaxStyle, useParallax } from './use-parallax';
+import { subtleParallaxStyle, useParallax } from './use-parallax';
 import { formatPhotoDate, keyCapClassName, padIndex, photoCaption } from './photo-utils';
 import { DownloadKey } from './download-key';
 import { formatDuration } from '@/lib/gallery-filters';
@@ -21,7 +21,7 @@ const cornerClassName =
   'pointer-events-none absolute size-3 border-pcnGreen opacity-0 transition-all duration-300 group-hover:opacity-100 group-focus-within:opacity-100';
 
 // A dimmed, scanlined thumbnail that powers up on hover: full colour, lit corner brackets and a
-// file-name caption sliding up from the bottom. The photo is taller than its frame and drifts
+// file-name caption sliding up from the bottom. The photo is slightly taller than its frame and drifts
 // against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
 export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps) {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -36,8 +36,8 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
       >
         <span
           aria-hidden
-          style={parallaxStyle}
-          className="absolute inset-x-0 -top-[12%] block h-[124%] transition-transform duration-150 ease-out will-change-transform"
+          style={subtleParallaxStyle}
+          className="absolute inset-x-0 -top-[5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

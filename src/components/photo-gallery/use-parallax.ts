@@ -59,6 +59,15 @@ export const parallaxStyle = {
 };
 
 /**
+ * A gentler `parallaxStyle` for a layer only ~10% taller than its frame, so photos are barely
+ * zoomed in to make room for the drift.
+ */
+export const subtleParallaxStyle = {
+  transform:
+    'translate3d(calc(var(--px, 0) * -6px), calc(var(--parallax, 0) * 3% + var(--py, 0) * -6px), 0)',
+};
+
+/**
  * Sets `--parallax` (-1…1) on the element as it scrolls through the viewport, and `--px`/`--py`
  * (-1…1) while the pointer moves over it, for the photo inside to drift with some depth.
  */
