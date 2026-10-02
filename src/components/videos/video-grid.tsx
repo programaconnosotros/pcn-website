@@ -5,6 +5,11 @@ import { ArrowUpRight, Eye, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { MarkToggle } from '@/components/ui/mark-toggle';
+import {
+  LanguageFilter,
+  matchesLanguage,
+  type LanguageFilterValue,
+} from '@/components/ui/language-filter';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { cn } from '@/lib/utils';
 import type { Video } from './videos';
@@ -115,18 +120,21 @@ export function VideoGrid({
 }) {
   const [playing, setPlaying] = useState<Video | null>(null);
   const [filter, setFilter] = useState<WatchFilter>('todos');
+  const [language, setLanguage] = useState<LanguageFilterValue>('todos');
   const marks = useContentMarks('video');
   const watchedIds = marks.ids('watched');
   const watchedCount = videos.filter((video) => watchedIds.has(video.id)).length;
-  const visibleVideos = videos.filter((video) =>
-    filter === 'todos' ? true : (filter === 'vistos') === watchedIds.has(video.id),
+  const visibleVideos = videos.filter(
+    (video) =>
+      matchesLanguage(video.language, language) &&
+      (filter === 'todos' || (filter === 'vistos') === watchedIds.has(video.id)),
   );
   const barWidth = 16;
   const filled = Math.round((watchedCount / Math.max(videos.length, 1)) * barWidth);
 
   return (
     <>
-      {/* Watch progress and the watched/unwatched filter. */}
+      {/* Watch progress, the language filter and the watched/unwatched filter. */}
       {toolbar && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px]">
           <span className="flex items-center gap-2 text-muted-foreground">
@@ -144,8 +152,9 @@ export function VideoGrid({
               </span>
             )}
           </span>
+          <LanguageFilter value={language} onChange={setLanguage} className="ml-auto" />
           <span
-            className="ml-auto flex border border-pcnGreen-200"
+            className="flex border border-pcnGreen-200"
             role="group"
             aria-label="Filtrar por estado"
           >
@@ -172,7 +181,11 @@ export function VideoGrid({
       {visibleVideos.length === 0 && (
         <p className="border border-dashed border-pcnGreen-200 py-8 text-center font-mono text-sm text-muted-foreground">
           <span className="text-pcnGreen">404</span> ·{' '}
-          {filter === 'vistos' ? 'todavía no marcaste ningún video como visto' : '¡ya viste todo!'}
+          {filter === 'vistos'
+            ? 'todavía no marcaste ningún video como visto'
+            : filter === 'sin-ver'
+              ? '¡ya viste todo!'
+              : 'no hay videos en ese idioma'}
         </p>
       )}
 

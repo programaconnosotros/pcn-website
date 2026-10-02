@@ -1,3 +1,5 @@
+import type { Language } from '@/components/ui/language-filter';
+
 export interface Article {
   id: string;
   title: string;
@@ -10,9 +12,10 @@ export interface Article {
   url: string;
   avatar: string;
   date: string; // ISO YYYY-MM-DD
+  language: Language;
 }
 
-export const articles: Article[] = [
+const allArticles: Article[] = [
   {
     id: '1',
     title: 'Loop Engineering',
@@ -24,6 +27,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/loop-engineering/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-06-07',
+    language: 'en',
   },
   {
     id: '2',
@@ -36,6 +40,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agent-harness-engineering/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-04-19',
+    language: 'en',
   },
   {
     id: '3',
@@ -48,6 +53,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/blog/agentic-infrastructure',
     avatar: 'https://github.com/tomocchino.png?size=128',
     date: '2026-04-09',
+    language: 'en',
   },
   {
     id: '4',
@@ -60,6 +66,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/dont-outsource-learning/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-05-16',
+    language: 'en',
   },
   {
     id: '5',
@@ -72,6 +79,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/skills-handoff',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-05-13',
+    language: 'en',
   },
   {
     id: '6',
@@ -84,6 +92,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agent-skills/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-05-03',
+    language: 'en',
   },
   {
     id: '7',
@@ -96,6 +105,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/skills-tdd',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-04-27',
+    language: 'en',
   },
   {
     id: '8',
@@ -108,6 +118,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/my-7-phases-of-ai-development',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-03-16',
+    language: 'en',
   },
   {
     id: '9',
@@ -120,6 +131,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/comprehension-debt/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-03-14',
+    language: 'en',
   },
   {
     id: '10',
@@ -132,6 +144,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/factory-model/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-02-25',
+    language: 'en',
   },
   {
     id: '11',
@@ -144,6 +157,7 @@ export const articles: Article[] = [
     url: 'https://every.to/guides/agent-native',
     avatar: 'https://github.com/everyinc.png?size=128',
     date: '2026-01-17',
+    language: 'en',
   },
   {
     id: '12',
@@ -156,6 +170,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/next-two-years/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-01-05',
+    language: 'en',
   },
   {
     id: '13',
@@ -168,6 +183,7 @@ export const articles: Article[] = [
     url: 'https://newsletter.posthog.com/p/the-golden-rules-of-agent-first-product',
     avatar: 'https://github.com/jinayoon.png?size=128',
     date: '2026-04-08',
+    language: 'en',
   },
   {
     id: '14',
@@ -180,6 +196,7 @@ export const articles: Article[] = [
     url: 'https://newsletter.posthog.com/p/how-to-demo',
     avatar: 'https://github.com/jinayoon.png?size=128',
     date: '2026-05-28',
+    language: 'en',
   },
   {
     id: '15',
@@ -192,6 +209,7 @@ export const articles: Article[] = [
     url: 'https://newsletter.posthog.com/p/great-companies-are-built-in-hackathons',
     avatar: 'https://github.com/ivanagas.png?size=128',
     date: '2026-04-21',
+    language: 'en',
   },
   {
     id: '16',
@@ -204,6 +222,7 @@ export const articles: Article[] = [
     url: 'https://newsletter.posthog.com/p/an-engineers-guide-to-product-management',
     avatar: 'https://github.com/jinayoon.png?size=128',
     date: '2026-03-11',
+    language: 'en',
   },
   {
     id: '17',
@@ -216,6 +235,7 @@ export const articles: Article[] = [
     url: 'https://landingpagehottips.com/',
     avatar: 'https://github.com/robhope.png?size=128',
     date: '2026-06-11',
+    language: 'en',
   },
   {
     id: '18',
@@ -228,6 +248,7 @@ export const articles: Article[] = [
     url: 'https://martinfowler.com/articles/micro-frontends.html',
     avatar: '/lectura/cam-jackson.jpg',
     date: '2019-06-19',
+    language: 'en',
   },
   {
     id: '19',
@@ -240,6 +261,7 @@ export const articles: Article[] = [
     url: 'https://martinfowler.com/articles/serverless.html',
     avatar: '/lectura/mike-roberts.jpg',
     date: '2018-05-22',
+    language: 'en',
   },
   {
     id: '20',
@@ -252,6 +274,7 @@ export const articles: Article[] = [
     url: 'https://martinfowler.com/articles/feature-toggles.html',
     avatar: '/lectura/pete-hodgson.png',
     date: '2017-10-09',
+    language: 'en',
   },
   {
     id: '21',
@@ -264,6 +287,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/brownfield-agentic-engineering/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-09-14',
+    language: 'en',
   },
   {
     id: '22',
@@ -276,6 +300,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/audit-your-agent-files/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-08-27',
+    language: 'en',
   },
   {
     id: '23',
@@ -288,6 +313,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agentic-skill-decay/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-08-31',
+    language: 'en',
   },
   {
     id: '24',
@@ -300,6 +326,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/human-judgment-doesnt-leave-the-software/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-08-21',
+    language: 'en',
   },
   {
     id: '25',
@@ -312,6 +339,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/practical-loop-engineering/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-08-14',
+    language: 'en',
   },
   {
     id: '26',
@@ -324,6 +352,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agentic-code-quality/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-08-08',
+    language: 'en',
   },
   {
     id: '27',
@@ -336,6 +365,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/software-factories/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-07-20',
+    language: 'en',
   },
   {
     id: '28',
@@ -348,6 +378,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/own-the-outer-loop/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-07-15',
+    language: 'en',
   },
   {
     id: '29',
@@ -360,6 +391,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/earning-judgment/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-07-14',
+    language: 'en',
   },
   {
     id: '30',
@@ -372,6 +404,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/career-advice-age-of-agents/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-07-06',
+    language: 'en',
   },
   {
     id: '31',
@@ -384,6 +417,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agentic-autonomy-levels/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-07-02',
+    language: 'en',
   },
   {
     id: '32',
@@ -396,6 +430,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/new-sdlc-vibe-coding/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-06-16',
+    language: 'en',
   },
   {
     id: '33',
@@ -408,6 +443,7 @@ export const articles: Article[] = [
     url: 'https://addyosmani.com/blog/agentic-code-review/',
     avatar: 'https://github.com/addyosmani.png?size=128',
     date: '2026-06-15',
+    language: 'en',
   },
   {
     id: '34',
@@ -420,6 +456,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/composable-architecture-integration-tax',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-07-22',
+    language: 'en',
   },
   {
     id: '35',
@@ -432,6 +469,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/vector-vs-graph-databases',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-07-10',
+    language: 'en',
   },
   {
     id: '36',
@@ -444,6 +482,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/backend-for-frontend-pattern',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-07-09',
+    language: 'en',
   },
   {
     id: '37',
@@ -456,6 +495,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/graphql-vs-rest',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-07-07',
+    language: 'en',
   },
   {
     id: '38',
@@ -468,6 +508,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/monolithic-vs-microservices',
     avatar: '/lectura/ben-sabic.jpg',
     date: '2026-07-06',
+    language: 'en',
   },
   {
     id: '39',
@@ -480,6 +521,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/rest-api-vs-restful-api',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-07-02',
+    language: 'en',
   },
   {
     id: '40',
@@ -492,6 +534,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/ci-cd-pipeline',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-05-26',
+    language: 'en',
   },
   {
     id: '41',
@@ -504,6 +547,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/self-hosted-llm',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-08-30',
+    language: 'en',
   },
   {
     id: '42',
@@ -516,6 +560,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/best-ai-gateways',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-07-27',
+    language: 'en',
   },
   {
     id: '43',
@@ -528,6 +573,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/what-is-an-ai-gateway',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-07-24',
+    language: 'en',
   },
   {
     id: '44',
@@ -540,6 +586,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/how-to-build-production-ready-ai-agents',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-08-03',
+    language: 'en',
   },
   {
     id: '45',
@@ -552,6 +599,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/ai-agent-evaluation-frameworks-production',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-07-30',
+    language: 'en',
   },
   {
     id: '46',
@@ -564,6 +612,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/multimodal-ai',
     avatar: 'https://github.com/vercel.png?size=128',
     date: '2026-07-23',
+    language: 'en',
   },
   {
     id: '47',
@@ -576,6 +625,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/fine-tuning-vs-rag',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-07-09',
+    language: 'en',
   },
   {
     id: '48',
@@ -588,6 +638,7 @@ export const articles: Article[] = [
     url: 'https://vercel.com/i/building-agentic-ai-applications-with-a-problem-first-approach',
     avatar: '/lectura/anshuman-bhardwaj.webp',
     date: '2026-06-17',
+    language: 'en',
   },
   {
     id: '49',
@@ -600,6 +651,7 @@ export const articles: Article[] = [
     url: 'https://alistair.cockburn.us/hexagonal-architecture',
     avatar: '/lectura/alistair-cockburn.jpg',
     date: '2005-01-04',
+    language: 'en',
   },
   {
     id: '50',
@@ -612,6 +664,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-is-an-llm',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-17',
+    language: 'en',
   },
   {
     id: '51',
@@ -624,6 +677,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-is-an-ai-engineer',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-26',
+    language: 'en',
   },
   {
     id: '52',
@@ -636,6 +690,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-are-llms-used-for',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-18',
+    language: 'en',
   },
   {
     id: '53',
@@ -648,6 +703,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/how-to-choose-an-llm',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-17',
+    language: 'en',
   },
   {
     id: '54',
@@ -660,6 +716,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/the-ai-engineer-mindset',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-24',
+    language: 'en',
   },
   {
     id: '55',
@@ -672,6 +729,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-are-evals',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2024-11-18',
+    language: 'en',
   },
   {
     id: '56',
@@ -684,6 +742,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/how-to-improve-your-llm-powered-app',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-03-24',
+    language: 'en',
   },
   {
     id: '57',
@@ -696,6 +755,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/skills-grill-me',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-04-27',
+    language: 'en',
   },
   {
     id: '58',
@@ -708,6 +768,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/grill-with-docs',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-05-05',
+    language: 'en',
   },
   {
     id: '59',
@@ -720,6 +781,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/essential-ai-coding-feedback-loops-for-type-script-projects',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-01-16',
+    language: 'en',
   },
   {
     id: '60',
@@ -732,6 +794,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/a-complete-guide-to-agents-md',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-01-18',
+    language: 'en',
   },
   {
     id: '61',
@@ -744,6 +807,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/plan-mode-introduction',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2026-01-09',
+    language: 'en',
   },
   {
     id: '62',
@@ -756,6 +820,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-are-tokens',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-09-30',
+    language: 'en',
   },
   {
     id: '63',
@@ -768,6 +833,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-is-the-context-window',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-09-30',
+    language: 'en',
   },
   {
     id: '64',
@@ -780,6 +846,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-are-tools',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-09-30',
+    language: 'en',
   },
   {
     id: '65',
@@ -792,6 +859,7 @@ export const articles: Article[] = [
     url: 'https://www.aihero.dev/what-is-an-agent',
     avatar: 'https://github.com/mattpocock.png?size=128',
     date: '2025-09-30',
+    language: 'en',
   },
   {
     id: '66',
@@ -804,6 +872,7 @@ export const articles: Article[] = [
     url: 'https://leerob.com/product-engineers',
     avatar: 'https://github.com/leerob.png?size=128',
     date: '2023-08-01',
+    language: 'en',
   },
   {
     id: '67',
@@ -816,6 +885,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/developer-experience-ai-agents',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-08-22',
+    language: 'en',
   },
   {
     id: '68',
@@ -828,6 +898,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-vs-designer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-08-19',
+    language: 'en',
   },
   {
     id: '69',
@@ -840,6 +911,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-vs-project-manager',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-08-11',
+    language: 'en',
   },
   {
     id: '70',
@@ -852,6 +924,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/cicd-is-dead',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-08-07',
+    language: 'en',
   },
   {
     id: '71',
@@ -864,6 +937,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/associate-product-engineer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-08-06',
+    language: 'en',
   },
   {
     id: '72',
@@ -876,6 +950,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/making-codebase-agent-ready',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-30',
+    language: 'en',
   },
   {
     id: '73',
@@ -888,6 +963,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-user-research',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-28',
+    language: 'en',
   },
   {
     id: '74',
@@ -900,6 +976,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineering-manager',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-23',
+    language: 'en',
   },
   {
     id: '75',
@@ -912,6 +989,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/harness-engineering',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-22',
+    language: 'en',
   },
   {
     id: '76',
@@ -924,6 +1002,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-skills',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-21',
+    language: 'en',
   },
   {
     id: '77',
@@ -936,6 +1015,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/spec-driven-development',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-17',
+    language: 'en',
   },
   {
     id: '78',
@@ -948,6 +1028,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/moving-away-from-agile',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-14',
+    language: 'en',
   },
   {
     id: '79',
@@ -960,6 +1041,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-metrics',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-11',
+    language: 'en',
   },
   {
     id: '80',
@@ -972,6 +1054,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-guide-go-to-market',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-10',
+    language: 'en',
   },
   {
     id: '81',
@@ -984,6 +1067,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/fly-ahead-of-the-airplane',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-10',
+    language: 'en',
   },
   {
     id: '82',
@@ -996,6 +1080,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/multi-agent-architecture-ships',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-09',
+    language: 'en',
   },
   {
     id: '83',
@@ -1008,6 +1093,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/software-engineering-plan-and-review',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-08',
+    language: 'en',
   },
   {
     id: '84',
@@ -1020,6 +1106,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/vibe-coding-to-vibe-engineering',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-07',
+    language: 'en',
   },
   {
     id: '85',
@@ -1032,6 +1119,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-manager-to-product-engineer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-04',
+    language: 'en',
   },
   {
     id: '86',
@@ -1044,6 +1132,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/context-engineering',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-07-01',
+    language: 'en',
   },
   {
     id: '87',
@@ -1056,6 +1145,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-vs-full-stack',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-06-30',
+    language: 'en',
   },
   {
     id: '88',
@@ -1068,6 +1158,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-impact-portfolio',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-06-24',
+    language: 'en',
   },
   {
     id: '89',
@@ -1080,6 +1171,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/software-engineer-to-product-engineer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-06-13',
+    language: 'en',
   },
   {
     id: '90',
@@ -1092,6 +1184,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/how-to-become-a-product-engineer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-05-28',
+    language: 'en',
   },
   {
     id: '91',
@@ -1104,6 +1197,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-interview',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-05-29',
+    language: 'en',
   },
   {
     id: '92',
@@ -1116,6 +1210,7 @@ export const articles: Article[] = [
     url: 'https://www.product.engineer/blog/product-engineer-vs-software-engineer',
     avatar: 'https://github.com/felipebarreiros.png?size=128',
     date: '2026-05-26',
+    language: 'en',
   },
   {
     id: '93',
@@ -1128,6 +1223,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/agentic-coding-best-practices',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-07-23',
+    language: 'en',
   },
   {
     id: '94',
@@ -1140,6 +1236,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/ai-engineering-process',
     avatar: '/lectura/santiago-bertinat.webp',
     date: '2026-04-28',
+    language: 'en',
   },
   {
     id: '95',
@@ -1152,6 +1249,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/vibe-coding',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2025-07-03',
+    language: 'en',
   },
   {
     id: '96',
@@ -1164,6 +1262,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/software-testing-life-cycle',
     avatar: 'https://github.com/eagerworks.png?size=128',
     date: '2025-05-07',
+    language: 'en',
   },
   {
     id: '97',
@@ -1176,6 +1275,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/design-development-teamwork',
     avatar: '/lectura/agustina-ranales.webp',
     date: '2025-06-12',
+    language: 'en',
   },
   {
     id: '98',
@@ -1188,6 +1288,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/rag-and-knowledge-graphs',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2024-09-13',
+    language: 'en',
   },
   {
     id: '99',
@@ -1200,6 +1301,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/cross-cultural-design',
     avatar: '/lectura/agustina-ranales.webp',
     date: '2024-11-28',
+    language: 'en',
   },
   {
     id: '100',
@@ -1212,6 +1314,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/retrieval-augmented-generation',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2024-02-27',
+    language: 'en',
   },
   {
     id: '101',
@@ -1224,6 +1327,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/clustering-ai',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2024-06-04',
+    language: 'en',
   },
   {
     id: '102',
@@ -1236,6 +1340,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/docs-hunter-rag',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2024-03-28',
+    language: 'en',
   },
   {
     id: '103',
@@ -1248,6 +1353,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/ai-for-text-generation',
     avatar: '/lectura/juan-pablo-balarini.webp',
     date: '2024-07-25',
+    language: 'en',
   },
   {
     id: '104',
@@ -1260,6 +1366,7 @@ export const articles: Article[] = [
     url: 'https://eagerworks.com/blog/progressive-web-applications',
     avatar: 'https://github.com/eagerworks.png?size=128',
     date: '2024-07-04',
+    language: 'en',
   },
   {
     id: '105',
@@ -1272,6 +1379,7 @@ export const articles: Article[] = [
     url: 'https://medium.com/@mauriciosnchz/singletons-y-carreras-de-datos-38d3963d7fbc',
     avatar: '/lectura/mauricio-sanchez.webp',
     date: '2026-06-17',
+    language: 'es',
   },
   {
     id: '106',
@@ -1284,6 +1392,7 @@ export const articles: Article[] = [
     url: 'https://medium.com/peya-tech/buscando-el-dise%C3%B1o-perfecto-0651723fb26b',
     avatar: '/lectura/mauricio-sanchez.webp',
     date: '2025-07-04',
+    language: 'es',
   },
   {
     id: '107',
@@ -1296,6 +1405,7 @@ export const articles: Article[] = [
     url: 'https://medium.com/peya-tech/growing-pains-mejorando-la-performance-de-componentes-ios-ef80db706f81',
     avatar: '/lectura/mauricio-sanchez.webp',
     date: '2024-10-16',
+    language: 'es',
   },
   {
     id: '108',
@@ -1308,6 +1418,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/loop-engineering',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-17',
+    language: 'en',
   },
   {
     id: '109',
@@ -1321,6 +1432,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/crashout',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-15',
+    language: 'en',
   },
   {
     id: '110',
@@ -1333,6 +1445,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/ai-agents-with-eve',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-23',
+    language: 'en',
   },
   {
     id: '111',
@@ -1345,6 +1458,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/agent-skills',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-23',
+    language: 'en',
   },
   {
     id: '112',
@@ -1357,6 +1471,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/mcp-servers',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-23',
+    language: 'en',
   },
   {
     id: '113',
@@ -1369,6 +1484,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/agent-native-architectures',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-17',
+    language: 'en',
   },
   {
     id: '114',
@@ -1382,6 +1498,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/minguini',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-16',
+    language: 'en',
   },
   {
     id: '115',
@@ -1394,6 +1511,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/quizo',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-16',
+    language: 'en',
   },
   {
     id: '116',
@@ -1406,6 +1524,7 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/pcn',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-08-15',
+    language: 'en',
   },
   {
     id: '117',
@@ -1418,8 +1537,11 @@ export const articles: Article[] = [
     url: 'https://www.dizenz.com/blog/agentic-coding',
     avatar: '/lectura/agustin-sanchez.webp',
     date: '2026-02-15',
+    language: 'en',
   },
-].sort((a, b) => b.date.localeCompare(a.date));
+];
+
+export const articles = [...allArticles].sort((a, b) => b.date.localeCompare(a.date));
 
 /** Everyone who signed an article: its author first, then any coauthors. */
 export const articleAuthors = (article: Article) => [article.author, ...(article.coauthors ?? [])];

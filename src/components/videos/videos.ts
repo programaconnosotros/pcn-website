@@ -1,3 +1,5 @@
+import type { Language } from '@/components/ui/language-filter';
+
 export interface Video {
   /** YouTube video id. */
   id: string;
@@ -8,6 +10,8 @@ export interface Video {
   /** Publication date on YouTube, ISO YYYY-MM-DD. */
   date: string;
   durationSeconds: number;
+  /** Language the video is spoken in. */
+  language: Language;
   /** Conference talks, also listed under "externas" on /charlas. */
   isTalk?: boolean;
 }
@@ -20,6 +24,7 @@ const allVideos: Video[] = [
     channel: 'Sequoia Capital',
     date: '2026-05-04',
     durationSeconds: 1476,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -29,6 +34,7 @@ const allVideos: Video[] = [
     channel: 'Sequoia Capital',
     date: '2026-04-29',
     durationSeconds: 1789,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -38,6 +44,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-04-23',
     durationSeconds: 1106,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -47,6 +54,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-09-30',
     durationSeconds: 1480,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -56,6 +64,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-09-25',
     durationSeconds: 1354,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -65,6 +74,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-07-10',
     durationSeconds: 1173,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -74,6 +84,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-07-08',
     durationSeconds: 961,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -83,6 +94,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-09-27',
     durationSeconds: 1236,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -92,6 +104,7 @@ const allVideos: Video[] = [
     channel: 'AI Engineer',
     date: '2026-09-27',
     durationSeconds: 1369,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -101,6 +114,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2025-12-03',
     durationSeconds: 1787,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -110,6 +124,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2025-11-17',
     durationSeconds: 1542,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -119,6 +134,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2025-12-15',
     durationSeconds: 1131,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -128,6 +144,7 @@ const allVideos: Video[] = [
     channel: 'Ruby on Rails',
     date: '2025-09-04',
     durationSeconds: 3835,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -137,6 +154,7 @@ const allVideos: Video[] = [
     channel: 'Ruby on Rails',
     date: '2026-09-23',
     durationSeconds: 3787,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -146,6 +164,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-09-26',
     durationSeconds: 2618,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -155,6 +174,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 2131,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -164,6 +184,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 2063,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -173,6 +194,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 1775,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -182,6 +204,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 1792,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -191,6 +214,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 2182,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -200,6 +224,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 4970,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -210,6 +235,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-10-01',
     durationSeconds: 5291,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -219,6 +245,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-09-28',
     durationSeconds: 1973,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -228,6 +255,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-09-28',
     durationSeconds: 2080,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -237,6 +265,7 @@ const allVideos: Video[] = [
     channel: 'Nerdearla',
     date: '2026-09-28',
     durationSeconds: 2133,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -246,6 +275,7 @@ const allVideos: Video[] = [
     channel: 'React Conf',
     date: '2024-07-25',
     durationSeconds: 1203,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -255,6 +285,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2023-11-03',
     durationSeconds: 971,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -264,6 +295,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2023-11-03',
     durationSeconds: 1741,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -273,6 +305,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2025-11-13',
     durationSeconds: 1509,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -282,6 +315,7 @@ const allVideos: Video[] = [
     channel: 'Vercel',
     date: '2025-11-24',
     durationSeconds: 854,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -291,6 +325,7 @@ const allVideos: Video[] = [
     channel: 'Real World React',
     date: '2022-05-24',
     durationSeconds: 1189,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -300,6 +335,7 @@ const allVideos: Video[] = [
     channel: 'Software Crafters Barcelona',
     date: '2020-02-02',
     durationSeconds: 3280,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -309,6 +345,7 @@ const allVideos: Video[] = [
     channel: 'Software Crafters Barcelona',
     date: '2019-02-19',
     durationSeconds: 3475,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -318,6 +355,7 @@ const allVideos: Video[] = [
     channel: 'CodelyTV',
     date: '2016-11-21',
     durationSeconds: 2949,
+    language: 'es',
     isTalk: true,
   },
   {
@@ -327,6 +365,7 @@ const allVideos: Video[] = [
     channel: 'CS50',
     date: '2016-11-10',
     durationSeconds: 2307,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -335,6 +374,7 @@ const allVideos: Video[] = [
     channel: 'Brian Will',
     date: '2016-03-21',
     durationSeconds: 3168,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -344,6 +384,7 @@ const allVideos: Video[] = [
     channel: 'NorfolkDevelopers',
     date: '2015-12-15',
     durationSeconds: 4403,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -353,6 +394,7 @@ const allVideos: Video[] = [
     channel: "O'Reilly",
     date: '2015-07-23',
     durationSeconds: 844,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -362,6 +404,7 @@ const allVideos: Video[] = [
     channel: 'People career',
     date: '2015-05-23',
     durationSeconds: 5015,
+    language: 'en',
     isTalk: true,
   },
   {
@@ -371,6 +414,7 @@ const allVideos: Video[] = [
     channel: 'David Senra',
     date: '2026-07-26',
     durationSeconds: 6099,
+    language: 'en',
   },
   {
     id: 'LU6K07U4wOk',
@@ -378,6 +422,7 @@ const allVideos: Video[] = [
     channel: 'Fazt',
     date: '2026-09-18',
     durationSeconds: 1850,
+    language: 'es',
   },
   {
     id: 'NYFGCESmikA',
@@ -386,6 +431,7 @@ const allVideos: Video[] = [
     channel: 'Lex Fridman',
     date: '2026-08-26',
     durationSeconds: 18951,
+    language: 'en',
   },
   {
     id: 'vagyIcmIGOQ',
@@ -394,6 +440,7 @@ const allVideos: Video[] = [
     channel: 'Lex Fridman',
     date: '2025-07-12',
     durationSeconds: 22128,
+    language: 'en',
   },
   {
     id: 'eiC58R16hb8',
@@ -401,6 +448,7 @@ const allVideos: Video[] = [
     channel: 'Lydia Hallie',
     date: '2024-04-04',
     durationSeconds: 754,
+    language: 'en',
   },
   {
     id: 'hJHvdBlSxug',
@@ -408,6 +456,7 @@ const allVideos: Video[] = [
     channel: 'Academind',
     date: '2019-04-15',
     durationSeconds: 745,
+    language: 'en',
   },
   {
     id: 'xckH5s3UuX4',
@@ -415,6 +464,7 @@ const allVideos: Video[] = [
     channel: 'freeCodeCamp Talks',
     date: '2020-12-22',
     durationSeconds: 644,
+    language: 'en',
   },
   {
     id: '6ERUGFurDHY',
@@ -422,6 +472,7 @@ const allVideos: Video[] = [
     channel: 'Google Cloud Tech',
     date: '2026-07-06',
     durationSeconds: 2761,
+    language: 'en',
   },
   {
     id: 'q9Vaoz0hd0U',
@@ -429,6 +480,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-04-29',
     durationSeconds: 1515,
+    language: 'es',
   },
   {
     id: 'FhQfG-Q4wL4',
@@ -436,6 +488,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-09-13',
     durationSeconds: 1239,
+    language: 'es',
   },
   {
     id: 'lBimeKh88OU',
@@ -443,6 +496,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-08-02',
     durationSeconds: 1836,
+    language: 'es',
   },
   {
     id: '2myd3cgqe2k',
@@ -450,6 +504,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-07-29',
     durationSeconds: 1107,
+    language: 'es',
   },
   {
     id: 'RBzGXBYa0Lg',
@@ -457,6 +512,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-07-26',
     durationSeconds: 1485,
+    language: 'es',
   },
   {
     id: '18FeGXyB-sI',
@@ -464,6 +520,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-06-14',
     durationSeconds: 577,
+    language: 'es',
   },
   {
     id: '2nEiIG-xca4',
@@ -471,6 +528,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-06-28',
     durationSeconds: 1423,
+    language: 'es',
   },
   {
     id: 'PoXC6XcVa1M',
@@ -478,6 +536,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-06-03',
     durationSeconds: 1347,
+    language: 'es',
   },
   {
     id: 'ElGlTv2A_bM',
@@ -485,6 +544,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-05-13',
     durationSeconds: 1712,
+    language: 'es',
   },
   {
     id: 'UTNbLoZCOgM',
@@ -492,6 +552,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-04-12',
     durationSeconds: 1180,
+    language: 'es',
   },
   {
     id: 'Rla0IMxIlNc',
@@ -499,6 +560,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-03-11',
     durationSeconds: 1127,
+    language: 'es',
   },
   {
     id: 'l3HJsXA-Fa4',
@@ -506,6 +568,7 @@ const allVideos: Video[] = [
     channel: 'BettaTech',
     date: '2026-02-05',
     durationSeconds: 1746,
+    language: 'es',
   },
 ];
 

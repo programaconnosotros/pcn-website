@@ -21,12 +21,20 @@ import { ArticleReaderDialog } from './article-reader-dialog';
 import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { SearchBar } from '@/components/ui/search-bar';
+import {
+  LanguageFilter,
+  matchesLanguage,
+  type Language,
+  type LanguageFilterValue,
+} from '@/components/ui/language-filter';
 import type { Writer } from './article-writers';
 
 interface Book {
   id: string;
   title: string;
   author: string;
+  /** Language of the edition we recommend. */
+  language: Language;
   categories: string[];
   description: string;
   year?: number;
@@ -35,11 +43,12 @@ interface Book {
   url?: string;
 }
 
-const books: Book[] = [
+const allBooks: Book[] = [
   {
     id: '1',
     title: 'Clean Code',
     author: 'Robert C. Martin',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Un manual de artesanía de software ágil que te enseñará a escribir código limpio y mantenible.',
@@ -51,6 +60,7 @@ const books: Book[] = [
     id: '2',
     title: 'The Pragmatic Programmer',
     author: 'Andrew Hunt, David Thomas',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Un enfoque práctico para convertirse en un programador más efectivo y productivo.',
@@ -62,6 +72,7 @@ const books: Book[] = [
     id: '3',
     title: 'Design Patterns',
     author: 'Gang of Four',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Patrones de diseño reutilizables para resolver problemas comunes en el diseño de software.',
@@ -73,6 +84,7 @@ const books: Book[] = [
     id: '4',
     title: 'Refactoring',
     author: 'Martin Fowler',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Mejora del diseño del código existente, mostrando cómo mejorar la estructura del código sin cambiar su comportamiento.',
@@ -84,6 +96,7 @@ const books: Book[] = [
     id: '5',
     title: "You Don't Know JS",
     author: 'Kyle Simpson',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Serie de libros que profundiza en los mecanismos internos del lenguaje JavaScript.',
@@ -94,6 +107,7 @@ const books: Book[] = [
     id: '6',
     title: 'The Mythical Man-Month',
     author: 'Frederick P. Brooks Jr.',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Ensayos sobre ingeniería de software que explican por qué agregar más personas a un proyecto retrasado lo retrasa aún más.',
@@ -105,6 +119,7 @@ const books: Book[] = [
     id: '7',
     title: 'Code Complete',
     author: 'Steve McConnell',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Una guía práctica para la construcción de software que cubre todo el proceso de desarrollo.',
@@ -116,6 +131,7 @@ const books: Book[] = [
     id: '8',
     title: 'Domain-Driven Design',
     author: 'Eric Evans',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Un enfoque para el desarrollo de software complejo conectando la implementación a un modelo en evolución.',
@@ -127,6 +143,7 @@ const books: Book[] = [
     id: '9',
     title: 'Mastering Event-Driven Microservices on AWS',
     author: 'Sheen Brisals, Luke Hedger',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía práctica para diseñar y construir arquitecturas de microservicios orientadas a eventos utilizando los servicios nativos de AWS.',
@@ -138,6 +155,7 @@ const books: Book[] = [
     id: '10',
     title: 'Mastering Serverless Computing with AWS Lambda',
     author: 'Marcia Villalba',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía completa para dominar el cómputo serverless con AWS Lambda, abarcando patrones, rendimiento y mejores prácticas de producción.',
@@ -149,6 +167,7 @@ const books: Book[] = [
     id: '11',
     title: '97 Things Every Software Architect Should Know',
     author: 'Richard Monson-Haefel (ed.)',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una colección de consejos prácticos de los arquitectos de software más experimentados del mundo, organizados en 97 lecciones esenciales.',
@@ -160,6 +179,7 @@ const books: Book[] = [
     id: '12',
     title: 'Balancing Coupling in Software Design',
     author: 'Vladislav Khononov',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Un análisis profundo del acoplamiento en el diseño de software, con estrategias para balancearlo y construir sistemas más mantenibles y evolutivos.',
@@ -171,6 +191,7 @@ const books: Book[] = [
     id: '13',
     title: 'Patterns for API Design',
     author: 'Olaf Zimmermann, Mirko Stocker, Daniel Lübke, Uwe Zdun, Cesare Pautasso',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Un catálogo de patrones probados para diseñar APIs robustas, comprensibles y evolutivas, con énfasis en comunicación entre servicios.',
@@ -182,6 +203,7 @@ const books: Book[] = [
     id: '14',
     title: 'Principles of Web API Design',
     author: 'James Higginbotham',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Un enfoque sistemático para diseñar APIs web de alta calidad, cubriendo modelado de dominio, contratos y gestión del ciclo de vida.',
@@ -193,6 +215,7 @@ const books: Book[] = [
     id: '15',
     title: 'Strategic Monoliths and Microservices',
     author: 'Vaughn Vernon, Tomasz Jaskula',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía estratégica para decidir cuándo usar monolitos o microservicios, con énfasis en Domain-Driven Design y contextos acotados.',
@@ -204,6 +227,7 @@ const books: Book[] = [
     id: '16',
     title: 'Continuous Architecture in Practice',
     author: 'Murat Erder, Pierre Pureur, Eoin Woods',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Un enfoque para practicar la arquitectura de software de forma continua en equipos ágiles, integrando decisiones de diseño en el flujo de desarrollo.',
@@ -215,6 +239,7 @@ const books: Book[] = [
     id: '17',
     title: 'Adaptive Systems with Domain-Driven Design, Wardley Mapping, and Team Topologies',
     author: 'Michael Plöd, Christian Stettler, Alban Frei, Nick Tune',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Combina Domain-Driven Design, Wardley Maps y Team Topologies para construir organizaciones y sistemas de software verdaderamente adaptativos.',
@@ -226,6 +251,7 @@ const books: Book[] = [
     id: '18',
     title: 'Test Driven Development: By Example',
     author: 'Kent Beck',
+    language: 'en',
     categories: ['Programación'],
     description:
       'El libro fundacional del TDD: muestra paso a paso cómo escribir tests antes que el código para producir software más limpio y con menos defectos.',
@@ -237,6 +263,7 @@ const books: Book[] = [
     id: '19',
     title: 'Modern Software Engineering',
     author: 'David Farley',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Un manifiesto para la ingeniería de software moderna, que integra entrega continua, TDD y principios de diseño para construir software de calidad.',
@@ -248,6 +275,7 @@ const books: Book[] = [
     id: '20',
     title: 'Designing Data-Intensive Applications',
     author: 'Martin Kleppmann',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía profunda sobre los principios y prácticas detrás de los sistemas de datos confiables, escalables y mantenibles.',
@@ -259,6 +287,7 @@ const books: Book[] = [
     id: '21',
     title: 'Agile Testing',
     author: 'Lisa Crispin, Janet Gregory',
+    language: 'en',
     categories: ['Programación', 'Testing'],
     description:
       'Una guía práctica para testers y equipos ágiles que muestra cómo integrar el testing en el proceso de desarrollo para entregar software de calidad.',
@@ -270,6 +299,7 @@ const books: Book[] = [
     id: '22',
     title: 'Cracking the Coding Interview',
     author: 'Gayle Laakmann McDowell',
+    language: 'en',
     categories: ['Programación'],
     description:
       'La guía más completa para preparar entrevistas técnicas de programación, con 189 preguntas y soluciones detalladas.',
@@ -281,6 +311,7 @@ const books: Book[] = [
     id: '23',
     title: 'Applying UML and Patterns',
     author: 'Craig Larman',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una introducción al análisis y diseño orientado a objetos con UML y patrones de diseño aplicados al desarrollo iterativo.',
@@ -292,6 +323,7 @@ const books: Book[] = [
     id: '24',
     title: 'Algoritmos a Fondo',
     author: 'Pablo Albero Sznajdleder',
+    language: 'es',
     categories: ['Programación'],
     description:
       'Un recorrido exhaustivo por las estructuras de datos y algoritmos fundamentales, con implementaciones prácticas en C y Java.',
@@ -303,6 +335,7 @@ const books: Book[] = [
     id: '25',
     title: 'Construcción de software con una mirada ágil',
     author: 'Diego Fontdevila, Alfredo Fernández, Jorge Aguirre',
+    language: 'es',
     categories: ['Programación'],
     description:
       'Un enfoque ágil para la construcción de software que combina prácticas de ingeniería moderna con metodologías iterativas de desarrollo.',
@@ -314,6 +347,7 @@ const books: Book[] = [
     id: '26',
     title: 'Engineering Management for the Rest of Us',
     author: 'Sarah Drasner',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Una guía práctica sobre gestión de ingeniería para quienes no tienen formación formal en management, cubriendo comunicación, contratación, retroalimentación y cultura de equipo.',
@@ -325,6 +359,7 @@ const books: Book[] = [
     id: '27',
     title: 'Getting Real',
     author: '37signals',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'El enfoque de 37signals para construir software web exitoso: más chico, más rápido y mejor, evitando funciones, reuniones y planes innecesarios.',
@@ -336,6 +371,7 @@ const books: Book[] = [
     id: '28',
     title: 'Shape Up',
     author: 'Ryan Singer',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'El método de 37signals para dar forma, apostar y construir producto en ciclos de seis semanas, sin estimaciones ni backlogs interminables.',
@@ -347,6 +383,7 @@ const books: Book[] = [
     id: '29',
     title: 'Remote: Office Not Required',
     author: 'Jason Fried, David Heinemeier Hansson',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Argumenta por qué el trabajo remoto es el futuro y cómo hacerlo bien, derribando los mitos sobre productividad y colaboración a distancia.',
@@ -358,6 +395,7 @@ const books: Book[] = [
     id: '30',
     title: "It Doesn't Have to Be Crazy at Work",
     author: 'Jason Fried, David Heinemeier Hansson',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Un manifiesto contra la cultura del ajetreo: cómo construir una empresa tranquila, rentable y sostenible sin largas jornadas ni estrés crónico.',
@@ -369,6 +407,7 @@ const books: Book[] = [
     id: '31',
     title: 'Rework',
     author: 'Jason Fried, David Heinemeier Hansson',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Una visión disruptiva y directa sobre cómo trabajar y emprender, descartando las convenciones tradicionales de los negocios.',
@@ -380,6 +419,7 @@ const books: Book[] = [
     id: '32',
     title: 'Refactoring UI',
     author: 'Adam Wathan, Steve Schoger',
+    language: 'en',
     categories: ['Diseño'],
     description:
       'Aprendé a diseñar interfaces hermosas con tácticas concretas y accionables en lugar de principios abstractos: jerarquía, espaciado, color, tipografía y más.',
@@ -390,6 +430,7 @@ const books: Book[] = [
     id: '33',
     title: 'Practical UI',
     author: 'Adham Dannaway',
+    language: 'en',
     categories: ['Diseño'],
     description:
       'Más de 100 guías prácticas y basadas en lógica para crear interfaces intuitivas, accesibles y atractivas, con ejemplos visuales.',
@@ -400,6 +441,7 @@ const books: Book[] = [
     id: '34',
     title: 'How To Design Better',
     author: 'UI Adrian',
+    language: 'en',
     categories: ['Diseño'],
     description:
       'Recurso de educación en diseño que cubre fundamentos de UI/UX, diseño de componentes y mejores prácticas, con ejemplos visuales y guías accionables.',
@@ -410,6 +452,7 @@ const books: Book[] = [
     id: '35',
     title: 'Better Small Talk',
     author: 'Patrick King',
+    language: 'en',
     categories: ['Comunicación'],
     description:
       'Una guía práctica para mejorar las conversaciones cotidianas, reducir la incomodidad social y construir conexiones más profundas y auténticas.',
@@ -421,6 +464,7 @@ const books: Book[] = [
     id: '36',
     title: 'One Presentation Away',
     author: 'Colin Boyd',
+    language: 'en',
     categories: ['Comunicación'],
     description:
       'Estrategias para convertirse en un orador irresistible que transforma presentaciones en oportunidades de negocio con confianza y claridad.',
@@ -432,6 +476,7 @@ const books: Book[] = [
     id: '37',
     title: 'Domain-Driven Refactoring',
     author: 'Alessandro Colla, Alberto Acerbis',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía práctica para aplicar Domain-Driven Design en la transformación de monolitos en sistemas modulares y microservicios.',
@@ -443,6 +488,7 @@ const books: Book[] = [
     id: '38',
     title: 'The Rust Programming Language',
     author: 'Steve Klabnik, Carol Nichols',
+    language: 'en',
     categories: ['Programación'],
     description:
       'El libro oficial del lenguaje Rust: cubre propiedad, tipado, concurrencia y seguridad de memoria desde los fundamentos hasta temas avanzados.',
@@ -454,6 +500,7 @@ const books: Book[] = [
     id: '39',
     title: 'The Book of Ruby',
     author: 'Huw Collingbourne',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Una introducción exhaustiva al lenguaje Ruby con ejemplos prácticos que van desde los conceptos básicos hasta técnicas orientadas a objetos avanzadas.',
@@ -465,6 +512,7 @@ const books: Book[] = [
     id: '40',
     title: 'The Principles of Object-Oriented JavaScript',
     author: 'Nicholas C. Zakas',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Explora en profundidad los mecanismos orientados a objetos de JavaScript, incluyendo prototipos, constructores, herencia y patrones de diseño.',
@@ -476,6 +524,7 @@ const books: Book[] = [
     id: '41',
     title: 'Data Structures and Algorithms in JavaScript',
     author: 'Federico Kereki',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Implementación y análisis de las estructuras de datos y algoritmos más importantes utilizando JavaScript moderno.',
@@ -487,6 +536,7 @@ const books: Book[] = [
     id: '42',
     title: 'Domain-Driven Design Reference',
     author: 'Eric Evans',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una referencia compacta con las definiciones canónicas y resúmenes de patrones del Domain-Driven Design, ideal como guía de consulta rápida.',
@@ -498,6 +548,7 @@ const books: Book[] = [
     id: '43',
     title: 'Coding Interview Patterns',
     author: 'Alex Xu, Shaun Gunawardane',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Un enfoque sistemático basado en patrones para resolver preguntas de entrevistas de programación con confianza y eficiencia.',
@@ -509,6 +560,7 @@ const books: Book[] = [
     id: '44',
     title: "System Design Interview – An Insider's Guide",
     author: 'Alex Xu',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una guía para superar entrevistas de diseño de sistemas, con casos de estudio detallados sobre sistemas escalables y distribuidos.',
@@ -520,6 +572,7 @@ const books: Book[] = [
     id: '45',
     title: 'Start. Scale. Exit. Repeat.',
     author: 'Colin C. Campbell',
+    language: 'en',
     categories: ['Negocios'],
     description:
       'Los secretos de los emprendedores en serie para crear, escalar, vender y repetir el ciclo de construcción de startups exitosas.',
@@ -531,6 +584,7 @@ const books: Book[] = [
     id: '46',
     title: 'Kickstart Database Management System Fundamentals',
     author: 'Jagdish Chandra Patni, Latika Pinjarkar',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Una introducción clara y práctica a los fundamentos de los sistemas de gestión de bases de datos, incluyendo modelado, SQL y optimización.',
@@ -542,6 +596,7 @@ const books: Book[] = [
     id: '47',
     title: "The Staff Engineer's Path",
     author: 'Tanya Reilly',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Una guía para ingenieros senior que navegan el crecimiento como contribuidores individuales en roles de staff engineer y liderazgo técnico.',
@@ -553,6 +608,7 @@ const books: Book[] = [
     id: '48',
     title: 'Monolith to Microservices',
     author: 'Sam Newman',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Patrones evolutivos y prácticos para migrar sistemas monolíticos hacia arquitecturas de microservicios de forma gradual y segura.',
@@ -564,6 +620,7 @@ const books: Book[] = [
     id: '49',
     title: 'Foundations of Software Testing: ISTQB Certification',
     author: 'Dorothy Graham, Rex Black, Erik van Veenendaal',
+    language: 'en',
     categories: ['Testing'],
     description:
       'Los fundamentos del testing de software según el currículo oficial del ISTQB, cubriendo principios, técnicas y gestión del ciclo de pruebas.',
@@ -575,6 +632,7 @@ const books: Book[] = [
     id: '50',
     title: "The Manager's Path",
     author: 'Camille Fournier',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Una hoja de ruta para líderes de ingeniería en cada etapa de su carrera: desde tech lead hasta CTO, con consejos prácticos y honestos.',
@@ -586,6 +644,7 @@ const books: Book[] = [
     id: '51',
     title: 'Software Architecture: The Hard Parts',
     author: 'Neal Ford, Mark Richards, Pramod Sadalage, Zhamak Dehghani',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Análisis de las difíciles decisiones arquitectónicas en sistemas distribuidos, con trade-offs entre descomposición, comunicación y gestión de datos.',
@@ -597,6 +656,7 @@ const books: Book[] = [
     id: '52',
     title: 'React Key Concepts',
     author: 'Maximilian Schwarzmüller',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Una guía en profundidad sobre los conceptos fundamentales de React: componentes, estado, efectos, contexto y las características del React moderno.',
@@ -608,6 +668,7 @@ const books: Book[] = [
     id: '53',
     title: 'Accelerate',
     author: 'Nicole Forsgren, Jez Humble, Gene Kim',
+    language: 'en',
     categories: ['DevOps', 'Gestión'],
     description:
       'Investigación basada en datos sobre las prácticas de DevOps y entrega continua que distinguen a las organizaciones tecnológicas de alto rendimiento.',
@@ -619,6 +680,7 @@ const books: Book[] = [
     id: '54',
     title: 'Build: Elements of an Effective Software Organization',
     author: 'Rebecca Murphey, Otto Hilska',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Principios y prácticas para construir organizaciones de ingeniería de software efectivas, desde la cultura hasta los procesos técnicos.',
@@ -630,6 +692,7 @@ const books: Book[] = [
     id: '55',
     title: 'Mastering Efficient Software Design Practices',
     author: 'Paulo Cardoso',
+    language: 'en',
     categories: ['DevOps'],
     description:
       'Técnicas para desarrollar software escalable y de alto rendimiento aplicando metodologías ágiles, DevOps, CI/CD y herramientas modernas.',
@@ -641,6 +704,7 @@ const books: Book[] = [
     id: '56',
     title: 'Lead With Empathy',
     author: 'Pete Srodoski',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Cómo elevar las habilidades de liderazgo poniendo la empatía en el centro para construir equipos sólidos e inspirar cambios duraderos en la organización.',
@@ -652,6 +716,7 @@ const books: Book[] = [
     id: '57',
     title: 'Improving Agile Retrospectives',
     author: 'Marc Loeffler',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Técnicas concretas para hacer retrospectivas ágiles más efectivas, dinámicas y orientadas a la mejora continua del equipo.',
@@ -663,6 +728,7 @@ const books: Book[] = [
     id: '58',
     title: 'Developer Testing: Building Quality into Software',
     author: 'Alexander Tarlinder',
+    language: 'en',
     categories: ['Testing'],
     description:
       'Un enfoque integral sobre testing para desarrolladores, cubriendo técnicas de unit testing, mocks y TDD para construir software de calidad.',
@@ -674,6 +740,7 @@ const books: Book[] = [
     id: '59',
     title: 'Management 3.0',
     author: 'Jurgen Appelo',
+    language: 'en',
     categories: ['Gestión'],
     description:
       'Un enfoque moderno y sistémico para la gestión de equipos ágiles, combinando complejidad, motivación y prácticas de liderazgo adaptativo.',
@@ -685,6 +752,7 @@ const books: Book[] = [
     id: '60',
     title: 'More Agile Testing',
     author: 'Janet Gregory, Lisa Crispin',
+    language: 'en',
     categories: ['Testing'],
     description:
       'Continúa el viaje del testing ágil con nuevas técnicas, casos de estudio y reflexiones sobre la calidad en equipos modernos de desarrollo.',
@@ -696,6 +764,7 @@ const books: Book[] = [
     id: '61',
     title: 'Web Security for Developers',
     author: 'Malcolm McDonald',
+    language: 'en',
     categories: ['Seguridad'],
     description:
       'Una guía práctica sobre las principales amenazas de seguridad web — XSS, CSRF, inyección SQL y más — con defensas concretas para desarrolladores.',
@@ -707,6 +776,7 @@ const books: Book[] = [
     id: '62',
     title: 'The Site Reliability Workbook',
     author: 'Betsy Beyer, Niall Richard Murphy, David K. Rensin, Kent Kawahara, Stephen Thorne',
+    language: 'en',
     categories: ['DevOps'],
     description:
       'Un compendio práctico de implementaciones reales de SRE con ejercicios y casos de uso para aplicar los principios de confiabilidad de Google.',
@@ -718,6 +788,7 @@ const books: Book[] = [
     id: '63',
     title: 'Chaos Engineering',
     author: 'Casey Rosenthal, Nora Jones',
+    language: 'en',
     categories: ['DevOps'],
     description:
       'Principios y prácticas de la ingeniería del caos para probar y mejorar la resiliencia de sistemas distribuidos en producción.',
@@ -729,6 +800,7 @@ const books: Book[] = [
     id: '64',
     title: 'Observability Engineering',
     author: 'Charity Majors, Liz Fong-Jones, George Miranda',
+    language: 'en',
     categories: ['DevOps'],
     description:
       'Cómo lograr excelencia en producción mediante observabilidad: trazas, métricas y logs para entender sistemas complejos en tiempo real.',
@@ -740,6 +812,7 @@ const books: Book[] = [
     id: '65',
     title: 'Software Architecture Metrics',
     author: 'Christian Ciceri et al.',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Casos de estudio sobre métricas de arquitectura de software para evaluar, monitorear y mejorar la calidad estructural de los sistemas.',
@@ -751,6 +824,7 @@ const books: Book[] = [
     id: '66',
     title: 'Site Reliability Engineering',
     author: 'Betsy Beyer, Chris Jones, Jennifer Petoff, Niall Richard Murphy',
+    language: 'en',
     categories: ['DevOps'],
     description:
       'Cómo Google ejecuta sus sistemas de producción: principios, prácticas y herramientas de SRE para sistemas a escala global.',
@@ -762,6 +836,7 @@ const books: Book[] = [
     id: '67',
     title: 'The Pricing Roadmap',
     author: 'Ulrik Lehrskov-Schmidt',
+    language: 'en',
     categories: ['Negocios'],
     description:
       'Una guía estructurada para diseñar modelos de precios B2B SaaS que maximizan el valor percibido y la satisfacción del cliente.',
@@ -773,6 +848,7 @@ const books: Book[] = [
     id: '68',
     title: 'The SaaS Playbook',
     author: 'Rob Walling',
+    language: 'en',
     categories: ['Negocios'],
     description:
       'Estrategias probadas para construir un negocio SaaS multimillonario sin capital de riesgo, aplicando principios de bootstrapping y crecimiento sostenible.',
@@ -784,6 +860,7 @@ const books: Book[] = [
     id: '69',
     title: 'Python Crash Course',
     author: 'Eric Matthes',
+    language: 'en',
     categories: ['Programación'],
     description:
       'Una introducción práctica y basada en proyectos al lenguaje Python, cubriendo fundamentos, visualización de datos, aplicaciones web y juegos.',
@@ -795,6 +872,7 @@ const books: Book[] = [
     id: '70',
     title: 'Software Architecture Patterns for Serverless Systems',
     author: 'John Gilbert',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Patrones de arquitectura para construir sistemas serverless modernos con microservicios orientados a eventos y micro frontends.',
@@ -806,6 +884,7 @@ const books: Book[] = [
     id: '71',
     title: 'How AI Works',
     author: 'Ronald T. Kneusel',
+    language: 'en',
     categories: ['IA'],
     description:
       'Una explicación accesible y rigurosa de los fundamentos matemáticos y algorítmicos detrás de la inteligencia artificial moderna.',
@@ -817,6 +896,7 @@ const books: Book[] = [
     id: '72',
     title: 'Serverless as a Game Changer',
     author: 'Joseph Emison',
+    language: 'en',
     categories: ['Arquitectura'],
     description:
       'Cómo aprovechar al máximo el modelo serverless en la nube para transformar la forma en que se construye y opera software a escala.',
@@ -828,6 +908,7 @@ const books: Book[] = [
     id: '73',
     title: 'Generative AI Design Patterns',
     author: 'Valliappa Lakshmanan, Hannes Hapke',
+    language: 'en',
     categories: ['IA'],
     description:
       'Un catálogo de patrones para resolver los problemas habituales al construir agentes y aplicaciones con IA generativa: control de salidas, RAG, razonamiento, confiabilidad y despliegue.',
@@ -840,6 +921,7 @@ const books: Book[] = [
     id: '74',
     title: 'AI Engineering',
     author: 'Chip Huyen',
+    language: 'en',
     categories: ['IA'],
     description:
       'Una guía práctica para construir aplicaciones sobre modelos fundacionales, desde la evaluación y el prompt engineering hasta RAG, agentes, fine-tuning y optimización de inferencia.',
@@ -852,6 +934,7 @@ const books: Book[] = [
     id: '75',
     title: 'Prompt Engineering for Generative AI',
     author: 'James Phoenix, Mike Taylor',
+    language: 'en',
     categories: ['IA'],
     description:
       'Principios y técnicas para escribir prompts que den resultados confiables con modelos de texto e imagen, incluyendo cadenas, agentes y RAG con LangChain.',
@@ -864,6 +947,7 @@ const books: Book[] = [
     id: '76',
     title: 'Designing Multi-Agent Systems',
     author: 'Victor Dibia',
+    language: 'en',
     categories: ['IA'],
     description:
       'Cómo diseñar e implementar sistemas multiagente con LLMs desde primeros principios: patrones de colaboración, orquestación, evaluación, observabilidad y confiabilidad de agentes.',
@@ -876,6 +960,7 @@ const books: Book[] = [
     id: '77',
     title: 'AI Systems Performance Engineering',
     author: 'Chris Fregly',
+    language: 'en',
     categories: ['IA'],
     description:
       'Estrategias concretas para optimizar el entrenamiento y la inferencia de modelos de IA, aprovechando al máximo GPUs, CUDA y PyTorch a nivel de hardware y software.',
@@ -888,6 +973,7 @@ const books: Book[] = [
     id: '78',
     title: 'Designing Machine Learning Systems',
     author: 'Chip Huyen',
+    language: 'en',
     categories: ['IA'],
     description:
       'Un enfoque integral para diseñar sistemas de machine learning en producción: datos, features, evaluación, despliegue, monitoreo y mejora continua de los modelos.',
@@ -900,6 +986,7 @@ const books: Book[] = [
     id: '79',
     title: 'Hands-On LLM Serving and Optimization',
     author: 'Chi Wang, Peiheng Hu',
+    language: 'en',
     categories: ['IA'],
     description:
       'Cómo servir LLMs a escala de forma eficiente, con técnicas de optimización e infraestructura para bajar la latencia y los costos de inferencia.',
@@ -912,6 +999,7 @@ const books: Book[] = [
     id: '80',
     title: 'Hands-On Large Language Models',
     author: 'Jay Alammar, Maarten Grootendorst',
+    language: 'en',
     categories: ['IA'],
     description:
       'Una introducción visual y práctica a los LLMs: cómo funcionan por dentro y cómo usarlos para clasificación, búsqueda semántica, generación de texto y fine-tuning.',
@@ -920,7 +1008,9 @@ const books: Book[] = [
     isbn: '1098150961',
     url: 'https://www.amazon.com/dp/1098150961',
   },
-].sort((a, b) => a.title.localeCompare(b.title));
+];
+
+const books = [...allBooks].sort((a, b) => a.title.localeCompare(b.title));
 
 const categories = [
   'Todas las categorías',
@@ -997,6 +1087,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
   const [activeTab, setActiveTab] = useState<'libros' | 'articulos'>('articulos');
   const [readerArticle, setReaderArticle] = useState<Article | null>(null);
   const [readStatus, setReadStatus] = useState<ReadStatus>('todos');
+  const [language, setLanguage] = useState<LanguageFilterValue>('todos');
   const savedCount = useContentMarks('article').ids('saved').size;
 
   // `/lectura?lista=para-leer` opens straight into the user's reading list (and any other
@@ -1027,9 +1118,9 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
       const matchesCategory =
         selectedCategory === 'Todas las categorías' || book.categories.includes(selectedCategory);
 
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesLanguage(book.language, language);
     });
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, language]);
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
@@ -1044,9 +1135,9 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
       const matchesCategory =
         selectedCategory === 'Todas las categorías' || article.category === selectedCategory;
 
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesLanguage(article.language, language);
     });
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, language]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as 'libros' | 'articulos');
@@ -1090,6 +1181,8 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                     label="Buscar por título, autor o descripción"
                     className="max-w-none flex-1"
                   />
+
+                  <LanguageFilter value={language} onChange={setLanguage} />
 
                   {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
                   {activeTab === 'libros' && (
