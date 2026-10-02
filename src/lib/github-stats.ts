@@ -1,3 +1,5 @@
+import { unstable_cache } from 'next/cache';
+
 const REPO = 'programaconnosotros/pcn-website';
 const API = `https://api.github.com/repos/${REPO}`;
 
@@ -13,7 +15,13 @@ export type ContributorStat = {
   mergedPrs: number;
   /** Lines added across all their commits, or `null` while GitHub computes the stats. */
   linesAdded: number | null;
+  /** Lines deleted across all their commits, or `null` while GitHub computes the stats. */
+  linesDeleted: number | null;
+  /** Start (ISO) of the first week with one of their commits, or `null` when unknown. */
+  firstContributionWeek: string | null;
 };
+
+export type LanguageShare = { name: string; percent: number };
 
 export type CollaborationStats = {
   stars: number;
@@ -28,6 +36,10 @@ export type CollaborationStats = {
   pushedAt: string;
   /** Commits per week for the last 52 weeks, oldest first. Empty while GitHub computes it. */
   weeklyCommits: number[];
+  /** Share of the repo's code per language (by bytes, as GitHub measures it), largest first. */
+  languages: LanguageShare[];
+  /** Lines currently in the repo: every line ever added minus every line deleted. */
+  linesOfCode: number | null;
   topContributors: ContributorStat[];
 };
 
@@ -55,8 +67,11 @@ type GitHubPull = {
 
 type GitHubContributorActivity = {
   author: { login: string } | null;
-  weeks: { a: number; d: number; c: number }[];
+  weeks: { w: number; a: number; d: number; c: number }[];
 };
+
+/** `[weekTimestamp, additions, deletions]` per week; deletions are negative. */
+type GitHubCodeFrequency = [number, number, number][];
 
 const github = async (path: string) => {
   const headers: HeadersInit = {
@@ -73,6 +88,40 @@ const github = async (path: string) => {
   if (!response.ok) throw new Error(`GitHub ${path} responded ${response.status}`);
   return response;
 };
+
+const STATS_ATTEMPTS = 3;
+const STATS_RETRY_MS = 1500;
+
+/**
+ * A `/stats/*` endpoint. GitHub answers 202 with no body while it computes them, so retry a
+ * few times and throw if they are still not ready: `unstable_cache` keeps only successful
+ * results, so a 202 is never cached for the hour and the next render asks again.
+ */
+const githubStats = unstable_cache(
+  async <T>(path: string): Promise<T> => {
+    const headers: HeadersInit = {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+    if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+
+    for (let attempt = 1; attempt <= STATS_ATTEMPTS; attempt++) {
+      const response = await fetch(`${API}${path}`, {
+        headers,
+        cache: 'no-store',
+        signal: AbortSignal.timeout(8000),
+      });
+      if (response.status === 200) return response.json();
+      if (response.status !== 202) throw new Error(`GitHub ${path} responded ${response.status}`);
+      if (attempt < STATS_ATTEMPTS) await new Promise((r) => setTimeout(r, STATS_RETRY_MS));
+    }
+    throw new Error(`GitHub ${path} is still computing`);
+  },
+  ['github-stats'],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+const optionalStats = <T>(path: string) => githubStats<T>(path).catch(() => null);
 
 /** Total item count of a paginated endpoint, read from the `rel="last"` page of `per_page=1`. */
 const countFromLinkHeader = (response: Response, fallback: number) => {
@@ -103,23 +152,29 @@ const median = (values: number[]) => {
 /** Collaboration numbers for the website repo, or `null` when GitHub can't be reached. */
 export const getCollaborationStats = async (): Promise<CollaborationStats | null> => {
   try {
-    const [repo, contributors, commitsResponse, participation, pulls, activity] = await Promise.all(
-      [
-        github('').then((res) => res.json() as Promise<GitHubRepo>),
-        github('/contributors?per_page=100').then(
-          (res) => res.json() as Promise<GitHubContributor[]>,
-        ),
-        github('/commits?per_page=1'),
-        // Returns 202 with an empty body while GitHub computes the stats; treat that as no data.
-        github('/stats/participation')
-          .then((res) => (res.status === 200 ? res.json() : null))
-          .catch(() => null) as Promise<{ all?: number[] } | null>,
-        fetchAllPulls(),
-        github('/stats/contributors')
-          .then((res) => (res.status === 200 ? res.json() : null))
-          .catch(() => null) as Promise<GitHubContributorActivity[] | null>,
-      ],
-    );
+    const [
+      repo,
+      contributors,
+      commitsResponse,
+      participation,
+      pulls,
+      activity,
+      languages,
+      frequency,
+    ] = await Promise.all([
+      github('').then((res) => res.json() as Promise<GitHubRepo>),
+      github('/contributors?per_page=100').then(
+        (res) => res.json() as Promise<GitHubContributor[]>,
+      ),
+      github('/commits?per_page=1'),
+      optionalStats<{ all?: number[] }>('/stats/participation'),
+      fetchAllPulls(),
+      optionalStats<GitHubContributorActivity[]>('/stats/contributors'),
+      github('/languages')
+        .then((res) => res.json() as Promise<Record<string, number>>)
+        .catch(() => ({}) as Record<string, number>),
+      optionalStats<GitHubCodeFrequency>('/stats/code_frequency'),
+    ]);
 
     const humans = contributors.filter((contributor) => contributor.type !== 'Bot');
     const merged = pulls.filter((pull) => pull.merged_at);
@@ -130,15 +185,31 @@ export const getCollaborationStats = async (): Promise<CollaborationStats | null
       if (login) mergedByAuthor.set(login, (mergedByAuthor.get(login) ?? 0) + 1);
     }
 
-    const linesAddedByAuthor = new Map<string, number>();
+    const activityByAuthor = new Map<
+      string,
+      { added: number; deleted: number; firstWeek: string | null }
+    >();
     for (const { author, weeks } of activity ?? []) {
-      if (author) {
-        linesAddedByAuthor.set(
-          author.login,
-          weeks.reduce((sum, week) => sum + week.a, 0),
-        );
-      }
+      if (!author) continue;
+      const first = weeks.find((week) => week.c > 0);
+      activityByAuthor.set(author.login, {
+        added: weeks.reduce((sum, week) => sum + week.a, 0),
+        deleted: weeks.reduce((sum, week) => sum + week.d, 0),
+        firstWeek: first ? new Date(first.w * 1000).toISOString() : null,
+      });
     }
+
+    const languageBytes = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
+    const languageShares = Object.entries(languages)
+      .map(([name, bytes]) => ({ name, percent: (bytes / languageBytes) * 100 }))
+      .sort((a, b) => b.percent - a.percent);
+
+    // code_frequency covers every commit; the per-author totals are the fallback while it computes.
+    const linesOfCode = frequency
+      ? frequency.reduce((sum, [, added, deleted]) => sum + added + deleted, 0)
+      : activity
+        ? [...activityByAuthor.values()].reduce((sum, a) => sum + a.added - a.deleted, 0)
+        : null;
 
     const hoursToMerge = merged.map(
       (pull) => (Date.parse(pull.merged_at!) - Date.parse(pull.created_at)) / 3_600_000,
@@ -151,7 +222,9 @@ export const getCollaborationStats = async (): Promise<CollaborationStats | null
         htmlUrl: contributor.html_url,
         commits: contributor.contributions,
         mergedPrs: mergedByAuthor.get(contributor.login) ?? 0,
-        linesAdded: activity ? linesAddedByAuthor.get(contributor.login) ?? 0 : null,
+        linesAdded: activity ? activityByAuthor.get(contributor.login)?.added ?? 0 : null,
+        linesDeleted: activity ? activityByAuthor.get(contributor.login)?.deleted ?? 0 : null,
+        firstContributionWeek: activityByAuthor.get(contributor.login)?.firstWeek ?? null,
       }))
       .sort((a, b) => b.mergedPrs - a.mergedPrs || b.commits - a.commits);
 
@@ -166,6 +239,8 @@ export const getCollaborationStats = async (): Promise<CollaborationStats | null
       createdAt: repo.created_at,
       pushedAt: repo.pushed_at,
       weeklyCommits: participation?.all ?? [],
+      languages: languageBytes > 0 ? languageShares : [],
+      linesOfCode,
       topContributors,
     };
   } catch (error) {

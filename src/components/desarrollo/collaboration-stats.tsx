@@ -1,18 +1,46 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { RuledCell, RuledGrid } from '@/components/ui/ruled-grid';
-import { getCollaborationStats } from '@/lib/github-stats';
+import { getCollaborationStats, type LanguageShare } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
 import { getAdminUser } from '@/lib/admin';
 import { cn } from '@/lib/utils';
 
-const TOP_CONTRIBUTORS = 8;
 const BAR_WIDTH = 20;
 const WEEK_MS = 7 * 24 * 3_600_000;
 
 const numberFormat = new Intl.NumberFormat('es-AR');
 const relativeFormat = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
 const weekFormat = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short' });
+const monthFormat = new Intl.DateTimeFormat('es-AR', { month: 'short', year: 'numeric' });
+const longDateFormat = new Intl.DateTimeFormat('es-AR', { dateStyle: 'long' });
+
+// 1234 → 1,2k; 1234567 → 1,2M. Line counts only need their order of magnitude in the list.
+const compact = (value: number) => {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1).replace('.', ',')}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1).replace('.', ',')}k`;
+  return String(value);
+};
+
+// Language colors as GitHub's linguist shows them; anything else falls back to a green shade.
+const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: '#3178c6',
+  JavaScript: '#f1e05a',
+  CSS: '#663399',
+  Shell: '#89e051',
+  Ruby: '#701516',
+  Dockerfile: '#384d54',
+  Makefile: '#427819',
+  HTML: '#e34c26',
+};
+const languageColor = (name: string) => LANGUAGE_COLORS[name] ?? '#04f4be';
+
+const formatPercent = (percent: number) =>
+  percent < 0.1
+    ? '<0,1%'
+    : percent >= 10
+      ? `${percent.toFixed(0)}%`
+      : `${percent.toFixed(1).replace('.', ',')}%`;
 
 const timeAgo = (iso: string) => {
   const days = Math.round((Date.parse(iso) - Date.now()) / (24 * 3_600_000));
@@ -87,6 +115,63 @@ const WeeklyActivity = ({ weeks }: { weeks: number[] }) => {
   );
 };
 
+const Languages = ({
+  languages,
+  linesOfCode,
+}: {
+  languages: LanguageShare[];
+  linesOfCode: number | null;
+}) => (
+  <div className="space-y-2">
+    {linesOfCode !== null && (
+      <p className="font-mono text-xs text-muted-foreground">
+        <span className="text-pcnGreen-500">$ </span>git log --numstat | awk &apos;{'{'}a+=$1; d+=$2
+        {'}'} END {'{'}print a-d{'}'}&apos;
+        <span className="ml-2 text-foreground">{numberFormat.format(linesOfCode)}</span>
+        <span className="ml-2">líneas de código hoy</span>
+      </p>
+    )}
+    {languages.length > 0 && (
+      <>
+        <p className="font-mono text-xs text-muted-foreground">
+          <span className="text-pcnGreen-500">$ </span>github-linguist --breakdown
+        </p>
+        <div
+          role="img"
+          aria-label={`Lenguajes del repo: ${languages
+            .map((language) => `${language.name} ${formatPercent(language.percent)}`)
+            .join(', ')}`}
+          className="flex h-2.5 gap-[2px] overflow-hidden"
+        >
+          {languages.map((language) => (
+            <span
+              key={language.name}
+              title={`${language.name} ${formatPercent(language.percent)}`}
+              className="h-full min-w-[3px] first:rounded-l-[2px] last:rounded-r-[2px]"
+              style={{ flexGrow: language.percent, backgroundColor: languageColor(language.name) }}
+            />
+          ))}
+        </div>
+        <ul className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]">
+          {languages.map((language) => (
+            <li key={language.name} className="flex items-center gap-1.5">
+              <span
+                aria-hidden
+                className="size-2 rounded-full"
+                style={{ backgroundColor: languageColor(language.name) }}
+              />
+              <span>{language.name}</span>
+              <span className="tabular-nums text-muted-foreground">
+                {formatPercent(language.percent)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+  </div>
+);
+
 export const CollaborationStats = async () => {
   const [stats, profiles, admin] = await Promise.all([
     getCollaborationStats(),
@@ -103,7 +188,7 @@ export const CollaborationStats = async () => {
     );
   }
 
-  const contributors = stats.topContributors.slice(0, TOP_CONTRIBUTORS);
+  const contributors = stats.topContributors;
   const maxMerged = Math.max(...contributors.map((contributor) => contributor.mergedPrs));
 
   return (
@@ -127,10 +212,14 @@ export const CollaborationStats = async () => {
 
       {stats.weeklyCommits.length > 0 && <WeeklyActivity weeks={stats.weeklyCommits} />}
 
+      {(stats.languages.length > 0 || stats.linesOfCode !== null) && (
+        <Languages languages={stats.languages} linesOfCode={stats.linesOfCode} />
+      )}
+
       <div>
         <p className="mb-2 font-mono text-xs text-muted-foreground">
-          <span className="text-pcnGreen-500">$ </span>gh pr list --state merged | sort -rn | head -
-          {contributors.length}
+          <span className="text-pcnGreen-500">$ </span>gh pr list --state merged | sort -rn
+          <span className="ml-2">· {contributors.length} personas</span>
         </p>
         <ol className="space-y-1">
           {contributors.map((contributor, index) => {
@@ -164,10 +253,27 @@ export const CollaborationStats = async () => {
                   <span className="text-pcnGreen-600 group-hover:text-pcnGreen">{bar.filled}</span>
                   <span className="text-pcnGreen-200">{bar.empty}</span>
                 </span>
-                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground sm:ml-2">
+                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground sm:ml-2 sm:w-40">
                   <span className="text-foreground">{contributor.mergedPrs}</span> PRs ·{' '}
                   {numberFormat.format(contributor.commits)} commits
                 </span>
+                {contributor.linesAdded !== null && contributor.linesDeleted !== null && (
+                  <span
+                    title={`${numberFormat.format(contributor.linesAdded)} líneas agregadas, ${numberFormat.format(contributor.linesDeleted)} eliminadas`}
+                    className="hidden w-28 shrink-0 tabular-nums lg:inline"
+                  >
+                    <span className="text-pcnGreen-600">+{compact(contributor.linesAdded)}</span>{' '}
+                    <span className="text-red-400/80">−{compact(contributor.linesDeleted)}</span>
+                  </span>
+                )}
+                {contributor.firstContributionWeek && (
+                  <span
+                    title={`Primer commit: semana del ${longDateFormat.format(new Date(contributor.firstContributionWeek))}`}
+                    className="hidden w-28 shrink-0 text-muted-foreground xl:inline"
+                  >
+                    desde {monthFormat.format(new Date(contributor.firstContributionWeek))}
+                  </span>
+                )}
                 {profile && (
                   <Link
                     href={`/perfil/${profile.id}`}
