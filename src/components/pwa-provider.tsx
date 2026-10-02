@@ -1,114 +1,66 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { isEmbedded } from '@/components/os/os-env';
 
-interface PwaContextType {
+// Chromium-only event, not in the DOM typings.
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+interface PwaContextValue {
+  /** The browser offered an install prompt we can trigger (Chromium). */
   isInstallable: boolean;
-  isStandalone: boolean;
-  isOnline: boolean;
+  /** iOS Safari: no prompt, installing is Compartir → Agregar a inicio. */
+  isIosInstallable: boolean;
   installApp: () => Promise<void>;
 }
 
-const PwaContext = createContext<PwaContextType | undefined>(undefined);
+const PwaContext = createContext<PwaContextValue | null>(null);
+
+const isStandalone = () =>
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (navigator as Navigator & { standalone?: boolean }).standalone === true;
+
+const isIos = () =>
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 export function PwaProvider({ children }: { children: React.ReactNode }) {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstallable, setIsInstallable] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isIosInstallable, setIsIosInstallable] = useState(false);
 
   useEffect(() => {
-    // 1. Detectar si la app corre instalada (Standalone)
-    const checkStandalone = () => {
-      const isStandaloneMode =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
-        document.referrer.includes('android-app://');
-      setIsStandalone(isStandaloneMode);
-    };
+    // Inside a PCN OS window the host page already does all of this.
+    if (isEmbedded()) return;
 
-    checkStandalone();
+    setIsIosInstallable(isIos() && !isStandalone());
 
-    // 2. Estado de la conexión a internet
-    setIsOnline(navigator.onLine);
-
-    const handleOnline = () => {
-      setIsOnline(true);
-      toast.success('Conexión restablecida', {
-        description: 'Vuelves a estar online. Disfruta de la experiencia completa.',
-        duration: 4000,
+    const handleOnline = () => toast.success('Conexión restablecida');
+    const handleOffline = () =>
+      toast.error('Sin conexión', {
+        description: 'Lo que ya cargó sigue disponible hasta que vuelva la red.',
       });
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
     };
-
-    const handleOffline = () => {
-      setIsOnline(false);
-      toast.error('Sin conexión a internet', {
-        description: 'Has entrado en modo offline. Los contenidos cargados seguirán disponibles.',
-        duration: 5000,
-      });
-    };
+    const handleAppInstalled = () => setInstallPrompt(null);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
-    // 3. Capturar el prompt de instalación PWA
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setIsInstallable(true);
-    };
-
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
-    // 4. Registro de Service Worker con soporte de depuración (?sw=true en URL en local)
-    const isDev = process.env.NODE_ENV === 'development';
-    const forceSwInDev = typeof window !== 'undefined' && window.location.search.includes('sw=true');
-    const shouldRegisterSw = 'serviceWorker' in navigator && (!isDev || forceSwInDev);
-
-    if (shouldRegisterSw) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          if (forceSwInDev) {
-            console.log('[PCN PWA] Service Worker registrado en desarrollo:', registration.scope);
-          }
-
-          // Escuchar cambios de estado para actualizaciones found
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed') {
-                  if (navigator.serviceWorker.controller) {
-                    // Nueva versión instalada y esperando activación. Mostrar toast premium.
-                    toast.info('Actualización disponible', {
-                      description: 'Hay mejoras listas para instalar en la plataforma.',
-                      action: {
-                        label: 'Actualizar',
-                        onClick: () => {
-                          newWorker.postMessage({ type: 'SKIP_WAITING' });
-                        },
-                      },
-                      duration: 12000,
-                    });
-                  }
-                }
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error('[PCN PWA] Error al registrar el Service Worker:', error);
-        });
-
-      // Escuchar cuando el nuevo SW tome el control y recargar la página inmediatamente
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-          refreshing = true;
-          window.location.reload();
-        }
+    // In development the worker would cache stale chunks; opt in with ?sw=true to debug it.
+    const register =
+      process.env.NODE_ENV === 'production' ||
+      new URLSearchParams(window.location.search).has('sw');
+    if (register && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch((error) => {
+        console.error('[PWA] No se pudo registrar el service worker:', error);
       });
     }
 
@@ -116,29 +68,21 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
-  const installApp = async () => {
-    if (!deferredPrompt) {
-      console.warn('[PCN PWA] El prompt de instalación no está disponible aún.');
-      return;
-    }
-
-    try {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`[PCN PWA] El usuario respondió al prompt de instalación: ${outcome}`);
-    } catch (err) {
-      console.error('[PCN PWA] Error al intentar instalar la aplicación:', err);
-    } finally {
-      setDeferredPrompt(null);
-      setIsInstallable(false);
-    }
-  };
+  const installApp = useCallback(async () => {
+    if (!installPrompt) return;
+    // A prompt can only be shown once, whatever the user picks.
+    setInstallPrompt(null);
+    await installPrompt.prompt();
+  }, [installPrompt]);
 
   return (
-    <PwaContext.Provider value={{ isInstallable, isStandalone, isOnline, installApp }}>
+    <PwaContext.Provider
+      value={{ isInstallable: installPrompt !== null, isIosInstallable, installApp }}
+    >
       {children}
     </PwaContext.Provider>
   );
@@ -146,8 +90,6 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
 
 export function usePwa() {
   const context = useContext(PwaContext);
-  if (context === undefined) {
-    throw new Error('usePwa debe ser usado dentro de un PwaProvider');
-  }
+  if (!context) throw new Error('usePwa must be used within a PwaProvider');
   return context;
 }

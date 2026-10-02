@@ -1,5 +1,6 @@
 import { ReactQueryProvider } from '@/components/react-query-provider';
 import { ThemeProvider } from '@/components/themes/theme-provider';
+import { PwaProvider } from '@/components/pwa-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollIndicator } from '@/components/ui/scroll-indicator';
@@ -21,7 +22,16 @@ export const metadata: Metadata = {
     template: '%s - PCN',
   },
   description: 'Comunidad de apasionados por la ingeniería de software.',
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  // Installed from Safari (Compartir → Agregar a inicio) it opens full screen, like on Android.
+  appleWebApp: {
+    capable: true,
+    title: 'PCN',
+    statusBarStyle: 'black',
+  },
   alternates: {
     types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'programaConNosotros' }] },
   },
@@ -68,13 +78,15 @@ const RootLayout = async ({
           forcedTheme="dark"
           disableTransitionOnChange
         >
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-          <Toaster closeButton position="top-right" />
-          <ScrollToTop />
-          <ScrollIndicator />
-          <HackerCursor />
-          <TerminalCaret />
-          <VimNavigation />
+          <PwaProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <Toaster closeButton position="top-right" />
+            <ScrollToTop />
+            <ScrollIndicator />
+            <HackerCursor />
+            <TerminalCaret />
+            <VimNavigation />
+          </PwaProvider>
         </ThemeProvider>
       </body>
     </html>

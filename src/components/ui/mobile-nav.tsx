@@ -19,6 +19,7 @@ import type { SessionUser } from '@/lib/session';
 import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useSidebar } from '@/components/ui/sidebar';
 import { NavUser } from '@/components/ui/nav-user';
+import { InstallAppButton } from '@/components/ui/install-app-button';
 import type { NavItem } from '@/components/ui/nav-main';
 import { cn } from '@/lib/utils';
 import { openGlobalSearch } from '@/components/search/global-search';
@@ -378,7 +379,8 @@ const MenuPanel = ({
         )}
 
         {!query && (
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col gap-2">
+            <InstallAppButton />
             <NavUser user={user} />
           </div>
         )}

@@ -1,28 +1,22 @@
 import type { MetadataRoute } from 'next';
 
+const shortcutIcons = [{ src: '/pwa-icon-192.png', sizes: '192x192', type: 'image/png' }];
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: '/',
     name: 'programaConNosotros',
     short_name: 'PCN',
     description: 'Comunidad de apasionados por la ingeniería de software.',
+    lang: 'es',
     start_url: '/',
+    scope: '/',
     display: 'standalone',
-    background_color: '#09090b',
-    theme_color: '#09090b',
-    orientation: 'portrait',
+    background_color: '#000000',
+    theme_color: '#000000',
     icons: [
-      {
-        src: '/pwa-icon-192.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/pwa-icon-512.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'any',
-      },
+      { src: '/pwa-icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/pwa-icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
       {
         src: '/pwa-icon-192-maskable.png',
         sizes: '192x192',
@@ -37,34 +31,10 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
     shortcuts: [
-      {
-        name: 'Eventos',
-        short_name: 'Eventos',
-        description: 'Ver los eventos programados de la comunidad',
-        url: '/eventos',
-        icons: [{ src: '/pwa-icon-192.png', sizes: '192x192' }],
-      },
-      {
-        name: 'Conversaciones',
-        short_name: 'Conversaciones',
-        description: 'Ver conversaciones y debates del grupo',
-        url: '/conversaciones',
-        icons: [{ src: '/pwa-icon-192.png', sizes: '192x192' }],
-      },
-      {
-        name: 'Cursos',
-        short_name: 'Cursos',
-        description: 'Acceder a los cursos de formación',
-        url: '/cursos',
-        icons: [{ src: '/pwa-icon-192.png', sizes: '192x192' }],
-      },
-      {
-        name: 'Lectura',
-        short_name: 'Lectura',
-        description: 'Explorar artículos y recomendaciones de lectura',
-        url: '/lectura',
-        icons: [{ src: '/pwa-icon-192.png', sizes: '192x192' }],
-      },
+      { name: 'Eventos', url: '/eventos', icons: shortcutIcons },
+      { name: 'Conversaciones', url: '/conversaciones', icons: shortcutIcons },
+      { name: 'Cursos', url: '/cursos', icons: shortcutIcons },
+      { name: 'Lectura', url: '/lectura', icons: shortcutIcons },
     ],
   };
 }

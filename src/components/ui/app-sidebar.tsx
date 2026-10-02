@@ -52,6 +52,7 @@ import { MobileNav } from '@/components/ui/mobile-nav';
 import type { SessionUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
+import { InstallAppButton } from './install-app-button';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
@@ -200,6 +201,7 @@ export function AppSidebar(props: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className="gap-1.5 border-t border-pcnGreen-200 px-3 pb-3 pt-2">
+        <InstallAppButton />
         <NavSecondary items={secondaryItems} className="p-0" />
         <NavUser user={user} />
       </SidebarFooter>

@@ -1,10 +1,15 @@
-const CACHE_NAME = 'pcn-pwa-cache-v1';
-const OFFLINE_URL = '/offline';
+// Service worker de la PWA. Solo cachea lo que es igual para todos: la página /offline (con
+// sus chunks, para que la trivia funcione sin red), los íconos y los assets estáticos. Las
+// páginas y los datos nunca se cachean porque dependen de la sesión: en un dispositivo
+// compartido quedarían a la vista después de cerrar sesión.
 
-const ASSETS_TO_CACHE = [
-  OFFLINE_URL,
-  '/',
-  '/favicon.ico',
+const VERSION = 'v2';
+const PRECACHE = `pcn-precache-${VERSION}`;
+const RUNTIME = `pcn-runtime-${VERSION}`;
+const OFFLINE_URL = '/offline';
+const RUNTIME_MAX_ENTRIES = 200;
+
+const ICONS = [
   '/logo.webp',
   '/pwa-icon-192.png',
   '/pwa-icon-512.png',
@@ -12,127 +17,93 @@ const ASSETS_TO_CACHE = [
   '/pwa-icon-512-maskable.png',
 ];
 
-// Instalar el Service Worker y cachear recursos críticos
+// Guarda /offline junto con cada script, estilo y fuente que referencia su HTML.
+const precacheOfflinePage = async (cache) => {
+  const response = await fetch(OFFLINE_URL, { cache: 'reload' });
+  if (!response.ok) throw new Error(`${OFFLINE_URL} respondió ${response.status}`);
+
+  const html = await response.clone().text();
+  const assets = new Set(html.match(/\/_next\/static\/[^"'\s\\)]+/g) ?? []);
+
+  await cache.put(OFFLINE_URL, response);
+  await cache.addAll([...assets]);
+};
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[PCN Service Worker] Precaching critical assets');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .then(() => self.skipWaiting())
+    caches.open(PRECACHE).then(async (cache) => {
+      await precacheOfflinePage(cache);
+      await cache.addAll(ICONS);
+      await self.skipWaiting();
+    }),
   );
 });
 
-// Activar y limpiar cachés antiguas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
-              console.log('[PCN Service Worker] Deleting old cache:', cacheName);
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      })
-      .then(() => self.clients.claim())
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== PRECACHE && key !== RUNTIME)
+            .map((key) => caches.delete(key)),
+        ),
+      )
+      .then(() => self.clients.claim()),
   );
 });
 
-// Interceptar solicitudes fetch
+// Cache API devuelve las claves en orden de inserción: se borran las más viejas.
+const trimRuntimeCache = async (cache) => {
+  const keys = await cache.keys();
+  const excess = keys.slice(0, Math.max(0, keys.length - RUNTIME_MAX_ENTRIES));
+  await Promise.all(excess.map((key) => cache.delete(key)));
+};
+
+const putInRuntimeCache = async (request, response) => {
+  if (!response.ok || response.type !== 'basic') return;
+  const cache = await caches.open(RUNTIME);
+  await cache.put(request, response);
+  await trimRuntimeCache(cache);
+};
+
+const fetchAndCache = (event) =>
+  fetch(event.request).then((response) => {
+    event.waitUntil(putInRuntimeCache(event.request, response.clone()));
+    return response;
+  });
+
 self.addEventListener('fetch', (event) => {
-  const request = event.request;
+  const { request } = event;
+  if (request.method !== 'GET') return;
+
   const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // Ignorar peticiones que no sean GET, HMR de Next.js, APIs locales, o extensiones de navegador
-  if (
-    request.method !== 'GET' ||
-    url.pathname.includes('_next/webpack-hmr') ||
-    url.pathname.startsWith('/api/') ||
-    url.pathname.startsWith('/admin') ||
-    url.protocol === 'chrome-extension:'
-  ) {
-    return;
-  }
-
-  // 1. Estrategia para Navegación (Páginas HTML principales)
+  // Páginas: siempre de la red; sin conexión, la pantalla /offline.
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Guardar copia fresca en caché para posterior lectura offline
-          const responseCopy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseCopy));
-          return response;
-        })
-        .catch(() => {
-          // Si falla (Offline), retornar la página desde caché o servir /offline
-          return caches.match(request).then((cachedResponse) => {
-            return cachedResponse || caches.match(OFFLINE_URL);
-          });
-        })
+      fetch(request).catch(async () => (await caches.match(OFFLINE_URL)) ?? Response.error()),
     );
     return;
   }
 
-  // 2. Estrategia Cache-First con actualización de background para Assets Estáticos
-  const isStaticAsset =
-    url.pathname.match(/\.(js|css|woff2|png|jpg|jpeg|svg|webp|gif|ico)$/) ||
-    url.pathname.includes('_next/static');
+  // Los archivos de /_next/static llevan hash en el nombre y nunca cambian: cache-first.
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(caches.match(request).then((cached) => cached ?? fetchAndCache(event)));
+    return;
+  }
 
-  if (isStaticAsset) {
+  // Imágenes y fuentes de /public: la copia guardada al instante, actualizada en segundo plano.
+  if (/\.(?:png|jpe?g|webp|gif|svg|ico|woff2?)$/.test(url.pathname)) {
     event.respondWith(
-      caches.match(request).then((cachedResponse) => {
-        if (cachedResponse) {
-          // Retornar recurso cacheado inmediatamente para velocidad premium
-          // y refrescar el cache en segundo plano de manera silenciosa
-          fetch(request)
-            .then((response) => {
-              if (response.status === 200) {
-                caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
-              }
-            })
-            .catch(() => {
-              // Silenciar errores de conexión al revalidar offline
-            });
-          return cachedResponse;
-        }
-
-        // Si no está en caché, hacer fetch normal
-        return fetch(request).then((response) => {
-          if (response.status === 200) {
-            const responseCopy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseCopy));
-          }
-          return response;
-        });
-      })
+      caches.match(request).then((cached) => {
+        const network = fetchAndCache(event);
+        if (!cached) return network;
+        event.waitUntil(network.catch(() => undefined));
+        return cached;
+      }),
     );
-    return;
-  }
-
-  // 3. Estrategia por defecto: Network-First con fallback a cache
-  event.respondWith(
-    fetch(request)
-      .then((response) => {
-        if (response.status === 200) {
-          const responseCopy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseCopy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(request))
-  );
-});
-
-// Permitir forzar la actualización del Service Worker
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
   }
 });
