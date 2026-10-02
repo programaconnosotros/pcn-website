@@ -323,6 +323,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   aria-label={`Redes de ${user.name}`}
                   className="flex divide-x divide-pcnGreen-200"
                 >
+                  {/* Icons only: with several networks the labels no longer fit on one line. */}
                   {socialLinks.map(({ label, href, icon: Icon, ariaLabel }) => (
                     <a
                       key={label}
@@ -330,10 +331,10 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={ariaLabel}
-                      className="group flex min-w-0 flex-auto items-center justify-center gap-1.5 px-2.5 py-2 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-pcnGreen/[0.04] hover:text-pcnGreen hover:shadow-[inset_0_-2px_0_#04f4be]"
+                      title={label}
+                      className="group flex min-w-0 flex-1 items-center justify-center py-2.5 transition-colors hover:bg-pcnGreen/[0.04] hover:shadow-[inset_0_-2px_0_#04f4be]"
                     >
-                      <Icon className="size-3.5 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
-                      <span className="truncate">{label}</span>
+                      <Icon className="size-4 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
                     </a>
                   ))}
                 </nav>
