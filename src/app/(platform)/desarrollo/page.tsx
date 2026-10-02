@@ -78,19 +78,19 @@ const architectureLayers = [
     icon: Globe,
     area: 'App Router & páginas',
     description:
-      'src/app — rutas organizadas en grupos (platform), autenticacion y api usando el App Router de Next.js',
+      'src/app — App Router de Next.js: el grupo (platform) con las secciones de la comunidad, autenticacion para login y registro, api para los route handlers, y archivos especiales como sitemap.ts, robots.ts, feed.xml y [shortcut] (atajos como /cowork que llevan al próximo evento)',
   },
   {
     icon: Server,
     area: 'Server actions',
     description:
-      'src/actions — lógica de servidor agrupada por dominio: auth, events, talks, testimonials, users y más',
+      'src/actions — lógica de servidor agrupada por dominio: auth, events, gallery, talks, talk-proposals, articles, comments, notifications, badges, users y más',
   },
   {
     icon: Database,
     area: 'Base de datos',
     description:
-      'Prisma ORM sobre PostgreSQL; esquema en prisma/schema.prisma con más de 50 migraciones versionadas',
+      'Prisma ORM sobre PostgreSQL; esquema en prisma/schema.prisma con más de 70 migraciones versionadas',
   },
   {
     icon: ShieldCheck,
@@ -108,32 +108,60 @@ const architectureLayers = [
     icon: Wrench,
     area: 'Utilidades',
     description:
-      'src/lib — funciones compartidas: Prisma client, S3, email, utils y validaciones reutilizables',
+      'src/lib — funciones compartidas: Prisma client, S3 y firma de CloudFront, procesamiento de fotos, email, calendario (ICS y Google Calendar), permisos de eventos, rate limiting, índice de búsqueda e imágenes de Open Graph',
+  },
+  {
+    icon: Package,
+    area: 'Hooks y contenido',
+    description:
+      'src/hooks — custom hooks de React; src/data — contenido estático versionado: changelog, preguntas frecuentes, partners y conversaciones',
   },
   {
     icon: Rocket,
     area: 'Deploy',
     description:
-      'Kamal vía GitHub Actions — cada push a main dispara un deploy automático a producción',
+      'Kamal vía GitHub Actions — cada push a main aplica las migraciones pendientes y despliega automáticamente a producción',
   },
 ];
 
 const toolchain = [
   {
     category: 'Frontend',
-    tools: ['React Hook Form', 'TanStack Query', 'TanStack Table', 'Framer Motion', 'shadcn/ui'],
+    tools: [
+      'shadcn/ui + Radix',
+      'React Hook Form',
+      'TanStack Query',
+      'TanStack Table',
+      'Motion',
+      'Sonner',
+      'date-fns',
+      'Embla Carousel',
+      'Lucide',
+    ],
   },
   {
     category: 'Backend & datos',
-    tools: ['AWS S3', 'Nodemailer', 'Zod', 'bcryptjs'],
+    tools: ['Prisma', 'Zod', 'bcryptjs', 'Nodemailer', 'React Email'],
+  },
+  {
+    category: 'Imágenes y video',
+    tools: ['AWS S3', 'CloudFront (URLs firmadas)', 'sharp', 'exifr', 'Mediabunny'],
   },
   {
     category: 'Testing & calidad',
-    tools: ['Jest', 'Playwright', 'ESLint', 'Prettier', 'Husky'],
+    tools: [
+      'Jest',
+      'jest-mock-extended',
+      'Playwright',
+      'ESLint',
+      'Prettier',
+      'Husky',
+      'lint-staged',
+    ],
   },
   {
     category: 'Infraestructura & dev',
-    tools: ['Docker Compose', 'Portless', 'Kamal', 'MailHog'],
+    tools: ['Docker Compose', 'Dev Containers', 'Portless', 'Kamal', 'GitHub Actions', 'MailHog'],
   },
 ];
 
@@ -141,11 +169,12 @@ const contributionSteps = [
   'Instalar Docker y Docker Compose',
   'Clonar el repositorio desde GitHub',
   'Crear el archivo .env usando .env.template como base',
-  'Levantar los contenedores con docker-compose up -d (incluye base de datos y web)',
+  'Levantar todo con docker-compose up -d: Postgres, MailHog (localhost:18025) y la web en localhost:3000, que aplica las migraciones al arrancar',
+  'Alternativa sin el contenedor web (Node 24+): pnpm install, docker-compose up -d database mailhog y pnpm dev, que sirve el sitio en https://pcn-website.localhost vía portless',
   'Opcional: si usás VS Code, abrí el proyecto con Dev Containers para desarrollar dentro del contenedor',
-  'Aplicar las migraciones con make apply-migrations (o pnpm apply-migrations en Windows)',
+  'Cuando bajes migraciones nuevas, aplicalas con make apply-migrations (o pnpm apply-migrations)',
   'Opcional: poblar la base de datos con datos de prueba ejecutando pnpm populate-database',
-  'Crear una branch, hacer los cambios y enviar una PR hacia testing',
+  'Crear una branch, hacer los cambios y enviar una PR hacia testing; si cambia la UI, sumá capturas con pnpm screenshot',
 ];
 
 const conventions = [
@@ -334,9 +363,10 @@ const DesarrolloPage = () => (
             <dl className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[200px_1fr]">
               <dt className="font-mono text-pcnGreen">Tests unitarios (Jest)</dt>
               <dd className="leading-relaxed text-muted-foreground">
-                Más de 70 tests colocalizados junto a los server actions (<Code>*.test.ts</Code>).
-                Se ejecutan con <Code>pnpm test</Code> o en modo watch con{' '}
-                <Code>pnpm test:watch</Code>.
+                Más de 90 archivos de test (<Code>*.test.ts</Code>) colocalizados junto al código
+                que prueban: server actions, <Code>src/lib</Code>, schemas y route handlers. Se
+                ejecutan con <Code>pnpm test</Code> o en modo watch con <Code>pnpm test:watch</Code>
+                .
               </dd>
               <dt className="font-mono text-pcnGreen">Tests E2E (Playwright)</dt>
               <dd className="leading-relaxed text-muted-foreground">
