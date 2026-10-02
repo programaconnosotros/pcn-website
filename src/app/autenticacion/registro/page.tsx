@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form';
 import { Suspense, useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const formSchema = signUpSchema;
 
@@ -58,7 +59,7 @@ const COUNTRIES = [
 function SignUpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isSubmitting, setIsSubmitting] = useState(false);
 

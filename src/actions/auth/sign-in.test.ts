@@ -111,6 +111,17 @@ describe('signIn', () => {
     expect(result).toEqual({ success: true, redirectTo: '/dashboard' });
   });
 
+  it('falls back to the home page when redirectTo points to another site', async () => {
+    mockCookies();
+    prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+    prismaMock.session.create.mockResolvedValue({ id: 'session-xyz' } as any);
+
+    const result = await signIn({ ...validInput, redirectTo: '//evil.example' });
+
+    expect(result).toEqual({ success: true, redirectTo: '/' });
+  });
+
   it('returns INVALID_CREDENTIALS on invalid input (zod failure)', async () => {
     const result = await signIn({ email: 'not-an-email', password: 'ok' } as any);
 

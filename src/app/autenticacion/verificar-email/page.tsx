@@ -21,6 +21,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const codeSchema = z.object({
   code: z
@@ -33,7 +34,7 @@ function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
-  const redirectTo = searchParams.get('redirect') || '/';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'));
 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);

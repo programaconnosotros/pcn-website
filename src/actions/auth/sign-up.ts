@@ -8,6 +8,7 @@ import { EmailVerificationEmail } from '@/components/auth/verification-email';
 import { render } from '@react-email/render';
 import { generateVerificationCode, getCodeExpirationDate, sendEmail } from '@/lib/email';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 export const signUp = async (
   data: z.infer<typeof signUpActionSchema>,
@@ -20,7 +21,7 @@ export const signUp = async (
 
   const {
     confirmPassword: _confirmPassword,
-    redirectTo,
+    redirectTo: rawRedirectTo,
     country,
     profession,
     studyField,
@@ -88,6 +89,8 @@ export const signUp = async (
       // No lanzar error para no bloquear el registro
       // El usuario podrá reenviar el código desde la página de verificación
     }
+
+    const redirectTo = safeRedirectPath(rawRedirectTo, '');
 
     // Devolver la URL de verificación para que el cliente redirija
     const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;

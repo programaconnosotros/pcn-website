@@ -18,6 +18,7 @@ import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const formSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -29,7 +30,7 @@ function SignInContent() {
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email') || '';
   const passwordParam = searchParams.get('password') || '';
-  const redirectTo = searchParams.get('redirect') || '';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isLoading, setIsLoading] = useState(false);
 

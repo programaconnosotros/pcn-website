@@ -5,6 +5,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -49,7 +50,7 @@ export const signIn = async (
 
     await createSession(user.id);
 
-    const redirectTo = data.redirectTo || '/';
+    const redirectTo = safeRedirectPath(validatedData.redirectTo);
 
     return { success: true, redirectTo };
   } catch {
