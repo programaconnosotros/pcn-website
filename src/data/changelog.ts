@@ -22,6 +22,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-02',
+    area: 'metricas',
+    title: 'Métricas de producto',
+    description:
+      'Nueva app Métricas para admins: tráfico, módulos y páginas más usados, funnel de registro con el paso donde se pierde la gente, horarios, fuentes, dispositivos y engagement, filtrando por fechas y comparando con el período anterior.',
+    authors: ['agustin-sanc'],
+    href: '/metricas',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-02',
     area: 'entrevistas',
     title: 'Entrevistas de product engineering y project manager',
     description:

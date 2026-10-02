@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Activity,
   Gauge,
   Link2,
   AlertTriangle,
@@ -108,6 +109,7 @@ const getAdminItems = (unreadCount: number): NavItem[] => [
   { title: 'Panel', url: '/admin', icon: Gauge },
   { title: 'Usuarios', url: '/usuarios', icon: Users },
   { title: 'Analíticas', url: '/analiticas', icon: LayoutDashboard },
+  { title: 'Métricas', url: '/metricas', icon: Activity },
   { title: 'Visitas', url: '/visitas', icon: Eye },
   { title: 'Notificaciones', url: '/notificaciones', icon: Bell, badge: unreadCount },
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },

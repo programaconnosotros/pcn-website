@@ -1,4 +1,5 @@
 import {
+  Activity,
   AlertTriangle,
   Bell,
   BriefcaseBusiness,
@@ -296,6 +297,16 @@ export const OS_PROGRAMS: OsProgram[] = [
     icon: LayoutDashboard,
     color: 'from-emerald-400 to-teal-700',
     group: 'Administración',
+    adminOnly: true,
+  },
+  {
+    id: 'metricas',
+    name: 'Métricas',
+    url: '/metricas',
+    icon: Activity,
+    color: 'from-pcnGreen to-teal-800',
+    group: 'Administración',
+    pinned: true,
     adminOnly: true,
   },
   {
