@@ -46,8 +46,6 @@ export type Achievement = DisplayBadge & {
   howTo: string;
   /** Where to go to work on it. */
   href: string;
-  /** Also shown next to the name on the profile header, not only in the badges block. */
-  highlight?: boolean;
   /** How far along a user is: `current` out of `target`. */
   progress: (_metrics: AchievementMetrics) => { current: number; target: number };
 };
@@ -63,7 +61,6 @@ const count = (metric: CountMetric, target: number) => (metrics: AchievementMetr
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'top-contributor',
-    highlight: true,
     name: 'Top contributor',
     description: 'Es quien más aportó al código de la plataforma de programaConNosotros.',
     icon: 'trophy',
@@ -75,7 +72,6 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'contributor',
-    highlight: true,
     name: 'Contributor',
     description: 'Aportó código a la plataforma open-source de programaConNosotros.',
     icon: 'code',
@@ -87,7 +83,6 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'speaker',
-    highlight: true,
     name: 'Speaker',
     description: 'Dio una charla en un evento de la comunidad.',
     icon: 'mic',
@@ -184,12 +179,11 @@ export const isAchieved = (achievement: Achievement, metrics: AchievementMetrics
 /** The achievements a user already earned, in `ACHIEVEMENTS` order. */
 export const earnedAchievements = (metrics: AchievementMetrics) =>
   ACHIEVEMENTS.filter((achievement) => isAchieved(achievement, metrics)).map(
-    ({ id, name, description, icon, tone, highlight }) => ({
+    ({ id, name, description, icon, tone }) => ({
       id,
       name,
       description,
       icon,
       tone,
-      highlight: !!highlight,
     }),
   );

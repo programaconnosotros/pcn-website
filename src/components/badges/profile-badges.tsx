@@ -118,17 +118,3 @@ export function ProfileBadges({
     </div>
   );
 }
-
-/** A compact row of medals for headers, next to someone's name. */
-export function BadgeStrip({ badges }: { badges: DisplayBadge[] }) {
-  if (badges.length === 0) return null;
-  return (
-    <span className="flex items-center gap-1">
-      {badges.map((badge) => (
-        <span key={badge.id} title={badge.name} className="group/badge inline-flex">
-          <BadgeMedal icon={badge.icon} tone={badge.tone} size="sm" />
-        </span>
-      ))}
-    </span>
-  );
-}

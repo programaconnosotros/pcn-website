@@ -1,5 +1,5 @@
 import { getCurrentSession } from '@/actions/auth/get-current-session';
-import { BadgeStrip, ProfileBadges } from '@/components/badges/profile-badges';
+import { ProfileBadges } from '@/components/badges/profile-badges';
 import {
   AMBASSADOR_BADGE,
   COFOUNDER_BADGE,
@@ -203,10 +203,6 @@ export default async function ProfilePage(props: ProfilePageProps) {
       custom: true,
     })),
   ];
-  // The header only fits the badges that say who someone is in the community.
-  const headerBadges = badges.filter(
-    (badge) => !achievements.some(({ id, highlight }) => id === badge.id && !highlight),
-  );
 
   const socialLinks = [
     {
@@ -300,10 +296,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 </Avatar>
 
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
-                    <BadgeStrip badges={headerBadges} />
-                  </div>
+                  <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
                   {isOwnProfile && (
                     <Link
                       href="/perfil"
