@@ -43,11 +43,14 @@ const nextConfig = {
       ...(process.env.AWS_CLOUDFRONT_URL
         ? [{ protocol: 'https', hostname: new URL(process.env.AWS_CLOUDFRONT_URL).hostname }]
         : []),
-      // S3 direct fallback (when CLOUDFRONT_URL is not set)
-      {
-        protocol: 'https',
-        hostname: '**.amazonaws.com',
-      },
+      // S3 direct fallback (when CLOUDFRONT_URL is not set). Only our bucket: a wildcard over
+      // amazonaws.com would let /_next/image proxy and resize images from anyone's bucket.
+      ...(process.env.AWS_S3_BUCKET
+        ? [
+            { protocol: 'https', hostname: `${process.env.AWS_S3_BUCKET}.s3.amazonaws.com` },
+            { protocol: 'https', hostname: `${process.env.AWS_S3_BUCKET}.s3.*.amazonaws.com` },
+          ]
+        : []),
     ],
   },
 };
