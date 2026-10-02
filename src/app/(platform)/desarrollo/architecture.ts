@@ -126,11 +126,11 @@ const physical: ArchitectureView = {
   id: 'fisica',
   title: 'Arquitectura física',
   summary:
-    'Dónde corre cada pieza en producción. Todo el tráfico de la app entra por un único servidor en AWS; los archivos pesados no pasan por él, van directo entre el navegador y S3/CloudFront.',
+    'Dónde corre cada pieza en producción. Todo vive en AWS: el tráfico de la app entra por un único servidor; los archivos pesados no pasan por él, van directo entre el navegador y S3/CloudFront.',
   source: `flowchart TB
   user["Navegador / PWA"]
   dns["DNS<br/>programaconnosotros.com"]
-  subgraph aws["AWS · us-east-2"]
+  subgraph aws["AWS"]
     subgraph ec2["Servidor EC2 · Ubuntu"]
       proxy["kamal-proxy<br/>HTTPS · Let's Encrypt"]
       app["Contenedor pcn-website<br/>Node 24 · next start :3000"]
@@ -138,8 +138,8 @@ const physical: ArchitectureView = {
     s3[("Bucket S3")]
     cf["CloudFront<br/>CDN"]
     ecr[("ECR<br/>registry de imágenes")]
+    db[("PostgreSQL")]
   end
-  db[("PostgreSQL<br/>DATABASE_URL")]
   gmail["Gmail SMTP"]
   gh["GitHub<br/>repo · Actions"]
   user --> dns --> proxy
@@ -180,7 +180,7 @@ const physical: ArchitectureView = {
     {
       term: 'PostgreSQL',
       detail:
-        'La base de producción vive fuera del contenedor y se accede por DATABASE_URL. DIRECT_URL es la conexión directa que usa Prisma para las migraciones.',
+        'La base de producción también vive en AWS, separada del servidor de la app: el contenedor se puede reemplazar en cada deploy sin tocar los datos. Prisma se conecta con una URL que llega como secreto, y el pipeline de deploy usa una conexión directa para aplicar las migraciones.',
     },
     {
       term: 'Bucket S3',
@@ -200,7 +200,7 @@ const physical: ArchitectureView = {
     {
       term: 'Gmail SMTP',
       detail:
-        'El servidor de correo saliente de producción, autenticado con SMTP_USER y SMTP_PASS.',
+        'El servidor de correo saliente de producción, autenticado con una cuenta propia del proyecto.',
     },
     {
       term: 'GitHub',
