@@ -28,7 +28,7 @@ const initials = (name: string) =>
 export const AmbassadorsSection = async () => {
   const ambassadors = await prisma.user.findMany({
     where: { isAmbassador: true },
-    select: { id: true, name: true, image: true, jobTitle: true },
+    select: { id: true, name: true, image: true },
     orderBy: { name: 'asc' },
   });
 
@@ -83,15 +83,8 @@ export const AmbassadorsSection = async () => {
                         {initials(ambassador.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="min-w-0">
-                      <span className="block truncate font-mono text-sm font-medium transition-colors group-hover:text-pcnGreen">
-                        {ambassador.name}
-                      </span>
-                      {ambassador.jobTitle && (
-                        <span className="block truncate text-xs text-muted-foreground">
-                          {ambassador.jobTitle}
-                        </span>
-                      )}
+                    <span className="min-w-0 truncate font-mono text-sm font-medium transition-colors group-hover:text-pcnGreen">
+                      {ambassador.name}
                     </span>
                   </Link>
                 </li>
