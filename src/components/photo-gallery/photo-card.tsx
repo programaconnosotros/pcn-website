@@ -45,7 +45,7 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
             alt=""
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-focus-within:brightness-100 group-focus-within:saturate-100 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100"
+            className="h-full w-full object-cover object-top brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-focus-within:brightness-100 group-focus-within:saturate-100 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100"
           />
         </span>
         <span
