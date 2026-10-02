@@ -1,10 +1,10 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { createSession } from '@/lib/session';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -47,20 +47,7 @@ export const signIn = async (
       return { success: false, error: 'EMAIL_NOT_VERIFIED', email };
     }
 
-    const session = await prisma.session.create({
-      data: {
-        userId: user.id,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      },
-    });
-
-    (await cookies()).set('sessionId', session.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
+    await createSession(user.id);
 
     const redirectTo = data.redirectTo || '/';
 

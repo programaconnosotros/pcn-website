@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { findSession } from '@/lib/session';
 
 export const deleteTestimonial = async (id: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -11,10 +12,7 @@ export const deleteTestimonial = async (id: string) => {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('No autorizado');

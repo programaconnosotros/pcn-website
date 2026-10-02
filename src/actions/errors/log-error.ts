@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 /**
  * Log error from server-side code
@@ -15,10 +16,7 @@ export const logError = async (
     let userId: string | undefined = undefined;
 
     if (sessionId) {
-      const session = await prisma.session.findUnique({
-        where: { id: sessionId },
-        include: { user: true },
-      });
+      const session = await findSession(sessionId);
       if (session) {
         // No loguear errores de admins
         if (session.user.role === 'ADMIN') {
@@ -67,10 +65,7 @@ export const logClientError = async (errorData: {
     let userId: string | undefined = undefined;
 
     if (sessionId) {
-      const session = await prisma.session.findUnique({
-        where: { id: sessionId },
-        include: { user: true },
-      });
+      const session = await findSession(sessionId);
       if (session) {
         // No loguear errores de admins
         if (session.user.role === 'ADMIN') {

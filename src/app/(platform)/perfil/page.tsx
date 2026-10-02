@@ -4,6 +4,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { findSession } from '@/lib/session';
 
 const Profile = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -13,11 +14,7 @@ const Profile = async () => {
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');

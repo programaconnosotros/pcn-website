@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const fetchNotifications = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -9,10 +10,7 @@ export const fetchNotifications = async () => {
     return [];
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     return [];

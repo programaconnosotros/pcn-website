@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
@@ -16,10 +17,7 @@ export const logClient = async (data: {
     let userId: string | undefined = undefined;
 
     if (sessionId) {
-      const session = await prisma.session.findUnique({
-        where: { id: sessionId },
-        include: { user: true },
-      });
+      const session = await findSession(sessionId);
       if (session) {
         // No loguear logs de admins
         if (session.user.role === 'ADMIN') {

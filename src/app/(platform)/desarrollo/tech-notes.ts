@@ -1158,7 +1158,7 @@ const [events, talks, advises, projects] = await Promise.all([
           },
         ],
         usage: [
-          'No usamos un proveedor externo: el modelo `Session` vive en Postgres y la cookie se llama `sessionId`. `getCurrentSession()` la resuelve en Server Components y server actions. Registrarse requiere verificar el email con un código de 6 dígitos.',
+          'No usamos un proveedor externo: el modelo `Session` vive en Postgres y la cookie se llama `sessionId`. Todas las lecturas pasan por `findSession()` (en `src/lib/session.ts`), que descarta las sesiones vencidas; cerrar sesión borra la fila. Registrarse requiere verificar el email con un código de 6 dígitos.',
           'Todos los formularios pasan por `enforceRateLimit`, una ventana deslizante en memoria (alcanza porque el sitio corre en un solo proceso). Los admins no tienen límite.',
         ],
         examples: [
@@ -1175,37 +1175,28 @@ if (!user.emailVerified) {
   return { success: false, error: 'EMAIL_NOT_VERIFIED', email };
 }
 
-const session = await prisma.session.create({
-  data: {
-    userId: user.id,
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  },
-});
-
-(await cookies()).set('sessionId', session.id, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
-  path: '/',
-  maxAge: 60 * 60 * 24 * 365,
-});`,
+await createSession(user.id);`,
           },
           {
-            file: 'src/actions/auth/get-current-session.ts',
+            file: 'src/lib/session.ts',
             lang: 'ts',
-            code: `export const getCurrentSession = async () => {
-  const sessionId = (await cookies()).get('sessionId')?.value;
-
-  if (!sessionId) return null;
-
-  return prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-    include: {
-      user: true,
-    },
+            code: `// Todas las lecturas de sesión pasan por acá: una sesión vencida no sirve en ningún lado
+export const findSession = (sessionId: string) =>
+  prisma.session.findUnique({
+    where: { id: sessionId, expires: { gt: new Date() } },
+    include: { user: true },
   });
+
+// Cerrar sesión borra la fila, así la cookie deja de servir aunque alguien la copie
+export const deleteCurrentSession = async () => {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+
+  if (sessionId) {
+    await prisma.session.deleteMany({ where: { id: sessionId } });
+  }
+
+  cookieStore.delete(SESSION_COOKIE);
 };`,
           },
         ],

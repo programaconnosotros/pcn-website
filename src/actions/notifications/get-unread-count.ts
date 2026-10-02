@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const getUnreadNotificationsCount = async (): Promise<number> => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -9,10 +10,7 @@ export const getUnreadNotificationsCount = async (): Promise<number> => {
     return 0;
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     return 0;

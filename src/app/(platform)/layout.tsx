@@ -1,7 +1,6 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { User } from '@prisma/client';
-import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { fetchUpcomingEvents } from '@/actions/events/fetch-upcoming-events';
 import { PageVisitTracker } from '@/components/analytics/page-visit-tracker';
@@ -11,6 +10,7 @@ import { OsBridge } from '@/components/os/os-bridge';
 import { OsGate } from '@/components/os/os-gate';
 import { PcnOs } from '@/components/os/pcn-os';
 import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
+import { findSession } from '@/lib/session';
 
 const PlatformLayout = async ({
   children,
@@ -24,10 +24,7 @@ const PlatformLayout = async ({
   let user: User | null = null;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
 
     if (session) {
       user = session.user;

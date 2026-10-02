@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { fetchTestimonial } from '@/actions/testimonials/fetch-testimonial';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { TestimonialDetailActions } from './testimonial-detail-actions';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -74,10 +74,7 @@ const TestimonialDetailPage = async (props: { params: Promise<{ id: string }> })
   let isAdmin = false;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
 
     if (session) {
       currentUserId = session.userId;

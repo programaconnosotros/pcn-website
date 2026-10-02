@@ -1,8 +1,8 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { createSession } from '@/lib/session';
 import { findValidEmailVerificationToken } from '@/lib/verification-codes';
 
 export const verifyEmailCode = async (email: string, code: string) => {
@@ -37,20 +37,7 @@ export const verifyEmailCode = async (email: string, code: string) => {
   ]);
 
   // Crear sesión automáticamente después de verificar
-  const session = await prisma.session.create({
-    data: {
-      userId: user.id,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 días
-    },
-  });
-
-  (await cookies()).set('sessionId', session.id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365, // 1 año
-  });
+  await createSession(user.id);
 
   return { success: true };
 };

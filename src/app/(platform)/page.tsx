@@ -1,4 +1,3 @@
-import prisma from '@/lib/prisma';
 import { Session, User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -14,6 +13,7 @@ import { AmbassadorsSection } from '@/components/home/ambassadors-section';
 import { LatestChangesSection } from '@/components/home/latest-changes-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -43,14 +43,7 @@ const Home = async () => {
   let session: (Session & { user: User }) | null = null;
 
   if (sessionId) {
-    session = await prisma.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
-    });
+    session = await findSession(sessionId);
   }
 
   const featuredTestimonials = await fetchFeaturedTestimonials();

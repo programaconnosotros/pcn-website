@@ -1,15 +1,12 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
+import { findSession } from '@/lib/session';
 
 // Helper de servidor (no es una Server Action): devuelve el usuario logueado o null.
 export async function getSessionUser() {
   const sessionId = (await cookies()).get('sessionId')?.value;
   if (!sessionId) return null;
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   return session?.user ?? null;
 }

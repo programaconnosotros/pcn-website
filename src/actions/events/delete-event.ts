@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { canDeleteEvent } from '@/lib/event-permissions';
+import { findSession } from '@/lib/session';
 
 export const deleteEvent = async (id: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -13,10 +14,7 @@ export const deleteEvent = async (id: string) => {
     throw new Error('Usuario no autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');

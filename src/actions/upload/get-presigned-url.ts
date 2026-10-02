@@ -2,8 +2,8 @@
 
 import { getPresignedUploadUrl } from '@/lib/s3';
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
@@ -27,10 +27,7 @@ export async function getPresignedUrl({
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('No autorizado');

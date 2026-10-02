@@ -87,7 +87,7 @@ describe('fetchNotifications', () => {
     const result = await fetchNotifications();
 
     expect(prismaMock.session.findUnique).toHaveBeenCalledWith({
-      where: { id: 'session-admin' },
+      where: { id: 'session-admin', expires: { gt: expect.any(Date) } },
       include: { user: true },
     });
     expect(prismaMock.notification.findMany).toHaveBeenCalledWith({

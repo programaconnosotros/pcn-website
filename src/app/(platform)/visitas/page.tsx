@@ -4,7 +4,6 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { fetchPageVisits, getPageVisitStats } from '@/actions/analytics/fetch-page-visits';
@@ -16,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { findSession } from '@/lib/session';
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('es-AR', {
@@ -49,10 +49,7 @@ const VisitasPage = async () => {
     redirect('/home');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/home');

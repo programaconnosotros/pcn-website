@@ -5,6 +5,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -58,12 +59,7 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
   const params = await props.params;
   const sessionId = (await cookies()).get('sessionId');
 
-  const session = sessionId
-    ? await prisma.session.findUnique({
-        where: { id: sessionId.value },
-        include: { user: true },
-      })
-    : null;
+  const session = sessionId ? await findSession(sessionId.value) : null;
 
   const advise = await prisma.advise.findUnique({
     where: { id: params.id },

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 import { ProjectsList } from '@/components/projects/projects-list';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -32,9 +32,7 @@ const Proyectos = async () => {
     cookies().then((c) => c.get('sessionId')?.value),
   ]);
 
-  const session = sessionId
-    ? await prisma.session.findUnique({ where: { id: sessionId }, include: { user: true } })
-    : null;
+  const session = sessionId ? await findSession(sessionId) : null;
 
   const currentUser = session
     ? { id: session.user.id, name: session.user.name, isAdmin: session.user.role === 'ADMIN' }

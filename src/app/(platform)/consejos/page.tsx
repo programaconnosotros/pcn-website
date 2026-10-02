@@ -7,6 +7,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -35,14 +36,7 @@ const AdvicePage = async () => {
   let session: (Session & { user: User }) | null = null;
 
   if (sessionId) {
-    session = await prisma.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
-    });
+    session = await findSession(sessionId);
   }
 
   const advises = await prisma.advise.findMany({

@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { findSession } from '@/lib/session';
 
 export const toggleLike = async (adviseId: string) => {
   try {
@@ -10,9 +11,7 @@ export const toggleLike = async (adviseId: string) => {
 
     if (!sessionId) throw new Error('User not authenticated');
 
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId.value },
-    });
+    const session = await findSession(sessionId.value);
 
     if (!session) throw new Error('Session not found');
 

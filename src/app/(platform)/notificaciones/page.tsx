@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { fetchNotifications } from '@/actions/notifications/fetch-notifications';
 import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
@@ -20,10 +20,7 @@ const NotificacionesPage = async () => {
     redirect('/home');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/home');

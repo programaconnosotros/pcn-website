@@ -1,10 +1,10 @@
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { NewTalkProposalForm } from '@/components/talk-proposals/new-talk-proposal-form';
+import { findSession } from '@/lib/session';
 
 const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
@@ -16,10 +16,7 @@ const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) =>
     redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);

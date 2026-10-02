@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const updateProfile = async (data: ProfileFormData) => {
   await enforceRateLimit('editContent');
@@ -17,11 +18,7 @@ export const updateProfile = async (data: ProfileFormData) => {
     redirect('/');
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: sessionId,
-    },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     console.error('Usuario no autenticado, redireccionando a /home');

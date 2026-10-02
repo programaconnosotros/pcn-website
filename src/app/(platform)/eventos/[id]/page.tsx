@@ -20,6 +20,7 @@ import { signGallerySrc, signGalleryItem } from '@/lib/gallery-signing';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
+import { findSession } from '@/lib/session';
 
 type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
 
@@ -97,10 +98,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   let userId: string | null = null;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
 
     if (session) {
       if (session.user.role === 'ADMIN') {
@@ -300,7 +298,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   <EventDetailClient
                     eventId={id}
                     eventName={event.name}
-                    isAuthenticated={!!sessionId}
+                    isAuthenticated={!!userId}
                     isRegistered={isRegistered}
                     registrationId={registrationId}
                     capacityAvailable={capacityInfo?.available ?? true}
@@ -442,7 +440,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               <Section title="call for speakers">
                 <Link
                   href={
-                    sessionId
+                    userId
                       ? `/eventos/${id}/proponer-charla`
                       : `/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
                   }

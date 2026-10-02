@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import prisma from '@/lib/prisma';
+import { findSession } from '@/lib/session';
 
 type RateLimitRule = { limit: number; windowSeconds: number };
 
@@ -66,12 +66,7 @@ export const getClientIp = async () => {
  */
 export const enforceRateLimit = async (name: RateLimitName) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  const session = sessionId
-    ? await prisma.session.findUnique({
-        where: { id: sessionId },
-        select: { user: { select: { id: true, role: true } } },
-      })
-    : null;
+  const session = sessionId ? await findSession(sessionId) : null;
 
   if (session?.user.role === 'ADMIN') return;
 

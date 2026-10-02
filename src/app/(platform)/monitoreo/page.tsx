@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { fetchErrors, getErrorStats } from '@/actions/errors/fetch-errors';
 import { fetchLogs, getLogStats } from '@/actions/logs/fetch-logs';
 import { PageTitle } from '@/components/ui/page-title';
@@ -20,6 +19,7 @@ import {
 import { MonitoringClient } from './monitoring-client';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
@@ -85,10 +85,7 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
     redirect('/home');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
     redirect('/home');

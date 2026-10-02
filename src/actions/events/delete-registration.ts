@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
+import { findSession } from '@/lib/session';
 
 export const deleteRegistration = async (registrationId: string) => {
   // Verificar que el usuario está logueado
@@ -12,10 +13,7 @@ export const deleteRegistration = async (registrationId: string) => {
     throw new Error('No autorizado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!(await canManageSomeEvent(session?.user))) {
     throw new Error('No tienes permisos para realizar esta acción');

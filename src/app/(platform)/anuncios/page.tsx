@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
 import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
 import {
   fetchAnnouncements,
@@ -7,6 +6,7 @@ import {
 } from '@/actions/announcements/get-announcements';
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 import type { Metadata } from 'next';
+import { findSession } from '@/lib/session';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -32,10 +32,7 @@ const AnunciosPage = async () => {
   let isAdmin = false;
 
   if (sessionId) {
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: { user: true },
-    });
+    const session = await findSession(sessionId);
     isAdmin = session?.user?.role === 'ADMIN';
   }
 

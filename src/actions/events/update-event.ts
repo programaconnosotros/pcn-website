@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { canEditEvent } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { findSession } from '@/lib/session';
 
 export const updateEvent = async (id: string, data: EventFormData) => {
   await enforceRateLimit('editContent');
@@ -19,10 +20,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('Usuario no autenticado');
   }
 
-  const session = await prisma.session.findUnique({
-    where: { id: sessionId },
-    include: { user: true },
-  });
+  const session = await findSession(sessionId);
 
   if (!session) {
     throw new Error('Sesión no encontrada');
