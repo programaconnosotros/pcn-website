@@ -103,7 +103,7 @@ export function AnnouncementsWrapper({
 
       {/* Dialog para crear nuevo anuncio */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nuevo anuncio</DialogTitle>
             <DialogDescription>Crea un nuevo anuncio para la comunidad.</DialogDescription>

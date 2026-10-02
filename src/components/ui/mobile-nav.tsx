@@ -441,7 +441,7 @@ export function MobileNav({
         // transparent and paint an opaque fill in an absolute child instead. The fill runs
         // past the bottom edge: with the floating URL bar expanded, `bottom: 0` sits above it
         // and page content would otherwise scroll by underneath, visible through the glass.
-        className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"
+        className="mobile-tab-bar pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"
       >
         <div
           aria-hidden

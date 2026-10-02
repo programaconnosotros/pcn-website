@@ -161,7 +161,7 @@ export function AnnouncementCard({
 
       {/* Dialog de edición */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Editar anuncio</DialogTitle>
             <DialogDescription>Modifica los datos del anuncio.</DialogDescription>

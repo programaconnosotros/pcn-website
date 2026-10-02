@@ -118,7 +118,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
       {/* Create dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
@@ -128,7 +128,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
 
       {/* Edit dialog */}
       <Dialog open={!!editingTalk} onOpenChange={(open) => !open && setEditingTalk(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Editar charla</DialogTitle>
           </DialogHeader>

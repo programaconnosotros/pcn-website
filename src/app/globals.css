@@ -379,6 +379,11 @@
     background: repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.025) 0 1px, transparent 1px 3px),
       radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.94) 100%);
   }
+  /* The phone tab bar (z-60) sits above dialogs (z-50) so it stays usable over the menu sheet,
+     but it would cover a dialog's footer buttons: hide it while any dialog is open. */
+  body:has(.dialog-surface[data-state='open']) .mobile-tab-bar {
+    display: none;
+  }
   .dialog-overlay[data-state='open'] {
     animation: dialog-fade-in 0.25s ease-out both;
   }

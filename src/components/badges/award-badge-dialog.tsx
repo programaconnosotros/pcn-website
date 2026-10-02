@@ -89,7 +89,7 @@ export function AwardBadgeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="font-mono">otorgarBadge({userName.split(' ')[0]})</DialogTitle>
         </DialogHeader>

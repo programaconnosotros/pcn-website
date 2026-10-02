@@ -9,9 +9,11 @@ export const dialogOverlayClassName = 'dialog-overlay fixed inset-0 z-50 backdro
 
 // A dark glass terminal panel with four lit corner brackets and scanlines (drawn as fixed
 // backgrounds so they stay put while the panel scrolls) that switches on like a CRT: a bright
-// horizontal line that snaps open vertically, then a scan beam sweeps down once.
+// horizontal line that snaps open vertically, then a scan beam sweeps down once. Capped to the
+// dynamic viewport (not `vh`, which on iOS includes the area behind the browser toolbar) and
+// scrollable, so long forms never push their buttons off screen.
 export const dialogContentClassName = cn(
-  'dialog-surface fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-sm border border-pcnGreen-400 p-6 font-mono backdrop-blur-xl',
+  'dialog-surface fixed left-1/2 top-1/2 z-50 grid max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto -translate-x-1/2 -translate-y-1/2 gap-4 rounded-sm border border-pcnGreen-400 p-6 font-mono backdrop-blur-xl',
   'shadow-[inset_0_1px_0_rgba(4,244,190,0.45),0_24px_60px_-16px_rgba(0,0,0,0.95),0_0_48px_-12px_rgba(4,244,190,0.55)]',
   'focus-visible:outline-none',
 );

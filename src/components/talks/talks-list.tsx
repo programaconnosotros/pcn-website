@@ -171,7 +171,7 @@ export function TalksList({ talks, eventId }: Props) {
       </div>
 
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
@@ -184,7 +184,7 @@ export function TalksList({ talks, eventId }: Props) {
       </Dialog>
 
       <Dialog open={!!editingTalk} onOpenChange={(open) => !open && setEditingTalk(null)}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Editar charla</DialogTitle>
           </DialogHeader>

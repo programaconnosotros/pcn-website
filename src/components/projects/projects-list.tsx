@@ -730,7 +730,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
 
       {/* Create dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nuevo proyecto</DialogTitle>
           </DialogHeader>
@@ -746,7 +746,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
 
       {/* Edit dialog */}
       <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Editar proyecto</DialogTitle>
           </DialogHeader>

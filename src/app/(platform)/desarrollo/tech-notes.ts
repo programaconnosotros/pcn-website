@@ -536,7 +536,7 @@ function addPcnOsVariants({ addVariant }: any) {
             lang: 'tsx',
             caption:
               'La barra de navegación mobile se oculta en desktop (`md:hidden`) y dentro de una ventana de PCN OS (`embedded:hidden`).',
-            code: `className="pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"`,
+            code: `className="mobile-tab-bar pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"`,
           },
           {
             file: 'src/components/ui/ruled-grid.tsx',
