@@ -5,15 +5,9 @@ import { fetchEvents } from '@/actions/events/fetch-events';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import { EventExhibit } from './event-exhibit';
 import { EventPoster } from './event-poster';
+import { hasEventEnded } from '@/lib/event-status';
 
 type EventWithCount = Awaited<ReturnType<typeof fetchEvents>>[number];
-
-// Same rule as EventStatusBadge: without an explicit end, an event lasts until the end of its day.
-const hasEnded = (event: EventWithCount, now: Date) => {
-  const end = event.endDate ? new Date(event.endDate) : new Date(event.date);
-  if (!event.endDate) end.setHours(23, 59, 59, 999);
-  return now > end;
-};
 
 const yearOf = (date: Date) =>
   new Intl.DateTimeFormat('es-AR', {
@@ -54,8 +48,8 @@ export const EventsList: React.FC = async () => {
 
   const now = new Date();
   // fetchEvents sorts newest first; upcoming events read best soonest first.
-  const upcoming = events.filter((event) => !hasEnded(event, now)).reverse();
-  const past = events.filter((event) => hasEnded(event, now));
+  const upcoming = events.filter((event) => !hasEventEnded(event, now)).reverse();
+  const past = events.filter((event) => hasEventEnded(event, now));
 
   // Every event gets a catalog number in the order it happened, the first one being Nº 001.
   const catalogNumber = new Map(events.map((event, index) => [event.id, events.length - index]));

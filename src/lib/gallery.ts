@@ -137,6 +137,48 @@ export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFi
   };
 }
 
+/**
+ * What a past event's page shows of it: up to `take` photos and videos in the order they were
+ * taken (the night told from the start), how many there are of each kind and who appears in them.
+ */
+export async function getEventMemories(eventId: string, take: number) {
+  const where = { ...visibleGalleryItem, eventId } satisfies Prisma.GalleryItemWhereInput;
+  const [items, kinds, people] = await Promise.all([
+    prisma.galleryItem.findMany({
+      where,
+      select: {
+        id: true,
+        kind: true,
+        src: true,
+        thumbSrc: true,
+        width: true,
+        height: true,
+        durationSeconds: true,
+        takenAt: true,
+        description: true,
+      },
+      orderBy: [{ takenAt: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+      take,
+    }),
+    prisma.galleryItem.groupBy({ by: ['kind'], where, _count: true }),
+    prisma.user.findMany({
+      where: { galleryTags: { some: { item: where } } },
+      select: { id: true, name: true, image: true },
+      orderBy: { name: 'asc' },
+    }),
+  ]);
+  const count = (kind: 'PHOTO' | 'VIDEO') => kinds.find((row) => row.kind === kind)?._count ?? 0;
+  return {
+    items: items.map(signGalleryItem),
+    photoCount: count('PHOTO'),
+    videoCount: count('VIDEO'),
+    people,
+  };
+}
+
+export type EventMemories = Awaited<ReturnType<typeof getEventMemories>>;
+export type EventMemoryItem = EventMemories['items'][number];
+
 /** The most recently uploaded photos and videos, newest upload first. */
 export const listLatestGalleryItems = async (take: number) =>
   (

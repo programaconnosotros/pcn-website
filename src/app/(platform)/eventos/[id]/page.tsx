@@ -7,6 +7,7 @@ import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
+import { EventSection } from '@/components/events/event-section';
 import { EventAnnouncements } from '@/components/announcements/event-announcements';
 import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
 import { Button } from '@/components/ui/button';
@@ -22,18 +23,12 @@ import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
 import { findSession } from '@/lib/session';
 import { activeWaitlistWhere, getWaitlistPosition } from '@/lib/event-waitlist';
+import { hasEventEnded } from '@/lib/event-status';
+import { PastEventMemory } from '@/components/events/memory/past-event-memory';
 
 type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
 
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="p-3">
-    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-      <span className="text-pcnGreen-500">{'// '}</span>
-      {title}
-    </h2>
-    {children}
-  </section>
-);
+const Section = EventSection;
 
 function normalizeDescription(text: string): string {
   return text
@@ -129,6 +124,11 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
         </div>
       </>
     );
+  }
+
+  // Un evento que ya terminó se muestra como el recuerdo de cómo fue, sin inscripción
+  if (hasEventEnded(event)) {
+    return <PastEventMemory event={event} canEdit={canEdit} isAdmin={isAdmin} />;
   }
 
   // Verificar si el evento ya pasó

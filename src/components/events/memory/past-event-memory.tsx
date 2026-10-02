@@ -1,0 +1,309 @@
+import Link from 'next/link';
+import { Edit, Globe, ImagePlus, Images, Mic, UserCog, Users } from 'lucide-react';
+import type { fetchEvent } from '@/actions/events/fetch-event';
+import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
+import { EventSection } from '@/components/events/event-section';
+import { FlyerFrame } from '@/components/events/flyer-frame';
+import { PersonLink } from '@/components/people/person-link';
+import { Button } from '@/components/ui/button';
+import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
+import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
+import { getEventMemories, type EventMemoryItem } from '@/lib/gallery';
+import prisma from '@/lib/prisma';
+import { MemoryHero } from './memory-hero';
+import { MemoryMosaic } from './memory-mosaic';
+import { MemoryTalks } from './memory-talks';
+
+type Event = NonNullable<Awaited<ReturnType<typeof fetchEvent>>>;
+
+// How many photos and videos the album shows before linking to the gallery.
+const MEMORY_PREVIEW = 30;
+// How many of the people tagged in the photos are listed by name.
+const PEOPLE_PREVIEW = 24;
+
+const plural = (count: number, one: string, many: string) => (count === 1 ? one : many);
+
+// The hero's photo: the first landscape photo of the night, or any photo at all.
+const pickCover = (items: EventMemoryItem[]) => {
+  const photos = items.filter((item) => item.kind === 'PHOTO');
+  return (
+    photos.find((item) => item.width && item.height && item.width / item.height > 1.2) ??
+    photos[0] ??
+    null
+  );
+};
+
+const linkRowClassName =
+  'flex items-center justify-between gap-2 py-1 font-mono text-xs text-muted-foreground hover:text-pcnGreen';
+
+/**
+ * A past event's page, laid out as a memory of how it went instead of an invitation: a photo of
+ * the night with what it left (people, talks, photos), the album, the talks given and the
+ * event's details. Whoever manages the event still gets their tools at the bottom.
+ */
+export async function PastEventMemory({
+  event,
+  canEdit,
+  isAdmin,
+}: {
+  event: Event;
+  canEdit: boolean;
+  isAdmin: boolean;
+}) {
+  const isExternalEvent = !!event.externalRegistrationUrl;
+  const [memories, talks, registrations, catalogNumber] = await Promise.all([
+    getEventMemories(event.id, MEMORY_PREVIEW + 1),
+    fetchPublicTalks(event.id),
+    isExternalEvent
+      ? Promise.resolve([])
+      : prisma.eventRegistration.groupBy({
+          by: ['cancelledAt'],
+          where: { eventId: event.id },
+          _count: true,
+        }),
+    // Same numbering as the /eventos museum: the first event ever is Nº 001.
+    prisma.event.count({ where: { deletedAt: null, date: { lte: event.date } } }),
+  ]);
+
+  const activeRegistrations = registrations
+    .filter((row) => row.cancelledAt === null)
+    .reduce((sum, row) => sum + row._count, 0);
+  const totalRegistrations = registrations.reduce((sum, row) => sum + row._count, 0);
+
+  const cover = pickCover(memories.items);
+  const album = memories.items.filter((item) => item !== cover).slice(0, MEMORY_PREVIEW);
+  const totalItems = memories.photoCount + memories.videoCount;
+  const orderedTalks = [...talks].sort((a, b) => a.order - b.order);
+  const place = event.isOnline
+    ? 'online'
+    : [event.placeName, event.city].filter(Boolean).join(', ') || null;
+
+  const stats = [
+    { value: activeRegistrations, label: plural(activeRegistrations, 'inscripto', 'inscriptos') },
+    { value: orderedTalks.length, label: plural(orderedTalks.length, 'charla', 'charlas') },
+    { value: memories.photoCount, label: plural(memories.photoCount, 'foto', 'fotos') },
+    { value: memories.videoCount, label: plural(memories.videoCount, 'video', 'videos') },
+    { value: memories.people.length, label: 'en las fotos' },
+  ].filter((stat) => stat.value > 0);
+
+  return (
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col p-4 pt-0">
+      <StickyHeader className="mt-4">
+        <PageTitle
+          path={[{ label: 'eventos', href: '/eventos' }, { label: event.name }]}
+          action={
+            canEdit && (
+              <Link href={`/eventos/${event.id}/editar`}>
+                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                  <Edit className="h-4 w-4" />
+                  editarEvento();
+                </Button>
+              </Link>
+            )
+          }
+        />
+      </StickyHeader>
+
+      <article className="mb-14 divide-y divide-pcnGreen-200 border border-pcnGreen-200">
+        <MemoryHero
+          name={event.name}
+          date={event.date}
+          place={place}
+          catalogNumber={catalogNumber}
+          cover={cover?.fullUrl ?? null}
+          flyer={event.flyerImages[0]}
+          stats={stats}
+        />
+
+        {(totalItems > 0 || isAdmin) && (
+          <EventSection
+            title="fotos y videos"
+            aside={
+              <span className="flex gap-4 font-mono text-xs">
+                {isAdmin && (
+                  <Link
+                    href={`/galeria/subir?evento=${event.id}`}
+                    className="flex items-center gap-1 text-muted-foreground hover:text-pcnGreen"
+                  >
+                    <ImagePlus className="size-3.5" />
+                    subir
+                  </Link>
+                )}
+                {totalItems > 0 && (
+                  <Link
+                    href={`/galeria?evento=${event.id}`}
+                    className="flex items-center gap-1 text-pcnGreen-700 hover:text-pcnGreen"
+                  >
+                    <Images className="size-3.5" />
+                    ver {totalItems === 1 ? 'en' : `los ${totalItems} en`} la galería →
+                  </Link>
+                )}
+              </span>
+            }
+          >
+            {album.length > 0 ? (
+              <MemoryMosaic eventId={event.id} items={album} total={totalItems - (cover ? 1 : 0)} />
+            ) : (
+              totalItems === 0 && (
+                <p className="font-mono text-xs text-muted-foreground">
+                  Todavía no hay fotos ni videos de este evento.
+                </p>
+              )
+            )}
+          </EventSection>
+        )}
+
+        {orderedTalks.length > 0 && (
+          <EventSection title="charlas">
+            <MemoryTalks talks={orderedTalks} />
+          </EventSection>
+        )}
+
+        <div className="grid grid-cols-1 divide-y divide-pcnGreen-200 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] md:divide-x md:divide-y-0">
+          <div className="flex flex-col divide-y divide-pcnGreen-200">
+            {event.description && (
+              <EventSection title="de qué se trató">
+                <p className="max-w-prose whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  {event.description}
+                </p>
+              </EventSection>
+            )}
+
+            {memories.people.length > 0 && (
+              <EventSection
+                title="aparecen en las fotos"
+                aside={<span className="font-mono text-xs">{memories.people.length}</span>}
+              >
+                <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                  {memories.people.slice(0, PEOPLE_PREVIEW).map((person) => (
+                    <li key={person.id}>
+                      <PersonLink person={person} />
+                    </li>
+                  ))}
+                </ul>
+                {memories.people.length > PEOPLE_PREVIEW && (
+                  <p className="mt-2 font-mono text-xs text-muted-foreground">
+                    y {memories.people.length - PEOPLE_PREVIEW} más
+                  </p>
+                )}
+              </EventSection>
+            )}
+          </div>
+
+          <div className="flex flex-col divide-y divide-pcnGreen-200">
+            <EventSection title="ficha">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
+                <dt className="text-muted-foreground">fecha</dt>
+                <dd>
+                  <LocalDate date={event.date} /> <LocalTime date={event.date} />
+                  {event.endDate && (
+                    <>
+                      {' → '}
+                      <LocalDate date={event.endDate} /> <LocalTime date={event.endDate} />
+                    </>
+                  )}
+                </dd>
+                <dt className="text-muted-foreground">{event.isOnline ? 'modo' : 'lugar'}</dt>
+                <dd>
+                  {event.isOnline
+                    ? 'online'
+                    : [event.placeName, event.address, event.city].filter(Boolean).join(' · ') ||
+                      '—'}
+                </dd>
+              </dl>
+            </EventSection>
+
+            {event.organizers.length > 0 && (
+              <EventSection title="organizaron">
+                <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                  {event.organizers.map(({ user }) => (
+                    <li key={user.id}>
+                      <PersonLink person={user} />
+                    </li>
+                  ))}
+                </ul>
+              </EventSection>
+            )}
+
+            {event.sponsors.length > 0 && (
+              <EventSection title="con el apoyo de">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+                  {event.sponsors.map((sponsor) =>
+                    sponsor.website ? (
+                      <a
+                        key={sponsor.id}
+                        href={sponsor.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-pcnGreen hover:underline"
+                      >
+                        <Globe className="h-3 w-3" />
+                        {sponsor.name}
+                      </a>
+                    ) : (
+                      <span key={sponsor.id}>{sponsor.name}</span>
+                    ),
+                  )}
+                </div>
+              </EventSection>
+            )}
+
+            {/* The hero already shows the flyer when there's no photo to open with. */}
+            {cover && event.flyerImages[0] && (
+              <EventSection title="el flyer">
+                <FlyerFrame
+                  src={event.flyerImages[0]}
+                  alt={`Flyer de ${event.name}`}
+                  className="aspect-[4/5] w-full max-w-xs"
+                />
+              </EventSection>
+            )}
+          </div>
+        </div>
+
+        {canEdit && (
+          <EventSection title="gestión">
+            <div className="grid gap-x-6 sm:grid-cols-2">
+              <Link href={`/eventos/${event.id}/charlas`} className={linkRowClassName}>
+                <span className="flex items-center gap-2">
+                  <Mic className="size-3.5" />
+                  charlas del evento
+                </span>
+                <span>gestionar →</span>
+              </Link>
+              <Link href={`/eventos/${event.id}/organizadores`} className={linkRowClassName}>
+                <span className="flex items-center gap-2">
+                  <UserCog className="size-3.5" />
+                  organizadores
+                </span>
+                <span>gestionar →</span>
+              </Link>
+              {!isExternalEvent && (
+                <Link href={`/eventos/${event.id}/inscripciones`} className={linkRowClassName}>
+                  <span className="flex items-center gap-2">
+                    <Users className="size-3.5" />
+                    {activeRegistrations} activas · {totalRegistrations} total
+                  </span>
+                  <span>inscripciones →</span>
+                </Link>
+              )}
+              {event.callForSpeakersEnabled && (
+                <Link
+                  href={`/eventos/${event.id}/propuestas-de-charlas`}
+                  className={linkRowClassName}
+                >
+                  <span className="flex items-center gap-2">
+                    <Mic className="size-3.5" />
+                    propuestas de charlas
+                  </span>
+                  <span>ver →</span>
+                </Link>
+              )}
+            </div>
+          </EventSection>
+        )}
+      </article>
+    </div>
+  );
+}
