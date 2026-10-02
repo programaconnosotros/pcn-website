@@ -18,7 +18,7 @@ import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
 import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, Pencil } from 'lucide-react';
+import { ArrowUpRight, Github, Instagram, Linkedin, Pencil } from 'lucide-react';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getUserIdentities } from '@/lib/identity-links';
@@ -109,6 +109,13 @@ type ProfileTalk = {
   event: { date: Date; placeName: string | null; city: string | null } | null;
   speakers: { speakerName: string }[];
 };
+
+// lucide has no X logo; same 24×24 box and `currentColor` fill as its icons.
+const XLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+    <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.17h1.7L7.4 4.73H5.58l11.1 14.44Z" />
+  </svg>
+);
 
 const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
   <RuledGrid className="grid-cols-1">
@@ -282,6 +289,33 @@ export default async function ProfilePage(props: ProfilePageProps) {
     })),
   ];
 
+  const socialLinks = [
+    {
+      label: 'x',
+      href: user.xAccountUrl,
+      icon: XLogo,
+      ariaLabel: `Perfil de X (anteriormente Twitter) de ${user.name}`,
+    },
+    {
+      label: 'linkedin',
+      href: user.linkedinUrl,
+      icon: Linkedin,
+      ariaLabel: `Perfil de LinkedIn de ${user.name}`,
+    },
+    {
+      label: 'github',
+      href: user.gitHubUrl,
+      icon: Github,
+      ariaLabel: `Perfil de GitHub de ${user.name}`,
+    },
+    {
+      label: 'instagram',
+      href: user.instagramUrl,
+      icon: Instagram,
+      ariaLabel: `Perfil de Instagram de ${user.name}`,
+    },
+  ].filter((link): link is typeof link & { href: string } => !!link.href);
+
   const profileFacts: { label: string; value: string; href?: string }[] = [
     ...user.positions.map((position) => ({
       label: 'trabaja',
@@ -433,60 +467,38 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     <h1 className="truncate font-mono text-base font-semibold">{user.name}</h1>
                     <BadgeStrip badges={badges} />
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-3 font-mono text-[11px] text-muted-foreground">
-                    {user.xAccountUrl && (
-                      <a
-                        href={user.xAccountUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pcnGreen"
-                        aria-label={`Perfil de X (anteriormente Twitter) de ${user.name}`}
-                      >
-                        x↗
-                      </a>
-                    )}
-                    {user.linkedinUrl && (
-                      <a
-                        href={user.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pcnGreen"
-                        aria-label={`Perfil de LinkedIn de ${user.name}`}
-                      >
-                        linkedin↗
-                      </a>
-                    )}
-                    {user.gitHubUrl && (
-                      <a
-                        href={user.gitHubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pcnGreen"
-                        aria-label={`Perfil de GitHub de ${user.name}`}
-                      >
-                        github↗
-                      </a>
-                    )}
-                    {user.instagramUrl && (
-                      <a
-                        href={user.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pcnGreen"
-                        aria-label={`Perfil de Instagram de ${user.name}`}
-                      >
-                        instagram↗
-                      </a>
-                    )}
-                    {isOwnProfile && (
-                      <Link href="/perfil" className="flex items-center gap-1 hover:text-pcnGreen">
-                        <Pencil className="h-3 w-3" />
-                        editar
-                      </Link>
-                    )}
-                  </div>
+                  {isOwnProfile && (
+                    <Link
+                      href="/perfil"
+                      className="flex w-fit items-center gap-1 border border-dashed border-pcnGreen-200 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen"
+                    >
+                      <Pencil className="size-2.5" />
+                      editar perfil
+                    </Link>
+                  )}
                 </div>
               </div>
+
+              {socialLinks.length > 0 && (
+                <nav
+                  aria-label={`Redes de ${user.name}`}
+                  className="flex divide-x divide-pcnGreen-200"
+                >
+                  {socialLinks.map(({ label, href, icon: Icon, ariaLabel }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={ariaLabel}
+                      className="group flex min-w-0 flex-auto items-center justify-center gap-1.5 px-2.5 py-2 font-mono text-[11px] text-muted-foreground transition-colors hover:bg-pcnGreen/[0.04] hover:text-pcnGreen hover:shadow-[inset_0_-2px_0_#04f4be]"
+                    >
+                      <Icon className="size-3.5 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
+                      <span className="truncate">{label}</span>
+                    </a>
+                  ))}
+                </nav>
+              )}
 
               {user.slogan && (
                 <p className="p-4 text-sm italic leading-relaxed text-muted-foreground">
