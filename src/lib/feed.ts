@@ -48,10 +48,14 @@ const eventItems = async (): Promise<FeedItem[]> => {
   const events = await prisma.event.findMany({
     where: { deletedAt: null },
     orderBy: { createdAt: 'desc' },
-    take: PER_SOURCE,
+    // Extra rows make up for the past events filtered out below.
+    take: PER_SOURCE * 2,
     select: { id: true, name: true, date: true, isOnline: true, createdAt: true },
   });
-  return events.map((event) => ({
+  // An event loaded after it happened (e.g. backfilling history) isn't news on the day it was
+  // created, so only events announced on or before their own date show up.
+  const announced = events.filter((event) => toFeedDay(event.date) >= toFeedDay(event.createdAt));
+  return announced.slice(0, PER_SOURCE).map((event) => ({
     id: `evento-${event.id}`,
     kind: 'evento',
     day: toFeedDay(event.createdAt),
