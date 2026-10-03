@@ -457,6 +457,9 @@ export function MobileNav({
                 key={item.url}
                 href={item.url}
                 aria-current={active ? 'page' : undefined}
+                // Any other tab closes the open menu right away, as if "Menú" had been tapped,
+                // instead of waiting for the route change (which never comes on the current tab).
+                onClick={() => setOpenMobile(false)}
                 className={cn(tabClassName, active && 'text-pcnGreen')}
               >
                 {active && <TabIndicator />}
