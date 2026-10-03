@@ -82,13 +82,13 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
-    redirect('/home');
+    redirect('/');
   }
 
   const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
-    redirect('/home');
+    redirect('/');
   }
 
   const params = await searchParams;
