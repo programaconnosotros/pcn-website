@@ -268,7 +268,7 @@ export default async function GalleryItemPage(props: Props) {
             <PhotoPeople
               photoId={photo.id}
               people={photo.tags.map((tag) => tag.user)}
-              viewerId={viewer?.id ?? null}
+              viewer={viewer && { id: viewer.id, name: viewer.name, image: viewer.image }}
               isAdmin={isAdmin}
             />
           </Section>

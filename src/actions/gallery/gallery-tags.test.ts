@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import {
@@ -65,6 +66,29 @@ describe('photo tags', () => {
     expect(prismaMock.galleryItemTag.deleteMany).toHaveBeenCalledWith({
       where: { itemId: 'photo-1', userId: 'user-2' },
     });
+  });
+
+  it('returns the tagged person and skips re-rendering the page', async () => {
+    loginAs(admin);
+    const person = { id: 'user-2', name: 'Ada', image: null };
+    prismaMock.user.findUnique.mockResolvedValue(person as any);
+
+    await expect(tagGalleryItemUser('photo-1', 'user-2')).resolves.toEqual({ person });
+    await expect(untagGalleryItemUser('photo-1', 'user-2')).resolves.toEqual({ success: true });
+
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { id: 'user-2' },
+      select: { id: true, name: true, image: true },
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it('does not tag missing people', async () => {
+    loginAs(admin);
+    prismaMock.user.findUnique.mockResolvedValue(null);
+
+    await expect(tagGalleryItemUser('photo-1', 'ghost')).rejects.toThrow('Usuario no encontrado');
+    expect(prismaMock.galleryItemTag.upsert).not.toHaveBeenCalled();
   });
 
   it('does not tag on missing photos', async () => {

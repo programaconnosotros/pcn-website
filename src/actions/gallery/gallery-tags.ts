@@ -21,15 +21,24 @@ const revalidateTags = (itemIds: string[], userId: string) => {
   revalidatePath(`/perfil/${userId}`);
 };
 
-const revalidateTag = (itemId: string, userId: string) => revalidateTags([itemId], userId);
-
-/** Marca que `userId` aparece en la foto. */
+/**
+ * Marca que `userId` aparece en la foto y devuelve a la persona, para que la página la muestre sin
+ * volver a renderizarse.
+ *
+ * A propósito no llama a `revalidatePath`: todas las páginas que muestran etiquetas (la foto, la
+ * galería, el perfil) son dinámicas, así que no hay caché de servidor que invalidar, y cualquier
+ * revalidación hace que Next vuelva a renderizar la página entera de la foto dentro de la respuesta
+ * de la action, que es lo que hacía lento etiquetar. La UI actualiza la lista de forma optimista.
+ */
 export async function tagGalleryItemUser(itemId: string, userId: string) {
   const viewer = await requireTagger(userId);
 
   const [photo, user] = await Promise.all([
     prisma.galleryItem.findUnique({ where: { id: itemId }, select: { id: true } }),
-    prisma.user.findUnique({ where: { id: userId }, select: { id: true } }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, image: true },
+    }),
   ]);
   if (!photo) throw new Error('Foto no encontrada');
   if (!user) throw new Error('Usuario no encontrado');
@@ -39,16 +48,14 @@ export async function tagGalleryItemUser(itemId: string, userId: string) {
     create: { itemId, userId, taggedById: viewer.id },
     update: {},
   });
-  revalidateTag(itemId, userId);
-  return { success: true };
+  return { person: user };
 }
 
-/** Quita la etiqueta de `userId` de la foto. */
+/** Quita la etiqueta de `userId` de la foto. Sin revalidar, por lo mismo que `tagGalleryItemUser`. */
 export async function untagGalleryItemUser(itemId: string, userId: string) {
   await requireTagger(userId);
 
   await prisma.galleryItemTag.deleteMany({ where: { itemId, userId } });
-  revalidateTag(itemId, userId);
   return { success: true };
 }
 
