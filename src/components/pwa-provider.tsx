@@ -1,38 +1,15 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { isEmbedded } from '@/components/os/os-env';
+import { PwaContext, type InstallGuide } from '@/components/pwa-context';
 
 // Chromium-only event, not in the DOM typings.
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
-
-/** How to install by hand where there is no prompt to trigger (see install-app-button.tsx). */
-export type InstallGuide =
-  | 'ios'
-  | 'android-samsung'
-  | 'android-firefox'
-  | 'android'
-  | 'mac-safari'
-  | 'desktop-firefox'
-  | 'desktop-chromium';
-
-interface PwaContextValue {
-  /** The browser offered an install prompt we can trigger (Chromium). */
-  isInstallable: boolean;
-  /** iOS Safari: no prompt, installing is Compartir → Agregar a inicio. */
-  isIosInstallable: boolean;
-  /** Not installed (or not running installed) and there is a way to install: prompt or guide. */
-  canInstall: boolean;
-  /** Manual steps for this browser, used when there is no prompt. */
-  installGuide: InstallGuide | null;
-  installApp: () => Promise<void>;
-}
-
-const PwaContext = createContext<PwaContextValue | null>(null);
 
 // The deferred prompt lives on the top window so a page inside a PCN OS window (a same-origin
 // iframe, which never gets `beforeinstallprompt`) can read and trigger the host's prompt.
@@ -182,10 +159,4 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
       {children}
     </PwaContext.Provider>
   );
-}
-
-export function usePwa() {
-  const context = useContext(PwaContext);
-  if (!context) throw new Error('usePwa must be used within a PwaProvider');
-  return context;
 }

@@ -18,7 +18,7 @@ export function OsPhotos({
   onOpen,
 }: {
   covered: boolean;
-  onOpen: (path: string) => void;
+  onOpen: (_path: string) => void;
 }) {
   const active = useBackgroundActive(covered);
   const [photos, setPhotos] = useState<RandomGalleryPhoto[] | null>(null);

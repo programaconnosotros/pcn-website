@@ -4,26 +4,15 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  MIN_WINDOW_HEIGHT,
+  MIN_WINDOW_WIDTH,
+  type ClampMode,
+  type OsWindowState,
+  type Rect,
+} from './os-window-geometry';
 import type { OsProgram } from './programs';
 import { PcnLoader } from '@/components/ui/pcn-loader';
-
-export interface Rect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-export interface OsWindowState extends Rect {
-  id: string;
-  /** URL the iframe was created with. It never changes, so the iframe never reloads on re-render. */
-  src: string;
-  /** Current location inside the window, reported by the embedded page. */
-  path: string;
-  title: string | null;
-  minimized: boolean;
-  maximized: boolean;
-}
 
 type ResizeDirection = 'e' | 's' | 'w' | 'se' | 'sw';
 
@@ -35,11 +24,6 @@ const resizeCursors: Record<ResizeDirection, string> = {
   sw: 'nesw-resize',
 };
 
-export type ClampMode = 'move' | 'resize';
-
-export const MIN_WINDOW_WIDTH = 420;
-export const MIN_WINDOW_HEIGHT = 280;
-
 interface OsWindowProps {
   win: OsWindowState;
   program: OsProgram;
@@ -48,15 +32,15 @@ interface OsWindowProps {
   zIndex: number;
   focused: boolean;
   /** Keeps the window inside the desktop: returns a rect clamped to it. */
-  clampRect: (rect: Rect, mode: ClampMode) => Rect;
+  clampRect: (_rect: Rect, _mode: ClampMode) => Rect;
   onFocus: () => void;
   onClose: () => void;
   onMinimize: () => void;
   onToggleMaximize: () => void;
-  onRectChange: (rect: Rect) => void;
+  onRectChange: (_rect: Rect) => void;
   /** Called with the cursor to show while moving or resizing, and with null when done. */
-  onInteractionChange: (cursor: string | null) => void;
-  registerIframe: (iframe: HTMLIFrameElement | null) => void;
+  onInteractionChange: (_cursor: string | null) => void;
+  registerIframe: (_iframe: HTMLIFrameElement | null) => void;
   onIframeLoad: () => void;
 }
 
@@ -67,7 +51,7 @@ const cleanTitle = (title: string | null) =>
 /** Follows the pointer until it is released, reporting the delta from where it started. */
 const trackPointer = (
   event: React.PointerEvent,
-  onMove: (dx: number, dy: number) => void,
+  onMove: (_dx: number, _dy: number) => void,
   onEnd: () => void,
 ) => {
   const startX = event.clientX;

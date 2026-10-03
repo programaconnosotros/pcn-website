@@ -35,8 +35,8 @@ interface OsMenuBarProps {
   user: OsUser | null;
   focusedProgram: OsProgram | null;
   musicPlayer: MusicPlayer;
-  onOpenProgram: (program: OsProgram) => void;
-  onOpenPath: (path: string) => void;
+  onOpenProgram: (_program: OsProgram) => void;
+  onOpenPath: (_path: string) => void;
   onOpenLauncher: () => void;
 }
 

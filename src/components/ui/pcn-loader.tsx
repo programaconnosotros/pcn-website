@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -66,10 +67,38 @@ export function PcnLoader({ label, className }: { label?: string; className?: st
           <span />
         </span>
         <span className="pcn-loader-logo">
-          <img src="/logo.webp" alt="" className="pcn-loader-half pcn-loader-half--left" />
-          <img src="/logo.webp" alt="" className="pcn-loader-half pcn-loader-half--right" />
-          <img src="/logo.webp" alt="" className="pcn-loader-ghost pcn-loader-ghost--a" />
-          <img src="/logo.webp" alt="" className="pcn-loader-ghost pcn-loader-ghost--b" />
+          <Image
+            src="/logo.webp"
+            alt=""
+            width={512}
+            height={512}
+            sizes="96px"
+            className="pcn-loader-half pcn-loader-half--left"
+          />
+          <Image
+            src="/logo.webp"
+            alt=""
+            width={512}
+            height={512}
+            sizes="96px"
+            className="pcn-loader-half pcn-loader-half--right"
+          />
+          <Image
+            src="/logo.webp"
+            alt=""
+            width={512}
+            height={512}
+            sizes="96px"
+            className="pcn-loader-ghost pcn-loader-ghost--a"
+          />
+          <Image
+            src="/logo.webp"
+            alt=""
+            width={512}
+            height={512}
+            sizes="96px"
+            className="pcn-loader-ghost pcn-loader-ghost--b"
+          />
           <span className="pcn-loader-beam" />
         </span>
       </div>

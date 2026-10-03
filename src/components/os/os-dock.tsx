@@ -282,7 +282,7 @@ interface DockItemProps {
   mouseX: MotionValue<number>;
   baseWidth: number;
   magnification: number;
-  onHover: (id: string | null) => void;
+  onHover: (_id: string | null) => void;
   onClick: () => void;
 }
 
@@ -423,7 +423,7 @@ interface OsDockProps {
   runningPrograms: OsProgram[];
   runningProgramIds: Set<string>;
   focusedProgramId: string | null;
-  onOpenProgram: (program: OsProgram) => void;
+  onOpenProgram: (_program: OsProgram) => void;
   onOpenLauncher: () => void;
 }
 

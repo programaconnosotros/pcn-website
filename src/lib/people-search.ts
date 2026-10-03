@@ -40,9 +40,9 @@ export function searchPeople<T>(
     fields,
     limit,
   }: {
-    name: (person: T) => string;
+    name: (_person: T) => string;
     /** Todo lo que se busca, nombre incluido. */
-    fields: (person: T) => Text[];
+    fields: (_person: T) => Text[];
     limit?: number;
   },
 ): T[] {

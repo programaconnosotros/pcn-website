@@ -15,17 +15,17 @@ import { OsMenuBar, type OsUser } from './os-menu-bar';
 import { OsProcesses } from './os-processes';
 import { OsWallpaper } from './os-wallpaper';
 import { OsPhotos } from './os-photos';
+import { OsWindow } from './os-window';
 import {
   MIN_WINDOW_HEIGHT,
   MIN_WINDOW_WIDTH,
-  OsWindow,
-  type OsWindowState,
   type ClampMode,
+  type OsWindowState,
   type Rect,
-} from './os-window';
+} from './os-window-geometry';
 import { useOsMode } from './use-os-mode';
 
-export const MENU_BAR_HEIGHT = 28;
+const MENU_BAR_HEIGHT = 28;
 
 interface Viewport {
   w: number;
@@ -57,7 +57,7 @@ type OsAction =
 const updateWindow = (
   state: OsState,
   id: string,
-  update: (win: OsWindowState) => Partial<OsWindowState>,
+  update: (_win: OsWindowState) => Partial<OsWindowState>,
 ): OsState => ({
   ...state,
   windows: state.windows.map((win) => (win.id === id ? { ...win, ...update(win) } : win)),

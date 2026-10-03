@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { Download, Share } from 'lucide-react';
-import { usePwa, type InstallGuide } from '@/components/pwa-provider';
+import { usePwa, type InstallGuide } from '@/components/pwa-context';
 import {
   Dialog,
   DialogContent,

@@ -23,7 +23,7 @@ export function LanguageFilter({
   className,
 }: {
   value: LanguageFilterValue;
-  onChange: (value: LanguageFilterValue) => void;
+  onChange: (_value: LanguageFilterValue) => void;
   className?: string;
 }) {
   return (
