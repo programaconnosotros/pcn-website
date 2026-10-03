@@ -180,7 +180,7 @@ export function ConversationDialog({
               <ConversationEventLink conversation={conversation} />
               {isGroup && (
                 <span className="border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
-                  hilo grupal
+                  muchos participantes
                 </span>
               )}
             </div>

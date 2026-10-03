@@ -1,6 +1,7 @@
 import type { Conversation } from '@/data/whatsapp-conversations';
 
-/** Conversations naming at least this many members are highlighted as group threads. */
+/** Conversations naming at least this many members are highlighted as having
+ * "muchos participantes". */
 export const GROUP_THREAD_MIN = 5;
 
 export const METER_SLOTS = 8;

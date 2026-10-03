@@ -42,7 +42,11 @@ const stats = [
   { label: 'charlas', value: conversations.length },
   { label: 'meses', value: allMonthKeys.length },
   { label: 'voces', value: participantCounts.length },
-  { label: 'hilos grupales', value: conversations.filter(isGroupThread).length, lit: true },
+  {
+    label: 'con muchos participantes',
+    value: conversations.filter(isGroupThread).length,
+    lit: true,
+  },
 ];
 
 function Stat({ label, value, lit }: { label: string; value: number; lit?: boolean }) {
@@ -185,7 +189,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                   label="Buscar conversaciones"
                 />
                 <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
-                  --grupales
+                  --muchos-participantes
                 </Flag>
                 {participant && (
                   <button
@@ -271,7 +275,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                           [{items.length}]
                           {groupCount > 0 && (
                             <span className="ml-2 text-pcnGreen">
-                              {groupCount} {groupCount === 1 ? 'grupal' : 'grupales'}
+                              {groupCount} con muchos participantes
                             </span>
                           )}
                         </span>
