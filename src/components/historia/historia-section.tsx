@@ -22,7 +22,10 @@ interface HistoriaSectionProps {
 /** One entry of the history timeline: period badge, title and prose. */
 export function HistoriaSection({ id, title, period, children }: HistoriaSectionProps) {
   return (
-    <section id={id} className="scroll-mt-32 p-4 lg:scroll-mt-28">
+    <section
+      id={id}
+      className="scroll-mt-32 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
+    >
       <header className="mb-3 flex items-baseline gap-3 font-mono">
         {period && <span className="shrink-0 text-xs tabular-nums text-pcnGreen">[{period}]</span>}
         <h2 className="text-base font-semibold tracking-tight">{title}</h2>

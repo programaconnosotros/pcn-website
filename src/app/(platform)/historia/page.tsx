@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { TableOfContents } from '@/components/historia/table-of-contents';
 import { HistoriaImage, HistoriaGallery } from '@/components/historia/historia-image';
 import {
@@ -111,11 +112,12 @@ const Story = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <PageTitle
-          sticky
-          path="historia"
-          meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
-        />
+        <StickyHeader pinnedOnDesktop>
+          <PageTitle
+            path="historia"
+            meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
+          />
+        </StickyHeader>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <TableOfContents />
@@ -125,7 +127,7 @@ const Story = () => (
               <HistoriaTaggingBar />
               <section
                 id="introduccion"
-                className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-28"
+                className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
               >
                 <h2 className="font-mono text-base font-semibold tracking-tight">
                   <span className="text-pcnGreen-500">## </span>Introducción
