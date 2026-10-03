@@ -43,9 +43,13 @@ export const postToOsHost = (message: OutgoingOsMessage) =>
  */
 const OWN_WINDOW_PATHS = [/^\/perfil\/[^/]+$/, /^\/eventos\/(?!nuevo$)[^/]+$/];
 
+/** Create/edit event forms: every link on them navigates the same window, like leaving a form. */
+const SAME_WINDOW_FROM_PATHS = [/^\/eventos\/nuevo$/, /^\/eventos\/[^/]+\/editar$/];
+
 export const opensInOwnWindow = (pathname: string, fromPathname: string) =>
   OWN_WINDOW_PATHS.some((pattern) => pattern.test(pathname)) &&
-  !(fromPathname === '/eventos' && pathname.startsWith('/eventos/'));
+  !(fromPathname === '/eventos' && pathname.startsWith('/eventos/')) &&
+  !SAME_WINDOW_FROM_PATHS.some((pattern) => pattern.test(fromPathname));
 
 /**
  * Inline script for the root layout `<head>`. It runs before paint and marks the document as
