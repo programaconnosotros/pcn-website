@@ -33,6 +33,9 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
   const [isIosInstallable, setIsIosInstallable] = useState(false);
 
   useEffect(() => {
+    // The app is interactive: fade out the launch screen (src/components/app-splash.tsx).
+    document.documentElement.setAttribute('data-app-ready', '');
+
     // Inside a PCN OS window the host page already does all of this.
     if (isEmbedded()) return;
 
