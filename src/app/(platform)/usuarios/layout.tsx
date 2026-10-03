@@ -25,14 +25,15 @@ export const metadata: Metadata = {
 export default async function UsuariosLayout({ children }: { children: React.ReactNode }) {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
+  // Non-admins land on the public member directory instead.
   if (!sessionId) {
-    redirect('/home');
+    redirect('/miembros');
   }
 
   const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
-    redirect('/home');
+    redirect('/miembros');
   }
 
   return <>{children}</>;

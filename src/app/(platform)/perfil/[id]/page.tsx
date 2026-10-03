@@ -281,7 +281,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         {/* Al subir rápido vuelven las pestañas, no el título, así no se apilan dos barras. */}
         <div className="mt-4">
           <PageTitle
-            path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+            path={[
+              // /usuarios is admin-only; everyone else browses people from /miembros.
+              viewerIsAdmin
+                ? { label: 'usuarios', href: '/usuarios' }
+                : { label: 'miembros', href: '/miembros' },
+              { label: user.name ?? 'perfil' },
+            ]}
           />
         </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
