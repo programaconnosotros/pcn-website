@@ -6,6 +6,8 @@ import {
 } from '@/app/(platform)/entrevistas/guias/guides/types';
 import { CopyLinkButton } from '@/components/interviews/copy-link-button';
 import { renderInlineCode } from '@/components/interviews/inline-code';
+import { RecommendedCourses } from '@/components/interviews/recommended-courses';
+import type { RecommendedCourse } from '@/data/recommended-courses';
 import { GuideProgressBar } from '@/components/interviews/guide-progress-bar';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { PageTitle } from '@/components/ui/page-title';
@@ -22,10 +24,12 @@ interface InterviewGuideProps {
   stack: string;
   /** Where to put the guide into practice: the simulator, or live coding exercises. */
   practice: { href: string; label: string };
+  /** Partner courses that go deeper on the guide's topics. */
+  courses?: RecommendedCourse[];
 }
 
 /** A preparation guide read section by section; each section can be marked as read. */
-export function InterviewGuide({ guide, label, stack, practice }: InterviewGuideProps) {
+export function InterviewGuide({ guide, label, stack, practice, courses }: InterviewGuideProps) {
   const marks = useContentMarks('interview-guide');
   const readIds = marks.ids('read');
   const isRead = (sectionId: string) => readIds.has(guideSectionKey(guide.track, sectionId));
@@ -102,6 +106,10 @@ export function InterviewGuide({ guide, label, stack, practice }: InterviewGuide
                 </p>
               )}
             </header>
+
+            {courses && courses.length > 0 && (
+              <RecommendedCourses courses={courses} className="mb-4" />
+            )}
 
             <div className="border border-pcnGreen-200">
               {guide.sections.map((section, index) => {

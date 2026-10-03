@@ -14,6 +14,7 @@ import { projectManagerQuestions } from './project-manager';
 import { qaQuestions } from './qa';
 import { qaAutomationQuestions } from './qa-automation';
 import { reactNativeQuestions } from './react-native';
+import { securityQuestions } from './security';
 import { frontendQuestions } from './frontend';
 import type { InterviewQuestion, InterviewTrack, QaTool, Seniority } from './types';
 
@@ -31,6 +32,7 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   ai: aiQuestions,
   agentic: agenticQuestions,
   qa: qaQuestions,
+  security: securityQuestions,
   'product-engineering': productEngineeringQuestions,
   'project-manager': projectManagerQuestions,
 };

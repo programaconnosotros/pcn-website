@@ -4,6 +4,7 @@ import {
 } from '@/components/interviews/interview-guides-list';
 import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
+import { endpointCourses } from '@/data/recommended-courses';
 import type { Metadata } from 'next';
 import { AREAS } from '../questions/types';
 import { crossTrackGuides, orderedGuides } from './guides';
@@ -11,7 +12,7 @@ import { crossTrackGuides, orderedGuides } from './guides';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 const DESCRIPTION =
-  'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
+  'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
 
 export const metadata: Metadata = {
   title: 'Guías de preparación para entrevistas',
@@ -94,7 +95,7 @@ const GuiasPage = () => {
           que más se preguntan de junior a senior y qué tenés que poder explicar en voz alta. Cuando
           termines una guía, ponete a prueba en el simulador.
         </p>
-        <InterviewGuidesList groups={groups} />
+        <InterviewGuidesList groups={groups} courses={endpointCourses} />
       </div>
     </div>
   );

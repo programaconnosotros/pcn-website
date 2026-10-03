@@ -3,7 +3,9 @@
 import { guideSectionKey, type GuideId } from '@/app/(platform)/entrevistas/guias/guides/types';
 import { GuideProgressBar } from '@/components/interviews/guide-progress-bar';
 import { InterviewsLayout, InterviewsPanel } from '@/components/interviews/interviews-layout';
+import { RecommendedCourses } from '@/components/interviews/recommended-courses';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
+import type { RecommendedCourse } from '@/data/recommended-courses';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { cn } from '@/lib/utils';
 import { ArrowRight, BookOpen, Terminal } from 'lucide-react';
@@ -56,7 +58,14 @@ const GuideCell = ({ guide, read }: { guide: GuideListItem; read: number }) => {
 };
 
 /** Every preparation guide grouped by area, with how much of each the user already read. */
-export function InterviewGuidesList({ groups }: { groups: GuideGroup[] }) {
+export function InterviewGuidesList({
+  groups,
+  courses,
+}: {
+  groups: GuideGroup[];
+  /** Partner courses recommended next to the guides. */
+  courses: RecommendedCourse[];
+}) {
   const marks = useContentMarks('interview-guide');
   const readIds = marks.ids('read');
   const unreadOf = (guide: GuideListItem) =>
@@ -169,6 +178,8 @@ export function InterviewGuidesList({ groups }: { groups: GuideGroup[] }) {
               simular entrevista
             </Link>
           </InterviewsPanel>
+
+          <RecommendedCourses courses={courses} />
         </>
       }
     />

@@ -4,6 +4,7 @@ export type InterviewArea =
   | 'ai'
   | 'agentic'
   | 'qa'
+  | 'security'
   | 'product-engineering'
   | 'project-manager';
 export type InterviewTrack =
@@ -18,6 +19,7 @@ export type InterviewTrack =
   | 'ai'
   | 'agentic'
   | 'qa'
+  | 'security'
   | 'product-engineering'
   | 'project-manager';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
@@ -35,6 +37,7 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'ai', label: 'AI engineering', stack: 'construir agentes de IA' },
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
   { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
+  { id: 'security', label: 'Seguridad informática', stack: 'AppSec, pentesting y defensa' },
   {
     id: 'product-engineering',
     label: 'Product engineering',
@@ -119,6 +122,12 @@ export const TRACKS: {
     area: 'qa',
     label: 'Quality engineering',
     stack: 'testing manual y automatizado',
+  },
+  {
+    id: 'security',
+    area: 'security',
+    label: 'Seguridad informática',
+    stack: 'AppSec, pentesting y defensa',
   },
   {
     id: 'product-engineering',

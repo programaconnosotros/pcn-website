@@ -13,6 +13,8 @@ import { pythonGuide } from './python';
 import { qaGuide } from './qa';
 import { reactGuide } from './react';
 import { reactNativeGuide } from './react-native';
+import { securityGuide } from './security';
+import { endpointCourses, type RecommendedCourse } from '@/data/recommended-courses';
 import type { InterviewGuide } from './types';
 
 export * from './types';
@@ -29,6 +31,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   ai: aiGuide,
   agentic: agenticGuide,
   qa: qaGuide,
+  security: securityGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,
 };
@@ -49,7 +52,13 @@ export interface GuideMeta {
   stack: string;
   guide: InterviewGuide;
   practice: { href: string; label: string };
+  courses?: RecommendedCourse[];
 }
+
+/** Partner courses each track's guide recommends. */
+export const trackCourses: Partial<Record<InterviewTrack, RecommendedCourse[]>> = {
+  security: endpointCourses,
+};
 
 /** A guide with its label and where to practice it, for a track or a cross-track guide. */
 export const getGuideMeta = (id: string): GuideMeta | undefined => {
@@ -62,6 +71,7 @@ export const getGuideMeta = (id: string): GuideMeta | undefined => {
     stack: track.stack,
     guide: interviewGuides[track.id],
     practice: { href: `/entrevistas?tipo=${track.id}`, label: 'simular entrevista' },
+    courses: trackCourses[track.id],
   };
 };
 

@@ -49,6 +49,7 @@ const GuiaPage = async (props: Props) => {
           label={meta.label}
           stack={meta.stack}
           practice={meta.practice}
+          courses={meta.courses}
         />
       </div>
     </div>

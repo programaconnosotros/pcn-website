@@ -13,6 +13,7 @@ import {
   ArrowUpRight,
   BookOpen,
   Bot,
+  LockKeyhole,
   MonitorSmartphone,
   Server,
   ShieldCheck,
@@ -31,6 +32,7 @@ const AREA_ICONS: Record<InterviewArea, LucideIcon> = {
   ai: Bot,
   agentic: Workflow,
   qa: ShieldCheck,
+  security: LockKeyhole,
   'product-engineering': Target,
   'project-manager': SquareKanban,
 };
@@ -109,7 +111,7 @@ export const InterviewsSection = () => (
       </span>
     </div>
 
-    <RuledGrid className="grid-cols-2 lg:grid-cols-4">
+    <RuledGrid className="grid-cols-2 lg:grid-cols-3">
       {AREAS.map(({ id, label, stack }, index) => {
         const Icon = AREA_ICONS[id];
         const chips = areaChips(id);
@@ -179,7 +181,7 @@ export const InterviewsSection = () => (
         href="/entrevistas"
         className={cn(
           ruledCellClassName,
-          'group flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4',
+          'group col-span-2 flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4 lg:col-span-1',
         )}
       >
         <span className="text-[11px] text-muted-foreground">
