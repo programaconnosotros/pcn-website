@@ -9,7 +9,7 @@ import { isEmbedded, opensInOwnWindow, postToOsHost as post } from './os-env';
  * the user interacts with it, so the host can update the title bar and bring it to the front.
  * Links to profiles and event details (except from the /eventos listing) are handed to the host
  * so they open in a new window, and so is every link clicked on the home page, which stays open
- * as the desktop's starting point.
+ * as the desktop's starting point. Breadcrumb links always navigate the window they're in.
  */
 export function OsBridge() {
   const pathname = usePathname();
@@ -45,6 +45,8 @@ export function OsBridge() {
       const url = new URL(anchor.href);
       if (url.origin !== window.location.origin || url.pathname.startsWith('/api/')) return;
       if (url.pathname === window.location.pathname) return;
+      // Going up the breadcrumb stays in this window: it's the same place, one level up.
+      if (anchor.closest('nav[aria-label="breadcrumb"]')) return;
       const fromHome = window.location.pathname === '/';
       if (!fromHome && !opensInOwnWindow(url.pathname, window.location.pathname)) return;
       event.preventDefault();
