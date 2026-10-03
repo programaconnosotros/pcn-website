@@ -9,6 +9,7 @@ import {
 } from '@/lib/badges';
 import { earnedAchievements } from '@/lib/achievements';
 import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
+import { GitHubContributions } from '@/components/profile/github-contributions';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -335,6 +336,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     </a>
                   ))}
                 </nav>
+              )}
+
+              {/* Live from GitHub on every visit: streams in when ready, never holds the page. */}
+              {user.gitHubUrl && (
+                <Suspense fallback={null}>
+                  <GitHubContributions gitHubUrl={user.gitHubUrl} />
+                </Suspense>
               )}
 
               {user.slogan && (
