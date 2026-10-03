@@ -5,7 +5,6 @@ import { FaqSection } from '@/components/home/faq-section';
 import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
-import { InterviewsSection } from '@/components/home/interviews-section';
 import { JoinSection } from '@/components/home/join-section';
 import { MusicSection } from '@/components/home/music-section';
 import { RecommendedWatchSection } from '@/components/home/recommended-watch-section';
@@ -30,6 +29,7 @@ interface HomeClientSideProps {
   latestPhotosSection: React.ReactNode;
   latestChangesSection: React.ReactNode;
   latestArticlesSection: React.ReactNode;
+  interviewsSection: React.ReactNode;
   ambassadorsSection: React.ReactNode;
   storyPhotos: StoryCardPhotos;
 }
@@ -44,6 +44,7 @@ const HomeClientSide = ({
   latestPhotosSection,
   latestChangesSection,
   latestArticlesSection,
+  interviewsSection,
   ambassadorsSection,
   storyPhotos,
 }: HomeClientSideProps) => (
@@ -67,9 +68,7 @@ const HomeClientSide = ({
 
       <Reveal>{latestArticlesSection}</Reveal>
 
-      <Reveal>
-        <InterviewsSection />
-      </Reveal>
+      <Reveal>{interviewsSection}</Reveal>
 
       <Reveal>
         <AchievementsSection />

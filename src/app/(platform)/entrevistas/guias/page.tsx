@@ -1,4 +1,5 @@
 import { InterviewGuidesList } from '@/components/interviews/interview-guides-list';
+import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
 import type { Metadata } from 'next';
 import { AREAS } from '../questions/types';
@@ -43,6 +44,7 @@ const GuiasPage = () => {
         <PageTitle
           path="entrevistas/guias"
           meta={`${guides.length} guías · ${sectionCount} secciones`}
+          action={<InterviewsTabs active="guias" />}
         />
         <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
           Qué estudiar antes de una entrevista, área por área: cómo suele ser el proceso, los temas

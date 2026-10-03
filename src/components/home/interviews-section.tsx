@@ -6,10 +6,12 @@ import {
   trackQuestionCount,
   type InterviewArea,
 } from '@/app/(platform)/entrevistas/questions';
+import { orderedGuides } from '@/app/(platform)/entrevistas/guias/guides';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import {
   ArrowUpRight,
+  BookOpen,
   Bot,
   MonitorSmartphone,
   Server,
@@ -40,6 +42,16 @@ const questionCount = (area: InterviewArea) =>
   );
 
 const totalQuestions = AREAS.reduce((total, { id }) => total + questionCount(id), 0);
+const totalGuideSections = orderedGuides.reduce(
+  (total, { guide }) => total + guide.sections.length,
+  0,
+);
+
+/** An area's guide, or the guide list when the area has one guide per technology. */
+const guideHref = (area: InterviewArea) => {
+  const tracks = TRACKS.filter((track) => track.area === area);
+  return tracks.length === 1 ? `/entrevistas/guias/${tracks[0].id}` : '/entrevistas/guias';
+};
 
 /** What to practice inside an area: its technologies (linked to each track) or QA's tools. */
 const areaChips = (area: InterviewArea) => {
@@ -62,7 +74,7 @@ export const InterviewsSection = () => (
           Practicá para tu próxima <span className="text-pcnGreen">entrevista</span>
         </>
       }
-      description="Simulá entrevistas para junior, semi-senior y senior con active recall: preguntas de a una y en orden aleatorio. Respondé en voz alta y después compará con la respuesta."
+      description="Estudiá con las guías de preparación de cada área y después simulá la entrevista para junior, semi-senior y senior con active recall: preguntas de a una y en orden aleatorio, respondés en voz alta y comparás con la respuesta."
       action={{ label: 'Empezar a practicar', href: '/entrevistas' }}
     />
 
@@ -84,6 +96,12 @@ export const InterviewsSection = () => (
             {totalQuestions}
           </span>{' '}
           preguntas
+        </span>
+        <span>
+          <span className="text-pcnGreen [text-shadow:0_0_8px_rgba(4,244,190,0.6)]">
+            {orderedGuides.length}
+          </span>{' '}
+          guías
         </span>
         <span className="hidden sm:inline">
           {SENIORITIES.map(({ label }) => label.toLowerCase()).join(' · ')}
@@ -140,9 +158,18 @@ export const InterviewsSection = () => (
               </div>
             )}
 
-            <span className="mt-auto text-[11px] text-muted-foreground/70">
-              <span className="text-pcnGreen-500"># </span>
-              {questionCount(id)} preguntas
+            <span className="mt-auto flex items-center justify-between gap-2 text-[11px] text-muted-foreground/70">
+              <span>
+                <span className="text-pcnGreen-500"># </span>
+                {questionCount(id)} preguntas
+              </span>
+              <Link
+                href={guideHref(id)}
+                className="relative z-10 flex items-center gap-1 text-pcnGreen-600 transition-colors hover:text-pcnGreen"
+              >
+                <BookOpen className="size-3" />
+                guía
+              </Link>
             </span>
           </div>
         );
@@ -167,5 +194,29 @@ export const InterviewsSection = () => (
         </span>
       </Link>
     </RuledGrid>
+
+    {/* Study first, then practice: the guides get their own band under the simulator. */}
+    <Link
+      href="/entrevistas/guias"
+      className="group flex flex-col gap-3 border border-t-0 border-pcnGreen-200 bg-pcnGreen/[0.03] p-3 font-mono transition-colors hover:bg-pcnGreen/[0.07] sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+    >
+      <span className="flex size-9 shrink-0 items-center justify-center border border-pcnGreen-200 bg-pcnGreen/[0.06] text-pcnGreen-600 transition-all group-hover:border-pcnGreen group-hover:text-pcnGreen group-hover:shadow-[0_0_14px_rgba(4,244,190,0.35)]">
+        <BookOpen className="size-4.5" />
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col gap-1">
+        <span className="text-sm font-semibold group-hover:text-pcnGreen">
+          Guías de preparación para entrevistas
+        </span>
+        <span className="text-[11px] leading-relaxed text-muted-foreground">
+          {orderedGuides.length} guías · {totalGuideSections} secciones: cómo es el proceso, qué te
+          van a preguntar de junior a senior y qué tenés que saber explicar. Marcá cada sección como
+          leída y seguí tu progreso.
+        </span>
+      </span>
+      <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-pcnGreen [text-shadow:0_0_10px_rgba(4,244,190,0.5)]">
+        leerGuias();
+        <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
   </section>
 );

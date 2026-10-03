@@ -13,6 +13,7 @@ import {
   type Seniority,
 } from '@/app/(platform)/entrevistas/questions';
 import { renderInlineCode } from '@/components/interviews/inline-code';
+import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -193,7 +194,11 @@ export function InterviewSimulator() {
 
     return (
       <div className="mb-14 max-w-2xl">
-        <PageTitle path="entrevistas" meta="active recall" />
+        <PageTitle
+          path="entrevistas"
+          meta="active recall"
+          action={<InterviewsTabs active="simulador" />}
+        />
         <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
           Practicá para tu próxima entrevista técnica. Las preguntas aparecen de a una y en orden
           aleatorio: respondé en voz alta y recién después mirá la respuesta.
