@@ -24,6 +24,10 @@ describe('interview guides', () => {
     for (const section of interviewGuides[track].sections) {
       expect(section.body.length).toBeGreaterThan(0);
       expect(section.checklist.length).toBeGreaterThan(0);
+      for (const item of section.checklist) {
+        expect(item.text.trim()).not.toBe('');
+        expect(item.explanation.trim()).not.toBe('');
+      }
     }
   });
 

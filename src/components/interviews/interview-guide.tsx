@@ -137,13 +137,31 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
 
                     <div className="mt-4 border-l-2 border-pcnGreen-500 pl-4">
                       <p className="mb-1.5 font-mono text-xs text-pcnGreen-500">
-                        # antes de la entrevista, sabé:
+                        # antes de la entrevista, sabé:{' '}
+                        <span className="text-muted-foreground">
+                          (tocá cada punto para ver la explicación)
+                        </span>
                       </p>
                       <ul className="space-y-1 text-sm">
-                        {section.checklist.map((item) => (
-                          <li key={item} className="flex gap-2">
-                            <span className="shrink-0 font-mono text-pcnGreen-500/70">-</span>
-                            <span>{renderInlineCode(item)}</span>
+                        {section.checklist.map(({ text, explanation }) => (
+                          <li key={text}>
+                            {/* Each point opens its explanation, so the guide is all you need. */}
+                            <details className="group">
+                              <summary className="flex cursor-pointer list-none gap-2 rounded-sm py-0.5 transition-colors hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen [&::-webkit-details-marker]:hidden">
+                                <span className="w-3 shrink-0 font-mono text-pcnGreen-500/70 group-open:hidden">
+                                  +
+                                </span>
+                                <span className="hidden w-3 shrink-0 font-mono text-pcnGreen group-open:inline">
+                                  -
+                                </span>
+                                <span className="group-open:text-pcnGreen">
+                                  {renderInlineCode(text)}
+                                </span>
+                              </summary>
+                              <p className="mb-2 ml-5 mt-1 text-[13px] leading-relaxed text-muted-foreground">
+                                {renderInlineCode(explanation)}
+                              </p>
+                            </details>
                           </li>
                         ))}
                       </ul>
