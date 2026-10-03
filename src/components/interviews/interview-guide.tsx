@@ -8,6 +8,7 @@ import { renderInlineCode } from '@/components/interviews/inline-code';
 import { GuideProgressBar } from '@/components/interviews/guide-progress-bar';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { TableOfContents } from '@/components/ui/table-of-contents';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { cn } from '@/lib/utils';
@@ -39,28 +40,29 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
 
   return (
     <>
-      <PageTitle
-        sticky
-        path={[
-          { label: 'entrevistas', href: '/entrevistas' },
-          { label: 'guias', href: '/entrevistas/guias' },
-          { label: guide.track },
-        ]}
-        meta={
-          <span className="tabular-nums">
-            {readCount}/{total} leídas
-          </span>
-        }
-        action={
-          <Link
-            href={`/entrevistas?tipo=${guide.track}`}
-            className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
-          >
-            simular entrevista
-            <ArrowRight className="size-3.5" />
-          </Link>
-        }
-      />
+      <StickyHeader pinnedOnDesktop>
+        <PageTitle
+          path={[
+            { label: 'entrevistas', href: '/entrevistas' },
+            { label: 'guias', href: '/entrevistas/guias' },
+            { label: guide.track },
+          ]}
+          meta={
+            <span className="tabular-nums">
+              {readCount}/{total} leídas
+            </span>
+          }
+          action={
+            <Link
+              href={`/entrevistas?tipo=${guide.track}`}
+              className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
+            >
+              simular entrevista
+              <ArrowRight className="size-3.5" />
+            </Link>
+          }
+        />
+      </StickyHeader>
 
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
         <TableOfContents
@@ -102,7 +104,7 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
                   <section
                     key={section.id}
                     id={section.id}
-                    className="scroll-mt-32 border-b border-pcnGreen-200 p-4 last:border-b-0 lg:scroll-mt-28"
+                    className="scroll-mt-32 border-b border-pcnGreen-200 p-4 last:border-b-0 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
                   >
                     <div className="flex items-start gap-3">
                       <h3 className="flex-1 font-mono text-base font-semibold tracking-tight">
