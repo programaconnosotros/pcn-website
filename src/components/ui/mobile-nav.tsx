@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -45,6 +53,10 @@ const tabItems = [
 // phone) instead of pushing the other tabs around.
 const tabClassName =
   'relative flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 px-0.5 font-mono text-[10px] font-medium tracking-tighter text-foreground/55 transition-colors active:bg-pcnGreen/10';
+
+// Where each screen was left when switching tabs, so coming back lands on the same spot, like a
+// native tab bar. The page itself comes from the router cache (see `staleTimes` in next.config).
+const tabScroll = new Map<string, number>();
 
 /** A lit bar over the active tab, like a selected pane in tmux. */
 const TabIndicator = () => (
@@ -422,10 +434,34 @@ export function MobileNav({
   const pathname = usePathname();
   const { openMobile, setOpenMobile } = useSidebar();
   const tabBarRef = useRef<HTMLElement>(null);
+  /** The tab just tapped, whose scroll position is restored once its page shows. */
+  const restoreRef = useRef<string | null>(null);
 
   useEffect(() => {
     setOpenMobile(false);
   }, [pathname, setOpenMobile]);
+
+  // Before paint, so the screen never flashes at the top before jumping back to where it was.
+  useLayoutEffect(() => {
+    if (restoreRef.current !== pathname) return;
+    restoreRef.current = null;
+    window.scrollTo(0, tabScroll.get(pathname) ?? 0);
+  }, [pathname]);
+
+  const handleTabClick = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
+    // Any other tab closes the open menu right away, as if "Menú" had been tapped, instead of
+    // waiting for the route change (which never comes on the current tab).
+    setOpenMobile(false);
+    if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+    // Tapping the tab you're on scrolls back to the top instead of reloading it.
+    if (pathname === url) {
+      event.preventDefault();
+      if (!openMobile) window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    tabScroll.set(pathname, window.scrollY);
+    restoreRef.current = url;
+  };
 
   const groups = useMemo(() => {
     let line = 0;
@@ -459,9 +495,9 @@ export function MobileNav({
                 key={item.url}
                 href={item.url}
                 aria-current={active ? 'page' : undefined}
-                // Any other tab closes the open menu right away, as if "Menú" had been tapped,
-                // instead of waiting for the route change (which never comes on the current tab).
-                onClick={() => setOpenMobile(false)}
+                // The scroll position is restored by hand (see `handleTabClick`).
+                scroll={false}
+                onClick={(event) => handleTabClick(event, item.url)}
                 className={cn(tabClassName, active && 'text-pcnGreen')}
               >
                 {active && <TabIndicator />}
