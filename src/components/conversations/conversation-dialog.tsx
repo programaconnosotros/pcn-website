@@ -15,6 +15,7 @@ import {
 } from './conversation-utils';
 import { ConversationEventLink } from './conversation-event';
 import { Highlight } from './highlight';
+import { LinkedNames } from './linked-names';
 import { ParticipantChip } from './participant-chip';
 
 const keyCapClassName = cn(
@@ -204,7 +205,11 @@ export function ConversationDialog({
                     {String(i + 1).padStart(lineNumberWidth, '0')}
                   </span>
                   <span>
-                    <Highlight text={sentence} query={query} />
+                    <LinkedNames
+                      text={sentence}
+                      query={query}
+                      participants={conversation.participants}
+                    />
                   </span>
                 </li>
               ))}
