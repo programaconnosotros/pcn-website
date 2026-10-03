@@ -3,6 +3,7 @@ import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { fromAdvise } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ProfileArticles } from '@/components/profile/profile-articles';
@@ -116,7 +117,12 @@ const AdviseRows = ({
 }) => (
   <RuledGrid className="grid-cols-1 md:grid-cols-2">
     {advises.map((advise) => (
-      <AdviseCard key={advise.id} session={session} advise={advise} showAuthor={false} />
+      <AdviseCard
+        key={advise.id}
+        session={session}
+        consejo={fromAdvise(advise)}
+        showAuthor={false}
+      />
     ))}
   </RuledGrid>
 );

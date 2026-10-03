@@ -1,0 +1,314 @@
+[
+  {
+    "id": "auto-1a43bbe-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-10-02",
+    "title": "Preparar entrevistas con IA y el cliente que llegó porque ChatGPT indexó la comunidad",
+    "content": "Prepará entrevistas pasándole a una IA tu CV y portfolio y pidiéndole que actúe como reclutador: que te diga qué te preguntaría; respondé y pedile que evalúe tus respuestas, qué faltó y qué te conviene estudiar.",
+    "tags": ["entrevistas", "ia"]
+  },
+  {
+    "id": "auto-05d48f8-leo-apaza",
+    "member": "Leo Apaza",
+    "date": "2026-10-02",
+    "title": "El rol de QA cuando los agentes también pueden probar",
+    "content": "Si sos QA y querés crecer, aprendé a automatizar, programar y entender código. Y empujá para que la calidad sea una responsabilidad compartida del equipo, no algo que se le deja solo a QA.",
+    "tags": ["testing", "carrera"]
+  },
+  {
+    "id": "auto-5ded988-sebastian-soraire",
+    "member": "Sebastián Soraire",
+    "date": "2026-10-02",
+    "title": "Cómo conseguir el primer trabajo como desarrollador junior hoy",
+    "content": "Personalizá tu CV y LinkedIn para cada lugar: contá situaciones concretas y el valor que aportaste en vez de frases como 'soy proactivo', porque quien lo lee lo traduce a cuánto gana la empresa incorporándote.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-329d65d-martin-uslenghi",
+    "member": "Martin Uslenghi",
+    "date": "2026-09-28",
+    "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
+    "content": "Para servir imágenes en producción por URL, mirá Cloudflare R2: tiene un free tier generoso y no cobra el egreso de datos.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-ce32801-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-23",
+    "title": "Cómo buscar el primer trabajo: contacto directo versus contenido genérico",
+    "content": "Para tu primer trabajo, en vez de generar contenido genérico, buscá activamente: elegí empresas donde te gustaría trabajar, averiguá quién trabaja ahí y mandales un mensaje bien pensado sobre qué valor podés aportar y por qué te interesa esa empresa.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-8f54646-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-09-22",
+    "title": "Latencia en la nube desde Argentina: Ohio, São Paulo, Santiago o us-central1",
+    "content": "Desplegá en la región más cercana a tus usuarios: la latencia está limitada por la distancia física de la fibra óptica. Una región en Estados Unidos solo tiene sentido si tus clientes están allá.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-f538d2c-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-16",
+    "title": "Cómo reducir el consumo de tokens en Claude y cuándo usar CLI o interfaz gráfica",
+    "content": "Lo que más tokens gasta son las conversaciones largas: cada request reenvía todo el historial. Usá /clear con criterio; compactar es mejor que nada, pero arrancar una conversación nueva es mejor todavía. Y elegí el modelo adecuado para cada tarea.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-975f004-ezequiel-sanchez",
+    "member": "Ezequiel Sánchez",
+    "date": "2026-09-04",
+    "title": "Ubuntu, Alpine o Debian para un VPS con Coolify y n8n",
+    "content": "Para un servidor, considerá una distro liviana como Alpine: menos paquetes instalados significa menos superficie de ataque. Y administrá tus servidores solo por CLI.",
+    "tags": ["devops", "seguridad"]
+  },
+  {
+    "id": "auto-dd021d3-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-09-02",
+    "title": "Qué preguntar en una entrevista con un cliente potencial",
+    "content": "En la primera reunión con un cliente, preguntá qué procesos manuales repiten mucho o fallan seguido, y mostrá empatía con esos problemas: al cliente le cae bien sentir que entendés su dolor.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-031ad48-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-29",
+    "title": "Monolito o microservicios cuando el código lo escriben agentes; el ingeniero multi-stack",
+    "content": "No saltes a microservicios por defecto: en la gran mayoría de los casos son sobreingeniería. Lo que ahorrás por un lado lo gastás desplegando infraestructura y escribiendo código extra para resolver los problemas propios de ese patrón.",
+    "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-29c3773-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-08-21",
+    "title": "Estilos rotos en Windows 7 con Next.js y Tailwind recientes",
+    "content": "Si tu web no aplica estilos en navegadores viejos, primero confirmá que el problema es el navegador; después configurá browserslist apuntando a la versión que necesitás soportar, agregá polyfills como globalThis y usá autoprefixer en PostCSS.",
+    "tags": ["frontend"]
+  },
+  {
+    "id": "auto-7f6ded6-leandro-andriani",
+    "member": "Leandro Andriani",
+    "date": "2026-08-21",
+    "title": "Qué es un harness de IA y cómo arma cada uno el suyo",
+    "content": "Armá tu propio harness probando configuraciones: si te descubrís pidiéndole lo mismo al agente una y otra vez, probablemente lo puedas resolver con una skill. Si encontrás un setup predefinido que te guste, usalo como base.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-e4238b2-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-12",
+    "title": "Incidente de colas en un SaaS multi-tenant y cómo rediseñarlas por tenant y prioridad",
+    "content": "En un SaaS multi-tenant no compartas una única cola de trabajos entre todos los clientes: dale a cada tenant su propio conjunto de colas divididas por prioridad, así un pico de uno no le mete demora a todos los demás.",
+    "tags": ["arquitectura", "backend"]
+  },
+  {
+    "id": "auto-9e4c791-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-08-05",
+    "title": "Agentes que operan la nube por CLI: el MCP de AWS y los permisos",
+    "content": "Si dejás que un agente opere tu nube por CLI, creale credenciales propias con solo los permisos que necesita: el principio de mínimo privilegio también aplica a la IA.",
+    "tags": ["seguridad", "ia"]
+  },
+  {
+    "id": "auto-23017f2-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-04",
+    "title": "Ataque de supply chain en npm (keyv/cacheable) y cómo protegerse con pnpm",
+    "content": "Activá minimumReleaseAge en pnpm: impide instalar versiones publicadas hace muy poco y te protege de las versiones maliciosas recién subidas en ataques de supply chain.",
+    "tags": ["seguridad", "herramientas"]
+  },
+  {
+    "id": "auto-e922ab6-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-27",
+    "title": "DNS rebinding: un riesgo al ofrecer webhooks",
+    "content": "Si tu producto envía webhooks, cuidate del DNS rebinding: el atacante registra una URL y después hace que resuelva a una IP interna. Validá la IP resuelta en el momento de cada envío y bloqueá los rangos privados.",
+    "tags": ["seguridad", "backend"]
+  },
+  {
+    "id": "auto-d362f16-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-26",
+    "title": "Cómo presupuestar un ecommerce a medida",
+    "content": "Si el cliente no define todo al detalle, no cierres un precio fijo: cobrá por hora y pedí un porcentaje por adelantado. Y antes de arrancar preguntá por qué no usan una solución ya hecha, como Tiendanube o Empretienda.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-f8d904e-mateo-antenucci",
+    "member": "Mateo Antenucci",
+    "date": "2026-07-20",
+    "title": "OCR de documentos, facturas y fotos de comprobantes: LLMs multimodales vs librerías tradicionales",
+    "content": "Si hacés OCR sobre fotos de tickets, preprocesalas: la poca luz, los dígitos borrosos y las imágenes rotadas bajan mucho el rendimiento. Usá Tesseract para detectar y corregir la orientación y OpenCV para subir el contraste.",
+    "tags": ["backend"]
+  },
+  {
+    "id": "auto-3ec108f-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2026-06-30",
+    "title": "Recursos para aprender Docker desde cero",
+    "content": "La mejor forma de aprender Docker es práctica: agarrá una aplicación propia y dockerizala, empaquetándola en una imagen de contenedor con todas sus dependencias.",
+    "tags": ["aprendizaje", "devops"]
+  },
+  {
+    "id": "auto-7479b2d-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-18",
+    "title": "BDD con Gherkin y herramientas de gestión de pruebas como Xray, Zephyr y Qase",
+    "content": "Para escribir escenarios de BDD, narrate los pasos que seguiste para llegar a un resultado y llevalos a Gherkin (Dado/Cuando/Entonces). Si un Product Owner lo entiende, está bien escrito: ni muy técnico ni muy genérico.",
+    "tags": ["testing"]
+  },
+  {
+    "id": "auto-0dc36b5-alejo-boga",
+    "member": "Alejo Boga",
+    "date": "2026-06-18",
+    "title": "Consejos para construir una carrera acelerada en tecnología",
+    "content": "En tus primeros años hacé más de lo que te piden y sumá una hora diaria de formación. Para no estancarte, tomá riesgos calculados, entendé cómo gana plata tu empresa y evitá saltos laterales que no se alinean con tus objetivos.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-ad1ffc7-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-06-05",
+    "title": "Opus 4.8 max fast: más rápido pero olvidadizo con los detalles",
+    "content": "Aunque el modelo soporte una ventana de contexto enorme, mantenete por debajo del 50% de contexto por tarea para que no pierda de vista los requerimientos iniciales.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-94f3cc0-victor-figueredo",
+    "member": "Victor Figueredo",
+    "date": "2026-04-27",
+    "title": "Debate: repo de PCN open-source vs closed-source por seguridad",
+    "content": "Cerrar el código no garantiza seguridad: el riesgo baja pero no desaparece. Un repo open source permite que la comunidad encuentre y parchee vulnerabilidades antes de que las explote alguien de afuera.",
+    "tags": ["open-source", "seguridad"]
+  },
+  {
+    "id": "auto-e09e735-martin-esteban",
+    "member": "Martín Esteban",
+    "date": "2026-01-26",
+    "title": "PostgreSQL avanzado: discusión técnica sobre índices y performance",
+    "content": "Si una consulta lenta sobre una tabla con millones de registros solo trabaja con los activos, probá un índice parcial que filtre esos registros: puede bajar la query de decenas de segundos a milisegundos.",
+    "tags": ["bases-de-datos"]
+  },
+  {
+    "id": "auto-64f7220-joaquin-sarmiento",
+    "member": "Joaquin Sarmiento",
+    "date": "2026-01-01",
+    "title": "GitHub Actions quiso volverse pago: drama y rollback",
+    "content": "Usá nektos/act para correr tus workflows de GitHub Actions localmente y probarlos sin gastar minutos en la nube.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-7e363a0-esteban-sanchez",
+    "member": "Esteban Sánchez",
+    "date": "2025-12-29",
+    "title": "Agentes con OpenCode en proyectos con deuda técnica",
+    "content": "En proyectos grandes con deuda técnica, definí agentes como archivos Markdown que especifiquen en detalle de qué son expertos, con ejemplos. Así no repetís ese contexto en cada prompt; igual contá con revisar y limpiar lo que hacen.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-2c1851e-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-12-26",
+    "title": "Modelo de dominio vs modelo de datos anémico",
+    "content": "En proyectos no muy grandes no separes modelo de dominio y modelo de datos: un ORM te ahorra tiempo. La separación vale la pena cuando la lógica de negocio se complica o el dominio no coincide con cómo se guarda en la base.",
+    "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-3a45612-mateo-lohezic",
+    "member": "Mateo Lohezic",
+    "date": "2025-12-04",
+    "title": "Cotización freelance: precios, contratos y estrategias",
+    "content": "Cobrá precio cerrado por etapas bien definidas (planificación, diseño, desarrollo, soporte): los cambios de diseño van solo en su etapa y cualquier feature nueva es otro presupuesto. Sumá un pequeño colchón para aceptar pedidos chicos sin costo.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-67872f2-fede-valle",
+    "member": "Fede Valle",
+    "date": "2025-10-01",
+    "title": "Cómo conseguir clientes como freelancer",
+    "content": "Para conseguir clientes como freelancer, construí una marca personal con proyectos bien presentados en tu portfolio: le da confianza a los referidos para cerrar tratos y te permite cobrar precios más altos.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-8f9b4b5-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-09-30",
+    "title": "LMS con NestJS/Next y el principio KISS vs SOLID",
+    "content": "No te abrumes con las buenas prácticas: principios como SOLID muchas veces terminan en sobrediseño. Guiate por KISS y, para diagramar, usá PlantUML así guardás los diagramas en Git como código.",
+    "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-c65e651-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-07-23",
+    "title": "Estimación de presupuesto para proyecto freelance complejo",
+    "content": "Para presupuestar, estimá las horas totales, multiplicalas por tu costo por hora y sumá un 20% de buffer de riesgo. Antes de refinar al detalle, pasá una estimación ballpark para ver si el cliente está dispuesto a pagar.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-4fd4cc5-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-06-20",
+    "title": "SvelteKit vs Next.js: debate de frameworks frontend",
+    "content": "No te enamores de ningún framework: animate a entender cómo funcionan por dentro las herramientas que usás todos los días.",
+    "tags": ["frontend", "aprendizaje"]
+  },
+  {
+    "id": "auto-92d7685-victor-figueredo",
+    "member": "Victor Figueredo",
+    "date": "2025-06-19",
+    "title": "OverTheWire y cómo mejorar el manejo avanzado de la terminal",
+    "content": "Para mejorar en la terminal, jugá los wargames de OverTheWire: te obligan a usar la consola para avanzar de nivel, y eso enseña mucho más que leer un manual.",
+    "tags": ["aprendizaje", "seguridad"]
+  },
+  {
+    "id": "auto-d32b023-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-06",
+    "title": "Cómo aprender inglés técnico para IT: métodos e inmersión",
+    "content": "Para soltar el inglés no hace falta arrancar hablando: acumulá input. Poné el teléfono en inglés, mirá series con subtítulos en inglés, escuchá podcasts, leé libros y consumí creadores de contenido solo en inglés durante un tiempo.",
+    "tags": ["ingles"]
+  },
+  {
+    "id": "auto-d32b023-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-06-06",
+    "title": "Cómo aprender inglés técnico para IT: métodos e inmersión",
+    "content": "Exponerte al inglés ayuda mucho, pero llega un punto en que sin practicar speaking no avanzás. Perdele el miedo a pronunciar mal: los no nativos siempre tienen acento y lo importante es hacerse entender.",
+    "tags": ["ingles"]
+  },
+  {
+    "id": "auto-0da9ed1-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-06-05",
+    "title": "Autenticación segura para plataforma de juegos web con suscripción",
+    "content": "Si usás tokens de un solo uso para redirigir entre servicios, agregalos a una blacklist apenas se usen para que no se puedan reutilizar, y limpiá esa blacklist con un cronjob que borre periódicamente los vencidos.",
+    "tags": ["seguridad", "backend"]
+  },
+  {
+    "id": "auto-ab0d3af-ariel-basabe",
+    "member": "Ariel Basabe",
+    "date": "2025-05-28",
+    "title": "Git merge vs rebase: diferencias y cuándo usar cada uno",
+    "content": "Usá rebase para mantener un historial lineal y el rebase interactivo para combinar, editar o eliminar commits, pero nunca hagas rebase de commits ya pusheados a un repo público: reescribe la historia y complica la colaboración.",
+    "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-36e4d50-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-05-20",
+    "title": "Cómo guardar imágenes en la base de datos sin nube",
+    "content": "Si no vas a usar servicios cloud, guardá las imágenes en el sistema de archivos del backend y almacená solo el path en la base de datos. Después podés sumar optimización de imágenes.",
+    "tags": ["backend", "bases-de-datos"]
+  },
+  {
+    "id": "auto-a7bb361-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2025-05-20",
+    "title": "App de escritorio Windows para empresa de eventos: stack recomendado",
+    "content": "Si armás una app de escritorio con Electron, usá React solo en lugar de Next.js: las rutas dinámicas de Next dan problemas dentro de Electron. Si te interesa Rust, Tauri es una alternativa similar.",
+    "tags": ["frontend", "herramientas"]
+  }
+]

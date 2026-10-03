@@ -10,8 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { Consejo } from '@/lib/consejos';
 import { cn, formatDate } from '@/lib/utils';
-import { Advise, User, Like } from '@prisma/client';
 import type { SessionWithUser } from '@/lib/session';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useEffect, useOptimistic, useRef, useState, type RefObject } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
+import { ExtractedNotice } from './extracted-notice';
 
 /** Whether a line-clamped element hides part of its text, re-checked when it resizes. */
 const useIsOverflowing = (ref: RefObject<HTMLElement | null>, enabled: boolean) => {
@@ -38,8 +39,10 @@ const useIsOverflowing = (ref: RefObject<HTMLElement | null>, enabled: boolean) 
   return isOverflowing;
 };
 
+type LikeRef = { userId: string };
+
 export const AdviseCard = ({
-  advise,
+  consejo,
   session,
   className,
   showAuthor = true,
@@ -50,10 +53,7 @@ export const AdviseCard = ({
   clamped?: boolean;
   /** Off where every card is by the same person, like their own profile. */
   showAuthor?: boolean;
-  advise: Advise & {
-    author: Pick<User, 'id' | 'name' | 'image'>;
-    likes: Like[];
-  };
+  consejo: Consejo;
   session: SessionWithUser | null;
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -62,26 +62,20 @@ export const AdviseCard = ({
   const contentRef = useRef<HTMLAnchorElement>(null);
   const isOverflowing = useIsOverflowing(contentRef, clamped);
 
-  // Initialize optimistic state with the current likes
-  const [optimisticLikes, addOptimisticLike] = useOptimistic(
-    advise.likes,
-    (state: Like[], userId: string) => {
-      const isLiked = state.some((like) => like.userId === userId);
-
-      return isLiked
+  const [optimisticLikes, toggleOptimisticLike] = useOptimistic(
+    consejo.likes ?? [],
+    (state: LikeRef[], userId: string) =>
+      state.some((like) => like.userId === userId)
         ? state.filter((like) => like.userId !== userId)
-        : [
-            ...state,
-            { userId, id: '', createdAt: new Date(), updatedAt: new Date(), adviseId: '' },
-          ];
-    },
+        : [...state, { userId }],
   );
 
-  const isAuthor = !!session?.user?.id && session.user.id === advise.author.id;
-
+  const isExtracted = consejo.source !== null;
+  const href = `/consejos/${consejo.id}`;
+  const isAuthor = !!session?.user?.id && session.user.id === consejo.author.id;
   const isAdmin = session?.user?.role === 'ADMIN';
-
-  const canEditOrDelete = isAuthor || isAdmin;
+  // Extracted consejos aren't rows anybody published, so there's nothing to edit or delete.
+  const canEditOrDelete = !isExtracted && (isAuthor || isAdmin);
 
   const isLiked = session?.user?.id
     ? optimisticLikes.some((like) => like.userId === session.user.id)
@@ -91,16 +85,12 @@ export const AdviseCard = ({
     if (!session?.user?.id || isLiking) return;
 
     setIsLiking(true);
-    const _previousLikes = [...optimisticLikes];
-
     try {
-      // Optimistically update the UI
-      addOptimisticLike(session.user.id);
-      await toggleLike(advise.id);
+      toggleOptimisticLike(session.user.id);
+      await toggleLike(consejo.id);
     } catch (error) {
       console.error('Error toggling like:', error);
-      // Revert optimistic update on error
-      addOptimisticLike(session.user.id);
+      toggleOptimisticLike(session.user.id);
     } finally {
       setIsLiking(false);
     }
@@ -111,6 +101,7 @@ export const AdviseCard = ({
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="h-6 w-6">
           <MoreVertical className="h-3.5 w-3.5" />
+          <span className="sr-only">Opciones</span>
         </Button>
       </DropdownMenuTrigger>
 
@@ -128,6 +119,15 @@ export const AdviseCard = ({
     </DropdownMenu>
   );
 
+  const authorAvatar = (
+    <Avatar className="h-6 w-6 rounded-sm">
+      <AvatarImage src={consejo.author.image ?? undefined} alt={consejo.author.name} />
+      <AvatarFallback className="rounded-sm text-[10px]">
+        {consejo.author.name.charAt(0)}
+      </AvatarFallback>
+    </Avatar>
+  );
+
   return (
     <article className={cn(ruledCellClassName, 'group/advise flex flex-col gap-4 p-4', className)}>
       <div className="relative flex-1 border-l-2 border-pcnGreen-200 pl-4 pr-6 transition-colors group-hover/advise:border-pcnGreen-500">
@@ -139,17 +139,17 @@ export const AdviseCard = ({
         </span>
         <Link
           ref={contentRef}
-          href={`/consejos/${advise.id}`}
+          href={href}
           className={cn(
             'block whitespace-pre-line text-[15px] leading-relaxed text-foreground/90 transition-colors hover:text-foreground',
             clamped && 'line-clamp-5',
           )}
         >
-          {advise.content}
+          {consejo.content}
         </Link>
         {clamped && isOverflowing && (
           <Link
-            href={`/consejos/${advise.id}`}
+            href={href}
             className="mt-1 inline-block font-mono text-xs text-pcnGreen-600 transition-colors hover:text-pcnGreen"
           >
             ver más →
@@ -157,30 +157,32 @@ export const AdviseCard = ({
         )}
       </div>
 
+      {consejo.source && <ExtractedNotice source={consejo.source} author={consejo.author.name} />}
+
       <footer className="flex items-center gap-2">
-        {showAuthor && (
-          <Link
-            href={`/perfil/${advise.author.id}`}
-            className="group/author flex min-w-0 items-center gap-2"
-          >
-            <Avatar className="h-6 w-6 rounded-sm">
-              <AvatarImage
-                src={advise.author.image ?? undefined}
-                alt={advise.author.name ?? undefined}
-              />
-              <AvatarFallback className="rounded-sm text-[10px]">
-                {advise.author?.name?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="truncate font-mono text-xs font-semibold transition-colors group-hover/author:text-pcnGreen">
-              {advise.author.name}
+        {showAuthor &&
+          (consejo.author.id ? (
+            <Link
+              href={`/perfil/${consejo.author.id}`}
+              className="group/author flex min-w-0 items-center gap-2"
+            >
+              {authorAvatar}
+              <span className="truncate font-mono text-xs font-semibold transition-colors group-hover/author:text-pcnGreen">
+                {consejo.author.name}
+              </span>
+            </Link>
+          ) : (
+            <span className="flex min-w-0 items-center gap-2">
+              {authorAvatar}
+              <span className="truncate font-mono text-xs font-semibold">
+                {consejo.author.name}
+              </span>
             </span>
-          </Link>
-        )}
+          ))}
 
         <time
-          dateTime={new Date(advise.createdAt).toISOString()}
-          title={formatDate(advise.createdAt)}
+          dateTime={consejo.createdAt}
+          title={formatDate(new Date(consejo.createdAt))}
           className={cn(
             'shrink-0 font-mono text-[11px] text-muted-foreground',
             showAuthor && 'hidden sm:inline',
@@ -188,45 +190,50 @@ export const AdviseCard = ({
           suppressHydrationWarning
         >
           {showAuthor && <span className="text-pcnGreen-500/60">· </span>}
-          {format(advise.createdAt, 'd MMM yyyy', { locale: es })}
+          {format(new Date(consejo.createdAt), 'd MMM yyyy', { locale: es })}
         </time>
 
         <div className="ml-auto flex shrink-0 items-center gap-1">
-          <button
-            type="button"
-            aria-pressed={isLiked}
-            className={cn(
-              'flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] tabular-nums transition-colors',
-              isLiked
-                ? 'border-red-500/40 bg-red-500/10 text-red-500 hover:text-red-400'
-                : 'border-transparent text-muted-foreground hover:border-red-500/30 hover:text-red-500',
-            )}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleLike();
-            }}
-          >
-            <Heart className="h-3.5 w-3.5" fill={isLiked ? 'currentColor' : 'none'} />
-            {optimisticLikes.length}
-            <span className="sr-only">Me gusta</span>
-          </button>
+          {consejo.likes && (
+            <button
+              type="button"
+              aria-pressed={isLiked}
+              className={cn(
+                'flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] tabular-nums transition-colors',
+                isLiked
+                  ? 'border-red-500/40 bg-red-500/10 text-red-500 hover:text-red-400'
+                  : 'border-transparent text-muted-foreground hover:border-red-500/30 hover:text-red-500',
+              )}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleLike();
+              }}
+            >
+              <Heart className="h-3.5 w-3.5" fill={isLiked ? 'currentColor' : 'none'} />
+              {optimisticLikes.length}
+              <span className="sr-only">Me gusta</span>
+            </button>
+          )}
           {canEditOrDelete && Options}
         </div>
       </footer>
 
-      <DeleteAdviseDialog
-        adviseId={advise.id}
-        isOpen={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      />
-
-      <EditAdviseDialog
-        adviseId={advise.id}
-        initialContent={advise.content}
-        isOpen={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-      />
+      {canEditOrDelete && (
+        <>
+          <DeleteAdviseDialog
+            adviseId={consejo.id}
+            isOpen={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          />
+          <EditAdviseDialog
+            adviseId={consejo.id}
+            initialContent={consejo.content}
+            isOpen={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+          />
+        </>
+      )}
     </article>
   );
 };

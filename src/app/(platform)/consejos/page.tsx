@@ -8,6 +8,9 @@ import { RuledGrid } from '@/components/ui/ruled-grid';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
+import { getIdentityMap } from '@/lib/identity-links';
+import { extractedConsejos } from '@/data/consejos-extraidos';
+import { fromAdvise, fromExtracted, sortByNewest } from '@/lib/consejos';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -35,7 +38,7 @@ const AdvicePage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   // La sesión y los consejos no dependen entre sí: se piden a la vez.
-  const [session, advises] = await Promise.all([
+  const [session, advises, profiles] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
     prisma.advise.findMany({
       orderBy: {
@@ -43,9 +46,16 @@ const AdvicePage = async () => {
       },
       include: {
         author: { select: { id: true, name: true, image: true } },
-        likes: true,
+        likes: { select: { userId: true } },
+        _count: { select: { comments: true } },
       },
     }),
+    getIdentityMap('whatsapp'),
+  ]);
+
+  const consejos = sortByNewest([
+    ...advises.map(fromAdvise),
+    ...extractedConsejos.map((consejo) => fromExtracted(consejo, profiles)),
   ]);
 
   return (
@@ -56,22 +66,22 @@ const AdvicePage = async () => {
             <div className="mb-4 flex items-start justify-between gap-4">
               <PageTitle
                 path="consejos"
-                meta={`${advises.length} consejos de la comunidad`}
+                meta={`${consejos.length} consejos de la comunidad`}
                 className="mb-0 flex-1"
               />
               {session && <AddAdvise />}
             </div>
           </StickyHeader>
 
-          {advises.length === 0 ? (
+          {consejos.length === 0 ? (
             <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
               <span className="text-pcnGreen-500">$ </span>
               No hay consejos para ver aún.
             </p>
           ) : (
             <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
-              {advises.map((advise) => (
-                <AdviseCard key={advise.id} advise={advise} session={session} />
+              {consejos.map((consejo) => (
+                <AdviseCard key={consejo.id} consejo={consejo} session={session} />
               ))}
             </RuledGrid>
           )}
