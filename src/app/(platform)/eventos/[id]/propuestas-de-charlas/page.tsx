@@ -19,6 +19,13 @@ import { LocalDateTime } from '@/components/ui/local-date-time';
 import { WhatsappSpeakerButton } from '@/components/talk-proposals/whatsapp-speaker-button';
 import { ProposalStatusActions } from '@/components/talk-proposals/proposal-status-actions';
 import { TalkProposalStatus } from '@prisma/client';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+// A 'use server' file can only export async functions, so the title comes from here.
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: tabTitle.ls('eventos/*/propuestas-de-charlas') };
+}
 
 const statusLabel: Record<TalkProposalStatus, string> = {
   PENDING: 'Pendiente',

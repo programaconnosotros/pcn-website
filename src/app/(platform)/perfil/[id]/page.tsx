@@ -28,6 +28,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 export const revalidate = 0;
 
@@ -47,7 +48,7 @@ export async function generateMetadata(props: {
 
   if (!user) {
     return {
-      title: 'Perfil no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El perfil que buscas no existe.',
     };
   }
@@ -59,7 +60,7 @@ export async function generateMetadata(props: {
   const pageUrl = `${SITE_URL}/perfil/${params.id}`;
 
   return {
-    title,
+    title: tabTitle.cat('perfil', user.name),
     description: description.length > 160 ? description.substring(0, 157) + '...' : description,
     openGraph: {
       title,

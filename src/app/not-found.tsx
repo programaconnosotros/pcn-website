@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { NotFoundScreen } from '@/components/errors/not-found-screen';
+import { NOT_FOUND_TAB_TITLE } from '@/lib/tab-title';
 
 export const metadata: Metadata = {
-  title: 'Página no encontrada',
+  title: { absolute: NOT_FOUND_TAB_TITLE },
   robots: { index: false },
 };
 

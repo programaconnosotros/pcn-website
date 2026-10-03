@@ -93,7 +93,7 @@ const lightningTalksNextGen: { title: string; speakers: Speaker[]; role: string 
 ];
 
 export const metadata: Metadata = {
-  title: 'Historia',
+  title: 'history',
   description:
     'Cómo nació programaConNosotros: desde un grupo de estudiantes apasionados en la UTN-FRT hasta una comunidad regional de ingeniería de software. Conocé a los fundadores y los pasos que nos trajeron hasta acá.',
   openGraph: {

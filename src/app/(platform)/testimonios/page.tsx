@@ -3,11 +3,12 @@ import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Testimonios',
+  title: tabTitle.ls('testimonios'),
   description:
     'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
   openGraph: {

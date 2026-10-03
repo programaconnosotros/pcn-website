@@ -37,7 +37,7 @@ import type { TocSection } from '@/components/ui/table-of-contents';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Desarrollá el proyecto',
+  title: 'pnpm dev',
   description:
     'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
   openGraph: {

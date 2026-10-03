@@ -18,9 +18,10 @@ import {
   TableTag,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { tabTitle } from '@/lib/tab-title';
 
 export const metadata: Metadata = {
-  title: 'Panel',
+  title: tabTitle.sudo('admin'),
   robots: { index: false, follow: false },
 };
 

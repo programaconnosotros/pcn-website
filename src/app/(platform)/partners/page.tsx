@@ -4,11 +4,12 @@ import { PARTNER_CONTACT_URL } from '@/data/partners';
 import { PartnersSection } from '@/components/home/partners-section';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Partners',
+  title: tabTitle.ls('partners'),
   description:
     'Conocé a las empresas y organizaciones que apoyan a programaConNosotros y hacen posible el crecimiento de la comunidad.',
   openGraph: {

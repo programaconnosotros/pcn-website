@@ -6,6 +6,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -27,7 +28,7 @@ export async function generateMetadata(props: {
 
   if (!advise) {
     return {
-      title: 'Consejo no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El consejo que buscas no existe.',
     };
   }
@@ -38,7 +39,7 @@ export async function generateMetadata(props: {
   const pageUrl = `${SITE_URL}/consejos/${params.id}`;
 
   return {
-    title,
+    title: tabTitle.cat('consejos', advise.author.name),
     description,
     openGraph: {
       title,

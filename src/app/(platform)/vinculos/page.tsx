@@ -9,9 +9,10 @@ import { requireAdminPage } from '@/lib/admin';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
 import { IdentityLinksTable, type IdentityRow } from './identity-links-table';
+import { tabTitle } from '@/lib/tab-title';
 
 export const metadata: Metadata = {
-  title: 'Vínculos',
+  title: tabTitle.sudo('vinculos'),
   robots: { index: false, follow: false },
 };
 

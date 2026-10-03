@@ -4,11 +4,12 @@ import { TableOfContents } from '@/components/especialidades/table-of-contents';
 import { SpecialtyCard } from '@/components/especialidades/specialty-card';
 import { specialtyGroups, specialties } from '@/components/especialidades/specialties';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Especialidades',
+  title: tabTitle.ls('especialidades'),
   description:
     'Una guía de las distintas especialidades dentro de la ingeniería de software para ayudarte a descubrir tu camino profesional.',
   openGraph: {

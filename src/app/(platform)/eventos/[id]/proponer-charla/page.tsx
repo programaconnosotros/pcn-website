@@ -5,6 +5,10 @@ import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { NewTalkProposalForm } from '@/components/talk-proposals/new-talk-proposal-form';
 import { findSession } from '@/lib/session';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+export const metadata: Metadata = { title: tabTitle.vim('eventos/*/proponer-charla') };
 
 const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;

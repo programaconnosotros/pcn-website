@@ -14,7 +14,7 @@ const DESCRIPTION =
   'Practicá para entrevistas de live coding: enunciados para resolver por tu cuenta y problemas de LeetCode recomendados para cada tecnología y seniority.';
 
 export const metadata: Metadata = {
-  title: 'Live coding',
+  title: './live-coding',
   description: DESCRIPTION,
   openGraph: {
     title: 'Live coding | programaConNosotros',

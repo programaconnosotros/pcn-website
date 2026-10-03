@@ -23,7 +23,7 @@ import { findSession } from '@/lib/session';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: 'Monitoreo',
+  title: 'sudo htop',
   robots: { index: false, follow: false },
 };
 

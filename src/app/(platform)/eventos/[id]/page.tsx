@@ -26,6 +26,7 @@ import { findSession } from '@/lib/session';
 import { activeWaitlistWhere, getWaitlistPosition } from '@/lib/event-waitlist';
 import { hasEventEnded } from '@/lib/event-status';
 import { PastEventMemory } from '@/components/events/memory/past-event-memory';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 const Section = EventSection;
 
@@ -47,7 +48,7 @@ export async function generateMetadata(props: {
 
   if (!event) {
     return {
-      title: 'Evento no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El evento que buscas no existe o ha sido eliminado.',
     };
   }
@@ -64,7 +65,7 @@ export async function generateMetadata(props: {
   const url = `/eventos/${event.id}`;
 
   return {
-    title: event.name,
+    title: tabTitle.cat('eventos', event.name),
     description,
     openGraph: {
       title: { absolute: event.name },

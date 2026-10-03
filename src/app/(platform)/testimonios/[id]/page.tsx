@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import { TestimonialDetailActions } from './testimonial-detail-actions';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -20,7 +21,7 @@ export async function generateMetadata(props: {
 
   if (!testimonial) {
     return {
-      title: 'Testimonio no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El testimonio que buscas no existe.',
     };
   }
@@ -31,7 +32,7 @@ export async function generateMetadata(props: {
   const pageUrl = `${SITE_URL}/testimonios/${params.id}`;
 
   return {
-    title,
+    title: tabTitle.cat('testimonios', testimonial.user.name),
     description,
     openGraph: {
       title,

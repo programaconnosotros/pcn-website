@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { logClientError } from '@/actions/errors/log-error';
 import { TerminalErrorScreen } from '@/components/errors/terminal-error-screen';
+import { ERROR_TAB_TITLE } from '@/lib/tab-title';
 
 export default function PlatformError({
   error,
@@ -22,6 +23,16 @@ export default function PlatformError({
       metadata: { digest: error.digest, boundary: 'app/(platform)/error.tsx' },
     }).catch(() => {});
   }, [error, pathname]);
+
+  // Error boundaries can't export metadata: show the crash in the tab and put the page's title
+  // back when the user retries (unless a navigation already set a new one).
+  useEffect(() => {
+    const previous = document.title;
+    document.title = ERROR_TAB_TITLE;
+    return () => {
+      if (document.title === ERROR_TAB_TITLE) document.title = previous;
+    };
+  }, []);
 
   return (
     <TerminalErrorScreen

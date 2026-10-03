@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Conversaciones',
+  title: tabTitle.ls('conversaciones'),
   description:
     'Las mejores conversaciones del WhatsApp de la comunidad: debates técnicos, anécdotas y momentos memorables entre apasionados por el software.',
   openGraph: {

@@ -6,7 +6,7 @@ const description =
   'Lo que pasa en la comunidad de programaConNosotros: eventos, charlas, fotos, proyectos y conversaciones.';
 
 export const metadata: Metadata = {
-  title: 'Feed',
+  title: 'tail -f ~/feed',
   description,
   openGraph: {
     title: 'Feed | programaConNosotros',

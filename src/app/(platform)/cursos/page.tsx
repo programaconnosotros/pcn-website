@@ -2,13 +2,14 @@ import { CoursesBrowser } from '@/components/courses/courses-browser';
 import { PageTitle } from '@/components/ui/page-title';
 import { communityCourses, externalCourses } from './courses';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const allCourses = [...communityCourses, ...externalCourses];
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Cursos',
+  title: tabTitle.ls('cursos'),
   description:
     'Una selección curada de cursos sobre ingeniería de software, recomendados por la comunidad. Recursos gratuitos y pagos para crecer en tu carrera.',
   openGraph: {

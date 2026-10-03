@@ -6,10 +6,11 @@ import { NotificationsClient } from './notifications-client';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: 'Notificaciones',
+  title: tabTitle.sudo('notificaciones'),
   robots: { index: false, follow: false },
 };
 

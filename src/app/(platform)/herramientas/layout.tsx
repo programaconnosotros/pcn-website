@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Herramientas',
+  title: tabTitle.ls('herramientas'),
   description:
     'Herramientas que usamos a diario para programar mejor: editores, terminales, productividad y más, recomendadas por la comunidad.',
   openGraph: {

@@ -9,11 +9,12 @@ import Link from 'next/link';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { canCreateEvents } from '@/lib/event-permissions';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Eventos',
+  title: tabTitle.ls('eventos'),
   description:
     'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
   openGraph: {

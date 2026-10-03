@@ -7,11 +7,12 @@ import {
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Anuncios',
+  title: tabTitle.ls('anuncios'),
   description: 'Novedades, avisos y eventos de la comunidad programaConNosotros.',
   openGraph: {
     title: 'Anuncios | programaConNosotros',

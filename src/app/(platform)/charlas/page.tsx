@@ -3,11 +3,12 @@ import { cookies } from 'next/headers';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
 import { CharlasAdminWrapper } from '@/components/talks/charlas-admin-wrapper';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Charlas',
+  title: tabTitle.ls('charlas'),
   description:
     'Mirá charlas técnicas dadas por miembros de la comunidad sobre ingeniería de software, arquitectura, IA y mucho más. Aprendé de quienes ya recorrieron el camino.',
   openGraph: {

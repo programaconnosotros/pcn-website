@@ -7,6 +7,13 @@ import { redirect } from 'next/navigation';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { TalksList } from '@/components/talks/talks-list';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+// A 'use server' file can only export async functions, so the title comes from here.
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: tabTitle.ls('eventos/*/charlas') };
+}
 
 const TalksPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;

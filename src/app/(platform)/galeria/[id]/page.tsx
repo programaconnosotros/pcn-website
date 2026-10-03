@@ -21,6 +21,7 @@ import { getGalleryItem, getGalleryNeighbours } from '@/lib/gallery';
 import { formatDuration, galleryQuery, parseGalleryFilter } from '@/lib/gallery-filters';
 import { googleMapsSearchUrl } from '@/lib/google-maps';
 import { cn } from '@/lib/utils';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -60,7 +61,7 @@ const NavKey = ({
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { id } = await props.params;
   const photo = await getGalleryItem(id);
-  if (!photo) return { title: 'Foto no encontrada' };
+  if (!photo) return { title: { absolute: MISSING_TAB_TITLE } };
 
   const title = photoCaption(photo);
   const people = photo.tags.map((tag) => tag.user.name);
@@ -75,7 +76,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   ];
 
   return {
-    title,
+    title: tabTitle.open('galeria', title),
     description,
     openGraph: {
       title,

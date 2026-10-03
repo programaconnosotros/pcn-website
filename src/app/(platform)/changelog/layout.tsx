@@ -6,7 +6,7 @@ const description =
   'Los últimos cambios de la plataforma de programaConNosotros y quién de la comunidad los hizo.';
 
 export const metadata: Metadata = {
-  title: 'Changelog',
+  title: 'git log',
   description,
   openGraph: {
     title: 'Changelog | programaConNosotros',

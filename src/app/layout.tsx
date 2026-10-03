@@ -15,14 +15,15 @@ import { OS_MODE_SCRIPT } from '@/components/os/os-display-mode-script';
 import { AppSplash } from '@/components/app-splash';
 import { APPLE_STARTUP_IMAGES } from '@/lib/apple-splash';
 import './globals.css';
+import { HOME_TAB_TITLE, TAB_TITLE_TEMPLATE } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'programaConNosotros',
-    template: '%s - PCN',
+    default: HOME_TAB_TITLE,
+    template: TAB_TITLE_TEMPLATE,
   },
   description: 'Comunidad de apasionados por la ingeniería de software.',
   icons: {

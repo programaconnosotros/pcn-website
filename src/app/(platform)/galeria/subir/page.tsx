@@ -4,7 +4,7 @@ import { PhotoUploader } from '@/components/photo-gallery/photo-uploader';
 import { requireAdminPage } from '@/lib/admin';
 import prisma from '@/lib/prisma';
 
-export const metadata = { title: 'Subir fotos y videos' };
+export const metadata = { title: 'scp * ~/galeria' };
 
 export default async function UploadPhotosPage(props: {
   searchParams: Promise<{ evento?: string }>;

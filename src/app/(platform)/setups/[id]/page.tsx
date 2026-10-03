@@ -10,6 +10,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { optimizedOgImage } from '@/lib/og-image';
 import { fetchSetup } from '@/lib/setups';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -26,7 +27,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { id } = await props.params;
   const setup = await fetchSetup(id);
-  if (!setup) return { title: 'Setup no encontrado' };
+  if (!setup) return { title: { absolute: MISSING_TAB_TITLE } };
 
   const title = `${setup.title} · setup de ${setup.author.name}`;
   const description =
@@ -34,7 +35,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const images = [{ url: optimizedOgImage(setup.imageUrl), alt: setup.title }];
 
   return {
-    title,
+    title: tabTitle.cat('setups', setup.title),
     description,
     openGraph: {
       title,

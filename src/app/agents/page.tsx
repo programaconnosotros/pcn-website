@@ -4,6 +4,7 @@ import { signGallerySrc } from '@/lib/gallery-signing';
 import { visibleGalleryItem } from '@/lib/gallery';
 import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!event) {
     return {
-      title: 'Eventos',
+      title: tabTitle.ls('eventos'),
       description: 'Participá del próximo evento de PCN.',
       openGraph: {
         title: 'Eventos',
@@ -48,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       : event.description;
 
   return {
-    title: event.name,
+    title: tabTitle.cat('eventos', event.name),
     description,
     openGraph: {
       title: event.name,

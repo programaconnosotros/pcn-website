@@ -19,6 +19,7 @@ import {
   type Rect,
 } from './os-window-geometry';
 import { useOsMode } from './use-os-mode';
+import { osTabTitle } from '@/lib/tab-title';
 
 const MENU_BAR_HEIGHT = 28;
 /** PCN OS liviano keeps at most this many windows with their page loaded; the rest sleep. */
@@ -309,12 +310,13 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   // Keep the address bar and tab title in sync with the focused window so links can be shared.
   const focusedPath = focusedWindow?.path;
   const focusedProgramName = focusedProgram?.name;
+  const focusedTitle = focusedWindow?.title;
   useEffect(() => {
     if (!isOs || !focusedPath) return;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== focusedPath) window.history.replaceState(null, '', focusedPath);
-    document.title = `${focusedProgramName} - PCN OS`;
-  }, [isOs, focusedPath, focusedProgramName]);
+    document.title = osTabTitle(focusedTitle ?? null, focusedProgramName ?? '');
+  }, [isOs, focusedPath, focusedProgramName, focusedTitle]);
 
   useEffect(() => {
     if (!isOs) return;

@@ -20,11 +20,12 @@ import { WHATSAPP_GROUP_URL } from '@/data/whatsapp-group';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { listStoryCardPhotos } from '@/lib/gallery';
+import { HOME_TAB_TITLE } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'programaConNosotros',
+  title: { absolute: HOME_TAB_TITLE },
   description:
     'Sumate a programaConNosotros, la comunidad de apasionados por la ingeniería de software. Eventos, charlas, cursos, podcasts y mucho más para llevar tu carrera al siguiente nivel.',
   openGraph: {

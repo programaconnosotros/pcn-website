@@ -7,11 +7,12 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Consejos',
+  title: tabTitle.ls('consejos'),
   description:
     'Consejos prácticos sobre ingeniería de software compartidos por miembros de la comunidad. Aprendé de la experiencia de otros y compartí la tuya.',
   openGraph: {

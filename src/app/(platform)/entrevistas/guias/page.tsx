@@ -8,6 +8,7 @@ import { endpointCourses } from '@/data/recommended-courses';
 import type { Metadata } from 'next';
 import { AREAS } from '../questions/types';
 import { crossTrackGuides, orderedGuides } from './guides';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -15,7 +16,7 @@ const DESCRIPTION =
   'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
 
 export const metadata: Metadata = {
-  title: 'Guías de preparación para entrevistas',
+  title: tabTitle.ls('entrevistas/guias'),
   description: DESCRIPTION,
   openGraph: {
     title: 'Guías de preparación para entrevistas | programaConNosotros',

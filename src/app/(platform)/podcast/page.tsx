@@ -1,10 +1,11 @@
 import { PageTitle } from '@/components/ui/page-title';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Podcast',
+  title: tabTitle.ls('podcast'),
   description:
     'Conversaciones con referentes de la industria sobre ingeniería de software, arquitectura, IA y carrera profesional. Episodios producidos por la comunidad.',
   openGraph: {

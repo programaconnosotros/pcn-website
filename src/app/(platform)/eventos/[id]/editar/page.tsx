@@ -6,6 +6,10 @@ import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
 import { DeleteEventButton } from '@/components/events/delete-event-button';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+export const metadata: Metadata = { title: tabTitle.vim('eventos/*/editar') };
 
 const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Software recomendado',
+  title: tabTitle.ls('software-recomendado'),
   description:
     'Software que la comunidad recomienda: herramientas, apps y servicios probados por miembros de programaConNosotros.',
   openGraph: {

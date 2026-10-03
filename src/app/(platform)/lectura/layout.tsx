@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Lectura',
+  title: tabTitle.ls('lectura'),
   description:
     'Artículos y libros recomendados para leer sobre ingeniería de software. Llevá registro de lo que vas leyendo y marcá lo que te interesa leer.',
   openGraph: {

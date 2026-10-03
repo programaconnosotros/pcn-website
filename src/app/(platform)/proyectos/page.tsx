@@ -3,11 +3,12 @@ import { cookies } from 'next/headers';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
 import { ProjectsList } from '@/components/projects/projects-list';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Proyectos',
+  title: tabTitle.ls('proyectos'),
   description:
     'Explorá los proyectos de software creados por miembros de la comunidad. Conocé las tecnologías utilizadas y las personas detrás de cada proyecto.',
   openGraph: {

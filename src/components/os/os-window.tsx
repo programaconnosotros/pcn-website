@@ -13,6 +13,7 @@ import {
 } from './os-window-geometry';
 import type { OsProgram } from './programs';
 import { PcnLoader } from '@/components/ui/pcn-loader';
+import { tabTitleSubject } from '@/lib/tab-title';
 
 type ResizeDirection = 'e' | 's' | 'w' | 'se' | 'sw';
 
@@ -52,8 +53,6 @@ interface OsWindowProps {
 }
 
 /** Strips the site-wide title template so the title bar shows only the page name. */
-const cleanTitle = (title: string | null) =>
-  title?.replace(/\s+-\s+PCN$/, '').replace(/^programaConNosotros$/, '') || null;
 
 /** Follows the pointer until it is released, reporting the delta from where it started. */
 const trackPointer = (
@@ -187,8 +186,9 @@ export function OsWindow({
     return () => window.clearInterval(interval);
   }, [loaded, suspended]);
   const Icon = program.icon;
-  const pageTitle = cleanTitle(win.title);
-  const subtitle = pageTitle && pageTitle !== program.name ? pageTitle : null;
+  // The title bar already shows the program's ~/dir; the page's terminal-style tab title adds
+  // what's open inside it (`cat ~/eventos/meetup` → `meetup`).
+  const subtitle = tabTitleSubject(win.title);
 
   const startDrag = (event: React.PointerEvent) => {
     if (event.button !== 0) return;
