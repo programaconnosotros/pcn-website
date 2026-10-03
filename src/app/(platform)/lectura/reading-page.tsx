@@ -1156,23 +1156,23 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                   meta={`${articles.length} artículos · ${books.length} libros`}
                 />
 
-                <TabsList className="mb-4">
-                  <TabsTrigger value="articulos">
-                    Artículos
-                    {savedCount > 0 && (
-                      <span
-                        title={`${savedCount} en tu lista para leer`}
-                        className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
-                      >
-                        {savedCount}
-                      </span>
-                    )}
-                  </TabsTrigger>
-                  <TabsTrigger value="libros">Libros</TabsTrigger>
-                </TabsList>
-
-                {/* Filtros compartidos */}
+                {/* Tabs y filtros compartidos en una sola línea */}
                 <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
+                  <TabsList className="h-8 shrink-0 self-start md:self-auto">
+                    <TabsTrigger value="articulos">
+                      Artículos
+                      {savedCount > 0 && (
+                        <span
+                          title={`${savedCount} en tu lista para leer`}
+                          className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
+                        >
+                          {savedCount}
+                        </span>
+                      )}
+                    </TabsTrigger>
+                    <TabsTrigger value="libros">Libros</TabsTrigger>
+                  </TabsList>
+
                   {/* Búsqueda */}
                   <SearchBar
                     searchQuery={searchTerm}
