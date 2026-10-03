@@ -4,6 +4,7 @@ import {
   guideSectionKey,
   type InterviewGuide as Guide,
 } from '@/app/(platform)/entrevistas/guias/guides/types';
+import { CopyLinkButton } from '@/components/interviews/copy-link-button';
 import { renderInlineCode } from '@/components/interviews/inline-code';
 import { GuideProgressBar } from '@/components/interviews/guide-progress-bar';
 import { MarkToggle } from '@/components/ui/mark-toggle';
@@ -53,13 +54,16 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
             </span>
           }
           action={
-            <Link
-              href={`/entrevistas?tipo=${guide.track}`}
-              className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
-            >
-              simular entrevista
-              <ArrowRight className="size-3.5" />
-            </Link>
+            <div className="flex items-center gap-2">
+              <CopyLinkButton path={`/entrevistas/guias/${guide.track}`} />
+              <Link
+                href={`/entrevistas?tipo=${guide.track}`}
+                className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
+              >
+                simular entrevista
+                <ArrowRight className="size-3.5" />
+              </Link>
+            </div>
           }
         />
       </StickyHeader>
