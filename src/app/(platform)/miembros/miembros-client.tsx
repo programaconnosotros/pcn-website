@@ -7,7 +7,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
-import { normalize } from '@/components/conversations/highlight';
+import { matchesPeopleQuery } from '@/lib/people-search';
 import type { CommunityMember } from '@/actions/users/fetch-community-members';
 import { cn } from '@/lib/utils';
 
@@ -129,13 +129,14 @@ function MemberRow({
 
 export function MiembrosClient({ members }: { members: CommunityMember[] }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const query = normalize(searchTerm.trim());
+  const query = searchTerm.trim();
 
   const filtered = useMemo(() => {
     if (!query) return members;
     return members.filter((member) =>
-      [member.name, member.slogan, ...memberRoles(member)].some(
-        (text) => text && normalize(text).includes(query),
+      matchesPeopleQuery(
+        [member.name, member.slogan, member.career, member.studyPlace, ...memberRoles(member)],
+        query,
       ),
     );
   }, [members, query]);

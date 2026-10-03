@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { canManageSomeEvent } from '@/lib/event-access';
 import { findSession } from '@/lib/session';
+import { searchPeople } from '@/lib/people-search';
 
 export type SpeakerUserOption = {
   id: string;
@@ -37,22 +38,36 @@ const speakerSelect = {
   studyPlace: true,
 } as const;
 
+// Busca por cualquier parte del nombre, email, slogan, trabajo y estudio (ver searchPeople).
 export async function searchUsersForSpeaker(q: string, limit = 20): Promise<SpeakerUserOption[]> {
   await requireAdmin();
   const trimmed = q.trim();
-  return prisma.user.findMany({
-    where: trimmed
-      ? {
-          OR: [
-            { name: { contains: trimmed, mode: 'insensitive' } },
-            { email: { contains: trimmed, mode: 'insensitive' } },
-          ],
-        }
-      : undefined,
-    select: speakerSelect,
-    orderBy: { name: 'asc' },
-    take: limit,
+  if (!trimmed) {
+    return prisma.user.findMany({ select: speakerSelect, orderBy: { name: 'asc' }, take: limit });
+  }
+
+  const users = await prisma.user.findMany({
+    select: {
+      ...speakerSelect,
+      slogan: true,
+      positions: { select: { jobTitle: true, enterprise: true } },
+    },
   });
+
+  return searchPeople(users, trimmed, {
+    name: (user) => user.name,
+    fields: (user) => [
+      user.name,
+      user.email,
+      user.slogan,
+      user.jobTitle,
+      user.enterprise,
+      user.career,
+      user.studyPlace,
+      ...user.positions.flatMap((position) => [position.jobTitle, position.enterprise]),
+    ],
+    limit,
+  }).map(({ slogan: _slogan, positions: _positions, ...option }) => option);
 }
 
 export async function getUserForSpeaker(id: string): Promise<SpeakerUserOption | null> {

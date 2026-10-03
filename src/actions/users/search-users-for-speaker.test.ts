@@ -90,28 +90,29 @@ describe('searchUsersForSpeaker', () => {
     expect(prismaMock.user.findMany).not.toHaveBeenCalled();
   });
 
-  it('queries by name and email when a search term is provided', async () => {
+  it('matches any part of the name, email, slogan, job or studies and drops the extra fields', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
-    prismaMock.user.findMany.mockResolvedValue([speakerOption] as any);
-
-    const result = await searchUsersForSpeaker('admin');
-
-    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: {
-        OR: [
-          { name: { contains: 'admin', mode: 'insensitive' } },
-          { email: { contains: 'admin', mode: 'insensitive' } },
-        ],
+    prismaMock.user.findMany.mockResolvedValue([
+      { ...speakerOption, slogan: null, positions: [] },
+      {
+        ...speakerOption,
+        id: 'user-2',
+        name: 'Agustín Sánchez',
+        email: 'agus@mail.com',
+        slogan: 'Construyendo cosas',
+        positions: [{ jobTitle: 'Dev', enterprise: 'Globant' }],
       },
-      select: speakerSelect,
-      orderBy: { name: 'asc' },
-      take: 20,
-    });
-    expect(result).toEqual([speakerOption]);
+    ] as any);
+
+    expect((await searchUsersForSpeaker('sanc agus')).map((u) => u.id)).toEqual(['user-2']);
+    expect((await searchUsersForSpeaker('globant')).map((u) => u.id)).toEqual(['user-2']);
+    expect((await searchUsersForSpeaker('construyendo')).map((u) => u.id)).toEqual(['user-2']);
+    expect((await searchUsersForSpeaker('pcn.com')).map((u) => u.id)).toEqual(['user-admin']);
+    expect(await searchUsersForSpeaker('admin')).toEqual([speakerOption]);
   });
 
-  it('passes undefined where clause when the query is an empty string', async () => {
+  it('lists users by name when the query is an empty string', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
     prismaMock.user.findMany.mockResolvedValue([speakerOption] as any);
@@ -119,14 +120,13 @@ describe('searchUsersForSpeaker', () => {
     await searchUsersForSpeaker('');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: undefined,
       select: speakerSelect,
       orderBy: { name: 'asc' },
       take: 20,
     });
   });
 
-  it('passes undefined where clause when the query is whitespace only', async () => {
+  it('lists users by name when the query is whitespace only', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
     prismaMock.user.findMany.mockResolvedValue([]) as any;
@@ -134,18 +134,23 @@ describe('searchUsersForSpeaker', () => {
     await searchUsersForSpeaker('   ');
 
     expect(prismaMock.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: undefined }),
+      expect.objectContaining({ orderBy: { name: 'asc' }, take: 20 }),
     );
   });
 
   it('respects a custom limit', async () => {
     mockCookies({ sessionId: 'session-admin' });
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
-    prismaMock.user.findMany.mockResolvedValue([]);
+    prismaMock.user.findMany.mockResolvedValue(
+      Array.from({ length: 8 }, (_, i) => ({
+        ...speakerOption,
+        id: `user-${i}`,
+        slogan: null,
+        positions: [],
+      })) as any,
+    );
 
-    await searchUsersForSpeaker('test', 5);
-
-    expect(prismaMock.user.findMany).toHaveBeenCalledWith(expect.objectContaining({ take: 5 }));
+    expect(await searchUsersForSpeaker('admin', 5)).toHaveLength(5);
   });
 });
 

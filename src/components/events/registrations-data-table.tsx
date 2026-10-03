@@ -24,6 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SearchBar } from '@/components/ui/search-bar';
+import { personRowFilter } from '@/lib/people-search';
 
 interface RegistrationsDataTableProps {
   data: EventRegistrationRow[];
@@ -39,6 +40,7 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
     state: { sorting, globalFilter },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: personRowFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

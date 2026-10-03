@@ -32,6 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SearchBar } from '@/components/ui/search-bar';
+import { personRowFilter } from '@/lib/people-search';
 import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface DataTableProps<TData, TValue> {
@@ -78,6 +79,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: personRowFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
