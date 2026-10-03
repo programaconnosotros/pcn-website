@@ -7,6 +7,8 @@ import {
   HistoriaSection,
   HistoriaTimeline,
 } from '@/components/historia/historia-section';
+import { HistoriaEvents } from '@/components/historia/historia-events';
+import { HISTORIA_FLYERS } from '@/components/historia/event-flyers';
 import { HistoriaOrganization } from '@/components/historia/historia-organization';
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -18,6 +20,7 @@ import {
 } from '@/components/historia/historia-person';
 import type { HistoriaPersonName } from '@/components/historia/people';
 import { getAdminUser } from '@/lib/admin';
+import { getHistoriaEvents, type HistoriaEvent } from '@/lib/historia-events';
 import { getIdentityMap } from '@/lib/identity-links';
 import type { Metadata } from 'next';
 
@@ -109,7 +112,7 @@ export const metadata: Metadata = {
   },
 };
 
-const Story = () => (
+const Story = ({ events }: { events: HistoriaEvent[] }) => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
@@ -393,17 +396,25 @@ const Story = () => (
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242335684-7df020ca-0179-422e-9084-4dbbb6ed20f1.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2021,
                         alt: 'Lightning Talks 2021',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242053412-bee91069-37b8-4d27-91cb-2fafcfdf92c9.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2023,
                         alt: 'Lightning Talks 2023',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777235792921-7d89c0da-a617-4e80-8a2b-6cc7cea2d0b8.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2024,
                         alt: 'Lightning Talks 2024',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.lightningTalks2021,
+                      HISTORIA_FLYERS.lightningTalks2023,
+                      HISTORIA_FLYERS.lightningTalks2024,
                     ]}
                   />
                 </HistoriaSection>
@@ -446,17 +457,25 @@ const Story = () => (
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241814466-2b43047c-27f0-4de7-86a2-faabca4f1ac9.jpeg',
+                        src: HISTORIA_FLYERS.miradaIndustria,
                         alt: 'Una Mirada de la Industria del Software',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236239325-19d0cf0e-4385-4e14-ac61-a2c20fb06bb0.jpeg',
+                        src: HISTORIA_FLYERS.descubriDesarrollo,
                         alt: 'Descubrí el Mundo del Desarrollo de Software',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241043347-93b51aef-47ba-4e88-9a9c-a4aaa997f6c2.jpeg',
+                        src: HISTORIA_FLYERS.introDesarrollo,
                         alt: 'Introducción al Desarrollo de Software',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.miradaIndustria,
+                      HISTORIA_FLYERS.descubriDesarrollo,
+                      HISTORIA_FLYERS.introDesarrollo,
                     ]}
                   />
                 </HistoriaSection>
@@ -504,11 +523,12 @@ const Story = () => (
                     laboral.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236349066-ae60a5c3-81d2-4cd8-bc18-85b648d4f089.jpeg"
+                    src={HISTORIA_FLYERS.techInAction}
                     alt="Tech in Action"
                     aspect="flyer"
                     className="mx-auto max-w-sm"
                   />
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.techInAction]} />
                 </HistoriaSection>
 
                 <HistoriaSection id="era-meetups" title="La era de las Meetups" period="2025">
@@ -536,25 +556,35 @@ const Story = () => (
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1766992051811-4f6bc2cb-ebe4-47e3-b701-dd537a0590fe.jpeg',
+                        src: HISTORIA_FLYERS.meetupDiciembre2025,
                         alt: 'Meetup diciembre 2025',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1771359135414-cc6b3a49-722f-400c-99f2-b049d32a23ec.JPG',
+                        src: HISTORIA_FLYERS.meetupFebrero2026,
                         alt: 'Meetup febrero 2026',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1775498317125-414e180b-4b7c-43b0-9848-64e89c4506af.PNG',
+                        src: HISTORIA_FLYERS.meetupAbril2026,
                         alt: 'Meetup abril 2026',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1776732685244-11d00b6f-78b7-460b-a1a8-11d40f0a852f.png',
+                        src: HISTORIA_FLYERS.coworkSession,
                         alt: 'Cowork Session',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1779314634681-9a349677-eb94-4345-b69b-6eef31325aa1.png',
+                        src: HISTORIA_FLYERS.meetupMayo2026,
                         alt: 'Meetup mayo 2026',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.meetupDiciembre2025,
+                      HISTORIA_FLYERS.meetupFebrero2026,
+                      HISTORIA_FLYERS.meetupAbril2026,
+                      HISTORIA_FLYERS.coworkSession,
+                      HISTORIA_FLYERS.meetupMayo2026,
                     ]}
                   />
                 </HistoriaSection>
@@ -569,11 +599,12 @@ const Story = () => (
                     ingeniería de software y demostró que la comunidad está al día con lo que viene.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
+                    src={HISTORIA_FLYERS.zeroToAgent}
                     alt="Zero to Agent"
                     aspect="flyer"
                     className="mx-auto max-w-sm"
                   />
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.zeroToAgent]} />
                 </HistoriaSection>
 
                 <HistoriaSection
@@ -589,7 +620,7 @@ const Story = () => (
                     profesión.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
+                    src={HISTORIA_FLYERS.nextGenSoftware2026}
                     alt="NextGen Software 2026"
                     className="mx-auto max-w-sm"
                   />
@@ -621,6 +652,7 @@ const Story = () => (
                       </li>
                     ))}
                   </ol>
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.nextGenSoftware2026]} />
                 </HistoriaSection>
 
                 <HistoriaSection
@@ -679,11 +711,15 @@ const Story = () => (
 );
 
 const PCNStory = async () => {
-  const [links, admin] = await Promise.all([getIdentityMap('historia'), getAdminUser()]);
+  const [links, admin, events] = await Promise.all([
+    getIdentityMap('historia'),
+    getAdminUser(),
+    getHistoriaEvents(),
+  ]);
 
   return (
     <HistoriaPeopleProvider links={links} isAdmin={admin !== null}>
-      <Story />
+      <Story events={events} />
     </HistoriaPeopleProvider>
   );
 };
