@@ -1,23 +1,34 @@
 import { agenticQuestions } from './agentic';
 import { aiQuestions } from './ai';
 import { androidQuestions } from './android';
+import { awsQuestions } from './aws';
+import { azureQuestions } from './azure';
 import { cypressQuestions } from './cypress';
+import { devopsQuestions } from './devops';
+import { dockerQuestions } from './docker';
 import { dotnetQuestions } from './dotnet';
 import { figmaQuestions } from './figma';
+import { frontendQuestions } from './frontend';
+import { gcpQuestions } from './gcp';
+import { githubActionsQuestions } from './github-actions';
 import { iosQuestions } from './ios';
 import { javaQuestions } from './java';
 import { k6Questions } from './k6';
+import { kubernetesQuestions } from './kubernetes';
+import { linuxQuestions } from './linux';
 import { nodeQuestions } from './node';
+import { observabilityQuestions } from './observability';
 import { playwrightQuestions } from './playwright';
-import { pythonQuestions } from './python';
 import { productEngineeringQuestions } from './product-engineering';
 import { projectManagerQuestions } from './project-manager';
+import { pythonQuestions } from './python';
 import { qaQuestions } from './qa';
 import { qaAutomationQuestions } from './qa-automation';
 import { reactNativeQuestions } from './react-native';
 import { securityQuestions } from './security';
+import { terraformQuestions } from './terraform';
 import { uxUiQuestions } from './ux-ui';
-import { frontendQuestions } from './frontend';
+import { vercelQuestions } from './vercel';
 import {
   TRACK_TOOLS,
   type InterviewQuestion,
@@ -42,6 +53,7 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   agentic: agenticQuestions,
   qa: qaQuestions,
   security: securityQuestions,
+  devops: devopsQuestions,
   'ux-ui': uxUiQuestions,
   'product-engineering': productEngineeringQuestions,
   'project-manager': projectManagerQuestions,
@@ -57,6 +69,16 @@ export const qaToolQuestions: Record<QaTool, Record<Seniority, InterviewQuestion
 // Tracks with tools (see TRACK_TOOLS) add one bank per selected tool to their general questions.
 export const trackToolQuestions: Record<TrackTool, Record<Seniority, InterviewQuestion[]>> = {
   figma: figmaQuestions,
+  aws: awsQuestions,
+  azure: azureQuestions,
+  gcp: gcpQuestions,
+  vercel: vercelQuestions,
+  docker: dockerQuestions,
+  kubernetes: kubernetesQuestions,
+  terraform: terraformQuestions,
+  'github-actions': githubActionsQuestions,
+  linux: linuxQuestions,
+  observability: observabilityQuestions,
 };
 
 export interface QaOptions {

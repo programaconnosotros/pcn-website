@@ -2,6 +2,7 @@ import { TRACKS, type InterviewTrack } from '../../questions/types';
 import { agenticGuide } from './agentic';
 import { aiGuide } from './ai';
 import { androidGuide } from './android';
+import { devopsGuide } from './devops';
 import { dotnetGuide } from './dotnet';
 import { iosGuide } from './ios';
 import { javaGuide } from './java';
@@ -33,6 +34,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   agentic: agenticGuide,
   qa: qaGuide,
   security: securityGuide,
+  devops: devopsGuide,
   'ux-ui': uxUiGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,

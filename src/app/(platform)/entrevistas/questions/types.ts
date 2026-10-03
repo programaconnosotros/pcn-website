@@ -5,6 +5,7 @@ export type InterviewArea =
   | 'agentic'
   | 'qa'
   | 'security'
+  | 'devops'
   | 'ux-ui'
   | 'product-engineering'
   | 'project-manager';
@@ -21,12 +22,24 @@ export type InterviewTrack =
   | 'agentic'
   | 'qa'
   | 'security'
+  | 'devops'
   | 'ux-ui'
   | 'product-engineering'
   | 'project-manager';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
 /** Tools a track can add on top of its general questions, one question bank each. */
-export type TrackTool = 'figma';
+export type TrackTool =
+  | 'figma'
+  | 'aws'
+  | 'azure'
+  | 'gcp'
+  | 'vercel'
+  | 'docker'
+  | 'kubernetes'
+  | 'terraform'
+  | 'github-actions'
+  | 'linux'
+  | 'observability';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
 export interface InterviewQuestion {
@@ -42,6 +55,7 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
   { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
   { id: 'security', label: 'Seguridad informática', stack: 'AppSec, pentesting y defensa' },
+  { id: 'devops', label: 'DevOps', stack: 'cloud, contenedores, IaC y CI/CD' },
   { id: 'ux-ui', label: 'Diseño UX/UI', stack: 'research, interacción, visual y Figma' },
   {
     id: 'product-engineering',
@@ -135,6 +149,12 @@ export const TRACKS: {
     stack: 'AppSec, pentesting y defensa',
   },
   {
+    id: 'devops',
+    area: 'devops',
+    label: 'DevOps',
+    stack: 'cloud, contenedores, IaC y CI/CD',
+  },
+  {
     id: 'ux-ui',
     area: 'ux-ui',
     label: 'Diseño UX/UI',
@@ -174,6 +194,22 @@ export interface TrackToolOption {
 export const TRACK_TOOLS: Partial<
   Record<InterviewTrack, { title: string; required: boolean; tools: TrackToolOption[] }>
 > = {
+  devops: {
+    title: 'tecnologías',
+    required: true,
+    tools: [
+      { id: 'aws', label: 'AWS', stack: 'IAM, VPC, EC2, S3, EKS' },
+      { id: 'azure', label: 'Azure', stack: 'Entra ID, AKS, App Service' },
+      { id: 'gcp', label: 'Google Cloud Platform', stack: 'IAM, GKE, Cloud Run' },
+      { id: 'vercel', label: 'Vercel', stack: 'deploys, previews, caché' },
+      { id: 'docker', label: 'Docker', stack: 'imágenes, Dockerfile, compose' },
+      { id: 'kubernetes', label: 'Kubernetes', stack: 'pods, deployments, Helm' },
+      { id: 'terraform', label: 'Terraform', stack: 'IaC, state, módulos' },
+      { id: 'github-actions', label: 'CI/CD', stack: 'GitHub Actions, pipelines' },
+      { id: 'linux', label: 'Linux y redes', stack: 'procesos, DNS, TCP/IP' },
+      { id: 'observability', label: 'Observabilidad', stack: 'Prometheus, Grafana' },
+    ],
+  },
   'ux-ui': {
     title: 'herramientas',
     required: false,
