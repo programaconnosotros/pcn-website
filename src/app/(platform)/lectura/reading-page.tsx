@@ -21,6 +21,7 @@ import { ArticleReaderDialog } from './article-reader-dialog';
 import { ArticlesPanel, isReadStatus, type ReadStatus } from './articles-panel';
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { SearchBar } from '@/components/ui/search-bar';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import {
   LanguageFilter,
   matchesLanguage,
@@ -1156,32 +1157,39 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                   meta={`${articles.length} artículos · ${books.length} libros`}
                 />
 
-                {/* Tabs y filtros compartidos en una sola línea */}
-                <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
-                  <TabsList className="h-8 shrink-0 self-start md:self-auto">
-                    <TabsTrigger value="articulos">
-                      Artículos
-                      {savedCount > 0 && (
-                        <span
-                          title={`${savedCount} en tu lista para leer`}
-                          className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
-                        >
-                          {savedCount}
-                        </span>
-                      )}
-                    </TabsTrigger>
-                    <TabsTrigger value="libros">Libros</TabsTrigger>
-                  </TabsList>
-
-                  {/* Búsqueda */}
-                  <SearchBar
-                    searchQuery={searchTerm}
-                    setSearchQuery={setSearchTerm}
-                    placeholder="título, autor o descripción"
-                    label="Buscar por título, autor o descripción"
-                    className="max-w-none flex-1"
-                  />
-
+                {/* Tabs, búsqueda y filtros en una sola línea; en el celular los filtros se pliegan */}
+                <CollapsibleFilters
+                  className="mb-4"
+                  activeCount={
+                    Number(language !== 'todos') +
+                    Number(activeTab === 'libros' && selectedCategory !== 'Todas las categorías')
+                  }
+                  leading={
+                    <TabsList className="h-8 shrink-0">
+                      <TabsTrigger value="articulos">
+                        Artículos
+                        {savedCount > 0 && (
+                          <span
+                            title={`${savedCount} en tu lista para leer`}
+                            className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
+                          >
+                            {savedCount}
+                          </span>
+                        )}
+                      </TabsTrigger>
+                      <TabsTrigger value="libros">Libros</TabsTrigger>
+                    </TabsList>
+                  }
+                  search={
+                    <SearchBar
+                      searchQuery={searchTerm}
+                      setSearchQuery={setSearchTerm}
+                      placeholder="título, autor o descripción"
+                      label="Buscar por título, autor o descripción"
+                      className="max-w-none flex-1"
+                    />
+                  }
+                >
                   <LanguageFilter value={language} onChange={setLanguage} />
 
                   {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
@@ -1199,7 +1207,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                       </SelectContent>
                     </Select>
                   )}
-                </div>
+                </CollapsibleFilters>
               </StickyHeader>
 
               {/* Tab: Artículos */}

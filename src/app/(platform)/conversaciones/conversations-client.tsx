@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { conversations, type Conversation } from '@/data/whatsapp-conversations';
 import { SearchBar } from '@/components/ui/search-bar';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { ActivityGraph, type MonthActivity } from '@/components/conversations/activity-graph';
 import { ConversationRow } from '@/components/conversations/conversation-row';
 import { ConversationDialog } from '@/components/conversations/conversation-dialog';
@@ -181,13 +182,29 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                 }
               />
 
-              <div className="mb-4 flex flex-wrap items-center gap-2">
-                <SearchBar
-                  searchQuery={searchTerm}
-                  setSearchQuery={setSearchTerm}
-                  placeholder="conversaciones, temas o personas"
-                  label="Buscar conversaciones"
-                />
+              <CollapsibleFilters
+                className="mb-4"
+                activeCount={Number(groupOnly) + Number(!!participant)}
+                search={
+                  <SearchBar
+                    searchQuery={searchTerm}
+                    setSearchQuery={setSearchTerm}
+                    placeholder="conversaciones, temas o personas"
+                    label="Buscar conversaciones"
+                  />
+                }
+                aside={
+                  <p
+                    className="font-mono text-xs tabular-nums text-muted-foreground"
+                    aria-live="polite"
+                  >
+                    <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
+                      {filtered.length}
+                    </span>
+                    /{conversations.length} resultados
+                  </p>
+                }
+              >
                 <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
                   --muchos-participantes
                 </Flag>
@@ -202,16 +219,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                     <span className="sr-only">Quitar filtro de persona</span>
                   </button>
                 )}
-                <p
-                  className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
-                  aria-live="polite"
-                >
-                  <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
-                    {filtered.length}
-                  </span>
-                  /{conversations.length} resultados
-                </p>
-              </div>
+              </CollapsibleFilters>
             </StickyHeader>
 
             <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">

@@ -140,7 +140,8 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
             }
           />
 
-          <div className="mb-4 flex flex-wrap items-center gap-2">
+          {/* Search and count share one row, even on phones. */}
+          <div className="mb-4 flex items-center gap-2">
             <SearchBar
               searchQuery={searchTerm}
               setSearchQuery={setSearchTerm}
@@ -148,7 +149,7 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
               label="Buscar cambios"
             />
             <p
-              className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
+              className="ml-auto shrink-0 font-mono text-xs tabular-nums text-muted-foreground"
               aria-live="polite"
             >
               <span className={cn(searchTerm.trim() ? 'text-pcnGreen' : 'text-foreground')}>

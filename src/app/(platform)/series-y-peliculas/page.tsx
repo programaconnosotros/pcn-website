@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { SearchBar } from '@/components/ui/search-bar';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 
 interface Title {
   id: string;
@@ -265,18 +266,19 @@ const SeriesYPeliculasPage = () => {
                 } películas`}
               />
 
-              {/* Filtros */}
-              <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center">
-                {/* Búsqueda */}
-                <SearchBar
-                  searchQuery={searchTerm}
-                  setSearchQuery={setSearchTerm}
-                  placeholder="título, director o descripción"
-                  label="Buscar por título, director o descripción"
-                  className="max-w-none flex-1"
-                />
-
-                {/* Filtro por género */}
+              <CollapsibleFilters
+                className="mb-4"
+                activeCount={Number(selectedGenre !== 'Todos los géneros')}
+                search={
+                  <SearchBar
+                    searchQuery={searchTerm}
+                    setSearchQuery={setSearchTerm}
+                    placeholder="título, director o descripción"
+                    label="Buscar por título, director o descripción"
+                    className="max-w-none flex-1"
+                  />
+                }
+              >
                 <Select value={selectedGenre} onValueChange={setSelectedGenre}>
                   <SelectTrigger className="h-8 w-full md:w-[200px]">
                     <SelectValue placeholder="Todos los géneros" />
@@ -289,7 +291,7 @@ const SeriesYPeliculasPage = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </CollapsibleFilters>
             </StickyHeader>
 
             {/* Grid de títulos */}

@@ -51,7 +51,7 @@ export function RegistrationsDataTable({ data }: RegistrationsDataTableProps) {
   return (
     <div className="space-y-3">
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex items-center gap-3">
         <SearchBar
           searchQuery={globalFilter}
           setSearchQuery={setGlobalFilter}
