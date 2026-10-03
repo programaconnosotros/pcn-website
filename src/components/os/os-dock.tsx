@@ -274,6 +274,8 @@ interface DockItemProps {
   magnification: number;
   onHover: (_id: string | null) => void;
   onClick: () => void;
+  /** PCN OS liviano: no launch bounce or entrance animation. */
+  lite: boolean;
 }
 
 const DockItem = ({
@@ -289,12 +291,13 @@ const DockItem = ({
   magnification,
   onHover,
   onClick,
+  lite,
 }: DockItemProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   const iconRef = useRef<HTMLSpanElement>(null);
   const [launches, setLaunches] = useState(0);
   const iconControls = useAnimationControls();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() || lite;
 
   const baseIcon = Math.min(36, baseWidth - 12);
   const footerHeight = showLabel ? ITEM_FOOTER_HEIGHT.labelled : ITEM_FOOTER_HEIGHT.compact;
@@ -415,6 +418,7 @@ interface OsDockProps {
   focusedProgramId: string | null;
   onOpenProgram: (_program: OsProgram) => void;
   onOpenLauncher: () => void;
+  lite?: boolean;
 }
 
 /**
@@ -430,8 +434,10 @@ export function OsDock({
   focusedProgramId,
   onOpenProgram,
   onOpenLauncher,
+  lite = false,
 }: OsDockProps) {
-  const reduceMotion = useReducedMotion();
+  // PCN OS liviano: no magnification, no entrance spring and no spotlight following the mouse.
+  const reduceMotion = useReducedMotion() || lite;
   const pinned = programs.filter((program) => program.pinned);
   const unpinnedRunning = runningPrograms.filter((program) => !program.pinned);
   const viewportWidth = useViewportWidth();
@@ -482,6 +488,7 @@ export function OsDock({
     focused: focusedProgramId === id,
     showLabel: showLabels,
     onHover: setHoveredId,
+    lite,
   });
 
   return (
@@ -528,8 +535,8 @@ export function OsDock({
         />
 
         <div
-          onMouseMove={onMouseMove}
-          onMouseLeave={onMouseLeave}
+          onMouseMove={lite ? undefined : onMouseMove}
+          onMouseLeave={lite ? undefined : onMouseLeave}
           className="relative flex items-end gap-0.5 rounded-md px-1 pb-0.5 pt-1.5"
         >
           {/* Glass and surface effects, clipped to the dock. The blur lives on this layer rather than

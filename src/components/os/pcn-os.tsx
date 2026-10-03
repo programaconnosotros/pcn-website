@@ -6,6 +6,7 @@ import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
+import { useDisplayMode } from './os-display-mode';
 import { isOsHost, isOsMessage } from './os-env';
 import { dockReservedHeight } from './os-dock-geometry';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
@@ -20,6 +21,8 @@ import {
 import { useOsMode } from './use-os-mode';
 
 const MENU_BAR_HEIGHT = 28;
+/** PCN OS liviano keeps at most this many windows with their page loaded; the rest sleep. */
+const LITE_LIVE_WINDOWS = 3;
 
 type OsDesktopParts = typeof import('./os-desktop-parts');
 
@@ -252,6 +255,7 @@ interface PcnOsProps {
 export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const isOs = useOsMode();
   const parts = useDesktopParts(isOs);
+  const lite = useDisplayMode() === 'lite';
   const [state, dispatch] = useReducer(reducer, { windows: [], order: [], nextId: 1 });
   const [viewport, setViewport] = useState<Viewport | null>(null);
   /** Cursor to show while a window is being moved or resized; null when idle. */
@@ -285,7 +289,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     if (!isOs || !viewport || opened.current) return;
     opened.current = true;
     const path = `${window.location.pathname}${window.location.search}`;
-    const split = path === '/' ? homeAndFeedRects(viewport) : null;
+    // PCN OS liviano opens only the home: every window is a whole copy of the site.
+    const split = path === '/' && !lite ? homeAndFeedRects(viewport) : null;
     if (split) {
       // The feed opens first so the home ends up in front, focused and in the address bar.
       dispatch({ type: 'open', path: '/feed', rect: split.feed });
@@ -293,7 +298,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
       return;
     }
     dispatch({ type: 'open', path, rect: newWindowRect(viewport, 0) });
-  }, [isOs, viewport]);
+  }, [isOs, viewport, lite]);
 
   const focusedId = [...state.order]
     .reverse()
@@ -363,6 +368,12 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   // Wallpaper and menu bar render from the start (they are what the server paints); the rest
   // waits for the desktop parts, which arrive like they used to after hydration.
   const desktop = isOs ? parts : null;
+  // PCN OS liviano: only the most recently focused windows that are on screen keep their page.
+  const liveWindowIds = new Set(
+    state.order
+      .filter((id) => !state.windows.find((win) => win.id === id)?.minimized)
+      .slice(-LITE_LIVE_WINDOWS),
+  );
 
   return (
     <div className="hidden os:block">
@@ -371,8 +382,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           showHint={desktop !== null && viewport !== null && state.windows.length === 0}
           onPointerDown={() => dispatch({ type: 'minimizeAll' })}
         />
-        {desktop && <desktop.OsProcesses covered={covered} />}
-        {desktop && viewport && (
+        {desktop && !lite && <desktop.OsProcesses covered={covered} />}
+        {desktop && !lite && viewport && (
           <desktop.OsPhotos
             covered={covered}
             onOpen={(path) => dispatch({ type: 'openPath', path, viewport })}
@@ -404,6 +415,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                     if (iframe) iframes.current.set(win.id, iframe);
                     else iframes.current.delete(win.id);
                   }}
+                  lite={lite}
+                  suspended={lite && !liveWindowIds.has(win.id)}
                   onIframeLoad={() => {
                     // Full page loads (e.g. auth pages outside the platform) don't run the bridge.
                     try {
@@ -454,8 +467,11 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
             focusedProgramId={focusedProgram?.id ?? null}
             onOpenProgram={openProgram}
             onOpenLauncher={() => setLauncherOpen(true)}
+            lite={lite}
           />
         )}
+
+        {desktop && <desktop.OsPerformanceNotice />}
 
         {desktop && (
           <desktop.OsLauncher

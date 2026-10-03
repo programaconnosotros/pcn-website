@@ -11,6 +11,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata, Viewport } from 'next';
 import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
+import { OS_MODE_SCRIPT } from '@/components/os/os-display-mode-script';
 import { AppSplash } from '@/components/app-splash';
 import { APPLE_STARTUP_IMAGES } from '@/lib/apple-splash';
 import './globals.css';
@@ -73,7 +74,7 @@ const RootLayout = async ({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT + OS_MODE_SCRIPT }} />
       </head>
       <body className={GeistSans.className}>
         <AppSplash />

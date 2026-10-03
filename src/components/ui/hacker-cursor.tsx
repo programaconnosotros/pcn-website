@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useDisplayMode } from '@/components/os/os-display-mode';
 import { isEmbedded, isOsMessage, postToOsHost } from '@/components/os/os-env';
 
 const INTERACTIVE =
@@ -28,18 +29,20 @@ const labelFor = (element: Element) => {
  * of what a click does), and a burst of hex characters on every click. Text fields keep the
  * native I-beam. Off for touch, pens and reduced motion. In PCN OS only the desktop draws it:
  * each window hides its native cursor and reports the pointer to the desktop, so there is
- * never a second (or frozen) copy on screen.
+ * never a second (or frozen) copy on screen. Off in PCN OS liviano and the classic layout, the
+ * low-resource modes: it runs every frame and every window reports each pointer move.
  */
 export function HackerCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const burstRef = useRef<HTMLDivElement>(null);
+  const enabled = useDisplayMode() === 'full';
 
   useEffect(() => {
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (!enabled || !finePointer.matches || reducedMotion.matches) return;
 
     const root = document.documentElement;
     root.classList.add('pcn-cursor');
@@ -247,7 +250,7 @@ export function HackerCursor() {
       window.removeEventListener('blur', onLeave);
       window.removeEventListener('message', onMessage);
     };
-  }, []);
+  }, [enabled]);
 
   return (
     <div aria-hidden>

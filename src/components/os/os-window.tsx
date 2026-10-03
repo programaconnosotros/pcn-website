@@ -42,6 +42,13 @@ interface OsWindowProps {
   onInteractionChange: (_cursor: string | null) => void;
   registerIframe: (_iframe: HTMLIFrameElement | null) => void;
   onIframeLoad: () => void;
+  /** PCN OS liviano: no open/close/minimize animations and no large shadows. */
+  lite?: boolean;
+  /**
+   * Its page is unloaded to save resources (PCN OS liviano keeps only the most recent windows
+   * live). It loads again, where it was, when the window comes back to the front.
+   */
+  suspended?: boolean;
 }
 
 /** Strips the site-wide title template so the title bar shows only the page name. */
@@ -147,15 +154,28 @@ export function OsWindow({
   onInteractionChange,
   registerIframe,
   onIframeLoad,
+  lite = false,
+  suspended = false,
 }: OsWindowProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [loaded, setLoaded] = useState(false);
+  // Where the page loads from. A suspended window resumes at the page it was on, not the one it
+  // was opened with (the iframe keeps `src` fixed while it navigates, to avoid reloads).
+  const [src, setSrc] = useState(win.src);
+  const [prevSuspended, setPrevSuspended] = useState(suspended);
+  if (suspended !== prevSuspended) {
+    setPrevSuspended(suspended);
+    if (suspended) {
+      setSrc(win.path);
+      setLoaded(false);
+    }
+  }
 
   // The iframe's `load` event waits for the whole streamed page and every image in it. The page
   // shell (or its loading skeleton) paints long before that, so the loader goes away as soon as
   // the embedded document has anything in its body.
   useEffect(() => {
-    if (loaded) return;
+    if (loaded || suspended) return;
     const interval = window.setInterval(() => {
       try {
         const doc = iframeRef.current?.contentDocument;
@@ -165,7 +185,7 @@ export function OsWindow({
       }
     }, 50);
     return () => window.clearInterval(interval);
-  }, [loaded]);
+  }, [loaded, suspended]);
   const Icon = program.icon;
   const pageTitle = cleanTitle(win.title);
   const subtitle = pageTitle && pageTitle !== program.name ? pageTitle : null;
@@ -213,13 +233,19 @@ export function OsWindow({
       role="dialog"
       aria-label={program.name}
       data-focused={focused}
-      initial={{ opacity: 0, scale: 0.94, y: 16 }}
+      initial={lite ? false : { opacity: 0, scale: 0.94, y: 16 }}
       animate={
-        win.minimized
-          ? { opacity: 0, scale: 0.4, y: 480, transition: { duration: 0.25, ease: 'easeIn' } }
-          : { opacity: 1, scale: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } }
+        lite
+          ? { opacity: win.minimized ? 0 : 1, transition: { duration: 0 } }
+          : win.minimized
+            ? { opacity: 0, scale: 0.4, y: 480, transition: { duration: 0.25, ease: 'easeIn' } }
+            : { opacity: 1, scale: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } }
       }
-      exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.15 } }}
+      exit={
+        lite
+          ? { opacity: 0, transition: { duration: 0 } }
+          : { opacity: 0, scale: 0.92, transition: { duration: 0.15 } }
+      }
       onPointerDownCapture={onFocus}
       style={{ left: rect.x, top: rect.y, width: rect.w, height: rect.h, zIndex }}
       className={cn(
@@ -229,6 +255,7 @@ export function OsWindow({
           : 'border-pcnGreen-200',
         win.maximized && 'rounded-none border-x-0',
         win.minimized && 'pointer-events-none',
+        lite && 'shadow-none',
       )}
     >
       <header
@@ -289,20 +316,27 @@ export function OsWindow({
       </header>
 
       <div className="relative min-h-0 flex-1 bg-background">
-        <iframe
-          ref={(iframe) => {
-            iframeRef.current = iframe;
-            registerIframe(iframe);
-          }}
-          src={win.src}
-          title={program.name}
-          onLoad={() => {
-            setLoaded(true);
-            onIframeLoad();
-          }}
-          className="size-full border-0 bg-background"
-        />
-        {!loaded && (
+        {suspended ? (
+          <div className="flex size-full flex-col items-center justify-center gap-2 bg-background font-mono text-xs text-pcnGreen-600">
+            <span className="text-pcnGreen">[ en pausa ]</span>
+            <span>ventana dormida para ahorrar recursos · hacé clic para reanudar</span>
+          </div>
+        ) : (
+          <iframe
+            ref={(iframe) => {
+              iframeRef.current = iframe;
+              registerIframe(iframe);
+            }}
+            src={src}
+            title={program.name}
+            onLoad={() => {
+              setLoaded(true);
+              onIframeLoad();
+            }}
+            className="size-full border-0 bg-background"
+          />
+        )}
+        {!loaded && !suspended && (
           <div className="absolute inset-0 flex items-center justify-center bg-background">
             <PcnLoader label={program.name.toLowerCase()} />
           </div>

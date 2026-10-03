@@ -1467,3 +1467,21 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
     animation: none;
   }
 }
+
+/* PCN OS liviano (src/components/os/os-display-mode.ts): no backdrop blur on the desktop or in
+   its windows. It is recomputed whenever anything moves underneath, the costliest effect for a
+   weak GPU; the translucent fills underneath stay, so surfaces still read as layered. */
+@media (min-width: 1024px) {
+  html[data-os-mode='lite'] *,
+  html[data-os-mode='lite'] *::before,
+  html[data-os-mode='lite'] *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+html[data-embedded][data-os-mode='lite'] *,
+html[data-embedded][data-os-mode='lite'] *::before,
+html[data-embedded][data-os-mode='lite'] *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}

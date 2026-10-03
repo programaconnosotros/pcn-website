@@ -6,6 +6,7 @@ export { AnimatePresence } from 'motion/react';
 export { BackgroundMusicPlayer } from '@/components/music/music-player-dialog';
 export { OsDock } from './os-dock';
 export { OsLauncher } from './os-launcher';
+export { OsPerformanceNotice } from './os-performance-notice';
 export { OsPhotos } from './os-photos';
 export { OsProcesses } from './os-processes';
 export { OsWindow } from './os-window';

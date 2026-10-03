@@ -1,12 +1,18 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { subscribeToDisplayMode } from './os-display-mode';
 import { OS_MEDIA_QUERY, isOsHost } from './os-env';
 
 const subscribe = (onChange: () => void) => {
   const mediaQuery = window.matchMedia(OS_MEDIA_QUERY);
   mediaQuery.addEventListener('change', onChange);
-  return () => mediaQuery.removeEventListener('change', onChange);
+  // Switching to or from the classic layout turns the desktop off or on too.
+  const unsubscribeMode = subscribeToDisplayMode(onChange);
+  return () => {
+    mediaQuery.removeEventListener('change', onChange);
+    unsubscribeMode();
+  };
 };
 
 /**
