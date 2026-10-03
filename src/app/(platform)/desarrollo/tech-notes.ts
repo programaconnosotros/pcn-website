@@ -872,7 +872,7 @@ export function LocalTime({ date }: { date: Date | string }) {
           },
         ],
         usage: [
-          'Motion se importa desde `motion/react` y anima detalles de la interfaz: el botón de volver arriba, el indicador de scroll, las ventanas y el dock de PCN OS, los contadores que suben (`NumberTicker`) y las apariciones al scrollear en la home (`reveal.tsx`). Embla mueve el carrusel de flyers de cada evento y los de charlas y lightning talks.',
+          'Motion se importa desde `motion/react` y anima detalles de la interfaz: el botón de volver arriba, el indicador de scroll, las ventanas y el dock de PCN OS, y los contadores que suben (`NumberTicker`). La home no lo usa: su hero y sus apariciones al scrollear son animaciones CSS, para que se vean sin esperar a que cargue el JavaScript. Embla mueve el carrusel de flyers de cada evento y los de charlas y lightning talks.',
         ],
         examples: [
           {

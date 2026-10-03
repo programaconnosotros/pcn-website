@@ -1418,3 +1418,52 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
     animation: none;
   }
 }
+
+/* Home: sections fade in as they scroll into view, driven by the scroll itself (no JS). Where
+   scroll-driven animations aren't supported, they're simply there. `content-visibility` skips
+   laying out and painting the long tail of sections until they get close to the viewport. */
+.reveal {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* Home hero: figures that count up from 0 in CSS alone. The number lives in a registered
+   integer property, interpolated by the animation and printed through a counter. */
+@property --count {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+.count-up {
+  --count: var(--count-to);
+  counter-reset: count var(--count);
+  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+.count-up::after {
+  content: counter(count);
+}
+@keyframes count-up {
+  from {
+    --count: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .count-up {
+    animation: none;
+  }
+}

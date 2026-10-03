@@ -1,17 +1,12 @@
-'use client';
-
-import { NumberTicker } from '@/components/magicui/number-ticker';
 import { Button } from '@/components/ui/button';
 import { HeroInstallButton } from '@/components/ui/install-app-button';
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import { ArrowRight, CalendarDays, LogIn, MessageCircle, UserPlus } from 'lucide-react';
-import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
-
-export const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/IFwKhHXoMwM6ysKcbfHiEh';
+import type { CSSProperties, ReactNode } from 'react';
+import { WHATSAPP_GROUP_URL } from '@/data/whatsapp-group';
 
 interface HomeHeroProps {
   userName: string | null;
@@ -29,11 +24,10 @@ const COMMUNITY_STATS = [
   { label: 'Años de comunidad', value: new Date().getFullYear() - FOUNDING_YEAR },
 ];
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 18 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
-});
+// The entrance is plain CSS, so it plays on first paint: the hero no longer waits for the
+// JavaScript to hydrate before it becomes visible (it's what the first visit paints first).
+const ENTER = 'animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both';
+const delay = (ms: number): CSSProperties => ({ animationDelay: `${ms}ms` });
 
 export const HomeHero = ({ userName, title }: HomeHeroProps) => {
   const firstName = userName?.split(' ')[0] ?? null;
@@ -48,6 +42,8 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
           fill
           priority
           sizes="100vw"
+          // Shown at 22% opacity under two gradients: compression artifacts never show, bytes do.
+          quality={40}
           className="object-cover object-center opacity-[0.22]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/85 to-background" />
@@ -59,13 +55,14 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
         {title}
         <div className="grid items-center gap-8 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
-            <motion.div {...fadeUp(0)} className="hidden md:block">
+            <div className={cn(ENTER, 'hidden md:block')}>
               <PromptLine user={firstName ? toShellName(firstName) : 'guest'} />
-            </motion.div>
+            </div>
 
-            <motion.h1
-              {...fadeUp(0.08)}
-              className="text-balance font-mono text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-4xl md:mt-4 lg:text-[2.6rem]"
+            {/* No fade on the heading: it's the largest text on screen, so it shows at once. */}
+            <h1
+              style={delay(80)}
+              className="text-balance font-mono text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground duration-700 ease-out animate-in slide-in-from-bottom-3 fill-mode-both sm:text-4xl md:mt-4 lg:text-[2.6rem]"
             >
               {firstName ? (
                 <>
@@ -80,9 +77,9 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                   <span className="cursor-blink text-glow text-pcnGreen">con nosotros.</span>
                 </>
               )}
-            </motion.h1>
+            </h1>
 
-            <motion.div {...fadeUp(0.16)} className="mt-5 max-w-xl">
+            <div style={delay(160)} className={cn(ENTER, 'mt-5 max-w-xl')}>
               <TerminalOutput
                 lines={
                   firstName
@@ -101,9 +98,9 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                       ]
                 }
               />
-            </motion.div>
+            </div>
 
-            <motion.div {...fadeUp(0.24)} className="mt-7 flex flex-wrap items-center gap-3">
+            <div style={delay(240)} className={cn(ENTER, 'mt-7 flex flex-wrap items-center gap-3')}>
               {firstName ? (
                 <>
                   <Button asChild size="lg">
@@ -144,31 +141,31 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                   </Link>
                 </>
               )}
-            </motion.div>
+            </div>
 
             {/* Install prompt or manual steps; renders nothing once the app is installed. */}
             <HeroInstallButton className="mt-5" />
 
             {!firstName && (
-              <motion.p
-                {...fadeUp(0.32)}
+              <p
+                style={delay(320)}
                 className={cn(
+                  ENTER,
                   GeistMono.className,
                   'mt-6 text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70',
                 )}
               >
                 Gratis · Sin spam · Desde {FOUNDING_YEAR}
-              </motion.p>
+              </p>
             )}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          <div
+            style={delay(200)}
+            className="duration-700 ease-out animate-in fade-in zoom-in-[0.98] slide-in-from-bottom-6 fill-mode-both"
           >
             <StatsPanel />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -222,6 +219,18 @@ const TerminalOutput = ({ lines }: { lines: OutputLine[] }) => (
   </ul>
 );
 
+/**
+ * Counts from 0 up to `value` in CSS alone (an animated, registered custom property shown
+ * through a CSS counter; see `.count-up` in globals.css), so the figure is in the server HTML
+ * and needs no JavaScript. Browsers without `@property` just show the final number.
+ */
+const CountUp = ({ value }: { value: number }) => (
+  <span className="tabular-nums tracking-tight">
+    <span aria-hidden className="count-up" style={{ '--count-to': value } as CSSProperties} />
+    <span className="sr-only">{value}</span>
+  </span>
+);
+
 const StatsPanel = () => {
   return (
     <div className="relative">
@@ -237,7 +246,7 @@ const StatsPanel = () => {
           {COMMUNITY_STATS.map((tile) => (
             <div key={tile.label} className="bg-black/90 p-4 md:p-5">
               <div className="text-glow flex items-baseline gap-0.5 font-mono text-3xl font-semibold tracking-tight text-pcnGreen md:text-4xl">
-                <NumberTicker value={tile.value} className="tabular-nums tracking-tight" />
+                <CountUp value={tile.value} />
                 <span className="text-pcnGreen-600">+</span>
               </div>
               <p

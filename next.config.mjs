@@ -26,6 +26,8 @@ const nextConfig = {
     return [{ source: '/sponsors', destination: '/partners', permanent: true }];
   },
   images: {
+    // 75 is the default; 40 is for the home hero backdrop, shown faded under gradients.
+    qualities: [40, 75],
     remotePatterns: [
       {
         hostname: 'avatars.githubusercontent.com',

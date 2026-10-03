@@ -1,5 +1,5 @@
-'use client';
-
+// A server component: the static sections render to HTML and ship no JavaScript of their own;
+// only the interactive leaves inside them (players, carousels, install button) hydrate.
 import { AchievementsSection } from '@/components/home/achievements-section';
 import { FaqSection } from '@/components/home/faq-section';
 import { FeatureBento } from '@/components/home/feature-bento';
@@ -11,24 +11,24 @@ import { RecommendedWatchSection } from '@/components/home/recommended-watch-sec
 import { Reveal } from '@/components/home/reveal';
 import { SocialLinks } from '@/components/home/social-links';
 import { PartnersMarquee } from '@/components/home/partners-marquee';
-import React from 'react';
+import type { ReactNode } from 'react';
 
-interface HomeClientSideProps {
+interface HomeSectionsProps {
   userName: string | null;
-  title: React.ReactNode;
-  testimonialsSection: React.ReactNode;
-  recentlyAddedEventsSection: React.ReactNode;
-  latestConversationsSection: React.ReactNode;
-  latestTalksSection: React.ReactNode;
-  latestPhotosSection: React.ReactNode;
-  latestChangesSection: React.ReactNode;
-  latestArticlesSection: React.ReactNode;
-  interviewsSection: React.ReactNode;
-  ambassadorsSection: React.ReactNode;
-  storyCardsSection: React.ReactNode;
+  title: ReactNode;
+  testimonialsSection: ReactNode;
+  recentlyAddedEventsSection: ReactNode;
+  latestConversationsSection: ReactNode;
+  latestTalksSection: ReactNode;
+  latestPhotosSection: ReactNode;
+  latestChangesSection: ReactNode;
+  latestArticlesSection: ReactNode;
+  interviewsSection: ReactNode;
+  ambassadorsSection: ReactNode;
+  storyCardsSection: ReactNode;
 }
 
-const HomeClientSide = ({
+const HomeSections = ({
   userName,
   title,
   testimonialsSection,
@@ -41,7 +41,7 @@ const HomeClientSide = ({
   interviewsSection,
   ambassadorsSection,
   storyCardsSection,
-}: HomeClientSideProps) => (
+}: HomeSectionsProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
     <HomeHero userName={userName} title={title} />
@@ -101,4 +101,4 @@ const HomeClientSide = ({
   </div>
 );
 
-export default HomeClientSide;
+export default HomeSections;

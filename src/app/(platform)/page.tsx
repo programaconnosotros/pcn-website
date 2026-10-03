@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
-import HomeClientSide from '@/app/(platform)/home-client-side';
+import HomeSections from '@/app/(platform)/home-sections';
 import { PageTitle } from '@/components/ui/page-title';
 import { fetchFeaturedTestimonials } from '@/actions/testimonials/fetch-featured-testimonials';
 import { RecentlyAddedEventsSection } from '@/components/home/recently-added-events-section';
@@ -16,7 +16,7 @@ import { InterviewsSection } from '@/components/home/interviews-section';
 import { HomeSectionSkeleton } from '@/components/home/home-section-skeleton';
 import { StoryCards } from '@/components/home/story-cards';
 import { TestimonialsSection } from '@/components/home/testimonials-section';
-import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
+import { WHATSAPP_GROUP_URL } from '@/data/whatsapp-group';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { listStoryCardPhotos } from '@/lib/gallery';
@@ -59,7 +59,7 @@ const Home = async () => {
   const session = sessionId ? await findSession(sessionId) : null;
 
   return (
-    <HomeClientSide
+    <HomeSections
       userName={session?.user?.name ?? null}
       title={
         <PageTitle
