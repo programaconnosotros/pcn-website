@@ -4,8 +4,8 @@ services:
     container_name: pcn-mailhog
     restart: always
     ports:
-      - '11025:1025' # SMTP
-      - '18025:8025' # Web UI
+      - '${MAILHOG_SMTP_PORT:-11025}:1025' # SMTP
+      - '${MAILHOG_UI_PORT:-18025}:8025' # Web UI
 
   database:
     image: postgres:13
