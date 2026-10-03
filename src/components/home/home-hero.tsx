@@ -2,6 +2,7 @@
 
 import { NumberTicker } from '@/components/magicui/number-ticker';
 import { Button } from '@/components/ui/button';
+import { HeroInstallButton } from '@/components/ui/install-app-button';
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import { ArrowRight, CalendarDays, LogIn, MessageCircle, UserPlus } from 'lucide-react';
@@ -144,6 +145,9 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                 </>
               )}
             </motion.div>
+
+            {/* Install prompt or manual steps; renders nothing once the app is installed. */}
+            <HeroInstallButton className="mt-5" />
 
             {!firstName && (
               <motion.p
