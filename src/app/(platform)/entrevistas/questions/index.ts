@@ -3,6 +3,7 @@ import { aiQuestions } from './ai';
 import { androidQuestions } from './android';
 import { cypressQuestions } from './cypress';
 import { dotnetQuestions } from './dotnet';
+import { figmaQuestions } from './figma';
 import { iosQuestions } from './ios';
 import { javaQuestions } from './java';
 import { k6Questions } from './k6';
@@ -15,8 +16,16 @@ import { qaQuestions } from './qa';
 import { qaAutomationQuestions } from './qa-automation';
 import { reactNativeQuestions } from './react-native';
 import { securityQuestions } from './security';
+import { uxUiQuestions } from './ux-ui';
 import { frontendQuestions } from './frontend';
-import type { InterviewQuestion, InterviewTrack, QaTool, Seniority } from './types';
+import {
+  TRACK_TOOLS,
+  type InterviewQuestion,
+  type InterviewTrack,
+  type QaTool,
+  type Seniority,
+  type TrackTool,
+} from './types';
 
 export * from './types';
 
@@ -33,6 +42,7 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   agentic: agenticQuestions,
   qa: qaQuestions,
   security: securityQuestions,
+  'ux-ui': uxUiQuestions,
   'product-engineering': productEngineeringQuestions,
   'project-manager': projectManagerQuestions,
 };
@@ -44,6 +54,11 @@ export const qaToolQuestions: Record<QaTool, Record<Seniority, InterviewQuestion
   k6: k6Questions,
 };
 
+// Tracks with tools (see TRACK_TOOLS) add one bank per selected tool to their general questions.
+export const trackToolQuestions: Record<TrackTool, Record<Seniority, InterviewQuestion[]>> = {
+  figma: figmaQuestions,
+};
+
 export interface QaOptions {
   automated: boolean;
   tools: QaTool[];
@@ -53,8 +68,12 @@ export const getInterviewQuestions = (
   track: InterviewTrack,
   seniority: Seniority,
   qa?: QaOptions,
+  tools: TrackTool[] = [],
 ): InterviewQuestion[] => {
   const questions = interviewQuestions[track][seniority];
+  if (TRACK_TOOLS[track]) {
+    return [...questions, ...tools.flatMap((tool) => trackToolQuestions[tool][seniority])];
+  }
   if (track !== 'qa' || !qa?.automated) return questions;
   return [
     ...questions,
@@ -70,5 +89,8 @@ export const trackQuestionCount = (track: InterviewTrack) =>
   countAll(
     track === 'qa'
       ? [qaQuestions, qaAutomationQuestions, ...Object.values(qaToolQuestions)]
-      : [interviewQuestions[track]],
+      : [
+          interviewQuestions[track],
+          ...(TRACK_TOOLS[track]?.tools.map(({ id }) => trackToolQuestions[id]) ?? []),
+        ],
   );

@@ -14,6 +14,7 @@ import { qaGuide } from './qa';
 import { reactGuide } from './react';
 import { reactNativeGuide } from './react-native';
 import { securityGuide } from './security';
+import { uxUiGuide } from './ux-ui';
 import { endpointCourses, type RecommendedCourse } from '@/data/recommended-courses';
 import type { InterviewGuide } from './types';
 
@@ -32,6 +33,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   agentic: agenticGuide,
   qa: qaGuide,
   security: securityGuide,
+  'ux-ui': uxUiGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,
 };

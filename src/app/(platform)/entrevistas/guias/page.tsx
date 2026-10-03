@@ -13,7 +13,7 @@ import { tabTitle } from '@/lib/tab-title';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 const DESCRIPTION =
-  'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
+  'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, diseño UX/UI, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
 
 export const metadata: Metadata = {
   title: tabTitle.ls('entrevistas/guias'),

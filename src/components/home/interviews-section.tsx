@@ -2,6 +2,7 @@ import {
   AREAS,
   QA_TOOLS,
   SENIORITIES,
+  TRACK_TOOLS,
   TRACKS,
   trackQuestionCount,
   type InterviewArea,
@@ -17,6 +18,7 @@ import {
   MonitorSmartphone,
   Server,
   ShieldCheck,
+  PenTool,
   SquareKanban,
   Target,
   Terminal,
@@ -33,6 +35,7 @@ const AREA_ICONS: Record<InterviewArea, LucideIcon> = {
   agentic: Workflow,
   qa: ShieldCheck,
   security: LockKeyhole,
+  'ux-ui': PenTool,
   'product-engineering': Target,
   'project-manager': SquareKanban,
 };
@@ -55,10 +58,15 @@ const guideHref = (area: InterviewArea) => {
   return tracks.length === 1 ? `/entrevistas/guias/${tracks[0].id}` : '/entrevistas/guias';
 };
 
-/** What to practice inside an area: its technologies (linked to each track) or QA's tools. */
+/** What to practice inside an area: its technologies (linked to each track) or its tools. */
 const areaChips = (area: InterviewArea) => {
   if (area === 'qa')
     return QA_TOOLS.map(({ id, label }) => ({ id, label, href: '/entrevistas?tipo=qa' }));
+  const tools = TRACKS.flatMap(
+    (track) => (track.area === area && TRACK_TOOLS[track.id]?.tools) || [],
+  );
+  if (tools.length)
+    return tools.map(({ id, label }) => ({ id, label, href: `/entrevistas?tipo=${id}` }));
   const technologies = TRACKS.filter((track) => track.area === area && track.technology);
   return technologies.map(({ id, technology }) => ({
     id,
@@ -181,7 +189,9 @@ export const InterviewsSection = () => (
         href="/entrevistas"
         className={cn(
           ruledCellClassName,
-          'group col-span-2 flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4 lg:col-span-1',
+          'group col-span-2 flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4',
+          // Fill the last row of the three-column grid, whatever the number of areas.
+          ['lg:col-span-3', 'lg:col-span-2', 'lg:col-span-1'][AREAS.length % 3],
         )}
       >
         <span className="text-[11px] text-muted-foreground">

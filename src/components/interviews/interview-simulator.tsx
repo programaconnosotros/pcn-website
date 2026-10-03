@@ -5,12 +5,14 @@ import {
   getInterviewQuestions,
   QA_TOOLS,
   SENIORITIES,
+  TRACK_TOOLS,
   TRACKS,
   type InterviewArea,
   type InterviewQuestion,
   type InterviewTrack,
   type QaTool,
   type Seniority,
+  type TrackTool,
 } from '@/app/(platform)/entrevistas/questions';
 import { GuideProgressPanel } from '@/components/interviews/guide-progress-panel';
 import { renderInlineCode } from '@/components/interviews/inline-code';
@@ -122,15 +124,25 @@ const TopicChips = ({ topics }: { topics: [string, number][] }) => (
   </div>
 );
 
-// Links from the home page and the guides preselect the area (`?tipo=backend`) or a track
-// (`?tipo=python`). Areas with a single track select it right away.
-const preselection = (tipo?: string) => {
+// Links from the home page and the guides preselect the area (`?tipo=backend`), a track
+// (`?tipo=python`) or a track's tool (`?tipo=figma`). Areas with a single track select it right away.
+const preselection = (
+  tipo?: string,
+): { area: InterviewArea | null; track: InterviewTrack | null; tools: TrackTool[] } => {
   const linkedTrack = TRACKS.find(({ id }) => id === tipo);
-  if (linkedTrack) return { area: linkedTrack.area, track: linkedTrack.id };
+  if (linkedTrack) return { area: linkedTrack.area, track: linkedTrack.id, tools: [] };
+  const toolTrack = TRACKS.find(({ id }) =>
+    TRACK_TOOLS[id]?.tools.some((tool) => tool.id === tipo),
+  );
+  if (toolTrack) return { area: toolTrack.area, track: toolTrack.id, tools: [tipo as TrackTool] };
   const linkedArea = AREAS.find(({ id }) => id === tipo)?.id;
-  if (!linkedArea) return { area: null, track: null };
+  if (!linkedArea) return { area: null, track: null, tools: [] };
   const areaTracks = TRACKS.filter((option) => option.area === linkedArea);
-  return { area: linkedArea, track: areaTracks.length === 1 ? areaTracks[0].id : null };
+  return {
+    area: linkedArea,
+    track: areaTracks.length === 1 ? areaTracks[0].id : null,
+    tools: [],
+  };
 };
 
 export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorProps) {
@@ -141,6 +153,8 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
   // Quality engineering only: whether the role includes automated testing and with which tools.
   const [qaAutomated, setQaAutomated] = useState<boolean | null>(null);
   const [qaTools, setQaTools] = useState<QaTool[]>([]);
+  // Tracks with tools (UX/UI, DevOps): which ones the role uses.
+  const [tools, setTools] = useState<TrackTool[]>(() => preselection(tipo).tools);
   const [deck, setDeck] = useState<InterviewQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -153,6 +167,7 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
     setArea(nextArea);
     // Areas with a single track select it right away; the rest ask for the technology next.
     setTrack(areaTracks.length === 1 ? areaTracks[0].id : null);
+    setTools([]);
   };
 
   const toggleQaTool = (tool: QaTool) =>
@@ -160,14 +175,27 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
       tools.includes(tool) ? tools.filter((t) => t !== tool) : [...tools, tool],
     );
 
+  const toggleTool = (tool: TrackTool) =>
+    setTools((selected) =>
+      selected.includes(tool) ? selected.filter((t) => t !== tool) : [...selected, tool],
+    );
+
+  const trackTools = track ? TRACK_TOOLS[track] : undefined;
+  // Keep the tools in display order regardless of the order they were clicked.
+  const selectedTools = trackTools?.tools.filter(({ id }) => tools.includes(id)) ?? [];
+  const toolsReady = !trackTools?.required || selectedTools.length > 0;
   const qaReady = qaAutomated === false || (qaAutomated === true && qaTools.length > 0);
   const interviewDeck =
-    track && seniority && (track !== 'qa' || qaReady)
-      ? getInterviewQuestions(track, seniority, {
-          automated: !!qaAutomated,
-          // Keep the tools in display order regardless of the order they were clicked.
-          tools: QA_TOOLS.map(({ id }) => id).filter((id) => qaTools.includes(id)),
-        })
+    track && seniority && (track !== 'qa' || qaReady) && toolsReady
+      ? getInterviewQuestions(
+          track,
+          seniority,
+          {
+            automated: !!qaAutomated,
+            tools: QA_TOOLS.map(({ id }) => id).filter((id) => qaTools.includes(id)),
+          },
+          selectedTools.map(({ id }) => id),
+        )
       : [];
 
   const start = (questions: InterviewQuestion[]) => {
@@ -214,10 +242,11 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
           .map(({ label }) => label)
           .join(' + ')
       : 'manual');
+  const toolsLabel = selectedTools.map(({ label }) => label).join(' + ');
   const interviewName =
     trackInfo &&
     seniorityInfo &&
-    [trackInfo.label, qaLabel, seniorityInfo.label].filter(Boolean).join(' · ');
+    [trackInfo.label, qaLabel, toolsLabel, seniorityInfo.label].filter(Boolean).join(' · ');
 
   const guidePanel = trackInfo ? (
     <GuideProgressPanel
@@ -242,12 +271,14 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
     const count = interviewDeck.length;
     const technologies = TRACKS.filter((option) => option.technology && option.area === area);
     const isQa = area === 'qa';
-    const extraSteps = (technologies.length ? 1 : 0) + (isQa ? (qaAutomated ? 2 : 1) : 0);
+    const extraSteps =
+      (technologies.length ? 1 : 0) + (isQa ? (qaAutomated ? 2 : 1) : 0) + (trackTools ? 1 : 0);
     const missing = [
       !area && 'el tipo',
       technologies.length > 0 && !track && 'la tecnología',
       isQa && qaAutomated === null && 'el tipo de testing',
       isQa && qaAutomated && !qaTools.length && 'al menos una herramienta',
+      trackTools?.required && !selectedTools.length && `al menos una de las ${trackTools.title}`,
       !seniority && 'la seniority',
     ].filter(Boolean) as string[];
     const pendingHint = `elegí ${
@@ -293,6 +324,39 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
                         selected={track === id}
                         onSelect={() => setTrack(id)}
                         label={technology!}
+                        hint={stack}
+                      />
+                    ))}
+                  </RuledGrid>
+                </>
+              )}
+
+              {trackTools && (
+                <>
+                  <h2 className="mb-2 font-mono text-xs text-pcnGreen-500">
+                    # {technologies.length ? 3 : 2}. {trackTools.title}{' '}
+                    <span className="text-muted-foreground">
+                      (
+                      {trackTools.required
+                        ? 'podés elegir más de una'
+                        : trackTools.tools.length > 1
+                          ? 'opcional, podés elegir más de una'
+                          : 'opcional, suma sus preguntas'}
+                      )
+                    </span>
+                  </h2>
+                  <RuledGrid
+                    className={cn(
+                      'mb-6 grid-cols-1',
+                      trackTools.tools.length > 1 && 'sm:grid-cols-2',
+                    )}
+                  >
+                    {trackTools.tools.map(({ id, label, stack }) => (
+                      <Option
+                        key={id}
+                        selected={tools.includes(id)}
+                        onSelect={() => toggleTool(id)}
+                        label={label}
                         hint={stack}
                       />
                     ))}
@@ -367,6 +431,12 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
                   <ConfigRow
                     label="testing"
                     value={qaAutomated === null ? null : qaAutomated ? qaLabel : 'manual'}
+                  />
+                )}
+                {trackTools && (
+                  <ConfigRow
+                    label={trackTools.title}
+                    value={toolsLabel || (trackTools.required ? null : 'ninguna')}
                   />
                 )}
                 <ConfigRow label="seniority" value={seniorityInfo?.label} />

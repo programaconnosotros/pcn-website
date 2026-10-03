@@ -5,6 +5,7 @@ export type InterviewArea =
   | 'agentic'
   | 'qa'
   | 'security'
+  | 'ux-ui'
   | 'product-engineering'
   | 'project-manager';
 export type InterviewTrack =
@@ -20,9 +21,12 @@ export type InterviewTrack =
   | 'agentic'
   | 'qa'
   | 'security'
+  | 'ux-ui'
   | 'product-engineering'
   | 'project-manager';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
+/** Tools a track can add on top of its general questions, one question bank each. */
+export type TrackTool = 'figma';
 export type Seniority = 'junior' | 'semi-senior' | 'senior';
 
 export interface InterviewQuestion {
@@ -38,6 +42,7 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
   { id: 'agentic', label: 'Agentic engineering', stack: 'desarrollar con agentes' },
   { id: 'qa', label: 'Quality engineering', stack: 'testing manual y automatizado' },
   { id: 'security', label: 'Seguridad informática', stack: 'AppSec, pentesting y defensa' },
+  { id: 'ux-ui', label: 'Diseño UX/UI', stack: 'research, interacción, visual y Figma' },
   {
     id: 'product-engineering',
     label: 'Product engineering',
@@ -130,6 +135,12 @@ export const TRACKS: {
     stack: 'AppSec, pentesting y defensa',
   },
   {
+    id: 'ux-ui',
+    area: 'ux-ui',
+    label: 'Diseño UX/UI',
+    stack: 'research, interacción, visual y Figma',
+  },
+  {
     id: 'product-engineering',
     area: 'product-engineering',
     label: 'Product engineering',
@@ -149,6 +160,32 @@ export const QA_TOOLS: { id: QaTool; label: string; stack: string }[] = [
   { id: 'playwright', label: 'Playwright', stack: 'E2E · API' },
   { id: 'k6', label: 'k6', stack: 'performance' },
 ];
+
+export interface TrackToolOption {
+  id: TrackTool;
+  label: string;
+  stack: string;
+}
+
+/**
+ * Tracks whose role can include specific tools: the general questions always enter and each
+ * selected tool adds its own bank. `required` asks for at least one tool before starting.
+ */
+export const TRACK_TOOLS: Partial<
+  Record<InterviewTrack, { title: string; required: boolean; tools: TrackToolOption[] }>
+> = {
+  'ux-ui': {
+    title: 'herramientas',
+    required: false,
+    tools: [
+      {
+        id: 'figma',
+        label: 'Figma',
+        stack: 'auto layout, componentes, variables, Dev Mode',
+      },
+    ],
+  },
+};
 
 export const SENIORITIES: { id: Seniority; label: string }[] = [
   { id: 'junior', label: 'Junior' },
