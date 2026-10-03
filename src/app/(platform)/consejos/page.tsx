@@ -1,10 +1,7 @@
-import { AdviseCard } from '@/components/advises/advise-card';
 import { AddAdvise } from '@/components/advises/add-advise';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
-import { PageTitle } from '@/components/ui/page-title';
-import { StickyHeader } from '@/components/ui/sticky-header';
-import { RuledGrid } from '@/components/ui/ruled-grid';
+import { ConsejosClient } from './consejos-client';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
@@ -58,36 +55,17 @@ const AdvicePage = async () => {
     ...extractedConsejos.map((consejo) => fromExtracted(consejo, profiles)),
   ]);
 
-  return (
-    <>
-      <div className="flex flex-1 flex-col p-4 pt-0">
-        <div className="mt-4">
-          <StickyHeader>
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <PageTitle
-                path="consejos"
-                meta={`${consejos.length} consejos de la comunidad`}
-                className="mb-0 flex-1"
-              />
-              {session && <AddAdvise />}
-            </div>
-          </StickyHeader>
+  // Consejo of the day: changes daily, the same for everyone that day.
+  const day = Math.floor(Date.now() / 86_400_000);
+  const fortuneId = consejos.length > 0 ? consejos[day % consejos.length].id : null;
 
-          {consejos.length === 0 ? (
-            <p className="border border-pcnGreen-200 p-4 font-mono text-xs text-muted-foreground">
-              <span className="text-pcnGreen-500">$ </span>
-              No hay consejos para ver aún.
-            </p>
-          ) : (
-            <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
-              {consejos.map((consejo) => (
-                <AdviseCard key={consejo.id} consejo={consejo} session={session} />
-              ))}
-            </RuledGrid>
-          )}
-        </div>
-      </div>
-    </>
+  return (
+    <ConsejosClient
+      consejos={consejos}
+      session={session}
+      fortuneId={fortuneId}
+      addButton={session && <AddAdvise />}
+    />
   );
 };
 

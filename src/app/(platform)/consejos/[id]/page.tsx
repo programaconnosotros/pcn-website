@@ -1,5 +1,6 @@
-import { AdviseCard } from '@/components/advises/advise-card';
-import { CommentSection } from '@/components/advises/comment-section';
+import { ConsejoPanel } from '@/components/advises/consejo-panel';
+import { consejoHash } from '@/components/advises/consejo-utils';
+import Link from 'next/link';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
@@ -57,38 +58,49 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
   ]);
 
   if (!detail) {
-    return <div>Consejo no encontrado</div>;
+    return (
+      <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="mt-4">
+          <PageTitle path="consejos/404" />
+          <p className="border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+            <span className="text-pcnGreen-500">$ cat consejo.txt: </span>no existe ese consejo.{' '}
+            <Link href="/consejos" className="text-pcnGreen-600 hover:text-pcnGreen">
+              cd ~/consejos →
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const { consejo, comments } = detail;
 
+  // Reached directly (shared link, reload): the same terminal reader as the modal, on its page.
   return (
-    <>
-      <div className="flex flex-1 flex-col p-4 pt-0">
-        <div className="mt-4">
-          <StickyHeader>
-            <PageTitle
-              path={`consejos/${consejo.id.slice(0, 8)}`}
-              meta={
-                consejo.source
-                  ? 'auto-extraído de una conversación'
-                  : `${comments.length} ${comments.length === 1 ? 'comentario' : 'comentarios'}`
-              }
-            />
-          </StickyHeader>
-          <div className="mb-14 border-l border-t border-pcnGreen-200">
-            <AdviseCard
-              consejo={consejo}
-              session={session}
-              clamped={false}
-              className="hover:bg-transparent"
-            />
-            {!consejo.source && (
-              <CommentSection adviseId={consejo.id} comments={comments} session={session} />
-            )}
-          </div>
-        </div>
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        <StickyHeader>
+          <PageTitle
+            path={`consejos/${consejoHash(consejo.id)}`}
+            meta={
+              consejo.source
+                ? 'auto-extraído de una conversación'
+                : `${comments.length} ${comments.length === 1 ? 'comentario' : 'comentarios'}`
+            }
+            action={
+              <Link
+                href="/consejos"
+                className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                cd .. ← todos los consejos
+              </Link>
+            }
+          />
+        </StickyHeader>
+        <article className="mx-auto mb-14 w-full max-w-3xl border border-pcnGreen-200 bg-black/40 shadow-[0_0_40px_-20px_rgba(4,244,190,0.5)]">
+          <ConsejoPanel consejo={consejo} comments={comments} session={session} variant="page" />
+        </article>
       </div>
-    </>
+    </div>
   );
 }
