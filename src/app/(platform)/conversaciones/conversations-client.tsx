@@ -80,7 +80,7 @@ function Flag({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'flex h-9 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-xs transition-all',
+        'flex h-8 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-[11px] transition-all',
         active
           ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]'
           : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',

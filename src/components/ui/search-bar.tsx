@@ -48,7 +48,7 @@ export function SearchBar({
   return (
     <label
       className={cn(
-        'flex h-9 w-full max-w-md cursor-text items-center gap-2 rounded-sm border border-pcnGreen-200 bg-black/40 px-3 font-mono text-sm transition-all focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]',
+        'flex h-8 w-full max-w-md cursor-text items-center gap-2 rounded-sm border border-pcnGreen-200 bg-black/40 px-2.5 font-mono text-xs transition-all focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_18px_-6px_rgba(4,244,190,0.6)]',
         className,
       )}
     >
@@ -76,7 +76,7 @@ export function SearchBar({
           }}
           className="shrink-0 text-muted-foreground transition-colors hover:text-pcnGreen"
         >
-          <X className="size-4" />
+          <X className="size-3.5" />
           <span className="sr-only">Limpiar búsqueda</span>
         </button>
       ) : (
