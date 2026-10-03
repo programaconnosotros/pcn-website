@@ -274,6 +274,7 @@ const tocSections: TocSection[] = [
     title: view.title,
     group: 'diagramas',
   })),
+  section('diseno', 'Diseño UX/UI'),
   section('tecnologias', 'Tecnologías'),
   section('contribuir', 'Cómo contribuir'),
   section('base-de-datos', 'Base de datos'),
@@ -361,6 +362,21 @@ const DesarrolloPage = () => (
                   </div>
                 ))}
               </div>
+            </Section>
+
+            <Section id="diseno" title="Diseño UX/UI y design system">
+              <p className="mb-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                El sitio está hecho para gente súper nerd, apasionada por el software: estética de
+                terminal, densidad antes que aire, un solo acento verde y el teclado como ciudadano
+                de primera. Contamos cómo llegamos a esta estética, los principios que seguimos, los
+                tokens y cada componente renderizado en vivo con todos sus estados.
+              </p>
+              <Link
+                href="/desarrollo/diseno"
+                className="font-mono text-sm text-pcnGreen underline-offset-4 hover:underline"
+              >
+                ~/desarrollo/diseno →
+              </Link>
             </Section>
 
             <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-pcnGreen-200">

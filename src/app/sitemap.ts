@@ -18,6 +18,7 @@ const STATIC_ROUTES = [
   '/podcast',
   '/desarrollo',
   '/desarrollo/calidad',
+  '/desarrollo/diseno',
   '/cursos',
   '/lectura',
   '/videos',
