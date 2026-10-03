@@ -1,58 +1,58 @@
 {
-  "updatedAt": "2026-10-02T03:17:52.988Z",
+  "updatedAt": "2026-10-03T22:05:28.143Z",
   "stars": 21,
-  "forks": 8,
-  "commits": 1661,
-  "contributors": 14,
-  "mergedPrs": 97,
-  "openPrs": 9,
-  "medianHoursToMerge": 1.2686111111111111,
+  "forks": 9,
+  "commits": 1812,
+  "contributors": 16,
+  "mergedPrs": 100,
+  "openPrs": 4,
+  "medianHoursToMerge": 1.6452777777777778,
   "createdAt": "2024-06-21T03:44:11Z",
-  "pushedAt": "2026-10-02T01:52:09Z",
+  "pushedAt": "2026-10-03T20:41:28Z",
   "weeklyCommits": [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 208, 215, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 51, 47, 41,
-    13, 0, 0, 15, 0, 66, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 290
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 226, 197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 39,
+    13, 0, 12, 3, 0, 67, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 422
   ],
   "languages": [
     {
       "name": "TypeScript",
-      "percent": 97.7414454721534
-    },
-    {
-      "name": "CSS",
-      "percent": 1.204251380614654
+      "percent": 98.18160146133413
     },
     {
       "name": "JavaScript",
-      "percent": 0.536396837605137
+      "percent": 0.7597299750776945
+    },
+    {
+      "name": "CSS",
+      "percent": 0.7541836175118878
     },
     {
       "name": "Shell",
-      "percent": 0.37728910335004456
+      "percent": 0.2218139654863278
     },
     {
       "name": "Ruby",
-      "percent": 0.12216098354514537
+      "percent": 0.07182028833395283
     },
     {
       "name": "Dockerfile",
-      "percent": 0.011114899935025863
+      "percent": 0.006534617641168414
     },
     {
       "name": "Makefile",
-      "percent": 0.007341322796591157
+      "percent": 0.004316074614845804
     }
   ],
-  "linesOfCode": 100098,
+  "linesOfCode": 141466,
   "topContributors": [
     {
       "login": "agustin-sanc",
       "avatarUrl": "https://avatars.githubusercontent.com/u/55034666?v=4",
       "htmlUrl": "https://github.com/agustin-sanc",
-      "commits": 1612,
+      "commits": 1760,
       "mergedPrs": 49,
-      "linesAdded": 196665,
-      "linesDeleted": 102023,
+      "linesAdded": 234855,
+      "linesDeleted": 107533,
       "firstContributionWeek": "2024-06-16T00:00:00.000Z"
     },
     {
@@ -89,10 +89,10 @@
       "login": "nicofuentesg",
       "avatarUrl": "https://avatars.githubusercontent.com/u/75289303?v=4",
       "htmlUrl": "https://github.com/nicofuentesg",
-      "commits": 5,
-      "mergedPrs": 5,
-      "linesAdded": 2911,
-      "linesDeleted": 2100,
+      "commits": 6,
+      "mergedPrs": 6,
+      "linesAdded": 4548,
+      "linesDeleted": 2115,
       "firstContributionWeek": "2025-04-06T00:00:00.000Z"
     },
     {
@@ -156,6 +156,16 @@
       "firstContributionWeek": "2026-09-27T00:00:00.000Z"
     },
     {
+      "login": "FedericoV21",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/138173670?v=4",
+      "htmlUrl": "https://github.com/FedericoV21",
+      "commits": 1,
+      "mergedPrs": 1,
+      "linesAdded": 1541,
+      "linesDeleted": 299,
+      "firstContributionWeek": "2026-09-27T00:00:00.000Z"
+    },
+    {
       "login": "Chelo154",
       "avatarUrl": "https://avatars.githubusercontent.com/u/43920099?v=4",
       "htmlUrl": "https://github.com/Chelo154",
@@ -174,6 +184,16 @@
       "linesAdded": 124,
       "linesDeleted": 10,
       "firstContributionWeek": "2026-09-06T00:00:00.000Z"
+    },
+    {
+      "login": "shadownrx",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/101913799?v=4",
+      "htmlUrl": "https://github.com/shadownrx",
+      "commits": 1,
+      "mergedPrs": 1,
+      "linesAdded": 701,
+      "linesDeleted": 10,
+      "firstContributionWeek": "2026-09-27T00:00:00.000Z"
     },
     {
       "login": "emilianogsh",
