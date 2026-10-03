@@ -2,6 +2,7 @@
 
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
 import { Button } from '@/components/ui/button';
@@ -126,7 +127,8 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
                   className="flex items-center gap-1.5 font-mono"
                 >
                   <ListChecks className="h-4 w-4" />
-                  {isSelecting ? 'listo' : 'seleccionar'}
+                  {/* Icon only on phones, so the actions fit next to the meta. */}
+                  <span className="max-sm:sr-only">{isSelecting ? 'listo' : 'seleccionar'}</span>
                 </Button>
               )}
               {canUpload && (
@@ -141,15 +143,22 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
           }
         />
 
-        <div className="mb-4 flex flex-col gap-2">
-          <GalleryFilters filter={filter} options={options} />
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <CollapsibleFilters
+          className="mb-4"
+          // Type, event and person stay on their own row above the search on wide screens.
+          panelClassName="md:order-first md:basis-full"
+          activeCount={
+            Number(filter.type !== 'todo') + Number(!!filter.eventId) + Number(!!filter.userId)
+          }
+          search={
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               placeholder="descripción, evento, persona o fecha"
               label="Buscar en la galería"
             />
+          }
+          aside={
             <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
               {searchQuery.trim() ? (
                 <>
@@ -162,8 +171,10 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
                 </>
               )}
             </p>
-          </div>
-        </div>
+          }
+        >
+          <GalleryFilters filter={filter} options={options} />
+        </CollapsibleFilters>
       </StickyHeader>
 
       {items.length === 0 ? (
