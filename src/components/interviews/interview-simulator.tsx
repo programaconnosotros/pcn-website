@@ -96,6 +96,8 @@ const Option = ({ selected, onSelect, label, hint }: OptionProps) => (
 interface InterviewSimulatorProps {
   /** Section ids of each track's preparation guide, to show how much of it was read. */
   guideSections: Record<InterviewTrack, string[]>;
+  /** The `?tipo=` the page was opened with, read on the server. */
+  tipo?: string;
 }
 
 const ConfigRow = ({ label, value }: { label: string; value?: string | false | null }) => (
@@ -120,10 +122,21 @@ const TopicChips = ({ topics }: { topics: [string, number][] }) => (
   </div>
 );
 
-export function InterviewSimulator({ guideSections }: InterviewSimulatorProps) {
+// Links from the home page and the guides preselect the area (`?tipo=backend`) or a track
+// (`?tipo=python`). Areas with a single track select it right away.
+const preselection = (tipo?: string) => {
+  const linkedTrack = TRACKS.find(({ id }) => id === tipo);
+  if (linkedTrack) return { area: linkedTrack.area, track: linkedTrack.id };
+  const linkedArea = AREAS.find(({ id }) => id === tipo)?.id;
+  if (!linkedArea) return { area: null, track: null };
+  const areaTracks = TRACKS.filter((option) => option.area === linkedArea);
+  return { area: linkedArea, track: areaTracks.length === 1 ? areaTracks[0].id : null };
+};
+
+export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorProps) {
   const [phase, setPhase] = useState<Phase>('setup');
-  const [area, setArea] = useState<InterviewArea | null>(null);
-  const [track, setTrack] = useState<InterviewTrack | null>(null);
+  const [area, setArea] = useState<InterviewArea | null>(() => preselection(tipo).area);
+  const [track, setTrack] = useState<InterviewTrack | null>(() => preselection(tipo).track);
   const [seniority, setSeniority] = useState<Seniority | null>(null);
   // Quality engineering only: whether the role includes automated testing and with which tools.
   const [qaAutomated, setQaAutomated] = useState<boolean | null>(null);
@@ -141,18 +154,6 @@ export function InterviewSimulator({ guideSections }: InterviewSimulatorProps) {
     // Areas with a single track select it right away; the rest ask for the technology next.
     setTrack(areaTracks.length === 1 ? areaTracks[0].id : null);
   };
-
-  // Links from the home page preselect the area (`?tipo=backend`) or a track (`?tipo=python`).
-  useEffect(() => {
-    const tipo = new URLSearchParams(window.location.search).get('tipo');
-    const linkedTrack = TRACKS.find(({ id }) => id === tipo);
-    if (linkedTrack) {
-      setArea(linkedTrack.area);
-      setTrack(linkedTrack.id);
-    } else if (AREAS.some(({ id }) => id === tipo)) {
-      selectArea(tipo as InterviewArea);
-    }
-  }, []);
 
   const toggleQaTool = (tool: QaTool) =>
     setQaTools((tools) =>

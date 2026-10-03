@@ -33,12 +33,18 @@ const guideSections = Object.fromEntries(
   ]),
 ) as Record<InterviewTrack, string[]>;
 
-const EntrevistasPage = () => (
-  <div className="flex flex-1 flex-col p-4 pt-0">
-    <div className="mt-4">
-      <InterviewSimulator guideSections={guideSections} />
+const EntrevistasPage = async (props: { searchParams: Promise<{ tipo?: string | string[] }> }) => {
+  const { tipo } = await props.searchParams;
+  const linked = typeof tipo === 'string' ? tipo : undefined;
+
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mt-4">
+        {/* Keyed by `tipo` so following another `?tipo=` link starts over with that selection. */}
+        <InterviewSimulator key={linked} guideSections={guideSections} tipo={linked} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default EntrevistasPage;
