@@ -187,8 +187,7 @@ async function main() {
             city: 'San Miguel de Tucumán',
             address: 'Bernardino Rivadavia 1050',
             placeName: 'UTN-FRT',
-            latitude: -26.844408,
-            longitude: -65.22264,
+            googleMapsUrl: 'https://www.google.com/maps?q=-26.844408,-65.22264',
             galleryItems: {
               create: includePhotos
                 ? Array.from({ length: 3 }).map(() => ({

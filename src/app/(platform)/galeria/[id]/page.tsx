@@ -19,6 +19,7 @@ import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { optimizedOgImage } from '@/lib/og-image';
 import { getGalleryItem, getGalleryNeighbours } from '@/lib/gallery';
 import { formatDuration, galleryQuery, parseGalleryFilter } from '@/lib/gallery-filters';
+import { googleMapsSearchUrl } from '@/lib/google-maps';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -114,13 +115,12 @@ export default async function GalleryItemPage(props: Props) {
     : '';
   const mapsHref =
     event && !event.isOnline
-      ? event.latitude !== null && event.longitude !== null
-        ? `https://www.google.com/maps?q=${event.latitude},${event.longitude}`
-        : event.address || event.placeName
-          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      ? event.googleMapsUrl ||
+        (event.address || event.placeName
+          ? googleMapsSearchUrl(
               [event.placeName, event.address, event.city].filter(Boolean).join(', '),
-            )}`
-          : null
+            )
+          : null)
       : null;
 
   return (

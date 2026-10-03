@@ -63,8 +63,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
         ...eventData,
         date: date,
         endDate: endDate,
-        latitude: validatedData.latitude ?? null,
-        longitude: validatedData.longitude ?? null,
+        googleMapsUrl: validatedData.googleMapsUrl ?? null,
         capacity: validatedData.capacity ?? null,
         sponsors: {
           create:

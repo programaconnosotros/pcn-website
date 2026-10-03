@@ -401,13 +401,8 @@ export const dbModels: DbModel[] = [
         list: true,
       },
       {
-        name: 'latitude',
-        type: 'Float',
-        optional: true,
-      },
-      {
-        name: 'longitude',
-        type: 'Float',
+        name: 'googleMapsUrl',
+        type: 'String',
         optional: true,
       },
       {

@@ -249,6 +249,19 @@ export async function PastEventMemory({
                     ? 'online'
                     : [event.placeName, event.address, event.city].filter(Boolean).join(' · ') ||
                       '—'}
+                  {!event.isOnline && event.googleMapsUrl && (
+                    <>
+                      {' '}
+                      <a
+                        href={event.googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-pcnGreen hover:underline"
+                      >
+                        abrir en Google Maps
+                      </a>
+                    </>
+                  )}
                 </dd>
               </dl>
             </EventSection>

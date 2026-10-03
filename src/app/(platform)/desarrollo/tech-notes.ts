@@ -1992,7 +1992,7 @@ export const signGalleryItem = <T extends { src: string; thumbSrc: string }>(ite
           },
         ],
         usage: [
-          'El modelo `Event` cubre todas las variantes: presencial (con `placeName`, `address`, `city` y coordenadas opcionales para un mapa de Google embebido) u online (`isOnline` + `streamingUrl`); de un día o de varios (`endDate`); con cupo (`capacity`) o sin límite; con inscripción propia o externa (`externalRegistrationUrl`, por ejemplo Luma); con convocatoria de charlas (`callForSpeakersEnabled`); con un "cupo completo" manual (`markedAsFull`); con uno o varios flyers (`flyerImages`, un carrusel que se ordena al subirlo) y sponsors. El schema de Zod pide lugar, ciudad y dirección solo si el evento no es online.',
+          'El modelo `Event` cubre todas las variantes: presencial (con `placeName`, `address`, `city`, y un link de Google Maps opcional, `googleMapsUrl`, del que salen el mapa embebido y el link "abrir en Google Maps") u online (`isOnline` + `streamingUrl`); de un día o de varios (`endDate`); con cupo (`capacity`) o sin límite; con inscripción propia o externa (`externalRegistrationUrl`, por ejemplo Luma); con convocatoria de charlas (`callForSpeakersEnabled`); con un "cupo completo" manual (`markedAsFull`); con uno o varios flyers (`flyerImages`, un carrusel que se ordena al subirlo) y sponsors. El schema de Zod pide lugar, ciudad y dirección solo si el evento no es online.',
           'Hay tres niveles de permisos: los admins pueden todo; los ambassadors (`isAmbassador`) crean eventos y editan o eliminan los que crearon; y cualquier usuario cargado como organizador puede editar el evento y gestionar sus inscripciones, charlas y propuestas. Quien crea un evento queda como organizador automáticamente, y elegir organizadores (con un buscador de miembros) queda para quien lo creó. Los eventos organizados aparecen en el perfil de cada persona.',
           'Convocatoria de charlas: si está activa, el evento muestra "proponer →" y cualquiera con sesión manda una propuesta con título, descripción y uno o más speakers (precompletado con su perfil). Quienes gestionan el evento la aceptan o rechazan (`PENDING`, `ACCEPTED`, `REJECTED`) y con un clic la convierten en una `Talk`, que también aparece en `/charlas`. Las nuevas propuestas e inscripciones generan notificaciones in-app para los admins.',
           'Mientras el evento no terminó, la página ofrece "agregar a Google Calendar" (un link de plantilla con fechas en UTC y zona horaria de Buenos Aires; si no hay hora de fin asume una hora y lo avisa) y "descargar .ics", generado por un route handler. Las fechas se muestran en la zona horaria de quien visita, en formato 24 h.',
@@ -2013,8 +2013,7 @@ export const signGalleryItem = <T extends { src: string; thumbSrc: string }>(ite
   address                 String? // Dirección específica (calle, número, etc.)
   placeName               String? // Nombre del lugar (bar, universidad, etc.)
   flyerImages             String[]  @default([])
-  latitude                Float?
-  longitude               Float?
+  googleMapsUrl           String? // Link de Google Maps del lugar; de ahí salen el mapa y los links
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)

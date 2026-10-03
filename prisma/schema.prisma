@@ -161,8 +161,7 @@ model Event {
   address                 String? // Dirección específica (calle, número, etc.)
   placeName               String? // Nombre del lugar (bar, universidad, etc.)
   flyerImages             String[]  @default([])
-  latitude                Float?
-  longitude               Float?
+  googleMapsUrl           String? // Link de Google Maps del lugar; de ahí salen el mapa y los links
   capacity                Int? // Cupo máximo del evento (opcional)
   externalRegistrationUrl String? // URL externa de inscripción (ej: Luma)
   markedAsFull            Boolean   @default(false)

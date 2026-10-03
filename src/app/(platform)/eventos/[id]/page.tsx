@@ -1,7 +1,7 @@
 import { cache, Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic } from 'lucide-react';
+import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic, MapPin } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
@@ -19,6 +19,7 @@ import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
 import { signGallerySrc, signGalleryItem } from '@/lib/gallery-signing';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
+import { googleMapsEmbedUrl } from '@/lib/google-maps';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
 import { findSession } from '@/lib/session';
@@ -124,6 +125,15 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   const hasEventPassed = new Date(eventEndDate) < now;
 
   const isExternalEvent = !!event.externalRegistrationUrl;
+
+  // El mapa sale del link de Google Maps; si es un link corto, se busca la dirección.
+  const mapEmbedUrl =
+    !event.isOnline && event.googleMapsUrl
+      ? googleMapsEmbedUrl(
+          event.googleMapsUrl,
+          [event.placeName, event.address, event.city].filter(Boolean).join(', '),
+        )
+      : null;
 
   // Todo lo que sigue depende solo del evento y la sesión: se pide en paralelo.
   const [registration, currentRegistrations, waitlistCount, registrations, eventAnnouncements] =
@@ -312,6 +322,20 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                         {[event.placeName, event.address, event.city && `${event.city}, Argentina`]
                           .filter(Boolean)
                           .join(' · ')}
+                        {event.googleMapsUrl && (
+                          <>
+                            {' '}
+                            <a
+                              href={event.googleMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-pcnGreen hover:underline"
+                            >
+                              <MapPin className="h-3 w-3" />
+                              abrir en Google Maps
+                            </a>
+                          </>
+                        )}
                       </dd>
                     </>
                   )
@@ -455,10 +479,10 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             )}
 
             {/* Mapa */}
-            {!event.isOnline && event.latitude && event.longitude && (
+            {mapEmbedUrl && (
               <div className="relative h-56 w-full overflow-hidden">
                 <iframe
-                  src={`https://www.google.com/maps?q=${Number(event.latitude).toFixed(6)},${Number(event.longitude).toFixed(6)}&z=15&output=embed`}
+                  src={mapEmbedUrl}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
