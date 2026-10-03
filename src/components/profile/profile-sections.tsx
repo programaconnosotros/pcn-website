@@ -205,8 +205,15 @@ export type ProfilePhoto = {
 };
 
 // Square thumbnails of the photos and videos the person was tagged in, each opening its page.
-export const PhotoGrid = ({ photos }: { photos: ProfilePhoto[] }) => (
-  <RuledGrid className="grid-cols-3 sm:grid-cols-4 xl:grid-cols-6">
+// `className` overrides the column count (e.g. the overview preview uses fewer, larger columns).
+export const PhotoGrid = ({
+  photos,
+  className,
+}: {
+  photos: ProfilePhoto[];
+  className?: string;
+}) => (
+  <RuledGrid className={cn('grid-cols-3 sm:grid-cols-4 xl:grid-cols-6', className)}>
     {photos.map((photo) => (
       <Link
         key={photo.id}

@@ -23,7 +23,7 @@ import { findSession } from '@/lib/session';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: 'Monitoreo',
+  title: 'sudo htop',
   robots: { index: false, follow: false },
 };
 
@@ -82,13 +82,13 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
-    redirect('/home');
+    redirect('/');
   }
 
   const session = await findSession(sessionId);
 
   if (!session || session.user.role !== 'ADMIN') {
-    redirect('/home');
+    redirect('/');
   }
 
   const params = await searchParams;

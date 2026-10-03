@@ -12,6 +12,7 @@ import { RelatedArticles } from '@/components/courses/related-articles';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import { rankRelated } from '@/lib/related';
 import type { Metadata } from 'next';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -23,7 +24,7 @@ export async function generateMetadata(props: {
 
   if (!course) {
     return {
-      title: 'Curso no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El curso que buscas no existe.',
     };
   }
@@ -35,7 +36,7 @@ export async function generateMetadata(props: {
       : course.description;
 
   return {
-    title,
+    title: tabTitle.cat('cursos', course.name),
     description,
     openGraph: {
       title: `${title} | programaConNosotros`,

@@ -18,6 +18,7 @@ import {
 } from '@/lib/badges';
 import prisma from '@/lib/prisma';
 import { cn } from '@/lib/utils';
+import { tabTitle } from '@/lib/tab-title';
 
 export const revalidate = 0;
 
@@ -27,7 +28,7 @@ const description =
   'Los logros de programaConNosotros: badges que se ganan participando en la comunidad, cuánto te falta para cada uno y quiénes ya los consiguieron.';
 
 export const metadata: Metadata = {
-  title: 'Logros',
+  title: tabTitle.ls('logros'),
   description,
   openGraph: {
     title: 'Logros | programaConNosotros',

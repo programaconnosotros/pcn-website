@@ -1,3 +1,5 @@
+import { MODE_ATTR } from './os-display-mode-script';
+
 /** Screens at least this wide render the site as PCN OS (a desktop with windows and a dock). */
 export const OS_MEDIA_QUERY = '(min-width: 1024px)';
 
@@ -50,9 +52,13 @@ export const notifyOsSessionChange = () => {
  */
 const OWN_WINDOW_PATHS = [/^\/perfil\/[^/]+$/, /^\/eventos\/(?!nuevo$)[^/]+$/];
 
+/** Create/edit event forms: every link on them navigates the same window, like leaving a form. */
+const SAME_WINDOW_FROM_PATHS = [/^\/eventos\/nuevo$/, /^\/eventos\/[^/]+\/editar$/];
+
 export const opensInOwnWindow = (pathname: string, fromPathname: string) =>
   OWN_WINDOW_PATHS.some((pattern) => pattern.test(pathname)) &&
-  !(fromPathname === '/eventos' && pathname.startsWith('/eventos/'));
+  !(fromPathname === '/eventos' && pathname.startsWith('/eventos/')) &&
+  !SAME_WINDOW_FROM_PATHS.some((pattern) => pattern.test(fromPathname));
 
 /**
  * Inline script for the root layout `<head>`. It runs before paint and marks the document as
@@ -64,9 +70,15 @@ export const EMBED_DETECTION_SCRIPT = `(function(){var d=document.documentElemen
 export const isEmbedded = () =>
   typeof document !== 'undefined' && document.documentElement.hasAttribute('data-embedded');
 
-/** True when this document is the PCN OS desktop host (large screen and not inside a window). */
+/**
+ * True when this document is the PCN OS desktop host: a large screen, not inside a window, and
+ * not switched to the classic layout (see os-display-mode.ts).
+ */
 export const isOsHost = () =>
-  typeof window !== 'undefined' && !isEmbedded() && window.matchMedia(OS_MEDIA_QUERY).matches;
+  typeof window !== 'undefined' &&
+  !isEmbedded() &&
+  document.documentElement.getAttribute(MODE_ATTR) !== 'classic' &&
+  window.matchMedia(OS_MEDIA_QUERY).matches;
 
 export const isOsMessage = (data: unknown): data is OsMessage =>
   typeof data === 'object' &&

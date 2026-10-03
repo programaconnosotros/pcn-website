@@ -26,11 +26,12 @@ interface InfluencersData {
 }
 
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Creadores de contenido recomendados',
+  title: tabTitle.ls('influencers'),
   description:
     'Una lista curada de creadores de contenido sobre ingeniería de software que la comunidad recomienda seguir.',
   openGraph: {

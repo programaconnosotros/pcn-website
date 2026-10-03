@@ -12,6 +12,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -21,6 +23,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { MusicPlayer } from '@/components/music/use-music-player';
 import { openGlobalSearch, useSearchShortcutLabel } from '@/components/search/global-search';
+import { setDisplayMode, useDisplayMode, type OsDisplayMode } from './os-display-mode';
 import { OsMusicControl } from './os-music-control';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
@@ -35,14 +38,20 @@ interface OsMenuBarProps {
   user: OsUser | null;
   focusedProgram: OsProgram | null;
   musicPlayer: MusicPlayer;
-  onOpenProgram: (program: OsProgram) => void;
-  onOpenPath: (path: string) => void;
+  onOpenProgram: (_program: OsProgram) => void;
+  onOpenPath: (_path: string) => void;
   onOpenLauncher: () => void;
 }
 
 const menuContentClassName = 'z-[7000] min-w-52';
 const menuTriggerClassName =
   'rounded-sm px-2 py-0.5 outline-none transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen data-[state=open]:bg-pcnGreen data-[state=open]:text-black';
+
+const DISPLAY_MODE_OPTIONS: { mode: OsDisplayMode; label: string; hint: string }[] = [
+  { mode: 'full', label: 'Completo', hint: 'todos los efectos' },
+  { mode: 'lite', label: 'Liviano', hint: 'para compus con pocos recursos' },
+  { mode: 'classic', label: 'Clásico', hint: 'sin escritorio, lo más rápido' },
+];
 
 const programById = (id: string) => OS_PROGRAMS.find((program) => program.id === id)!;
 
@@ -88,6 +97,7 @@ export function OsMenuBar({
   onOpenLauncher,
 }: OsMenuBarProps) {
   const shortcutLabel = useSearchShortcutLabel();
+  const displayMode = useDisplayMode();
 
   return (
     <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
@@ -119,6 +129,24 @@ export function OsMenuBar({
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={onOpenLauncher}>Todos los programas</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => openGlobalSearch()}>Buscar…</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Modo de PCN OS</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className={menuContentClassName}>
+              <DropdownMenuRadioGroup
+                value={displayMode}
+                onValueChange={(value) => setDisplayMode(value as OsDisplayMode)}
+              >
+                {DISPLAY_MODE_OPTIONS.map((option) => (
+                  <DropdownMenuRadioItem key={option.mode} value={option.mode}>
+                    <span className="flex flex-col">
+                      <span>{option.label}</span>
+                      <span className="text-[10px] text-muted-foreground">{option.hint}</span>
+                    </span>
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Redes</DropdownMenuSubTrigger>

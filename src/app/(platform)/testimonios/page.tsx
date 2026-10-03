@@ -3,11 +3,12 @@ import { fetchTestimonials } from '@/actions/testimonials/fetch-testimonials';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Testimonios',
+  title: tabTitle.ls('testimonios'),
   description:
     'Historias reales de miembros que crecieron junto a la comunidad. Descubrí cómo programaConNosotros impactó en su carrera profesional.',
   openGraph: {
@@ -28,19 +29,14 @@ export const metadata: Metadata = {
 
 const TestimoniosPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  let currentUserId: string | undefined = undefined;
-  let isAdmin = false;
 
-  if (sessionId) {
-    const session = await findSession(sessionId);
-
-    if (session) {
-      currentUserId = session.userId;
-      isAdmin = session.user.role === 'ADMIN';
-    }
-  }
-
-  const testimonials = await fetchTestimonials();
+  // La sesión y los testimonios no dependen entre sí: se piden a la vez.
+  const [session, testimonials] = await Promise.all([
+    sessionId ? findSession(sessionId) : null,
+    fetchTestimonials(),
+  ]);
+  const currentUserId: string | undefined = session?.userId;
+  const isAdmin = session?.user.role === 'ADMIN';
 
   // Verificar si el usuario actual ya tiene un testimonio
   const hasUserTestimonial = currentUserId

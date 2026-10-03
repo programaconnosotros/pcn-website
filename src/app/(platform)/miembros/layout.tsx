@@ -6,7 +6,7 @@ const description =
   'Conocé a las personas de programaConNosotros: co-founders, ambassadors, speakers y quienes organizan eventos.';
 
 export const metadata: Metadata = {
-  title: 'Miembros',
+  title: 'who',
   description,
   openGraph: {
     title: 'Miembros | programaConNosotros',

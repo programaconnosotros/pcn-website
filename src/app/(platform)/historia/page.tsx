@@ -1,4 +1,5 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { TableOfContents } from '@/components/historia/table-of-contents';
 import { HistoriaImage, HistoriaGallery } from '@/components/historia/historia-image';
 import {
@@ -6,14 +7,26 @@ import {
   HistoriaSection,
   HistoriaTimeline,
 } from '@/components/historia/historia-section';
+import { HistoriaEvents } from '@/components/historia/historia-events';
+import { HISTORIA_FLYERS } from '@/components/historia/event-flyers';
+import { HistoriaOrganization } from '@/components/historia/historia-organization';
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import {
+  HistoriaPeopleProvider,
+  HistoriaPerson,
+  HistoriaTaggingBar,
+} from '@/components/historia/historia-person';
+import type { HistoriaPersonName } from '@/components/historia/people';
+import { getAdminUser } from '@/lib/admin';
+import { getHistoriaEvents, type HistoriaEvent } from '@/lib/historia-events';
+import { getIdentityMap } from '@/lib/identity-links';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
-const founders = [
+const founders: HistoriaPersonName[] = [
   'Agustín Sánchez',
   'Mauricio Sánchez',
   'Esteban Sánchez',
@@ -22,63 +35,65 @@ const founders = [
   'Iván Taddei',
 ];
 
-const lightningTalksNextGen = [
+type Speaker = { name: HistoriaPersonName; title?: string };
+
+const lightningTalksNextGen: { title: string; speakers: Speaker[]; role: string }[] = [
   {
     title: 'Cómo Construir una Carrera Exponencial en Tecnología',
-    speaker: 'Ing. Alejo Boga',
+    speakers: [{ name: 'Alejo Boga', title: 'Ing.' }],
     role: 'Senior AI Engineer en Santander Tecnología',
   },
   {
     title: 'Effective Agentic Coding',
-    speaker: 'Agustín Sánchez',
+    speakers: [{ name: 'Agustín Sánchez' }],
     role: 'Senior Software Engineer en Eagerworks, Director de DIZENZ y Líder de PCN',
   },
   {
     title: 'Buscando el Diseño Perfecto',
-    speaker: 'Ing. Mauricio Sánchez',
+    speakers: [{ name: 'Mauricio Sánchez', title: 'Ing.' }],
     role: 'Staff Software Engineer en PedidosYa, Co-fundador de PCN',
   },
   {
     title: '5 Consejos de Supervivencia Backend',
-    speaker: 'Ing. Marcelo de Jesús Núñez',
+    speakers: [{ name: 'Marcelo Núñez', title: 'Ing.' }],
     role: 'Senior Software Engineer en Bowery, Co-fundador de PCN',
   },
   {
     title:
       'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
-    speaker: 'Ing. Franco Pérez',
+    speakers: [{ name: 'Franco Pérez', title: 'Ing.' }],
     role: 'Founder de Crisol Studio',
   },
   {
     title: 'Anatomía de un Agente de IA: Qué son y cómo funcionan',
-    speaker: 'Franco Jose Espinoza',
+    speakers: [{ name: 'Franco Jose Espinoza' }],
     role: 'Founder & Lead Developer en Section 05',
   },
   {
     title:
       'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
-    speaker: 'Fabio Ramos',
+    speakers: [{ name: 'Fabio Ramos' }],
     role: 'Lead Software Engineer en CAW Tech',
   },
   {
     title: 'NEX OS: Ingeniería de Sistemas Operativos en la Web y Optimización Extrema',
-    speaker: 'Salvador Juárez y Yamil Cardozo',
+    speakers: [{ name: 'Salvador Juárez' }, { name: 'Yamil Cardozo' }],
     role: 'Software Engineer en Bitflow · Estudiante IES',
   },
   {
     title: 'El Atacante que Llegó por el npm install',
-    speaker: 'Ismael Chávez',
+    speakers: [{ name: 'Ismael Chávez' }],
     role: 'Software Developer & Pentester en Endpoint Consulting',
   },
   {
     title: 'No te Reemplaza la IA, te Reemplaza el QA que la Usa',
-    speaker: 'Leo Apaza',
+    speakers: [{ name: 'Leo Apaza' }],
     role: 'Software Development Engineer in Test en Assist-365',
   },
 ];
 
 export const metadata: Metadata = {
-  title: 'Historia',
+  title: 'history',
   description:
     'Cómo nació programaConNosotros: desde un grupo de estudiantes apasionados en la UTN-FRT hasta una comunidad regional de ingeniería de software. Conocé a los fundadores y los pasos que nos trajeron hasta acá.',
   openGraph: {
@@ -97,24 +112,26 @@ export const metadata: Metadata = {
   },
 };
 
-const PCNStory = () => (
+const Story = ({ events }: { events: HistoriaEvent[] }) => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <PageTitle
-          sticky
-          path="historia"
-          meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
-        />
+        <StickyHeader pinnedOnDesktop>
+          <PageTitle
+            path="historia"
+            meta="de un grupo de estudiantes a una comunidad sin fronteras · 2015 → hoy"
+          />
+        </StickyHeader>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <TableOfContents />
 
           <div className="min-w-0 flex-1">
             <div className="mx-auto max-w-3xl border border-pcnGreen-200">
+              <HistoriaTaggingBar />
               <section
                 id="introduccion"
-                className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-28"
+                className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
               >
                 <h2 className="font-mono text-base font-semibold tracking-tight">
                   <span className="text-pcnGreen-500">## </span>Introducción
@@ -129,8 +146,11 @@ const PCNStory = () => (
                     <b>programaConNosotros</b> es una comunidad de profesionales y estudiantes de
                     ingeniería de software, fundada en el año 2020 en Tucumán (Argentina), en plena
                     cuarentena por la pandemia del COVID-19. Los co-fundadores son los hermanos
-                    Sánchez (Agustín, Mauricio y Esteban) junto a Germán Navarro, Marcelo Núñez e
-                    Iván Taddei.
+                    Sánchez (<HistoriaPerson name="Agustín Sánchez">Agustín</HistoriaPerson>,{' '}
+                    <HistoriaPerson name="Mauricio Sánchez">Mauricio</HistoriaPerson> y{' '}
+                    <HistoriaPerson name="Esteban Sánchez">Esteban</HistoriaPerson>) junto a{' '}
+                    <HistoriaPerson name="Germán Navarro" />,{' '}
+                    <HistoriaPerson name="Marcelo Núñez" /> e <HistoriaPerson name="Iván Taddei" />.
                   </p>
                   <p>
                     Si bien la comunidad fue fundada en 2020, los co-fundadores y las personas más
@@ -140,16 +160,25 @@ const PCNStory = () => (
                 </HistoriaProse>
                 <p className="mt-4 border-t border-dashed border-pcnGreen-200 pt-3 font-mono text-xs text-muted-foreground">
                   <span className="text-pcnGreen">co-fundadores: </span>
-                  {founders.join(' · ')}
+                  {founders.map((name, index) => (
+                    <span key={name}>
+                      {index > 0 && ' · '}
+                      <HistoriaPerson name={name} />
+                    </span>
+                  ))}
                 </p>
               </section>
 
               <HistoriaTimeline>
                 <HistoriaSection id="comienzos-utn" title="Comienzos en la UTN-FRT" period="2015">
                   <p>
-                    En el año 2015, en la Universidad Tecnológica de Tucumán (Argentina), se
-                    conocieron Agustín Sánchez y Germán Navarro, estudiando Ingeniería en Sistemas
-                    de Información. La gran pasión que tenían por la ingeniería de software,
+                    En el año 2015, en{' '}
+                    <HistoriaOrganization name="UTN-FRT">
+                      la Universidad Tecnológica de Tucumán
+                    </HistoriaOrganization>{' '}
+                    (Argentina), se conocieron <HistoriaPerson name="Agustín Sánchez" /> y{' '}
+                    <HistoriaPerson name="Germán Navarro" />, estudiando Ingeniería en Sistemas de
+                    Información. La gran pasión que tenían por la ingeniería de software,
                     particularmente por la programación, los llevó a estudiar mucho más de lo que se
                     enseñaba en la universidad y a participar de actividades extracurriculares como
                     charlas y competencias de programación.
@@ -166,9 +195,11 @@ const PCNStory = () => (
                   period="2017"
                 >
                   <p>
-                    En el año 2017, Agus y Germán se sumaron al IEEE para participar del programa de
-                    voluntariado, que tiene como objetivo hacer networking, organizar y participar
-                    de eventos técnicos.
+                    En el año 2017, <HistoriaPerson name="Agustín Sánchez">Agus</HistoriaPerson> y{' '}
+                    <HistoriaPerson name="Germán Navarro">Germán</HistoriaPerson> se sumaron al{' '}
+                    <HistoriaOrganization name="IEEE" />
+                    para participar del programa de voluntariado, que tiene como objetivo hacer
+                    networking, organizar y participar de eventos técnicos.
                   </p>
                   <HistoriaImage
                     src="/historia/evento_abril (173) (2).webp"
@@ -176,11 +207,12 @@ const PCNStory = () => (
                   />
                   <p>
                     Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>
-                    , y se hicieron amigos de Facu Gelatti y Franco Mirada. Facu y Franco ya estaban
-                    terminando de cursar la carrera y fueron mentores muy importantes para Agus y
-                    Germán. Compartieron muchos eventos técnicos, destacandose los congresos de
-                    Smalltalks, por la gran pasión que tenían por la programación orientada a
-                    objetos.
+                    , y se hicieron amigos de <HistoriaPerson name="Facu Gelatti" /> y{' '}
+                    <HistoriaPerson name="Franco Mirada" />. Facu y Franco ya estaban terminando de
+                    cursar la carrera y fueron mentores muy importantes para Agus y Germán.
+                    Compartieron muchos eventos técnicos, destacandose los congresos de{' '}
+                    <HistoriaOrganization name="Smalltalks" />, por la gran pasión que tenían por la
+                    programación orientada a objetos.
                   </p>
                   {/* // TODO: Agregar fotos de los congresos de Smalltalks. */}
                   <p>
@@ -194,9 +226,10 @@ const PCNStory = () => (
                     Les apasionaba mucho la programación competitiva asi que daban clases ad-honorem
                     sobre algoritmos y estructuras de datos avanzadas aparte de cursar la carrera de
                     ingeniería. A estas clases se sumaban varios estudiantes apasionados por la
-                    programación. El profesor Augusto Nasrallah y el ingeniero Jorge Buabud de la
-                    UTN-FRT colaboraban prestando un laboratorio de computación de la universidad
-                    para dictar estas clases.
+                    programación. El profesor <HistoriaPerson name="Augusto Nasrallah" /> y el
+                    ingeniero <HistoriaPerson name="Jorge Buabud" /> de la UTN-FRT colaboraban
+                    prestando un laboratorio de computación de la universidad para dictar estas
+                    clases.
                   </p>
                 </HistoriaSection>
 
@@ -225,7 +258,8 @@ const PCNStory = () => (
                 >
                   <p>
                     En el año 2018, Agus y Germán dieron un paso importante presidiendo el Capítulo
-                    Estudiantil de IEEE Computer Society en la Universidad Nacional de Tucumán.
+                    Estudiantil de <HistoriaOrganization name="IEEE Computer Society" /> en la
+                    Universidad Nacional de Tucumán.
                   </p>
                 </HistoriaSection>
 
@@ -233,7 +267,7 @@ const PCNStory = () => (
                   <p>
                     Agus creó un club de algoritmos que se juntaban todos los viernes desde las
                     18.00 hasta las 23.00 en un laboratorio del departamento de ingeniería en
-                    sistemas de información de la UTN-FRT.
+                    sistemas de información de la <HistoriaOrganization name="UTN-FRT" />.
                   </p>
                   <HistoriaImage
                     src="/historia/photo_2019-10-14_01-58-25.webp"
@@ -249,8 +283,11 @@ const PCNStory = () => (
                   <p>
                     En abril del 2018, organizaron el Tucumán Hack Weekend, un congreso
                     internacional de seguridad informática llevado a cabo en la UTN de Tucumán. El
-                    evento fue organizado también por la organización Tucumán Hacking, presidida por
-                    Victor Figueredo (ahora CEO de Endpoint Consulting).
+                    evento fue organizado también por la organización{' '}
+                    <HistoriaOrganization name="Tucumán Hacking" />, presidida por{' '}
+                    <HistoriaPerson name="Victor Figueredo" /> (ahora CEO de{' '}
+                    <HistoriaOrganization name="Endpoint Consulting" />
+                    ).
                   </p>
                   <HistoriaGallery
                     images={[
@@ -280,13 +317,17 @@ const PCNStory = () => (
                 <HistoriaSection id="nibble" title="Nibble" period="2019">
                   <p>
                     En el año 2019, Agus y Germán conocieron 2 personas en la UTN-FRT que se
-                    convirtieron en grandes compañeros y amigos: Iván Taddei y Marcelo
-                    &quot;Chelo&quot; Núñez. El grupo de los 4, bautizado por el Chelo como
-                    &quot;Nibble&quot;, fue un grupo destacado en la facultad, más que nada por la
-                    pasión que tenían por la ingeniería del software. Nunca fueron a la facultad
-                    solo para aprobar materias y ya, sino que realmente querían entender cómo
-                    funcionan las cosas, cómo se relacionan, cómo se aplican, y estudiar mucho más
-                    de lo que adentro de las aulas se enseñaba.
+                    convirtieron en grandes compañeros y amigos:{' '}
+                    <HistoriaPerson name="Iván Taddei" /> y{' '}
+                    <HistoriaPerson name="Marcelo Núñez">
+                      Marcelo &quot;Chelo&quot; Núñez
+                    </HistoriaPerson>
+                    . El grupo de los 4, bautizado por el Chelo como &quot;Nibble&quot;, fue un
+                    grupo destacado en la facultad, más que nada por la pasión que tenían por la
+                    ingeniería del software. Nunca fueron a la facultad solo para aprobar materias y
+                    ya, sino que realmente querían entender cómo funcionan las cosas, cómo se
+                    relacionan, cómo se aplican, y estudiar mucho más de lo que adentro de las aulas
+                    se enseñaba.
                   </p>
                   <HistoriaImage src="/historia/IMG_1525.webp" alt="Nibble" />
                 </HistoriaSection>
@@ -298,10 +339,10 @@ const PCNStory = () => (
                 >
                   <p>
                     En el año 2020, en la Rama Estudiantil IEEE de la UTN-FRT se renovaron las
-                    autoridades. Agus y Germán dieron otro paso más en su carrera del voluntariado y
-                    Mauricio Sánchez se sumó también. Agus era presidente, Germán vicepresidente y
-                    Mauri tesorero. Se sumaron aquel año también Chelo, Iván y Esteban para
-                    colaborar en la organización de las actividades.
+                    autoridades. Agus y Germán dieron otro paso más en su carrera del voluntariado y{' '}
+                    <HistoriaPerson name="Mauricio Sánchez" /> se sumó también. Agus era presidente,
+                    Germán vicepresidente y Mauri tesorero. Se sumaron aquel año también Chelo, Iván
+                    y Esteban para colaborar en la organización de las actividades.
                   </p>
                   <p>
                     2020 estuvo marcado por la cuarentena por la pandemia del COVID-19, por lo que
@@ -324,11 +365,15 @@ const PCNStory = () => (
                   period="2020"
                 >
                   <p>
-                    La cátedra de Algoritmos y Estructuras de Datos (AED) de la UTN-FRT le dio lugar
-                    a la comunidad para dar algunos talleres de Git y GitHub, con los cuales se sumó
-                    mucha gente a la comunidad, entre los cuales estaban Tobias Paz Posse, Jeremias
-                    Ivanoff y Lucas Pérez. Tobi, Jere (alias Lunai) y Lucas le pusieron mucha
-                    energía y buena onda a la comunidad, y han crecido mucho desde que entraron.
+                    La cátedra de Algoritmos y Estructuras de Datos (AED) de la{' '}
+                    <HistoriaOrganization name="UTN-FRT" /> le dio lugar a la comunidad para dar
+                    algunos talleres de Git y GitHub, con los cuales se sumó mucha gente a la
+                    comunidad, entre los cuales estaban{' '}
+                    <HistoriaPerson name="Tobías Paz Posse">Tobias Paz Posse</HistoriaPerson>,{' '}
+                    <HistoriaPerson name="Jeremias Ivanoff" /> y{' '}
+                    <HistoriaPerson name="Lucas Pérez" />. Tobi, Jere (alias Lunai) y Lucas le
+                    pusieron mucha energía y buena onda a la comunidad, y han crecido mucho desde
+                    que entraron.
                   </p>
                 </HistoriaSection>
 
@@ -342,26 +387,34 @@ const PCNStory = () => (
                   <p>
                     La primera edición fue en junio de 2021, de forma virtual por Discord, con
                     charlas rápidas sobre ingeniería de software. Con la vuelta a la presencialidad,
-                    las Lightning Talks encontraron su lugar en el SUM 1 de la UTN-FRT: organizamos
-                    una edición en mayo de 2023 y otra en octubre de 2024, convocando a cada vez más
-                    miembros de la comunidad a subirse al escenario y compartir lo que estaban
-                    aprendiendo.
+                    las Lightning Talks encontraron su lugar en el SUM 1 de la{' '}
+                    <HistoriaOrganization name="UTN-FRT" />: organizamos una edición en mayo de 2023
+                    y otra en octubre de 2024, convocando a cada vez más miembros de la comunidad a
+                    subirse al escenario y compartir lo que estaban aprendiendo.
                   </p>
                   <HistoriaGallery
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242335684-7df020ca-0179-422e-9084-4dbbb6ed20f1.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2021,
                         alt: 'Lightning Talks 2021',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777242053412-bee91069-37b8-4d27-91cb-2fafcfdf92c9.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2023,
                         alt: 'Lightning Talks 2023',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777235792921-7d89c0da-a617-4e80-8a2b-6cc7cea2d0b8.jpeg',
+                        src: HISTORIA_FLYERS.lightningTalks2024,
                         alt: 'Lightning Talks 2024',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.lightningTalks2021,
+                      HISTORIA_FLYERS.lightningTalks2023,
+                      HISTORIA_FLYERS.lightningTalks2024,
                     ]}
                   />
                 </HistoriaSection>
@@ -372,8 +425,9 @@ const PCNStory = () => (
                   period="2023"
                 >
                   <p>
-                    En 2023, colaboramos con Global Learning dando charlas sobre arquitectura de
-                    software e ingeniería de software en la última clase de sus cursos.
+                    En 2023, colaboramos con <HistoriaOrganization name="Global Learning" /> dando
+                    charlas sobre arquitectura de software e ingeniería de software en la última
+                    clase de sus cursos.
                   </p>
                 </HistoriaSection>
 
@@ -393,26 +447,35 @@ const PCNStory = () => (
                   <p>
                     En octubre de 2024 fuimos invitados a dar dos charlas de orientación vocacional.
                     La primera, <b>Descubrí el Mundo del Desarrollo de Software</b>, se llevó a cabo
-                    en Aticana, donde recorrimos los distintos roles y caminos posibles dentro de la
-                    profesión. La segunda, <b>Introducción al Desarrollo de Software</b>, la dimos
-                    en el Instituto Nuestra Señora de Montserrat para estudiantes de secundaria que
-                    estaban dando sus primeros pasos en este mundo.
+                    en <HistoriaOrganization name="Aticana" />, donde recorrimos los distintos roles
+                    y caminos posibles dentro de la profesión. La segunda,{' '}
+                    <b>Introducción al Desarrollo de Software</b>, la dimos en el{' '}
+                    <HistoriaOrganization name="Instituto Nuestra Señora de Montserrat" /> para
+                    estudiantes de secundaria que estaban dando sus primeros pasos en este mundo.
                   </p>
                   <HistoriaGallery
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241814466-2b43047c-27f0-4de7-86a2-faabca4f1ac9.jpeg',
+                        src: HISTORIA_FLYERS.miradaIndustria,
                         alt: 'Una Mirada de la Industria del Software',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236239325-19d0cf0e-4385-4e14-ac61-a2c20fb06bb0.jpeg',
+                        src: HISTORIA_FLYERS.descubriDesarrollo,
                         alt: 'Descubrí el Mundo del Desarrollo de Software',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777241043347-93b51aef-47ba-4e88-9a9c-a4aaa997f6c2.jpeg',
+                        src: HISTORIA_FLYERS.introDesarrollo,
                         alt: 'Introducción al Desarrollo de Software',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.miradaIndustria,
+                      HISTORIA_FLYERS.descubriDesarrollo,
+                      HISTORIA_FLYERS.introDesarrollo,
                     ]}
                   />
                 </HistoriaSection>
@@ -431,19 +494,28 @@ const PCNStory = () => (
                   <p>
                     El proyecto es open-source y cualquier persona de la comunidad puede participar
                     en el desarrollo y testing de la plataforma. Los miembros de la comunidad que
-                    colaboraron en el desarrollo de la primera versión del website fueron Germán
-                    Navarro, Mauricio Chaile, Matías Gutierrez, Nicolas Fuentes, Facundo Bazán,
-                    Vicky Grillo, Emiliano Grillo, Carlos Spagnolo, Alejo Boga, Tobías Paz Posse,
-                    Marcelo Núñez y Benjamin Cortes. El equipo fue liderado por Agustín Sánchez.
+                    colaboraron en el desarrollo de la primera versión del website fueron{' '}
+                    <HistoriaPerson name="Germán Navarro" />,{' '}
+                    <HistoriaPerson name="Mauricio Chaile" />,{' '}
+                    <HistoriaPerson name="Matías Gutierrez" />,{' '}
+                    <HistoriaPerson name="Nicolas Fuentes" />,{' '}
+                    <HistoriaPerson name="Facundo Bazán" />, <HistoriaPerson name="Vicky Grillo" />,{' '}
+                    <HistoriaPerson name="Emiliano Grillo" />,{' '}
+                    <HistoriaPerson name="Carlos Spagnolo" />, <HistoriaPerson name="Alejo Boga" />,{' '}
+                    <HistoriaPerson name="Tobías Paz Posse" />,{' '}
+                    <HistoriaPerson name="Marcelo Núñez" /> y{' '}
+                    <HistoriaPerson name="Benjamin Cortes" />. El equipo fue liderado por{' '}
+                    <HistoriaPerson name="Agustín Sánchez" />.
                   </p>
                 </HistoriaSection>
 
                 <HistoriaSection id="tech-in-action" title="Tech in Action" period="2025">
                   <p>
-                    En junio de 2025, en el marco del Mes de la Ingeniería, la UTN-FRT nos abrió
-                    nuevamente las puertas del SUM 1 para organizar <b>Tech in Action</b>: dos
-                    presentaciones técnicas a cargo de miembros de la comunidad que mostraron
-                    proyectos reales y herramientas que estaban usando en su trabajo cotidiano.
+                    En junio de 2025, en el marco del Mes de la Ingeniería, la{' '}
+                    <HistoriaOrganization name="UTN-FRT" /> nos abrió nuevamente las puertas del SUM
+                    1 para organizar <b>Tech in Action</b>: dos presentaciones técnicas a cargo de
+                    miembros de la comunidad que mostraron proyectos reales y herramientas que
+                    estaban usando en su trabajo cotidiano.
                   </p>
                   <p>
                     El evento reunió a estudiantes, egresados y profesionales de la industria, y fue
@@ -451,20 +523,23 @@ const PCNStory = () => (
                     laboral.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777236349066-ae60a5c3-81d2-4cd8-bc18-85b648d4f089.jpeg"
+                    src={HISTORIA_FLYERS.techInAction}
                     alt="Tech in Action"
                     aspect="flyer"
                     className="mx-auto max-w-sm"
                   />
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.techInAction]} />
                 </HistoriaSection>
 
                 <HistoriaSection id="era-meetups" title="La era de las Meetups" period="2025">
                   <p>
                     A partir de 2025, la comunidad adoptó un nuevo formato que se convirtió en el
                     corazón de la actividad de PCN: las meetups mensuales. Con sedes que rotaron
-                    entre Blackbox Cowork (Yerba Buena), Once57 Cowork y Xetro AI (San Miguel de
-                    Tucumán), cada encuentro combinó charlas técnicas, networking y trabajo
-                    colaborativo en un ambiente relajado.
+                    entre <HistoriaOrganization name="Blackbox Cowork" /> (Yerba Buena),{' '}
+                    <HistoriaOrganization name="Once57 Cowork" /> y{' '}
+                    <HistoriaOrganization name="Xetro AI" /> (San Miguel de Tucumán), cada encuentro
+                    combinó charlas técnicas, networking y trabajo colaborativo en un ambiente
+                    relajado.
                   </p>
                   <p>
                     También incorporamos las <b>Cowork Sessions</b>, jornadas de trabajo y estudio
@@ -481,25 +556,35 @@ const PCNStory = () => (
                     aspect="flyer"
                     images={[
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1766992051811-4f6bc2cb-ebe4-47e3-b701-dd537a0590fe.jpeg',
+                        src: HISTORIA_FLYERS.meetupDiciembre2025,
                         alt: 'Meetup diciembre 2025',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1771359135414-cc6b3a49-722f-400c-99f2-b049d32a23ec.JPG',
+                        src: HISTORIA_FLYERS.meetupFebrero2026,
                         alt: 'Meetup febrero 2026',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1775498317125-414e180b-4b7c-43b0-9848-64e89c4506af.PNG',
+                        src: HISTORIA_FLYERS.meetupAbril2026,
                         alt: 'Meetup abril 2026',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1776732685244-11d00b6f-78b7-460b-a1a8-11d40f0a852f.png',
+                        src: HISTORIA_FLYERS.coworkSession,
                         alt: 'Cowork Session',
                       },
                       {
-                        src: 'https://d374fgq95bfr8o.cloudfront.net/events/flyers/1779314634681-9a349677-eb94-4345-b69b-6eef31325aa1.png',
+                        src: HISTORIA_FLYERS.meetupMayo2026,
                         alt: 'Meetup mayo 2026',
                       },
+                    ]}
+                  />
+                  <HistoriaEvents
+                    events={events}
+                    flyers={[
+                      HISTORIA_FLYERS.meetupDiciembre2025,
+                      HISTORIA_FLYERS.meetupFebrero2026,
+                      HISTORIA_FLYERS.meetupAbril2026,
+                      HISTORIA_FLYERS.coworkSession,
+                      HISTORIA_FLYERS.meetupMayo2026,
                     ]}
                   />
                 </HistoriaSection>
@@ -507,17 +592,19 @@ const PCNStory = () => (
                 <HistoriaSection id="zero-to-agent" title="Zero to Agent" period="2026">
                   <p>
                     En abril de 2026 organizamos <b>Zero to Agent</b>, el primer hackathon de PCN
-                    dedicado al desarrollo de agentes de IA. El evento se realizó en Once57 Cowork y
-                    desafió a los participantes a construir agentes usando Vercel v0, con más de USD
-                    6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
+                    dedicado al desarrollo de agentes de IA. El evento se realizó en{' '}
+                    <HistoriaOrganization name="Once57 Cowork" /> y desafió a los participantes a
+                    construir agentes usando <HistoriaOrganization name="Vercel v0" />, con más de
+                    USD 6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
                     ingeniería de software y demostró que la comunidad está al día con lo que viene.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1777412831586-c7e9da58-e2a2-40d9-853a-e06cc1a5aace.png"
+                    src={HISTORIA_FLYERS.zeroToAgent}
                     alt="Zero to Agent"
                     aspect="flyer"
                     className="mx-auto max-w-sm"
                   />
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.zeroToAgent]} />
                 </HistoriaSection>
 
                 <HistoriaSection
@@ -527,13 +614,13 @@ const PCNStory = () => (
                 >
                   <p>
                     En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
-                    Sistemas de Información de la UTN-FRT, co-organizamos{' '}
-                    <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes de la
-                    Ingeniería y reflexionar sobre el pasado, el presente y el futuro de la
+                    Sistemas de Información de la <HistoriaOrganization name="UTN-FRT" />,
+                    co-organizamos <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes
+                    de la Ingeniería y reflexionar sobre el pasado, el presente y el futuro de la
                     profesión.
                   </p>
                   <HistoriaImage
-                    src="https://d374fgq95bfr8o.cloudfront.net/events/flyers/1780980085496-3a4b53b8-7df0-4259-a25a-d8d86873493b.png"
+                    src={HISTORIA_FLYERS.nextGenSoftware2026}
                     alt="NextGen Software 2026"
                     className="mx-auto max-w-sm"
                   />
@@ -552,12 +639,20 @@ const PCNStory = () => (
                             {talk.title}
                           </p>
                           <p className="mt-0.5 text-sm leading-snug">
-                            {talk.speaker} · {talk.role}
+                            {talk.speakers.map((speaker, speakerIndex) => (
+                              <span key={speaker.name}>
+                                {speakerIndex > 0 && ' y '}
+                                {speaker.title && `${speaker.title} `}
+                                <HistoriaPerson name={speaker.name} />
+                              </span>
+                            ))}{' '}
+                            · {talk.role}
                           </p>
                         </div>
                       </li>
                     ))}
                   </ol>
+                  <HistoriaEvents events={events} flyers={[HISTORIA_FLYERS.nextGenSoftware2026]} />
                 </HistoriaSection>
 
                 <HistoriaSection
@@ -577,9 +672,10 @@ const PCNStory = () => (
                     Pero lo más valioso no es el contenido técnico: es el <b>networking genuino</b>.
                     Ofertas de trabajo compartidas en el grupo que se convirtieron en empleos
                     reales, referidos entre miembros, revisiones de CV, consejos de entrevistas, y
-                    la organización espontánea de un club de lectura técnica. Cuando Facundo García
-                    Martoni consiguió su posición como Senior Full-Stack Engineer gracias a una
-                    oferta publicada en el grupo y el acompañamiento de otros miembros, quedó claro{' '}
+                    la organización espontánea de un club de lectura técnica. Cuando{' '}
+                    <HistoriaPerson name="Facundo García Martoni" /> consiguió su posición como
+                    Senior Full-Stack Engineer gracias a una oferta publicada en el grupo y el
+                    acompañamiento de otros miembros, quedó claro{' '}
                     <b>el valor concreto de pertenecer a esta comunidad</b>.
                   </p>
                   <p>
@@ -613,4 +709,18 @@ const PCNStory = () => (
     </div>
   </>
 );
+
+const PCNStory = async () => {
+  const [links, admin, events] = await Promise.all([
+    getIdentityMap('historia'),
+    getAdminUser(),
+    getHistoriaEvents(),
+  ]);
+
+  return (
+    <HistoriaPeopleProvider links={links} isAdmin={admin !== null}>
+      <Story events={events} />
+    </HistoriaPeopleProvider>
+  );
+};
 export default PCNStory;

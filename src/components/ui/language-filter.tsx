@@ -23,14 +23,14 @@ export function LanguageFilter({
   className,
 }: {
   value: LanguageFilterValue;
-  onChange: (value: LanguageFilterValue) => void;
+  onChange: (_value: LanguageFilterValue) => void;
   className?: string;
 }) {
   return (
     <span className={cn('flex items-center gap-2 font-mono text-[11px]', className)}>
       <span className="text-muted-foreground">idioma</span>
       <span
-        className="flex border border-pcnGreen-200"
+        className="flex h-8 border border-pcnGreen-200"
         role="group"
         aria-label="Filtrar por idioma"
       >
@@ -42,7 +42,7 @@ export function LanguageFilter({
             aria-pressed={value === option}
             onClick={() => onChange(option)}
             className={cn(
-              'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+              'border-r border-pcnGreen-200 px-2 transition-colors last:border-r-0',
               value === option
                 ? 'bg-pcnGreen text-black'
                 : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',

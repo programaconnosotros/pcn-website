@@ -40,6 +40,7 @@ import {
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { SearchBar } from '@/components/ui/search-bar';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { WebReaderDialog } from '@/components/web-reader/web-reader-dialog';
 import { cn } from '@/lib/utils';
@@ -390,42 +391,44 @@ export function ProjectsList({ projects, currentUser }: Props) {
             {savingOrder && <span className="cursor-blink ml-auto">guardando</span>}
           </p>
         ) : (
-          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center">
-            <SearchBar
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              placeholder="proyecto, stack o persona"
-              label="Buscar proyectos"
-            />
-            <div
-              aria-label="Filtrar proyectos"
-              className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0"
-            >
-              {stats.openSource > 0 && (
-                <>
-                  <Flag
-                    active={openSourceOnly}
-                    onClick={() => setOpenSourceOnly((value) => !value)}
-                    count={stats.openSource}
-                  >
-                    <Github className="size-3" />
-                    --open-source
-                  </Flag>
-                  <span aria-hidden className="my-1.5 w-px shrink-0 bg-pcnGreen-200" />
-                </>
-              )}
-              {stats.stack.slice(0, TOP_STACK).map(([tech, count]) => (
+          <CollapsibleFilters
+            className="mb-4"
+            activeCount={Number(openSourceOnly) + Number(!!stack)}
+            search={
+              <SearchBar
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                placeholder="proyecto, stack o persona"
+                label="Buscar proyectos"
+              />
+            }
+            // From md up the flags scroll sideways next to the search instead of wrapping.
+            panelClassName="gap-1.5 md:min-w-0 md:flex-1 md:flex-nowrap md:overflow-x-auto [scrollbar-width:none]"
+          >
+            {stats.openSource > 0 && (
+              <>
                 <Flag
-                  key={tech}
-                  active={stack === tech}
-                  onClick={() => setStack(stack === tech ? null : tech)}
-                  count={count}
+                  active={openSourceOnly}
+                  onClick={() => setOpenSourceOnly((value) => !value)}
+                  count={stats.openSource}
                 >
-                  --{tech.toLowerCase()}
+                  <Github className="size-3" />
+                  --open-source
                 </Flag>
-              ))}
-            </div>
-          </div>
+                <span aria-hidden className="my-1.5 w-px shrink-0 self-stretch bg-pcnGreen-200" />
+              </>
+            )}
+            {stats.stack.slice(0, TOP_STACK).map(([tech, count]) => (
+              <Flag
+                key={tech}
+                active={stack === tech}
+                onClick={() => setStack(stack === tech ? null : tech)}
+                count={count}
+              >
+                --{tech.toLowerCase()}
+              </Flag>
+            ))}
+          </CollapsibleFilters>
         )}
       </StickyHeader>
 

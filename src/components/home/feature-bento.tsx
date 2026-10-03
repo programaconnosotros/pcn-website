@@ -20,7 +20,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { WHATSAPP_GROUP_URL } from './home-hero';
+import { WHATSAPP_GROUP_URL } from '@/data/whatsapp-group';
 import { SectionHeader } from './section-header';
 
 interface Feature {

@@ -9,7 +9,7 @@ import { OS_PROGRAM_GROUPS, type OsProgram } from './programs';
 interface OsLauncherProps {
   open: boolean;
   programs: OsProgram[];
-  onOpenProgram: (program: OsProgram) => void;
+  onOpenProgram: (_program: OsProgram) => void;
   onClose: () => void;
 }
 

@@ -5,6 +5,9 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { findSession } from '@/lib/session';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = { title: 'whoami' };
 
 const Profile = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;

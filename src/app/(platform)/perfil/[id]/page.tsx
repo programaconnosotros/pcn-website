@@ -9,6 +9,7 @@ import {
 } from '@/lib/badges';
 import { earnedAchievements } from '@/lib/achievements';
 import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
+import { GitHubContributions } from '@/components/profile/github-contributions';
 import { LanguageCoinsContainer } from '@/components/profile/language-coins-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
@@ -27,6 +28,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 export const revalidate = 0;
 
@@ -46,7 +48,7 @@ export async function generateMetadata(props: {
 
   if (!user) {
     return {
-      title: 'Perfil no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El perfil que buscas no existe.',
     };
   }
@@ -58,7 +60,7 @@ export async function generateMetadata(props: {
   const pageUrl = `${SITE_URL}/perfil/${params.id}`;
 
   return {
-    title,
+    title: tabTitle.cat('perfil', user.name),
     description: description.length > 160 ? description.substring(0, 157) + '...' : description,
     openGraph: {
       title,
@@ -281,7 +283,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         {/* Al subir rápido vuelven las pestañas, no el título, así no se apilan dos barras. */}
         <div className="mt-4">
           <PageTitle
-            path={[{ label: 'usuarios', href: '/usuarios' }, { label: user.name ?? 'perfil' }]}
+            path={[
+              // /usuarios is admin-only; everyone else browses people from /miembros.
+              viewerIsAdmin
+                ? { label: 'usuarios', href: '/usuarios' }
+                : { label: 'miembros', href: '/miembros' },
+              { label: user.name ?? 'perfil' },
+            ]}
           />
         </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -329,6 +337,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
                     </a>
                   ))}
                 </nav>
+              )}
+
+              {/* Live from GitHub on every visit: streams in when ready, never holds the page. */}
+              {user.gitHubUrl && (
+                <Suspense fallback={null}>
+                  <GitHubContributions gitHubUrl={user.gitHubUrl} />
+                </Suspense>
               )}
 
               {user.slogan && (

@@ -6,6 +6,10 @@ import { redirect } from 'next/navigation';
 import { fetchEventForEdit } from '@/actions/events/fetch-event-for-edit';
 import { EditEventForm } from '@/components/events/edit-event-form';
 import { DeleteEventButton } from '@/components/events/delete-event-button';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+export const metadata: Metadata = { title: tabTitle.vim('eventos/*/editar') };
 
 const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;
@@ -33,8 +37,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
     address: event.address ?? '',
     placeName: event.placeName ?? '',
     flyerImages: event.flyerImages,
-    latitude: event.latitude?.toString() || '',
-    longitude: event.longitude?.toString() || '',
+    googleMapsUrl: event.googleMapsUrl ?? '',
     capacity: event.capacity?.toString() || '',
     externalRegistrationUrl: event.externalRegistrationUrl ?? '',
     shortcut: event.shortcut ?? '',

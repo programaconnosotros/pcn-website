@@ -19,6 +19,13 @@ const nextConfig = {
     root: import.meta.dirname,
   },
   serverExternalPackages: ['jsdom'],
+  experimental: {
+    // Reuse a visited page for 5 minutes instead of asking the server again on every visit, so
+    // going back to a tab (the phone tab bar, the profile or interview tabs) is instant, like a
+    // native app. Pull to refresh (`router.refresh()`) and server actions that revalidate still
+    // fetch fresh data right away.
+    staleTimes: { dynamic: 300 },
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
@@ -26,6 +33,8 @@ const nextConfig = {
     return [{ source: '/sponsors', destination: '/partners', permanent: true }];
   },
   images: {
+    // 75 is the default; 40 is for the home hero backdrop, shown faded under gradients.
+    qualities: [40, 75],
     remotePatterns: [
       {
         hostname: 'avatars.githubusercontent.com',

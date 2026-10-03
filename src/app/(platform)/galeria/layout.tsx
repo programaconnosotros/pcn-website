@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Galería',
+  title: tabTitle.ls('galeria'),
   description:
     'Fotos y videos de meetups, conferencias y encuentros de la comunidad. Reviví los momentos que vivimos juntos.',
   openGraph: {

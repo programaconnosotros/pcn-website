@@ -2,6 +2,7 @@ import { prismaMock } from '@/test/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
+import { extractedConsejos } from '@/data/consejos-extraidos';
 import { ACHIEVEMENTS, EMPTY_METRICS, earnedAchievements } from './achievements';
 import { getAchievementMetrics, getUserAchievementMetrics } from './achievement-metrics';
 
@@ -59,6 +60,11 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, projectsShared: 1 })).toEqual(['project-shared']);
   });
 
+  it('earns consejero after 25 consejos', () => {
+    expect(ids({ ...EMPTY_METRICS, consejos: 24 })).toEqual([]);
+    expect(ids({ ...EMPTY_METRICS, consejos: 25 })).toEqual(['consejos-25']);
+  });
+
   it('caps progress at the target', () => {
     const speaker = ACHIEVEMENTS.find(({ id }) => id === 'speaker')!;
     expect(speaker.progress({ ...EMPTY_METRICS, talksGiven: 5 })).toEqual({
@@ -76,6 +82,7 @@ describe('getAchievementMetrics', () => {
     (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([]);
     (prismaMock.eventRegistration.groupBy as jest.Mock).mockResolvedValue([]);
     prismaMock.project.findMany.mockResolvedValue([]);
+    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
@@ -202,6 +209,34 @@ describe('getAchievementMetrics', () => {
 
     expect(metrics.get('user-1')?.projectsShared).toBe(1);
     expect(metrics.has('user-2')).toBe(false);
+  });
+
+  it('counts published consejos per author', async () => {
+    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([
+      { authorId: 'user-1', _count: { _all: 7 } },
+    ]);
+
+    const metrics = await getAchievementMetrics(['user-1']);
+
+    expect(metrics.get('user-1')?.consejos).toBe(7);
+    expect(prismaMock.advise.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { authorId: { in: ['user-1'] } } }),
+    );
+  });
+
+  it('adds the consejos extracted from conversations to their linked WhatsApp names', async () => {
+    const { member } = extractedConsejos[0];
+    const extracted = extractedConsejos.filter((consejo) => consejo.member === member).length;
+    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([
+      { authorId: 'user-1', _count: { _all: 2 } },
+    ]);
+    prismaMock.identityLink.findMany.mockImplementation((async ({ where }: any) =>
+      where.source === 'whatsapp' ? [{ userId: 'user-1', externalName: member }] : []) as any);
+
+    const metrics = await getAchievementMetrics();
+
+    expect(extracted).toBeGreaterThan(0);
+    expect(metrics.get('user-1')?.consejos).toBe(2 + extracted);
   });
 
   it('returns empty metrics for a user without activity', async () => {

@@ -5,6 +5,7 @@ import { ArrowUpRight, Eye, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { MarkToggle } from '@/components/ui/mark-toggle';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { SearchBar } from '@/components/ui/search-bar';
 import {
   LanguageFilter,
@@ -147,16 +148,22 @@ export function VideoGrid({
     <>
       {/* Watch progress, the language filter and the watched/unwatched filter. */}
       {toolbar && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px]">
-          {searchable && (
-            <SearchBar
-              searchQuery={query}
-              setSearchQuery={setQuery}
-              placeholder="título, speaker, evento o canal"
-              label="Buscar por título, speaker, evento o canal"
-              className="h-8 max-w-sm flex-1 basis-full sm:basis-auto"
-            />
-          )}
+        <CollapsibleFilters
+          className="border border-b-0 border-pcnGreen-200 bg-black/60 px-3 py-2 font-mono text-[11px] md:gap-x-4"
+          panelClassName="md:flex-1 md:gap-x-4"
+          activeCount={Number(language !== 'todos') + Number(filter !== 'todos')}
+          search={
+            searchable && (
+              <SearchBar
+                searchQuery={query}
+                setSearchQuery={setQuery}
+                placeholder="título, speaker, evento o canal"
+                label="Buscar por título, speaker, evento o canal"
+                className="h-8 max-w-sm flex-1 basis-full sm:basis-auto"
+              />
+            )
+          }
+        >
           <span className="flex items-center gap-2 text-muted-foreground">
             vistos
             <span aria-hidden className="tracking-[-0.05em]">
@@ -174,7 +181,7 @@ export function VideoGrid({
           </span>
           <LanguageFilter value={language} onChange={setLanguage} className="ml-auto" />
           <span
-            className="flex border border-pcnGreen-200"
+            className="flex h-8 border border-pcnGreen-200"
             role="group"
             aria-label="Filtrar por estado"
           >
@@ -185,7 +192,7 @@ export function VideoGrid({
                 aria-pressed={filter === value}
                 onClick={() => setFilter(value)}
                 className={cn(
-                  'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                  'border-r border-pcnGreen-200 px-2 transition-colors last:border-r-0',
                   filter === value
                     ? 'bg-pcnGreen text-black'
                     : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',
@@ -195,7 +202,7 @@ export function VideoGrid({
               </button>
             ))}
           </span>
-        </div>
+        </CollapsibleFilters>
       )}
 
       {visibleVideos.length === 0 && (

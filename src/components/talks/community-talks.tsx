@@ -473,7 +473,7 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
           className="h-8 max-w-sm flex-1"
         />
         <span
-          className="ml-auto flex border border-pcnGreen-200 font-mono text-[11px]"
+          className="ml-auto flex h-8 border border-pcnGreen-200 font-mono text-[11px]"
           role="group"
           aria-label="Filtrar charlas"
         >
@@ -484,7 +484,7 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
               aria-pressed={filter === value}
               onClick={() => setFilter(value)}
               className={cn(
-                'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                'border-r border-pcnGreen-200 px-2 transition-colors last:border-r-0',
                 filter === value
                   ? 'bg-pcnGreen text-black'
                   : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',

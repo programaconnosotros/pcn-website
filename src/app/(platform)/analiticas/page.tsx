@@ -20,10 +20,11 @@ import {
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: 'Analíticas',
+  title: tabTitle.sudo('analiticas'),
   robots: { index: false, follow: false },
 };
 

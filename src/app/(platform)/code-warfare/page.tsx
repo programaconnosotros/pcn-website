@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Code Warfare',
+  title: './code-warfare',
   description: 'Competencias de programación de la comunidad programaConNosotros. Próximamente.',
   openGraph: {
     title: 'Code Warfare | programaConNosotros',

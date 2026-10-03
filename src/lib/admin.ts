@@ -17,6 +17,6 @@ export const requireAdmin = async () => {
 /** For admin pages and layouts: sends everyone else to the home page. */
 export const requireAdminPage = async () => {
   const admin = await getAdminUser();
-  if (!admin) redirect('/home');
+  if (!admin) redirect('/');
   return admin;
 };

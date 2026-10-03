@@ -81,4 +81,5 @@ export const members: Member[] = [
   { name: 'Franco Espinoza' },
   { name: 'Iván Taddei' },
   { name: 'Esteban Sánchez' },
+  { name: 'Leo Apaza' },
 ];

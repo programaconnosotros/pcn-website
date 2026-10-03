@@ -1,12 +1,13 @@
-import { Suspense } from 'react';
+import { cache, Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic } from 'lucide-react';
+import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic, MapPin } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
+import { EventSection } from '@/components/events/event-section';
 import { EventAnnouncements } from '@/components/announcements/event-announcements';
 import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
 import { Button } from '@/components/ui/button';
@@ -18,22 +19,19 @@ import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { optimizedOgImage } from '@/lib/og-image';
 import { signGallerySrc, signGalleryItem } from '@/lib/gallery-signing';
 import { createGoogleCalendarUrl } from '@/lib/google-calendar';
+import { googleMapsEmbedUrl } from '@/lib/google-maps';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
 import { findSession } from '@/lib/session';
 import { activeWaitlistWhere, getWaitlistPosition } from '@/lib/event-waitlist';
+import { hasEventEnded } from '@/lib/event-status';
+import { PastEventMemory } from '@/components/events/memory/past-event-memory';
+import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
-type EventWithDetails = Awaited<ReturnType<typeof fetchEvent>>;
+const Section = EventSection;
 
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="p-3">
-    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-      <span className="text-pcnGreen-500">{'// '}</span>
-      {title}
-    </h2>
-    {children}
-  </section>
-);
+// generateMetadata and the page both need the event: one query per request.
+const getEvent = cache(fetchEvent);
 
 function normalizeDescription(text: string): string {
   return text
@@ -46,11 +44,11 @@ export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const event = await fetchEvent(params.id);
+  const event = await getEvent(params.id);
 
   if (!event) {
     return {
-      title: 'Evento no encontrado',
+      title: { absolute: MISSING_TAB_TITLE },
       description: 'El evento que buscas no existe o ha sido eliminado.',
     };
   }
@@ -67,7 +65,7 @@ export async function generateMetadata(props: {
   const url = `/eventos/${event.id}`;
 
   return {
-    title: event.name,
+    title: tabTitle.cat('eventos', event.name),
     description,
     openGraph: {
       title: { absolute: event.name },
@@ -90,31 +88,17 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
   const params = await props.params;
   const id: string = params.id;
 
-  const event: EventWithDetails = await fetchEvent(id);
-
-  // Verificar si el usuario es admin y obtener datos de sesión
+  // El evento y la sesión no dependen entre sí: se piden a la vez.
   const sessionId = (await cookies()).get('sessionId')?.value;
-  let isAdmin = false;
-  let canEdit = false;
-  let userId: string | null = null;
+  const [event, session] = await Promise.all([
+    getEvent(id),
+    sessionId ? findSession(sessionId) : null,
+  ]);
 
-  if (sessionId) {
-    const session = await findSession(sessionId);
-
-    if (session) {
-      if (session.user.role === 'ADMIN') {
-        isAdmin = true;
-      }
-      userId = session.userId;
-
-      // Ambassadors editan los eventos que crearon; cualquier usuario, los que organiza
-      if (isAdmin) {
-        canEdit = true;
-      } else if (event) {
-        canEdit = canEditEvent(session.user, event);
-      }
-    }
-  }
+  const isAdmin = session?.user.role === 'ADMIN';
+  const userId: string | null = session?.userId ?? null;
+  // Ambassadors editan los eventos que crearon; cualquier usuario, los que organiza
+  const canEdit = !!session && (isAdmin || (!!event && canEditEvent(session.user, event)));
 
   if (!event) {
     return (
@@ -131,6 +115,11 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
     );
   }
 
+  // Un evento que ya terminó se muestra como el recuerdo de cómo fue, sin inscripción
+  if (hasEventEnded(event)) {
+    return <PastEventMemory event={event} canEdit={canEdit} isAdmin={isAdmin} />;
+  }
+
   // Verificar si el evento ya pasó
   const now = new Date();
   const eventEndDate = event.endDate || event.date;
@@ -138,84 +127,60 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
   const isExternalEvent = !!event.externalRegistrationUrl;
 
-  // Verificar si el usuario ya está registrado (solo inscripciones activas)
-  let isRegistered = false;
-  let registrationId: string | null = null;
-  if (userId && !isExternalEvent) {
-    const registration = await prisma.eventRegistration.findFirst({
-      where: {
-        eventId: id,
-        userId: userId,
-        cancelledAt: null, // Solo considerar inscripciones activas
-      },
-    });
-    if (registration) {
-      isRegistered = true;
-      registrationId = registration.id;
-    }
-  }
+  // El mapa sale del link de Google Maps; si es un link corto, se busca la dirección.
+  const mapEmbedUrl =
+    !event.isOnline && event.googleMapsUrl
+      ? googleMapsEmbedUrl(
+          event.googleMapsUrl,
+          [event.placeName, event.address, event.city].filter(Boolean).join(', '),
+        )
+      : null;
 
-  // Obtener información del cupo
-  let capacityInfo = null;
-  if (event.capacity !== null && !isExternalEvent) {
-    const currentRegistrations = await prisma.eventRegistration.count({
-      where: {
-        eventId: id,
-        cancelledAt: null, // Excluir inscripciones canceladas
-      },
-    });
-    capacityInfo = {
-      current: currentRegistrations,
-      capacity: event.capacity,
-      available: currentRegistrations < event.capacity,
-    };
-  }
+  // Todo lo que sigue depende solo del evento y la sesión: se pide en paralelo.
+  const [registration, currentRegistrations, waitlistCount, registrations, eventAnnouncements] =
+    await Promise.all([
+      // Si el usuario ya está registrado (solo inscripciones activas)
+      userId && !isExternalEvent
+        ? prisma.eventRegistration.findFirst({
+            where: { eventId: id, userId, cancelledAt: null },
+            select: { id: true },
+          })
+        : null,
+      // Inscripciones activas, para el cupo
+      event.capacity !== null && !isExternalEvent
+        ? prisma.eventRegistration.count({ where: { eventId: id, cancelledAt: null } })
+        : null,
+      // Cuántos esperan en la lista de espera
+      !isExternalEvent
+        ? prisma.eventWaitlistEntry.count({ where: activeWaitlistWhere(id) })
+        : Promise.resolve(0),
+      // Inscripciones, para el resumen de quien gestiona el evento (solo inscripción interna)
+      canEdit && !isExternalEvent
+        ? prisma.eventRegistration.findMany({
+            where: { eventId: id },
+            select: { cancelledAt: true },
+          })
+        : Promise.resolve([] as { cancelledAt: Date | null }[]),
+      getEventAnnouncements(id),
+    ]);
+
+  const isRegistered = !!registration;
+  const registrationId = registration?.id ?? null;
+
+  const capacityInfo =
+    event.capacity !== null && currentRegistrations !== null
+      ? {
+          current: currentRegistrations,
+          capacity: event.capacity,
+          available: currentRegistrations < event.capacity,
+        }
+      : null;
 
   const isFull = event.markedAsFull || (capacityInfo !== null && !capacityInfo.available);
 
-  // Lista de espera: cuántos esperan y, si el usuario está esperando, en qué lugar
-  let waitlistCount = 0;
-  let waitlistPosition: number | null = null;
-  if (!isExternalEvent) {
-    waitlistCount = await prisma.eventWaitlistEntry.count({ where: activeWaitlistWhere(id) });
-    if (userId && !isRegistered && waitlistCount > 0) {
-      waitlistPosition = await getWaitlistPosition(id, userId);
-    }
-  }
-
-  // Obtener inscripciones si el usuario es admin (solo para eventos con inscripción interna)
-  let registrations: Array<{
-    id: string;
-    userId: string;
-    cancelledAt: Date | null;
-    createdAt: Date;
-    user: {
-      name: string;
-      email: string;
-    };
-  }> = [];
-
-  if (canEdit && !isExternalEvent) {
-    registrations = await prisma.eventRegistration.findMany({
-      where: {
-        eventId: id,
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  // Obtener anuncios del evento
-  const eventAnnouncements = await getEventAnnouncements(id);
+  // Si el usuario está esperando, en qué lugar
+  const waitlistPosition =
+    userId && !isRegistered && waitlistCount > 0 ? await getWaitlistPosition(id, userId) : null;
 
   return (
     <>
@@ -358,6 +323,20 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                         {[event.placeName, event.address, event.city && `${event.city}, Argentina`]
                           .filter(Boolean)
                           .join(' · ')}
+                        {event.googleMapsUrl && (
+                          <>
+                            {' '}
+                            <a
+                              href={event.googleMapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-pcnGreen hover:underline"
+                            >
+                              <MapPin className="h-3 w-3" />
+                              abrir en Google Maps
+                            </a>
+                          </>
+                        )}
                       </dd>
                     </>
                   )
@@ -501,10 +480,10 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             )}
 
             {/* Mapa */}
-            {!event.isOnline && event.latitude && event.longitude && (
+            {mapEmbedUrl && (
               <div className="relative h-56 w-full overflow-hidden">
                 <iframe
-                  src={`https://www.google.com/maps?q=${Number(event.latitude).toFixed(6)},${Number(event.longitude).toFixed(6)}&z=15&output=embed`}
+                  src={mapEmbedUrl}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

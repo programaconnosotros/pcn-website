@@ -35,6 +35,7 @@ import {
   Wrench,
   Youtube,
 } from 'lucide-react';
+import { useEffect } from 'react';
 import { GeistMono } from 'geist/font/mono';
 import Link from 'next/link';
 import { NavMain, type NavItem } from '@/components/ui/nav-main';
@@ -54,6 +55,8 @@ import type { SessionUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 import { NavSecondary } from './nav-secondary';
 import { InstallAppButton } from './install-app-button';
+import { OsClassicReturn } from '@/components/os/os-classic-return';
+import { consumeOpenSidebarRequest } from '@/components/os/os-display-mode';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
@@ -132,7 +135,12 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar(props: AppSidebarProps) {
   const { user, upcomingEvents = [], unreadNotificationsCount = 0, ...sidebarProps } = props;
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpen } = useSidebar();
+
+  // Just switched from PCN OS to the classic layout: start with the navigation in view.
+  useEffect(() => {
+    if (!isMobile && consumeOpenSidebarRequest()) setOpen(true);
+  }, [isMobile, setOpen]);
 
   if (isMobile)
     return (
@@ -204,6 +212,7 @@ export function AppSidebar(props: AppSidebarProps) {
 
       <SidebarFooter className="gap-1.5 border-t border-pcnGreen-200 px-3 pb-3 pt-2">
         <InstallAppButton />
+        <OsClassicReturn />
         <NavSecondary items={secondaryItems} className="p-0" />
         <NavUser user={user} />
       </SidebarFooter>

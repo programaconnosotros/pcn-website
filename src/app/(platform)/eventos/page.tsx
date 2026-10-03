@@ -1,17 +1,20 @@
+import { Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { EventsList } from '@/components/events/events-list';
+import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { Button } from '@/components/ui/button';
 import { Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { canCreateEvents } from '@/lib/event-permissions';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Eventos',
+  title: tabTitle.ls('eventos'),
   description:
     'Meetups, coworks, Lightning Talks y la serie Zero to Agent: descubrí los próximos eventos de la comunidad y participá presencial u online junto a personas apasionadas por el software.',
   openGraph: {
@@ -66,7 +69,10 @@ const EventsPage = async () => {
             </div>
           </StickyHeader>
 
-          <EventsList />
+          {/* The header shows right away; the list streams in once the events are loaded. */}
+          <Suspense fallback={<RuledGridSkeleton count={8} />}>
+            <EventsList />
+          </Suspense>
         </div>
       </div>
     </>

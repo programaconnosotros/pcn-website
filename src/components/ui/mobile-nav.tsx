@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -41,8 +49,14 @@ const tabItems = [
   { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
 ];
 
+// Geist Mono is wide, so the labels are set tight and truncate (e.g. "Conversaciones" on a narrow
+// phone) instead of pushing the other tabs around.
 const tabClassName =
-  'relative flex h-full flex-1 flex-col items-center justify-center gap-1 font-mono text-[10px] font-medium tracking-wide text-foreground/55 transition-colors active:bg-pcnGreen/10';
+  'relative flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 px-0.5 font-mono text-[10px] font-medium tracking-tighter text-foreground/55 transition-colors active:bg-pcnGreen/10';
+
+// Where each screen was left when switching tabs, so coming back lands on the same spot, like a
+// native tab bar. The page itself comes from the router cache (see `staleTimes` in next.config).
+const tabScroll = new Map<string, number>();
 
 /** A lit bar over the active tab, like a selected pane in tmux. */
 const TabIndicator = () => (
@@ -151,7 +165,7 @@ const MenuRow = ({ item, active }: { item: MenuEntry; active: boolean }) => {
   const external = isExternal(item.url);
   const delay = Math.min(item.line * 22, 600);
   const className = cn(
-    'group relative flex h-12 items-center gap-3 border-b border-pcnGreen-200 px-3 text-[15px] font-medium text-foreground/85 duration-300 animate-in fade-in slide-in-from-left-3 fill-mode-both last:border-b-0 active:bg-pcnGreen/10',
+    'group relative flex h-12 items-center gap-2.5 border-b border-pcnGreen-200 px-2.5 text-[14px] min-[380px]:gap-3 min-[380px]:px-3 min-[380px]:text-[15px] font-medium text-foreground/85 duration-300 animate-in fade-in slide-in-from-left-3 fill-mode-both last:border-b-0 active:bg-pcnGreen/10',
     active && 'bg-pcnGreen/[0.08] text-pcnGreen',
   );
   const content = (
@@ -179,7 +193,7 @@ const MenuRow = ({ item, active }: { item: MenuEntry; active: boolean }) => {
           {item.badge > 99 ? '99+' : item.badge}
         </span>
       ) : (
-        <span className="min-w-0 flex-1 truncate text-right font-mono text-[11px] text-foreground/30">
+        <span className="min-w-0 flex-1 truncate text-right font-mono text-[11px] tracking-tight text-foreground/30">
           {displayPath(item.url)}
         </span>
       )}
@@ -269,7 +283,7 @@ const MenuPanel = ({
       </div>
 
       <header className="relative shrink-0 border-b border-pcnGreen-200 bg-black/70 backdrop-blur">
-        <div className="flex h-12 items-center gap-2.5 pl-4 pr-2">
+        <div className="flex h-12 items-center gap-2.5 pl-3 pr-2 min-[380px]:pl-4">
           <span className="relative flex size-7 shrink-0 items-center justify-center rounded-sm ring-1 ring-inset ring-pcnGreen-400">
             <span className="absolute inset-0 rounded-sm bg-pcnGreen/20 blur-md" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -294,7 +308,7 @@ const MenuPanel = ({
             event.preventDefault();
             openFirstMatch();
           }}
-          className="mx-4 mb-3 flex h-11 items-center gap-2 rounded-sm border border-pcnGreen-300 bg-black/80 px-3 font-mono text-[14px] transition-shadow focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_20px_-6px_rgba(4,244,190,0.6)]"
+          className="mx-3 mb-3 flex h-11 items-center gap-2 rounded-sm border border-pcnGreen-300 bg-black/80 px-3 font-mono text-[14px] transition-shadow focus-within:border-pcnGreen-600 focus-within:shadow-[0_0_20px_-6px_rgba(4,244,190,0.6)] min-[380px]:mx-4"
         >
           <span className="shrink-0 text-pcnGreen">$</span>
           <span className="shrink-0 text-foreground/50">cd</span>
@@ -317,7 +331,7 @@ const MenuPanel = ({
         </form>
       </header>
 
-      <div className="relative flex-1 overflow-y-auto overscroll-contain px-4 pb-6">
+      <div className="relative flex-1 overflow-y-auto overscroll-contain px-3 pb-6 min-[380px]:px-4">
         {/* The prompt above only filters sections; this hands the query to the site-wide search. */}
         <button
           type="button"
@@ -338,7 +352,7 @@ const MenuPanel = ({
               <span className="text-foreground/70">buscar en todo el sitio</span>
             )}
           </span>
-          <span className="shrink-0 text-[10px] text-pcnGreen-500">
+          <span className="hidden shrink-0 text-[10px] text-pcnGreen-500 min-[380px]:inline">
             eventos · cursos · charlas…
           </span>
         </button>
@@ -420,10 +434,34 @@ export function MobileNav({
   const pathname = usePathname();
   const { openMobile, setOpenMobile } = useSidebar();
   const tabBarRef = useRef<HTMLElement>(null);
+  /** The tab just tapped, whose scroll position is restored once its page shows. */
+  const restoreRef = useRef<string | null>(null);
 
   useEffect(() => {
     setOpenMobile(false);
   }, [pathname, setOpenMobile]);
+
+  // Before paint, so the screen never flashes at the top before jumping back to where it was.
+  useLayoutEffect(() => {
+    if (restoreRef.current !== pathname) return;
+    restoreRef.current = null;
+    window.scrollTo(0, tabScroll.get(pathname) ?? 0);
+  }, [pathname]);
+
+  const handleTabClick = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
+    // Any other tab closes the open menu right away, as if "Menú" had been tapped, instead of
+    // waiting for the route change (which never comes on the current tab).
+    setOpenMobile(false);
+    if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+    // Tapping the tab you're on scrolls back to the top instead of reloading it.
+    if (pathname === url) {
+      event.preventDefault();
+      if (!openMobile) window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    tabScroll.set(pathname, window.scrollY);
+    restoreRef.current = url;
+  };
 
   const groups = useMemo(() => {
     let line = 0;
@@ -457,6 +495,9 @@ export function MobileNav({
                 key={item.url}
                 href={item.url}
                 aria-current={active ? 'page' : undefined}
+                // The scroll position is restored by hand (see `handleTabClick`).
+                scroll={false}
+                onClick={(event) => handleTabClick(event, item.url)}
                 className={cn(tabClassName, active && 'text-pcnGreen')}
               >
                 {active && <TabIndicator />}
@@ -464,7 +505,9 @@ export function MobileNav({
                   className={cn('size-[22px]', active && 'drop-shadow-[0_0_6px_#04f4be]')}
                   strokeWidth={1.75}
                 />
-                <span className={cn(active && 'text-glow')}>{item.title}</span>
+                <span className={cn('max-w-full truncate', active && 'text-glow')}>
+                  {item.title}
+                </span>
               </Link>
             );
           })}
@@ -490,7 +533,7 @@ export function MobileNav({
                 <SquareTerminal className="size-4" strokeWidth={2} />
               )}
             </span>
-            <span className={cn(openMobile && 'text-glow')}>Menú</span>
+            <span className={cn('max-w-full truncate', openMobile && 'text-glow')}>Menú</span>
           </button>
         </div>
       </nav>

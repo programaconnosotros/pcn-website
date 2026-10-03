@@ -5,6 +5,7 @@ const LANG_ALIASES: Record<string, BundledLanguage | 'text'> = { sh: 'bash', tre
 
 const LANGS: BundledLanguage[] = [
   'bash',
+  'css',
   'dockerfile',
   'js',
   'json',

@@ -29,13 +29,15 @@ import { technologies, toolchain } from '@/components/desarrollo/technologies';
 import { techNoteGroups } from './tech-notes';
 import { DesarrolloToc } from '@/components/desarrollo/desarrollo-toc';
 import { DbDiagram } from '@/components/desarrollo/db-diagram';
+import { ArchitectureDiagram } from '@/components/desarrollo/architecture-diagram';
+import { architectureViews } from './architecture';
 import { DB_SCHEMA_UPDATED_AT, dbEnums, dbModels, dbRelations } from './db-schema';
 import type { TocSection } from '@/components/ui/table-of-contents';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Desarrollá el proyecto',
+  title: 'pnpm dev',
   description:
     'El website de PCN es open-source. Aprendé cómo sumarte al desarrollo, ganar experiencia real con un equipo y dejar tu huella en la comunidad.',
   openGraph: {
@@ -266,6 +268,13 @@ const section = (id: string, title: string): TocSection => ({ id, title });
 // Index on the left: the page's sections, with every stack note under its group.
 const tocSections: TocSection[] = [
   section('arquitectura', 'Arquitectura'),
+  section('diagramas', 'Diagramas de arquitectura'),
+  ...architectureViews.map((view) => ({
+    id: `diagrama-${view.id}`,
+    title: view.title,
+    group: 'diagramas',
+  })),
+  section('diseno', 'Diseño UX/UI'),
   section('tecnologias', 'Tecnologías'),
   section('contribuir', 'Cómo contribuir'),
   section('base-de-datos', 'Base de datos'),
@@ -323,6 +332,51 @@ const DesarrolloPage = () => (
                   detail: layer.description,
                 }))}
               />
+            </Section>
+
+            <Section id="diagramas" title="Diagramas de arquitectura">
+              <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                El mismo sistema visto desde {architectureViews.length} ángulos: cómo se reparte la
+                lógica, dónde corre cada pieza, cómo llega un cambio a producción, cómo se levanta
+                en tu máquina y cómo colaboran las piezas en una petición real. Debajo de cada
+                diagrama está explicado cada componente.
+              </p>
+              <div className="space-y-6">
+                {architectureViews.map((view) => (
+                  <div
+                    key={view.id}
+                    id={`diagrama-${view.id}`}
+                    className="scroll-mt-32 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+3rem)]"
+                  >
+                    <h3 className="mb-2 font-mono text-sm text-pcnGreen">
+                      <span className="text-pcnGreen-500">### </span>
+                      {view.title}
+                    </h3>
+                    <p className="mb-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                      {view.summary}
+                    </p>
+                    <ArchitectureDiagram id={view.id} title={view.title} source={view.source} />
+                    <div className="mt-3">
+                      <DefinitionList items={view.components} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section id="diseno" title="Diseño UX/UI y design system">
+              <p className="mb-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                El sitio está hecho para gente súper nerd, apasionada por el software: estética de
+                terminal, densidad antes que aire, un solo acento verde y el teclado como ciudadano
+                de primera. Contamos cómo llegamos a esta estética, los principios que seguimos, los
+                tokens y cada componente renderizado en vivo con todos sus estados.
+              </p>
+              <Link
+                href="/desarrollo/diseno"
+                className="font-mono text-sm text-pcnGreen underline-offset-4 hover:underline"
+              >
+                ~/desarrollo/diseno →
+              </Link>
             </Section>
 
             <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-pcnGreen-200">
@@ -446,6 +500,15 @@ const DesarrolloPage = () => (
                   push. No se puede pushear código que rompa alguno de estos checks.
                 </dd>
               </dl>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Las técnicas, los checks y todos los casos de prueba, manuales y automatizados, en{' '}
+                <Link
+                  href="/desarrollo/calidad"
+                  className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                >
+                  ~/desarrollo/calidad →
+                </Link>
+              </p>
             </Section>
 
             <Section id="estadisticas" title="Estadísticas de colaboración">

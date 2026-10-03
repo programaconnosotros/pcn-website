@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { OfflineScreen } from './offline-screen';
+import { OFFLINE_TAB_TITLE } from '@/lib/tab-title';
 
 export const metadata: Metadata = {
-  title: 'Sin conexión',
+  title: { absolute: OFFLINE_TAB_TITLE },
   robots: { index: false },
 };
 

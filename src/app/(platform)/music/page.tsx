@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Música',
+  title: 'mpv ~/music',
   description: 'Radios de la comunidad y playlists recomendadas para programar concentrado.',
   openGraph: {
     title: 'Música | programaConNosotros',

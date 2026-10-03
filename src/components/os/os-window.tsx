@@ -1,44 +1,32 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  MIN_WINDOW_HEIGHT,
+  MIN_WINDOW_WIDTH,
+  type ClampMode,
+  type OsWindowState,
+  type Rect,
+} from './os-window-geometry';
 import type { OsProgram } from './programs';
 import { PcnLoader } from '@/components/ui/pcn-loader';
+import { tabTitleSubject } from '@/lib/tab-title';
 
-export interface Rect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-export interface OsWindowState extends Rect {
-  id: string;
-  /** URL the iframe was created with. It never changes, so the iframe never reloads on re-render. */
-  src: string;
-  /** Current location inside the window, reported by the embedded page. */
-  path: string;
-  title: string | null;
-  minimized: boolean;
-  maximized: boolean;
-}
-
-type ResizeDirection = 'e' | 's' | 'w' | 'se' | 'sw';
+type ResizeDirection = 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
 const resizeCursors: Record<ResizeDirection, string> = {
+  n: 'ns-resize',
+  s: 'ns-resize',
   e: 'ew-resize',
   w: 'ew-resize',
-  s: 'ns-resize',
+  nw: 'nwse-resize',
   se: 'nwse-resize',
+  ne: 'nesw-resize',
   sw: 'nesw-resize',
 };
-
-export type ClampMode = 'move' | 'resize';
-
-export const MIN_WINDOW_WIDTH = 420;
-export const MIN_WINDOW_HEIGHT = 280;
 
 interface OsWindowProps {
   win: OsWindowState;
@@ -48,35 +36,55 @@ interface OsWindowProps {
   zIndex: number;
   focused: boolean;
   /** Keeps the window inside the desktop: returns a rect clamped to it. */
-  clampRect: (rect: Rect, mode: ClampMode) => Rect;
+  clampRect: (_rect: Rect, _mode: ClampMode) => Rect;
   onFocus: () => void;
   onClose: () => void;
   onMinimize: () => void;
   onToggleMaximize: () => void;
-  onRectChange: (rect: Rect) => void;
+  onRectChange: (_rect: Rect) => void;
   /** Called with the cursor to show while moving or resizing, and with null when done. */
-  onInteractionChange: (cursor: string | null) => void;
-  registerIframe: (iframe: HTMLIFrameElement | null) => void;
+  onInteractionChange: (_cursor: string | null) => void;
+  registerIframe: (_iframe: HTMLIFrameElement | null) => void;
   onIframeLoad: () => void;
+  /** PCN OS liviano: no open/close/minimize animations and no large shadows. */
+  lite?: boolean;
+  /**
+   * Its page is unloaded to save resources (PCN OS liviano keeps only the most recent windows
+   * live). It loads again, where it was, when the window comes back to the front.
+   */
+  suspended?: boolean;
 }
 
 /** Strips the site-wide title template so the title bar shows only the page name. */
-const cleanTitle = (title: string | null) =>
-  title?.replace(/\s+-\s+PCN$/, '').replace(/^programaConNosotros$/, '') || null;
 
-/** Follows the pointer until it is released, reporting the delta from where it started. */
+/**
+ * Follows the pointer until it is released, reporting the delta from where it started at most
+ * once per frame (pointer events can fire several times per frame on high-rate mice).
+ */
 const trackPointer = (
   event: React.PointerEvent,
-  onMove: (dx: number, dy: number) => void,
+  onMove: (_dx: number, _dy: number) => void,
   onEnd: () => void,
 ) => {
   const startX = event.clientX;
   const startY = event.clientY;
-  const move = (e: PointerEvent) => onMove(e.clientX - startX, e.clientY - startY);
+  let frame = 0;
+  let last: PointerEvent | null = null;
+  const flush = () => {
+    frame = 0;
+    if (last) onMove(last.clientX - startX, last.clientY - startY);
+    last = null;
+  };
+  const move = (e: PointerEvent) => {
+    last = e;
+    frame ||= requestAnimationFrame(flush);
+  };
   const up = () => {
     window.removeEventListener('pointermove', move);
     window.removeEventListener('pointerup', up);
     window.removeEventListener('pointercancel', up);
+    cancelAnimationFrame(frame);
+    flush();
     onEnd();
   };
   window.addEventListener('pointermove', move);
@@ -140,10 +148,14 @@ const WindowButton = ({
 );
 
 // Handles sit just inside the frame because the window clips its overflow for rounded corners.
+// The top ones are thin so the title bar buttons stay clickable.
 const resizeHandles: { direction: ResizeDirection; className: string }[] = [
-  { direction: 'e', className: 'right-0 top-10 bottom-3 w-1.5 cursor-ew-resize' },
-  { direction: 'w', className: 'left-0 top-10 bottom-3 w-1.5 cursor-ew-resize' },
+  { direction: 'n', className: 'top-0 left-2 right-2 h-1 cursor-ns-resize' },
+  { direction: 'e', className: 'right-0 top-2 bottom-3 w-1.5 cursor-ew-resize' },
+  { direction: 'w', className: 'left-0 top-2 bottom-3 w-1.5 cursor-ew-resize' },
   { direction: 's', className: 'bottom-0 left-3 right-3 h-1.5 cursor-ns-resize' },
+  { direction: 'nw', className: 'top-0 left-0 size-2 cursor-nwse-resize' },
+  { direction: 'ne', className: 'top-0 right-0 size-2 cursor-nesw-resize' },
   { direction: 'se', className: 'bottom-0 right-0 size-3 cursor-nwse-resize' },
   { direction: 'sw', className: 'bottom-0 left-0 size-3 cursor-nesw-resize' },
 ];
@@ -163,12 +175,76 @@ export function OsWindow({
   onInteractionChange,
   registerIframe,
   onIframeLoad,
+  lite = false,
+  suspended = false,
 }: OsWindowProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [loaded, setLoaded] = useState(false);
+  // Where the page loads from. A suspended window resumes at the page it was on, not the one it
+  // was opened with (the iframe keeps `src` fixed while it navigates, to avoid reloads).
+  const [src, setSrc] = useState(win.src);
+  const [prevSuspended, setPrevSuspended] = useState(suspended);
+  if (suspended !== prevSuspended) {
+    setPrevSuspended(suspended);
+    if (suspended) {
+      setSrc(win.path);
+      setLoaded(false);
+    }
+  }
+
+  // The iframe's `load` event waits for the whole streamed page and every image in it. The page
+  // shell (or its loading skeleton) paints long before that, so the loader goes away as soon as
+  // the embedded document has anything in its body.
+  useEffect(() => {
+    if (loaded || suspended) return;
+    const interval = window.setInterval(() => {
+      try {
+        const doc = iframeRef.current?.contentDocument;
+        if (doc && doc.URL !== 'about:blank' && doc.body?.childElementCount) setLoaded(true);
+      } catch {
+        // Not readable (another origin): wait for the load event instead.
+      }
+    }, 50);
+    return () => window.clearInterval(interval);
+  }, [loaded, suspended]);
   const Icon = program.icon;
-  const pageTitle = cleanTitle(win.title);
-  const subtitle = pageTitle && pageTitle !== program.name ? pageTitle : null;
+  // The title bar already shows the program's ~/dir; the page's terminal-style tab title adds
+  // what's open inside it (`cat ~/eventos/meetup` → `meetup`).
+  const subtitle = tabTitleSubject(win.title);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  /** A move or resize ended after being previewed on the DOM; React has to take it back. */
+  const settling = useRef(false);
+
+  // While the pointer moves, the window is updated on the DOM directly instead of through React:
+  // the desktop and every other window would re-render on each frame otherwise. Once released,
+  // the final rect goes to the reducer and this hands the styles back to React.
+  useLayoutEffect(() => {
+    const el = sectionRef.current;
+    if (!settling.current || !el) return;
+    settling.current = false;
+    el.style.translate = '';
+    el.style.left = `${rect.x}px`;
+    el.style.top = `${rect.y}px`;
+    el.style.width = `${rect.w}px`;
+    el.style.height = `${rect.h}px`;
+  });
+
+  /** Moves are previewed with `translate` (no layout); resizes need the real size. */
+  const preview = (next: Rect, mode: ClampMode) => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (mode === 'move') {
+      el.style.translate = `${next.x - rect.x}px ${next.y - rect.y}px`;
+      el.style.width = `${next.w}px`;
+      el.style.height = `${next.h}px`;
+      return;
+    }
+    el.style.left = `${next.x}px`;
+    el.style.top = `${next.y}px`;
+    el.style.width = `${next.w}px`;
+    el.style.height = `${next.h}px`;
+  };
 
   const startDrag = (event: React.PointerEvent) => {
     if (event.button !== 0) return;
@@ -178,11 +254,20 @@ export function OsWindow({
     const start: Rect = win.maximized
       ? { ...win, x: Math.round(event.clientX - win.w * ratio), y: rect.y }
       : rect;
+    let latest: Rect | null = null;
     onInteractionChange('default');
     trackPointer(
       event,
-      (dx, dy) => onRectChange(clampRect({ ...start, x: start.x + dx, y: start.y + dy }, 'move')),
-      () => onInteractionChange(null),
+      (dx, dy) => {
+        latest = clampRect({ ...start, x: start.x + dx, y: start.y + dy }, 'move');
+        preview(latest, 'move');
+      },
+      () => {
+        onInteractionChange(null);
+        if (!latest) return;
+        settling.current = true;
+        onRectChange(latest);
+      },
     );
   };
 
@@ -191,6 +276,7 @@ export function OsWindow({
     event.stopPropagation();
     onFocus();
     const start = rect;
+    let latest: Rect | null = null;
     onInteractionChange(resizeCursors[direction]);
     trackPointer(
       event,
@@ -202,24 +288,41 @@ export function OsWindow({
           next.x = start.x + start.w - next.w;
         }
         if (direction.includes('s')) next.h = Math.max(MIN_WINDOW_HEIGHT, start.h + dy);
-        onRectChange(clampRect(next, 'resize'));
+        if (direction.includes('n')) {
+          next.h = Math.max(MIN_WINDOW_HEIGHT, start.h - dy);
+          next.y = start.y + start.h - next.h;
+        }
+        latest = clampRect(next, 'resize');
+        preview(latest, 'resize');
       },
-      () => onInteractionChange(null),
+      () => {
+        onInteractionChange(null);
+        if (!latest) return;
+        settling.current = true;
+        onRectChange(latest);
+      },
     );
   };
 
   return (
     <motion.section
+      ref={sectionRef}
       role="dialog"
       aria-label={program.name}
       data-focused={focused}
-      initial={{ opacity: 0, scale: 0.94, y: 16 }}
+      initial={lite ? false : { opacity: 0, scale: 0.94, y: 16 }}
       animate={
-        win.minimized
-          ? { opacity: 0, scale: 0.4, y: 480, transition: { duration: 0.25, ease: 'easeIn' } }
-          : { opacity: 1, scale: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } }
+        lite
+          ? { opacity: win.minimized ? 0 : 1, transition: { duration: 0 } }
+          : win.minimized
+            ? { opacity: 0, scale: 0.4, y: 480, transition: { duration: 0.25, ease: 'easeIn' } }
+            : { opacity: 1, scale: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } }
       }
-      exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.15 } }}
+      exit={
+        lite
+          ? { opacity: 0, transition: { duration: 0 } }
+          : { opacity: 0, scale: 0.92, transition: { duration: 0.15 } }
+      }
       onPointerDownCapture={onFocus}
       style={{ left: rect.x, top: rect.y, width: rect.w, height: rect.h, zIndex }}
       className={cn(
@@ -229,6 +332,7 @@ export function OsWindow({
           : 'border-pcnGreen-200',
         win.maximized && 'rounded-none border-x-0',
         win.minimized && 'pointer-events-none',
+        lite && 'shadow-none',
       )}
     >
       <header
@@ -289,20 +393,27 @@ export function OsWindow({
       </header>
 
       <div className="relative min-h-0 flex-1 bg-background">
-        <iframe
-          ref={(iframe) => {
-            iframeRef.current = iframe;
-            registerIframe(iframe);
-          }}
-          src={win.src}
-          title={program.name}
-          onLoad={() => {
-            setLoaded(true);
-            onIframeLoad();
-          }}
-          className="size-full border-0 bg-background"
-        />
-        {!loaded && (
+        {suspended ? (
+          <div className="flex size-full flex-col items-center justify-center gap-2 bg-background font-mono text-xs text-pcnGreen-600">
+            <span className="text-pcnGreen">[ en pausa ]</span>
+            <span>ventana dormida para ahorrar recursos · hacé clic para reanudar</span>
+          </div>
+        ) : (
+          <iframe
+            ref={(iframe) => {
+              iframeRef.current = iframe;
+              registerIframe(iframe);
+            }}
+            src={src}
+            title={program.name}
+            onLoad={() => {
+              setLoaded(true);
+              onIframeLoad();
+            }}
+            className="size-full border-0 bg-background"
+          />
+        )}
+        {!loaded && !suspended && (
           <div className="absolute inset-0 flex items-center justify-center bg-background">
             <PcnLoader label={program.name.toLowerCase()} />
           </div>

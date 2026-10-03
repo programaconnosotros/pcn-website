@@ -1,52 +1,47 @@
-'use client';
-
+// A server component: the static sections render to HTML and ship no JavaScript of their own;
+// only the interactive leaves inside them (players, carousels, install button) hydrate.
 import { AchievementsSection } from '@/components/home/achievements-section';
 import { FaqSection } from '@/components/home/faq-section';
 import { FeatureBento } from '@/components/home/feature-bento';
 import { HomeFooter } from '@/components/home/home-footer';
 import { HomeHero } from '@/components/home/home-hero';
-import { InterviewsSection } from '@/components/home/interviews-section';
 import { JoinSection } from '@/components/home/join-section';
 import { MusicSection } from '@/components/home/music-section';
 import { RecommendedWatchSection } from '@/components/home/recommended-watch-section';
 import { Reveal } from '@/components/home/reveal';
 import { SocialLinks } from '@/components/home/social-links';
 import { PartnersMarquee } from '@/components/home/partners-marquee';
-import { StoryCards } from '@/components/home/story-cards';
-import type { StoryCardPhotos } from '@/lib/gallery';
-import {
-  TestimonialsSection,
-  type FeaturedTestimonial,
-} from '@/components/home/testimonials-section';
-import React from 'react';
+import type { ReactNode } from 'react';
 
-interface HomeClientSideProps {
+interface HomeSectionsProps {
   userName: string | null;
-  title: React.ReactNode;
-  featuredTestimonials: FeaturedTestimonial[];
-  recentlyAddedEventsSection: React.ReactNode;
-  latestConversationsSection: React.ReactNode;
-  latestTalksSection: React.ReactNode;
-  latestPhotosSection: React.ReactNode;
-  latestChangesSection: React.ReactNode;
-  latestArticlesSection: React.ReactNode;
-  ambassadorsSection: React.ReactNode;
-  storyPhotos: StoryCardPhotos;
+  title: ReactNode;
+  testimonialsSection: ReactNode;
+  recentlyAddedEventsSection: ReactNode;
+  latestConversationsSection: ReactNode;
+  latestTalksSection: ReactNode;
+  latestPhotosSection: ReactNode;
+  latestChangesSection: ReactNode;
+  latestArticlesSection: ReactNode;
+  interviewsSection: ReactNode;
+  ambassadorsSection: ReactNode;
+  storyCardsSection: ReactNode;
 }
 
-const HomeClientSide = ({
+const HomeSections = ({
   userName,
   title,
-  featuredTestimonials,
+  testimonialsSection,
   recentlyAddedEventsSection,
   latestConversationsSection,
   latestTalksSection,
   latestPhotosSection,
   latestChangesSection,
   latestArticlesSection,
+  interviewsSection,
   ambassadorsSection,
-  storyPhotos,
-}: HomeClientSideProps) => (
+  storyCardsSection,
+}: HomeSectionsProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
     <HomeHero userName={userName} title={title} />
@@ -67,9 +62,7 @@ const HomeClientSide = ({
 
       <Reveal>{latestArticlesSection}</Reveal>
 
-      <Reveal>
-        <InterviewsSection />
-      </Reveal>
+      <Reveal>{interviewsSection}</Reveal>
 
       <Reveal>
         <AchievementsSection />
@@ -83,13 +76,9 @@ const HomeClientSide = ({
         <MusicSection />
       </Reveal>
 
-      <Reveal>
-        <StoryCards photos={storyPhotos} />
-      </Reveal>
+      <Reveal>{storyCardsSection}</Reveal>
 
-      <Reveal>
-        <TestimonialsSection testimonials={featuredTestimonials} />
-      </Reveal>
+      <Reveal>{testimonialsSection}</Reveal>
 
       <Reveal>
         <SocialLinks />
@@ -112,4 +101,4 @@ const HomeClientSide = ({
   </div>
 );
 
-export default HomeClientSide;
+export default HomeSections;

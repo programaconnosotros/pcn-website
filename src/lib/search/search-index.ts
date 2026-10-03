@@ -5,6 +5,7 @@ import { specialties } from '@/components/especialidades/specialties';
 import { visiblePrograms } from '@/components/os/programs';
 import { conversations } from '@/data/whatsapp-conversations';
 import { conversationHref } from '@/components/conversations/conversation-utils';
+import { extractedConsejos } from '@/data/consejos-extraidos';
 import type { SearchResult } from './types';
 
 /**
@@ -95,6 +96,18 @@ const buildStaticIndex = (): IndexedEntry[] => [
       },
       conversation.summary,
       conversation.participants.join(' '),
+    ),
+  ),
+  ...extractedConsejos.map((consejo) =>
+    toEntry(
+      {
+        type: 'consejo',
+        title: consejo.content.length > 90 ? `${consejo.content.slice(0, 89)}…` : consejo.content,
+        subtitle: `${consejo.member} · auto-extraído`,
+        href: `/consejos/${consejo.id}`,
+      },
+      consejo.content,
+      consejo.member,
     ),
   ),
 ];

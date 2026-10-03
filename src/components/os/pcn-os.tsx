@@ -1,32 +1,56 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
 import { useRouter } from 'next/navigation';
-import { BackgroundMusicPlayer } from '@/components/music/music-player-dialog';
 import { findMusicSet } from '@/components/music/music-sets';
 import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
-import { isOsMessage } from './os-env';
-import { OsDock, dockReservedHeight } from './os-dock';
-import { OsLauncher } from './os-launcher';
+import { useDisplayMode } from './os-display-mode';
+import { isOsHost, isOsMessage } from './os-env';
+import { dockReservedHeight } from './os-dock-geometry';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
-import { OsProcesses } from './os-processes';
 import { OsWallpaper } from './os-wallpaper';
-import { OsPhotos } from './os-photos';
 import {
   MIN_WINDOW_HEIGHT,
   MIN_WINDOW_WIDTH,
-  OsWindow,
-  type OsWindowState,
   type ClampMode,
+  type OsWindowState,
   type Rect,
-} from './os-window';
+} from './os-window-geometry';
 import { useOsMode } from './use-os-mode';
+import { readSession, restoreOrder, toSession, writeSession, type SavedWindow } from './os-session';
+import { osTabTitle } from '@/lib/tab-title';
 
-export const MENU_BAR_HEIGHT = 28;
+const MENU_BAR_HEIGHT = 28;
+/** PCN OS liviano keeps at most this many windows with their page loaded; the rest sleep. */
+const LITE_LIVE_WINDOWS = 3;
+
+type OsDesktopParts = typeof import('./os-desktop-parts');
+
+let desktopParts: Promise<OsDesktopParts> | null = null;
+const loadDesktopParts = () => (desktopParts ??= import('./os-desktop-parts'));
+
+// On a desktop host, start downloading right away, while the page is still hydrating, so the
+// dock and the first window show up as early as before. Elsewhere it is never requested.
+if (typeof window !== 'undefined' && isOsHost()) void loadDesktopParts();
+
+/** The heavy desktop components, once the desktop is active and they have loaded. */
+const useDesktopParts = (enabled: boolean) => {
+  const [parts, setParts] = useState<OsDesktopParts | null>(null);
+  useEffect(() => {
+    if (!enabled || parts) return;
+    let cancelled = false;
+    void loadDesktopParts().then((loaded) => {
+      if (!cancelled) setParts(loaded);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, parts]);
+  return parts;
+};
 
 interface Viewport {
   w: number;
@@ -42,6 +66,8 @@ interface OsState {
 
 type OsAction =
   | { type: 'open'; path: string; rect: Rect }
+  /** Brings back a saved session, windows from back to front. Replaces any open window. */
+  | { type: 'restore'; windows: SavedWindow[] }
   /** Opens a page in a new window, or brings forward the window already showing it. */
   | { type: 'openPath'; path: string; viewport: Viewport }
   | { type: 'focus'; id: string }
@@ -58,7 +84,7 @@ type OsAction =
 const updateWindow = (
   state: OsState,
   id: string,
-  update: (win: OsWindowState) => Partial<OsWindowState>,
+  update: (_win: OsWindowState) => Partial<OsWindowState>,
 ): OsState => ({
   ...state,
   windows: state.windows.map((win) => (win.id === id ? { ...win, ...update(win) } : win)),
@@ -83,6 +109,27 @@ const reducer = (state: OsState, action: OsAction): OsState => {
         windows: [...state.windows, win],
         order: [...state.order, id],
         nextId: state.nextId + 1,
+      };
+    }
+    case 'restore': {
+      const windows = action.windows.map(
+        ({ path, minimized, maximized, x, y, w, h }, index): OsWindowState => ({
+          id: `win-${state.nextId + index}`,
+          src: path,
+          path,
+          title: null,
+          minimized,
+          maximized,
+          x,
+          y,
+          w,
+          h,
+        }),
+      );
+      return {
+        windows,
+        order: windows.map((win) => win.id),
+        nextId: state.nextId + windows.length,
       };
     }
     case 'openPath': {
@@ -233,6 +280,8 @@ interface PcnOsProps {
  */
 export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const isOs = useOsMode();
+  const parts = useDesktopParts(isOs);
+  const lite = useDisplayMode() === 'lite';
   const [state, dispatch] = useReducer(reducer, { windows: [], order: [], nextId: 1 });
   const [viewport, setViewport] = useState<Viewport | null>(null);
   /** Cursor to show while a window is being moved or resized; null when idle. */
@@ -261,13 +310,29 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     return () => window.removeEventListener('resize', onResize);
   }, [isOs]);
 
-  // Open the page the visitor landed on (the home page by default) in the first window, and the
-  // feed next to the home.
+  // After a reload, bring back every window that was open, where it was. Otherwise open the page
+  // the visitor landed on (the home page by default) in the first window, and the feed next to
+  // the home.
   useEffect(() => {
     if (!isOs || !viewport || opened.current) return;
     opened.current = true;
     const path = `${window.location.pathname}${window.location.search}`;
-    const split = path === '/' ? homeAndFeedRects(viewport) : null;
+    const session = readSession();
+    if (session) {
+      const restored = restoreOrder(session.windows, path);
+      // The screen may have changed size since: windows keep their share of it and fit inside.
+      const windows = restored.windows.map((win) => ({
+        ...win,
+        ...fitToDesktop(scaleToDesktop(win, session.viewport, viewport), viewport),
+      }));
+      dispatch({ type: 'restore', windows });
+      // The address bar points somewhere no saved window was: open it on top, focused.
+      if (!restored.matched)
+        dispatch({ type: 'open', path, rect: newWindowRect(viewport, windows.length) });
+      return;
+    }
+    // PCN OS liviano opens only the home: every window is a whole copy of the site.
+    const split = path === '/' && !lite ? homeAndFeedRects(viewport) : null;
     if (split) {
       // The feed opens first so the home ends up in front, focused and in the address bar.
       dispatch({ type: 'open', path: '/feed', rect: split.feed });
@@ -275,7 +340,14 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
       return;
     }
     dispatch({ type: 'open', path, rect: newWindowRect(viewport, 0) });
-  }, [isOs, viewport]);
+  }, [isOs, viewport, lite]);
+
+  // Remember the desktop for the next reload. Moves and resizes only reach the state when the
+  // pointer is released, so this doesn't write while dragging.
+  useEffect(() => {
+    if (!isOs || !viewport || !opened.current) return;
+    writeSession(toSession(state.windows, state.order, viewport));
+  }, [isOs, viewport, state.windows, state.order]);
 
   const focusedId = [...state.order]
     .reverse()
@@ -286,12 +358,13 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   // Keep the address bar and tab title in sync with the focused window so links can be shared.
   const focusedPath = focusedWindow?.path;
   const focusedProgramName = focusedProgram?.name;
+  const focusedTitle = focusedWindow?.title;
   useEffect(() => {
     if (!isOs || !focusedPath) return;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== focusedPath) window.history.replaceState(null, '', focusedPath);
-    document.title = `${focusedProgramName} - PCN OS`;
-  }, [isOs, focusedPath, focusedProgramName]);
+    document.title = osTabTitle(focusedTitle ?? null, focusedProgramName ?? '');
+  }, [isOs, focusedPath, focusedProgramName, focusedTitle]);
 
   useEffect(() => {
     if (!isOs) return;
@@ -343,28 +416,37 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
 
   // A maximized window hides the desktop, so its background widgets can pause.
   const covered = state.windows.some((win) => win.maximized && !win.minimized);
+  // Wallpaper and menu bar render from the start (they are what the server paints); the rest
+  // waits for the desktop parts, which arrive like they used to after hydration.
+  const desktop = isOs ? parts : null;
+  // PCN OS liviano: only the most recently focused windows that are on screen keep their page.
+  const liveWindowIds = new Set(
+    state.order
+      .filter((id) => !state.windows.find((win) => win.id === id)?.minimized)
+      .slice(-LITE_LIVE_WINDOWS),
+  );
 
   return (
     <div className="hidden os:block">
       <div className={cn('fixed inset-0 overflow-hidden', interactionCursor && 'select-none')}>
         <OsWallpaper
-          showHint={isOs && viewport !== null && state.windows.length === 0}
+          showHint={desktop !== null && viewport !== null && state.windows.length === 0}
           onPointerDown={() => dispatch({ type: 'minimizeAll' })}
         />
-        {isOs && <OsProcesses covered={covered} />}
-        {isOs && viewport && (
-          <OsPhotos
+        {desktop && !lite && <desktop.OsProcesses covered={covered} />}
+        {desktop && !lite && viewport && (
+          <desktop.OsPhotos
             covered={covered}
             onOpen={(path) => dispatch({ type: 'openPath', path, viewport })}
           />
         )}
 
-        {isOs && viewport && (
-          <AnimatePresence>
+        {desktop && viewport && (
+          <desktop.AnimatePresence>
             {state.windows.map((win) => {
               const program = findProgramForPath(win.path);
               return (
-                <OsWindow
+                <desktop.OsWindow
                   key={win.id}
                   win={win}
                   program={program}
@@ -384,6 +466,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                     if (iframe) iframes.current.set(win.id, iframe);
                     else iframes.current.delete(win.id);
                   }}
+                  lite={lite}
+                  suspended={lite && !liveWindowIds.has(win.id)}
                   onIframeLoad={() => {
                     // Full page loads (e.g. auth pages outside the platform) don't run the bridge.
                     try {
@@ -403,7 +487,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                 />
               );
             })}
-          </AnimatePresence>
+          </desktop.AnimatePresence>
         )}
 
         {/* While a window is moved or resized, this shield sits over every iframe so the pointer
@@ -426,24 +510,31 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           onOpenLauncher={() => setLauncherOpen(true)}
         />
 
-        <OsDock
-          programs={programs}
-          runningPrograms={runningPrograms}
-          runningProgramIds={runningProgramIds}
-          focusedProgramId={focusedProgram?.id ?? null}
-          onOpenProgram={openProgram}
-          onOpenLauncher={() => setLauncherOpen(true)}
-        />
+        {desktop && (
+          <desktop.OsDock
+            programs={programs}
+            runningPrograms={runningPrograms}
+            runningProgramIds={runningProgramIds}
+            focusedProgramId={focusedProgram?.id ?? null}
+            onOpenProgram={openProgram}
+            onOpenLauncher={() => setLauncherOpen(true)}
+            lite={lite}
+          />
+        )}
 
-        <OsLauncher
-          open={launcherOpen}
-          programs={programs}
-          onOpenProgram={(program) => {
-            setLauncherOpen(false);
-            openProgram(program);
-          }}
-          onClose={() => setLauncherOpen(false)}
-        />
+        {desktop && <desktop.OsPerformanceNotice />}
+
+        {desktop && (
+          <desktop.OsLauncher
+            open={launcherOpen}
+            programs={programs}
+            onOpenProgram={(program) => {
+              setLauncherOpen(false);
+              openProgram(program);
+            }}
+            onClose={() => setLauncherOpen(false)}
+          />
+        )}
 
         {isOs && viewport && (
           <GlobalSearch
@@ -453,8 +544,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           />
         )}
 
-        {isOs && musicPlayer.current && (
-          <BackgroundMusicPlayer
+        {desktop && musicPlayer.current && (
+          <desktop.BackgroundMusicPlayer
             set={musicPlayer.current}
             open={musicPlayer.open}
             onClose={musicPlayer.hide}

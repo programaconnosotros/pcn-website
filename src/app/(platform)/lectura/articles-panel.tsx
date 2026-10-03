@@ -379,7 +379,7 @@ export function ArticlesPanel({
             )}
           </span>
           <span
-            className="ml-auto flex border border-pcnGreen-200"
+            className="ml-auto flex h-8 border border-pcnGreen-200"
             role="group"
             aria-label="Filtrar por estado"
           >
@@ -390,7 +390,7 @@ export function ArticlesPanel({
                 aria-pressed={status === value}
                 onClick={() => onStatusChange(value)}
                 className={cn(
-                  'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                  'border-r border-pcnGreen-200 px-2 transition-colors last:border-r-0',
                   status === value
                     ? 'bg-pcnGreen text-black'
                     : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',

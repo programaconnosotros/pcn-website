@@ -7,7 +7,8 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
-import { normalize } from '@/components/conversations/highlight';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
+import { matchesPeopleQuery } from '@/lib/people-search';
 import type { CommunityMember } from '@/actions/users/fetch-community-members';
 import { cn } from '@/lib/utils';
 
@@ -129,13 +130,14 @@ function MemberRow({
 
 export function MiembrosClient({ members }: { members: CommunityMember[] }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const query = normalize(searchTerm.trim());
+  const query = searchTerm.trim();
 
   const filtered = useMemo(() => {
     if (!query) return members;
     return members.filter((member) =>
-      [member.name, member.slogan, ...memberRoles(member)].some(
-        (text) => text && normalize(text).includes(query),
+      matchesPeopleQuery(
+        [member.name, member.slogan, member.career, member.studyPlace, ...memberRoles(member)],
+        query,
       ),
     );
   }, [members, query]);
@@ -194,13 +196,30 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
         <StickyHeader>
           <PageTitle path="miembros" meta="las personas que forman programaConNosotros" />
 
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <SearchBar
-              searchQuery={searchTerm}
-              setSearchQuery={setSearchTerm}
-              placeholder="nombre, cargo o empresa"
-              label="Buscar miembros"
-            />
+          <CollapsibleFilters
+            className="mb-4"
+            // Jump links, not filters: on phones they fold away like the filters of other pages.
+            label="secciones"
+            search={
+              <SearchBar
+                searchQuery={searchTerm}
+                setSearchQuery={setSearchTerm}
+                placeholder="nombre, cargo o empresa"
+                label="Buscar miembros"
+              />
+            }
+            aside={
+              <p
+                className="font-mono text-xs tabular-nums text-muted-foreground"
+                aria-live="polite"
+              >
+                <span className={cn(query ? 'text-pcnGreen' : 'text-foreground')}>
+                  {filtered.length}
+                </span>
+                /{members.length} miembros
+              </p>
+            }
+          >
             <nav
               aria-label="Secciones"
               className="flex flex-wrap gap-x-3 font-mono text-xs text-muted-foreground"
@@ -213,16 +232,7 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
                   </a>
                 ))}
             </nav>
-            <p
-              className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
-              aria-live="polite"
-            >
-              <span className={cn(query ? 'text-pcnGreen' : 'text-foreground')}>
-                {filtered.length}
-              </span>
-              /{members.length} miembros
-            </p>
-          </div>
+          </CollapsibleFilters>
         </StickyHeader>
 
         {sections.length === 0 ? (

@@ -4,7 +4,7 @@ import { PhotoUploader } from '@/components/photo-gallery/photo-uploader';
 import { requireAdminPage } from '@/lib/admin';
 import prisma from '@/lib/prisma';
 
-export const metadata = { title: 'Subir fotos y videos' };
+export const metadata = { title: 'scp * ~/galeria' };
 
 export default async function UploadPhotosPage(props: {
   searchParams: Promise<{ evento?: string }>;
@@ -14,7 +14,7 @@ export default async function UploadPhotosPage(props: {
 
   const events = await prisma.event.findMany({
     where: { deletedAt: null },
-    select: { id: true, name: true, date: true },
+    select: { id: true, name: true, date: true, endDate: true },
     orderBy: { date: 'desc' },
   });
   const defaultEventId = events.some((event) => event.id === evento) ? evento! : null;

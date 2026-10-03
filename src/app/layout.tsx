@@ -11,15 +11,19 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata, Viewport } from 'next';
 import { EMBED_DETECTION_SCRIPT } from '@/components/os/os-env';
+import { OS_MODE_SCRIPT } from '@/components/os/os-display-mode-script';
+import { AppSplash } from '@/components/app-splash';
+import { APPLE_STARTUP_IMAGES } from '@/lib/apple-splash';
 import './globals.css';
+import { HOME_TAB_TITLE, TAB_TITLE_TEMPLATE } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'programaConNosotros',
-    template: '%s - PCN',
+    default: HOME_TAB_TITLE,
+    template: TAB_TITLE_TEMPLATE,
   },
   description: 'Comunidad de apasionados por la ingeniería de software.',
   icons: {
@@ -31,6 +35,8 @@ export const metadata: Metadata = {
     capable: true,
     title: 'PCN',
     statusBarStyle: 'black',
+    // Launch screens so the installed app doesn't open on a black screen.
+    startupImage: APPLE_STARTUP_IMAGES,
   },
   alternates: {
     types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'programaConNosotros' }] },
@@ -69,9 +75,10 @@ const RootLayout = async ({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT + OS_MODE_SCRIPT }} />
       </head>
       <body className={GeistSans.className}>
+        <AppSplash />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

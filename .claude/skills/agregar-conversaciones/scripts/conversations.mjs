@@ -37,9 +37,12 @@ const monthFiles = () =>
 
 const readMonth = (file) => JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8'));
 
+// Conversations from an event (`eventId`, e.g. a virtual meetup) don't come from the WhatsApp
+// export, so they don't mark how far the chat has been summarized.
 const lastSummarizedDate = () =>
   monthFiles()
     .flatMap(readMonth)
+    .filter((entry) => !entry.eventId)
     .map((entry) => entry.date)
     .sort()
     .at(-1);
@@ -173,7 +176,7 @@ const prepare = (args) => {
   if (lastDate && byMonth.size) {
     const boundary = monthFiles()
       .flatMap(readMonth)
-      .filter((entry) => entry.date === lastDate);
+      .filter((entry) => entry.date === lastDate && !entry.eventId);
     console.log(`\nya resumido el ${lastDate} (no duplicar):`);
     for (const entry of boundary) console.log(`  - ${entry.title}`);
   }
@@ -238,7 +241,8 @@ const check = () => {
       total++;
       const where = `${file}[${i}]`;
       const keys = Object.keys(entry).sort().join(',');
-      if (keys !== 'date,summary,title') problems.push(`${where}: campos ${keys}`);
+      if (keys !== 'date,summary,title' && keys !== 'date,eventId,summary,title')
+        problems.push(`${where}: campos ${keys}`);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date ?? '')) problems.push(`${where}: fecha inválida`);
       else if (!entry.date.startsWith(month)) problems.push(`${where}: ${entry.date} fuera de mes`);
       if (i > 0 && entry.date < entries[i - 1].date) problems.push(`${where}: fuera de orden`);

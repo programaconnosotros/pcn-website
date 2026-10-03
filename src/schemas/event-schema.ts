@@ -1,3 +1,4 @@
+import { isGoogleMapsUrl } from '@/lib/google-maps';
 import { z } from 'zod';
 
 export const eventSchema = z
@@ -38,34 +39,16 @@ export const eventSchema = z
       )
       .optional()
       .default([]),
-    latitude: z.preprocess(
-      (val) => {
-        if (val === null || val === undefined) return '';
-        if (typeof val === 'number') return val.toString();
-        return val;
-      },
-      z
-        .string()
-        .optional()
-        .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
-        .refine((val) => val === undefined || (!isNaN(val) && val >= -90 && val <= 90), {
-          message: 'La latitud debe ser un número entre -90 y 90',
-        }),
-    ),
-    longitude: z.preprocess(
-      (val) => {
-        if (val === null || val === undefined) return '';
-        if (typeof val === 'number') return val.toString();
-        return val;
-      },
-      z
-        .string()
-        .optional()
-        .transform((val) => (val === '' || val === undefined ? undefined : parseFloat(val)))
-        .refine((val) => val === undefined || (!isNaN(val) && val >= -180 && val <= 180), {
-          message: 'La longitud debe ser un número entre -180 y 180',
-        }),
-    ),
+    googleMapsUrl: z
+      .string()
+      .optional()
+      .transform((val) => {
+        const trimmed = val?.trim() ?? '';
+        return trimmed === '' ? undefined : trimmed;
+      })
+      .refine((val) => val === undefined || isGoogleMapsUrl(val), {
+        message: 'Pegá un link de Google Maps (google.com/maps o maps.app.goo.gl)',
+      }),
     sponsors: z
       .array(
         z.object({

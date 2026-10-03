@@ -3,6 +3,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { videos } from '@/components/videos/videos';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -10,7 +11,7 @@ const description =
   'Videos y charlas que la comunidad recomienda para aprender ingeniería de software: arquitectura, IA, frontend, backend y más.';
 
 export const metadata: Metadata = {
-  title: 'Videos',
+  title: tabTitle.ls('videos'),
   description,
   openGraph: {
     title: 'Videos | programaConNosotros',

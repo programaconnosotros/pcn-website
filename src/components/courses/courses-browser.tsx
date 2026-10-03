@@ -4,6 +4,7 @@ import type { Course } from '@/app/(platform)/cursos/courses';
 import { CourseRow } from '@/components/courses/course-row';
 import { RuledGrid } from '@/components/ui/ruled-grid';
 import { SearchBar } from '@/components/ui/search-bar';
+import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cn } from '@/lib/utils';
 import { useMemo, useState, type ReactNode } from 'react';
@@ -78,43 +79,42 @@ export const CoursesBrowser = ({ header, courses }: { header: ReactNode; courses
     <div className="mb-14">
       <StickyHeader>
         {header}
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="curso, tema o autor"
-            label="Buscar cursos"
-            className="sm:max-w-sm"
-          />
-          {/* Flags scroll sideways on phones instead of wrapping into a second row. */}
-          <div
-            aria-label="Filtrar cursos"
-            className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
-          >
-            {FILTERS.map(({ value, flag, matches }) => {
-              const active = filter === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setFilter(value)}
-                  className={cn(
-                    'flex h-9 shrink-0 items-center gap-1.5 rounded-sm border px-3 font-mono text-xs transition-colors',
-                    active
-                      ? 'border-pcnGreen-600 bg-pcnGreen-100 text-pcnGreen'
-                      : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-400 hover:text-foreground',
-                  )}
-                >
-                  {flag}
-                  <span className="text-[10px] tabular-nums opacity-60">
-                    {courses.filter(matches).length}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <CollapsibleFilters
+          className="mb-6"
+          activeCount={Number(filter !== 'all')}
+          search={
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder="curso, tema o autor"
+              label="Buscar cursos"
+              className="md:max-w-sm"
+            />
+          }
+        >
+          {FILTERS.map(({ value, flag, matches }) => {
+            const active = filter === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setFilter(value)}
+                className={cn(
+                  'flex h-8 shrink-0 items-center gap-1.5 rounded-sm border px-3 font-mono text-xs transition-colors',
+                  active
+                    ? 'border-pcnGreen-600 bg-pcnGreen-100 text-pcnGreen'
+                    : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-400 hover:text-foreground',
+                )}
+              >
+                {flag}
+                <span className="text-[10px] tabular-nums opacity-60">
+                  {courses.filter(matches).length}
+                </span>
+              </button>
+            );
+          })}
+        </CollapsibleFilters>
       </StickyHeader>
 
       <div className="flex flex-col gap-6">

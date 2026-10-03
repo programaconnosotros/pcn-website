@@ -18,6 +18,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { LocalDateTime } from '@/components/ui/local-date-time';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+// A 'use server' file can only export async functions, so the title comes from here.
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: tabTitle.ls('eventos/*/inscripciones') };
+}
 
 const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }) => {
   const params = await props.params;

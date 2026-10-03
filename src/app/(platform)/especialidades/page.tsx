@@ -1,13 +1,15 @@
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { TableOfContents } from '@/components/especialidades/table-of-contents';
 import { SpecialtyCard } from '@/components/especialidades/specialty-card';
 import { specialtyGroups, specialties } from '@/components/especialidades/specialties';
 import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export const metadata: Metadata = {
-  title: 'Especialidades',
+  title: tabTitle.ls('especialidades'),
   description:
     'Una guía de las distintas especialidades dentro de la ingeniería de software para ayudarte a descubrir tu camino profesional.',
   openGraph: {
@@ -30,11 +32,12 @@ const SpecialtiesPage = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <PageTitle
-          sticky
-          path="especialidades"
-          meta={`${specialties.length} especialidades · ${specialtyGroups.length} áreas`}
-        />
+        <StickyHeader pinnedOnDesktop>
+          <PageTitle
+            path="especialidades"
+            meta={`${specialties.length} especialidades · ${specialtyGroups.length} áreas`}
+          />
+        </StickyHeader>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <TableOfContents />
@@ -42,7 +45,11 @@ const SpecialtiesPage = () => (
           <div className="min-w-0 flex-1">
             <div className="mx-auto max-w-3xl space-y-8">
               {specialtyGroups.map((group) => (
-                <section key={group.id} id={group.id} className="scroll-mt-32 lg:scroll-mt-28">
+                <section
+                  key={group.id}
+                  id={group.id}
+                  className="scroll-mt-32 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
+                >
                   <div className="mb-2">
                     <h2 className="font-mono text-sm font-semibold">
                       <span className="text-pcnGreen-500">## </span>

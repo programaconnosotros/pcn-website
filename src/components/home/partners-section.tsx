@@ -7,6 +7,7 @@ import { RuledGrid, ruledCellClassName } from '../ui/ruled-grid';
 import { Handshake, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type Partner, type PartnerKind, partners } from '@/data/partners';
+import { partnerLogoGroupHoverClassName } from './partner-logo-styles';
 
 const GROUPS: { kind: PartnerKind; label: string }[] = [
   { kind: 'empresa', label: 'empresas' },
@@ -28,14 +29,16 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
     rel="noopener noreferrer"
     className={cn(ruledCellClassName, 'group flex flex-col items-center gap-2 p-4 text-center')}
   >
-    <div className="flex h-16 w-full items-center justify-center">
+    <div
+      className={cn('flex h-16 w-full items-center justify-center', partnerLogoGroupHoverClassName)}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={partner.logo}
         alt={partner.name}
         className={cn(
           // Same bounding box for every logo so none looks more prominent.
-          'h-10 w-36 object-contain',
+          'h-9 w-32 object-contain',
           partner.monochromeOnDark && 'brightness-0 invert',
         )}
       />

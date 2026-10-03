@@ -17,10 +17,11 @@ import {
 } from '@/components/admin/metrics/metrics-panels';
 import { getProductMetrics } from '@/lib/product-metrics';
 import { METRICS_TIME_ZONE, parseMetricsRange } from '@/lib/metrics-range';
+import { tabTitle } from '@/lib/tab-title';
 
 // Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: 'Métricas',
+  title: tabTitle.sudo('metricas'),
   robots: { index: false, follow: false },
 };
 

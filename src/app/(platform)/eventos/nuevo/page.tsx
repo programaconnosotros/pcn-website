@@ -4,6 +4,10 @@ import { NewEventForm } from '@/components/events/new-event-form';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { canCreateEvents } from '@/lib/event-permissions';
 import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+export const metadata: Metadata = { title: tabTitle.touch('eventos/nuevo') };
 
 const NewEventPage = async () => {
   const session = await getCurrentSession();

@@ -3,16 +3,19 @@
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { Check, ChevronLeft, ChevronRight, Link2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import {
   METER_SLOTS,
+  conversationHref,
   formatLongDate,
   isGroupThread,
   shortHash,
   toSentences,
 } from './conversation-utils';
+import { ConversationEventLink } from './conversation-event';
 import { Highlight } from './highlight';
+import { LinkedNames } from './linked-names';
 import { ParticipantChip } from './participant-chip';
 
 const keyCapClassName = cn(
@@ -25,6 +28,42 @@ const keyCapClassName = cn(
 const Kbd = ({ children }: { children: React.ReactNode }) => (
   <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">{children}</kbd>
 );
+
+// Copies the conversation's deep link (`/conversaciones?c=<hash>`), which opens it on load.
+function CopyLinkButton({ conversation }: { conversation: Conversation }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        new URL(conversationHref(conversation), window.location.origin).toString(),
+      );
+      setCopied(true);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className={cn(keyCapClassName, copied && 'border-pcnGreen text-pcnGreen')}
+      onClick={handleCopy}
+      title={copied ? 'Link copiado' : 'Copiar link para compartir'}
+    >
+      {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
+      <span className="sr-only" aria-live="polite">
+        {copied ? 'Link copiado' : 'Copiar link para compartir'}
+      </span>
+    </button>
+  );
+}
 
 interface ConversationDialogProps {
   conversations: Conversation[];
@@ -77,7 +116,9 @@ export function ConversationDialog({
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         className={cn(
-          'flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 p-0 [&>button:last-child]:hidden',
+          // Only the body scrolls. Safari counts the body's overflow as the panel's own, so with the
+          // surface's default `overflow-y-auto` the whole panel scrolled away past its footer.
+          'flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 overflow-hidden p-0 [&>button:last-child]:hidden',
           // The phone tab bar (h-16 + safe area, z-60) sits above dialogs, so center the reader
           // in the space above it and cap its height to that space instead of the full viewport.
           'max-md:top-[calc((100dvh+env(safe-area-inset-top)-4rem-env(safe-area-inset-bottom))/2)]',
@@ -101,6 +142,7 @@ export function ConversationDialog({
             /{total}]
           </span>
           <div className="flex shrink-0 gap-1">
+            <CopyLinkButton key={shortHash(conversation)} conversation={conversation} />
             <button
               type="button"
               className={keyCapClassName}
@@ -128,7 +170,7 @@ export function ConversationDialog({
           </div>
         </header>
 
-        <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto">
+        <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
           <div
             key={index}
             className="flex flex-col gap-4 p-5 duration-300 animate-in fade-in slide-in-from-bottom-1 sm:p-6"
@@ -138,9 +180,10 @@ export function ConversationDialog({
                 <span className="text-pcnGreen-600">$ date </span>
                 {formatLongDate(conversation.date)}
               </time>
+              <ConversationEventLink conversation={conversation} />
               {isGroup && (
                 <span className="border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
-                  hilo grupal
+                  muchos participantes
                 </span>
               )}
             </div>
@@ -162,7 +205,11 @@ export function ConversationDialog({
                     {String(i + 1).padStart(lineNumberWidth, '0')}
                   </span>
                   <span>
-                    <Highlight text={sentence} query={query} />
+                    <LinkedNames
+                      text={sentence}
+                      query={query}
+                      participants={conversation.participants}
+                    />
                   </span>
                 </li>
               ))}

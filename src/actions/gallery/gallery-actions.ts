@@ -17,6 +17,7 @@ import {
 import {
   MAX_VIDEO_BYTES,
   galleryDetailsSchema,
+  parseGalleryItemIds,
   videoMetadataSchema,
   type GalleryDetailsInput,
   type VideoMetadataInput,
@@ -59,11 +60,14 @@ async function assertEventExists(eventId: string | null) {
   if (!event) throw new Error('Evento no encontrado');
 }
 
-const revalidateItem = (photoId: string, eventIds: (string | null)[] = []) => {
+const revalidateItems = (photoIds: string[], eventIds: (string | null)[] = []) => {
   revalidatePath('/galeria');
-  revalidatePath(`/galeria/${photoId}`);
-  eventIds.forEach((eventId) => eventId && revalidatePath(`/eventos/${eventId}`));
+  photoIds.forEach((photoId) => revalidatePath(`/galeria/${photoId}`));
+  new Set(eventIds).forEach((eventId) => eventId && revalidatePath(`/eventos/${eventId}`));
 };
+
+const revalidateItem = (photoId: string, eventIds: (string | null)[] = []) =>
+  revalidateItems([photoId], eventIds);
 
 /** URL firmada para subir el original de una foto a S3. Solo admins. */
 export async function getPhotoUploadUrl(fileName: string, contentType: string) {
@@ -208,4 +212,50 @@ export async function deleteGalleryItem(photoId: string) {
   revalidateItem(photoId, [photo.eventId]);
   photo.tags.forEach(({ userId }) => revalidatePath(`/perfil/${userId}`));
   return { success: true };
+}
+
+/** Pasa varias fotos y videos a un evento (o a ninguno). Solo admins. */
+export async function bulkSetGalleryItemsEvent(itemIds: string[], eventId: string | null) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+  await assertEventExists(eventId);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, eventId: true },
+  });
+  await prisma.galleryItem.updateMany({
+    where: { id: { in: items.map((item) => item.id) } },
+    data: { eventId },
+  });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    [eventId, ...items.map((item) => item.eventId)],
+  );
+  return { updated: items.length };
+}
+
+/** Elimina varias fotos y videos, sus etiquetas y sus archivos en S3. Solo admins. */
+export async function bulkDeleteGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, eventId: true, storageKeys: true, tags: { select: { userId: true } } },
+  });
+
+  // Primero los archivos: si S3 falla, las fotos siguen en la galería y se puede reintentar.
+  await deleteObjects(items.flatMap((item) => item.storageKeys));
+  await prisma.galleryItem.deleteMany({ where: { id: { in: items.map((item) => item.id) } } });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    items.map((item) => item.eventId),
+  );
+  new Set(items.flatMap((item) => item.tags.map((tag) => tag.userId))).forEach((userId) =>
+    revalidatePath(`/perfil/${userId}`),
+  );
+  return { deleted: items.length };
 }

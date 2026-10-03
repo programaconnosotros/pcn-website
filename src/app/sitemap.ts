@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { extractedConsejos } from '@/data/consejos-extraidos';
 import prisma from '@/lib/prisma';
 import { communityCourses, externalCourses } from './(platform)/cursos/courses';
+import { TRACKS } from './(platform)/entrevistas/questions/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -16,12 +18,16 @@ const STATIC_ROUTES = [
   '/charlas',
   '/podcast',
   '/desarrollo',
+  '/desarrollo/calidad',
+  '/desarrollo/diseno',
   '/cursos',
   '/lectura',
   '/videos',
   '/especialidades',
   '/herramientas',
   '/entrevistas',
+  '/entrevistas/guias',
+  '/entrevistas/live-coding',
   '/proyectos',
   '/consejos',
   '/testimonios',
@@ -56,6 +62,10 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
     return [
       ...events.map((e) => ({ url: `${SITE_URL}/eventos/${e.id}`, lastModified: e.updatedAt })),
       ...advises.map((a) => ({ url: `${SITE_URL}/consejos/${a.id}`, lastModified: a.updatedAt })),
+      ...extractedConsejos.map((c) => ({
+        url: `${SITE_URL}/consejos/${c.id}`,
+        lastModified: new Date(c.conversation.date),
+      })),
       ...testimonials.map((t) => ({
         url: `${SITE_URL}/testimonios/${t.id}`,
         lastModified: t.updatedAt,
@@ -73,6 +83,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const courses = [...communityCourses, ...externalCourses].map((course) => ({
     url: `${SITE_URL}/cursos/${course.id}`,
   }));
+  const interviewGuides = [...TRACKS.map((track) => track.id), 'live-coding'].map((guide) => ({
+    url: `${SITE_URL}/entrevistas/guias/${guide}`,
+  }));
 
   return [
     ...STATIC_ROUTES.map((route) => ({
@@ -81,6 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route === '/' ? 1 : 0.7,
     })),
     ...courses,
+    ...interviewGuides,
     ...(await dynamicRoutes()),
   ];
 }

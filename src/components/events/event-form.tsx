@@ -25,6 +25,7 @@ import {
   ExternalLink,
   Video,
   Link2,
+  MapIcon,
 } from 'lucide-react';
 import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import Link from 'next/link';
@@ -57,8 +58,7 @@ export function EventForm({
       address: defaultValues?.address || '',
       placeName: defaultValues?.placeName || '',
       flyerImages: defaultValues?.flyerImages ?? [],
-      latitude: defaultValues?.latitude || '',
-      longitude: defaultValues?.longitude || '',
+      googleMapsUrl: defaultValues?.googleMapsUrl ?? '',
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
       externalRegistrationUrl: defaultValues?.externalRegistrationUrl ?? '',
@@ -308,51 +308,34 @@ export function EventForm({
                     )}
                   />
                 )}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* Latitud */}
+                {/* Link de Google Maps (solo presencial) */}
+                {!isOnline && (
                   <FormField
                     control={form.control}
-                    name="latitude"
+                    name="googleMapsUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Latitud (opcional)</FormLabel>
+                        <FormLabel>
+                          <MapIcon className="mr-2 inline h-4 w-4" />
+                          URL de Google Maps (opcional)
+                        </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
-                            step="any"
-                            placeholder="Ej: -34.6037"
+                            type="url"
+                            placeholder="https://maps.app.goo.gl/..."
                             {...field}
-                            value={String(field.value ?? '')}
+                            value={field.value ?? ''}
                           />
                         </FormControl>
-                        <FormDescription>Coordenada de latitud para el mapa</FormDescription>
+                        <FormDescription>
+                          En Google Maps: Compartir → Copiar vínculo. Se usa para el mapa y el link
+                          &quot;abrir en Google Maps&quot;.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  {/* Longitud */}
-                  <FormField
-                    control={form.control}
-                    name="longitude"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Longitud (opcional)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="any"
-                            placeholder="Ej: -58.3816"
-                            {...field}
-                            value={String(field.value ?? '')}
-                          />
-                        </FormControl>
-                        <FormDescription>Coordenada de longitud para el mapa</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                )}
               </div>
             </FormSection>
             <FormSection

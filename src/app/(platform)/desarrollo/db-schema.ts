@@ -38,7 +38,7 @@ export type DbDomain =
   | 'auth'
   | 'sistema';
 
-export const DB_SCHEMA_UPDATED_AT = '2026-10-02';
+export const DB_SCHEMA_UPDATED_AT = '2026-10-03';
 
 export const dbEnums: { name: string; values: string[] }[] = [
   {
@@ -401,13 +401,8 @@ export const dbModels: DbModel[] = [
         list: true,
       },
       {
-        name: 'latitude',
-        type: 'Float',
-        optional: true,
-      },
-      {
-        name: 'longitude',
-        type: 'Float',
+        name: 'googleMapsUrl',
+        type: 'String',
         optional: true,
       },
       {
@@ -440,6 +435,13 @@ export const dbModels: DbModel[] = [
       {
         name: 'shortcut',
         type: 'String',
+        optional: true,
+      },
+      {
+        name: 'coverPhotoId',
+        type: 'String',
+        fk: true,
+        unique: true,
         optional: true,
       },
       {
@@ -1843,6 +1845,14 @@ export const dbRelations: DbRelation[] = [
     label: 'createdBy',
     optional: true,
     many: true,
+    onDelete: 'SetNull',
+  },
+  {
+    from: 'Event',
+    to: 'GalleryItem',
+    label: 'coverPhoto',
+    optional: true,
+    many: false,
     onDelete: 'SetNull',
   },
   {

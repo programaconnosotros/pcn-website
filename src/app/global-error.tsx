@@ -1,12 +1,17 @@
 'use client';
 
 import { TerminalErrorScreen } from '@/components/errors/terminal-error-screen';
+import { FATAL_TAB_TITLE } from '@/lib/tab-title';
 import './globals.css';
 
 // Last-resort boundary for errors in the root layout itself; it replaces the whole document.
 export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
   return (
     <html lang="es" className="dark">
+      {/* It replaces the root layout, so the metadata title is gone too. */}
+      <head>
+        <title>{FATAL_TAB_TITLE}</title>
+      </head>
       <body className="flex min-h-dvh flex-col bg-black text-foreground">
         <TerminalErrorScreen
           code="500"

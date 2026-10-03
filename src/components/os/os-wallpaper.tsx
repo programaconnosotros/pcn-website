@@ -15,7 +15,8 @@ export function OsWallpaper({
       className="absolute inset-0 overflow-hidden bg-[#020504]"
       onPointerDown={onPointerDown}
     >
-      <div className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pcnGreen/[0.07] blur-[180px]" />
+      {/* A 900px blur is one of the costliest layers on a weak GPU: PCN OS liviano drops it. */}
+      <div className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pcnGreen/[0.07] blur-[180px] lite:hidden" />
       <div className="bg-grid-fade absolute inset-0" />
       <div className="absolute inset-0 flex select-none flex-col items-center justify-center gap-5 pb-24">
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -3,6 +3,7 @@ import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { AdviseCard } from '@/components/advises/advise-card';
+import { fromAdvise } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ProfileArticles } from '@/components/profile/profile-articles';
@@ -36,7 +37,16 @@ import {
 const PREVIEW = 2;
 const ARTICLES_PREVIEW = 3;
 const CONVERSATIONS_PREVIEW = 4;
-const PHOTOS_PREVIEW = 6;
+// The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
+// row half empty when the person has more photos than fit.
+const PHOTOS_PREVIEW_COLUMNS = 3;
+const PHOTOS_PREVIEW = 2 * PHOTOS_PREVIEW_COLUMNS;
+
+/** How many photos the preview shows: as many full rows as possible (all of them if under one row). */
+const photosPreviewCount = (total: number) =>
+  total < PHOTOS_PREVIEW_COLUMNS
+    ? total
+    : Math.min(PHOTOS_PREVIEW, total - (total % PHOTOS_PREVIEW_COLUMNS));
 
 type Session = ComponentProps<typeof AdviseCard>['session'];
 
@@ -107,7 +117,12 @@ const AdviseRows = ({
 }) => (
   <RuledGrid className="grid-cols-1 md:grid-cols-2">
     {advises.map((advise) => (
-      <AdviseCard key={advise.id} session={session} advise={advise} showAuthor={false} />
+      <AdviseCard
+        key={advise.id}
+        session={session}
+        consejo={fromAdvise(advise)}
+        showAuthor={false}
+      />
     ))}
   </RuledGrid>
 );
@@ -139,6 +154,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
     ]);
   const { contributions } = github;
   const tabHref = (tab: ProfileTab) => profileTabHref(userId, tab);
+  const previewPhotos = photos.slice(0, photosPreviewCount(photos.length));
   const hasActivity =
     projects.length +
       advises.length +
@@ -161,11 +177,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
         <ProfileStat label="proyectos" value={projects.length} href={tabHref('proyectos')} />
         <ProfileStat label="consejos" value={advises.length} href={tabHref('consejos')} />
         <ProfileStat label="charlas" value={talks.length} href={tabHref('charlas')} />
-        <ProfileStat
-          label="artículos publicados"
-          value={articles.length}
-          href={tabHref('articulos')}
-        />
+        <ProfileStat label="artículos" value={articles.length} href={tabHref('articulos')} />
         <ProfileStat
           label="conversaciones"
           value={conversations.length}
@@ -252,9 +264,10 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="fotos y videos"
             count={photos.length}
-            href={photos.length > PHOTOS_PREVIEW ? tabHref('fotos') : undefined}
+            href={photos.length > previewPhotos.length ? tabHref('fotos') : undefined}
           />
-          <PhotoGrid photos={photos.slice(0, PHOTOS_PREVIEW)} />
+          {/* Same 3 columns at every width (tailwind-merge drops the default breakpoints). */}
+          <PhotoGrid photos={previewPhotos} className="grid-cols-3 sm:grid-cols-3 xl:grid-cols-3" />
         </section>
       )}
 

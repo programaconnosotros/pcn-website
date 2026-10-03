@@ -25,6 +25,11 @@ export type AchievementMetrics = {
   conversations: number;
   /** Projects on /proyectos they published or are a member of. */
   projectsShared: number;
+  /**
+   * Consejos on /consejos: the ones they published plus the ones extracted automatically from
+   * conversations where they gave the advice (through their linked WhatsApp names).
+   */
+  consejos: number;
 };
 
 export const EMPTY_METRICS: AchievementMetrics = {
@@ -37,6 +42,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   eventsAttended: 0,
   conversations: 0,
   projectsShared: 0,
+  consejos: 0,
 };
 
 export type Achievement = DisplayBadge & {
@@ -168,6 +174,18 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Publicá en /proyectos algo que hayas construido, solo o en equipo.',
     href: '/proyectos',
     progress: count('projectsShared', 1),
+  },
+  {
+    id: 'consejos-25',
+    name: 'Consejero',
+    description: 'Tiene 25 consejos publicados en la comunidad o más.',
+    icon: 'lightbulb',
+    tone: 'gold',
+    goal: 'tener 25 consejos',
+    howTo:
+      'Publicá en /consejos lo que aprendiste. También suman los consejos tuyos extraídos de /conversaciones.',
+    href: '/consejos',
+    progress: count('consejos', 25),
   },
 ];
 

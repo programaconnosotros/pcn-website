@@ -21,6 +21,7 @@ import {
 } from 'motion/react';
 import { LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { NO_HOVER_QUERY, wantsDockLabels } from './os-dock-geometry';
 import { ProgramIcon } from './program-icon';
 import type { OsProgram } from './programs';
 
@@ -39,14 +40,6 @@ const MAX_MAGNIFICATION = 0.55;
 /** Room under each icon: the activity meter, plus the name when labels show. */
 const ITEM_FOOTER_HEIGHT = { compact: 8, labelled: 22 };
 
-/**
- * Devices that can't hover (touch tablets wide enough for PCN OS) never see the tooltips, so the
- * dock shows each program's name under its icon there instead.
- */
-const NO_HOVER_QUERY = '(hover: none)';
-const wantsDockLabels = () =>
-  typeof window !== 'undefined' && window.matchMedia(NO_HOVER_QUERY).matches;
-
 const subscribeToHoverCapability = (onChange: () => void) => {
   const mediaQuery = window.matchMedia(NO_HOVER_QUERY);
   mediaQuery.addEventListener('change', onChange);
@@ -55,9 +48,6 @@ const subscribeToHoverCapability = (onChange: () => void) => {
 
 const useDockLabels = () =>
   useSyncExternalStore(subscribeToHoverCapability, wantsDockLabels, () => false);
-
-/** Space the desktop keeps free at the bottom of the screen for the dock. */
-export const dockReservedHeight = () => (wantsDockLabels() ? 76 : 64);
 
 const SCRAMBLE_GLYPHS = '!<>-_\\/[]{}=+*^?#01ｱｲｳｴｵｶｷ';
 
@@ -282,8 +272,10 @@ interface DockItemProps {
   mouseX: MotionValue<number>;
   baseWidth: number;
   magnification: number;
-  onHover: (id: string | null) => void;
+  onHover: (_id: string | null) => void;
   onClick: () => void;
+  /** PCN OS liviano: no launch bounce or entrance animation. */
+  lite: boolean;
 }
 
 const DockItem = ({
@@ -299,12 +291,13 @@ const DockItem = ({
   magnification,
   onHover,
   onClick,
+  lite,
 }: DockItemProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   const iconRef = useRef<HTMLSpanElement>(null);
   const [launches, setLaunches] = useState(0);
   const iconControls = useAnimationControls();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() || lite;
 
   const baseIcon = Math.min(36, baseWidth - 12);
   const footerHeight = showLabel ? ITEM_FOOTER_HEIGHT.labelled : ITEM_FOOTER_HEIGHT.compact;
@@ -423,8 +416,9 @@ interface OsDockProps {
   runningPrograms: OsProgram[];
   runningProgramIds: Set<string>;
   focusedProgramId: string | null;
-  onOpenProgram: (program: OsProgram) => void;
+  onOpenProgram: (_program: OsProgram) => void;
   onOpenLauncher: () => void;
+  lite?: boolean;
 }
 
 /**
@@ -440,8 +434,10 @@ export function OsDock({
   focusedProgramId,
   onOpenProgram,
   onOpenLauncher,
+  lite = false,
 }: OsDockProps) {
-  const reduceMotion = useReducedMotion();
+  // PCN OS liviano: no magnification, no entrance spring and no spotlight following the mouse.
+  const reduceMotion = useReducedMotion() || lite;
   const pinned = programs.filter((program) => program.pinned);
   const unpinnedRunning = runningPrograms.filter((program) => !program.pinned);
   const viewportWidth = useViewportWidth();
@@ -492,6 +488,7 @@ export function OsDock({
     focused: focusedProgramId === id,
     showLabel: showLabels,
     onHover: setHoveredId,
+    lite,
   });
 
   return (
@@ -538,8 +535,8 @@ export function OsDock({
         />
 
         <div
-          onMouseMove={onMouseMove}
-          onMouseLeave={onMouseLeave}
+          onMouseMove={lite ? undefined : onMouseMove}
+          onMouseLeave={lite ? undefined : onMouseLeave}
           className="relative flex items-end gap-0.5 rounded-md px-1 pb-0.5 pt-1.5"
         >
           {/* Glass and surface effects, clipped to the dock. The blur lives on this layer rather than

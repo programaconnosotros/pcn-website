@@ -4,6 +4,8 @@ export interface Conversation {
   title: string;
   date: string;
   summary: string;
+  /** The event the conversation happened at (e.g. a virtual meetup), when it isn't from the chat. */
+  eventId?: string;
   /** Community members named in the summary, in order of first mention. */
   participants: string[];
 }
@@ -26,6 +28,7 @@ import m202606 from './2026-06.json';
 import m202607 from './2026-07.json';
 import m202608 from './2026-08.json';
 import m202609 from './2026-09.json';
+import m202610 from './2026-10.json';
 
 // Lowercase without accents, so `Nuñez` matches `Nunez` and `Pérez` matches `Perez`.
 const normalize = (text: string) =>
@@ -72,6 +75,7 @@ const rawConversations: Omit<Conversation, 'participants'>[] = [
   ...m202607,
   ...m202608,
   ...m202609,
+  ...m202610,
 ];
 
 export const conversations: Conversation[] = rawConversations.map((conversation) => ({

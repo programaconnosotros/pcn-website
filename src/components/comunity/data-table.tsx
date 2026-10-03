@@ -32,6 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SearchBar } from '@/components/ui/search-bar';
+import { personRowFilter } from '@/lib/people-search';
 import { StickyHeader } from '@/components/ui/sticky-header';
 
 interface DataTableProps<TData, TValue> {
@@ -78,6 +79,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: personRowFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -115,7 +117,7 @@ export function DataTable<TData, TValue>({
       <StickyHeader>
         {header}
         {/* Toolbar */}
-        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="mb-3 flex items-center gap-2 sm:gap-3">
           <SearchBar
             searchQuery={globalFilter}
             setSearchQuery={setGlobalFilter}
@@ -124,7 +126,7 @@ export function DataTable<TData, TValue>({
             className="max-w-none flex-1"
           />
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <span
               className="font-mono text-xs tabular-nums text-muted-foreground"
               aria-live="polite"
@@ -137,7 +139,7 @@ export function DataTable<TData, TValue>({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2.5 font-mono text-xs text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen data-[state=open]:border-pcnGreen-600 data-[state=open]:text-pcnGreen"
+                  className="flex h-8 items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2.5 font-mono text-xs text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen data-[state=open]:border-pcnGreen-600 data-[state=open]:text-pcnGreen"
                 >
                   <SlidersHorizontal className="size-3.5" />
                   --columnas

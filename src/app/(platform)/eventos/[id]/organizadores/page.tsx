@@ -5,6 +5,10 @@ import { EventOrganizersManager } from '@/components/events/event-organizers-man
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { canEditEvent, canManageEventOrganizers } from '@/lib/event-permissions';
+import type { Metadata } from 'next';
+import { tabTitle } from '@/lib/tab-title';
+
+export const metadata: Metadata = { title: tabTitle.ls('eventos/*/organizadores') };
 
 const OrganizersPage = async (props: { params: Promise<{ id: string }> }) => {
   const { id } = await props.params;

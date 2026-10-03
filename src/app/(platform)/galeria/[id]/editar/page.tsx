@@ -6,8 +6,9 @@ import { photoFileName } from '@/components/photo-gallery/photo-utils';
 import { requireAdminPage } from '@/lib/admin';
 import { getGalleryItem } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
+import { tabTitle } from '@/lib/tab-title';
 
-export const metadata = { title: 'Editar' };
+export const metadata = { title: tabTitle.vim('galeria/*/editar') };
 
 export default async function EditPhotoPage(props: { params: Promise<{ id: string }> }) {
   await requireAdminPage();

@@ -34,6 +34,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "db:diagram": "node scripts/generate-db-schema.mjs && prettier --write 'src/app/(platform)/desarrollo/db-schema.ts'",
+    "qa:cases": "node scripts/generate-automated-cases.mjs",
     "github:stats": "node scripts/update-github-stats.mjs",
     "pwa:icons": "node scripts/generate-pwa-icons.mjs"
   },

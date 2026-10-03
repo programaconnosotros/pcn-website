@@ -10,13 +10,14 @@ import { RuledGrid } from '@/components/ui/ruled-grid';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { TabBrackets, tabsListClassName, tabsTriggerClassName } from '@/components/ui/tab-styles';
 import { fetchSetups, parseSetupSort, type SetupSort } from '@/lib/setups';
+import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 const DESCRIPTION =
   'Los lugares de trabajo de la comunidad: escritorios, equipos y periféricos con los que programan los miembros de PCN.';
 
 export const metadata: Metadata = {
-  title: 'Setups',
+  title: tabTitle.ls('setups'),
   description: DESCRIPTION,
   openGraph: {
     title: 'Setups de la comunidad | programaConNosotros',

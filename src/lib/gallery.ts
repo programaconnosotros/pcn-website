@@ -19,7 +19,7 @@ export const galleryTileSelect = {
   takenAt: true,
   description: true,
   event: { select: { id: true, name: true } },
-  tags: { select: { user: { select: { name: true } } } },
+  tags: { select: { user: { select: { id: true, name: true } } } },
 } satisfies Prisma.GalleryItemSelect;
 
 export type GalleryTile = ReturnType<
@@ -96,8 +96,8 @@ export async function getGalleryItem(id: string) {
           placeName: true,
           address: true,
           city: true,
-          latitude: true,
-          longitude: true,
+          googleMapsUrl: true,
+          coverPhotoId: true,
         },
       },
       tags: {
@@ -136,6 +136,83 @@ export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFi
     total: ids.length,
   };
 }
+
+/**
+ * What a past event's page shows of it: up to `take` photos and videos in the order they were
+ * taken (the night told from the start), how many there are of each kind and who appears in them.
+ */
+export async function getEventMemories(eventId: string, take: number) {
+  const where = { ...visibleGalleryItem, eventId } satisfies Prisma.GalleryItemWhereInput;
+  const [items, kinds, people] = await Promise.all([
+    prisma.galleryItem.findMany({
+      where,
+      select: {
+        id: true,
+        kind: true,
+        src: true,
+        thumbSrc: true,
+        width: true,
+        height: true,
+        durationSeconds: true,
+        takenAt: true,
+        description: true,
+      },
+      orderBy: [{ takenAt: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+      take,
+    }),
+    prisma.galleryItem.groupBy({ by: ['kind'], where, _count: true }),
+    prisma.user.findMany({
+      where: { galleryTags: { some: { item: where } } },
+      select: { id: true, name: true, image: true },
+      orderBy: { name: 'asc' },
+    }),
+  ]);
+  const count = (kind: 'PHOTO' | 'VIDEO') => kinds.find((row) => row.kind === kind)?._count ?? 0;
+  return {
+    items: items.map(signGalleryItem),
+    photoCount: count('PHOTO'),
+    videoCount: count('VIDEO'),
+    people,
+  };
+}
+
+export type EventMemories = Awaited<ReturnType<typeof getEventMemories>>;
+export type EventMemoryItem = EventMemories['items'][number];
+
+// Wide enough to fill the memorial's header without an awkward crop.
+const COVER_MIN_RATIO = 1.3;
+const isLandscape = (item: { width: number | null; height: number | null }) =>
+  !!item.width && !!item.height && item.width / item.height >= COVER_MIN_RATIO;
+
+/**
+ * The photos for a past event's header: the one an admin chose, or else up to `take` of its
+ * landscape photos in random order (the header cycles through them). `photos` lists every photo
+ * of the event, in the order they were taken, for the admin's cover picker.
+ */
+export async function getEventCover(eventId: string, coverPhotoId: string | null, take = 6) {
+  const photos = (
+    await prisma.galleryItem.findMany({
+      where: { ...visibleGalleryItem, eventId, kind: 'PHOTO' },
+      select: { id: true, src: true, thumbSrc: true, width: true, height: true },
+      orderBy: [{ takenAt: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+    })
+  ).map(signGalleryItem);
+
+  const chosen = coverPhotoId ? photos.find((photo) => photo.id === coverPhotoId) : undefined;
+  const landscape = photos.filter(isLandscape);
+  for (let i = landscape.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [landscape[i], landscape[j]] = [landscape[j], landscape[i]];
+  }
+
+  return {
+    chosenId: chosen?.id ?? null,
+    covers: chosen ? [chosen] : landscape.slice(0, take),
+    photos,
+  };
+}
+
+export type EventCover = Awaited<ReturnType<typeof getEventCover>>;
 
 /** The most recently uploaded photos and videos, newest upload first. */
 export const listLatestGalleryItems = async (take: number) =>

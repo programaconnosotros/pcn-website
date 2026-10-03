@@ -14,6 +14,8 @@ export const fetchCommunityMembers = async () => {
       enterprise: true,
       positions: { select: { jobTitle: true, enterprise: true }, orderBy: { order: 'asc' } },
       slogan: true,
+      career: true,
+      studyPlace: true,
       isCofounder: true,
       isAmbassador: true,
       createdAt: true,

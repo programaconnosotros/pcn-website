@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
+import { extractedConsejos } from '@/data/consejos-extraidos';
 import { EMPTY_METRICS, type AchievementMetrics } from '@/lib/achievements';
 
 // The counts behind each achievement (src/lib/achievements), for some users or for everyone.
@@ -39,6 +40,7 @@ export const getAchievementMetrics = async (
     readArticles,
     registrations,
     projects,
+    advises,
   ] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
@@ -79,6 +81,11 @@ export const getAchievementMetrics = async (
         : undefined,
       select: { authorId: true, members: { select: { userId: true } } },
     }),
+    prisma.advise.groupBy({
+      by: ['authorId'],
+      where: userIds ? { authorId: { in: userIds } } : undefined,
+      _count: { _all: true },
+    }),
   ]);
 
   const metrics = new Map<string, AchievementMetrics>();
@@ -100,6 +107,8 @@ export const getAchievementMetrics = async (
   for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
   for (const { userId, _count } of registrations) of(userId).eventsAttended = _count._all;
 
+  for (const { authorId, _count } of advises) of(authorId).consejos = _count._all;
+
   for (const { authorId, members } of projects) {
     // Someone listed both as author and as member still shared the project once.
     const people = new Set([authorId, ...members.map(({ userId }) => userId)]);
@@ -113,6 +122,9 @@ export const getAchievementMetrics = async (
       participants.some((name) => names.includes(name)),
     ).length;
     if (taken > 0) of(userId).conversations = taken;
+
+    const given = extractedConsejos.filter(({ member }) => names.includes(member)).length;
+    if (given > 0) of(userId).consejos += given;
   }
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.

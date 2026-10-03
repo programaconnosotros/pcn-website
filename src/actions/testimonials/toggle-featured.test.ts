@@ -107,7 +107,7 @@ describe('toggleFeatured', () => {
       data: { featured: true },
     });
     expect(revalidatePath).toHaveBeenCalledWith('/testimonios');
-    expect(revalidatePath).toHaveBeenCalledWith('/home');
+    expect(revalidatePath).toHaveBeenCalledWith('/');
   });
 
   it('sets featured to false when it was true and revalidates both paths', async () => {
@@ -126,6 +126,6 @@ describe('toggleFeatured', () => {
       data: { featured: false },
     });
     expect(revalidatePath).toHaveBeenCalledWith('/testimonios');
-    expect(revalidatePath).toHaveBeenCalledWith('/home');
+    expect(revalidatePath).toHaveBeenCalledWith('/');
   });
 });

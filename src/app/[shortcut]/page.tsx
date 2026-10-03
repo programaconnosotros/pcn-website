@@ -4,6 +4,7 @@ import { trackPageVisit } from '@/actions/analytics/track-page-visit';
 import { findNextEventByShortcut, slugToLabel } from '@/lib/event-shortcuts';
 import type { Metadata } from 'next';
 import { optimizedOgImage } from '@/lib/og-image';
+import { HOME_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export async function generateMetadata({
 
   if (!event) {
     return {
-      title: 'programaConNosotros',
+      title: { absolute: HOME_TAB_TITLE },
       description: 'Participá de los próximos eventos de PCN.',
       openGraph: {
         title: 'programaConNosotros',
@@ -48,7 +49,7 @@ export async function generateMetadata({
     : `${SITE_URL}/eventos/${event.id}/og-image`;
 
   return {
-    title: event.name,
+    title: tabTitle.cat('eventos', event.name),
     description: event.description,
     openGraph: {
       title: `${event.name} - ${label}`,
