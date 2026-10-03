@@ -17,6 +17,7 @@ const STATIC_ROUTES = [
   '/charlas',
   '/podcast',
   '/desarrollo',
+  '/desarrollo/calidad',
   '/cursos',
   '/lectura',
   '/videos',

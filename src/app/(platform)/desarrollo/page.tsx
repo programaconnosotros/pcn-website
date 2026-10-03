@@ -484,6 +484,15 @@ const DesarrolloPage = () => (
                   push. No se puede pushear código que rompa alguno de estos checks.
                 </dd>
               </dl>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Las técnicas, los checks y todos los casos de prueba, manuales y automatizados, en{' '}
+                <Link
+                  href="/desarrollo/calidad"
+                  className="font-mono text-pcnGreen underline-offset-4 hover:underline"
+                >
+                  ~/desarrollo/calidad →
+                </Link>
+              </p>
             </Section>
 
             <Section id="estadisticas" title="Estadísticas de colaboración">
