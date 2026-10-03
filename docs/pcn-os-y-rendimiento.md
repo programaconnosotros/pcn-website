@@ -81,6 +81,14 @@ captura para que un link que debe abrir otra ventana no llegue a navegar con `<L
 hacia adelante. Cada ventana guarda dos URLs: `src` (con la que se creó el iframe, que nunca
 cambia para no recargarlo) y `path` (dónde está ahora, según `location`).
 
+Las ventanas se mueven arrastrando la barra de título (doble clic maximiza o restaura) y se
+redimensionan desde los cuatro bordes y las cuatro esquinas, con un tamaño mínimo y siempre
+dentro del escritorio. Mientras dura el arrastre, `OsWindow` escribe la posición directo en el
+DOM una vez por frame (`requestAnimationFrame`; al mover usa `translate`, sin layout) y un
+escudo transparente tapa los iframes para que no se traguen el puntero. Recién al soltar manda
+el rect final al reducer, así ni el escritorio ni las otras ventanas se re-renderizan en cada
+movimiento.
+
 ## Cómo decide qué mostrar sin parpadeos
 
 El servidor no sabe el tamaño de la pantalla, y decidir en JavaScript después de hidratar
