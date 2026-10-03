@@ -133,8 +133,15 @@ export function HistoriaPerson({ name, children }: HistoriaPersonProps) {
         <Link
           href={`/perfil/${user.id}`}
           title={`Ver el perfil de ${user.name}`}
-          className="text-foreground underline decoration-pcnGreen/50 decoration-dotted underline-offset-4 transition-colors hover:text-pcnGreen hover:decoration-pcnGreen"
+          // A mention chip, so it reads as a link to someone and not as a spelling mark.
+          className="inline-flex items-baseline gap-1 whitespace-nowrap rounded-sm bg-pcnGreen/[0.08] px-1 font-medium text-pcnGreen transition-colors hover:bg-pcnGreen/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
         >
+          <Avatar className="size-3.5 self-center rounded-full">
+            <AvatarImage src={user.image ?? undefined} alt="" />
+            <AvatarFallback className="rounded-full text-[8px]">
+              {user.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
           {label}
         </Link>
       ) : (
