@@ -21,6 +21,7 @@ import {
 } from 'motion/react';
 import { LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { NO_HOVER_QUERY, wantsDockLabels } from './os-dock-geometry';
 import { ProgramIcon } from './program-icon';
 import type { OsProgram } from './programs';
 
@@ -39,14 +40,6 @@ const MAX_MAGNIFICATION = 0.55;
 /** Room under each icon: the activity meter, plus the name when labels show. */
 const ITEM_FOOTER_HEIGHT = { compact: 8, labelled: 22 };
 
-/**
- * Devices that can't hover (touch tablets wide enough for PCN OS) never see the tooltips, so the
- * dock shows each program's name under its icon there instead.
- */
-const NO_HOVER_QUERY = '(hover: none)';
-const wantsDockLabels = () =>
-  typeof window !== 'undefined' && window.matchMedia(NO_HOVER_QUERY).matches;
-
 const subscribeToHoverCapability = (onChange: () => void) => {
   const mediaQuery = window.matchMedia(NO_HOVER_QUERY);
   mediaQuery.addEventListener('change', onChange);
@@ -55,9 +48,6 @@ const subscribeToHoverCapability = (onChange: () => void) => {
 
 const useDockLabels = () =>
   useSyncExternalStore(subscribeToHoverCapability, wantsDockLabels, () => false);
-
-/** Space the desktop keeps free at the bottom of the screen for the dock. */
-export const dockReservedHeight = () => (wantsDockLabels() ? 76 : 64);
 
 const SCRAMBLE_GLYPHS = '!<>-_\\/[]{}=+*^?#01ｱｲｳｴｵｶｷ';
 

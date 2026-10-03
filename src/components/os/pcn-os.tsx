@@ -1,21 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
-import { BackgroundMusicPlayer } from '@/components/music/music-player-dialog';
 import { findMusicSet } from '@/components/music/music-sets';
 import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
-import { isOsMessage } from './os-env';
-import { OsDock, dockReservedHeight } from './os-dock';
-import { OsLauncher } from './os-launcher';
+import { isOsHost, isOsMessage } from './os-env';
+import { dockReservedHeight } from './os-dock-geometry';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
-import { OsProcesses } from './os-processes';
 import { OsWallpaper } from './os-wallpaper';
-import { OsPhotos } from './os-photos';
-import { OsWindow } from './os-window';
 import {
   MIN_WINDOW_HEIGHT,
   MIN_WINDOW_WIDTH,
@@ -26,6 +20,31 @@ import {
 import { useOsMode } from './use-os-mode';
 
 const MENU_BAR_HEIGHT = 28;
+
+type OsDesktopParts = typeof import('./os-desktop-parts');
+
+let desktopParts: Promise<OsDesktopParts> | null = null;
+const loadDesktopParts = () => (desktopParts ??= import('./os-desktop-parts'));
+
+// On a desktop host, start downloading right away, while the page is still hydrating, so the
+// dock and the first window show up as early as before. Elsewhere it is never requested.
+if (typeof window !== 'undefined' && isOsHost()) void loadDesktopParts();
+
+/** The heavy desktop components, once the desktop is active and they have loaded. */
+const useDesktopParts = (enabled: boolean) => {
+  const [parts, setParts] = useState<OsDesktopParts | null>(null);
+  useEffect(() => {
+    if (!enabled || parts) return;
+    let cancelled = false;
+    void loadDesktopParts().then((loaded) => {
+      if (!cancelled) setParts(loaded);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, parts]);
+  return parts;
+};
 
 interface Viewport {
   w: number;
@@ -232,6 +251,7 @@ interface PcnOsProps {
  */
 export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const isOs = useOsMode();
+  const parts = useDesktopParts(isOs);
   const [state, dispatch] = useReducer(reducer, { windows: [], order: [], nextId: 1 });
   const [viewport, setViewport] = useState<Viewport | null>(null);
   /** Cursor to show while a window is being moved or resized; null when idle. */
@@ -340,28 +360,31 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
 
   // A maximized window hides the desktop, so its background widgets can pause.
   const covered = state.windows.some((win) => win.maximized && !win.minimized);
+  // Wallpaper and menu bar render from the start (they are what the server paints); the rest
+  // waits for the desktop parts, which arrive like they used to after hydration.
+  const desktop = isOs ? parts : null;
 
   return (
     <div className="hidden os:block">
       <div className={cn('fixed inset-0 overflow-hidden', interactionCursor && 'select-none')}>
         <OsWallpaper
-          showHint={isOs && viewport !== null && state.windows.length === 0}
+          showHint={desktop !== null && viewport !== null && state.windows.length === 0}
           onPointerDown={() => dispatch({ type: 'minimizeAll' })}
         />
-        {isOs && <OsProcesses covered={covered} />}
-        {isOs && viewport && (
-          <OsPhotos
+        {desktop && <desktop.OsProcesses covered={covered} />}
+        {desktop && viewport && (
+          <desktop.OsPhotos
             covered={covered}
             onOpen={(path) => dispatch({ type: 'openPath', path, viewport })}
           />
         )}
 
-        {isOs && viewport && (
-          <AnimatePresence>
+        {desktop && viewport && (
+          <desktop.AnimatePresence>
             {state.windows.map((win) => {
               const program = findProgramForPath(win.path);
               return (
-                <OsWindow
+                <desktop.OsWindow
                   key={win.id}
                   win={win}
                   program={program}
@@ -400,7 +423,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                 />
               );
             })}
-          </AnimatePresence>
+          </desktop.AnimatePresence>
         )}
 
         {/* While a window is moved or resized, this shield sits over every iframe so the pointer
@@ -423,24 +446,28 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           onOpenLauncher={() => setLauncherOpen(true)}
         />
 
-        <OsDock
-          programs={programs}
-          runningPrograms={runningPrograms}
-          runningProgramIds={runningProgramIds}
-          focusedProgramId={focusedProgram?.id ?? null}
-          onOpenProgram={openProgram}
-          onOpenLauncher={() => setLauncherOpen(true)}
-        />
+        {desktop && (
+          <desktop.OsDock
+            programs={programs}
+            runningPrograms={runningPrograms}
+            runningProgramIds={runningProgramIds}
+            focusedProgramId={focusedProgram?.id ?? null}
+            onOpenProgram={openProgram}
+            onOpenLauncher={() => setLauncherOpen(true)}
+          />
+        )}
 
-        <OsLauncher
-          open={launcherOpen}
-          programs={programs}
-          onOpenProgram={(program) => {
-            setLauncherOpen(false);
-            openProgram(program);
-          }}
-          onClose={() => setLauncherOpen(false)}
-        />
+        {desktop && (
+          <desktop.OsLauncher
+            open={launcherOpen}
+            programs={programs}
+            onOpenProgram={(program) => {
+              setLauncherOpen(false);
+              openProgram(program);
+            }}
+            onClose={() => setLauncherOpen(false)}
+          />
+        )}
 
         {isOs && viewport && (
           <GlobalSearch
@@ -450,8 +477,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           />
         )}
 
-        {isOs && musicPlayer.current && (
-          <BackgroundMusicPlayer
+        {desktop && musicPlayer.current && (
+          <desktop.BackgroundMusicPlayer
             set={musicPlayer.current}
             open={musicPlayer.open}
             onClose={musicPlayer.hide}
