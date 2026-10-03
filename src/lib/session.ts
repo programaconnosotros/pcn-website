@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import type { Session, User } from '@prisma/client';
 import prisma from '@/lib/prisma';
@@ -21,13 +22,16 @@ export const hashSessionToken = (token: string) => createHash('sha256').update(t
 
 /**
  * La sesión vigente para el token de la cookie, con su usuario. Todas las lecturas de sesión
- * pasan por acá para que una sesión vencida no sirva en ningún lado.
+ * pasan por acá para que una sesión vencida no sirva en ningún lado. Va con `cache` de React:
+ * el layout, la página y sus componentes leen la sesión varias veces por request y así se
+ * consulta la base una sola vez.
  */
-export const findSession = (token: string) =>
+export const findSession = cache((token: string) =>
   prisma.session.findUnique({
     where: { id: hashSessionToken(token), expires: { gt: new Date() } },
     include: { user: true },
-  });
+  }),
+);
 
 /** Crea una sesión para el usuario y deja la cookie puesta. */
 export const createSession = async (userId: string) => {

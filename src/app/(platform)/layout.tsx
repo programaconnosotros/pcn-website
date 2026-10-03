@@ -20,20 +20,14 @@ const PlatformLayout = async ({
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
   const sessionId = cookieStore.get('sessionId')?.value;
 
-  let user: SessionUser | null = null;
+  // La sesión y los próximos eventos no dependen entre sí: se piden a la vez.
+  const [session, upcomingEvents] = await Promise.all([
+    sessionId ? findSession(sessionId) : null,
+    fetchUpcomingEvents(5),
+  ]);
+  const user: SessionUser | null = session?.user ?? null;
 
-  if (sessionId) {
-    const session = await findSession(sessionId);
-
-    if (session) {
-      user = session.user;
-    }
-  }
-
-  // Obtener próximos eventos para la sidebar
-  const upcomingEvents = await fetchUpcomingEvents(5);
-
-  // Obtener contador de notificaciones no leídas (solo para admins)
+  // Contador de notificaciones no leídas (solo para admins)
   const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
 
   return (

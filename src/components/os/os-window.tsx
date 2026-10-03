@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Copy, ExternalLink, Minus, RotateCw, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -166,6 +166,22 @@ export function OsWindow({
 }: OsWindowProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [loaded, setLoaded] = useState(false);
+
+  // The iframe's `load` event waits for the whole streamed page and every image in it. The page
+  // shell (or its loading skeleton) paints long before that, so the loader goes away as soon as
+  // the embedded document has anything in its body.
+  useEffect(() => {
+    if (loaded) return;
+    const interval = window.setInterval(() => {
+      try {
+        const doc = iframeRef.current?.contentDocument;
+        if (doc && doc.URL !== 'about:blank' && doc.body?.childElementCount) setLoaded(true);
+      } catch {
+        // Not readable (another origin): wait for the load event instead.
+      }
+    }, 50);
+    return () => window.clearInterval(interval);
+  }, [loaded]);
   const Icon = program.icon;
   const pageTitle = cleanTitle(win.title);
   const subtitle = pageTitle && pageTitle !== program.name ? pageTitle : null;

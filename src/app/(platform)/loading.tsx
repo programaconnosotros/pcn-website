@@ -1,8 +1,13 @@
-import { PcnLoader } from '@/components/ui/pcn-loader';
+import { PageTitleSkeleton, RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 
+// Fallback for the pages without a loading.tsx of their own: the shape of a regular page (title
+// plus a ruled grid), so the layout shows up right away instead of a full-screen animation.
 const Loading = () => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-    <PcnLoader />
+  <div className="flex flex-1 flex-col p-4 pt-0">
+    <div className="mt-4">
+      <PageTitleSkeleton />
+      <RuledGridSkeleton count={8} />
+    </div>
   </div>
 );
 
