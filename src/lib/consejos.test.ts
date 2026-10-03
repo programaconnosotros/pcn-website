@@ -6,7 +6,82 @@ import {
 } from '@/data/consejos-extraidos';
 import { conversations } from '@/data/whatsapp-conversations';
 import { members } from '@/data/whatsapp-conversations/members';
-import { fromAdvise, fromExtracted, sortByNewest } from './consejos';
+import {
+  DEFAULT_CONSEJO_FILTERS,
+  authorKey,
+  consejoTopics,
+  filterConsejos,
+  fromAdvise,
+  fromExtracted,
+  sortByNewest,
+  type Consejo,
+} from './consejos';
+
+const published = (overrides: Partial<Consejo>): Consejo => ({
+  id: 'a',
+  content: 'Medí antes de optimizar.',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  author: { id: 'user-1', name: 'Ana López', image: null },
+  likes: [],
+  commentCount: 0,
+  tags: [],
+  source: null,
+  ...overrides,
+});
+
+describe('consejoTopics', () => {
+  it('uses the tags of extracted consejos', () => {
+    expect(consejoTopics({ content: 'Aprendé inglés', tags: ['carrera'] })).toEqual(['carrera']);
+  });
+
+  it('infers topics from word starts, without accents', () => {
+    expect(consejoTopics({ content: 'Practicá inglés todos los días', tags: [] })).toEqual(
+      expect.arrayContaining(['aprendizaje', 'ingles']),
+    );
+    // "ia" only as a word, not inside "experiencia".
+    expect(consejoTopics({ content: 'La experiencia suma', tags: [] })).not.toContain('ia');
+  });
+});
+
+describe('filterConsejos', () => {
+  const a = published({ id: 'a', likes: [{ userId: 'x' }], createdAt: '2026-01-01' });
+  const b = published({
+    id: 'b',
+    content: 'Usá rebase con cuidado',
+    author: { id: null, name: 'Ariel Basabe', image: null },
+    createdAt: '2026-02-01',
+    tags: ['herramientas'],
+    source: { title: 'Merge vs rebase', date: '2026-02-01', hash: 'abc1234', href: '/x' },
+    likes: null,
+  });
+  const c = published({ id: 'c', commentCount: 4, createdAt: '2025-12-01' });
+  const all = [a, b, c];
+  const ids = (filters: Partial<typeof DEFAULT_CONSEJO_FILTERS>) =>
+    filterConsejos(all, { ...DEFAULT_CONSEJO_FILTERS, ...filters }).map(({ id }) => id);
+
+  it('lists everything newest first by default', () => {
+    expect(ids({})).toEqual(['b', 'a', 'c']);
+  });
+
+  it('searches text, author and source without accents', () => {
+    expect(ids({ query: 'medi' })).toEqual(['a', 'c']);
+    expect(ids({ query: 'basabe' })).toEqual(['b']);
+    expect(ids({ query: 'merge vs' })).toEqual(['b']);
+  });
+
+  it('filters by origin, author and topic', () => {
+    expect(ids({ origin: 'auto' })).toEqual(['b']);
+    expect(ids({ origin: 'manual' })).toEqual(['a', 'c']);
+    expect(ids({ author: authorKey(b) })).toEqual(['b']);
+    expect(ids({ topic: 'herramientas' })).toEqual(['b']);
+  });
+
+  it('sorts by likes, comments or oldest', () => {
+    expect(ids({ sort: 'likes' })[0]).toBe('a');
+    expect(ids({ sort: 'comentados' })[0]).toBe('c');
+    expect(ids({ sort: 'antiguos' })).toEqual(['c', 'a', 'b']);
+  });
+});
 
 describe('extracted consejos data', () => {
   it('points every consejo at an existing conversation', () => {

@@ -6,11 +6,19 @@ import { useConsejosNav } from '@/components/advises/consejos-nav';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import type { Consejo } from '@/lib/consejos';
+import {
+  DEFAULT_CONSEJO_FILTERS,
+  authorKey,
+  consejoTopics,
+  filterConsejos,
+  type Consejo,
+  type ConsejoFilters,
+} from '@/lib/consejos';
 import type { SessionWithUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ConsejosFilters, type FilterOption } from './consejos-filters';
 
 function Stat({ label, value, lit }: { label: string; value: number; lit?: boolean }) {
   return (
@@ -87,8 +95,33 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
     ];
   }, [consejos]);
 
+  const [filters, setFilters] = useState<ConsejoFilters>(DEFAULT_CONSEJO_FILTERS);
+
+  const { topics, authors } = useMemo(() => {
+    const count = (keys: [string, string][]) => {
+      const counts = new Map<string, FilterOption>();
+      for (const [value, label] of keys) {
+        const option = counts.get(value) ?? { value, label, count: 0 };
+        option.count += 1;
+        counts.set(value, option);
+      }
+      return [...counts.values()];
+    };
+    return {
+      topics: count(
+        consejos.flatMap((consejo) =>
+          consejoTopics(consejo).map((topic): [string, string] => [topic, topic]),
+        ),
+      ).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es')),
+      authors: count(
+        consejos.map((consejo): [string, string] => [authorKey(consejo), consejo.author.name]),
+      ).sort((a, b) => a.label.localeCompare(b.label, 'es')),
+    };
+  }, [consejos]);
+
   const fortune = consejos.find(({ id }) => id === fortuneId);
-  const visible = consejos;
+  const visible = useMemo(() => filterConsejos(consejos, filters), [consejos, filters]);
+  const isFiltering = visible.length !== consejos.length || filters.sort !== 'recientes';
 
   // The modal steps through exactly what the list shows.
   useEffect(() => {
@@ -104,9 +137,23 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
             meta={`${consejos.length} consejos de la comunidad`}
             action={addButton}
           />
+          <ConsejosFilters
+            filters={filters}
+            onChange={setFilters}
+            topics={topics}
+            authors={authors}
+            results={visible.length}
+            total={consejos.length}
+          />
         </StickyHeader>
 
-        <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div
+          className={cn(
+            'mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]',
+            // While searching, results go first.
+            isFiltering && 'hidden',
+          )}
+        >
           <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
             {stats.map((stat) => (
               <Stat key={stat.label} {...stat} />
@@ -117,12 +164,30 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
 
         {visible.length === 0 ? (
           <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>No hay consejos para ver aún.
+            <span className="text-pcnGreen-500">$ </span>
+            {consejos.length === 0 ? (
+              'No hay consejos para ver aún.'
+            ) : (
+              <>
+                0 resultados
+                {filters.query.trim() && (
+                  <>
+                    {' '}
+                    para <span className="text-pcnGreen">&quot;{filters.query}&quot;</span>
+                  </>
+                )}
+              </>
+            )}
           </p>
         ) : (
           <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
             {visible.map((consejo) => (
-              <AdviseCard key={consejo.id} consejo={consejo} session={session} />
+              <AdviseCard
+                key={consejo.id}
+                consejo={consejo}
+                session={session}
+                query={filters.query}
+              />
             ))}
           </RuledGrid>
         )}
