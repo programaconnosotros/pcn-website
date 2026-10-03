@@ -99,7 +99,12 @@ export default async function AdvisePage(props: { params: Promise<{ id: string }
             />
           </StickyHeader>
           <div className="mb-14 border-l border-t border-pcnGreen-200">
-            <AdviseCard advise={advise} session={session} className="hover:bg-transparent" />
+            <AdviseCard
+              advise={advise}
+              session={session}
+              clamped={false}
+              className="hover:bg-transparent"
+            />
             <CommentSection adviseId={advise.id} comments={advise.comments} session={session} />
           </div>
         </div>

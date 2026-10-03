@@ -17,17 +17,37 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Edit, Heart, MoreVertical, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useOptimistic, useState } from 'react';
+import { useEffect, useOptimistic, useRef, useState, type RefObject } from 'react';
 import { DeleteAdviseDialog } from './delete-advise-dialog';
 import { EditAdviseDialog } from './edit-advise-dialog';
+
+/** Whether a line-clamped element hides part of its text, re-checked when it resizes. */
+const useIsOverflowing = (ref: RefObject<HTMLElement | null>, enabled: boolean) => {
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!enabled || !element) return;
+    const check = () => setIsOverflowing(element.scrollHeight > element.clientHeight + 1);
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, enabled]);
+
+  return isOverflowing;
+};
 
 export const AdviseCard = ({
   advise,
   session,
   className,
   showAuthor = true,
+  clamped = true,
 }: {
   className?: string;
+  /** Cut long consejos to a few lines with a "ver más" link. Off on the consejo's own page. */
+  clamped?: boolean;
   /** Off where every card is by the same person, like their own profile. */
   showAuthor?: boolean;
   advise: Advise & {
@@ -39,6 +59,8 @@ export const AdviseCard = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
+  const contentRef = useRef<HTMLAnchorElement>(null);
+  const isOverflowing = useIsOverflowing(contentRef, clamped);
 
   // Initialize optimistic state with the current likes
   const [optimisticLikes, addOptimisticLike] = useOptimistic(
@@ -108,18 +130,32 @@ export const AdviseCard = ({
 
   return (
     <article className={cn(ruledCellClassName, 'group/advise flex flex-col gap-4 p-4', className)}>
-      <Link
-        href={`/consejos/${advise.id}`}
-        className="relative flex-1 border-l-2 border-pcnGreen-200 pl-4 pr-6 text-[15px] leading-relaxed text-foreground/90 transition-colors hover:text-foreground group-hover/advise:border-pcnGreen-500"
-      >
+      <div className="relative flex-1 border-l-2 border-pcnGreen-200 pl-4 pr-6 transition-colors group-hover/advise:border-pcnGreen-500">
         <span
           aria-hidden
           className="absolute -top-1 right-0 font-serif text-4xl leading-none text-pcnGreen/15"
         >
           &rdquo;
         </span>
-        {advise.content}
-      </Link>
+        <Link
+          ref={contentRef}
+          href={`/consejos/${advise.id}`}
+          className={cn(
+            'block whitespace-pre-line text-[15px] leading-relaxed text-foreground/90 transition-colors hover:text-foreground',
+            clamped && 'line-clamp-5',
+          )}
+        >
+          {advise.content}
+        </Link>
+        {clamped && isOverflowing && (
+          <Link
+            href={`/consejos/${advise.id}`}
+            className="mt-1 inline-block font-mono text-xs text-pcnGreen-600 transition-colors hover:text-pcnGreen"
+          >
+            ver más →
+          </Link>
+        )}
+      </div>
 
       <footer className="flex items-center gap-2">
         {showAuthor && (
