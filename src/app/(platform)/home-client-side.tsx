@@ -11,18 +11,12 @@ import { RecommendedWatchSection } from '@/components/home/recommended-watch-sec
 import { Reveal } from '@/components/home/reveal';
 import { SocialLinks } from '@/components/home/social-links';
 import { PartnersMarquee } from '@/components/home/partners-marquee';
-import { StoryCards } from '@/components/home/story-cards';
-import type { StoryCardPhotos } from '@/lib/gallery';
-import {
-  TestimonialsSection,
-  type FeaturedTestimonial,
-} from '@/components/home/testimonials-section';
 import React from 'react';
 
 interface HomeClientSideProps {
   userName: string | null;
   title: React.ReactNode;
-  featuredTestimonials: FeaturedTestimonial[];
+  testimonialsSection: React.ReactNode;
   recentlyAddedEventsSection: React.ReactNode;
   latestConversationsSection: React.ReactNode;
   latestTalksSection: React.ReactNode;
@@ -31,13 +25,13 @@ interface HomeClientSideProps {
   latestArticlesSection: React.ReactNode;
   interviewsSection: React.ReactNode;
   ambassadorsSection: React.ReactNode;
-  storyPhotos: StoryCardPhotos;
+  storyCardsSection: React.ReactNode;
 }
 
 const HomeClientSide = ({
   userName,
   title,
-  featuredTestimonials,
+  testimonialsSection,
   recentlyAddedEventsSection,
   latestConversationsSection,
   latestTalksSection,
@@ -46,7 +40,7 @@ const HomeClientSide = ({
   latestArticlesSection,
   interviewsSection,
   ambassadorsSection,
-  storyPhotos,
+  storyCardsSection,
 }: HomeClientSideProps) => (
   // Break out of the SidebarInset horizontal padding so sections can go full-bleed.
   <div className="-mx-1 md:-mx-6">
@@ -82,13 +76,9 @@ const HomeClientSide = ({
         <MusicSection />
       </Reveal>
 
-      <Reveal>
-        <StoryCards photos={storyPhotos} />
-      </Reveal>
+      <Reveal>{storyCardsSection}</Reveal>
 
-      <Reveal>
-        <TestimonialsSection testimonials={featuredTestimonials} />
-      </Reveal>
+      <Reveal>{testimonialsSection}</Reveal>
 
       <Reveal>
         <SocialLinks />

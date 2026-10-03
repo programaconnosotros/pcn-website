@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
@@ -12,9 +13,12 @@ import { AmbassadorsSection } from '@/components/home/ambassadors-section';
 import { LatestChangesSection } from '@/components/home/latest-changes-section';
 import { LatestArticlesSection } from '@/components/home/latest-articles';
 import { InterviewsSection } from '@/components/home/interviews-section';
+import { HomeSectionSkeleton } from '@/components/home/home-section-skeleton';
+import { StoryCards } from '@/components/home/story-cards';
+import { TestimonialsSection } from '@/components/home/testimonials-section';
 import { WHATSAPP_GROUP_URL } from '@/components/home/home-hero';
 import type { Metadata } from 'next';
-import { findSession, type SessionWithUser } from '@/lib/session';
+import { findSession } from '@/lib/session';
 import { listStoryCardPhotos } from '@/lib/gallery';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -39,19 +43,20 @@ export const metadata: Metadata = {
   },
 };
 
+const FeaturedTestimonialsSection = async () => (
+  <TestimonialsSection testimonials={await fetchFeaturedTestimonials()} />
+);
+
+const StoryCardsSection = async () => <StoryCards photos={await listStoryCardPhotos()} />;
+
+/**
+ * Only the session (already read by the layout, so it costs nothing) is awaited here. Every
+ * section that needs the database streams in on its own behind a skeleton, so the hero and the
+ * static sections show up right away.
+ */
 const Home = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-
-  let session: SessionWithUser | null = null;
-
-  if (sessionId) {
-    session = await findSession(sessionId);
-  }
-
-  const [featuredTestimonials, storyPhotos] = await Promise.all([
-    fetchFeaturedTestimonials(),
-    listStoryCardPhotos(),
-  ]);
+  const session = sessionId ? await findSession(sessionId) : null;
 
   return (
     <HomeClientSide
@@ -73,16 +78,77 @@ const Home = async () => {
           }
         />
       }
-      featuredTestimonials={featuredTestimonials}
-      recentlyAddedEventsSection={<RecentlyAddedEventsSection />}
+      recentlyAddedEventsSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton
+              cells={2}
+              gridClassName="grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"
+              cellClassName="h-72"
+            />
+          }
+        >
+          <RecentlyAddedEventsSection />
+        </Suspense>
+      }
       latestConversationsSection={<LatestConversationsSection />}
-      latestTalksSection={<LatestTalksSection />}
-      latestPhotosSection={<LatestPhotosSection />}
+      latestTalksSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton gridClassName="grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-4" />
+          }
+        >
+          <LatestTalksSection />
+        </Suspense>
+      }
+      latestPhotosSection={
+        <Suspense fallback={<HomeSectionSkeleton cells={8} />}>
+          <LatestPhotosSection />
+        </Suspense>
+      }
       latestChangesSection={<LatestChangesSection />}
-      latestArticlesSection={<LatestArticlesSection />}
+      latestArticlesSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton
+              cells={6}
+              gridClassName="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3"
+              cellClassName="h-20"
+            />
+          }
+        >
+          <LatestArticlesSection />
+        </Suspense>
+      }
       interviewsSection={<InterviewsSection />}
-      ambassadorsSection={<AmbassadorsSection />}
-      storyPhotos={storyPhotos}
+      ambassadorsSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton
+              cells={2}
+              gridClassName="lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+              cellClassName="h-56"
+            />
+          }
+        >
+          <AmbassadorsSection />
+        </Suspense>
+      }
+      testimonialsSection={
+        <Suspense
+          fallback={
+            <HomeSectionSkeleton cells={3} gridClassName="md:grid-cols-3" cellClassName="h-44" />
+          }
+        >
+          <FeaturedTestimonialsSection />
+        </Suspense>
+      }
+      storyCardsSection={
+        // The cards themselves are static: they show at once and the photos fade in after.
+        <Suspense fallback={<StoryCards photos={{ historia: [], galeria: [] }} />}>
+          <StoryCardsSection />
+        </Suspense>
+      }
     />
   );
 };
