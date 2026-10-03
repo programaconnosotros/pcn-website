@@ -76,7 +76,7 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
 
         <div className="mb-14 min-w-0 flex-1">
           <div className="mx-auto max-w-3xl">
-            <header className="mb-4 font-mono">
+            <header className="mb-4 mt-4 font-mono">
               <h2 className="text-lg font-semibold">
                 <span className="text-pcnGreen-500"># </span>
                 {label}
