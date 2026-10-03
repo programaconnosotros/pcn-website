@@ -1,7 +1,7 @@
 import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
-import { METER_SLOTS, isGroupThread, shortHash } from './conversation-utils';
+import { METER_SLOTS, formatShortDate, isGroupThread, shortHash } from './conversation-utils';
 import { ConversationEventLink } from './conversation-event';
 import { Highlight } from './highlight';
 import { ParticipantChip } from './participant-chip';
@@ -46,18 +46,26 @@ export function ConversationRow({
         />
       )}
 
-      <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-muted-foreground">
-        <span className="text-pcnGreen-600">{shortHash(conversation)}</span>
-        <time dateTime={date}>{date}</time>
-        <ConversationEventLink conversation={conversation} />
+      {/* Phones get a single short line here (short date, short badge); the hash and the event
+          move out of the way so nothing wraps. */}
+      <div className="flex min-w-0 items-center gap-2 whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground">
+        <span className="hidden text-pcnGreen-600 sm:inline">{shortHash(conversation)}</span>
+        <time dateTime={date}>
+          <span className="sm:hidden">{formatShortDate(date)}</span>
+          <span className="hidden sm:inline">{date}</span>
+        </time>
+        <span className="hidden min-w-0 sm:flex">
+          <ConversationEventLink conversation={conversation} />
+        </span>
         {isGroup && (
-          <span className="border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
-            muchos participantes
+          <span className="shrink-0 border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
+            <span className="sm:hidden">grupal</span>
+            <span className="hidden sm:inline">muchos participantes</span>
           </span>
         )}
         {participants.length > 0 && (
           <span
-            className="ml-auto flex items-center gap-1.5"
+            className="ml-auto flex shrink-0 items-center gap-1.5"
             title={`${participants.length} participantes`}
           >
             <span aria-hidden className="flex gap-px">
@@ -99,14 +107,24 @@ export function ConversationRow({
         </button>
       </h3>
 
-      <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="line-clamp-3 text-[13px] leading-relaxed text-muted-foreground sm:text-xs">
         <Highlight text={summary} query={query} />
       </p>
 
-      <div className="mt-auto flex flex-wrap items-center gap-1 pt-1 font-mono text-[11px]">
+      <span className="flex min-w-0 font-mono text-[11px] sm:hidden">
+        <ConversationEventLink conversation={conversation} />
+      </span>
+
+      {/* On phones the chips stay on one line that scrolls sideways instead of stacking into
+          rows, and the whole card already opens the summary, so "abrir resumen" goes away. Gaps
+          let taps through to the card. */}
+      <div className="pointer-events-none -mx-3 mt-auto flex items-center gap-1 overflow-x-auto px-3 pt-1 font-mono text-[11px] [mask-image:linear-gradient(to_right,transparent,black_12px,black_calc(100%-24px),transparent)] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
         {/* Lifted above the title's stretched hit area so `@name` filters instead of opening. */}
         {visibleParticipants.map((name) => (
-          <span key={name} className="relative z-10 flex">
+          <span
+            key={name}
+            className="pointer-events-auto relative z-10 flex shrink-0 whitespace-nowrap"
+          >
             <ParticipantChip
               name={name}
               active={activeParticipant === name}
@@ -119,7 +137,7 @@ export function ConversationRow({
             type="button"
             onClick={onOpen}
             title="Ver todos los participantes"
-            className="px-1 leading-5 text-muted-foreground transition-colors hover:text-pcnGreen"
+            className="pointer-events-auto relative z-10 shrink-0 px-1 leading-5 text-muted-foreground transition-colors hover:text-pcnGreen"
           >
             +{hiddenCount}
           </button>
@@ -127,7 +145,7 @@ export function ConversationRow({
         <button
           type="button"
           onClick={onOpen}
-          className="group/open ml-auto flex items-center gap-1 border border-transparent px-1.5 leading-5 text-pcnGreen-700 transition-all hover:border-pcnGreen-600 hover:text-pcnGreen hover:shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]"
+          className="group/open pointer-events-auto ml-auto hidden items-center gap-1 border border-transparent px-1.5 leading-5 text-pcnGreen-700 transition-all hover:border-pcnGreen-600 hover:text-pcnGreen hover:shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)] sm:flex"
         >
           <span className="text-pcnGreen-600 group-hover/open:text-pcnGreen">&gt;_</span>
           abrir resumen

@@ -48,3 +48,9 @@ export const formatLongDate = (date: string) => {
   const [year, month, day] = date.split('-').map(Number);
   return `${day} de ${MONTHS_ES[month - 1]} de ${year}`;
 };
+
+/** "2026-10-02" → "02 oct", for the tight card header on phones (the month heads the group). */
+export const formatShortDate = (date: string) => {
+  const [, month, day] = date.split('-');
+  return `${day} ${MONTHS_ES[Number(month) - 1].slice(0, 3)}`;
+};

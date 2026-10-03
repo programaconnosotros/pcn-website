@@ -263,7 +263,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                   const groupCount = items.filter(isGroupThread).length;
                   return (
                     <section key={key} id={`m-${key}`} className="scroll-mt-4">
-                      <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      <h2 className="mb-2 flex items-center gap-2 whitespace-nowrap font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground sm:tracking-[0.2em]">
                         <span className="text-pcnGreen">{'>'}</span>
                         <span className="text-foreground">{key}</span>
                         <span>{monthName(key)}</span>
@@ -275,7 +275,9 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                           [{items.length}]
                           {groupCount > 0 && (
                             <span className="ml-2 text-pcnGreen">
-                              {groupCount} con muchos participantes
+                              {groupCount}
+                              <span className="sm:hidden"> grupales</span>
+                              <span className="hidden sm:inline"> con muchos participantes</span>
                             </span>
                           )}
                         </span>
