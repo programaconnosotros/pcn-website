@@ -1,4 +1,7 @@
-import { InterviewGuidesList } from '@/components/interviews/interview-guides-list';
+import {
+  InterviewGuidesList,
+  type GuideGroup,
+} from '@/components/interviews/interview-guides-list';
 import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
 import type { Metadata } from 'next';
@@ -28,33 +31,45 @@ export const metadata: Metadata = {
 };
 
 const GuiasPage = () => {
-  const guides = orderedGuides.map(({ id, area, label, technology, stack, guide }) => ({
-    track: id,
+  const items = orderedGuides.map(({ id, area, label, technology, stack, guide }) => ({
     area,
+    track: id,
     label: technology ?? label,
+    fullLabel: label,
     stack,
     summary: guide.summary,
     sectionIds: guide.sections.map((section) => section.id),
   }));
-  const sectionCount = guides.reduce((count, guide) => count + guide.sectionIds.length, 0);
+  // Areas with a guide per technology get their own group; the rest share one.
+  const multiTrackAreas = AREAS.filter(
+    (area) => items.filter((item) => item.area === area.id).length > 1,
+  );
+  const groups: GuideGroup[] = [
+    ...multiTrackAreas.map((area) => ({
+      label: area.label,
+      guides: items.filter((item) => item.area === area.id),
+    })),
+    {
+      label: 'Más áreas',
+      guides: items.filter((item) => !multiTrackAreas.some((area) => area.id === item.area)),
+    },
+  ];
+  const sectionCount = items.reduce((count, item) => count + item.sectionIds.length, 0);
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4 max-w-2xl">
+      <div className="mb-14 mt-4">
         <PageTitle
           path="entrevistas/guias"
-          meta={`${guides.length} guías · ${sectionCount} secciones`}
+          meta={`${items.length} guías · ${sectionCount} secciones`}
           action={<InterviewsTabs active="guias" />}
         />
-        <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Qué estudiar antes de una entrevista, área por área: cómo suele ser el proceso, los temas
           que más se preguntan de junior a senior y qué tenés que poder explicar en voz alta. Cuando
           termines una guía, ponete a prueba en el simulador.
         </p>
-        <InterviewGuidesList
-          areas={AREAS.map(({ id, label }) => ({ id, label }))}
-          guides={guides}
-        />
+        <InterviewGuidesList groups={groups} />
       </div>
     </div>
   );

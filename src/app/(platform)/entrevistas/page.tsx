@@ -1,5 +1,7 @@
 import { InterviewSimulator } from '@/components/interviews/interview-simulator';
 import type { Metadata } from 'next';
+import { interviewGuides } from './guias/guides';
+import type { InterviewTrack } from './questions/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -23,10 +25,18 @@ export const metadata: Metadata = {
   },
 };
 
+// Only the section ids reach the client, to show how much of each guide was read.
+const guideSections = Object.fromEntries(
+  Object.entries(interviewGuides).map(([track, guide]) => [
+    track,
+    guide.sections.map((section) => section.id),
+  ]),
+) as Record<InterviewTrack, string[]>;
+
 const EntrevistasPage = () => (
   <div className="flex flex-1 flex-col p-4 pt-0">
     <div className="mt-4">
-      <InterviewSimulator />
+      <InterviewSimulator guideSections={guideSections} />
     </div>
   </div>
 );
