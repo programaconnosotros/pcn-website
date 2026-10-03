@@ -19,6 +19,7 @@ import {
   type Rect,
 } from './os-window-geometry';
 import { useOsMode } from './use-os-mode';
+import { readSession, restoreOrder, toSession, writeSession, type SavedWindow } from './os-session';
 import { osTabTitle } from '@/lib/tab-title';
 
 const MENU_BAR_HEIGHT = 28;
@@ -64,6 +65,8 @@ interface OsState {
 
 type OsAction =
   | { type: 'open'; path: string; rect: Rect }
+  /** Brings back a saved session, windows from back to front. Replaces any open window. */
+  | { type: 'restore'; windows: SavedWindow[] }
   /** Opens a page in a new window, or brings forward the window already showing it. */
   | { type: 'openPath'; path: string; viewport: Viewport }
   | { type: 'focus'; id: string }
@@ -105,6 +108,27 @@ const reducer = (state: OsState, action: OsAction): OsState => {
         windows: [...state.windows, win],
         order: [...state.order, id],
         nextId: state.nextId + 1,
+      };
+    }
+    case 'restore': {
+      const windows = action.windows.map(
+        ({ path, minimized, maximized, x, y, w, h }, index): OsWindowState => ({
+          id: `win-${state.nextId + index}`,
+          src: path,
+          path,
+          title: null,
+          minimized,
+          maximized,
+          x,
+          y,
+          w,
+          h,
+        }),
+      );
+      return {
+        windows,
+        order: windows.map((win) => win.id),
+        nextId: state.nextId + windows.length,
       };
     }
     case 'openPath': {
@@ -284,12 +308,27 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     return () => window.removeEventListener('resize', onResize);
   }, [isOs]);
 
-  // Open the page the visitor landed on (the home page by default) in the first window, and the
-  // feed next to the home.
+  // After a reload, bring back every window that was open, where it was. Otherwise open the page
+  // the visitor landed on (the home page by default) in the first window, and the feed next to
+  // the home.
   useEffect(() => {
     if (!isOs || !viewport || opened.current) return;
     opened.current = true;
     const path = `${window.location.pathname}${window.location.search}`;
+    const session = readSession();
+    if (session) {
+      const restored = restoreOrder(session.windows, path);
+      // The screen may have changed size since: windows keep their share of it and fit inside.
+      const windows = restored.windows.map((win) => ({
+        ...win,
+        ...fitToDesktop(scaleToDesktop(win, session.viewport, viewport), viewport),
+      }));
+      dispatch({ type: 'restore', windows });
+      // The address bar points somewhere no saved window was: open it on top, focused.
+      if (!restored.matched)
+        dispatch({ type: 'open', path, rect: newWindowRect(viewport, windows.length) });
+      return;
+    }
     // PCN OS liviano opens only the home: every window is a whole copy of the site.
     const split = path === '/' && !lite ? homeAndFeedRects(viewport) : null;
     if (split) {
@@ -300,6 +339,13 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     }
     dispatch({ type: 'open', path, rect: newWindowRect(viewport, 0) });
   }, [isOs, viewport, lite]);
+
+  // Remember the desktop for the next reload. Moves and resizes only reach the state when the
+  // pointer is released, so this doesn't write while dragging.
+  useEffect(() => {
+    if (!isOs || !viewport || !opened.current) return;
+    writeSession(toSession(state.windows, state.order, viewport));
+  }, [isOs, viewport, state.windows, state.order]);
 
   const focusedId = [...state.order]
     .reverse()

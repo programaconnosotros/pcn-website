@@ -89,6 +89,15 @@ escudo transparente tapa los iframes para que no se traguen el puntero. Recién 
 el rect final al reducer, así ni el escritorio ni las otras ventanas se re-renderizan en cada
 movimiento.
 
+La sesión del escritorio se guarda en `sessionStorage` (`os-session.ts`) cada vez que cambia el
+estado: qué ventanas hay, en qué página está cada una, su rect, si está minimizada o maximizada y
+el orden de apilado. Al recargar la pestaña vuelven todas donde estaban (escaladas y ajustadas si
+la pantalla cambió de tamaño), y la que muestra la URL de la barra de direcciones queda al frente;
+si ninguna la muestra, se abre una ventana nueva para esa URL encima del resto. Las entradas
+inválidas se descartan (solo rutas del propio sitio, como mucho 12 ventanas). Una pestaña nueva o
+un link compartido arrancan con el escritorio de siempre. En liviano, las ventanas restauradas
+que no están entre las 3 más recientes vuelven en pausa, sin cargar su página.
+
 ## Cómo decide qué mostrar sin parpadeos
 
 El servidor no sabe el tamaño de la pantalla, y decidir en JavaScript después de hidratar
