@@ -60,6 +60,28 @@ describe('setIdentityLink', () => {
     ).rejects.toThrow('Nombre desconocido');
   });
 
+  it('links a person mentioned in /historia to a user', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+
+    await setIdentityLink({ source: 'historia', externalName: 'Germán Navarro', userId: 'user-2' });
+
+    expect(prismaMock.identityLink.upsert).toHaveBeenCalledWith({
+      where: { source_externalName: { source: 'historia', externalName: 'Germán Navarro' } },
+      create: { source: 'historia', externalName: 'Germán Navarro', userId: 'user-2' },
+      update: { userId: 'user-2' },
+    });
+  });
+
+  it('rejects names /historia does not mention', async () => {
+    loginAs(admin);
+
+    await expect(
+      setIdentityLink({ source: 'historia', externalName: 'Alguien Inventado', userId: 'user-2' }),
+    ).rejects.toThrow('Nombre desconocido');
+  });
+
   it('rejects WhatsApp names that are not community members', async () => {
     loginAs(admin);
 

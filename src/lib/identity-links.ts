@@ -1,13 +1,13 @@
 import prisma from '@/lib/prisma';
 
-export const IDENTITY_SOURCES = ['whatsapp', 'github', 'articulos'] as const;
+export const IDENTITY_SOURCES = ['whatsapp', 'github', 'articulos', 'historia'] as const;
 export type IdentitySource = (typeof IDENTITY_SOURCES)[number];
 
 export type LinkedUser = { id: string; name: string; image: string | null };
 
 /**
- * External name (WhatsApp member, GitHub login or /lectura article author) → the platform user an
- * admin linked it to.
+ * External name (WhatsApp member, GitHub login, /lectura article author or person mentioned in
+ * /historia) → the platform user an admin linked it to.
  */
 export const getIdentityMap = async (
   source: IdentitySource,

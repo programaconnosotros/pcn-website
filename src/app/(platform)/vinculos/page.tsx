@@ -4,6 +4,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
 import { conversations } from '@/data/whatsapp-conversations';
 import { members } from '@/data/whatsapp-conversations/members';
+import { HISTORIA_PEOPLE } from '@/components/historia/people';
 import { requireAdminPage } from '@/lib/admin';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
@@ -17,10 +18,11 @@ export const metadata: Metadata = {
 export default async function VinculosPage() {
   await requireAdminPage();
 
-  const [whatsappLinks, githubLinks, authorLinks, stats] = await Promise.all([
+  const [whatsappLinks, githubLinks, authorLinks, historiaLinks, stats] = await Promise.all([
     getIdentityMap('whatsapp'),
     getIdentityMap('github'),
     getIdentityMap('articulos'),
+    getIdentityMap('historia'),
     getCollaborationStats(),
   ]);
 
@@ -68,6 +70,14 @@ export default async function VinculosPage() {
     }))
     .sort((a, b) => b.weight - a.weight || a.externalName.localeCompare(b.externalName));
 
+  // In order of appearance in the story.
+  const historiaRows: IdentityRow[] = HISTORIA_PEOPLE.map((name) => ({
+    externalName: name,
+    detail: 'mencionado',
+    weight: 0,
+    user: historiaLinks[name] ?? null,
+  }));
+
   const linked = (rows: IdentityRow[]) => rows.filter((row) => row.user).length;
 
   return (
@@ -76,7 +86,7 @@ export default async function VinculosPage() {
         <StickyHeader>
           <PageTitle
             path="vinculos"
-            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github · ${linked(authorRows)}/${authorRows.length} de artículos`}
+            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github · ${linked(authorRows)}/${authorRows.length} de artículos · ${linked(historiaRows)}/${historiaRows.length} de historia`}
           />
         </StickyHeader>
 
@@ -85,7 +95,8 @@ export default async function VinculosPage() {
           Asigná quién es quién. Un miembro de WhatsApp vinculado muestra sus conversaciones en su
           perfil y su nombre en /conversaciones lleva al perfil; un login de GitHub vinculado
           muestra sus contribuciones al sitio en el perfil y en /desarrollo; un autor de /lectura
-          vinculado suma todos sus artículos al perfil y figura como escritor en cada uno.
+          vinculado suma todos sus artículos al perfil y figura como escritor en cada uno; una
+          persona mencionada en /historia vinculada lleva a su perfil desde la historia.
         </p>
 
         <div className="mb-14 grid gap-6 2xl:grid-cols-2">
@@ -109,6 +120,12 @@ export default async function VinculosPage() {
             title="artículos"
             command="grep author lectura/articles.ts"
             rows={authorRows}
+          />
+          <IdentityLinksTable
+            source="historia"
+            title="historia"
+            command="grep HistoriaPerson historia/page.tsx"
+            rows={historiaRows}
           />
         </div>
       </div>

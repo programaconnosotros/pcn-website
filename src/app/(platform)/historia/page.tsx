@@ -9,11 +9,19 @@ import {
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import {
+  HistoriaPeopleProvider,
+  HistoriaPerson,
+  HistoriaTaggingBar,
+} from '@/components/historia/historia-person';
+import type { HistoriaPersonName } from '@/components/historia/people';
+import { getAdminUser } from '@/lib/admin';
+import { getIdentityMap } from '@/lib/identity-links';
 import type { Metadata } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
-const founders = [
+const founders: HistoriaPersonName[] = [
   'Agustín Sánchez',
   'Mauricio Sánchez',
   'Esteban Sánchez',
@@ -22,57 +30,59 @@ const founders = [
   'Iván Taddei',
 ];
 
-const lightningTalksNextGen = [
+type Speaker = { name: HistoriaPersonName; title?: string };
+
+const lightningTalksNextGen: { title: string; speakers: Speaker[]; role: string }[] = [
   {
     title: 'Cómo Construir una Carrera Exponencial en Tecnología',
-    speaker: 'Ing. Alejo Boga',
+    speakers: [{ name: 'Alejo Boga', title: 'Ing.' }],
     role: 'Senior AI Engineer en Santander Tecnología',
   },
   {
     title: 'Effective Agentic Coding',
-    speaker: 'Agustín Sánchez',
+    speakers: [{ name: 'Agustín Sánchez' }],
     role: 'Senior Software Engineer en Eagerworks, Director de DIZENZ y Líder de PCN',
   },
   {
     title: 'Buscando el Diseño Perfecto',
-    speaker: 'Ing. Mauricio Sánchez',
+    speakers: [{ name: 'Mauricio Sánchez', title: 'Ing.' }],
     role: 'Staff Software Engineer en PedidosYa, Co-fundador de PCN',
   },
   {
     title: '5 Consejos de Supervivencia Backend',
-    speaker: 'Ing. Marcelo de Jesús Núñez',
+    speakers: [{ name: 'Marcelo Núñez', title: 'Ing.' }],
     role: 'Senior Software Engineer en Bowery, Co-fundador de PCN',
   },
   {
     title:
       'Stablecoins, Mercados 24/7 y Activos Tokenizados: Blockchain, el Nuevo Stack Financiero',
-    speaker: 'Ing. Franco Pérez',
+    speakers: [{ name: 'Franco Pérez', title: 'Ing.' }],
     role: 'Founder de Crisol Studio',
   },
   {
     title: 'Anatomía de un Agente de IA: Qué son y cómo funcionan',
-    speaker: 'Franco Jose Espinoza',
+    speakers: [{ name: 'Franco Jose Espinoza' }],
     role: 'Founder & Lead Developer en Section 05',
   },
   {
     title:
       'De MVP a Pro: Evolución de interfaces complejas y carga cognitiva (Caso Volley Manager)',
-    speaker: 'Fabio Ramos',
+    speakers: [{ name: 'Fabio Ramos' }],
     role: 'Lead Software Engineer en CAW Tech',
   },
   {
     title: 'NEX OS: Ingeniería de Sistemas Operativos en la Web y Optimización Extrema',
-    speaker: 'Salvador Juárez y Yamil Cardozo',
+    speakers: [{ name: 'Salvador Juárez' }, { name: 'Yamil Cardozo' }],
     role: 'Software Engineer en Bitflow · Estudiante IES',
   },
   {
     title: 'El Atacante que Llegó por el npm install',
-    speaker: 'Ismael Chávez',
+    speakers: [{ name: 'Ismael Chávez' }],
     role: 'Software Developer & Pentester en Endpoint Consulting',
   },
   {
     title: 'No te Reemplaza la IA, te Reemplaza el QA que la Usa',
-    speaker: 'Leo Apaza',
+    speakers: [{ name: 'Leo Apaza' }],
     role: 'Software Development Engineer in Test en Assist-365',
   },
 ];
@@ -97,7 +107,7 @@ export const metadata: Metadata = {
   },
 };
 
-const PCNStory = () => (
+const Story = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
@@ -112,6 +122,7 @@ const PCNStory = () => (
 
           <div className="min-w-0 flex-1">
             <div className="mx-auto max-w-3xl border border-pcnGreen-200">
+              <HistoriaTaggingBar />
               <section
                 id="introduccion"
                 className="scroll-mt-32 border-b border-pcnGreen-200 p-4 lg:scroll-mt-28"
@@ -129,8 +140,11 @@ const PCNStory = () => (
                     <b>programaConNosotros</b> es una comunidad de profesionales y estudiantes de
                     ingeniería de software, fundada en el año 2020 en Tucumán (Argentina), en plena
                     cuarentena por la pandemia del COVID-19. Los co-fundadores son los hermanos
-                    Sánchez (Agustín, Mauricio y Esteban) junto a Germán Navarro, Marcelo Núñez e
-                    Iván Taddei.
+                    Sánchez (<HistoriaPerson name="Agustín Sánchez">Agustín</HistoriaPerson>,{' '}
+                    <HistoriaPerson name="Mauricio Sánchez">Mauricio</HistoriaPerson> y{' '}
+                    <HistoriaPerson name="Esteban Sánchez">Esteban</HistoriaPerson>) junto a{' '}
+                    <HistoriaPerson name="Germán Navarro" />,{' '}
+                    <HistoriaPerson name="Marcelo Núñez" /> e <HistoriaPerson name="Iván Taddei" />.
                   </p>
                   <p>
                     Si bien la comunidad fue fundada en 2020, los co-fundadores y las personas más
@@ -140,7 +154,12 @@ const PCNStory = () => (
                 </HistoriaProse>
                 <p className="mt-4 border-t border-dashed border-pcnGreen-200 pt-3 font-mono text-xs text-muted-foreground">
                   <span className="text-pcnGreen">co-fundadores: </span>
-                  {founders.join(' · ')}
+                  {founders.map((name, index) => (
+                    <span key={name}>
+                      {index > 0 && ' · '}
+                      <HistoriaPerson name={name} />
+                    </span>
+                  ))}
                 </p>
               </section>
 
@@ -148,8 +167,9 @@ const PCNStory = () => (
                 <HistoriaSection id="comienzos-utn" title="Comienzos en la UTN-FRT" period="2015">
                   <p>
                     En el año 2015, en la Universidad Tecnológica de Tucumán (Argentina), se
-                    conocieron Agustín Sánchez y Germán Navarro, estudiando Ingeniería en Sistemas
-                    de Información. La gran pasión que tenían por la ingeniería de software,
+                    conocieron <HistoriaPerson name="Agustín Sánchez" /> y{' '}
+                    <HistoriaPerson name="Germán Navarro" />, estudiando Ingeniería en Sistemas de
+                    Información. La gran pasión que tenían por la ingeniería de software,
                     particularmente por la programación, los llevó a estudiar mucho más de lo que se
                     enseñaba en la universidad y a participar de actividades extracurriculares como
                     charlas y competencias de programación.
@@ -166,9 +186,10 @@ const PCNStory = () => (
                   period="2017"
                 >
                   <p>
-                    En el año 2017, Agus y Germán se sumaron al IEEE para participar del programa de
-                    voluntariado, que tiene como objetivo hacer networking, organizar y participar
-                    de eventos técnicos.
+                    En el año 2017, <HistoriaPerson name="Agustín Sánchez">Agus</HistoriaPerson> y{' '}
+                    <HistoriaPerson name="Germán Navarro">Germán</HistoriaPerson> se sumaron al IEEE
+                    para participar del programa de voluntariado, que tiene como objetivo hacer
+                    networking, organizar y participar de eventos técnicos.
                   </p>
                   <HistoriaImage
                     src="/historia/evento_abril (173) (2).webp"
@@ -176,11 +197,11 @@ const PCNStory = () => (
                   />
                   <p>
                     Viajaron a un evento en Catamarca llamado <b>Reunión Nacional de Ramas (RNR)</b>
-                    , y se hicieron amigos de Facu Gelatti y Franco Mirada. Facu y Franco ya estaban
-                    terminando de cursar la carrera y fueron mentores muy importantes para Agus y
-                    Germán. Compartieron muchos eventos técnicos, destacandose los congresos de
-                    Smalltalks, por la gran pasión que tenían por la programación orientada a
-                    objetos.
+                    , y se hicieron amigos de <HistoriaPerson name="Facu Gelatti" /> y{' '}
+                    <HistoriaPerson name="Franco Mirada" />. Facu y Franco ya estaban terminando de
+                    cursar la carrera y fueron mentores muy importantes para Agus y Germán.
+                    Compartieron muchos eventos técnicos, destacandose los congresos de Smalltalks,
+                    por la gran pasión que tenían por la programación orientada a objetos.
                   </p>
                   {/* // TODO: Agregar fotos de los congresos de Smalltalks. */}
                   <p>
@@ -194,9 +215,10 @@ const PCNStory = () => (
                     Les apasionaba mucho la programación competitiva asi que daban clases ad-honorem
                     sobre algoritmos y estructuras de datos avanzadas aparte de cursar la carrera de
                     ingeniería. A estas clases se sumaban varios estudiantes apasionados por la
-                    programación. El profesor Augusto Nasrallah y el ingeniero Jorge Buabud de la
-                    UTN-FRT colaboraban prestando un laboratorio de computación de la universidad
-                    para dictar estas clases.
+                    programación. El profesor <HistoriaPerson name="Augusto Nasrallah" /> y el
+                    ingeniero <HistoriaPerson name="Jorge Buabud" /> de la UTN-FRT colaboraban
+                    prestando un laboratorio de computación de la universidad para dictar estas
+                    clases.
                   </p>
                 </HistoriaSection>
 
@@ -249,8 +271,8 @@ const PCNStory = () => (
                   <p>
                     En abril del 2018, organizaron el Tucumán Hack Weekend, un congreso
                     internacional de seguridad informática llevado a cabo en la UTN de Tucumán. El
-                    evento fue organizado también por la organización Tucumán Hacking, presidida por
-                    Victor Figueredo (ahora CEO de Endpoint Consulting).
+                    evento fue organizado también por la organización Tucumán Hacking, presidida por{' '}
+                    <HistoriaPerson name="Victor Figueredo" /> (ahora CEO de Endpoint Consulting).
                   </p>
                   <HistoriaGallery
                     images={[
@@ -280,13 +302,17 @@ const PCNStory = () => (
                 <HistoriaSection id="nibble" title="Nibble" period="2019">
                   <p>
                     En el año 2019, Agus y Germán conocieron 2 personas en la UTN-FRT que se
-                    convirtieron en grandes compañeros y amigos: Iván Taddei y Marcelo
-                    &quot;Chelo&quot; Núñez. El grupo de los 4, bautizado por el Chelo como
-                    &quot;Nibble&quot;, fue un grupo destacado en la facultad, más que nada por la
-                    pasión que tenían por la ingeniería del software. Nunca fueron a la facultad
-                    solo para aprobar materias y ya, sino que realmente querían entender cómo
-                    funcionan las cosas, cómo se relacionan, cómo se aplican, y estudiar mucho más
-                    de lo que adentro de las aulas se enseñaba.
+                    convirtieron en grandes compañeros y amigos:{' '}
+                    <HistoriaPerson name="Iván Taddei" /> y{' '}
+                    <HistoriaPerson name="Marcelo Núñez">
+                      Marcelo &quot;Chelo&quot; Núñez
+                    </HistoriaPerson>
+                    . El grupo de los 4, bautizado por el Chelo como &quot;Nibble&quot;, fue un
+                    grupo destacado en la facultad, más que nada por la pasión que tenían por la
+                    ingeniería del software. Nunca fueron a la facultad solo para aprobar materias y
+                    ya, sino que realmente querían entender cómo funcionan las cosas, cómo se
+                    relacionan, cómo se aplican, y estudiar mucho más de lo que adentro de las aulas
+                    se enseñaba.
                   </p>
                   <HistoriaImage src="/historia/IMG_1525.webp" alt="Nibble" />
                 </HistoriaSection>
@@ -298,10 +324,10 @@ const PCNStory = () => (
                 >
                   <p>
                     En el año 2020, en la Rama Estudiantil IEEE de la UTN-FRT se renovaron las
-                    autoridades. Agus y Germán dieron otro paso más en su carrera del voluntariado y
-                    Mauricio Sánchez se sumó también. Agus era presidente, Germán vicepresidente y
-                    Mauri tesorero. Se sumaron aquel año también Chelo, Iván y Esteban para
-                    colaborar en la organización de las actividades.
+                    autoridades. Agus y Germán dieron otro paso más en su carrera del voluntariado y{' '}
+                    <HistoriaPerson name="Mauricio Sánchez" /> se sumó también. Agus era presidente,
+                    Germán vicepresidente y Mauri tesorero. Se sumaron aquel año también Chelo, Iván
+                    y Esteban para colaborar en la organización de las actividades.
                   </p>
                   <p>
                     2020 estuvo marcado por la cuarentena por la pandemia del COVID-19, por lo que
@@ -326,9 +352,12 @@ const PCNStory = () => (
                   <p>
                     La cátedra de Algoritmos y Estructuras de Datos (AED) de la UTN-FRT le dio lugar
                     a la comunidad para dar algunos talleres de Git y GitHub, con los cuales se sumó
-                    mucha gente a la comunidad, entre los cuales estaban Tobias Paz Posse, Jeremias
-                    Ivanoff y Lucas Pérez. Tobi, Jere (alias Lunai) y Lucas le pusieron mucha
-                    energía y buena onda a la comunidad, y han crecido mucho desde que entraron.
+                    mucha gente a la comunidad, entre los cuales estaban{' '}
+                    <HistoriaPerson name="Tobías Paz Posse">Tobias Paz Posse</HistoriaPerson>,{' '}
+                    <HistoriaPerson name="Jeremias Ivanoff" /> y{' '}
+                    <HistoriaPerson name="Lucas Pérez" />. Tobi, Jere (alias Lunai) y Lucas le
+                    pusieron mucha energía y buena onda a la comunidad, y han crecido mucho desde
+                    que entraron.
                   </p>
                 </HistoriaSection>
 
@@ -431,10 +460,18 @@ const PCNStory = () => (
                   <p>
                     El proyecto es open-source y cualquier persona de la comunidad puede participar
                     en el desarrollo y testing de la plataforma. Los miembros de la comunidad que
-                    colaboraron en el desarrollo de la primera versión del website fueron Germán
-                    Navarro, Mauricio Chaile, Matías Gutierrez, Nicolas Fuentes, Facundo Bazán,
-                    Vicky Grillo, Emiliano Grillo, Carlos Spagnolo, Alejo Boga, Tobías Paz Posse,
-                    Marcelo Núñez y Benjamin Cortes. El equipo fue liderado por Agustín Sánchez.
+                    colaboraron en el desarrollo de la primera versión del website fueron{' '}
+                    <HistoriaPerson name="Germán Navarro" />,{' '}
+                    <HistoriaPerson name="Mauricio Chaile" />,{' '}
+                    <HistoriaPerson name="Matías Gutierrez" />,{' '}
+                    <HistoriaPerson name="Nicolas Fuentes" />,{' '}
+                    <HistoriaPerson name="Facundo Bazán" />, <HistoriaPerson name="Vicky Grillo" />,{' '}
+                    <HistoriaPerson name="Emiliano Grillo" />,{' '}
+                    <HistoriaPerson name="Carlos Spagnolo" />, <HistoriaPerson name="Alejo Boga" />,{' '}
+                    <HistoriaPerson name="Tobías Paz Posse" />,{' '}
+                    <HistoriaPerson name="Marcelo Núñez" /> y{' '}
+                    <HistoriaPerson name="Benjamin Cortes" />. El equipo fue liderado por{' '}
+                    <HistoriaPerson name="Agustín Sánchez" />.
                   </p>
                 </HistoriaSection>
 
@@ -552,7 +589,14 @@ const PCNStory = () => (
                             {talk.title}
                           </p>
                           <p className="mt-0.5 text-sm leading-snug">
-                            {talk.speaker} · {talk.role}
+                            {talk.speakers.map((speaker, speakerIndex) => (
+                              <span key={speaker.name}>
+                                {speakerIndex > 0 && ' y '}
+                                {speaker.title && `${speaker.title} `}
+                                <HistoriaPerson name={speaker.name} />
+                              </span>
+                            ))}{' '}
+                            · {talk.role}
                           </p>
                         </div>
                       </li>
@@ -577,9 +621,10 @@ const PCNStory = () => (
                     Pero lo más valioso no es el contenido técnico: es el <b>networking genuino</b>.
                     Ofertas de trabajo compartidas en el grupo que se convirtieron en empleos
                     reales, referidos entre miembros, revisiones de CV, consejos de entrevistas, y
-                    la organización espontánea de un club de lectura técnica. Cuando Facundo García
-                    Martoni consiguió su posición como Senior Full-Stack Engineer gracias a una
-                    oferta publicada en el grupo y el acompañamiento de otros miembros, quedó claro{' '}
+                    la organización espontánea de un club de lectura técnica. Cuando{' '}
+                    <HistoriaPerson name="Facundo García Martoni" /> consiguió su posición como
+                    Senior Full-Stack Engineer gracias a una oferta publicada en el grupo y el
+                    acompañamiento de otros miembros, quedó claro{' '}
                     <b>el valor concreto de pertenecer a esta comunidad</b>.
                   </p>
                   <p>
@@ -613,4 +658,14 @@ const PCNStory = () => (
     </div>
   </>
 );
+
+const PCNStory = async () => {
+  const [links, admin] = await Promise.all([getIdentityMap('historia'), getAdminUser()]);
+
+  return (
+    <HistoriaPeopleProvider links={links} isAdmin={admin !== null}>
+      <Story />
+    </HistoriaPeopleProvider>
+  );
+};
 export default PCNStory;
