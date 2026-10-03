@@ -31,6 +31,25 @@ describe('fetchHomeEvents', () => {
     expect(prismaMock.event.findMany).toHaveBeenCalledTimes(1);
   });
 
+  it('drops an event without end date once its day is over in Argentina', async () => {
+    jest.useFakeTimers({ now: new Date('2026-10-03T15:00:00Z') });
+    prismaMock.event.findMany.mockResolvedValue([]);
+
+    await fetchHomeEvents();
+
+    expect(prismaMock.event.findMany).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: expect.arrayContaining([
+            { endDate: null, date: { gte: new Date('2026-10-03T03:00:00Z') } },
+          ]),
+        }),
+      }),
+    );
+    jest.useRealTimers();
+  });
+
   it('asks for the soonest upcoming events first', async () => {
     prismaMock.event.findMany.mockResolvedValue([]);
 
