@@ -2269,6 +2269,310 @@ if (location) url.searchParams.set('location', location);`,
         ],
         sourcePath: 'src/actions/events',
       },
+      {
+        id: 'pcn-os',
+        name: 'PCN OS · un escritorio hecho de iframes',
+        tagline: 'ventanas que son páginas reales, carga diferida y tres modos según la compu',
+        what: 'Un "escritorio web" imita un sistema operativo dentro del navegador: barra de menú, dock, ventanas que se mueven y se apilan. La decisión que más pesa es qué hay dentro de cada ventana. Renderizar componentes ahí obliga a duplicar ruteo y estado; usar un iframe por ventana reutiliza las páginas reales tal cual, con su scroll, sus diálogos y su diseño responsive al tamaño de la ventana, pero cada ventana pasa a ser una copia entera de la app. El resto del diseño es administrar ese costo: no cargar el escritorio donde no se usa y ofrecer modos más livianos para compus con pocos recursos.',
+        concepts: [
+          {
+            term: 'host y ventana',
+            detail:
+              'El mismo layout corre en dos roles: el documento de arriba dibuja el escritorio y cada iframe dibuja solo la página. Un atributo en `<html>` (`data-embedded`) dice cuál es cuál.',
+          },
+          {
+            term: 'postMessage',
+            detail:
+              'Canal entre documentos. Host y ventanas son del mismo origen y se mandan mensajes tipados: a dónde navegó la ventana, que la tocaron, que abra otra ventana, que suene música.',
+          },
+          {
+            term: 'decidir antes del paint',
+            detail:
+              'Un script inline en el `<head>` marca atributos en `<html>` antes del primer paint, así el CSS muestra el layout correcto desde el primer frame. Decidirlo en JavaScript después de hidratar siempre parpadea.',
+          },
+          {
+            term: 'import() diferido',
+            detail:
+              'Un `import()` dinámico crea un chunk aparte que solo se descarga cuando se pide. Pedirlo apenas corre el módulo adelanta la descarga a antes de la hidratación.',
+          },
+          {
+            term: 'degradación progresiva',
+            detail:
+              'Ante poco hardware, apagar primero lo más caro (más iframes vivos, desenfoques, trabajo en cada frame) y dejar el resto, en vez de un todo o nada.',
+          },
+          {
+            term: 'frames largos',
+            detail:
+              'Un frame de más de 50 ms (menos de 20 fps) es un tirón visible. Medir qué proporción de frames son largos distingue una compu lenta de una pantalla limitada a 30 fps.',
+          },
+        ],
+        usage: [
+          'En pantallas de 1024px o más, `PcnOs` reemplaza el layout clásico. Cada programa del dock abre una ventana `OsWindow` con un iframe de la URL real; el estado vive en un `useReducer` (abrir, enfocar, minimizar, maximizar, mover, redimensionar) y el orden de apilado es un array de ids. Cada ventana guarda `src` (con la que se creó el iframe, fija para no recargarlo) y `path` (dónde está ahora).',
+          '`OsBridge` corre dentro de cada ventana: avisa a dónde navegó y cuándo la tocaron, y en fase de captura intercepta los links que deben abrir otra ventana (perfiles, detalle de eventos) antes de que `<Link>` navegue. El cursor hacker se dibuja una sola vez en el escritorio: las ventanas le reportan el puntero.',
+          'El variant de Tailwind `os:` combina el media query con los atributos de `<html>`; el servidor manda el escritorio (`hidden os:block`) y el layout clásico (`os:hidden`) y el CSS elige. Después de hidratar, `OsGate` desmonta el árbol que no se ve.',
+          'El escritorio carga en dos partes: el fondo, la barra de menú y el estado se renderizan en el servidor y nunca se desmontan; el dock, las ventanas, los widgets, el launcher y el reproductor (con framer-motion) viven en `os-desktop-parts.ts` y se importan solo en un escritorio. Celulares, tablets y las páginas dentro de ventanas no los descargan. Como el primer paint no cambia, no hay parpadeo.',
+          'Hay tres modos: completo, liviano y clásico. El script del `<head>` elige antes del paint: la elección guardada, o liviano si la compu tiene 4 núcleos o menos, 4 GB o menos, o ahorro de datos. Si nadie eligió, el escritorio además mide sus frames unos segundos: si traba pasa a liviano, y si en liviano sigue trabando sugiere el clásico. Cuando el liviano fue automático, un aviso explica que no se está viendo la experiencia completa por los recursos de la compu. El modo se cambia desde el menú PCN_OS, y las ventanas abiertas lo siguen por el evento `storage`.',
+          'El modo liviano apaga, en orden de costo: deja solo 3 ventanas con su página cargada (las demás quedan en pausa y se recargan donde estaban al volver), quita `backdrop-filter` y el brillo desenfocado del fondo, los widgets y el cursor hacker, la magnificación del dock y las animaciones de ventanas. El clásico no tiene escritorio ni iframes. La documentación completa está en `docs/pcn-os-y-rendimiento.md`.',
+        ],
+        examples: [
+          {
+            file: 'src/components/os/pcn-os.tsx',
+            lang: 'ts',
+            caption:
+              'La parte pesada del escritorio es un chunk aparte. En un escritorio la descarga arranca apenas corre el módulo; en el resto nunca se pide.',
+            code: `let desktopParts: Promise<OsDesktopParts> | null = null;
+const loadDesktopParts = () => (desktopParts ??= import('./os-desktop-parts'));
+
+// On a desktop host, start downloading right away, while the page is still hydrating, so the
+// dock and the first window show up as early as before. Elsewhere it is never requested.
+if (typeof window !== 'undefined' && isOsHost()) void loadDesktopParts();
+
+/** The heavy desktop components, once the desktop is active and they have loaded. */
+const useDesktopParts = (enabled: boolean) => {
+  const [parts, setParts] = useState<OsDesktopParts | null>(null);
+  useEffect(() => {
+    if (!enabled || parts) return;
+    let cancelled = false;
+    void loadDesktopParts().then((loaded) => {
+      if (!cancelled) setParts(loaded);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, parts]);
+  return parts;
+};`,
+          },
+          {
+            file: 'src/components/os/pcn-os.tsx',
+            lang: 'ts',
+            caption:
+              'El escritorio solo acepta mensajes de su propio origen y de sus propias ventanas.',
+            code: `const onMessage = (event: MessageEvent) => {
+  if (event.origin !== window.location.origin || !isOsMessage(event.data)) return;
+  const id = [...iframes.current].find(([, f]) => f.contentWindow === event.source)?.[0];
+  if (!id) return;
+  if (event.data.type === 'focus') dispatch({ type: 'focus', id });
+  if (event.data.type === 'location')
+    dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
+  if (event.data.type === 'open' && viewport)
+    dispatch({ type: 'openPath', path: event.data.path, viewport });
+  // …
+};`,
+          },
+          {
+            file: 'src/components/os/pcn-os.tsx',
+            lang: 'ts',
+            caption: 'En liviano, solo las ventanas visibles más recientes mantienen su página.',
+            code: `const liveWindowIds = new Set(
+  state.order
+    .filter((id) => !state.windows.find((win) => win.id === id)?.minimized)
+    .slice(-LITE_LIVE_WINDOWS),
+);`,
+          },
+          {
+            file: 'src/components/os/os-window.tsx',
+            lang: 'tsx',
+            caption:
+              'Una ventana en pausa se recarga en la página donde estaba, no en la que se abrió.',
+            code: `const [src, setSrc] = useState(win.src);
+const [prevSuspended, setPrevSuspended] = useState(suspended);
+if (suspended !== prevSuspended) {
+  setPrevSuspended(suspended);
+  if (suspended) {
+    setSrc(win.path);
+    setLoaded(false);
+  }
+}`,
+          },
+          {
+            file: 'src/components/os/os-performance-notice.tsx',
+            lang: 'ts',
+            caption:
+              'La medición cuenta frames largos durante 5 segundos; más del 20% es una compu que traba.',
+            code: `const tick = (time: number) => {
+  if (!start) {
+    start = last = time;
+  } else {
+    frames += 1;
+    if (time - last > LONG_FRAME_MS) longFrames += 1;
+    last = time;
+  }
+  if (time - start < SAMPLE_MS) {
+    frame = requestAnimationFrame(tick);
+    return;
+  }
+  if (!aborted && frames > 0 && longFrames / frames > SLOW_SHARE) onSlow();
+};`,
+          },
+        ],
+        docsUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage',
+        sourcePath: 'src/components/os',
+      },
+      {
+        id: 'rendimiento-home',
+        name: 'Rendimiento · primer paint de la home',
+        tagline: 'que se vea antes de que cargue el JavaScript',
+        what: 'El primer paint útil (y el LCP, el elemento más grande en pantalla) depende de lo que el HTML del servidor ya muestra. Todo lo que espera a que el JavaScript hidrate llega tarde: un contenido que arranca invisible para animar su entrada, un número que se llena en el cliente, una sección estática mandada como componente de cliente. La receta es renderizar en el servidor todo lo que no es interactivo, animar con CSS en vez de JavaScript, y dejar que el navegador saltee el trabajo de lo que está fuera de pantalla.',
+        concepts: [
+          {
+            term: 'LCP',
+            detail:
+              'Largest Contentful Paint: cuándo aparece el elemento más grande de la pantalla. Un elemento con `opacity: 0` no cuenta hasta que se ve, así que una entrada animada en JS retrasa el LCP lo que tarde el bundle.',
+          },
+          {
+            term: 'server vs client component',
+            detail:
+              "Un server component se manda como HTML y no suma JavaScript; un `'use client'` arrastra al bundle todo lo que importa. Las secciones estáticas no necesitan ser de cliente.",
+          },
+          {
+            term: 'animaciones CSS',
+            detail:
+              'Corren en el primer paint, sin esperar al JavaScript, y el navegador las puede componer fuera del hilo principal.',
+          },
+          {
+            term: 'scroll-driven animations',
+            detail:
+              '`animation-timeline: view()` ata el progreso de una animación CSS a cuánto entró el elemento en la pantalla. Reemplaza al `IntersectionObserver` para apariciones al scrollear.',
+          },
+          {
+            term: '@property',
+            detail:
+              'Registra una custom property con un tipo (por ejemplo `<integer>`) para que se pueda interpolar en una animación. Con un contador de CSS se imprime un número que sube sin JavaScript.',
+          },
+          {
+            term: 'content-visibility',
+            detail:
+              '`content-visibility: auto` saltea el layout y el pintado de lo que está lejos de la pantalla; `contain-intrinsic-size` reserva su alto para que el scroll no salte.',
+          },
+        ],
+        usage: [
+          'La home (`page.tsx`) solo espera la sesión, que el layout ya leyó; cada sección con datos llega por streaming detrás de un skeleton. El envoltorio de las secciones, `home-sections.tsx`, es un server component: las secciones estáticas (bento, logros, preguntas, footer…) llegan como HTML y solo hidratan las hojas interactivas, como los reproductores o el botón de instalar la app.',
+          'El hero y las apariciones al scrollear usaban framer-motion con `opacity: 0` inicial, así que la página aparecía recién después de hidratar. Ahora el hero usa las clases de `tailwindcss-animate` (el título solo se desliza, sin fade, porque es lo más grande de la pantalla) y `Reveal` es un `div` con una animación CSS ligada al scroll; donde no hay soporte, el contenido simplemente está.',
+          'Los números del hero (500+ miembros…) se renderizaban vacíos en el servidor porque los escribía `NumberTicker` en el cliente. Ahora `CountUp` los anima solo con CSS y el valor real va además en un `sr-only` para lectores de pantalla.',
+          'La foto de fondo del hero es de 3024px y 2.7 MB y se ve al 22% de opacidad bajo dos gradientes, así que se sirve con `quality={40}`. Next 16 solo acepta las calidades declaradas en `images.qualities`; sin declararla, la home tiraba un error de React que encontramos bisecando los cambios.',
+          "Dos trampas de los server components: una constante exportada desde un archivo `'use client'` llega a un server component como referencia de cliente y no como valor (por eso `WHATSAPP_GROUP_URL` vive en `src/data/whatsapp-group.ts`), y lo mismo pasa con el script inline que elige el modo de PCN OS, que vive en un archivo sin la directiva.",
+        ],
+        examples: [
+          {
+            file: 'src/app/globals.css',
+            lang: 'css',
+            caption:
+              'Aparición al scrollear sin JavaScript, y sin layout ni pintado hasta que la sección se acerca.',
+            code: `.reveal {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}`,
+          },
+          {
+            file: 'src/app/globals.css',
+            lang: 'css',
+            caption:
+              'Un entero registrado que se anima de 0 al valor y se imprime con un contador.',
+            code: `@property --count {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+.count-up {
+  --count: var(--count-to);
+  counter-reset: count var(--count);
+  animation: count-up 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+.count-up::after {
+  content: counter(count);
+}
+@keyframes count-up {
+  from {
+    --count: 0;
+  }
+}`,
+          },
+          {
+            file: 'src/components/home/home-hero.tsx',
+            lang: 'tsx',
+            code: `const CountUp = ({ value }: { value: number }) => (
+  <span className="tabular-nums tracking-tight">
+    <span aria-hidden className="count-up" style={{ '--count-to': value } as CSSProperties} />
+    <span className="sr-only">{value}</span>
+  </span>
+);`,
+          },
+          {
+            file: 'next.config.mjs',
+            lang: 'js',
+            code: `images: {
+  // 75 is the default; 40 is for the home hero backdrop, shown faded under gradients.
+  qualities: [40, 75],
+  // …
+},`,
+          },
+        ],
+        docsUrl: 'https://web.dev/articles/lcp',
+        sourcePath: 'src/components/home',
+      },
+      {
+        id: 'pull-to-refresh',
+        name: 'PWA · pull to refresh',
+        tagline: 'el gesto de recargar que la app instalada no trae',
+        what: 'Una PWA instalada corre sin la interfaz del navegador, y con ella pierde el gesto de tirar hacia abajo para recargar. Reimplementarlo es escuchar los toques, decidir cuándo un arrastre es un "pull" (desde arriba de todo, claramente vertical, sin un diálogo ni un scroll interno de por medio), mostrar un indicador con resistencia y, al soltar, volver a pedir los datos sin recargar la página entera.',
+        concepts: [
+          {
+            term: 'display-mode: standalone',
+            detail:
+              'Media query que es verdadero cuando la app corre instalada. En iOS, además, `navigator.standalone`.',
+          },
+          {
+            term: 'listeners no pasivos',
+            detail:
+              'Para cancelar el rebote nativo de iOS hace falta `preventDefault` en `touchmove`, que solo funciona si el listener se registró con `passive: false`.',
+          },
+          {
+            term: 'router.refresh()',
+            detail:
+              'Vuelve a renderizar los server components de la ruta actual y mezcla el resultado sin perder el scroll ni el estado de los componentes de cliente.',
+          },
+          {
+            term: 'transiciones async',
+            detail:
+              '`startTransition` con una función async mantiene `isPending` en verdadero hasta que termina, ideal para sostener un spinner mientras llegan los datos.',
+          },
+        ],
+        usage: [
+          '`PullToRefresh` está montado en el layout de `(platform)` y solo se activa instalada y con puntero táctil; en el navegador queda el gesto nativo. Las páginas con contenido que vive en el repo (cursos, videos, podcast…) están en una lista de excepciones: las páginas nuevas tienen pull to refresh por defecto.',
+          'Al soltar pasado el umbral se llama a `router.refresh()` para los server components y a `invalidateQueries()` para lo que usa React Query, todo dentro de `startTransition`, y el indicador gira hasta que `isPending` vuelve a falso (con un mínimo de 600 ms para que se lea como "se actualizó").',
+        ],
+        examples: [
+          {
+            file: 'src/components/pull-to-refresh.tsx',
+            lang: 'ts',
+            code: `if (pullRef.current >= THRESHOLD) {
+  setDistance(THRESHOLD);
+  if (navigator.vibrate) navigator.vibrate(10);
+  startTransition(async () => {
+    router.refresh();
+    await Promise.all([
+      queryClient.invalidateQueries(),
+      new Promise((resolve) => window.setTimeout(resolve, MIN_SPIN_MS)),
+    ]);
+  });
+} else {
+  setDistance(0);
+}`,
+          },
+        ],
+        docsUrl: 'https://nextjs.org/docs/app/api-reference/functions/use-router',
+        sourcePath: 'src/components/pull-to-refresh.tsx',
+      },
     ],
   },
 ];
