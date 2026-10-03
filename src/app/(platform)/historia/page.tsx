@@ -7,6 +7,7 @@ import {
   HistoriaSection,
   HistoriaTimeline,
 } from '@/components/historia/historia-section';
+import { HistoriaOrganization } from '@/components/historia/historia-organization';
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -168,8 +169,11 @@ const Story = () => (
               <HistoriaTimeline>
                 <HistoriaSection id="comienzos-utn" title="Comienzos en la UTN-FRT" period="2015">
                   <p>
-                    En el año 2015, en la Universidad Tecnológica de Tucumán (Argentina), se
-                    conocieron <HistoriaPerson name="Agustín Sánchez" /> y{' '}
+                    En el año 2015, en{' '}
+                    <HistoriaOrganization name="UTN-FRT">
+                      la Universidad Tecnológica de Tucumán
+                    </HistoriaOrganization>{' '}
+                    (Argentina), se conocieron <HistoriaPerson name="Agustín Sánchez" /> y{' '}
                     <HistoriaPerson name="Germán Navarro" />, estudiando Ingeniería en Sistemas de
                     Información. La gran pasión que tenían por la ingeniería de software,
                     particularmente por la programación, los llevó a estudiar mucho más de lo que se
@@ -189,7 +193,8 @@ const Story = () => (
                 >
                   <p>
                     En el año 2017, <HistoriaPerson name="Agustín Sánchez">Agus</HistoriaPerson> y{' '}
-                    <HistoriaPerson name="Germán Navarro">Germán</HistoriaPerson> se sumaron al IEEE
+                    <HistoriaPerson name="Germán Navarro">Germán</HistoriaPerson> se sumaron al{' '}
+                    <HistoriaOrganization name="IEEE" />
                     para participar del programa de voluntariado, que tiene como objetivo hacer
                     networking, organizar y participar de eventos técnicos.
                   </p>
@@ -202,8 +207,9 @@ const Story = () => (
                     , y se hicieron amigos de <HistoriaPerson name="Facu Gelatti" /> y{' '}
                     <HistoriaPerson name="Franco Mirada" />. Facu y Franco ya estaban terminando de
                     cursar la carrera y fueron mentores muy importantes para Agus y Germán.
-                    Compartieron muchos eventos técnicos, destacandose los congresos de Smalltalks,
-                    por la gran pasión que tenían por la programación orientada a objetos.
+                    Compartieron muchos eventos técnicos, destacandose los congresos de{' '}
+                    <HistoriaOrganization name="Smalltalks" />, por la gran pasión que tenían por la
+                    programación orientada a objetos.
                   </p>
                   {/* // TODO: Agregar fotos de los congresos de Smalltalks. */}
                   <p>
@@ -249,7 +255,8 @@ const Story = () => (
                 >
                   <p>
                     En el año 2018, Agus y Germán dieron un paso importante presidiendo el Capítulo
-                    Estudiantil de IEEE Computer Society en la Universidad Nacional de Tucumán.
+                    Estudiantil de <HistoriaOrganization name="IEEE Computer Society" /> en la
+                    Universidad Nacional de Tucumán.
                   </p>
                 </HistoriaSection>
 
@@ -257,7 +264,7 @@ const Story = () => (
                   <p>
                     Agus creó un club de algoritmos que se juntaban todos los viernes desde las
                     18.00 hasta las 23.00 en un laboratorio del departamento de ingeniería en
-                    sistemas de información de la UTN-FRT.
+                    sistemas de información de la <HistoriaOrganization name="UTN-FRT" />.
                   </p>
                   <HistoriaImage
                     src="/historia/photo_2019-10-14_01-58-25.webp"
@@ -273,8 +280,11 @@ const Story = () => (
                   <p>
                     En abril del 2018, organizaron el Tucumán Hack Weekend, un congreso
                     internacional de seguridad informática llevado a cabo en la UTN de Tucumán. El
-                    evento fue organizado también por la organización Tucumán Hacking, presidida por{' '}
-                    <HistoriaPerson name="Victor Figueredo" /> (ahora CEO de Endpoint Consulting).
+                    evento fue organizado también por la organización{' '}
+                    <HistoriaOrganization name="Tucumán Hacking" />, presidida por{' '}
+                    <HistoriaPerson name="Victor Figueredo" /> (ahora CEO de{' '}
+                    <HistoriaOrganization name="Endpoint Consulting" />
+                    ).
                   </p>
                   <HistoriaGallery
                     images={[
@@ -352,9 +362,10 @@ const Story = () => (
                   period="2020"
                 >
                   <p>
-                    La cátedra de Algoritmos y Estructuras de Datos (AED) de la UTN-FRT le dio lugar
-                    a la comunidad para dar algunos talleres de Git y GitHub, con los cuales se sumó
-                    mucha gente a la comunidad, entre los cuales estaban{' '}
+                    La cátedra de Algoritmos y Estructuras de Datos (AED) de la{' '}
+                    <HistoriaOrganization name="UTN-FRT" /> le dio lugar a la comunidad para dar
+                    algunos talleres de Git y GitHub, con los cuales se sumó mucha gente a la
+                    comunidad, entre los cuales estaban{' '}
                     <HistoriaPerson name="Tobías Paz Posse">Tobias Paz Posse</HistoriaPerson>,{' '}
                     <HistoriaPerson name="Jeremias Ivanoff" /> y{' '}
                     <HistoriaPerson name="Lucas Pérez" />. Tobi, Jere (alias Lunai) y Lucas le
@@ -373,10 +384,10 @@ const Story = () => (
                   <p>
                     La primera edición fue en junio de 2021, de forma virtual por Discord, con
                     charlas rápidas sobre ingeniería de software. Con la vuelta a la presencialidad,
-                    las Lightning Talks encontraron su lugar en el SUM 1 de la UTN-FRT: organizamos
-                    una edición en mayo de 2023 y otra en octubre de 2024, convocando a cada vez más
-                    miembros de la comunidad a subirse al escenario y compartir lo que estaban
-                    aprendiendo.
+                    las Lightning Talks encontraron su lugar en el SUM 1 de la{' '}
+                    <HistoriaOrganization name="UTN-FRT" />: organizamos una edición en mayo de 2023
+                    y otra en octubre de 2024, convocando a cada vez más miembros de la comunidad a
+                    subirse al escenario y compartir lo que estaban aprendiendo.
                   </p>
                   <HistoriaGallery
                     aspect="flyer"
@@ -403,8 +414,9 @@ const Story = () => (
                   period="2023"
                 >
                   <p>
-                    En 2023, colaboramos con Global Learning dando charlas sobre arquitectura de
-                    software e ingeniería de software en la última clase de sus cursos.
+                    En 2023, colaboramos con <HistoriaOrganization name="Global Learning" /> dando
+                    charlas sobre arquitectura de software e ingeniería de software en la última
+                    clase de sus cursos.
                   </p>
                 </HistoriaSection>
 
@@ -424,10 +436,11 @@ const Story = () => (
                   <p>
                     En octubre de 2024 fuimos invitados a dar dos charlas de orientación vocacional.
                     La primera, <b>Descubrí el Mundo del Desarrollo de Software</b>, se llevó a cabo
-                    en Aticana, donde recorrimos los distintos roles y caminos posibles dentro de la
-                    profesión. La segunda, <b>Introducción al Desarrollo de Software</b>, la dimos
-                    en el Instituto Nuestra Señora de Montserrat para estudiantes de secundaria que
-                    estaban dando sus primeros pasos en este mundo.
+                    en <HistoriaOrganization name="Aticana" />, donde recorrimos los distintos roles
+                    y caminos posibles dentro de la profesión. La segunda,{' '}
+                    <b>Introducción al Desarrollo de Software</b>, la dimos en el{' '}
+                    <HistoriaOrganization name="Instituto Nuestra Señora de Montserrat" /> para
+                    estudiantes de secundaria que estaban dando sus primeros pasos en este mundo.
                   </p>
                   <HistoriaGallery
                     aspect="flyer"
@@ -479,10 +492,11 @@ const Story = () => (
 
                 <HistoriaSection id="tech-in-action" title="Tech in Action" period="2025">
                   <p>
-                    En junio de 2025, en el marco del Mes de la Ingeniería, la UTN-FRT nos abrió
-                    nuevamente las puertas del SUM 1 para organizar <b>Tech in Action</b>: dos
-                    presentaciones técnicas a cargo de miembros de la comunidad que mostraron
-                    proyectos reales y herramientas que estaban usando en su trabajo cotidiano.
+                    En junio de 2025, en el marco del Mes de la Ingeniería, la{' '}
+                    <HistoriaOrganization name="UTN-FRT" /> nos abrió nuevamente las puertas del SUM
+                    1 para organizar <b>Tech in Action</b>: dos presentaciones técnicas a cargo de
+                    miembros de la comunidad que mostraron proyectos reales y herramientas que
+                    estaban usando en su trabajo cotidiano.
                   </p>
                   <p>
                     El evento reunió a estudiantes, egresados y profesionales de la industria, y fue
@@ -501,9 +515,11 @@ const Story = () => (
                   <p>
                     A partir de 2025, la comunidad adoptó un nuevo formato que se convirtió en el
                     corazón de la actividad de PCN: las meetups mensuales. Con sedes que rotaron
-                    entre Blackbox Cowork (Yerba Buena), Once57 Cowork y Xetro AI (San Miguel de
-                    Tucumán), cada encuentro combinó charlas técnicas, networking y trabajo
-                    colaborativo en un ambiente relajado.
+                    entre <HistoriaOrganization name="Blackbox Cowork" /> (Yerba Buena),{' '}
+                    <HistoriaOrganization name="Once57 Cowork" /> y{' '}
+                    <HistoriaOrganization name="Xetro AI" /> (San Miguel de Tucumán), cada encuentro
+                    combinó charlas técnicas, networking y trabajo colaborativo en un ambiente
+                    relajado.
                   </p>
                   <p>
                     También incorporamos las <b>Cowork Sessions</b>, jornadas de trabajo y estudio
@@ -546,9 +562,10 @@ const Story = () => (
                 <HistoriaSection id="zero-to-agent" title="Zero to Agent" period="2026">
                   <p>
                     En abril de 2026 organizamos <b>Zero to Agent</b>, el primer hackathon de PCN
-                    dedicado al desarrollo de agentes de IA. El evento se realizó en Once57 Cowork y
-                    desafió a los participantes a construir agentes usando Vercel v0, con más de USD
-                    6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
+                    dedicado al desarrollo de agentes de IA. El evento se realizó en{' '}
+                    <HistoriaOrganization name="Once57 Cowork" /> y desafió a los participantes a
+                    construir agentes usando <HistoriaOrganization name="Vercel v0" />, con más de
+                    USD 6.000 en premios globales en juego. Fue una apuesta fuerte al futuro de la
                     ingeniería de software y demostró que la comunidad está al día con lo que viene.
                   </p>
                   <HistoriaImage
@@ -566,9 +583,9 @@ const Story = () => (
                 >
                   <p>
                     En junio de 2026, en el marco del 40° aniversario de la carrera de Ingeniería en
-                    Sistemas de Información de la UTN-FRT, co-organizamos{' '}
-                    <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes de la
-                    Ingeniería y reflexionar sobre el pasado, el presente y el futuro de la
+                    Sistemas de Información de la <HistoriaOrganization name="UTN-FRT" />,
+                    co-organizamos <b>NextGen Software 2026</b>, unas jornadas para celebrar el Mes
+                    de la Ingeniería y reflexionar sobre el pasado, el presente y el futuro de la
                     profesión.
                   </p>
                   <HistoriaImage
