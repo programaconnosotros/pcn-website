@@ -174,7 +174,7 @@ export function VideoGrid({
           </span>
           <LanguageFilter value={language} onChange={setLanguage} className="ml-auto" />
           <span
-            className="flex border border-pcnGreen-200"
+            className="flex h-8 border border-pcnGreen-200"
             role="group"
             aria-label="Filtrar por estado"
           >
@@ -185,7 +185,7 @@ export function VideoGrid({
                 aria-pressed={filter === value}
                 onClick={() => setFilter(value)}
                 className={cn(
-                  'border-r border-pcnGreen-200 px-2 py-0.5 transition-colors last:border-r-0',
+                  'border-r border-pcnGreen-200 px-2 transition-colors last:border-r-0',
                   filter === value
                     ? 'bg-pcnGreen text-black'
                     : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',

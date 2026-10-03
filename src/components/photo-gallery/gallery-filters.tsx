@@ -76,7 +76,7 @@ export function GalleryFilters({
     <div className="flex flex-wrap items-center gap-2">
       <nav
         aria-label="Tipo"
-        className="flex border border-pcnGreen-200 font-mono text-xs"
+        className="flex h-8 border border-pcnGreen-200 font-mono text-xs"
         role="group"
       >
         {GALLERY_TYPES.map(({ value, label }) => {
@@ -88,7 +88,7 @@ export function GalleryFilters({
               scroll={false}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'border-r border-pcnGreen-200 px-2.5 py-1 transition-colors last:border-r-0',
+                'flex items-center border-r border-pcnGreen-200 px-2.5 transition-colors last:border-r-0',
                 active
                   ? 'bg-pcnGreen text-black'
                   : 'text-muted-foreground hover:bg-pcnGreen/[0.06] hover:text-pcnGreen',

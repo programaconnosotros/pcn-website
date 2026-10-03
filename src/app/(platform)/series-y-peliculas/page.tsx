@@ -278,7 +278,7 @@ const SeriesYPeliculasPage = () => {
 
                 {/* Filtro por género */}
                 <Select value={selectedGenre} onValueChange={setSelectedGenre}>
-                  <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectTrigger className="h-8 w-full md:w-[200px]">
                     <SelectValue placeholder="Todos los géneros" />
                   </SelectTrigger>
                   <SelectContent>

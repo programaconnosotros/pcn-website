@@ -34,7 +34,11 @@ export function RangeFilter({
       )}
       aria-busy={isPending}
     >
-      <div className="flex border border-pcnGreen-200" role="group" aria-label="Rango de fechas">
+      <div
+        className="flex h-8 border border-pcnGreen-200"
+        role="group"
+        aria-label="Rango de fechas"
+      >
         {RANGE_PRESETS.map(({ id, label }) => (
           <button
             key={id}
@@ -42,7 +46,7 @@ export function RangeFilter({
             aria-pressed={preset === id}
             onClick={() => go(`rango=${id}`)}
             className={cn(
-              'border-r border-pcnGreen-200 px-2.5 py-1 last:border-r-0 hover:text-pcnGreen',
+              'border-r border-pcnGreen-200 px-2.5 last:border-r-0 hover:text-pcnGreen',
               preset === id
                 ? 'bg-pcnGreen/15 text-pcnGreen shadow-[inset_0_-2px_0_#04f4be]'
                 : 'text-muted-foreground',
@@ -54,7 +58,7 @@ export function RangeFilter({
       </div>
       <form
         className={cn(
-          'flex items-center gap-1.5 border px-2 py-0.5',
+          'flex h-8 items-center gap-1.5 border px-2',
           preset === null ? 'border-pcnGreen-600' : 'border-pcnGreen-200',
         )}
         onSubmit={(event) => {

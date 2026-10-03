@@ -195,7 +195,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                   <button
                     type="button"
                     onClick={() => setParticipant(null)}
-                    className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
+                    className="flex h-8 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
                   >
                     --author=&quot;{participant}&quot;
                     <X className="size-3.5" />

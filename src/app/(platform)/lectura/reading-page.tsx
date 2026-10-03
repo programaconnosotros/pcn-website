@@ -1187,7 +1187,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                   {/* Filtro por categoría (los artículos filtran desde su propio histograma) */}
                   {activeTab === 'libros' && (
                     <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                      <SelectTrigger className="w-full md:w-[200px]">
+                      <SelectTrigger className="h-8 w-full md:w-[200px]">
                         <SelectValue placeholder="Todas las categorías" />
                       </SelectTrigger>
                       <SelectContent>
