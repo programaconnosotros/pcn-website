@@ -115,7 +115,9 @@ export function ConversationDialog({
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         className={cn(
-          'flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 p-0 [&>button:last-child]:hidden',
+          // Only the body scrolls. Safari counts the body's overflow as the panel's own, so with the
+          // surface's default `overflow-y-auto` the whole panel scrolled away past its footer.
+          'flex max-h-[calc(100dvh-2rem)] max-w-3xl flex-col gap-0 overflow-hidden p-0 [&>button:last-child]:hidden',
           // The phone tab bar (h-16 + safe area, z-60) sits above dialogs, so center the reader
           // in the space above it and cap its height to that space instead of the full viewport.
           'max-md:top-[calc((100dvh+env(safe-area-inset-top)-4rem-env(safe-area-inset-bottom))/2)]',
@@ -167,7 +169,7 @@ export function ConversationDialog({
           </div>
         </header>
 
-        <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto">
+        <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
           <div
             key={index}
             className="flex flex-col gap-4 p-5 duration-300 animate-in fade-in slide-in-from-bottom-1 sm:p-6"
