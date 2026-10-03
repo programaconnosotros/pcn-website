@@ -91,8 +91,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Prisma Migrations
-        run: pnpm prisma migrate deploy
+      # Prisma migrations run from the Kamal pre-deploy hook (.kamal/hooks/pre-deploy),
+      # after the new image is pulled on the servers and right before it boots.
 
       # - name: Release Kamal deploy lock
       #   run: kamal lock release
