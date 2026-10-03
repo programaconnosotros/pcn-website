@@ -3,10 +3,11 @@
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { Check, ChevronLeft, ChevronRight, Link2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import {
   METER_SLOTS,
+  conversationHref,
   formatLongDate,
   isGroupThread,
   shortHash,
@@ -25,6 +26,42 @@ const keyCapClassName = cn(
 const Kbd = ({ children }: { children: React.ReactNode }) => (
   <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">{children}</kbd>
 );
+
+// Copies the conversation's deep link (`/conversaciones?c=<hash>`), which opens it on load.
+function CopyLinkButton({ conversation }: { conversation: Conversation }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        new URL(conversationHref(conversation), window.location.origin).toString(),
+      );
+      setCopied(true);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className={cn(keyCapClassName, copied && 'border-pcnGreen text-pcnGreen')}
+      onClick={handleCopy}
+      title={copied ? 'Link copiado' : 'Copiar link para compartir'}
+    >
+      {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
+      <span className="sr-only" aria-live="polite">
+        {copied ? 'Link copiado' : 'Copiar link para compartir'}
+      </span>
+    </button>
+  );
+}
 
 interface ConversationDialogProps {
   conversations: Conversation[];
@@ -101,6 +138,7 @@ export function ConversationDialog({
             /{total}]
           </span>
           <div className="flex shrink-0 gap-1">
+            <CopyLinkButton key={shortHash(conversation)} conversation={conversation} />
             <button
               type="button"
               className={keyCapClassName}
