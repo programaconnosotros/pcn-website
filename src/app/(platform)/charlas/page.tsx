@@ -27,12 +27,11 @@ export const metadata: Metadata = {
 };
 
 const Talks = async () => {
-  const [talks, sessionId] = await Promise.all([
+  const sessionId = (await cookies()).get('sessionId')?.value;
+  const [talks, session] = await Promise.all([
     fetchPublicTalks(),
-    cookies().then((c) => c.get('sessionId')?.value),
+    sessionId ? findSession(sessionId) : null,
   ]);
-
-  const session = sessionId ? await findSession(sessionId) : null;
 
   const isAdmin = session?.user.role === 'ADMIN';
 

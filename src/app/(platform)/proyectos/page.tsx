@@ -27,12 +27,11 @@ export const metadata: Metadata = {
 };
 
 const Proyectos = async () => {
-  const [projects, sessionId] = await Promise.all([
+  const sessionId = (await cookies()).get('sessionId')?.value;
+  const [projects, session] = await Promise.all([
     fetchPublicProjects(),
-    cookies().then((c) => c.get('sessionId')?.value),
+    sessionId ? findSession(sessionId) : null,
   ]);
-
-  const session = sessionId ? await findSession(sessionId) : null;
 
   const currentUser = session
     ? { id: session.user.id, name: session.user.name, isAdmin: session.user.role === 'ADMIN' }

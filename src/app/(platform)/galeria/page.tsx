@@ -14,19 +14,23 @@ export default async function GalleryPage(props: {
   if (searchParams.foto !== undefined) redirect('/galeria');
 
   const filter = parseGalleryFilter(searchParams);
-  const [items, options, admin] = await Promise.all([
+  const adminPromise = getAdminUser();
+  const [items, options, admin, events] = await Promise.all([
     listGalleryItems(filter),
     getGalleryFilterOptions(),
-    getAdminUser(),
+    adminPromise,
+    // Every event, for the admins' bulk editing (the filters only list the ones with photos).
+    // Starts as soon as the session is known instead of after the gallery queries.
+    adminPromise.then((admin) =>
+      admin
+        ? prisma.event.findMany({
+            where: { deletedAt: null },
+            select: { id: true, name: true, date: true },
+            orderBy: { date: 'desc' },
+          })
+        : null,
+    ),
   ]);
-  // Every event, for the admins' bulk editing (the filters only list the ones with photos).
-  const events = admin
-    ? await prisma.event.findMany({
-        where: { deletedAt: null },
-        select: { id: true, name: true, date: true },
-        orderBy: { date: 'desc' },
-      })
-    : null;
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">

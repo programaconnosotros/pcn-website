@@ -28,19 +28,14 @@ export const metadata: Metadata = {
 
 const TestimoniosPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  let currentUserId: string | undefined = undefined;
-  let isAdmin = false;
 
-  if (sessionId) {
-    const session = await findSession(sessionId);
-
-    if (session) {
-      currentUserId = session.userId;
-      isAdmin = session.user.role === 'ADMIN';
-    }
-  }
-
-  const testimonials = await fetchTestimonials();
+  // La sesión y los testimonios no dependen entre sí: se piden a la vez.
+  const [session, testimonials] = await Promise.all([
+    sessionId ? findSession(sessionId) : null,
+    fetchTestimonials(),
+  ]);
+  const currentUserId: string | undefined = session?.userId;
+  const isAdmin = session?.user.role === 'ADMIN';
 
   // Verificar si el usuario actual ya tiene un testimonio
   const hasUserTestimonial = currentUserId
