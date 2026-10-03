@@ -36,7 +36,16 @@ import {
 const PREVIEW = 2;
 const ARTICLES_PREVIEW = 3;
 const CONVERSATIONS_PREVIEW = 4;
-const PHOTOS_PREVIEW = 6;
+// The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
+// row half empty when the person has more photos than fit.
+const PHOTOS_PREVIEW_COLUMNS = 3;
+const PHOTOS_PREVIEW = 2 * PHOTOS_PREVIEW_COLUMNS;
+
+/** How many photos the preview shows: as many full rows as possible (all of them if under one row). */
+const photosPreviewCount = (total: number) =>
+  total < PHOTOS_PREVIEW_COLUMNS
+    ? total
+    : Math.min(PHOTOS_PREVIEW, total - (total % PHOTOS_PREVIEW_COLUMNS));
 
 type Session = ComponentProps<typeof AdviseCard>['session'];
 
@@ -139,6 +148,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
     ]);
   const { contributions } = github;
   const tabHref = (tab: ProfileTab) => profileTabHref(userId, tab);
+  const previewPhotos = photos.slice(0, photosPreviewCount(photos.length));
   const hasActivity =
     projects.length +
       advises.length +
@@ -248,9 +258,10 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="fotos y videos"
             count={photos.length}
-            href={photos.length > PHOTOS_PREVIEW ? tabHref('fotos') : undefined}
+            href={photos.length > previewPhotos.length ? tabHref('fotos') : undefined}
           />
-          <PhotoGrid photos={photos.slice(0, PHOTOS_PREVIEW)} />
+          {/* Same 3 columns at every width (tailwind-merge drops the default breakpoints). */}
+          <PhotoGrid photos={previewPhotos} className="grid-cols-3 sm:grid-cols-3 xl:grid-cols-3" />
         </section>
       )}
 
