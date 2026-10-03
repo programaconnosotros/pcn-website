@@ -2,6 +2,7 @@ import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
 import { METER_SLOTS, isGroupThread, shortHash } from './conversation-utils';
+import { ConversationEventLink } from './conversation-event';
 import { Highlight } from './highlight';
 import { ParticipantChip } from './participant-chip';
 
@@ -48,6 +49,7 @@ export function ConversationRow({
       <div className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-muted-foreground">
         <span className="text-pcnGreen-600">{shortHash(conversation)}</span>
         <time dateTime={date}>{date}</time>
+        <ConversationEventLink conversation={conversation} />
         {isGroup && (
           <span className="border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
             hilo grupal

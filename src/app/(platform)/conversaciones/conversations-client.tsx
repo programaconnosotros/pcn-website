@@ -12,6 +12,7 @@ import { ActivityGraph, type MonthActivity } from '@/components/conversations/ac
 import { ConversationRow } from '@/components/conversations/conversation-row';
 import { ConversationDialog } from '@/components/conversations/conversation-dialog';
 import { ProfileLinksContext } from '@/components/conversations/participant-chip';
+import { ConversationEventsContext } from '@/components/conversations/conversation-event';
 import type { LinkedUser } from '@/lib/identity-links';
 import Link from 'next/link';
 import {
@@ -89,10 +90,12 @@ function Flag({
 
 interface ConversationsClientProps {
   profiles: Record<string, LinkedUser>;
+  /** Event id → name, for the events some conversations happened at. */
+  events: Record<string, string>;
   isAdmin: boolean;
 }
 
-export function ConversationsClient({ profiles, isAdmin }: ConversationsClientProps) {
+export function ConversationsClient({ profiles, events, isAdmin }: ConversationsClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [groupOnly, setGroupOnly] = useState(false);
   const [participant, setParticipant] = useState<string | null>(null);
@@ -155,152 +158,154 @@ export function ConversationsClient({ profiles, isAdmin }: ConversationsClientPr
 
   return (
     <ProfileLinksContext.Provider value={profiles}>
-      <div className="flex flex-1 flex-col p-4 pt-0">
-        <div className="mt-4">
-          <StickyHeader>
-            <PageTitle
-              path="conversaciones"
-              meta={`${conversations.length} charlas destacadas del grupo de WhatsApp`}
-              action={
-                isAdmin && (
-                  <Link
-                    href="/vinculos"
-                    className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
-                  >
-                    vincular perfiles →
-                  </Link>
-                )
-              }
-            />
-
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <SearchBar
-                searchQuery={searchTerm}
-                setSearchQuery={setSearchTerm}
-                placeholder="conversaciones, temas o personas"
-                label="Buscar conversaciones"
+      <ConversationEventsContext.Provider value={events}>
+        <div className="flex flex-1 flex-col p-4 pt-0">
+          <div className="mt-4">
+            <StickyHeader>
+              <PageTitle
+                path="conversaciones"
+                meta={`${conversations.length} charlas destacadas del grupo de WhatsApp y los eventos`}
+                action={
+                  isAdmin && (
+                    <Link
+                      href="/vinculos"
+                      className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                    >
+                      vincular perfiles →
+                    </Link>
+                  )
+                }
               />
-              <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
-                --grupales
-              </Flag>
-              {participant && (
-                <button
-                  type="button"
-                  onClick={() => setParticipant(null)}
-                  className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
-                >
-                  --author=&quot;{participant}&quot;
-                  <X className="size-3.5" />
-                  <span className="sr-only">Quitar filtro de persona</span>
-                </button>
-              )}
-              <p
-                className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
-                aria-live="polite"
-              >
-                <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
-                  {filtered.length}
-                </span>
-                /{conversations.length} resultados
-              </p>
-            </div>
-          </StickyHeader>
 
-          <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-            <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
-              {stats.map((stat) => (
-                <Stat key={stat.label} {...stat} />
-              ))}
-            </RuledGrid>
-            <ActivityGraph months={activity} />
-          </div>
-
-          <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">
-            <span className="mr-1 text-muted-foreground">
-              <span className="text-pcnGreen-600">{'// '}</span>voces frecuentes:
-            </span>
-            {participantCounts.slice(0, TOP_VOICES).map(([name, count]) => (
-              <button
-                key={name}
-                type="button"
-                onClick={() => toggleParticipant(name)}
-                aria-pressed={participant === name}
-                className={cn(
-                  'border px-1.5 leading-5 transition-colors',
-                  participant === name
-                    ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
-                    : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <SearchBar
+                  searchQuery={searchTerm}
+                  setSearchQuery={setSearchTerm}
+                  placeholder="conversaciones, temas o personas"
+                  label="Buscar conversaciones"
+                />
+                <Flag active={groupOnly} onClick={() => setGroupOnly(!groupOnly)}>
+                  --grupales
+                </Flag>
+                {participant && (
+                  <button
+                    type="button"
+                    onClick={() => setParticipant(null)}
+                    className="flex h-9 items-center gap-1.5 rounded-sm border border-pcnGreen-600 bg-pcnGreen/10 px-2.5 font-mono text-xs text-pcnGreen"
+                  >
+                    --author=&quot;{participant}&quot;
+                    <X className="size-3.5" />
+                    <span className="sr-only">Quitar filtro de persona</span>
+                  </button>
                 )}
-              >
-                <span className="text-pcnGreen-600">@</span>
-                {name}
-                <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
-              </button>
-            ))}
+                <p
+                  className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
+                  aria-live="polite"
+                >
+                  <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
+                    {filtered.length}
+                  </span>
+                  /{conversations.length} resultados
+                </p>
+              </div>
+            </StickyHeader>
+
+            <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+              <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
+                {stats.map((stat) => (
+                  <Stat key={stat.label} {...stat} />
+                ))}
+              </RuledGrid>
+              <ActivityGraph months={activity} />
+            </div>
+
+            <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">
+              <span className="mr-1 text-muted-foreground">
+                <span className="text-pcnGreen-600">{'// '}</span>voces frecuentes:
+              </span>
+              {participantCounts.slice(0, TOP_VOICES).map(([name, count]) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => toggleParticipant(name)}
+                  aria-pressed={participant === name}
+                  className={cn(
+                    'border px-1.5 leading-5 transition-colors',
+                    participant === name
+                      ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
+                      : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+                  )}
+                >
+                  <span className="text-pcnGreen-600">@</span>
+                  {name}
+                  <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
+                </button>
+              ))}
+            </div>
+
+            {filtered.length === 0 ? (
+              <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>0 resultados
+                {searchTerm.trim() && (
+                  <>
+                    {' '}
+                    para <span className="text-pcnGreen">&quot;{searchTerm}&quot;</span>
+                  </>
+                )}
+              </p>
+            ) : (
+              <div className="mb-14 space-y-6">
+                {grouped.map(([key, items]) => {
+                  const groupCount = items.filter(isGroupThread).length;
+                  return (
+                    <section key={key} id={`m-${key}`} className="scroll-mt-4">
+                      <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                        <span className="text-pcnGreen">{'>'}</span>
+                        <span className="text-foreground">{key}</span>
+                        <span>{monthName(key)}</span>
+                        <span
+                          aria-hidden
+                          className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                        />
+                        <span className="tabular-nums">
+                          [{items.length}]
+                          {groupCount > 0 && (
+                            <span className="ml-2 text-pcnGreen">
+                              {groupCount} {groupCount === 1 ? 'grupal' : 'grupales'}
+                            </span>
+                          )}
+                        </span>
+                      </h2>
+                      <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+                        {items.map((c) => (
+                          <ConversationRow
+                            key={`${c.date}-${c.title}`}
+                            conversation={c}
+                            query={searchTerm}
+                            activeParticipant={participant}
+                            onParticipantClick={toggleParticipant}
+                            onOpen={() => setOpenIndex(filtered.indexOf(c))}
+                          />
+                        ))}
+                      </RuledGrid>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {filtered.length === 0 ? (
-            <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-              <span className="text-pcnGreen-500">$ </span>0 resultados
-              {searchTerm.trim() && (
-                <>
-                  {' '}
-                  para <span className="text-pcnGreen">&quot;{searchTerm}&quot;</span>
-                </>
-              )}
-            </p>
-          ) : (
-            <div className="mb-14 space-y-6">
-              {grouped.map(([key, items]) => {
-                const groupCount = items.filter(isGroupThread).length;
-                return (
-                  <section key={key} id={`m-${key}`} className="scroll-mt-4">
-                    <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      <span className="text-pcnGreen">{'>'}</span>
-                      <span className="text-foreground">{key}</span>
-                      <span>{monthName(key)}</span>
-                      <span
-                        aria-hidden
-                        className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
-                      />
-                      <span className="tabular-nums">
-                        [{items.length}]
-                        {groupCount > 0 && (
-                          <span className="ml-2 text-pcnGreen">
-                            {groupCount} {groupCount === 1 ? 'grupal' : 'grupales'}
-                          </span>
-                        )}
-                      </span>
-                    </h2>
-                    <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
-                      {items.map((c) => (
-                        <ConversationRow
-                          key={`${c.date}-${c.title}`}
-                          conversation={c}
-                          query={searchTerm}
-                          activeParticipant={participant}
-                          onParticipantClick={toggleParticipant}
-                          onOpen={() => setOpenIndex(filtered.indexOf(c))}
-                        />
-                      ))}
-                    </RuledGrid>
-                  </section>
-                );
-              })}
-            </div>
-          )}
+          <ConversationDialog
+            conversations={filtered}
+            index={openIndex}
+            query={searchTerm}
+            activeParticipant={participant}
+            onNavigate={setOpenIndex}
+            onClose={() => setOpenIndex(null)}
+            onParticipantClick={filterFromDialog}
+          />
         </div>
-
-        <ConversationDialog
-          conversations={filtered}
-          index={openIndex}
-          query={searchTerm}
-          activeParticipant={participant}
-          onNavigate={setOpenIndex}
-          onClose={() => setOpenIndex(null)}
-          onParticipantClick={filterFromDialog}
-        />
-      </div>
+      </ConversationEventsContext.Provider>
     </ProfileLinksContext.Provider>
   );
 }

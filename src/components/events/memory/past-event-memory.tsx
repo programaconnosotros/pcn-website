@@ -9,8 +9,11 @@ import { Button } from '@/components/ui/button';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
+import { conversations } from '@/data/whatsapp-conversations';
 import { getEventMemories, type EventMemoryItem } from '@/lib/gallery';
+import { getIdentityMap } from '@/lib/identity-links';
 import prisma from '@/lib/prisma';
+import { MemoryConversations } from './memory-conversations';
 import { MemoryHero } from './memory-hero';
 import { MemoryMosaic } from './memory-mosaic';
 import { MemoryTalks } from './memory-talks';
@@ -52,7 +55,8 @@ export async function PastEventMemory({
   isAdmin: boolean;
 }) {
   const isExternalEvent = !!event.externalRegistrationUrl;
-  const [memories, talks, registrations, catalogNumber] = await Promise.all([
+  const eventConversations = conversations.filter((c) => c.eventId === event.id);
+  const [memories, talks, registrations, catalogNumber, profiles] = await Promise.all([
     getEventMemories(event.id, MEMORY_PREVIEW + 1),
     fetchPublicTalks(event.id),
     isExternalEvent
@@ -64,6 +68,7 @@ export async function PastEventMemory({
         }),
     // Same numbering as the /eventos museum: the first event ever is Nº 001.
     prisma.event.count({ where: { deletedAt: null, date: { lte: event.date } } }),
+    eventConversations.length > 0 ? getIdentityMap('whatsapp') : Promise.resolve({}),
   ]);
 
   const activeRegistrations = registrations
@@ -82,6 +87,10 @@ export async function PastEventMemory({
   const stats = [
     { value: activeRegistrations, label: plural(activeRegistrations, 'inscripto', 'inscriptos') },
     { value: orderedTalks.length, label: plural(orderedTalks.length, 'charla', 'charlas') },
+    {
+      value: eventConversations.length,
+      label: plural(eventConversations.length, 'conversación', 'conversaciones'),
+    },
     { value: memories.photoCount, label: plural(memories.photoCount, 'foto', 'fotos') },
     { value: memories.videoCount, label: plural(memories.videoCount, 'video', 'videos') },
     { value: memories.people.length, label: 'en las fotos' },
@@ -157,6 +166,22 @@ export async function PastEventMemory({
         {orderedTalks.length > 0 && (
           <EventSection title="charlas">
             <MemoryTalks talks={orderedTalks} />
+          </EventSection>
+        )}
+
+        {eventConversations.length > 0 && (
+          <EventSection
+            title="de qué se habló"
+            aside={
+              <Link
+                href="/conversaciones"
+                className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+              >
+                todas las conversaciones →
+              </Link>
+            }
+          >
+            <MemoryConversations conversations={eventConversations} profiles={profiles} />
           </EventSection>
         )}
 
