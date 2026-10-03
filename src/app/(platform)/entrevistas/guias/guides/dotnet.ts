@@ -1,0 +1,185 @@
+import type { InterviewGuide } from './types';
+
+export const dotnetGuide: InterviewGuide = {
+  track: 'dotnet',
+  summary:
+    'Qué estudiar y cómo practicar para una entrevista de backend con C# y ASP.NET Core, de junior a senior.',
+  sections: [
+    {
+      id: 'la-entrevista',
+      title: 'Cómo es la entrevista',
+      body: [
+        'Un proceso de backend .NET suele tener una charla con recruiting, una entrevista técnica sobre C# y ASP.NET Core, un ejercicio práctico (live coding o take-home) y, para perfiles altos, system design y una charla con liderazgo. Muchas empresas que usan .NET trabajan con Azure y SQL Server, así que preguntá por el stack completo: cambia el foco de algunas preguntas.',
+        'Para junior se evalúa C# con buena base: tipos por valor y por referencia, clases, interfaces, colecciones, LINQ, excepciones, `async` y `await`, y un endpoint con ASP.NET Core y Entity Framework Core. Esperan código claro y que sepas explicar lo que escribís. Un proyecto propio con una API, una base y tests es tu mejor argumento.',
+        'Para semi-senior el foco está en el framework y sus trampas: lifetimes de la inyección de dependencias, el pipeline de middleware, Minimal APIs contra controllers, `async` bien usado (sin `.Result`), `CancellationToken`, change tracking y N+1 en EF Core, configuración con el Options pattern, logging estructurado, autenticación con JWT y tests de integración.',
+        'Para senior se evalúan rendimiento y arquitectura: el garbage collector, `Span<T>`, thread pool starvation, diagnóstico en producción, estructura de soluciones grandes, CQRS, resiliencia y mensajería entre servicios, observabilidad, contenedores, Native AOT y migraciones desde .NET Framework. También cómo liderás decisiones técnicas en el equipo.',
+      ],
+      checklist: [
+        'Saber qué etapas tiene el proceso y qué stack completo usa la empresa',
+        'Tener un proyecto ASP.NET Core propio que puedas explicar completo',
+        'Contar dos o tres problemas reales que resolviste con contexto y resultado',
+        'Distinguir qué se espera de un junior, un semi-senior y un senior',
+        'Saber en qué versión de .NET trabajaste y qué cambió en las últimas',
+      ],
+    },
+    {
+      id: 'fundamentos',
+      title: 'C# y el runtime de .NET',
+      body: [
+        'La base que más se pregunta: tipos por valor (`struct`, primitivos) contra tipos por referencia (`class`), qué pasa al pasarlos a un método, y cuándo un `struct` tiene sentido (chico, inmutable, de vida corta). Sabé también propiedades contra campos, interfaces, generics con restricciones, `string` inmutable y `StringBuilder`, y las colecciones habituales: `List<T>`, `Dictionary<TKey, TValue>` y `HashSet<T>` con su costo de búsqueda.',
+        'LINQ es infaltable: sintaxis de métodos, proyecciones, agrupaciones y, sobre todo, la ejecución diferida: la query no corre hasta que la enumerás, y enumerarla dos veces la ejecuta dos veces. Conocé `IEnumerable<T>` contra `IQueryable<T>`: el primero filtra en memoria, el segundo traduce la expresión a SQL, y mezclarlos sin cuidado trae toda la tabla.',
+        'C# moderno suma puntos: nullable reference types activados para que el compilador avise de posibles `null`, records para datos inmutables con igualdad por valor, pattern matching, primary constructors, `required` e `init`. `IDisposable` con `using` para liberar recursos no administrados y excepciones bien usadas (no para control de flujo, con `throw;` para conservar el stack trace). En 2026 lo esperable es .NET 8 o .NET 10, ambas LTS.',
+        'Del runtime: el CLR compila IL a código nativo con JIT, gestiona memoria con un garbage collector generacional (gen 0, 1 y 2, más el Large Object Heap) y tiene un thread pool compartido. El boxing de un tipo por valor a `object` genera allocations que en código caliente afectan el rendimiento; saber detectarlo es una pregunta típica de semi-senior.',
+      ],
+      checklist: [
+        'Explicar tipos por valor y por referencia con un ejemplo',
+        'Explicar la ejecución diferida de LINQ y sus trampas',
+        'Diferenciar `IEnumerable<T>` e `IQueryable<T>`',
+        'Usar records, nullable reference types y pattern matching',
+        'Usar `using` e `IDisposable` correctamente',
+        'Explicar qué es el boxing y cuándo importa',
+      ],
+    },
+    {
+      id: 'aspnet-core-apis',
+      title: 'ASP.NET Core y diseño de APIs',
+      body: [
+        'ASP.NET Core es un pipeline de middleware donde el orden importa: manejo de excepciones primero, después HTTPS, routing, CORS, autenticación, autorización y por último los endpoints. Sabé escribir un middleware propio y explicar qué pasa si ponés `UseAuthorization` antes de `UseAuthentication`.',
+        'La inyección de dependencias viene incluida y los lifetimes son pregunta segura: Transient crea una instancia cada vez, Scoped una por request y Singleton una para toda la app. El error clásico es la captive dependency: inyectar un servicio Scoped (como un `DbContext`) dentro de un Singleton. Para configuración, el Options pattern con `IOptions<T>` y sus variantes, y secretos fuera de `appsettings.json` (user secrets en desarrollo, Key Vault o variables de entorno en producción).',
+        'Minimal APIs contra controllers: las primeras son más livianas y hoy cubren casi todo (filtros, validación, grupos de rutas, OpenAPI integrado); los controllers siguen siendo comunes en proyectos grandes y legacy. Sabé validar entradas (Data Annotations, la validación integrada de Minimal APIs o FluentValidation) y manejar errores de forma global con `IExceptionHandler` y respuestas `ProblemDetails`.',
+        'El diseño de APIs es el de cualquier backend: recursos, verbos, idempotencia, códigos correctos (201 con `CreatedAtRoute`, 204, 400, 401, 403, 404, 409), paginación y un formato de error consistente. Para senior, versionado con Asp.Versioning, deprecaciones y cómo evolucionar un contrato público sin romper clientes.',
+      ],
+      checklist: [
+        'Ordenar el pipeline de middleware y explicar por qué',
+        'Explicar Transient, Scoped y Singleton y la captive dependency',
+        'Usar el Options pattern para la configuración',
+        'Comparar Minimal APIs y controllers',
+        'Manejar errores globalmente con `ProblemDetails`',
+        'Elegir el código de estado correcto en cada caso',
+      ],
+    },
+    {
+      id: 'bases-de-datos',
+      title: 'EF Core, SQL y transacciones',
+      body: [
+        'Sabé SQL a mano (`JOIN`, agregaciones, índices, planes de ejecución) y EF Core: `DbContext` como unidad de trabajo, `DbSet`, configuración con Fluent API, relaciones y migraciones. El `DbContext` no es thread-safe y vive por request (Scoped); usarlo en paralelo es un error frecuente.',
+        'El change tracking es lo que más se pregunta: EF Core sigue las entidades que trae para detectar cambios al llamar a `SaveChanges`, lo que cuesta memoria y CPU. Para lecturas usá `AsNoTracking` o proyecciones con `Select` a DTOs. El N+1 aparece con lazy loading o con loops que consultan; se resuelve con `Include`, proyecciones o split queries. Activá el logging de SQL para ver qué genera cada query.',
+        'Transacciones: `SaveChanges` ya es transaccional, y para varias operaciones usás `BeginTransaction`. Para concurrencia optimista, un concurrency token (`rowversion` en SQL Server o una columna de versión) que hace fallar el `SaveChanges` con `DbUpdateConcurrencyException` si otro escribió antes. Para senior, niveles de aislamiento y el patrón outbox para guardar datos y publicar un evento de forma consistente.',
+        'En equipo, las migraciones se revisan en el PR, se aplican con scripts idempotentes o bundles en el pipeline y no al arrancar la app en producción. Sabé cuándo salir de EF Core: consultas complejas o masivas con Dapper o SQL directo, y operaciones en lote con `ExecuteUpdate` y `ExecuteDelete`.',
+      ],
+      checklist: [
+        'Explicar el change tracking y cuándo usar `AsNoTracking`',
+        'Detectar y resolver un N+1 en EF Core',
+        'Usar transacciones y concurrencia optimista con un concurrency token',
+        'Explicar cómo aplicar migraciones de forma segura en equipo',
+        'Decidir cuándo usar Dapper o SQL directo',
+        'Explicar por qué el `DbContext` es Scoped y no thread-safe',
+      ],
+    },
+    {
+      id: 'async-concurrencia',
+      title: 'Async, Task y concurrencia',
+      body: [
+        '`async` y `await` liberan el hilo mientras se espera I/O, lo que permite atender más requests con el mismo thread pool. Sabé explicar que no crean hilos nuevos y que `Task` representa una operación en curso. Usá `async` de punta a punta: bloquear con `.Result` o `.Wait()` puede causar deadlocks en contextos con sincronización y, en ASP.NET Core, agota el thread pool.',
+        'El `CancellationToken` permite cortar trabajo cuando el cliente se va o vence un timeout: recibilo en los endpoints y pasalo a EF Core y `HttpClient`. Evitá `async void` salvo en event handlers, y conocé `Task.WhenAll` para paralelizar llamadas independientes. `ValueTask` sirve para evitar allocations en métodos que casi siempre terminan sincrónicamente, pero tiene reglas (no se puede await dos veces), así que no es un reemplazo general de `Task`.',
+        'Thread pool starvation es una pregunta de senior: pasa cuando hay código sincrónico bloqueando hilos del pool, la latencia sube mientras la CPU está baja, y el pool crece lento. Se diagnostica con `dotnet-counters` (cola del thread pool) y dumps, y se resuelve eliminando el bloqueo, no subiendo el mínimo de hilos.',
+        'Para trabajo en segundo plano, `BackgroundService` o `IHostedService`, recordando crear un scope para usar servicios Scoped. Para alto volumen dentro de un servicio, `Channel<T>` como cola productor-consumidor con backpressure, `Parallel.ForEachAsync` con grado de paralelismo limitado, o colas externas y Hangfire para trabajos persistentes.',
+      ],
+      checklist: [
+        'Explicar qué hace `await` y por qué no crea hilos',
+        'Explicar por qué evitar `.Result`, `.Wait()` y `async void`',
+        'Propagar `CancellationToken` en toda la cadena',
+        'Diagnosticar thread pool starvation',
+        'Implementar un `BackgroundService` con un scope de DI',
+        'Usar `Channel<T>` para procesar trabajo concurrente',
+      ],
+    },
+    {
+      id: 'seguridad',
+      title: 'Seguridad y autenticación',
+      body: [
+        'Separá autenticación de autorización y conocé cómo las modela ASP.NET Core: esquemas de autenticación, claims, políticas con `AddAuthorization` y `[Authorize]` o `RequireAuthorization` en endpoints. Las políticas basadas en claims o en requisitos propios escalan mejor que chequear roles a mano en cada endpoint.',
+        'JWT con `AddJwtBearer`: validar issuer, audience, firma y expiración, con tokens emitidos por un proveedor de identidad (Microsoft Entra ID, Auth0, Keycloak u otro) en vez de armar tu propio servidor de tokens. Sabé comparar cookies y JWT, explicar access y refresh tokens y por qué revocar un JWT es difícil. Para contraseñas propias, ASP.NET Core Identity ya resuelve el hashing.',
+        'Medidas que conviene nombrar: HTTPS y HSTS, CORS restrictivo, rate limiting con el middleware integrado, validación de entrada, queries parametrizadas (EF Core lo hace, pero `FromSqlRaw` con strings concatenados no), protección contra mass assignment usando DTOs, headers de seguridad, y secretos en Key Vault o variables de entorno. Auditá paquetes con `dotnet list package --vulnerable` o Dependabot.',
+        'Para senior, el diseño completo: OAuth 2.0 y OpenID Connect, scopes por API, autenticación entre servicios con client credentials o managed identities en la nube, y logs que no filtren tokens ni datos personales.',
+      ],
+      checklist: [
+        'Configurar autenticación JWT y validar sus parámetros',
+        'Definir políticas de autorización basadas en claims',
+        'Comparar cookies y JWT incluyendo revocación',
+        'Configurar rate limiting y CORS en ASP.NET Core',
+        'Explicar dónde guardar secretos en desarrollo y en producción',
+        'Explicar cuándo EF Core no te protege de SQL injection',
+      ],
+    },
+    {
+      id: 'testing',
+      title: 'Testing en .NET',
+      body: [
+        'La base es xUnit (también se usan NUnit y MSTest) con un framework de mocks como NSubstitute o Moq: tests unitarios de servicios con dependencias reemplazadas por interfaces. Practicá arrange, act y assert, `[Theory]` con datos para cubrir varios casos y testear tanto el camino feliz como los errores.',
+        'Para integración, `WebApplicationFactory` levanta la API en memoria y te da un `HttpClient` para pegarle a los endpoints reales, reemplazando servicios con `ConfigureTestServices`. Combinalo con Testcontainers para tener una base real; el provider InMemory de EF Core no se comporta como una base relacional y esconde bugs.',
+        'Lo que buscan los entrevistadores es criterio: no mockear el `DbContext`, testear lógica de negocio y bordes de la API, tests independientes y rápidos, y datos de prueba claros. Un error común es acoplar los tests a detalles de implementación que se rompen con cada refactor.',
+        'Para senior, la estrategia de una solución grande: proporción de unitarios e integración, contract tests entre servicios, tests de arquitectura (NetArchTest o ArchUnitNET) para cuidar dependencias entre proyectos, y la suite como condición para mergear en CI.',
+      ],
+      checklist: [
+        'Escribir un test con xUnit y un mock de una dependencia',
+        'Hacer tests de integración con `WebApplicationFactory`',
+        'Reemplazar servicios en tests con `ConfigureTestServices`',
+        'Usar Testcontainers en vez del provider InMemory',
+        'Proponer una estrategia de testing para una solución grande',
+      ],
+    },
+    {
+      id: 'arquitectura-produccion',
+      title: 'Arquitectura, escala y producción',
+      body: [
+        'Para soluciones grandes, sabé defender una estructura: Clean Architecture o vertical slices, con el dominio sin depender de la infraestructura, proyectos separados por responsabilidad y sin exagerar capas que no aportan. CQRS separa modelos de lectura y escritura; aplicalo donde las lecturas y escrituras tienen necesidades distintas, no en todo el sistema, y sabé que MediatR es una herramienta opcional y no un requisito del patrón.',
+        'Entre servicios, HTTP con `IHttpClientFactory` (crear un `HttpClient` por request agota sockets y uno estático ignora cambios de DNS), gRPC para comunicación interna eficiente y mensajería con Azure Service Bus, RabbitMQ o Kafka, a veces con MassTransit o Wolverine. La resiliencia se arma con timeouts, retries con backoff, circuit breaker y hedging usando Polly o `Microsoft.Extensions.Http.Resilience`. Para caching, `IMemoryCache`, cache distribuida con Redis, `HybridCache` y output caching.',
+        'Rendimiento y diagnóstico: medir antes de optimizar, con `dotnet-counters`, `dotnet-trace`, `dotnet-dump` y BenchmarkDotNet para micro-benchmarks. Reducir allocations con `Span<T>` y `Memory<T>`, pools y evitar boxing en código caliente. El GC tiene modos workstation y server y presiona más cuando hay muchos objetos en el Large Object Heap. Los source generators mueven trabajo de runtime a compilación (serialización JSON, logging, regex) y habilitan Native AOT, que da arranque rápido y menos memoria a cambio de no poder usar reflection libre.',
+        'Observabilidad con OpenTelemetry (trazas, métricas y logs) y logging estructurado con `ILogger` o Serilog; .NET Aspire ayuda en desarrollo local de sistemas distribuidos. En contenedores, imágenes oficiales chiseled, usuario no root, health checks y graceful shutdown. Para migrar desde .NET Framework, hacelo de forma incremental (YARP para el patrón strangler fig, el upgrade assistant y bibliotecas en .NET Standard como puente).',
+      ],
+      checklist: [
+        'Defender una estructura de solución y cuándo aplicar CQRS',
+        'Explicar por qué usar `IHttpClientFactory`',
+        'Configurar resiliencia con Polly o `Microsoft.Extensions.Http.Resilience`',
+        'Diagnosticar un problema de performance con las herramientas `dotnet-*`',
+        'Explicar `Span<T>`, source generators y los trade-offs de Native AOT',
+        'Instrumentar un servicio con OpenTelemetry',
+        'Planificar una migración incremental desde .NET Framework',
+      ],
+    },
+    {
+      id: 'ejercicios',
+      title: 'Live coding, take-home y system design',
+      body: [
+        'El live coding en .NET suele ser lógica con colecciones y LINQ, modelado con clases e interfaces, un endpoint con validación o un problema de algoritmos de dificultad media. Practicá escribir C# fuera de Visual Studio o Rider, porque el editor compartido puede no tener IntelliSense. Repetí el problema con tus palabras, acordá casos borde y usá LINQ donde aclara, no para mostrar.',
+        'El take-home suele ser una API con ASP.NET Core y EF Core: cuidá la estructura, DTOs, validación, manejo global de errores, migraciones, tests unitarios y de integración con `WebApplicationFactory`, y un `README` con cómo correrlo con `docker compose up`. Documentá decisiones y lo que harías con más tiempo. Si usaste IA, entendé y podé defender cada línea.',
+        'En system design seguí un orden: requisitos, estimación de volumen, API, modelo de datos, diseño de alto nivel y profundizar en los cuellos de botella. En empresas .NET es común que el diseño se apoye en servicios de Azure; sabé nombrar equivalentes (colas, cache, almacenamiento) sin atarte a un proveedor si no te lo piden.',
+      ],
+      checklist: [
+        'Resolver un ejercicio con colecciones y LINQ sin IntelliSense',
+        'Modelar un problema con clases e interfaces bien separadas',
+        'Entregar una API ASP.NET Core con tests, migraciones y `README`',
+        'Seguir un orden fijo para un ejercicio de system design',
+        'Nombrar los componentes de nube que usarías y por qué',
+      ],
+    },
+    {
+      id: 'dia-de-la-entrevista',
+      title: 'El día de la entrevista',
+      body: [
+        'Pensá en voz alta y aclará el alcance antes de resolver: qué volumen, qué consistencia, qué pasa ante errores. Si no sabés algo, decilo y contá cómo lo investigarías o qué sabés de algo relacionado; inventar se nota y resta mucho.',
+        'Para preguntas de comportamiento usá STAR: situación, tarea, acción y resultado, contando lo que hiciste vos y con un resultado concreto. Prepará historias sobre un incidente en producción, un desacuerdo técnico, un error propio y una mejora que impulsaste.',
+        'Llevá preguntas para la empresa: en qué versión de .NET están y cómo actualizan, si hay código en .NET Framework, cómo despliegan, cómo manejan guardias e incidentes y cómo se toman las decisiones de arquitectura.',
+        'Checklist final: probá cámara, micrófono y el editor; tené tu proyecto listo; repasá el stack de la búsqueda; dormí bien. Después anotá lo que no supiste y estudialo para la próxima.',
+      ],
+      checklist: [
+        'Pensar en voz alta y aclarar el alcance antes de resolver',
+        'Admitir lo que no sabés y explicar cómo lo averiguarías',
+        'Tener tres o cuatro historias preparadas con formato STAR',
+        'Llevar al menos tres preguntas para la empresa',
+        'Probar el entorno técnico antes de empezar',
+      ],
+    },
+  ],
+};

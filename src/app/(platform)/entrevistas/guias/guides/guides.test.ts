@@ -1,0 +1,34 @@
+import { isValidContentMark } from '@/actions/content-marks/content-marks';
+import { TRACKS } from '../../questions/types';
+import { guideSectionKey, interviewGuides } from '.';
+
+describe('interview guides', () => {
+  it('has a guide for every interview track', () => {
+    for (const { id } of TRACKS) {
+      expect(interviewGuides[id].track).toBe(id);
+    }
+  });
+
+  it.each(TRACKS.map(({ id }) => id))('%s has unique, storable section ids', (track) => {
+    const ids = interviewGuides[track].sections.map((section) => section.id);
+
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const id of ids) {
+      expect(id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+      // setContentMark rejects content ids longer than 100 characters.
+      expect(guideSectionKey(track, id).length).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it.each(TRACKS.map(({ id }) => id))('%s sections have content to read', (track) => {
+    for (const section of interviewGuides[track].sections) {
+      expect(section.body.length).toBeGreaterThan(0);
+      expect(section.checklist.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('stores read sections as content marks', () => {
+    expect(isValidContentMark('interview-guide', 'read')).toBe(true);
+    expect(isValidContentMark('interview-guide', 'watched')).toBe(false);
+  });
+});

@@ -1,0 +1,187 @@
+import type { InterviewGuide } from './types';
+
+export const nodeGuide: InterviewGuide = {
+  track: 'node',
+  summary:
+    'Qué estudiar y cómo practicar para una entrevista de backend con Node.js, Express y NestJS, de junior a senior.',
+  sections: [
+    {
+      id: 'la-entrevista',
+      title: 'Cómo es la entrevista',
+      body: [
+        'Un proceso típico de backend Node.js tiene una charla inicial con recruiting, una entrevista técnica conceptual, un ejercicio práctico (live coding o take-home) y, para perfiles más altos, una instancia de system design y otra de cultura o liderazgo. No todas las empresas hacen todas las etapas, pero casi todas combinan preguntas de teoría con algo de código real. Preguntá al principio cuántas etapas hay y qué evalúa cada una: es información que te dan sin problema y te ayuda a prepararte.',
+        'Para junior se evalúa que entiendas los fundamentos: JavaScript asíncrono, qué es Node y por qué es non-blocking, HTTP y REST, SQL básico y cómo armar un endpoint simple con Express. No se espera que sepas todo, sino que razones bien, que tu código sea prolijo y que digas con honestidad hasta dónde llegás. Un proyecto propio con una API, tests y una base de datos suma mucho más que una lista larga de tecnologías.',
+        'Para semi-senior el foco pasa a la autonomía: manejo de errores, validación, autenticación, índices, transacciones, el problema N+1, testing de integración y cómo llevar un servicio a producción con Docker y logs útiles. Te van a pedir ejemplos concretos de cosas que hiciste y por qué las hiciste así. Respuestas del tipo "depende" están bien siempre que expliques de qué depende.',
+        'Para senior importan los trade-offs y el impacto: elegir entre monolito y microservicios, consistencia entre servicios, colas, caching, observabilidad, deploys sin downtime, incidentes que resolviste y cómo hacés crecer a otras personas del equipo. Esperan que hagas preguntas antes de diseñar, que menciones costos y riesgos, y que sepas decir qué no harías.',
+      ],
+      checklist: [
+        'Saber qué etapas tiene el proceso y qué evalúa cada una',
+        'Tener un proyecto propio que puedas explicar de punta a punta',
+        'Contar dos o tres problemas reales que resolviste con contexto y resultado',
+        'Distinguir qué se espera de un junior, un semi-senior y un senior',
+        'Explicar con tus palabras por qué elegiste Node.js para un proyecto',
+      ],
+    },
+    {
+      id: 'fundamentos',
+      title: 'JavaScript, TypeScript y el runtime',
+      body: [
+        'Antes de cualquier framework te van a medir JavaScript: scope y closures, `this`, `==` contra `===`, tipos primitivos contra objetos (paso por referencia), destructuring, spread y la diferencia entre callbacks, promesas y `async/await`. Practicá explicar qué pasa cuando una promesa se rechaza y nadie la maneja, y cómo se propagan los errores con `try/catch` en funciones `async`. Es muy común que en el live coding se olviden un `await` y no lo noten.',
+        'Sabé explicar qué es Node: un runtime basado en V8 que delega el I/O a libuv y al sistema operativo, con un solo hilo que ejecuta tu JavaScript y un event loop que procesa los callbacks a medida que el I/O termina. Eso lo hace muy bueno para servicios con mucha concurrencia de red y malo para trabajo pesado de CPU en el hilo principal. Conocé también el ecosistema: `package.json` y lockfile, rangos semver, scripts, variables de entorno con `process.env` y la carga de `.env` que Node ya trae con `--env-file`.',
+        'Los módulos son pregunta frecuente: CommonJS (`require`) contra ES Modules (`import`), cómo se activa cada uno y los problemas de interoperabilidad. En 2026 la mayoría de los proyectos nuevos usan ESM y TypeScript; Node ya puede ejecutar archivos `.ts` quitando los tipos, aunque para producción muchos equipos siguen compilando con `tsc` o un bundler. Usá una versión LTS (par) y sabé por qué no conviene correr una impar en producción.',
+        'En TypeScript te alcanza con dominar bien lo cotidiano: interfaces contra `type`, uniones y narrowing, generics simples, `unknown` contra `any`, y `strict` activado. El error típico es creer que los tipos validan datos en runtime: no lo hacen, por eso en el borde de la API necesitás validar con algo como Zod o class-validator.',
+      ],
+      checklist: [
+        'Explicar closures, `this` y el paso de objetos por referencia',
+        'Comparar callbacks, promesas y `async/await`, incluyendo el manejo de errores',
+        'Explicar qué hacen V8 y libuv y por qué Node es non-blocking',
+        'Diferenciar CommonJS de ES Modules y saber cuál usar hoy',
+        'Explicar para qué sirven el lockfile y las variables de entorno',
+        'Justificar por qué los tipos de TypeScript no reemplazan la validación en runtime',
+      ],
+    },
+    {
+      id: 'express-nestjs-apis',
+      title: 'Express, NestJS y diseño de APIs',
+      body: [
+        'Express es minimalista: un pipeline de middlewares `(req, res, next)` donde el orden importa. Sabé armar un router, parsear el body, agregar un middleware de autenticación y uno de errores (el que recibe cuatro argumentos, al final de la cadena). Desde Express 5 las promesas rechazadas en handlers `async` llegan solas al middleware de errores; en Express 4 tenías que llamar a `next(err)` o usar un wrapper, y es una pregunta clásica.',
+        'NestJS agrega estructura: módulos, controllers, providers e inyección de dependencias, con pipes para validar y transformar, guards para autorización, interceptors para lógica transversal y exception filters para mapear errores. Si la empresa usa Nest, practicá contar el ciclo de vida de una request por esas capas y cuándo conviene cada una. Si te preguntan cuál elegir, el argumento honesto es que Express da libertad y Nest da convenciones que escalan mejor en equipos grandes, a cambio de más abstracción.',
+        'En diseño de APIs se espera que manejes REST con criterio: recursos con sustantivos, verbos HTTP correctos, idempotencia de GET, PUT y DELETE, y códigos de estado precisos (201 al crear, 204 sin contenido, 400 contra 422, 401 contra 403, 404, 409). Sabé diferenciar path params, query params y body, implementar paginación por offset y por cursor, y explicar cuándo GraphQL tiene sentido y qué problemas trae (caching, N+1 en resolvers, queries costosas).',
+        'Para semi-senior y senior entran el manejo de errores consistente (un formato único de error, nunca stack traces al cliente), la validación de entrada, CORS bien entendido, rate limiting, versionado de APIs y cómo introducir cambios sin romper clientes. Un detalle que suma: documentar con OpenAPI y generar o validar los contratos a partir de ese documento.',
+      ],
+      checklist: [
+        'Armar un servidor Express con rutas, middlewares y manejo de errores centralizado',
+        'Explicar el ciclo de una request en NestJS: guards, pipes, interceptors y filters',
+        'Elegir el código de estado correcto para crear, validar, autorizar y conflictos',
+        'Implementar paginación por cursor y explicar por qué escala mejor que offset',
+        'Explicar qué es CORS y por qué el error aparece en el navegador y no en el servidor',
+        'Comparar REST y GraphQL con ventajas y costos concretos',
+      ],
+    },
+    {
+      id: 'bases-de-datos',
+      title: 'Bases de datos, ORMs y transacciones',
+      body: [
+        'SQL es lo que más diferencia a candidatos parecidos. Practicá escribir a mano `SELECT` con `JOIN`, `GROUP BY`, `HAVING` y subqueries, y explicá la diferencia entre `INNER JOIN` y `LEFT JOIN` con un ejemplo. Sabé qué son las claves primarias y foráneas, qué es normalizar y cuándo tiene sentido desnormalizar para lecturas. En Node lo habitual es PostgreSQL con Prisma, Drizzle, TypeORM o Knex, y MongoDB con Mongoose en algunos equipos.',
+        'Los índices son pregunta segura: aceleran lecturas a costa de escrituras más lentas y más espacio, y un índice compuesto sirve según el orden de sus columnas. Aprendé a leer un `EXPLAIN ANALYZE` básico para ver si una query hace un seq scan. El problema N+1 aparece casi siempre que hay un ORM: sabé reconocerlo en los logs de queries y resolverlo con includes, joins o batching (DataLoader en GraphQL).',
+        'Transacciones: qué significa ACID, cómo abrir una transacción con tu ORM y qué pasa si una operación falla a mitad de camino. A nivel senior te pueden pedir los niveles de aislamiento (read committed, repeatable read, serializable) y qué anomalías evita cada uno, más locking optimista con una columna de versión contra locking pesimista con `SELECT ... FOR UPDATE`.',
+        'No te olvides de lo operativo: migraciones versionadas y aplicadas en el pipeline, connection pooling (y por qué cada instancia abre su pool, lo que puede agotar las conexiones de Postgres), y Redis para cache, sesiones, rate limiting o colas simples. Un error común es usar el ORM sin mirar nunca el SQL que genera.',
+      ],
+      checklist: [
+        'Escribir una query con `JOIN` y `GROUP BY` sin ayuda del ORM',
+        'Explicar cuándo crear un índice y qué costo tiene',
+        'Detectar y resolver un N+1 en un endpoint con un ORM',
+        'Explicar ACID y usar una transacción en Prisma o TypeORM',
+        'Comparar locking optimista y pesimista',
+        'Explicar qué es un connection pool y cómo dimensionarlo',
+      ],
+    },
+    {
+      id: 'event-loop-concurrencia',
+      title: 'Event loop, async y concurrencia',
+      body: [
+        'El event loop es la pregunta más característica de Node. Sabé recorrer sus fases (timers, pending callbacks, poll, check, close) y dónde entran las microtasks: las de `process.nextTick` y las promesas se vacían entre cada callback, antes de seguir con la siguiente fase. Un buen ejercicio es predecir el orden de salida de un snippet con `setTimeout`, `setImmediate`, `Promise.resolve().then` y `nextTick`, y explicar el porqué.',
+        'Bloquear el event loop es el error más grave en un servicio Node: un `JSON.parse` de un payload enorme, una regex con backtracking catastrófico, un loop de CPU o una función sincrónica como `fs.readFileSync` dentro de un handler frenan todas las requests a la vez. Sabé detectarlo con métricas de event loop lag o `monitorEventLoopDelay`, y resolverlo moviendo ese trabajo a `worker_threads`, a otro servicio o a una cola.',
+        'Para usar varios núcleos, Node escala con varios procesos: el módulo `cluster`, PM2 o, lo más común hoy, varias réplicas detrás de un load balancer en Kubernetes o en la plataforma de deploy. Los `worker_threads` son para trabajo de CPU dentro de un proceso, no para atender más requests. Conocé `Promise.all`, `Promise.allSettled`, `Promise.race` y `Promise.any`, y cuándo limitar la concurrencia en lugar de disparar mil promesas juntas.',
+        'Los streams son otro tema de semi-senior: procesar archivos o respuestas grandes por partes, con backpressure, usando `pipeline` para no perder errores. A nivel senior te pueden preguntar por fugas de memoria: listeners que se acumulan, caches sin límite, closures que retienen objetos; se investigan con heap snapshots y `--inspect` comparando dos momentos.',
+      ],
+      checklist: [
+        'Recorrer las fases del event loop y ubicar microtasks y `nextTick`',
+        'Predecir el orden de ejecución de un snippet con timers y promesas',
+        'Explicar qué bloquea el event loop y cómo detectarlo en producción',
+        'Diferenciar `cluster`, réplicas y `worker_threads` y cuándo usar cada uno',
+        'Comparar `Promise.all`, `allSettled`, `race` y `any`',
+        'Explicar backpressure y por qué usar `pipeline` con streams',
+      ],
+    },
+    {
+      id: 'seguridad',
+      title: 'Seguridad y autenticación',
+      body: [
+        'Primero separá conceptos: autenticación es quién sos, autorización es qué podés hacer. Las contraseñas se guardan con un hash lento y con salt (Argon2, bcrypt o scrypt), nunca con SHA-256 a secas. Los secretos van en variables de entorno o en un secret manager, nunca en el repo.',
+        'Sesiones contra tokens es pregunta casi segura. Con sesiones el servidor guarda el estado y el navegador manda una cookie `HttpOnly`, `Secure` y `SameSite`; revocar es trivial. Con JWT el token es autocontenido y se valida con la firma, lo que escala bien entre servicios, pero revocarlo es difícil: por eso se usan access tokens cortos con refresh tokens rotados. Guardar un JWT en `localStorage` lo expone a XSS, y ese detalle suele marcar la diferencia en la respuesta.',
+        'Conocé el OWASP Top 10 aplicado a una API: SQL injection (se previene con queries parametrizadas, no escapando a mano), broken access control (validar que el recurso pertenece al usuario, no solo que está logueado), mass assignment, SSRF y validación de entrada. En Node suma mencionar `helmet`, límites de tamaño del body, rate limiting y auditar dependencias con `npm audit` o Dependabot por el riesgo de supply chain.',
+        'A nivel senior se espera que diseñes la seguridad de una API pública completa: OAuth 2.0 y OpenID Connect con un proveedor de identidad, scopes, API keys para integraciones, HTTPS en todos lados, logs sin datos sensibles y principio de mínimo privilegio en la base y en la nube.',
+      ],
+      checklist: [
+        'Diferenciar autenticación de autorización con un ejemplo',
+        'Explicar cómo guardar contraseñas y por qué no sirve un hash rápido',
+        'Comparar sesiones con cookies y JWT, incluyendo revocación',
+        'Prevenir SQL injection y explicar por qué funcionan las queries parametrizadas',
+        'Nombrar los riesgos principales del OWASP Top 10 para APIs',
+        'Explicar el flujo de access token y refresh token',
+      ],
+    },
+    {
+      id: 'testing',
+      title: 'Testing en backend',
+      body: [
+        'Sabé diferenciar tests unitarios (una función o servicio aislado), de integración (tu código con la base, la cola o HTTP real) y end-to-end (el sistema completo). En backend los de integración suelen dar más confianza por costo: levantar la app y pegarle a los endpoints con Supertest contra una base real en Docker o con Testcontainers detecta errores que los mocks esconden.',
+        'Las herramientas habituales son Vitest o Jest, y Node trae su propio runner con `node:test`. Practicá escribir un test con arrange, act y assert, mockear una dependencia externa (un cliente HTTP o un servicio de pagos) y testear el caso feliz y los errores. En NestJS conocé el `TestingModule` para reemplazar providers.',
+        'El error común es mockear todo y terminar testeando los mocks, o escribir tests acoplados a la implementación que se rompen con cada refactor. Lo que buscan los entrevistadores es criterio: qué testeás primero (la lógica de negocio y los bordes de la API), cómo mantenés los tests rápidos y deterministas, y cómo manejás datos de prueba sin que un test dependa de otro.',
+        'Para senior, hablá de estrategia: la pirámide o el trofeo de testing, contract testing entre servicios, tests en el pipeline de CI como condición para mergear, y cómo cubrir migraciones y jobs asincrónicos.',
+      ],
+      checklist: [
+        'Diferenciar unitario, integración y end-to-end con ejemplos de backend',
+        'Escribir un test de un endpoint con Supertest',
+        'Mockear una dependencia externa y explicar cuándo no conviene',
+        'Levantar una base real para tests de integración',
+        'Explicar cómo mantener los tests rápidos, aislados y deterministas',
+      ],
+    },
+    {
+      id: 'arquitectura-produccion',
+      title: 'Arquitectura, escala y producción',
+      body: [
+        'Monolito contra microservicios es la pregunta de arquitectura por excelencia. La respuesta madura es que un monolito modular bien separado es la mejor opción por defecto y que los microservicios se justifican por necesidades de escala, de deploy independiente o de equipos, a cambio de complejidad operativa, red poco confiable y consistencia eventual. Sabé explicar el patrón outbox y las sagas para mantener datos consistentes entre servicios sin transacciones distribuidas.',
+        'Para escalar, conocé las palancas en orden: medir primero, cachear (cache-aside con Redis, TTL e invalidación), réplicas de lectura, índices y queries, colas para sacar trabajo del request (BullMQ, RabbitMQ, SQS o Kafka) y recién después particionar datos. Con colas, sabé que en la práctica la entrega es at-least-once, así que los consumidores tienen que ser idempotentes. El teorema CAP y las idempotency keys en pagos son temas recurrentes de senior.',
+        'Resiliencia y observabilidad van juntas: timeouts en cada llamada externa, retries con backoff y jitter solo en operaciones idempotentes, circuit breakers y degradación elegante. Para ver qué pasa usá logs estructurados en JSON con un logger como Pino, métricas (latencia p95 y p99, tasa de errores, event loop lag) y trazas distribuidas con OpenTelemetry. Practicá contar cómo investigarías un endpoint que se volvió lento en producción, paso a paso.',
+        'En deploy se espera que manejes Docker (imagen multi-stage, usuario no root, `node` directo en lugar de `npm start` para recibir `SIGTERM` y cerrar conexiones de forma ordenada), CI/CD, y estrategias como rolling, blue-green o canary con feature flags. Las migraciones de base tienen que ser compatibles hacia atrás (expand and contract) para que convivan dos versiones de la app durante el deploy.',
+      ],
+      checklist: [
+        'Argumentar cuándo pasar de monolito a microservicios y cuándo no',
+        'Explicar el patrón outbox y para qué sirve una saga',
+        'Diseñar una estrategia de cache con invalidación',
+        'Explicar at-least-once y cómo hacer un consumidor idempotente',
+        'Nombrar las tres señales de observabilidad y qué medirías en un servicio Node',
+        'Describir un deploy sin downtime con migraciones compatibles',
+        'Contar paso a paso cómo diagnosticarías un endpoint lento',
+      ],
+    },
+    {
+      id: 'ejercicios',
+      title: 'Live coding, take-home y system design',
+      body: [
+        'El live coding de backend suele ser un endpoint o una función con lógica concreta: un CRUD con validación, agrupar y transformar datos, un rate limiter en memoria, un cliente con retries, o un problema de algoritmos de dificultad media. Practicá en el mismo entorno que vas a usar (editor compartido, sin autocompletado de IA si así lo piden) y con un cronómetro. Antes de escribir, repetí el problema con tus palabras, acordá entradas y salidas y proponé casos borde.',
+        'En el take-home importa más la calidad que la cantidad de features: estructura clara, validación, manejo de errores, tests de lo importante, un `README` con cómo correrlo (idealmente con `docker compose up`) y una sección de decisiones y de lo que harías con más tiempo. Respetá el tiempo sugerido y no agregues tecnologías solo para impresionar. Si usaste IA para ayudarte, asegurate de entender y poder defender cada línea, porque la siguiente entrevista suele ser sobre ese código.',
+        'El system design aparece en semi-senior alto y senior: un acortador de URLs, un sistema de notificaciones, un feed o un backend de pagos. Seguí un orden: requisitos funcionales y no funcionales, estimación gruesa de volumen, API, modelo de datos, diseño de alto nivel y después profundizar en el cuello de botella (cache, colas, particionado, consistencia). Lo que se evalúa es cómo razonás los trade-offs, no que llegues a una arquitectura perfecta.',
+      ],
+      checklist: [
+        'Resolver un CRUD con validación y errores en menos de 45 minutos',
+        'Implementar un rate limiter o un retry con backoff desde cero',
+        'Entregar un take-home con tests, `README` y decisiones documentadas',
+        'Seguir un orden fijo para encarar un ejercicio de system design',
+        'Estimar órdenes de magnitud de requests, almacenamiento y ancho de banda',
+        'Defender cada decisión de tu código ante preguntas de seguimiento',
+      ],
+    },
+    {
+      id: 'dia-de-la-entrevista',
+      title: 'El día de la entrevista',
+      body: [
+        'Pensá en voz alta: el entrevistador evalúa tu proceso, no solo el resultado. Antes de responder o codear, hacé preguntas que aclaren el alcance (volumen, consistencia, qué pasa ante errores). Si no sabés algo, decilo y contá cómo lo averiguarías o qué sí sabés de un tema vecino; inventar se nota y resta mucho más que un "no lo sé".',
+        'Para las preguntas de comportamiento usá STAR: situación, tarea, acción y resultado, con foco en lo que hiciste vos y con un resultado medible si lo hay. Prepará historias sobre un incidente en producción, un desacuerdo técnico, un error tuyo y qué aprendiste, y algo que mejoraste por iniciativa propia. Un minuto y medio por historia es una buena medida.',
+        'Llevá preguntas para la empresa: cómo es el proceso de deploy y cada cuánto salen a producción, quién está de guardia y cómo se manejan los incidentes, cómo se decide la arquitectura, qué tan grande es la deuda técnica y cómo es el onboarding. Las respuestas te dicen mucho del día a día y muestran interés real.',
+        'Checklist final: probá cámara, micrófono y el editor compartido antes; tené a mano tu `README` o proyecto para mostrar; repasá el stack que pide la búsqueda; dormí bien. Al terminar, anotá lo que no supiste responder y estudialo: cada entrevista es práctica para la siguiente.',
+      ],
+      checklist: [
+        'Pensar en voz alta y hacer preguntas de alcance antes de resolver',
+        'Admitir lo que no sabés y explicar cómo lo resolverías',
+        'Tener tres o cuatro historias preparadas con formato STAR',
+        'Llevar al menos tres preguntas para hacerle a la empresa',
+        'Probar el entorno técnico antes de empezar',
+        'Anotar después lo que no supiste para estudiarlo',
+      ],
+    },
+  ],
+};

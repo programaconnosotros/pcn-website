@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import prisma from '@/lib/prisma';
 import { communityCourses, externalCourses } from './(platform)/cursos/courses';
+import { TRACKS } from './(platform)/entrevistas/questions/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -22,6 +23,7 @@ const STATIC_ROUTES = [
   '/especialidades',
   '/herramientas',
   '/entrevistas',
+  '/entrevistas/guias',
   '/proyectos',
   '/consejos',
   '/testimonios',
@@ -73,6 +75,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const courses = [...communityCourses, ...externalCourses].map((course) => ({
     url: `${SITE_URL}/cursos/${course.id}`,
   }));
+  const interviewGuides = TRACKS.map((track) => ({
+    url: `${SITE_URL}/entrevistas/guias/${track.id}`,
+  }));
 
   return [
     ...STATIC_ROUTES.map((route) => ({
@@ -81,6 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route === '/' ? 1 : 0.7,
     })),
     ...courses,
+    ...interviewGuides,
     ...(await dynamicRoutes()),
   ];
 }

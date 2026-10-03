@@ -12,25 +12,15 @@ import {
   type QaTool,
   type Seniority,
 } from '@/app/(platform)/entrevistas/questions';
+import { renderInlineCode } from '@/components/interviews/inline-code';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ArrowRight, Check, Eye, RotateCcw, Square, X } from 'lucide-react';
-import { Fragment, useEffect, useState } from 'react';
+import { ArrowRight, BookOpen, Check, Eye, RotateCcw, Square, X } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Phase = 'setup' | 'running' | 'done';
-
-// Answers mark code with backticks, like Markdown inline code.
-const renderInlineCode = (text: string) =>
-  text.split(/`([^`]+)`/).map((part, i) =>
-    i % 2 === 1 ? (
-      <code key={i} className="rounded-sm bg-pcnGreen/10 px-1 font-mono text-[0.9em] text-pcnGreen">
-        {part}
-      </code>
-    ) : (
-      <Fragment key={i}>{part}</Fragment>
-    ),
-  );
 
 const shuffle = <T,>(items: T[]) => {
   const result = [...items];
@@ -204,10 +194,23 @@ export function InterviewSimulator() {
     return (
       <div className="mb-14 max-w-2xl">
         <PageTitle path="entrevistas" meta="active recall" />
-        <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
+        <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
           Practicá para tu próxima entrevista técnica. Las preguntas aparecen de a una y en orden
           aleatorio: respondé en voz alta y recién después mirá la respuesta.
         </p>
+        <Link
+          href={track ? `/entrevistas/guias/${track}` : '/entrevistas/guias'}
+          className="mb-6 flex items-center gap-2 border border-dashed border-pcnGreen-200 px-3 py-2 font-mono text-xs text-muted-foreground transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+        >
+          <BookOpen className="size-3.5 shrink-0 text-pcnGreen-500" />
+          <span>
+            ¿Primero querés estudiar?{' '}
+            <span className="text-pcnGreen">
+              {trackInfo ? `leé la guía de ${trackInfo.label}` : 'leé las guías de preparación'}
+            </span>
+          </span>
+          <ArrowRight className="ml-auto size-3.5 shrink-0" />
+        </Link>
 
         <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># 1. tipo de entrevista</h2>
         <RuledGrid className="mb-6 grid-cols-1">
@@ -353,6 +356,10 @@ export function InterviewSimulator() {
           >
             elegir otra entrevista
           </button>
+          <Link href={`/entrevistas/guias/${track}`} className={secondaryButtonClassName}>
+            <BookOpen className="size-3.5" />
+            estudiar con la guía
+          </Link>
         </div>
 
         {toReview.length > 0 && (

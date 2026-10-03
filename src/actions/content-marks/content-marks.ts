@@ -3,6 +3,8 @@ export const CONTENT_MARKS = {
   article: ['read', 'saved'],
   // YouTube videos, including the external talks on /charlas, keyed by video id.
   video: ['watched'],
+  // Sections of the /entrevistas/guias preparation guides, keyed by `<track>/<section id>`.
+  'interview-guide': ['read'],
 } as const;
 
 export type ContentType = keyof typeof CONTENT_MARKS;

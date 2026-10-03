@@ -1,0 +1,185 @@
+import type { InterviewGuide } from './types';
+
+export const pythonGuide: InterviewGuide = {
+  track: 'python',
+  summary:
+    'Qué estudiar y cómo practicar para una entrevista de backend con Python, Django y FastAPI, de junior a senior.',
+  sections: [
+    {
+      id: 'la-entrevista',
+      title: 'Cómo es la entrevista',
+      body: [
+        'Un proceso de backend Python suele tener una charla con recruiting, una entrevista técnica sobre el lenguaje y el framework, un ejercicio práctico (live coding o take-home) y, para perfiles altos, system design y una charla de cultura o liderazgo. Python también se usa mucho en datos e IA, así que preguntá si el rol es de APIs, de pipelines o mixto: cambia bastante lo que te van a preguntar.',
+        'Para junior se evalúa Python sólido: tipos mutables e inmutables, colecciones, funciones, excepciones, comprehensions, entornos virtuales y un framework básico. Esperan que escribas código claro y pythónico, que sepas armar un endpoint simple y un test con pytest. Un proyecto propio con Django o FastAPI, base de datos y tests es tu mejor carta.',
+        'Para semi-senior el foco está en entender cómo funcionan las cosas por debajo: el GIL, `asyncio`, decoradores, Pydantic, el ORM sin N+1, migraciones, Celery, fixtures y mocks, logging y dependencias reproducibles. Te van a pedir ejemplos de decisiones que tomaste y problemas que resolviste.',
+        'Para senior se evalúan los trade-offs: estructura de proyectos grandes, rendimiento y escalado, mezcla de sync y async, pools de conexiones con muchos workers, observabilidad, seguridad, evolución de APIs públicas y migraciones de versión. También cómo guiás técnicamente al equipo y cómo manejás la deuda técnica.',
+      ],
+      checklist: [
+        'Saber qué etapas tiene el proceso y si el rol es de APIs, datos o mixto',
+        'Tener un proyecto propio con Django o FastAPI que puedas explicar completo',
+        'Contar dos o tres problemas reales que resolviste con contexto y resultado',
+        'Distinguir qué se espera de un junior, un semi-senior y un senior',
+        'Explicar por qué Python es una buena o mala opción para un caso dado',
+      ],
+    },
+    {
+      id: 'fundamentos',
+      title: 'Python y su runtime',
+      body: [
+        'El lenguaje se evalúa en detalle. Sabé qué tipos son mutables (listas, dicts, sets) e inmutables (tuplas, strings, números), por qué una lista como valor por defecto de un parámetro es un bug clásico, la diferencia entre `==` e `is`, y entre copia superficial y profunda. Practicá comprehensions, `*args` y `**kwargs`, desempaquetado, generadores con `yield`, context managers con `with` y el manejo de excepciones con `try`, `except`, `else` y `finally`.',
+        'En orientación a objetos conocé métodos de instancia, `@classmethod` y `@staticmethod`, propiedades, herencia y los métodos especiales (`__init__`, `__repr__`, `__eq__`, `__iter__`). Las dataclasses y los decoradores son preguntas de semi-senior: sabé escribir un decorador con `functools.wraps` y explicar qué hace. Para senior pueden aparecer descriptores, el protocolo de iteración en detalle o metaclases.',
+        'Los type hints no se validan en runtime: son para herramientas como mypy o Pyright y para el editor. En código base grande se usan de forma progresiva con `Protocol`, generics y `TypedDict`, y bibliotecas como Pydantic sí los usan para validar en runtime. Seguí PEP 8 y usá un formatter y linter como Ruff.',
+        'Del runtime: CPython compila a bytecode y lo interpreta, gestiona memoria con conteo de referencias más un recolector de ciclos, y tiene el GIL. Conocé entornos virtuales y dependencias reproducibles: en 2026 muchos equipos usan `uv` con `pyproject.toml` y lockfile, aunque Poetry y `pip-tools` siguen presentes. Sabé en qué versión de Python estás y qué trajo de nuevo.',
+      ],
+      checklist: [
+        'Explicar mutabilidad y el bug del argumento por defecto mutable',
+        'Diferenciar `==` de `is` y copia superficial de profunda',
+        'Escribir un generador, un context manager y un decorador',
+        'Explicar `@classmethod`, `@staticmethod` y dataclasses',
+        'Explicar qué validan y qué no validan los type hints',
+        'Armar un entorno reproducible con `pyproject.toml` y lockfile',
+      ],
+    },
+    {
+      id: 'django-fastapi-apis',
+      title: 'Django, FastAPI y diseño de APIs',
+      body: [
+        'Django es baterías incluidas: ORM, migraciones, admin, auth, formularios y un ecosistema maduro, con Django REST Framework para APIs. FastAPI es más liviano, async nativo, con validación y documentación OpenAPI automáticas a partir de type hints y Pydantic. Flask queda como micro framework. Sabé argumentar cuándo elegirías cada uno: Django para productos con mucho CRUD, admin y equipo grande; FastAPI para APIs y servicios con mucha I/O o que sirven modelos.',
+        'En Django conocé el ciclo de una request (URLconf, middleware, view, template o serializer), los serializers y viewsets de DRF, permisos y las señales con sus riesgos. En FastAPI, el sistema de inyección de dependencias con `Depends`, los modelos de Pydantic para request y response, los status codes y cuándo una ruta debe ser `def` o `async def`. Pydantic v2 es el estándar: conocé `model_validate` y los validadores.',
+        'El diseño de APIs se evalúa igual que en cualquier backend: recursos, verbos HTTP, idempotencia, códigos de estado correctos (201, 204, 400, 401, 403, 404, 409, 422), paginación por offset y por cursor, filtros por query params, y un formato de error consistente. Para senior, versionado y cómo evolucionar una API pública sin romper clientes: cambios aditivos, deprecaciones con fecha y un contrato OpenAPI como fuente de verdad.',
+        'Conocé WSGI contra ASGI: WSGI es sincrónico (Gunicorn), ASGI soporta async, websockets y conexiones largas (Uvicorn, Hypercorn, Daphne). Django soporta vistas async sobre ASGI, pero gran parte del ORM sigue siendo sincrónico por dentro, un detalle que suma mencionar.',
+      ],
+      checklist: [
+        'Comparar Django, Flask y FastAPI y elegir uno para un caso concreto',
+        'Explicar el ciclo de una request en Django y en FastAPI',
+        'Usar `Depends` para inyectar una sesión de base o el usuario actual',
+        'Definir modelos de Pydantic para validar entrada y salida',
+        'Elegir el código de estado correcto en cada caso',
+        'Explicar la diferencia entre WSGI y ASGI',
+      ],
+    },
+    {
+      id: 'bases-de-datos',
+      title: 'Bases de datos, ORMs y transacciones',
+      body: [
+        'Practicá SQL a mano: `JOIN`, agregaciones, subqueries, índices y cómo leer un `EXPLAIN ANALYZE`. En Python vas a trabajar con el ORM de Django o con SQLAlchemy 2.0 (a veces vía SQLModel), y saber qué SQL genera cada llamada es lo que separa a un semi-senior de un junior. Un índice acelera lecturas y encarece escrituras; un índice compuesto se aprovecha según el orden de las columnas.',
+        'El N+1 es la pregunta más frecuente: en Django se resuelve con `select_related` (joins para relaciones a uno) y `prefetch_related` (query aparte para relaciones a muchos); en SQLAlchemy con `joinedload` o `selectinload`. Sabé detectarlo con Django Debug Toolbar, logs de SQL o un test que cuente queries. Conocé también `only`, `values` y `bulk_create` para no traer ni escribir de más.',
+        'Transacciones: en Django `transaction.atomic` como decorador o context manager, y `ATOMIC_REQUESTS`; en SQLAlchemy el manejo explícito de la sesión con `commit` y `rollback`. Para senior, niveles de aislamiento, `select_for_update` para locking pesimista y una columna de versión para locking optimista, y `transaction.on_commit` para disparar tareas de Celery solo cuando los datos ya están confirmados.',
+        'Migraciones con las de Django o con Alembic: versionadas, revisadas en el PR y compatibles hacia atrás durante el deploy. Para servicios con muchos workers, el connection pool es crítico: cada proceso de Gunicorn o Uvicorn abre su pool, y la suma puede superar el límite de Postgres; ahí entra PgBouncer o ajustar el tamaño por worker.',
+      ],
+      checklist: [
+        'Escribir una query con `JOIN` y `GROUP BY` sin el ORM',
+        'Resolver un N+1 con `select_related` o `prefetch_related`',
+        'Usar transacciones en Django y en SQLAlchemy',
+        'Explicar `select_for_update` y locking optimista',
+        'Crear y revisar una migración segura para producción',
+        'Calcular cuántas conexiones abren tus workers y cómo limitarlas',
+      ],
+    },
+    {
+      id: 'concurrencia-async',
+      title: 'GIL, asyncio y concurrencia',
+      body: [
+        'El GIL hace que en CPython un solo hilo ejecute bytecode a la vez dentro de un proceso. Por eso los threads sirven para I/O (el GIL se libera mientras esperás la red o el disco) pero no aceleran trabajo de CPU, que necesita `multiprocessing`, `ProcessPoolExecutor` o código nativo. Desde Python 3.13 existe un build free-threaded sin GIL, todavía opcional y con impacto en bibliotecas con extensiones en C; mencionarlo con esa salvedad muestra que estás al día.',
+        '`asyncio` usa un event loop de un hilo con corrutinas que ceden el control en cada `await`. Es ideal para muchas operaciones de I/O concurrentes, siempre que todo el camino sea async: un driver o cliente HTTP sincrónico (como `requests`) dentro de una corrutina bloquea el loop entero. La solución es usar bibliotecas async (`httpx`, `asyncpg`) o mandar lo bloqueante a un thread con `asyncio.to_thread` o `run_in_executor`.',
+        'Sabé elegir: threads para I/O con bibliotecas sincrónicas, asyncio para mucha I/O concurrente con bibliotecas async, procesos para CPU. Conocé `asyncio.gather`, `TaskGroup` y los timeouts con `asyncio.timeout`, y cómo limitar concurrencia con un `Semaphore`.',
+        'Para trabajo en segundo plano se usan colas de tareas como Celery (con Redis o RabbitMQ), RQ, Dramatiq o arq. A nivel senior te preguntan por la entrega at-least-once y cómo evitar efectos duplicados: tareas idempotentes, claves de idempotencia, `acks_late` con cuidado y reintentos con backoff.',
+      ],
+      checklist: [
+        'Explicar qué es el GIL y qué implica para threads y procesos',
+        'Explicar cómo funciona el event loop de `asyncio`',
+        'Detectar código bloqueante dentro de una corrutina y corregirlo',
+        'Elegir entre threads, procesos y asyncio para un caso dado',
+        'Limitar concurrencia con `Semaphore` y poner timeouts',
+        'Diseñar una tarea de Celery idempotente con reintentos',
+      ],
+    },
+    {
+      id: 'seguridad',
+      title: 'Seguridad y autenticación',
+      body: [
+        'Separá autenticación (quién sos) de autorización (qué podés hacer). Las contraseñas se guardan con un hash lento y con salt: Django ya lo hace con PBKDF2 o Argon2, y en FastAPI usás bibliotecas como `pwdlib` o `passlib` con Argon2 o bcrypt. Los secretos van en variables de entorno o en un secret manager, y en Django nunca con `DEBUG = True` en producción.',
+        'En Django lo habitual es autenticación por sesión con cookies y protección CSRF incluida, o tokens con DRF. En FastAPI se arma con dependencias: un esquema OAuth2 que extrae el token, valida el JWT y devuelve el usuario, más dependencias de permisos por ruta. Sabé comparar sesiones con JWT, explicar access y refresh tokens y por qué revocar un JWT es difícil.',
+        'Riesgos específicos de Python que suman puntos: `pickle` con datos no confiables permite ejecutar código, igual que `eval` o `yaml.load` sin `SafeLoader`; `subprocess` con `shell=True` y strings armados con input del usuario es inyección de comandos; y el SQL armado con f-strings es SQL injection aunque uses un ORM para el resto. Mencioná también auditar dependencias con `pip-audit` y fijar versiones.',
+        'A nivel senior, diseñá la seguridad de una API pública: OAuth 2.0 y OpenID Connect con un proveedor de identidad, scopes, rate limiting, CORS restrictivo, validación estricta con Pydantic, HTTPS y logs sin datos sensibles.',
+      ],
+      checklist: [
+        'Diferenciar autenticación de autorización con un ejemplo',
+        'Explicar cómo guarda contraseñas Django y qué usarías en FastAPI',
+        'Implementar autenticación JWT con dependencias de FastAPI',
+        'Nombrar riesgos propios de Python como `pickle` y `shell=True`',
+        'Explicar CSRF y cuándo aplica',
+        'Comparar sesiones y JWT incluyendo revocación',
+      ],
+    },
+    {
+      id: 'testing',
+      title: 'Testing con pytest',
+      body: [
+        'pytest es el estándar: tests como funciones con `assert` simples, fixtures para preparar datos y dependencias, `parametrize` para cubrir muchos casos y `conftest.py` para compartir fixtures. Practicá escribir un test unitario, uno de un endpoint con el `TestClient` de FastAPI o el cliente de Django, y uno con base de datos real.',
+        'Los mocks se hacen con `unittest.mock` o `pytest-mock`; el error típico es parchear el lugar equivocado: se parchea donde el objeto se usa, no donde se define. En FastAPI conviene reemplazar dependencias con `app.dependency_overrides` en vez de parchear. No mockees lo que es tuyo y barato de usar: mockeá servicios externos, no tu propia base.',
+        'Para integración, una base Postgres real en Docker o con Testcontainers da más confianza que SQLite si en producción usás Postgres. Cuidá el aislamiento con transacciones que se revierten al final de cada test, y mantené la suite rápida corriéndola en paralelo con `pytest-xdist`.',
+        'Para senior, la estrategia: qué proporción de unitarios e integración, contract tests entre servicios, factories en lugar de fixtures gigantes (factory_boy), cobertura como señal y no como objetivo, y type checking con mypy o Pyright en CI como otra capa de verificación.',
+      ],
+      checklist: [
+        'Escribir tests con fixtures y `parametrize`',
+        'Testear un endpoint con el cliente de prueba del framework',
+        'Mockear una dependencia externa en el lugar correcto',
+        'Reemplazar dependencias de FastAPI en tests',
+        'Aislar tests que usan una base real',
+        'Proponer una estrategia de testing para un backend grande',
+      ],
+    },
+    {
+      id: 'arquitectura-produccion',
+      title: 'Arquitectura, escala y producción',
+      body: [
+        'Para proyectos grandes sabé proponer una estructura: separar dominio, servicios y acceso a datos, organizar por módulo de negocio y no solo por capa técnica, y mantener los frameworks en los bordes. Monolito modular por defecto y servicios separados cuando hay razones de escala, deploy o equipos. Para comunicar servicios, HTTP o gRPC sincrónico para consultas y eventos por una cola o un broker para desacoplar, con el patrón outbox para no perder eventos.',
+        'Rendimiento: medí antes de optimizar con `cProfile`, py-spy o un APM. Las palancas habituales son queries e índices, cache con Redis (cache-aside, TTL, invalidación), mover trabajo a tareas en segundo plano, procesar en lotes con generadores para no cargar millones de registros en memoria, y escalar horizontalmente. Para fugas de memoria, `tracemalloc` y comparar snapshots.',
+        'En producción, Gunicorn con workers de Uvicorn o Uvicorn solo, con la cantidad de workers según CPU y tipo de carga, timeouts y reinicio periódico de workers para contener fugas. La imagen Docker conviene multi-stage, slim, con usuario no root, dependencias instaladas desde el lockfile y capas ordenadas para aprovechar la cache.',
+        'Observabilidad: logging estructurado en JSON con `logging` o structlog e IDs de correlación, métricas de latencia y errores, y trazas con OpenTelemetry, que instrumenta Django, FastAPI, SQLAlchemy y los clientes HTTP. Para deploys, migraciones compatibles hacia atrás, rolling o canary, y health checks reales.',
+      ],
+      checklist: [
+        'Proponer la estructura de un backend Python grande',
+        'Perfilar un servicio y explicar qué optimizarías primero',
+        'Configurar Gunicorn o Uvicorn para producción',
+        'Armar un Dockerfile multi-stage para una app Python',
+        'Instrumentar logs, métricas y trazas con OpenTelemetry',
+        'Explicar el patrón outbox y la comunicación entre servicios',
+      ],
+    },
+    {
+      id: 'ejercicios',
+      title: 'Live coding, take-home y system design',
+      body: [
+        'El live coding en Python suele mezclar estructuras de datos y lógica: procesar un archivo o una lista de registros, agrupar con `dict` y `collections` (`Counter`, `defaultdict`), un endpoint con validación, o un problema de algoritmos de dificultad media. Aprovechá la biblioteca estándar: saber usar `itertools`, `heapq` o `bisect` en el momento justo luce mucho. Repetí el problema con tus palabras y acordá casos borde antes de escribir.',
+        'En el take-home importa la calidad: estructura clara, modelos de Pydantic o serializers, manejo de errores, tests con pytest, Ruff y type hints, un `README` con cómo levantarlo (idealmente con `docker compose up`) y las decisiones que tomaste. Si usaste IA, entendé cada línea: la entrevista siguiente suele ser revisar ese código con vos.',
+        'En system design (semi-senior alto y senior) seguí un orden: requisitos, estimación de volumen, API, modelo de datos, diseño de alto nivel y profundizar en el cuello de botella. En Python suman detalles propios: dónde usar tareas en segundo plano, cómo dimensionar workers y conexiones, y cuándo un componente crítico de CPU conviene en otro lenguaje o en una biblioteca nativa.',
+      ],
+      checklist: [
+        'Resolver un ejercicio de procesamiento de datos con la biblioteca estándar',
+        'Armar un CRUD con validación y tests en menos de una hora',
+        'Entregar un take-home con `README`, tests y decisiones documentadas',
+        'Seguir un orden fijo para un ejercicio de system design',
+        'Estimar volumen de requests y almacenamiento en órdenes de magnitud',
+      ],
+    },
+    {
+      id: 'dia-de-la-entrevista',
+      title: 'El día de la entrevista',
+      body: [
+        'Pensá en voz alta y hacé preguntas antes de resolver: el entrevistador evalúa cómo razonás. Si no sabés algo, decilo y contá cómo lo averiguarías o qué sabés de un tema relacionado. Inventar una respuesta se nota y resta más que admitir un límite.',
+        'Para preguntas de comportamiento usá STAR: situación, tarea, acción y resultado, contando lo que hiciste vos y con un resultado concreto. Tené preparadas historias sobre un incidente, un desacuerdo técnico, un error propio y una mejora que impulsaste. Mantenelas en un minuto y medio.',
+        'Llevá preguntas para la empresa: cómo despliegan y cada cuánto, cómo manejan guardias e incidentes, en qué versión de Python están y cómo actualizan, cómo se toman las decisiones técnicas y cómo es el onboarding.',
+        'Checklist final: probá cámara, micrófono, conexión y el editor compartido; tené tu proyecto listo para mostrar; repasá el stack que pide la búsqueda. Después de la entrevista anotá lo que no supiste y estudialo.',
+      ],
+      checklist: [
+        'Pensar en voz alta y aclarar el alcance antes de resolver',
+        'Admitir lo que no sabés y explicar cómo lo averiguarías',
+        'Tener tres o cuatro historias preparadas con formato STAR',
+        'Llevar al menos tres preguntas para la empresa',
+        'Probar el entorno técnico antes de empezar',
+      ],
+    },
+  ],
+};

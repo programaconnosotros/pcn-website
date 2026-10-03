@@ -1,0 +1,185 @@
+import type { InterviewGuide } from './types';
+
+export const javaGuide: InterviewGuide = {
+  track: 'java',
+  summary:
+    'Qué estudiar y cómo practicar para una entrevista de backend con Java y Spring Boot, de junior a senior.',
+  sections: [
+    {
+      id: 'la-entrevista',
+      title: 'Cómo es la entrevista',
+      body: [
+        'Los procesos de Java suelen ser más formales: charla con recruiting, entrevista técnica sobre el lenguaje y Spring, un ejercicio práctico (live coding o take-home), y para perfiles altos system design y una charla con liderazgo. En empresas grandes, bancos y consultoras es común una prueba de algoritmos al principio. Preguntá cuántas etapas hay y qué evalúa cada una.',
+        'Para junior se evalúa Java y orientación a objetos con precisión: los pilares de POO, interfaces contra clases abstractas, `equals` y `hashCode`, colecciones, excepciones y un endpoint básico con Spring Boot. Se espera código prolijo, nombres claros y que sepas explicar lo que escribís. Un proyecto propio con Spring Boot, JPA, una base real y tests vale más que cualquier certificación.',
+        'Para semi-senior se mira Java moderno (streams, lambdas, `record`, `Optional`), cómo funciona Spring por dentro (inyección de dependencias, scopes, `@Transactional`), JPA sin N+1, concurrencia básica, Spring Security, testing con slices y configuración por entorno. Te van a pedir ejemplos de decisiones reales.',
+        'Para senior importan la JVM en producción (memoria, GC, diagnóstico), virtual threads, transacciones avanzadas, resiliencia y consistencia entre microservicios, Kafka, observabilidad, contenedores y cómo modernizar sistemas legacy. También cómo guiás técnicamente al equipo y manejás actualizaciones de versiones y dependencias.',
+      ],
+      checklist: [
+        'Saber qué etapas tiene el proceso y si hay prueba de algoritmos',
+        'Tener un proyecto Spring Boot propio que puedas explicar completo',
+        'Contar dos o tres problemas reales que resolviste con contexto y resultado',
+        'Distinguir qué se espera de un junior, un semi-senior y un senior',
+        'Saber en qué versión de Java y Spring Boot trabajaste y qué cambió',
+      ],
+    },
+    {
+      id: 'fundamentos',
+      title: 'Java, POO y la JVM',
+      body: [
+        'Empezá por lo básico pero con precisión: JDK, JRE y JVM; tipos primitivos y wrappers con autoboxing (y el `NullPointerException` que aparece al desempaquetar un `null`); `==` contra `equals`; por qué `String` es inmutable; `final`, `static` y `this`. El contrato entre `equals` y `hashCode` es pregunta casi segura: si dos objetos son iguales tienen que tener el mismo hash, o se rompen los `HashMap` y `HashSet`.',
+        'Colecciones: `List`, `Set` y `Map` y sus implementaciones, `ArrayList` contra `LinkedList` (casi siempre `ArrayList`), y cómo funciona un `HashMap` por dentro (buckets, colisiones, árboles cuando un bucket crece, rehash). Excepciones checked contra unchecked, try-with-resources para cerrar recursos y genéricos con su type erasure.',
+        'Java moderno es lo que diferencia: lambdas e interfaces funcionales, la Stream API (y cuándo un loop es más claro), `Optional` como tipo de retorno y no como campo, `record` para datos inmutables, `var`, text blocks, sealed classes y pattern matching en `switch`. En 2026 lo esperable es Java 21 o 25 (ambas LTS); sabé qué features usaste de cada una.',
+        'De la JVM: heap contra stack, cómo el garbage collector trabaja por generaciones, que G1 es el default y que ZGC apunta a pausas mínimas, y que el JIT optimiza el código caliente en runtime. Para el build, Maven o Gradle: dependencias, scopes, plugins y por qué conviene un BOM para alinear versiones.',
+      ],
+      checklist: [
+        'Explicar el contrato entre `equals` y `hashCode` con un ejemplo roto',
+        'Explicar cómo funciona un `HashMap` por dentro',
+        'Diferenciar checked y unchecked exceptions y usar try-with-resources',
+        'Usar streams, lambdas, `Optional` y `record` con criterio',
+        'Explicar heap, stack y el garbage collector a grandes rasgos',
+        'Explicar qué hace Maven o Gradle y cómo se manejan versiones',
+      ],
+    },
+    {
+      id: 'spring-boot-apis',
+      title: 'Spring Boot y diseño de APIs',
+      body: [
+        'Spring Boot resuelve configuración y arranque: starters, autoconfiguración, servidor embebido y configuración externa. Sabé explicar la inyección de dependencias (inversión de control, inyección por constructor como práctica recomendada), los estereotipos (`@Component`, `@Service`, `@Repository`, `@Controller`), los scopes de beans y que el default es singleton, con lo que eso implica para el estado mutable.',
+        'Para senior, cómo funciona la autoconfiguración por dentro: clases de configuración registradas que se activan con condiciones como `@ConditionalOnClass` o `@ConditionalOnMissingBean`, lo que te permite reemplazar un bean definiendo el tuyo. También los proxies: muchas anotaciones (`@Transactional`, `@Async`, `@Cacheable`) funcionan por proxy y no se aplican en llamadas internas dentro de la misma clase, un bug clásico.',
+        'En la capa web conocé `@RestController`, `@GetMapping`, `@PathVariable`, `@RequestParam`, `@RequestBody` y `ResponseEntity`. Validá con Bean Validation (`@Valid`, `@NotNull`, `@Size`) y centralizá errores con `@RestControllerAdvice` y `ProblemDetail` (RFC 9457) para devolver un formato consistente. La configuración por entorno se maneja con profiles, `application.yml` y `@ConfigurationProperties`.',
+        'El diseño de APIs es el mismo que en cualquier backend: recursos, verbos, idempotencia, códigos correctos (201, 204, 400, 401, 403, 404, 409), paginación (`Pageable` en Spring Data, y cursores para volúmenes grandes), versionado y documentación con OpenAPI vía springdoc. Para senior, evolución de APIs públicas sin romper clientes.',
+      ],
+      checklist: [
+        'Explicar inyección de dependencias e inyección por constructor',
+        'Explicar cómo funciona la autoconfiguración de Spring Boot',
+        'Explicar por qué `@Transactional` no aplica en una llamada interna',
+        'Armar un controller con validación y manejo global de errores',
+        'Configurar perfiles y `@ConfigurationProperties` por entorno',
+        'Elegir el código de estado correcto en cada caso',
+      ],
+    },
+    {
+      id: 'bases-de-datos',
+      title: 'JPA, SQL y transacciones',
+      body: [
+        'Sabé SQL a mano (`JOIN`, agregaciones, índices, `EXPLAIN`) y la pila de acceso a datos: JDBC como base, JPA como especificación, Hibernate como implementación y Spring Data JPA encima con repositorios. Conocé el ciclo de vida de una entidad (transient, managed, detached), el persistence context y el dirty checking que hace que un cambio se guarde sin llamar a `save`.',
+        'Fetch `LAZY` contra `EAGER` y el N+1 son preguntas seguras. Lo recomendado es lazy por defecto y traer lo necesario con `JOIN FETCH`, `@EntityGraph` o proyecciones con DTOs. Sabé detectar el N+1 activando el log de SQL o con estadísticas de Hibernate, y explicar la `LazyInitializationException` y por qué `open-in-view` no es la solución.',
+        '`@Transactional` es central: por defecto hace rollback solo con excepciones unchecked, la propagación default es `REQUIRED`, `REQUIRES_NEW` abre una transacción independiente y `readOnly` permite optimizaciones. Para senior, niveles de aislamiento y sus anomalías, y locking optimista con `@Version` contra pesimista con `@Lock`.',
+        'En lo operativo: migraciones versionadas con Flyway o Liquibase (nunca `ddl-auto=update` en producción), connection pool con HikariCP y su tamaño (más grande no es mejor), y cuándo salir de JPA hacia `JdbcClient`, jOOQ o SQL nativo para consultas complejas o masivas.',
+      ],
+      checklist: [
+        'Explicar la relación entre JDBC, JPA, Hibernate y Spring Data',
+        'Detectar y resolver un N+1 con `JOIN FETCH` o `@EntityGraph`',
+        'Explicar propagación y rollback de `@Transactional`',
+        'Comparar locking optimista con `@Version` y pesimista',
+        'Versionar el esquema con Flyway o Liquibase',
+        'Explicar cómo dimensionar el pool de HikariCP',
+      ],
+    },
+    {
+      id: 'concurrencia',
+      title: 'Concurrencia y virtual threads',
+      body: [
+        'Conocé las bases: `Thread`, `Runnable`, condiciones de carrera y cómo se protegen con `synchronized`, `volatile` (visibilidad, no atomicidad) y las clases atómicas como `AtomicInteger`. Las colecciones concurrentes (`ConcurrentHashMap`) y la inmutabilidad suelen ser mejores soluciones que sincronizar a mano.',
+        'Para trabajo asincrónico, `ExecutorService` para manejar pools de hilos y `CompletableFuture` para componer tareas (`thenApply`, `thenCompose`, `allOf`) con manejo de errores. En Spring, `@Async` usa un executor que conviene configurar en vez de dejar el default.',
+        'Los virtual threads (Java 21) cambian el panorama: son hilos livianos gestionados por la JVM, ideales para código bloqueante de I/O con el estilo simple de un thread por request, y Spring Boot los activa con `spring.threads.virtual.enabled`. No aceleran trabajo de CPU, no conviene ponerlos en un pool, y hay que cuidar los recursos limitados como conexiones a la base (el pool sigue siendo el límite). Sabé que el pinning con `synchronized` se resolvió en Java 24.',
+        'Para senior: el Java Memory Model y la relación happens-before (qué garantiza que un hilo vea lo que escribió otro), y cuándo elegir Spring WebFlux. Con virtual threads, WebFlux pierde atractivo para la mayoría de los servicios; sigue teniendo sentido para streaming y backpressure de punta a punta, a cambio de un modelo de programación más difícil de leer y depurar.',
+      ],
+      checklist: [
+        'Diferenciar `synchronized`, `volatile` y clases atómicas',
+        'Componer tareas con `CompletableFuture` y manejar errores',
+        'Explicar qué son los virtual threads y cuándo no ayudan',
+        'Explicar happens-before con un ejemplo',
+        'Comparar Spring MVC con virtual threads y WebFlux',
+      ],
+    },
+    {
+      id: 'seguridad',
+      title: 'Seguridad y Spring Security',
+      body: [
+        'Separá autenticación de autorización. Spring Security funciona como una cadena de filtros que se configura con un bean `SecurityFilterChain`: autentica la request, guarda el resultado en el `SecurityContext` y después aplica reglas de autorización por URL o por método con `@PreAuthorize`. Practicá contar ese flujo de punta a punta.',
+        'Las contraseñas se guardan con un `PasswordEncoder` lento (BCrypt o Argon2). Para APIs, lo habitual es el modo resource server con JWT emitidos por un proveedor de identidad: Spring valida la firma y los claims, y vos mapeás roles y scopes. Sabé comparar sesiones con JWT y explicar access y refresh tokens y la dificultad de revocar.',
+        'Riesgos que conviene nombrar: SQL injection con queries armadas concatenando strings (incluso en JPQL), broken access control al no verificar que el recurso pertenece al usuario, mass assignment al bindear entidades directo desde el request (usá DTOs), deserialización insegura y dependencias vulnerables (Log4Shell es el ejemplo que todos recuerdan). Usá OWASP Dependency-Check, Dependabot o Renovate.',
+        'Para senior, autenticación entre varios servicios: OAuth 2.0 y OpenID Connect con un authorization server centralizado, propagación de tokens o client credentials entre servicios, mTLS en la red interna y secretos en un vault, no en `application.yml`.',
+      ],
+      checklist: [
+        'Explicar la cadena de filtros de Spring Security',
+        'Configurar un resource server que valide JWT',
+        'Usar `@PreAuthorize` para reglas por método',
+        'Explicar por qué usar DTOs en lugar de bindear entidades',
+        'Diseñar autenticación entre servicios con OAuth 2.0',
+        'Explicar cómo manejar dependencias vulnerables',
+      ],
+    },
+    {
+      id: 'testing',
+      title: 'Testing en Spring Boot',
+      body: [
+        'La base es JUnit 5 con AssertJ y Mockito: tests unitarios de servicios con dependencias mockeadas, sin levantar Spring. Si inyectás por constructor, testear sin el framework es trivial, y eso es un argumento a favor que conviene mencionar.',
+        'Spring Boot ofrece test slices para levantar solo una parte: `@WebMvcTest` para controllers con `MockMvc`, `@DataJpaTest` para repositorios, y `@SpringBootTest` para el contexto completo. Para reemplazar beans en tests se usa `@MockitoBean` (que reemplazó a `@MockBean`). Saber cuándo usar cada uno y por qué un `@SpringBootTest` en todos lados vuelve lenta la suite es lo que buscan.',
+        'Para integración real, Testcontainers con Postgres, Kafka o Redis en Docker, integrado con Spring Boot con `@ServiceConnection`. Evitá H2 si en producción usás Postgres: las diferencias de dialecto esconden bugs. Cuidá el aislamiento entre tests y reutilizá el contexto de Spring para que la suite no tarde minutos de más.',
+        'Para senior, la estrategia entre varios servicios: contract testing con Spring Cloud Contract o Pact, tests de arquitectura con ArchUnit para cuidar dependencias entre capas, y qué corre en cada etapa del pipeline.',
+      ],
+      checklist: [
+        'Escribir un test unitario con JUnit 5 y Mockito',
+        'Elegir entre `@WebMvcTest`, `@DataJpaTest` y `@SpringBootTest`',
+        'Testear un controller con `MockMvc`',
+        'Usar Testcontainers para tests de integración',
+        'Explicar por qué evitar H2 si producción usa Postgres',
+        'Proponer una estrategia de testing para varios servicios',
+      ],
+    },
+    {
+      id: 'arquitectura-produccion',
+      title: 'Arquitectura, escala y producción',
+      body: [
+        'Para aplicaciones grandes, organizá por módulos de negocio con límites claros (Spring Modulith ayuda a verificarlos), dominio separado de la infraestructura y DTOs en los bordes. Monolito modular por defecto y microservicios cuando hay razones concretas. Para modernizar un legacy, el patrón strangler fig: extraer funcionalidades de a poco detrás de una fachada, con tests que fijen el comportamiento antes de tocar.',
+        'Entre servicios, la resiliencia se arma con timeouts, retries con backoff solo en operaciones idempotentes, circuit breaker y bulkheads, típicamente con Resilience4j. Para consistencia, sagas y el patrón outbox en lugar de transacciones distribuidas. Kafka aparece seguido: sabé explicar topics, particiones, consumer groups, que el orden se garantiza solo dentro de una partición y que at-least-once obliga a consumidores idempotentes.',
+        'Diagnóstico en producción: para memoria, heap dumps analizados con Eclipse MAT; para CPU, thread dumps y JDK Flight Recorder; para latencia, trazas y métricas antes que adivinar. Elegir el GC depende del objetivo: G1 como default equilibrado, ZGC para pausas mínimas con heaps grandes. Para un endpoint lento, el orden es medir, encontrar si es base, red o CPU, y recién ahí optimizar.',
+        'Observabilidad con Actuator, Micrometer y OpenTelemetry: métricas, health checks, trazas y logs estructurados con trace ID. En contenedores, la JVM respeta los límites de memoria y CPU, pero conviene configurar `MaxRAMPercentage`, usar imágenes livianas, construir con Buildpacks o Jib, y conocer GraalVM native image y CRaC para arranques rápidos con sus trade-offs. Mantené Java y dependencias al día con el BOM de Spring Boot y Renovate.',
+      ],
+      checklist: [
+        'Proponer la estructura de una aplicación Spring grande',
+        'Aplicar timeouts, retries y circuit breaker con Resilience4j',
+        'Explicar particiones, consumer groups y garantías de Kafka',
+        'Diagnosticar una fuga de memoria o CPU alta en la JVM',
+        'Configurar observabilidad con Actuator, Micrometer y OpenTelemetry',
+        'Explicar qué tener en cuenta al correr la JVM en contenedores',
+        'Planificar la migración gradual de un monolito legacy',
+      ],
+    },
+    {
+      id: 'ejercicios',
+      title: 'Live coding, take-home y system design',
+      body: [
+        'En Java es común un ejercicio de algoritmos (colecciones, ordenamiento, mapas, recursión) o de modelado orientado a objetos: diseñar las clases de un estacionamiento, un carrito o una biblioteca. Practicá escribir Java sin el IDE completándote todo, porque a veces el editor compartido es básico. Pensá en voz alta, definí casos borde y elegí bien las estructuras de datos.',
+        'El take-home suele ser una API con Spring Boot: cuidá la estructura por capas o módulos, DTOs, validación, manejo global de errores, migraciones, tests de unidad e integración con Testcontainers y un `README` con cómo correrlo con `docker compose up`. Documentá decisiones y lo que harías con más tiempo. Si usaste IA, entendé y podé defender cada línea.',
+        'En system design seguí un orden: requisitos, estimación de volumen, API, modelo de datos, diseño de alto nivel y profundizar en cuellos de botella. En Java los entrevistadores suelen ir a fondo en mensajería, transacciones, consistencia y resiliencia, así que prepará cómo usarías Kafka, outbox y circuit breakers en un diseño concreto.',
+      ],
+      checklist: [
+        'Resolver un ejercicio de colecciones sin depender del IDE',
+        'Modelar un problema con clases, interfaces y responsabilidades claras',
+        'Entregar una API Spring Boot con tests, migraciones y `README`',
+        'Seguir un orden fijo para un ejercicio de system design',
+        'Integrar mensajería y resiliencia en un diseño concreto',
+      ],
+    },
+    {
+      id: 'dia-de-la-entrevista',
+      title: 'El día de la entrevista',
+      body: [
+        'Pensá en voz alta y aclará el alcance antes de resolver: qué volumen, qué consistencia, qué pasa ante errores. Si no sabés algo, decilo y contá cómo lo investigarías o qué sabés de algo relacionado; inventar se nota y resta mucho.',
+        'Para preguntas de comportamiento usá STAR: situación, tarea, acción y resultado, contando lo que hiciste vos y con un resultado concreto. Prepará historias sobre un incidente en producción, un desacuerdo técnico, un error propio y una mejora que impulsaste.',
+        'Llevá preguntas para la empresa: en qué versión de Java y Spring están y cómo actualizan, cómo despliegan, cómo manejan guardias e incidentes, cuánto código legacy hay y cómo se toman las decisiones de arquitectura.',
+        'Checklist final: probá cámara, micrófono y el editor; tené tu proyecto listo; repasá el stack de la búsqueda; dormí bien. Después anotá lo que no supiste y estudialo para la próxima.',
+      ],
+      checklist: [
+        'Pensar en voz alta y aclarar el alcance antes de resolver',
+        'Admitir lo que no sabés y explicar cómo lo averiguarías',
+        'Tener tres o cuatro historias preparadas con formato STAR',
+        'Llevar al menos tres preguntas para la empresa',
+        'Probar el entorno técnico antes de empezar',
+      ],
+    },
+  ],
+};

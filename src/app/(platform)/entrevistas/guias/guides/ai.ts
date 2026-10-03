@@ -1,0 +1,185 @@
+import type { InterviewGuide } from './types';
+
+export const aiGuide: InterviewGuide = {
+  track: 'ai',
+  summary:
+    'Todo lo que necesitás para una entrevista de AI engineering: LLMs, prompting, contexto, herramientas, RAG, evals, seguridad y agentes en producción.',
+  sections: [
+    {
+      id: 'la-entrevista',
+      title: 'Cómo es la entrevista',
+      body: [
+        'Una entrevista de AI engineering suele combinar tres partes: preguntas conceptuales sobre LLMs y agentes, una conversación de diseño de sistema (por ejemplo, "diseñá un asistente que responda sobre la documentación interna") y un ejercicio práctico, en vivo o como take-home. Cada vez más empresas agregan una charla sobre un proyecto propio: qué construiste, qué salió mal y cómo lo mediste.',
+        'En junior se espera que entiendas los conceptos base: qué es un token, la ventana de contexto, tool use, qué hace un buen prompt y por qué el modelo alucina. No hace falta que hayas puesto nada en producción, pero sí que hayas llamado a una API de un modelo y armado algo chico que funcione de punta a punta.',
+        'En semi-senior el foco pasa al cómo: diseñar herramientas, armar un RAG que recupere bien, obtener salidas estructuradas confiables, medir si un cambio de prompt mejora o empeora y bajar costo y latencia. Te van a pedir trade-offs concretos, no definiciones.',
+        'En senior evalúan criterio de arquitectura y de producto: cuándo usar un workflow y cuándo un agente autónomo, cómo evaluar tareas de varios pasos, cómo defenderte de prompt injection, cómo manejar un cambio de versión del modelo y cuánto cuesta el sistema por usuario. También pesa mucho si sabés decir cuándo no conviene usar un LLM.',
+      ],
+      checklist: [
+        'Contar en 2 minutos un proyecto con LLMs que hayas construido y qué aprendiste',
+        'Explicar qué cambia en lo que te preguntan según la seniority',
+        'Identificar si la empresa construye producto con IA o integra IA en un producto existente',
+        'Tener un ejemplo de un problema que no resolverías con un LLM',
+        'Saber qué stack y proveedores de modelos usa la empresa antes de entrar',
+      ],
+    },
+    {
+      id: 'fundamentos',
+      title: 'LLMs, prompting y contexto',
+      body: [
+        'Un LLM genera texto prediciendo el siguiente token a partir de todo lo que tiene en el contexto. De ahí salen casi todas sus propiedades: el costo y la latencia se miden en tokens de entrada y de salida (los de salida suelen ser más caros y más lentos), lo que no está en el contexto no existe para el modelo, y el knowledge cutoff marca hasta dónde llega lo que aprendió en el entrenamiento. Sabé explicar la temperatura, por qué el mismo prompt puede dar respuestas distintas y los límites del modelo: cálculo exacto, datos en tiempo real y decisiones que necesitan ser determinísticas y auditables.',
+        'Un buen prompt es un brief para un colega muy capaz que no conoce tu proyecto: contexto, objetivo, restricciones, formato de salida y criterio de éxito. El system prompt fija el rol y las reglas estables, los ejemplos (few-shot) muestran el formato mejor que cualquier descripción y separar instrucciones de datos con etiquetas como `<documento>` evita que el modelo confunda uno con otro. Las alucinaciones no se eliminan, se gestionan: dale las fuentes, permitile decir "no sé", pedile que cite y verificá la salida con algo determinístico. Pedirle que razone antes de responder mejora tareas de varios pasos, a cambio de más tokens y latencia.',
+        'Context engineering es decidir qué entra en la ventana de contexto en cada paso: instrucciones, historial, documentos recuperados, resultados de herramientas y memoria; el prompt es solo una parte. Más contexto no es mejor: la información irrelevante diluye la atención, sube el costo y puede contradecir lo importante. Cuando una tarea larga llena la ventana, las estrategias son compactar (resumir el historial), recortar resultados de herramientas viejos, guardar estado en archivos externos y delegar subtareas a subagentes que devuelven solo un resumen; sabé explicar qué se pierde en cada una.',
+        'Para que tu backend pueda usar la respuesta, pedí salidas estructuradas: la mayoría de los proveedores soporta structured outputs o tool use con JSON schema, que garantiza la forma del JSON. Aun así validá el contenido con Zod o Pydantic, porque un JSON válido puede tener valores absurdos, y definí qué hacés si falla: reintentar con el error, degradar o escalar a un humano. Suma puntos ordenar el contexto con lo estable al principio (system prompt, herramientas, documentos fijos) para aprovechar prompt caching, y lo variable al final.',
+      ],
+      checklist: [
+        'Explicar qué es un token y cómo impacta en costo, latencia y límites',
+        'Explicar temperatura, no determinismo y knowledge cutoff',
+        'Escribir un system prompt con rol, reglas, formato de salida y ejemplos',
+        'Dar tres técnicas concretas para reducir alucinaciones',
+        'Explicar la diferencia entre prompt engineering y context engineering',
+        'Describir estrategias para tareas que superan la ventana de contexto',
+        'Obtener JSON confiable con structured outputs y validarlo con un schema',
+      ],
+    },
+    {
+      id: 'herramientas',
+      title: 'Herramientas y MCP',
+      body: [
+        'Tool use es el mecanismo por el que el modelo pide ejecutar una función: le pasás nombre, descripción y JSON schema de parámetros, el modelo devuelve una llamada estructurada, tu código la ejecuta y le devuelve el resultado. El modelo nunca ejecuta nada por sí mismo; la responsabilidad de validar parámetros, permisos y efectos es tuya.',
+        'Diseñar herramientas es diseñar una API para un usuario muy particular. Funcionan mejor pocas herramientas con propósito claro que muchas parecidas; nombres y descripciones que digan cuándo usarlas y cuándo no; parámetros con tipos estrictos y enums; respuestas cortas y con la información que el modelo necesita para el siguiente paso; y errores accionables ("el campo `fecha` debe ser ISO 8601") en vez de stack traces. Las herramientas con efectos irreversibles merecen confirmación o un humano en el medio.',
+        'MCP (Model Context Protocol) es un estándar abierto para exponer herramientas, recursos y prompts a cualquier cliente compatible mediante un servidor MCP. Evita reescribir la misma integración para cada agente o proveedor. Sabé explicar la diferencia entre servidores locales (stdio) y remotos (HTTP con autenticación, típicamente OAuth), y los riesgos: un servidor de terceros puede devolver contenido malicioso o pedir más permisos de los necesarios.',
+        'Cuando una herramienta falla, el agente tiene que enterarse con un mensaje útil para reintentar o cambiar de estrategia, y vos tenés que poner límites: timeouts, reintentos acotados, idempotencia en operaciones con efectos y un máximo de pasos. Un error común es devolver un error genérico que lleva al modelo a repetir la misma llamada en loop.',
+      ],
+      checklist: [
+        'Explicar el ciclo completo de tool use entre el modelo y tu código',
+        'Diseñar la definición de una herramienta con descripción, schema y errores claros',
+        'Explicar qué es MCP, qué expone un servidor y cuándo conviene usarlo',
+        'Describir cómo limitar lo que un agente puede hacer con sus herramientas',
+        'Manejar fallas de herramientas sin que el agente entre en loop',
+      ],
+    },
+    {
+      id: 'rag',
+      title: 'RAG y búsqueda',
+      body: [
+        'RAG (retrieval-augmented generation) es recuperar información relevante y ponerla en el contexto antes de generar la respuesta. Tiene dos fases: indexación (cargar documentos, partirlos en chunks, generar embeddings y guardarlos en un índice) y consulta (buscar los chunks relevantes para la pregunta, opcionalmente rerankearlos y armar el prompt con ellos). Un embedding es un vector que representa el significado de un texto, de modo que textos parecidos quedan cerca.',
+        'La calidad de un RAG se decide sobre todo en la recuperación. El tamaño de chunk es un trade-off: chunks chicos son precisos pero pierden contexto, chunks grandes traen ruido; respetar la estructura del documento (secciones, títulos) y agregar metadatos suele rendir más que ajustar números. La búsqueda híbrida combina vectores con búsqueda por palabras clave (BM25), que es clave para códigos, nombres propios y siglas. Un reranker reordena los candidatos con un modelo más preciso y permite traer muchos y quedarte con los mejores.',
+        'Sabé distinguir cuándo usar RAG, prompting o fine-tuning: RAG para conocimiento que cambia o es privado y necesita citas; prompting cuando el conocimiento entra en el contexto; fine-tuning para estilo, formato o tareas muy específicas, no para enseñar hechos nuevos. Con ventanas de contexto grandes, a veces lo más simple es meter todo el documento; mencioná que lo evaluaste en vez de asumirlo.',
+        'Un candidato fuerte evalúa la recuperación por separado de la generación: si el chunk correcto no llegó al contexto, ningún prompt lo arregla. También piensa en permisos (que un usuario no recupere documentos que no puede ver), en actualizar el índice cuando cambian los documentos y en mostrar las fuentes al usuario.',
+      ],
+      checklist: [
+        'Explicar las fases de indexación y consulta de un RAG',
+        'Justificar un tamaño de chunk y una estrategia de chunking',
+        'Explicar búsqueda híbrida y reranking y cuándo agregarlos',
+        'Decidir entre RAG, prompting y fine-tuning con argumentos',
+        'Medir recall de la recuperación separado de la calidad de la respuesta',
+        'Respetar permisos de acceso en los documentos recuperados',
+      ],
+    },
+    {
+      id: 'agentes',
+      title: 'Arquitectura de agentes',
+      body: [
+        'Un agente es un modelo que trabaja en loop: recibe un objetivo, decide una acción, ejecuta una herramienta, observa el resultado y repite hasta terminar o necesitar a un humano. Antes de construir uno, preguntate si alcanza con un workflow: pasos fijos orquestados por código (prompt chaining, routing, paralelización) son más baratos, predecibles y fáciles de testear. Usá un agente autónomo cuando los pasos no se pueden prever y el costo de un error es manejable.',
+        'Los patrones que conviene conocer son prompt chaining (cada paso procesa la salida del anterior, con validaciones en el medio), routing (clasificar la entrada y mandarla al flujo adecuado), evaluator-optimizer (un modelo genera y otro critica) y orquestador-trabajadores (un agente divide la tarea y delega subtareas a otros que trabajan con contexto propio). Los sistemas multi-agente paralelizan y aíslan contexto, pero multiplican el costo, son más difíciles de debuggear y pueden perder información en cada traspaso.',
+        'Para tareas largas y memoria, separá lo que vive en el contexto de lo que vive afuera: archivos de progreso, una base de datos de hechos sobre el usuario o un índice que el agente consulta con herramientas. La memoria de largo plazo necesita reglas sobre qué guardar, cuándo olvidar y cómo corregir algo que quedó mal, y el usuario debería poder verla y borrarla.',
+        'Siempre poné límites: máximo de pasos o de tokens por tarea, timeouts, detección de acciones repetidas y un punto de salida hacia un humano. El human-in-the-loop se diseña según el riesgo: aprobación previa para acciones irreversibles o caras, revisión posterior para las reversibles, y nada para lecturas. En entrevistas suma mucho dibujar el loop y marcar dónde está cada control.',
+      ],
+      checklist: [
+        'Explicar el loop de un agente y sus condiciones de corte',
+        'Decidir entre un workflow predefinido y un agente autónomo con un ejemplo',
+        'Describir prompt chaining, routing y orquestador-trabajadores',
+        'Explicar ventajas y riesgos de un sistema multi-agente',
+        'Diseñar memoria de largo plazo y su gestión',
+        'Ubicar los puntos de human-in-the-loop según el riesgo de cada acción',
+      ],
+    },
+    {
+      id: 'evals',
+      title: 'Evals',
+      body: [
+        'Sin evals no sabés si un cambio de prompt, de modelo o de herramienta mejora o empeora el sistema; solo tenés impresiones. Una eval es un conjunto de casos de entrada con un criterio para juzgar la salida, que corrés de forma repetible. Pensalo como la suite de tests de un sistema no determinístico: medís tasas, no pasa o falla de un solo caso.',
+        'Los criterios van de más a menos confiables: chequeos determinísticos (el JSON valida, la respuesta contiene el dato correcto, el agente llamó a la herramienta esperada), comparación con una respuesta de referencia y LLM-as-a-judge para lo subjetivo. Un juez LLM necesita una rúbrica concreta, preferir escalas simples o comparaciones de a pares, y calibrarse contra juicios humanos; tiene sesgos de posición, de longitud y a favor de su propio estilo.',
+        'Sin usuarios todavía, armá el dataset a mano: casos típicos, bordes y adversariales escritos con gente que conoce el dominio, más casos sintéticos generados y revisados. Con usuarios, sumá casos reales que fallaron en producción. Los agentes de varios pasos se evalúan mirando el resultado final (¿quedó resuelta la tarea?) y también la trayectoria: pasos, herramientas usadas, costo y tiempo, porque hay muchos caminos válidos.',
+        'Lo que buscan en senior es que las evals estén en el flujo de trabajo: corren en CI ante cambios de prompt, se usan para comparar modelos antes de migrar y se alimentan de producción. Un error típico es optimizar contra un dataset chico hasta sobreajustarlo, o tener una sola métrica agregada que esconde regresiones en un segmento.',
+      ],
+      checklist: [
+        'Explicar por qué un cambio de prompt sin evals es una apuesta',
+        'Armar un dataset inicial de evals sin usuarios reales',
+        'Combinar chequeos determinísticos con LLM-as-a-judge',
+        'Listar los sesgos de un juez LLM y cómo calibrarlo',
+        'Evaluar un agente por resultado y por trayectoria',
+        'Integrar evals en CI y en la migración de versiones de modelo',
+      ],
+    },
+    {
+      id: 'seguridad',
+      title: 'Seguridad y guardrails',
+      body: [
+        'Prompt injection es cuando instrucciones maliciosas llegan al modelo a través de contenido que procesa: un mail, una página web, un documento recuperado o la respuesta de una herramienta. No hay una defensa perfecta, así que se diseña asumiendo que va a pasar: separar instrucciones de datos, mínimo privilegio en las herramientas, confirmación humana para acciones sensibles y validación determinística de todo lo que el modelo quiere hacer.',
+        'La "lethal trifecta" resume el riesgo: un agente con acceso a datos privados, expuesto a contenido no confiable y con capacidad de comunicarse hacia afuera puede ser manipulado para exfiltrar datos. Si un sistema necesita las tres, cortá alguna en el flujo concreto: sin salida a internet mientras procesa contenido externo, allowlists de dominios o aprobación humana antes de enviar.',
+        'Los guardrails son controles alrededor del modelo: validar entrada (temas fuera de alcance, datos personales), validar salida (schema, contenido, políticas) y restringir acciones (permisos, límites de monto, allowlists). Nunca confíes ciegamente en la salida en tu backend: tratala como input de usuario, sin ejecutarla, sin interpolarla en SQL y sin renderizarla como HTML sin sanitizar. Si el agente ejecuta código, va en un sandbox: contenedor o microVM sin credenciales, con red restringida, límites de CPU, memoria y tiempo, y sistema de archivos efímero.',
+        'Con datos personales, mandá al modelo solo lo necesario, anonimizá o enmascará cuando puedas, revisá la retención y el uso para entrenamiento del proveedor, y cuidá que los logs y traces no se conviertan en una copia sin control de esos datos. En entrevistas, nombrar estas capas con un ejemplo concreto vale más que listar herramientas.',
+      ],
+      checklist: [
+        'Explicar prompt injection directa e indirecta con un ejemplo',
+        'Explicar la lethal trifecta y cómo romperla',
+        'Describir guardrails de entrada, salida y acciones',
+        'Diseñar un sandbox para un agente que ejecuta código',
+        'Explicar cómo manejar datos personales en prompts, logs y traces',
+      ],
+    },
+    {
+      id: 'produccion',
+      title: 'Producción, costos y observabilidad',
+      body: [
+        'Llevar un agente a producción es tratarlo como cualquier sistema distribuido con una dependencia lenta, cara y no determinística. Necesitás timeouts, reintentos con backoff ante rate limits y errores del proveedor, fallbacks (otro modelo, una respuesta degradada o un humano), límites de gasto por usuario y despliegues graduales con feature flags. El streaming mejora mucho la latencia percibida aunque no cambie la total.',
+        'Para bajar costo y latencia: usá el modelo más chico que pase tus evals en cada paso (un modelo rápido para clasificar o rutear y uno potente para razonar), aprovechá prompt caching con un prefijo estable, recortá el contexto, limitá `max_tokens`, cacheá respuestas repetidas y usá batch para lo que no es interactivo. Estimá el costo por tarea multiplicando pasos promedio por tokens por paso, y medilo en producción porque los agentes varían mucho.',
+        'La observabilidad de un agente es tracing de cada ejecución: prompts y versiones, modelo, llamadas a herramientas con parámetros y resultados, tokens, costo, latencia por paso, errores y el resultado final, más feedback del usuario. Sin eso no podés reproducir un caso que salió mal ni convertirlo en un caso de eval. Hay plataformas específicas y también podés usar OpenTelemetry con convenciones para GenAI.',
+        'Los modelos cambian y se deprecan. Versioná prompts junto con el código, fijá versiones concretas del modelo, corré las evals antes de migrar, hacé rollout gradual comparando métricas y tené rollback. Un senior también sabe hablar de unit economics: cuánto cuesta una tarea resuelta, qué margen deja y qué pasa si el uso crece diez veces.',
+      ],
+      checklist: [
+        'Listar los controles para poner un agente en producción de forma confiable',
+        'Proponer cinco formas de reducir costo y latencia',
+        'Estimar el costo por tarea de un agente',
+        'Definir qué registrar en el tracing de un agente',
+        'Planificar la migración a una nueva versión de modelo',
+        'Explicar cómo funciona el prompt caching y qué invalida la caché',
+      ],
+    },
+    {
+      id: 'ejercicios',
+      title: 'Ejercicios prácticos',
+      body: [
+        'Los ejercicios más comunes son construir un agente chico con dos o tres herramientas (buscar en una base, consultar una API, ejecutar una acción), un RAG sobre un conjunto de documentos o un pipeline de extracción que devuelva JSON validado. En vivo suelen durar entre 45 y 90 minutos; como take-home, entre unas horas y un fin de semana. Casi siempre podés usar el SDK del proveedor y un agente de código, y te van a preguntar por qué tomaste cada decisión.',
+        'Arrancá por algo que funcione de punta a punta con el caso más simple, y después iterá. Separá el prompt del código, validá las salidas con un schema, manejá errores de herramientas y poné un límite de pasos. Si podés, agregá un set chico de evals (aunque sean diez casos con chequeos simples): es lo que más diferencia a un candidato fuerte, porque demuestra que sabés medir.',
+        'En el README de un take-home explicá cómo correrlo, las decisiones de diseño, lo que dejaste afuera y por qué, los riesgos (prompt injection, costos) y cómo lo llevarías a producción. Un error frecuente es sobrediseñar con frameworks y multi-agente algo que se resolvía con un workflow de dos pasos; otro es no mostrar ni un solo caso donde el sistema falla.',
+        'Practicá también diseño de sistema en pizarra: un agente de soporte que ejecuta reembolsos, un asistente sobre documentación interna o un clasificador de tickets. Recorré requisitos, flujo, herramientas, contexto, evals, seguridad, costos y observabilidad, en ese orden, y pedí los números que necesitás (volumen, latencia tolerada, costo de un error).',
+      ],
+      checklist: [
+        'Construir un agente con tool use y límite de pasos usando la API de un modelo',
+        'Armar un RAG mínimo con chunking, embeddings y citas',
+        'Agregar diez casos de eval a un proyecto propio',
+        'Escribir un README que explique decisiones, límites y próximos pasos',
+        'Diseñar en pizarra un agente que ejecuta acciones reales con controles de riesgo',
+      ],
+    },
+    {
+      id: 'dia-de-la-entrevista',
+      title: 'El día de la entrevista',
+      body: [
+        'Pensá en voz alta: el entrevistador evalúa cómo razonás, no solo el resultado. Antes de diseñar, hacé preguntas de aclaración (quién lo usa, qué volumen, qué pasa si se equivoca, qué datos hay) y explicitá los supuestos. Si no sabés algo, decilo y contá cómo lo averiguarías o cómo lo probarías; inventar en una entrevista de IA es especialmente mal visto, porque es justo lo que intentás evitar en tus sistemas.',
+        'Para las preguntas de comportamiento usá STAR: situación, tarea, acción y resultado, con foco en lo que hiciste vos y en un resultado medible. Prepará historias sobre un sistema con LLMs que no funcionó como esperabas, una decisión de costo contra calidad, un incidente o regresión y una vez que convenciste al equipo de no usar IA para algo.',
+        'Llevá preguntas para la empresa: cómo evalúan sus sistemas hoy, qué modelos y proveedores usan y por qué, cómo manejan seguridad y datos personales, cuánto del producto depende de IA, qué tan madura está su observabilidad y quién decide cuándo algo está listo para producción. Las respuestas te dicen mucho sobre el nivel de la práctica.',
+        'Checklist final: repasá los conceptos de cada sección de esta guía, tené abierto un proyecto propio para mostrar, probá tu entorno (API key de prueba, editor, conexión) si hay ejercicio en vivo, y prepará una respuesta corta a "¿cómo te mantenés al día?" con fuentes concretas.',
+      ],
+      checklist: [
+        'Hacer preguntas de aclaración antes de diseñar o codear',
+        'Decir "no sé" y explicar cómo lo averiguarías',
+        'Tener tres historias STAR preparadas sobre proyectos con IA',
+        'Llevar cinco preguntas para la empresa',
+        'Tener el entorno listo y un proyecto propio para mostrar',
+      ],
+    },
+  ],
+};
