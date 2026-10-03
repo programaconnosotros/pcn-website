@@ -9,6 +9,7 @@ import { OsBridge } from '@/components/os/os-bridge';
 import { OsGate } from '@/components/os/os-gate';
 import { PcnOs } from '@/components/os/pcn-os';
 import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
+import { PullToRefresh } from '@/components/pull-to-refresh';
 import { findSession, type SessionUser } from '@/lib/session';
 
 const PlatformLayout = async ({
@@ -55,6 +56,7 @@ const PlatformLayout = async ({
             </ConsoleInterceptor>
           </SidebarProvider>
           <ClassicGlobalSearch />
+          <PullToRefresh />
         </OsGate>
       </div>
     </>
