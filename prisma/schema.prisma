@@ -170,6 +170,9 @@ model Event {
   isOnline                Boolean   @default(false)
   streamingUrl            String?
   shortcut                String? // Slug para URL corta de flyers (ej: "cowork" → /cowork). Reutilizable entre eventos.
+  // Foto de portada del memorial que eligió un admin. Sin elegir, la portada alterna fotos
+  // horizontales del evento al azar.
+  coverPhotoId            String?   @unique
   deletedAt               DateTime? // Eliminación lógica
   // Usuario que creó el evento. Null en eventos cargados antes de que se guardara.
   createdById             String?
@@ -177,6 +180,7 @@ model Event {
   updatedAt               DateTime  @updatedAt
 
   createdBy       User?                @relation("UserCreatedEvents", fields: [createdById], references: [id], onDelete: SetNull)
+  coverPhoto      GalleryItem?         @relation("EventCoverPhoto", fields: [coverPhotoId], references: [id], onDelete: SetNull)
   organizers      EventOrganizer[]
   galleryItems    GalleryItem[]
   registrations   EventRegistration[]
@@ -238,6 +242,7 @@ model GalleryItem {
   legacyId        Int?            @unique
 
   event      Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  coverOf    Event?           @relation("EventCoverPhoto")
   uploadedBy User?            @relation("UserUploadedGalleryItems", fields: [uploadedById], references: [id], onDelete: SetNull)
   tags       GalleryItemTag[]
 

@@ -10,10 +10,11 @@ import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { conversations } from '@/data/whatsapp-conversations';
-import { getEventMemories, type EventMemoryItem } from '@/lib/gallery';
+import { getEventCover, getEventMemories } from '@/lib/gallery';
 import { getIdentityMap } from '@/lib/identity-links';
 import prisma from '@/lib/prisma';
 import { MemoryConversations } from './memory-conversations';
+import { MemoryCoverPicker } from './memory-cover-picker';
 import { MemoryHero } from './memory-hero';
 import { MemoryMosaic } from './memory-mosaic';
 import { MemoryTalks } from './memory-talks';
@@ -26,16 +27,6 @@ const MEMORY_PREVIEW = 30;
 const PEOPLE_PREVIEW = 24;
 
 const plural = (count: number, one: string, many: string) => (count === 1 ? one : many);
-
-// The hero's photo: the first landscape photo of the night, or any photo at all.
-const pickCover = (items: EventMemoryItem[]) => {
-  const photos = items.filter((item) => item.kind === 'PHOTO');
-  return (
-    photos.find((item) => item.width && item.height && item.width / item.height > 1.2) ??
-    photos[0] ??
-    null
-  );
-};
 
 const linkRowClassName =
   'flex items-center justify-between gap-2 py-1 font-mono text-xs text-muted-foreground hover:text-pcnGreen';
@@ -56,8 +47,9 @@ export async function PastEventMemory({
 }) {
   const isExternalEvent = !!event.externalRegistrationUrl;
   const eventConversations = conversations.filter((c) => c.eventId === event.id);
-  const [memories, talks, registrations, catalogNumber, profiles] = await Promise.all([
+  const [memories, cover, talks, registrations, catalogNumber, profiles] = await Promise.all([
     getEventMemories(event.id, MEMORY_PREVIEW + 1),
+    getEventCover(event.id, event.coverPhotoId),
     fetchPublicTalks(event.id),
     isExternalEvent
       ? Promise.resolve([])
@@ -76,8 +68,12 @@ export async function PastEventMemory({
     .reduce((sum, row) => sum + row._count, 0);
   const totalRegistrations = registrations.reduce((sum, row) => sum + row._count, 0);
 
-  const cover = pickCover(memories.items);
-  const album = memories.items.filter((item) => item !== cover).slice(0, MEMORY_PREVIEW);
+  // Without landscape photos, any photo of the night still beats the flyer.
+  const covers = cover.covers.length > 0 ? cover.covers : cover.photos.slice(0, 1);
+  // A chosen cover opens the page, so the album doesn't repeat it.
+  const album = memories.items
+    .filter((item) => item.id !== cover.chosenId)
+    .slice(0, MEMORY_PREVIEW);
   const totalItems = memories.photoCount + memories.videoCount;
   const orderedTalks = [...talks].sort((a, b) => a.order - b.order);
   const place = event.isOnline
@@ -120,9 +116,23 @@ export async function PastEventMemory({
           date={event.date}
           place={place}
           catalogNumber={catalogNumber}
-          cover={cover?.fullUrl ?? null}
+          covers={covers.map((photo) => photo.fullUrl)}
           flyer={event.flyerImages[0]}
           stats={stats}
+          coverPicker={
+            isAdmin && (
+              <MemoryCoverPicker
+                eventId={event.id}
+                chosenId={cover.chosenId}
+                photos={cover.photos.map(({ id, thumbUrl, width, height }) => ({
+                  id,
+                  thumbUrl,
+                  width,
+                  height,
+                }))}
+              />
+            )
+          }
         />
 
         {(totalItems > 0 || isAdmin) && (
@@ -152,7 +162,11 @@ export async function PastEventMemory({
             }
           >
             {album.length > 0 ? (
-              <MemoryMosaic eventId={event.id} items={album} total={totalItems - (cover ? 1 : 0)} />
+              <MemoryMosaic
+                eventId={event.id}
+                items={album}
+                total={totalItems - (cover.chosenId ? 1 : 0)}
+              />
             ) : (
               totalItems === 0 && (
                 <p className="font-mono text-xs text-muted-foreground">
@@ -275,7 +289,7 @@ export async function PastEventMemory({
             )}
 
             {/* The hero already shows the flyer when there's no photo to open with. */}
-            {cover && event.flyerImages[0] && (
+            {covers.length > 0 && event.flyerImages[0] && (
               <EventSection title="el flyer">
                 <FlyerFrame
                   src={event.flyerImages[0]}

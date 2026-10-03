@@ -1,46 +1,52 @@
+import type { ReactNode } from 'react';
 import { LocalShortDate } from '@/components/ui/local-date-time';
+import { MemoryCover } from './memory-cover';
 
 type Stat = { value: number; label: string };
 
 /**
- * The opening of a past event's page: a wide photo of the night (or, without photos, its flyer
- * over a blurred copy of itself) with the catalog number, name, date, place and what it left.
+ * The opening of a past event's page: a wide photo of the night, or several taking turns (or,
+ * without photos, its flyer over a blurred copy of itself) with the catalog number, name, date,
+ * place and what it left.
  */
 export function MemoryHero({
   name,
   date,
   place,
   catalogNumber,
-  cover,
+  covers,
   flyer,
   stats,
+  coverPicker,
 }: {
   name: string;
   date: Date;
   place: string | null;
   catalogNumber: number;
-  /** A landscape photo of the event, shown full bleed. */
-  cover: string | null;
+  /** Landscape photos of the event, shown full bleed; with more than one they take turns. */
+  covers: string[];
   flyer: string | undefined;
   stats: Stat[];
+  /** The admin's control to choose the cover. */
+  coverPicker?: ReactNode;
 }) {
-  const backdrop = cover ?? flyer;
+  const cover = covers.length > 0;
 
   return (
     <header className="relative isolate flex min-h-[18rem] overflow-hidden bg-black sm:min-h-[22rem] md:aspect-[21/9] md:min-h-0">
-      {backdrop && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={backdrop}
-          alt=""
-          aria-hidden
-          fetchPriority="high"
-          className={
-            cover
-              ? 'absolute inset-0 -z-10 h-full w-full object-cover'
-              : 'absolute inset-0 -z-10 h-full w-full scale-125 object-cover opacity-50 blur-2xl'
-          }
-        />
+      {cover ? (
+        <MemoryCover photos={covers} />
+      ) : (
+        flyer && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={flyer}
+            alt=""
+            aria-hidden
+            fetchPriority="high"
+            className="absolute inset-0 -z-10 h-full w-full scale-125 object-cover opacity-50 blur-2xl"
+          />
+        )
       )}
       <span
         aria-hidden
@@ -50,6 +56,8 @@ export function MemoryHero({
         aria-hidden
         className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-transparent"
       />
+
+      {coverPicker}
 
       <div className="flex w-full items-end gap-6 p-4 sm:p-6">
         <div className="flex min-w-0 flex-1 flex-col gap-2 text-white">

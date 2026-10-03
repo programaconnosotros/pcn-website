@@ -6,6 +6,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { LocalDate } from '@/components/ui/local-date-time';
 import { PhotoActionsBar } from '@/components/photo-gallery/photo-actions-bar';
+import { EventCoverKey } from '@/components/photo-gallery/event-cover-key';
 import { PhotoPeople } from '@/components/photo-gallery/photo-people';
 import { PhotoKeyboardNav } from '@/components/photo-gallery/photo-keyboard-nav';
 import {
@@ -159,6 +160,13 @@ export default async function GalleryItemPage(props: Props) {
                   <Pencil className="size-3.5" />
                   <span className="sr-only">Editar o eliminar</span>
                 </Link>
+              )}
+              {isAdmin && !isVideo && photo.event && (
+                <EventCoverKey
+                  eventId={photo.event.id}
+                  photoId={photo.id}
+                  isCover={photo.event.coverPhotoId === photo.id}
+                />
               )}
               <PhotoActionsBar photo={photo} />
             </>

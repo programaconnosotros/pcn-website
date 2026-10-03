@@ -98,6 +98,7 @@ export async function getGalleryItem(id: string) {
           city: true,
           latitude: true,
           longitude: true,
+          coverPhotoId: true,
         },
       },
       tags: {
@@ -178,6 +179,41 @@ export async function getEventMemories(eventId: string, take: number) {
 
 export type EventMemories = Awaited<ReturnType<typeof getEventMemories>>;
 export type EventMemoryItem = EventMemories['items'][number];
+
+// Wide enough to fill the memorial's header without an awkward crop.
+const COVER_MIN_RATIO = 1.3;
+const isLandscape = (item: { width: number | null; height: number | null }) =>
+  !!item.width && !!item.height && item.width / item.height >= COVER_MIN_RATIO;
+
+/**
+ * The photos for a past event's header: the one an admin chose, or else up to `take` of its
+ * landscape photos in random order (the header cycles through them). `photos` lists every photo
+ * of the event, in the order they were taken, for the admin's cover picker.
+ */
+export async function getEventCover(eventId: string, coverPhotoId: string | null, take = 6) {
+  const photos = (
+    await prisma.galleryItem.findMany({
+      where: { ...visibleGalleryItem, eventId, kind: 'PHOTO' },
+      select: { id: true, src: true, thumbSrc: true, width: true, height: true },
+      orderBy: [{ takenAt: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+    })
+  ).map(signGalleryItem);
+
+  const chosen = coverPhotoId ? photos.find((photo) => photo.id === coverPhotoId) : undefined;
+  const landscape = photos.filter(isLandscape);
+  for (let i = landscape.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [landscape[i], landscape[j]] = [landscape[j], landscape[i]];
+  }
+
+  return {
+    chosenId: chosen?.id ?? null,
+    covers: chosen ? [chosen] : landscape.slice(0, take),
+    photos,
+  };
+}
+
+export type EventCover = Awaited<ReturnType<typeof getEventCover>>;
 
 /** The most recently uploaded photos and videos, newest upload first. */
 export const listLatestGalleryItems = async (take: number) =>
