@@ -6,7 +6,7 @@ import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
 import type { Metadata } from 'next';
 import { AREAS } from '../questions/types';
-import { orderedGuides } from './guides';
+import { crossTrackGuides, orderedGuides } from './guides';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -44,24 +44,49 @@ const GuiasPage = () => {
   const multiTrackAreas = AREAS.filter(
     (area) => items.filter((item) => item.area === area.id).length > 1,
   );
+  const simulatorCta = {
+    href: '/entrevistas',
+    hint: '¿ya estudiaste? ponete a prueba',
+    label: 'simularEntrevista();',
+  };
   const groups: GuideGroup[] = [
+    {
+      label: 'Para cualquier entrevista',
+      guides: crossTrackGuides.map(({ id, label, stack, guide }) => ({
+        track: id,
+        label,
+        fullLabel: label,
+        stack,
+        summary: guide.summary,
+        sectionIds: guide.sections.map((section) => section.id),
+      })),
+      cta: {
+        href: '/entrevistas/live-coding',
+        hint: 'enunciados y leetcode por tecnología',
+        label: 'practicarLiveCoding();',
+      },
+    },
     ...multiTrackAreas.map((area) => ({
       label: area.label,
       guides: items.filter((item) => item.area === area.id),
+      cta: simulatorCta,
     })),
     {
       label: 'Más áreas',
       guides: items.filter((item) => !multiTrackAreas.some((area) => area.id === item.area)),
+      cta: simulatorCta,
     },
   ];
-  const sectionCount = items.reduce((count, item) => count + item.sectionIds.length, 0);
+  const sectionCount = groups
+    .flatMap((group) => group.guides)
+    .reduce((count, item) => count + item.sectionIds.length, 0);
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mb-14 mt-4">
         <PageTitle
           path="entrevistas/guias"
-          meta={`${items.length} guías · ${sectionCount} secciones`}
+          meta={`${items.length + crossTrackGuides.length} guías · ${sectionCount} secciones`}
           action={<InterviewsTabs active="guias" />}
         />
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">

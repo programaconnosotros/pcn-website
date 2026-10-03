@@ -20,10 +20,12 @@ interface InterviewGuideProps {
   guide: Guide;
   label: string;
   stack: string;
+  /** Where to put the guide into practice: the simulator, or live coding exercises. */
+  practice: { href: string; label: string };
 }
 
 /** A preparation guide read section by section; each section can be marked as read. */
-export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
+export function InterviewGuide({ guide, label, stack, practice }: InterviewGuideProps) {
   const marks = useContentMarks('interview-guide');
   const readIds = marks.ids('read');
   const isRead = (sectionId: string) => readIds.has(guideSectionKey(guide.track, sectionId));
@@ -57,10 +59,10 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
             <div className="flex items-center gap-2">
               <CopyLinkButton path={`/entrevistas/guias/${guide.track}`} />
               <Link
-                href={`/entrevistas?tipo=${guide.track}`}
+                href={practice.href}
                 className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
               >
-                simular entrevista
+                {practice.label}
                 <ArrowRight className="size-3.5" />
               </Link>
             </div>
@@ -186,10 +188,10 @@ export function InterviewGuide({ guide, label, stack }: InterviewGuideProps) {
               <div className="mt-6 flex flex-wrap items-center gap-3 font-mono text-xs">
                 <span className="text-pcnGreen">guía completa. ahora ponete a prueba:</span>
                 <Link
-                  href={`/entrevistas?tipo=${guide.track}`}
+                  href={practice.href}
                   className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
                 >
-                  simular entrevista
+                  {practice.label}
                   <ArrowRight className="size-3.5" />
                 </Link>
               </div>

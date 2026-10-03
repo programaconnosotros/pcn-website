@@ -5,9 +5,10 @@ import Link from 'next/link';
 const TABS = [
   { id: 'simulador', label: 'simulador', href: '/entrevistas' },
   { id: 'guias', label: 'guías', href: '/entrevistas/guias' },
+  { id: 'live-coding', label: 'live coding', href: '/entrevistas/live-coding' },
 ] as const;
 
-/** Switches between the interview simulator and the preparation guides. */
+/** Switches between the interview simulator, the preparation guides and live coding practice. */
 export const InterviewsTabs = ({ active }: { active: (typeof TABS)[number]['id'] }) => (
   <nav aria-label="Entrevistas" className={cn(tabsListClassName, 'h-8')}>
     {TABS.map((tab) => (

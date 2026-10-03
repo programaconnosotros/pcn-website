@@ -1,8 +1,7 @@
 import { InterviewGuide } from '@/components/interviews/interview-guide';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { TRACKS } from '../../questions/types';
-import { getInterviewGuide } from '../guides';
+import { allGuideIds, getGuideMeta } from '../guides';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -10,15 +9,15 @@ type Props = { params: Promise<{ guia: string }> };
 
 export const dynamicParams = false;
 
-export const generateStaticParams = () => TRACKS.map(({ id }) => ({ guia: id }));
+export const generateStaticParams = () => allGuideIds.map((id) => ({ guia: id }));
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { guia } = await props.params;
-  const guide = getInterviewGuide(guia);
-  const track = TRACKS.find(({ id }) => id === guia);
-  if (!guide || !track) return { title: 'Guía no encontrada' };
+  const meta = getGuideMeta(guia);
+  if (!meta) return { title: 'Guía no encontrada' };
 
-  const title = `Guía de entrevista: ${track.label}`;
+  const { guide } = meta;
+  const title = `Guía de entrevista: ${meta.label}`;
   return {
     title,
     description: guide.summary,
@@ -39,14 +38,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 const GuiaPage = async (props: Props) => {
   const { guia } = await props.params;
-  const guide = getInterviewGuide(guia);
-  const track = TRACKS.find(({ id }) => id === guia);
-  if (!guide || !track) notFound();
+  const meta = getGuideMeta(guia);
+  if (!meta) notFound();
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <InterviewGuide guide={guide} label={track.label} stack={track.stack} />
+        <InterviewGuide
+          guide={meta.guide}
+          label={meta.label}
+          stack={meta.stack}
+          practice={meta.practice}
+        />
       </div>
     </div>
   );

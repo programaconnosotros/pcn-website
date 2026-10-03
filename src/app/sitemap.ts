@@ -24,6 +24,7 @@ const STATIC_ROUTES = [
   '/herramientas',
   '/entrevistas',
   '/entrevistas/guias',
+  '/entrevistas/live-coding',
   '/proyectos',
   '/consejos',
   '/testimonios',
@@ -75,8 +76,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const courses = [...communityCourses, ...externalCourses].map((course) => ({
     url: `${SITE_URL}/cursos/${course.id}`,
   }));
-  const interviewGuides = TRACKS.map((track) => ({
-    url: `${SITE_URL}/entrevistas/guias/${track.id}`,
+  const interviewGuides = [...TRACKS.map((track) => track.id), 'live-coding'].map((guide) => ({
+    url: `${SITE_URL}/entrevistas/guias/${guide}`,
   }));
 
   return [

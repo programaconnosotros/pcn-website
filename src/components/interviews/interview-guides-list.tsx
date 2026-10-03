@@ -1,7 +1,6 @@
 'use client';
 
-import type { InterviewTrack } from '@/app/(platform)/entrevistas/questions/types';
-import { guideSectionKey } from '@/app/(platform)/entrevistas/guias/guides/types';
+import { guideSectionKey, type GuideId } from '@/app/(platform)/entrevistas/guias/guides/types';
 import { GuideProgressBar } from '@/components/interviews/guide-progress-bar';
 import { InterviewsLayout, InterviewsPanel } from '@/components/interviews/interviews-layout';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -11,7 +10,7 @@ import { ArrowRight, BookOpen, Terminal } from 'lucide-react';
 import Link from 'next/link';
 
 export interface GuideListItem {
-  track: InterviewTrack;
+  track: GuideId;
   label: string;
   /** Full name, including the area for tracks that share one (`Frontend · iOS`). */
   fullLabel: string;
@@ -23,6 +22,8 @@ export interface GuideListItem {
 export interface GuideGroup {
   label: string;
   guides: GuideListItem[];
+  /** Fills the two-column grid's hole when the group has an odd number of guides. */
+  cta: { href: string; hint: string; label: string };
 }
 
 const GuideCell = ({ guide, read }: { guide: GuideListItem; read: number }) => {
@@ -75,10 +76,9 @@ export function InterviewGuidesList({ groups }: { groups: GuideGroup[] }) {
 
   return (
     <InterviewsLayout
-      main={groups.map((group, index) => {
-        // An odd number of guides leaves a hole in the two-column grid; a shortcut to the
-        // simulator fills it.
-        const fillsHole = group.guides.length % 2 === 1 && index === groups.length - 1;
+      main={groups.map((group) => {
+        // An odd number of guides leaves a hole in the two-column grid; a shortcut fills it.
+        const fillsHole = group.guides.length % 2 === 1;
         return (
           <section key={group.label} className="mb-6">
             <h2 className="mb-2 font-mono text-xs text-pcnGreen-500"># {group.label}</h2>
@@ -92,17 +92,18 @@ export function InterviewGuidesList({ groups }: { groups: GuideGroup[] }) {
               ))}
               {fillsHole && (
                 <Link
-                  href="/entrevistas"
+                  href={group.cta.href}
                   className={cn(
                     ruledCellClassName,
                     'group flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono max-md:hidden',
                   )}
                 >
                   <span className="text-[11px] text-muted-foreground">
-                    <span className="text-pcnGreen-500">&gt; </span>ya estudiaste? ponete a prueba
+                    <span className="text-pcnGreen-500">&gt; </span>
+                    {group.cta.hint}
                   </span>
                   <span className="flex items-center gap-1.5 text-sm font-semibold text-pcnGreen [text-shadow:0_0_10px_rgba(4,244,190,0.5)]">
-                    simularEntrevista();
+                    {group.cta.label}
                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </Link>

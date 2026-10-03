@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-03',
     area: 'entrevistas',
+    title: 'Práctica de live coding',
+    description:
+      'Nueva sección de live coding en entrevistas: enunciados como los de una entrevista real para resolver por tu cuenta y problemas de LeetCode recomendados para cada tecnología y seniority, más una guía de cómo encarar un live coding. Marcá lo que ya resolviste para seguir tu progreso.',
+    authors: ['agustin-sanc'],
+    href: '/entrevistas/live-coding',
+  },
+  {
+    date: '2026-10-03',
+    area: 'entrevistas',
     title: 'Guías de preparación para entrevistas',
     description:
       'Cada tipo de entrevista tiene su guía de estudio: cómo suele ser el proceso, los temas que más se preguntan de junior a senior y qué tenés que poder explicar. Marcá cada sección como leída para seguir tu progreso y, cuando termines, ponete a prueba en el simulador.',

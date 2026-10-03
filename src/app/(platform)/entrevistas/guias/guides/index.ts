@@ -5,6 +5,7 @@ import { androidGuide } from './android';
 import { dotnetGuide } from './dotnet';
 import { iosGuide } from './ios';
 import { javaGuide } from './java';
+import { liveCodingGuide } from './live-coding';
 import { nodeGuide } from './node';
 import { productEngineeringGuide } from './product-engineering';
 import { projectManagerGuide } from './project-manager';
@@ -32,8 +33,39 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   'project-manager': projectManagerGuide,
 };
 
-export const getInterviewGuide = (track: string) =>
-  Object.hasOwn(interviewGuides, track) ? interviewGuides[track as InterviewTrack] : undefined;
+/** Guides that apply to every track, with where to practice what they teach. */
+export const crossTrackGuides = [
+  {
+    id: 'live-coding' as const,
+    label: 'Live coding',
+    stack: 'método, patrones y práctica',
+    guide: liveCodingGuide,
+    practice: { href: '/entrevistas/live-coding', label: 'practicar ejercicios' },
+  },
+];
+
+export interface GuideMeta {
+  label: string;
+  stack: string;
+  guide: InterviewGuide;
+  practice: { href: string; label: string };
+}
+
+/** A guide with its label and where to practice it, for a track or a cross-track guide. */
+export const getGuideMeta = (id: string): GuideMeta | undefined => {
+  const crossTrack = crossTrackGuides.find((guide) => guide.id === id);
+  if (crossTrack) return crossTrack;
+  const track = TRACKS.find((option) => option.id === id);
+  if (!track) return undefined;
+  return {
+    label: track.label,
+    stack: track.stack,
+    guide: interviewGuides[track.id],
+    practice: { href: `/entrevistas?tipo=${track.id}`, label: 'simular entrevista' },
+  };
+};
+
+export const allGuideIds = [...TRACKS.map(({ id }) => id), ...crossTrackGuides.map(({ id }) => id)];
 
 /** Guides in the same order as the simulator's tracks. */
 export const orderedGuides = TRACKS.map((track) => ({

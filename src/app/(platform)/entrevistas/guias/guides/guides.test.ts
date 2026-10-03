@@ -1,6 +1,6 @@
 import { isValidContentMark } from '@/actions/content-marks/content-marks';
 import { TRACKS } from '../../questions/types';
-import { guideSectionKey, interviewGuides } from '.';
+import { crossTrackGuides, getGuideMeta, guideSectionKey, interviewGuides } from '.';
 
 describe('interview guides', () => {
   it('has a guide for every interview track', () => {
@@ -34,5 +34,15 @@ describe('interview guides', () => {
   it('stores read sections as content marks', () => {
     expect(isValidContentMark('interview-guide', 'read')).toBe(true);
     expect(isValidContentMark('interview-guide', 'watched')).toBe(false);
+  });
+
+  it('includes the cross-track guides with somewhere to practice', () => {
+    for (const { id, guide } of crossTrackGuides) {
+      expect(guide.track).toBe(id);
+      expect(getGuideMeta(id)?.practice.href).toBeTruthy();
+      for (const section of guide.sections) {
+        expect(section.checklist.every((item) => item.explanation.trim() !== '')).toBe(true);
+      }
+    }
   });
 });
