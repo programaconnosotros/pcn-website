@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { EventsList } from '@/components/events/events-list';
+import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { Button } from '@/components/ui/button';
 import { Plus, Handshake } from 'lucide-react';
 import Link from 'next/link';
@@ -66,7 +68,10 @@ const EventsPage = async () => {
             </div>
           </StickyHeader>
 
-          <EventsList />
+          {/* The header shows right away; the list streams in once the events are loaded. */}
+          <Suspense fallback={<RuledGridSkeleton count={8} />}>
+            <EventsList />
+          </Suspense>
         </div>
       </div>
     </>
