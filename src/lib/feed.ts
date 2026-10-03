@@ -27,6 +27,8 @@ export interface FeedItem {
   href: string;
   /** Short extra detail shown next to the kind, e.g. who gave the talk. */
   meta?: string;
+  /** Overrides the kind's tag, e.g. a conversation summarized from an event, not the chat. */
+  tag?: string;
   thumbs?: { id: string; src: string }[];
 }
 
@@ -182,19 +184,34 @@ const setupItems = async (): Promise<FeedItem[]> => {
   }));
 };
 
-const conversationItems = (): FeedItem[] =>
-  [...conversations]
+const conversationItems = async (): Promise<FeedItem[]> => {
+  const latest = [...conversations]
     .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, PER_SOURCE)
-    .map((conversation) => ({
-      id: `conversacion-${conversationHref(conversation)}`,
-      kind: 'conversacion',
-      day: conversation.date,
-      sortKey: conversation.date,
-      title: conversation.title,
-      description: conversation.summary,
-      href: conversationHref(conversation),
-    }));
+    .slice(0, PER_SOURCE);
+  const eventIds = [...new Set(latest.flatMap((c) => (c.eventId ? [c.eventId] : [])))];
+  const events = eventIds.length
+    ? await prisma.event.findMany({
+        where: { id: { in: eventIds }, deletedAt: null },
+        select: { id: true, name: true },
+      })
+    : [];
+  const eventNames = new Map(events.map((event) => [event.id, event.name]));
+
+  return latest.map((conversation) => ({
+    id: `conversacion-${conversationHref(conversation)}`,
+    kind: 'conversacion',
+    day: conversation.date,
+    sortKey: conversation.date,
+    title: conversation.title,
+    description: conversation.summary,
+    href: conversationHref(conversation),
+    // Summarized from an event (e.g. a virtual meetup), not from the WhatsApp group.
+    ...(conversation.eventId && {
+      tag: 'evento',
+      meta: eventNames.get(conversation.eventId),
+    }),
+  }));
+};
 
 const changelogItems = (): FeedItem[] =>
   changelog

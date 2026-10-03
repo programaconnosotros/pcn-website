@@ -17,7 +17,7 @@ const KINDS: Record<FeedKind, { label: string; tag: string; className: string }>
   setup: { label: 'setups', tag: 'setup', className: 'border-amber-400/50 text-amber-300' },
   proyecto: { label: 'proyectos', tag: 'proyecto', className: 'border-pink-400/50 text-pink-300' },
   conversacion: {
-    label: 'grupo',
+    label: 'conversaciones',
     tag: 'whatsapp',
     className: 'border-sky-400/50 text-sky-300',
   },
@@ -52,7 +52,7 @@ function FeedRow({ item }: { item: FeedItem }) {
   return (
     <Link href={item.href} className={cn(ruledCellClassName, 'group flex flex-col gap-1.5 p-3')}>
       <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
-        <span className={cn('border px-1 leading-4', kind.className)}>{kind.tag}</span>
+        <span className={cn('border px-1 leading-4', kind.className)}>{item.tag ?? kind.tag}</span>
         {item.meta && <span className="min-w-0 truncate">{item.meta}</span>}
         <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
       </span>
