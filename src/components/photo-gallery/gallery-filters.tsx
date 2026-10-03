@@ -13,8 +13,13 @@ import {
 import type { GalleryFilterOptions } from '@/lib/gallery';
 import { GALLERY_TYPES, galleryQuery, isFiltered, type GalleryFilter } from '@/lib/gallery-filters';
 import { cn } from '@/lib/utils';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 
 const ALL = 'all';
+
+function OptionName({ option }: { option: { name: string; date?: Date } }) {
+  return option.date ? <EventOptionLabel name={option.name} date={option.date} /> : option.name;
+}
 
 // One select of the filter bar; picking "all" clears that filter.
 function FilterSelect({
@@ -25,7 +30,8 @@ function FilterSelect({
 }: {
   label: string;
   value: string | undefined;
-  options: { id: string; name: string; count: number }[];
+  // Events carry their date, shown next to the name so same-named events can be told apart.
+  options: { id: string; name: string; count: number; date?: Date }[];
   onChange: (_value: string | undefined) => void;
 }) {
   const selected = options.find((option) => option.id === value);
@@ -41,7 +47,7 @@ function FilterSelect({
         <SelectValue>
           <span className="truncate">
             <span className="text-muted-foreground">{label}:</span>{' '}
-            {selected ? selected.name : 'todos'}
+            {selected ? <OptionName option={selected} /> : 'todos'}
           </span>
         </SelectValue>
       </SelectTrigger>
@@ -51,7 +57,8 @@ function FilterSelect({
         </SelectItem>
         {options.map((option) => (
           <SelectItem key={option.id} value={option.id} className="font-mono text-xs">
-            {option.name} <span className="text-muted-foreground">({option.count})</span>
+            <OptionName option={option} />{' '}
+            <span className="text-muted-foreground">({option.count})</span>
           </SelectItem>
         ))}
       </SelectContent>

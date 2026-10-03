@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 
 export type EventOption = { id: string; name: string; date: Date; endDate?: Date | null };
 
@@ -36,7 +37,13 @@ export function PhotoEventSelect({
     >
       <SelectTrigger className="font-mono text-xs" aria-label={ariaLabel}>
         <SelectValue>
-          <span className="truncate">{selected?.name ?? 'sin evento'}</span>
+          <span className="truncate">
+            {selected ? (
+              <EventOptionLabel name={selected.name} date={selected.date} />
+            ) : (
+              'sin evento'
+            )}
+          </span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
@@ -45,10 +52,7 @@ export function PhotoEventSelect({
         </SelectItem>
         {events.map((event) => (
           <SelectItem key={event.id} value={event.id} className="font-mono text-xs">
-            {event.name}{' '}
-            <span className="text-muted-foreground">
-              · {new Date(event.date).toLocaleDateString('es-AR')}
-            </span>
+            <EventOptionLabel name={event.name} date={event.date} />
           </SelectItem>
         ))}
       </SelectContent>

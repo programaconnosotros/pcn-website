@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import { createTalk } from '@/actions/talks/create-talk';
 import { updateTalk } from '@/actions/talks/update-talk';
 import { fetchEventsForSelect } from '@/actions/talks/fetch-events-for-select';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
@@ -383,13 +384,10 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
                     <SelectItem value="__none__">Sin evento</SelectItem>
                     {events.map((event) => (
                       <SelectItem key={event.id} value={event.id}>
-                        {event.name} &mdash;{' '}
-                        {new Date(event.date).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        })}{' '}
-                        &mdash; {getEventLocation(event) || 'Sin ubicación'}
+                        <EventOptionLabel name={event.name} date={event.date} />{' '}
+                        <span className="text-muted-foreground">
+                          · {getEventLocation(event) || 'Sin ubicación'}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -23,8 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Announcement } from '@prisma/client';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { EventOptionLabel } from '@/components/events/event-option-label';
 
 interface EventOption {
   id: string;
@@ -178,7 +177,7 @@ export function AnnouncementForm({
                   <SelectContent>
                     {events.map((event) => (
                       <SelectItem key={event.id} value={event.id}>
-                        {event.name} - {format(new Date(event.date), 'dd MMM yyyy', { locale: es })}
+                        <EventOptionLabel name={event.name} date={event.date} />
                       </SelectItem>
                     ))}
                   </SelectContent>
