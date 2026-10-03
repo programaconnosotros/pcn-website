@@ -18,6 +18,7 @@ import { setIdentityLink } from '@/actions/identity-links/set-identity-link';
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
 import { UserCombobox } from '@/components/admin/user-combobox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserHoverCard } from '@/components/users/user-hover-card';
 import type { LinkedUser } from '@/lib/identity-links';
 import { cn } from '@/lib/utils';
 import { HISTORIA_PEOPLE, type HistoriaPersonName } from './people';
@@ -120,7 +121,7 @@ interface HistoriaPersonProps {
 
 /**
  * A person mentioned in the story: a link to their profile once an admin tags them as a platform
- * user, plain text otherwise. In tagging mode admins get an `@` button next to it to pick the user.
+ * user (hovering it shows a summary card of them), plain text otherwise. In tagging mode admins get an `@` button next to it to pick the user.
  */
 export function HistoriaPerson({ name, children }: HistoriaPersonProps) {
   const { links, isAdmin, tagging } = useContext(HistoriaPeopleContext);
@@ -130,20 +131,21 @@ export function HistoriaPerson({ name, children }: HistoriaPersonProps) {
   return (
     <>
       {user ? (
-        <Link
-          href={`/perfil/${user.id}`}
-          title={`Ver el perfil de ${user.name}`}
-          // A mention chip, so it reads as a link to someone and not as a spelling mark.
-          className="inline-flex items-baseline gap-1 whitespace-nowrap rounded-sm bg-pcnGreen/[0.08] px-1 font-medium text-pcnGreen transition-colors hover:bg-pcnGreen/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
-        >
-          <Avatar className="size-3.5 self-center rounded-full">
-            <AvatarImage src={user.image ?? undefined} alt="" />
-            <AvatarFallback className="rounded-full text-[8px]">
-              {user.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          {label}
-        </Link>
+        <UserHoverCard user={user}>
+          <Link
+            href={`/perfil/${user.id}`}
+            // A mention chip, so it reads as a link to someone and not as a spelling mark.
+            className="inline-flex items-baseline gap-1 whitespace-nowrap rounded-sm bg-pcnGreen/[0.08] px-1 font-medium text-pcnGreen transition-colors hover:bg-pcnGreen/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+          >
+            <Avatar className="size-3.5 self-center rounded-full">
+              <AvatarImage src={user.image ?? undefined} alt="" />
+              <AvatarFallback className="rounded-full text-[8px]">
+                {user.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            {label}
+          </Link>
+        </UserHoverCard>
       ) : (
         label
       )}
