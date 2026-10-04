@@ -1,6 +1,5 @@
-import type { Prisma } from '@prisma/client';
 import { render } from '@react-email/render';
-import prisma from '@/lib/prisma';
+import prisma, { type TransactionClient } from '@/lib/prisma';
 import { sendEmail } from '@/lib/email';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 import { WaitlistPromotionEmail } from '@/components/events/waitlist-promotion-email';
@@ -8,7 +7,7 @@ import { WaitlistPromotionEmail } from '@/components/events/waitlist-promotion-e
 // Lógica de la lista de espera de eventos. Vive fuera de un archivo 'use server' a propósito:
 // nada de esto debe poder invocarse desde el cliente como server action.
 
-type Tx = Prisma.TransactionClient;
+type Tx = TransactionClient;
 
 export type PromotedUser = {
   registrationId: string;

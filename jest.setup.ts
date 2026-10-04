@@ -16,9 +16,12 @@ jest.mock('@/lib/prisma', () => {
 const prismaMock: DeepMockProxy<PrismaClient> = jest.requireMock('@/lib/prisma').default;
 
 // ─── Next.js server APIs ─────────────────────────────────────────────────────
+// unstable_cache runs the function every time, like a cache that always misses.
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
   revalidateTag: jest.fn(),
+  updateTag: jest.fn(),
+  unstable_cache: (fn: unknown) => fn,
 }));
 
 // redirect() normally throws to interrupt control flow; replicate that here so

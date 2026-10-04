@@ -1,4 +1,7 @@
+import { createRequire } from 'node:module';
 import nextJest from 'next/jest.js';
+
+const require = createRequire(import.meta.url);
 
 const createJestConfig = nextJest({
   // Provides next.config.mjs and .env files to the test environment
@@ -20,6 +23,9 @@ const config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@actions/(.*)$': '<rootDir>/src/actions/$1',
+    // tsconfig's `@prisma/*` alias makes next/jest rewrite a runtime `@prisma/client` import to
+    // ./prisma/client, which doesn't exist (tsc falls back to node_modules, Jest doesn't).
+    '^(\\.\\./)+prisma/client$': require.resolve('@prisma/client'),
   },
 };
 
