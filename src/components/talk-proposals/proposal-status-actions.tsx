@@ -30,6 +30,7 @@ type Props = {
 
 export function ProposalStatusActions({ proposalId, currentStatus, speakerName, hasTalk }: Props) {
   const [isPending, setIsPending] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleStatusChange = async (status: TalkProposalStatus) => {
     setIsPending(true);
@@ -76,6 +77,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
     try {
       await deleteTalkProposal(proposalId);
       toast.success('Propuesta eliminada');
+      setDeleteOpen(false);
     } catch (error: any) {
       toast.error(
         actionErrorMessage(
@@ -131,7 +133,7 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         </Button>
       )}
 
-      <AlertDialog>
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogTrigger asChild>
           <Button size="sm" variant="ghost" disabled={isPending}>
             <Trash2 className="h-3 w-3" />
@@ -148,7 +150,12 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
           <AlertDialogFooter>
             <AlertDialogCancel>cancelar();</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
+              // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+              // falla, se pierde. Se cierra solo cuando termina bien.
+              onClick={(event) => {
+                event.preventDefault();
+                void handleDelete();
+              }}
               disabled={isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

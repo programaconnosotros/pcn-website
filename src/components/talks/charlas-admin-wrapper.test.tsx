@@ -141,12 +141,14 @@ describe('CharlasAdminWrapper', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Eliminar' }));
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No autorizado'));
 
-    await openMenu('Eliminar');
-    await userEvent.click(await screen.findByRole('button', { name: 'Eliminar' }));
+    // Si falla, el diálogo queda abierto: se reintenta y se cancela desde ahí
+    const retry = screen.getByRole('button', { name: 'Eliminar' });
+    await waitFor(() => expect(retry).toBeEnabled());
+    await userEvent.click(retry);
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Error al eliminar la charla'));
 
-    await openMenu('Eliminar');
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancelar' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Cancelar' })).toBeEnabled());
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
     await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
     expect(deleteTalk).toHaveBeenCalledTimes(2);
   });

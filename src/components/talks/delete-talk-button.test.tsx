@@ -34,8 +34,10 @@ describe('DeleteTalkButton', () => {
 
     await confirm();
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No autorizado'));
-    await waitFor(() => expect(screen.getByRole('button')).toBeEnabled());
-    await confirm();
+    // Si falla, el diálogo queda abierto para reintentar
+    const retry = screen.getByRole('button', { name: 'Eliminar' });
+    await waitFor(() => expect(retry).toBeEnabled());
+    await userEvent.click(retry);
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Error al eliminar la charla'));
   });
 });

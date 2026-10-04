@@ -25,12 +25,14 @@ type Props = {
 
 export function DeleteTalkButton({ talkId, talkTitle }: Props) {
   const [isPending, setIsPending] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
     setIsPending(true);
     try {
       await deleteTalk(talkId);
       toast.success('Charla eliminada');
+      setOpen(false);
     } catch (error: any) {
       toast.error(actionErrorMessage(error, 'Error al eliminar la charla', true));
     } finally {
@@ -39,7 +41,7 @@ export function DeleteTalkButton({ talkId, talkTitle }: Props) {
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost" disabled={isPending}>
           <Trash2 className="h-3 w-3" />
@@ -55,7 +57,12 @@ export function DeleteTalkButton({ talkId, talkTitle }: Props) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+            // falla, se pierde. Se cierra solo cuando termina bien.
+            onClick={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
             disabled={isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

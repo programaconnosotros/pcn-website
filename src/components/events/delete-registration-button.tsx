@@ -34,8 +34,10 @@ export function DeleteRegistrationButton({
 
   const handleDelete = async () => {
     setIsLoading(true);
+    // toast.promise devuelve el id del toast: se espera la action en sí
+    const promise = deleteRegistration(registrationId);
     try {
-      await toast.promise(deleteRegistration(registrationId), {
+      toast.promise(promise, {
         loading: 'Eliminando inscripción...',
         success: 'Inscripción eliminada exitosamente',
         error: (error) => {
@@ -43,6 +45,7 @@ export function DeleteRegistrationButton({
           return actionErrorMessage(error, 'Ocurrió un error al eliminar la inscripción', true);
         },
       });
+      await promise;
       setOpen(false);
       router.refresh();
     } catch {
@@ -74,7 +77,12 @@ export function DeleteRegistrationButton({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+            // falla, se pierde. Se cierra solo cuando termina bien.
+            onClick={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

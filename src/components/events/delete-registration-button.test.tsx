@@ -39,7 +39,8 @@ describe('DeleteRegistrationButton', () => {
     await userEvent.click(screen.getByRole('button'));
     await userEvent.click(screen.getByRole('button', { name: 'Eliminar' }));
 
-    await waitFor(() => expect(screen.getByRole('button')).toBeEnabled());
+    // Si falla, el diálogo queda abierto (con el botón habilitado para reintentar)
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Eliminar' })).toBeEnabled());
     const { error } = mockPromise.mock.calls[0][1] as { error: (_e: Error) => string };
     expect(error(new Error('No autorizado'))).toBe('No autorizado');
     expect(error(new Error(''))).toBe('Ocurrió un error al eliminar la inscripción');

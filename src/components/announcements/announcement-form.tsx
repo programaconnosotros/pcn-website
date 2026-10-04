@@ -71,7 +71,9 @@ export function AnnouncementForm({
   const watchCategory = form.watch('category');
 
   const handleSubmit = async (data: AnnouncementFormData) => {
-    await onSubmit(data);
+    // El evento solo aplica a la categoría "evento": si se eligió uno y después se cambió la
+    // categoría, el selector se oculta pero el valor seguía viajando
+    await onSubmit({ ...data, eventId: data.category === 'evento' ? data.eventId : null });
   };
 
   return (

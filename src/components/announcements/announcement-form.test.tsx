@@ -55,10 +55,7 @@ describe('AnnouncementForm', () => {
     );
   });
 
-  // BUG: the event selector disappears when the category stops being "evento", but the event
-  // picked before is still submitted, so a "noticia" keeps showing on that event's page
-  // (Announcement.eventId is "solo para categoría evento").
-  it.failing('drops the event when the category is no longer "evento"', async () => {
+  it('drops the event when the category is no longer "evento"', async () => {
     const onSubmit = jest.fn().mockResolvedValue(undefined);
     render(<AnnouncementForm events={events} onSubmit={onSubmit} onCancel={jest.fn()} />);
 

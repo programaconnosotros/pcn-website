@@ -57,7 +57,12 @@ export function DeleteAnnouncementDialog({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            // Sin preventDefault el diálogo se cierra al click: no se ve el estado de carga y, si
+            // falla, se pierde. Se cierra solo cuando termina bien.
+            onClick={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

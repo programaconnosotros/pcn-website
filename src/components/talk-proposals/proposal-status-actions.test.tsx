@@ -107,8 +107,10 @@ describe('ProposalStatusActions', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'aceptar();' })).toBeEnabled());
     await remove();
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No autorizado'));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'aceptar();' })).toBeEnabled());
-    await remove();
+    // Si falla, el diálogo queda abierto: se reintenta desde ahí
+    const retry = screen.getByRole('button', { name: 'eliminar();' });
+    await waitFor(() => expect(retry).toBeEnabled());
+    await userEvent.click(retry);
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
         'No se pudo eliminar la propuesta. Revisá que gestiones este evento.',
