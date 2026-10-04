@@ -56,3 +56,21 @@ describe('event organizers', () => {
     expect(prismaMock.eventOrganizer.upsert).not.toHaveBeenCalled();
   });
 });
+
+describe('event organizers access checks', () => {
+  it('requires a logged-in user', async () => {
+    mockCookies();
+
+    await expect(addEventOrganizer('event-1', 'user-2')).rejects.toThrow('No autorizado');
+    await expect(removeEventOrganizer('event-1', 'org-1')).rejects.toThrow('No autorizado');
+    expect(prismaMock.event.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('throws when the event does not exist', async () => {
+    loginAs(admin);
+    prismaMock.event.findUnique.mockResolvedValue(null);
+
+    await expect(addEventOrganizer('missing', 'user-2')).rejects.toThrow('Evento no encontrado');
+    expect(prismaMock.eventOrganizer.upsert).not.toHaveBeenCalled();
+  });
+});

@@ -109,3 +109,26 @@ describe('setIdentityLink', () => {
     });
   });
 });
+
+describe('setIdentityLink edge cases', () => {
+  it('does not link to unknown users', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue(null);
+
+    await expect(
+      setIdentityLink({ source: 'github', externalName: 'octocat', userId: 'ghost' }),
+    ).rejects.toThrow('Usuario no encontrado');
+    expect(prismaMock.identityLink.upsert).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when unlinking a name that was never linked', async () => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+
+    await setIdentityLink({ source: 'github', externalName: 'octocat', userId: null });
+
+    expect(prismaMock.identityLink.delete).not.toHaveBeenCalled();
+    expect(prismaMock.identityLink.upsert).not.toHaveBeenCalled();
+  });
+});

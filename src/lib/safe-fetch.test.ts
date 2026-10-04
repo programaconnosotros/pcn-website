@@ -1,6 +1,6 @@
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { createSafeFetch, isPrivateAddress, safeFetch } from './safe-fetch';
+import { BlockedAddressError, createSafeFetch, isPrivateAddress, safeFetch } from './safe-fetch';
 
 // Servers reales en 127.0.0.1. `safeFetch` los bloquea por ser loopback; para probar el resto
 // (redirects, tope de bytes) se usa una variante que solo bloquea una IP "interna" de mentira.
@@ -123,5 +123,69 @@ describe('safeFetch', () => {
     const url = await listen(() => {});
 
     await expect(localFetch(url, { timeoutMs: 100 })).rejects.toThrow();
+  });
+
+  it('connects to a hostname whose addresses are all allowed', async () => {
+    const url = await listen((_req, res) => res.end('hola'));
+    const port = new URL(url).port;
+
+    const response = await localFetch(`http://localhost:${port}/`, { maxBytes: 100 });
+
+    expect(response.body?.toString()).toBe('hola');
+  });
+
+  it('fails when the hostname does not resolve', async () => {
+    await expect(localFetch('http://pcn.invalid/')).rejects.toThrow();
+  });
+
+  it("doesn't read the body of an error response", async () => {
+    const url = await listen((_req, res) => {
+      res.writeHead(404);
+      res.end('no está');
+    });
+
+    const response = await localFetch(url, { maxBytes: 100 });
+
+    expect(response).toMatchObject({ status: 404, ok: false, body: null });
+  });
+
+  it('drops a streamed body once it passes maxBytes', async () => {
+    const url = await listen((_req, res) => {
+      // Sin content-length: el tope se controla mientras llegan los chunks.
+      res.writeHead(200, { 'transfer-encoding': 'chunked' });
+      res.write('x'.repeat(60));
+      setTimeout(() => res.end('y'.repeat(60)), 20);
+    });
+
+    expect((await localFetch(url, { maxBytes: 100 })).body).toBeNull();
+  });
+
+  it('joins repeated headers', async () => {
+    const url = await listen((_req, res) => {
+      res.setHeader('set-cookie', ['a=1', 'b=2']);
+      res.end();
+    });
+
+    expect((await localFetch(url)).headers.get('set-cookie')).toBe('a=1, b=2');
+  });
+
+  it('sends the extra headers it is given', async () => {
+    let received: string | undefined;
+    const url = await listen((req, res) => {
+      received = req.headers['x-test'] as string;
+      res.end();
+    });
+
+    await localFetch(url, { headers: { 'x-test': 'yes' } });
+
+    expect(received).toBe('yes');
+  });
+});
+
+describe('BlockedAddressError', () => {
+  it('names the host in the message', () => {
+    expect(new BlockedAddressError('db.internal').message).toBe(
+      'db.internal apunta a una dirección interna',
+    );
   });
 });

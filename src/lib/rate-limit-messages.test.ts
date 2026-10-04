@@ -83,3 +83,28 @@ describe('actionErrorMessage', () => {
     expect(actionErrorMessage(new Error('El evento está lleno'), 'Error')).toBe('Error');
   });
 });
+
+describe('rateLimitMessage for every form', () => {
+  it.each([
+    ['signIn', 'inicio de sesión'],
+    ['signUp', 'cuentas'],
+    ['sendCode', 'códigos'],
+    ['verifyCode', 'adivinar'],
+    ['createContent', 'publicar'],
+    ['comment', 'comentar'],
+    ['editContent', 'ediciones'],
+    ['eventRegistration', 'cupos'],
+    ['upload', 'subir'],
+    ['photoDownload', 'descargar'],
+    ['log', 'registros'],
+    ['pageVisit', 'visitas'],
+  ] as const)('explains the %s limit and the wait', (name, word) => {
+    const message = rateLimitMessage(name, 120);
+    expect(message).toContain(word);
+    expect(message).toContain('2 minutos');
+  });
+
+  it('round-trips a digest into its message', () => {
+    expect(getRateLimitMessage({ digest: rateLimitDigest('upload', 3600) })).toContain('1 hora');
+  });
+});

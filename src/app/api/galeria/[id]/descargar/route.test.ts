@@ -97,4 +97,32 @@ describe('GET /api/galeria/[id]/descargar', () => {
     );
     expect(prismaMock.galleryItem.findFirst).not.toHaveBeenCalled();
   });
+  it('answers 404 for an item that does not exist or is hidden', async () => {
+    prismaMock.galleryItem.findFirst.mockResolvedValue(null);
+
+    const response = await download();
+
+    expect(response.status).toBe(404);
+    expect(getPresignedDownloadUrl).not.toHaveBeenCalled();
+  });
+
+  it('answers 404 when the /public file is missing', async () => {
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
+      id: 'legacy-6',
+      src: '/photos/does-not-exist.webp',
+      takenAt: new Date(2024, 9, 16),
+    } as any);
+
+    expect((await download()).status).toBe(404);
+  });
+
+  it('answers 404 for a relative src that is not under /public', async () => {
+    prismaMock.galleryItem.findFirst.mockResolvedValue({
+      id: 'x',
+      src: 'photos/agus-talk.webp',
+      takenAt: new Date(),
+    } as any);
+
+    expect((await download()).status).toBe(404);
+  });
 });

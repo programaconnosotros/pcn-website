@@ -24,3 +24,7 @@ describe('safeRedirectPath', () => {
     expect(safeRedirectPath(undefined)).toBe('/');
   });
 });
+
+it('returns the fallback for paths the URL parser rejects', () => {
+  expect(safeRedirectPath('//[', '/inicio')).toBe('/inicio');
+});

@@ -326,3 +326,14 @@ describe('video uploads', () => {
     });
   });
 });
+
+describe('getPhotoUploadUrl', () => {
+  it('returns a presigned URL for supported formats', async () => {
+    loginAs(admin);
+
+    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).resolves.toEqual({
+      uploadUrl: 'https://s3.example.com/presigned',
+      key: 'gallery/originals/a.jpg',
+    });
+  });
+});

@@ -1,5 +1,14 @@
 import { createServer, type Server } from 'node:net';
-import { pgConfig, serverAcceptsTls } from './database-url';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { pgAdapter, pgConfig, serverAcceptsTls } from './database-url';
+
+jest.mock('@prisma/adapter-pg', () => ({
+  PrismaPg: jest.fn().mockImplementation(() => ({
+    provider: 'postgres',
+    adapterName: '@prisma/adapter-pg',
+    connect: jest.fn().mockResolvedValue('connection'),
+  })),
+}));
 
 describe('pgConfig', () => {
   it('asks the server about TLS when the URL has no sslmode, like Prisma 6', () => {
@@ -88,5 +97,78 @@ describe('serverAcceptsTls', () => {
     await new Promise((resolve) => server!.close(resolve));
     server = undefined;
     await expect(serverAcceptsTls('127.0.0.1', port, 1000)).resolves.toBe(false);
+  });
+});
+
+describe('serverAcceptsTls timeouts', () => {
+  let server: Server | undefined;
+  afterEach(() => server?.close());
+
+  it('is false when the server never answers', async () => {
+    const port = await new Promise<number>((resolve) => {
+      server = createServer(() => {}).listen(0, '127.0.0.1', () => {
+        const address = server!.address();
+        resolve(typeof address === 'object' && address ? address.port : 0);
+      });
+    });
+    await expect(serverAcceptsTls('127.0.0.1', port, 50)).resolves.toBe(false);
+  });
+});
+
+describe('pgAdapter', () => {
+  let server: Server | undefined;
+  afterEach(() => server?.close());
+
+  const listen = (reply: string) =>
+    new Promise<number>((resolve) => {
+      server = createServer((socket) => socket.once('data', () => socket.end(reply))).listen(
+        0,
+        '127.0.0.1',
+        () => {
+          const address = server!.address();
+          resolve(typeof address === 'object' && address ? address.port : 0);
+        },
+      );
+    });
+
+  it('returns the plain adapter when the URL fixes the TLS mode', () => {
+    const adapter = pgAdapter('postgresql://u:p@db.example.com/x?sslmode=require&schema=app');
+
+    expect(PrismaPg).toHaveBeenCalledWith(
+      expect.objectContaining({ ssl: { rejectUnauthorized: false } }),
+      { schema: 'app' },
+    );
+    expect(adapter).toBe(jest.mocked(PrismaPg).mock.results[0].value);
+  });
+
+  it('builds an adapter without connection data when there is no URL', () => {
+    pgAdapter(undefined);
+
+    expect(PrismaPg).toHaveBeenCalledWith({}, undefined);
+  });
+
+  it('uses TLS when the server accepts it (sslmode=prefer)', async () => {
+    const port = await listen('S');
+    const adapter = pgAdapter(`postgresql://u:p@127.0.0.1:${port}/x?sslaccept=strict`);
+
+    expect(adapter.provider).toBe('postgres');
+    expect(adapter.adapterName).toBe('@prisma/adapter-pg');
+    await expect(adapter.connect()).resolves.toBe('connection');
+    expect(jest.mocked(PrismaPg).mock.calls.at(-1)).toEqual([
+      expect.objectContaining({ ssl: { rejectUnauthorized: true } }),
+      undefined,
+    ]);
+  });
+
+  it('connects without TLS when the server refuses it', async () => {
+    const port = await listen('N');
+    const adapter = pgAdapter(`postgresql://u:p@127.0.0.1:${port}/x?schema=app`);
+
+    await adapter.connect();
+
+    expect(jest.mocked(PrismaPg).mock.calls.at(-1)).toEqual([
+      expect.objectContaining({ ssl: false }),
+      { schema: 'app' },
+    ]);
   });
 });

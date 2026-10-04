@@ -115,3 +115,34 @@ describe('updateTalkProposalStatus', () => {
     });
   });
 });
+
+describe('updateTalkProposalStatus edge cases', () => {
+  it('throws when the proposal does not exist', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talkProposal.findUnique.mockResolvedValue(null);
+
+    await expect(updateTalkProposalStatus('missing', 'ACCEPTED')).rejects.toThrow(
+      'Propuesta no encontrada',
+    );
+    expect(prismaMock.talkProposal.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects organizers of other events', async () => {
+    mockCookies({ sessionId: 'session-regular' });
+    prismaMock.session.findUnique.mockResolvedValue({
+      ...regularSession,
+      user: { ...regularUser, isAmbassador: false },
+    } as any);
+    prismaMock.eventOrganizer.count.mockResolvedValue(1);
+    prismaMock.talkProposal.findUnique.mockResolvedValue({ eventId: 'event-2' } as any);
+    prismaMock.event.findUnique.mockResolvedValue({
+      createdById: 'someone',
+      deletedAt: null,
+      organizers: [{ userId: 'other' }],
+    } as any);
+
+    await expect(updateTalkProposalStatus('p-1', 'ACCEPTED')).rejects.toThrow('No tenés permisos');
+    expect(prismaMock.talkProposal.update).not.toHaveBeenCalled();
+  });
+});

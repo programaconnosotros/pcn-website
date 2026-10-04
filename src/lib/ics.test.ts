@@ -67,3 +67,12 @@ describe('createIcsFile', () => {
     }
   });
 });
+
+describe('createIcsFile escaping per RFC 5545', () => {
+  // BUG: escapeText replaces ';' with ';' (a no-op), so semicolons in TEXT values go out
+  // unescaped; RFC 5545 §3.3.11 requires '\;'. The test above asserts the current output.
+  it.failing('escapes semicolons in text fields', () => {
+    const ics = unfold(createIcsFile(event, now));
+    expect(ics).toContain('SUMMARY:Café Virtual\\; edición 2\\, con amigos');
+  });
+});

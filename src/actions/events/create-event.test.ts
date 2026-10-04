@@ -149,3 +149,44 @@ describe('createEvent', () => {
     );
   });
 });
+
+describe('createEvent dates and sponsors', () => {
+  beforeEach(() => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-1' } as any);
+  });
+
+  it('rejects an end date that is not after the start date', async () => {
+    await expect(createEvent({ ...validEventData, endDate: validEventData.date })).rejects.toThrow(
+      'La fecha de finalización debe ser posterior a la fecha de inicio',
+    );
+    await expect(
+      createEvent({ ...validEventData, endDate: '2026-08-15T17:00:00.000Z' }),
+    ).rejects.toThrow('La fecha de finalización debe ser posterior');
+    expect(prismaMock.event.create).not.toHaveBeenCalled();
+  });
+
+  it('stores a later end date, skips blank sponsors and nulls empty sponsor websites', async () => {
+    await expect(
+      createEvent({
+        ...validEventData,
+        endDate: '2026-08-15T20:00:00.000Z',
+        sponsors: [
+          { name: 'Acme', website: 'https://acme.dev' },
+          { name: 'Sin web', website: '' },
+          { name: '   ' },
+        ],
+      }),
+    ).rejects.toThrow('NEXT_REDIRECT');
+
+    const { data } = prismaMock.event.create.mock.calls[0][0] as any;
+    expect(data.endDate).toEqual(new Date('2026-08-15T20:00:00.000Z'));
+    expect(data.sponsors.create).toEqual([
+      { name: 'Acme', website: 'https://acme.dev' },
+      { name: 'Sin web', website: null },
+    ]);
+    expect(data.googleMapsUrl).toBeNull();
+    expect(data.capacity).toBeNull();
+  });
+});

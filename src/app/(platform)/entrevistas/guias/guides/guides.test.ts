@@ -46,3 +46,27 @@ describe('interview guides', () => {
     }
   });
 });
+
+describe('getGuideMeta', () => {
+  it('describes a track guide with where to simulate the interview', () => {
+    const track = TRACKS[0];
+    expect(getGuideMeta(track.id)).toMatchObject({
+      label: track.label,
+      stack: track.stack,
+      guide: interviewGuides[track.id],
+      practice: { href: `/entrevistas?tipo=${track.id}`, label: 'simular entrevista' },
+    });
+  });
+
+  it('includes the partner courses a track recommends', () => {
+    expect(getGuideMeta('security')?.courses?.length).toBeGreaterThan(0);
+  });
+
+  it('returns the cross-track guide as is', () => {
+    expect(getGuideMeta('live-coding')).toBe(crossTrackGuides[0]);
+  });
+
+  it('returns undefined for an unknown guide', () => {
+    expect(getGuideMeta('cobol')).toBeUndefined();
+  });
+});

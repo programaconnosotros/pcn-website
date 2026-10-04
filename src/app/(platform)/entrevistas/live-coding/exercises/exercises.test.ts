@@ -1,6 +1,6 @@
 import { isValidContentMark } from '@/actions/content-marks/content-marks';
 import { SENIORITIES } from '../../questions/types';
-import { exerciseKey, livePractices } from '.';
+import { exerciseKey, getLivePractice, livePractices } from '.';
 
 const practices = Object.values(livePractices);
 
@@ -40,5 +40,16 @@ describe('live coding practice', () => {
   it('stores solved exercises and problems as content marks', () => {
     expect(isValidContentMark('coding-exercise', 'solved')).toBe(true);
     expect(isValidContentMark('leetcode-problem', 'solved')).toBe(true);
+  });
+});
+
+describe('getLivePractice', () => {
+  it('returns the practice of a track that has one', () => {
+    expect(getLivePractice('node')).toBe(livePractices.node);
+  });
+
+  it('returns undefined for unknown tracks and inherited keys', () => {
+    expect(getLivePractice('cobol')).toBeUndefined();
+    expect(getLivePractice('toString')).toBeUndefined();
   });
 });

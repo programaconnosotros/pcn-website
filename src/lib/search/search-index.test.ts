@@ -1,4 +1,5 @@
-import { normalizeSearchText, rankEntries, toEntry } from './search-index';
+import { getStaticIndex, normalizeSearchText, rankEntries, toEntry } from './search-index';
+import { SEARCH_GROUPS } from './types';
 
 const entries = [
   toEntry({ type: 'curso', title: 'Git & GitHub', href: '/cursos/git' }, 'Control de versiones'),
@@ -56,5 +57,37 @@ describe('rankEntries', () => {
 
   it('returns nothing for a blank query', () => {
     expect(rankEntries(entries, '   ')).toEqual([]);
+  });
+});
+
+describe('getStaticIndex', () => {
+  it('indexes sections, courses, videos, articles, specialties, conversations and consejos', () => {
+    const index = getStaticIndex();
+    const types = new Set(index.map((entry) => entry.type));
+
+    for (const type of ['seccion', 'curso', 'video', 'lectura', 'especialidad', 'conversacion'])
+      expect(types).toContain(type);
+    expect(index.every((entry) => entry.text.startsWith(' ') && entry.href)).toBe(true);
+  });
+
+  it('is built once and reused', () => {
+    expect(getStaticIndex()).toBe(getStaticIndex());
+  });
+
+  it('shortens long consejos to 90 characters in the title', () => {
+    const consejos = getStaticIndex().filter((entry) => entry.type === 'consejo');
+    expect(consejos.every((entry) => entry.title.length <= 90)).toBe(true);
+  });
+
+  it('links articles to the /lectura search', () => {
+    const article = getStaticIndex().find((entry) => entry.type === 'lectura');
+    expect(article?.href).toMatch(/^\/lectura\?q=/);
+  });
+});
+
+describe('SEARCH_GROUPS', () => {
+  it('has a heading for every group, once', () => {
+    const types = SEARCH_GROUPS.map((group) => group.type);
+    expect(new Set(types).size).toBe(types.length);
   });
 });

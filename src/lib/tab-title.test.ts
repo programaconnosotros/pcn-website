@@ -46,3 +46,27 @@ describe('osTabTitle', () => {
     expect(osTabTitle(null, 'Series y películas')).toBe('cd ~/series-y-peliculas · pcn-os');
   });
 });
+
+describe('tabSlug edge cases', () => {
+  it('keeps a slug that fits exactly', () => {
+    expect(tabSlug('abcd', 4)).toBe('abcd');
+  });
+
+  it('cuts right before a dash without dropping the last word', () => {
+    expect(tabSlug('hola mundo cruel', 10)).toBe('hola-mundo');
+  });
+
+  it('cuts mid-word when the last dash is too early', () => {
+    expect(tabSlug('ab supercalifragilistico', 10)).toBe('ab-superca');
+    expect(tabSlug('supercalifragilistico', 8)).toBe('supercal');
+  });
+});
+
+describe('tabTitle commands', () => {
+  it('builds every command', () => {
+    expect(tabTitle.open('galeria', 'Foto del meetup')).toBe('open ~/galeria/foto-del-meetup');
+    expect(tabTitle.vim('eventos/1/editar')).toBe('vim ~/eventos/1/editar');
+    expect(tabTitle.touch('eventos/nuevo')).toBe('touch ~/eventos/nuevo');
+    expect(tabTitle.sudo('usuarios')).toBe('sudo ls ~/usuarios');
+  });
+});

@@ -1,5 +1,11 @@
 import sharp from 'sharp';
-import { FULL_SIZE, THUMB_SIZE, optimizePhoto } from './photo-processing';
+import {
+  FULL_SIZE,
+  POSTER_SIZE,
+  THUMB_SIZE,
+  optimizePhoto,
+  optimizePoster,
+} from './photo-processing';
 
 const jpeg = (width: number, height: number) =>
   sharp({ create: { width, height, channels: 3, background: '#04f4be' } })
@@ -33,5 +39,20 @@ describe('optimizePhoto', () => {
     const result = await optimizePhoto(rotated);
 
     expect([result.width, result.height]).toEqual([200, 400]);
+  });
+});
+
+describe('optimizePoster', () => {
+  it('shrinks a video frame into a webp poster', async () => {
+    const poster = await sharp(await optimizePoster(await jpeg(3840, 2160))).metadata();
+
+    expect(poster.format).toBe('webp');
+    expect([poster.width, poster.height]).toEqual([POSTER_SIZE, 720]);
+  });
+
+  it('never enlarges small frames', async () => {
+    const poster = await sharp(await optimizePoster(await jpeg(640, 360))).metadata();
+
+    expect([poster.width, poster.height]).toEqual([640, 360]);
   });
 });
