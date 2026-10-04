@@ -1060,13 +1060,11 @@ ALTER TABLE "User" ADD COLUMN "instagramUrl" TEXT;`,
           {
             file: 'src/lib/prisma.ts',
             lang: 'ts',
-            code: `import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@/generated/prisma/client';
-import { pgConfig } from '@/lib/database-url';
+            code: `import { PrismaClient } from '@/generated/prisma/client';
+import { pgAdapter } from '@/lib/database-url';
 
 const prismaClientSingleton = () => {
-  const { pool, schema } = pgConfig(process.env.DATABASE_URL);
-  return new PrismaClient({ adapter: new PrismaPg(pool, { schema }) });
+  return new PrismaClient({ adapter: pgAdapter(process.env.DATABASE_URL) });
 };
 
 declare const globalThis: {

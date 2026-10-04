@@ -1,7 +1,6 @@
-import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@/generated/prisma/client';
 import { checkCachedRead, expireModels } from '@/lib/cache';
-import { pgConfig } from '@/lib/database-url';
+import { pgAdapter } from '@/lib/database-url';
 import { isDelete, modelsIn } from '@/lib/prisma-models';
 
 const WRITES = new Set([
@@ -17,13 +16,12 @@ const WRITES = new Set([
 ]);
 
 const prismaClientSingleton = () => {
-  const { pool, schema } = pgConfig(process.env.DATABASE_URL);
   // Datos sensibles que no salen de la base salvo que una consulta los pida con
   // `omit: { campo: false }`: el hash de la contraseña (solo el login) y el teléfono de los
   // oradores (solo quienes gestionan el evento). Así un `include` que termina en un componente
   // de cliente o en una página pública no puede filtrarlos.
   return new PrismaClient({
-    adapter: new PrismaPg(pool, { schema }),
+    adapter: pgAdapter(process.env.DATABASE_URL),
     omit: {
       user: { password: true },
       talkSpeaker: { speakerPhone: true },
