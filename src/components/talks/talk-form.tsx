@@ -290,7 +290,10 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
   }, []);
 
   const form = useForm<TalkFormData>({
-    resolver: zodResolver(talkSchema),
+    // `raw`: el submit recibe lo que cargó el form y no lo ya transformado por el schema, porque
+    // createTalk/updateTalk lo vuelven a validar con el mismo schema y la fecha transformada (un
+    // Date) no pasa como texto: con un evento elegido, guardar fallaba con "Invalid input".
+    resolver: zodResolver(talkSchema, undefined, { raw: true }),
     defaultValues: {
       eventId: talk?.eventId ?? eventId ?? null,
       manualEventTitle: talk?.manualEventTitle ?? '',
