@@ -19,6 +19,7 @@ import { updateTalkProposalStatus } from '@/actions/talk-proposals/update-talk-p
 import { deleteTalkProposal } from '@/actions/talk-proposals/delete-talk-proposal';
 import { createTalkFromProposal } from '@/actions/talks/create-talk-from-proposal';
 import { CheckCircle, XCircle, Trash2, Mic, Loader2 } from 'lucide-react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   proposalId: string;
@@ -36,7 +37,13 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
       await updateTalkProposalStatus(proposalId, status);
       toast.success(status === 'ACCEPTED' ? 'Propuesta aceptada' : 'Propuesta rechazada');
     } catch (error: any) {
-      toast.error(error.message || 'Error al actualizar el estado');
+      toast.error(
+        actionErrorMessage(
+          error,
+          'No se pudo actualizar la propuesta. Revisá que gestiones este evento.',
+          true,
+        ),
+      );
     } finally {
       setIsPending(false);
     }
@@ -52,7 +59,13 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
         toast.success('Charla creada a partir de la propuesta');
       }
     } catch (error: any) {
-      toast.error(error.message || 'Error al crear la charla');
+      toast.error(
+        actionErrorMessage(
+          error,
+          'No se pudo crear la charla. Revisá que gestiones este evento.',
+          true,
+        ),
+      );
     } finally {
       setIsPending(false);
     }
@@ -64,7 +77,13 @@ export function ProposalStatusActions({ proposalId, currentStatus, speakerName, 
       await deleteTalkProposal(proposalId);
       toast.success('Propuesta eliminada');
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar la propuesta');
+      toast.error(
+        actionErrorMessage(
+          error,
+          'No se pudo eliminar la propuesta. Revisá que gestiones este evento.',
+          true,
+        ),
+      );
     } finally {
       setIsPending(false);
     }
