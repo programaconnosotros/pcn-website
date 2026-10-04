@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { findMusicSet } from '@/components/music/music-sets';
 import { useMusicPlayer } from '@/components/music/use-music-player';
 import { cn } from '@/lib/utils';
@@ -288,6 +289,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const [launcherOpen, setLauncherOpen] = useState(false);
   const musicPlayer = useMusicPlayer();
   const { play: playMusic } = musicPlayer;
+  const router = useRouter();
   const iframes = useRef(new Map<string, HTMLIFrameElement>());
   const opened = useRef(false);
 
@@ -375,6 +377,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
       if (event.data.type === 'open' && viewport)
         dispatch({ type: 'openPath', path: event.data.path, viewport });
+      if (event.data.type === 'session') router.refresh();
       if (event.data.type === 'search') openGlobalSearch(event.data.query);
       if (event.data.type === 'playMusic') {
         const set = findMusicSet(event.data.id);
@@ -383,7 +386,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [isOs, viewport, playMusic]);
+  }, [isOs, viewport, playMusic, router]);
 
   const openProgram = useCallback(
     (program: OsProgram) => {

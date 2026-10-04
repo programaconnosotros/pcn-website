@@ -1,4 +1,5 @@
 'use client';
+import { notifyOsSessionChange } from '@/components/os/os-env';
 import { signIn } from '@/actions/auth/sign-in';
 import { Button } from '@/components/ui/button';
 import {
@@ -58,6 +59,7 @@ function SignInContent() {
 
       if (result.success) {
         toast.success('Hola! 👋');
+        notifyOsSessionChange();
         router.push(result.redirectTo);
         return;
       }

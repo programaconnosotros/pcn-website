@@ -1,5 +1,6 @@
 'use client';
 
+import { notifyOsSessionChange } from '@/components/os/os-env';
 import { sendVerificationCode } from '@/actions/auth/send-verification-code';
 import { verifyEmailCode } from '@/actions/auth/verify-email-code';
 import { Button } from '@/components/ui/button';
@@ -89,6 +90,7 @@ function VerifyEmailContent() {
     try {
       await verifyEmailCode(email, values.code);
       setIsVerified(true);
+      notifyOsSessionChange();
       toast.success('¡Email verificado! Redirigiendo...');
       setTimeout(() => {
         router.push(redirectTo);

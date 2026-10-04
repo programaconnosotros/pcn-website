@@ -10,6 +10,8 @@ export type OsMessage =
   | { source: typeof OS_MESSAGE_SOURCE; type: 'location'; path: string; title: string }
   | { source: typeof OS_MESSAGE_SOURCE; type: 'focus' }
   | { source: typeof OS_MESSAGE_SOURCE; type: 'open'; path: string }
+  /** The user signed in (or out) inside a window, so the desktop has to reload who it shows. */
+  | { source: typeof OS_MESSAGE_SOURCE; type: 'session' }
   /** Plays a music set in the desktop's player, so it keeps playing when the window closes. */
   | { source: typeof OS_MESSAGE_SOURCE; type: 'playMusic'; id: string }
   /** Opens the desktop's global search (⌘K pressed inside a window). */
@@ -37,6 +39,11 @@ type OutgoingOsMessage = OsMessage extends infer M
 /** Sends a message from a PCN OS window to the desktop host. */
 export const postToOsHost = (message: OutgoingOsMessage) =>
   window.parent.postMessage({ source: OS_MESSAGE_SOURCE, ...message }, window.location.origin);
+
+/** Tells the desktop the session changed from inside a window; no-op outside a window. */
+export const notifyOsSessionChange = () => {
+  if (isEmbedded()) postToOsHost({ type: 'session' });
+};
 
 /**
  * Detail pages that PCN OS opens in a window of their own instead of navigating the window the
