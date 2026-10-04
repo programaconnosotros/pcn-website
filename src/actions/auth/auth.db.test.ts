@@ -165,9 +165,7 @@ describe('signUp', () => {
     expect(user.emailVerified).toBe(false);
   });
 
-  // BUG: el chequeo de email duplicado distingue mayúsculas. Con `ana@x` registrada, `Ana@x` crea
-  // una segunda cuenta para la misma casilla (y el login con la otra capitalización falla).
-  it.failing('treats an email that differs only in case as a duplicate', async () => {
+  it('treats an email that differs only in case as a duplicate', async () => {
     const lower = `caso-${uid()}@test.pcn`;
     await createUser({ email: lower });
 

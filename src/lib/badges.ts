@@ -90,8 +90,9 @@ export const BADGE_TONES = {
 
 export type BadgeTone = keyof typeof BADGE_TONES;
 
-export const isBadgeIcon = (value: string): value is BadgeIcon => value in BADGE_ICONS;
-export const isBadgeTone = (value: string): value is BadgeTone => value in BADGE_TONES;
+// Object.hasOwn y no `in`: `in` también acepta 'constructor', 'toString' o '__proto__'
+export const isBadgeIcon = (value: string): value is BadgeIcon => Object.hasOwn(BADGE_ICONS, value);
+export const isBadgeTone = (value: string): value is BadgeTone => Object.hasOwn(BADGE_TONES, value);
 
 /** A badge as the UI draws it, whether built-in (ambassador, co-founder) or custom. */
 export type DisplayBadge = {

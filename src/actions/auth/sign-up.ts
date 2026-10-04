@@ -34,8 +34,10 @@ export const signUp = async (
 
   try {
     // Verificar si el email ya existe antes de intentar crear
-    const existingUser = await prisma.user.findUnique({
-      where: { email: cleanedData.email },
+    // Sin distinguir mayúsculas: Ana@x.com y ana@x.com son el mismo buzón
+    const existingUser = await prisma.user.findFirst({
+      where: { email: { equals: cleanedData.email, mode: 'insensitive' } },
+      select: { id: true },
     });
 
     if (existingUser) {

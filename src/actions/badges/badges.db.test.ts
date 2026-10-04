@@ -58,10 +58,7 @@ describe('createBadge', () => {
     expect(await prisma.badge.count({ where: { name: input.name.trim() } })).toBe(0);
   });
 
-  // BUG: isBadgeIcon/isBadgeTone (src/lib/badges.ts:93-94) usan `value in BADGE_ICONS`, que
-  // también es true para las claves del prototipo de Object. Un badge con ícono `constructor` o
-  // `toString` se guarda, y al dibujarlo BADGE_ICONS[icon] es una función de Object, no un ícono.
-  it.failing.each([['constructor'], ['toString'], ['__proto__']])(
+  it.each([['constructor'], ['toString'], ['__proto__']])(
     'rejects the Object prototype key %s as an icon',
     async (icon) => {
       await asAdmin();
@@ -72,10 +69,7 @@ describe('createBadge', () => {
     },
   );
 
-  // BUG: createBadge (src/actions/badges/badge-actions.ts:47-48) crea el badge y después lo
-  // entrega fuera de una transacción. Si el usuario no existe, el admin ve el error pero el badge
-  // ya quedó creado (y un reintento crea otro igual).
-  it.failing('creates nothing when the user to award it to does not exist', async () => {
+  it('creates nothing when the user to award it to does not exist', async () => {
     await asAdmin();
     const input = badgeInput();
 

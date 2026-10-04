@@ -27,7 +27,7 @@ const input = {
 const createdUser = { id: 'user-1', name: 'Ana Pérez', email: 'ana@example.com' };
 
 const mockCreate = () => {
-  prismaMock.user.findUnique.mockResolvedValue(null);
+  prismaMock.user.findFirst.mockResolvedValue(null);
   prismaMock.user.create.mockResolvedValue(createdUser as never);
   prismaMock.emailVerificationToken.create.mockResolvedValue({} as never);
 };
@@ -116,7 +116,7 @@ describe('signUp', () => {
   });
 
   it('returns EMAIL_ALREADY_EXISTS when the email is taken', async () => {
-    prismaMock.user.findUnique.mockResolvedValue({ id: 'other' } as never);
+    prismaMock.user.findFirst.mockResolvedValue({ id: 'other' } as never);
 
     await expect(signUp(input)).resolves.toEqual({
       success: false,
@@ -126,7 +126,7 @@ describe('signUp', () => {
   });
 
   it('maps a P2002 unique violation on email to EMAIL_ALREADY_EXISTS', async () => {
-    prismaMock.user.findUnique.mockResolvedValue(null);
+    prismaMock.user.findFirst.mockResolvedValue(null);
     prismaMock.user.create.mockRejectedValue({ code: 'P2002', meta: { target: ['email'] } });
 
     await expect(signUp(input)).resolves.toEqual({
@@ -136,7 +136,7 @@ describe('signUp', () => {
   });
 
   it('returns UNKNOWN_ERROR for other database failures', async () => {
-    prismaMock.user.findUnique.mockResolvedValue(null);
+    prismaMock.user.findFirst.mockResolvedValue(null);
     prismaMock.user.create.mockRejectedValue({ code: 'P2002', meta: { target: ['name'] } });
 
     await expect(signUp(input)).resolves.toEqual({ success: false, error: 'UNKNOWN_ERROR' });
@@ -164,6 +164,6 @@ describe('signUp', () => {
     await expect(
       signUp({ ...input, password: 'short', confirmPassword: 'short' }),
     ).rejects.toThrow();
-    expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
   });
 });

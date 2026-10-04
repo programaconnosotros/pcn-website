@@ -99,6 +99,7 @@ describe('createComment', () => {
   it('creates a reply when parentCommentId is provided', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.findUnique.mockResolvedValue({ adviseId: validInput.adviseId } as any);
     prismaMock.comment.create.mockResolvedValue({
       ...mockComment,
       parentCommentId: 'comment-parent',
@@ -115,5 +116,19 @@ describe('createComment', () => {
         data: expect.objectContaining({ parentCommentId: 'comment-parent' }),
       }),
     );
+  });
+
+  it.each([
+    ['belongs to another advise', { adviseId: 'otro-consejo' }],
+    ['does not exist', null],
+  ])('rejects a reply whose parent comment %s', async (_case, parent) => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.findUnique.mockResolvedValue(parent as any);
+
+    await expect(
+      createComment({ ...validInput, parentCommentId: 'comment-parent' }),
+    ).rejects.toThrow('El comentario al que respondés no es de este consejo');
+    expect(prismaMock.comment.create).not.toHaveBeenCalled();
   });
 });

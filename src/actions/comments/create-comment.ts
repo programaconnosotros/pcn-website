@@ -33,6 +33,18 @@ export const createComment = async ({
 
   if (!session) throw new Error('Sesión no encontrada');
 
+  // Una respuesta va en el mismo consejo que su comentario padre: si no, quedaría colgada de un
+  // hilo de otro consejo y no aparecería en ninguno.
+  if (validatedData.parentCommentId) {
+    const parent = await prisma.comment.findUnique({
+      where: { id: validatedData.parentCommentId },
+      select: { adviseId: true },
+    });
+    if (!parent || parent.adviseId !== validatedData.adviseId) {
+      throw new Error('El comentario al que respondés no es de este consejo');
+    }
+  }
+
   const comment = await prisma.comment.create({
     data: {
       content: validatedData.content,

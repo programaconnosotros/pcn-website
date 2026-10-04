@@ -41,6 +41,12 @@ export async function createBadge(input: BadgeInput, userId?: string) {
   const parsed = badgeSchema.safeParse(input);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
 
+  // El usuario se valida antes de crear nada: si no existe, no queda una insignia huérfana que un
+  // reintento duplicaría.
+  if (userId && !(await prisma.user.findUnique({ where: { id: userId }, select: { id: true } }))) {
+    throw new Error('Usuario no encontrado');
+  }
+
   const badge = await prisma.badge.create({ data: parsed.data });
   if (userId) await award(userId, badge.id, admin.id);
   return badge;

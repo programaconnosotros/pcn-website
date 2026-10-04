@@ -111,11 +111,7 @@ describe('createComment', () => {
     expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(0);
   });
 
-  // BUG: createComment no comprueba que el comentario padre sea del mismo consejo. Una respuesta
-  // a un comentario del consejo A enviada con adviseId del consejo B queda guardada en B, colgando
-  // de un hilo de A: no aparece en ninguno de los dos hilos (getAdviseById de A busca respuestas
-  // por parentCommentId pero la cuenta en B, y B no la muestra porque no es de primer nivel).
-  it.failing('rejects a reply whose parent comment belongs to another advise', async () => {
+  it('rejects a reply whose parent comment belongs to another advise', async () => {
     const author = await quickUser();
     const adviseA = await makeAdvise(author.id);
     const adviseB = await makeAdvise(author.id);
