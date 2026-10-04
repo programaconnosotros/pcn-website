@@ -46,6 +46,7 @@ export const layerLabels: Record<AutomatedLayer, string> = {
   unit: 'unit',
   'server-action': 'server action',
   'route-handler': 'route handler',
+  integration: 'integración',
   e2e: 'e2e',
 };
 
@@ -56,6 +57,10 @@ const preconditionsByLayer: Record<AutomatedLayer, string[]> = {
     'Prisma, cookies() y headers() mockeados por jest.setup.ts (no hace falta base de datos)',
   ],
   'route-handler': ['pnpm install', 'Prisma y S3 mockeados (no hace falta base de datos)'],
+  integration: [
+    'pnpm install',
+    'Postgres local corriendo (DATABASE_URL); pnpm test:db crea y borra su propia base con las migraciones',
+  ],
   e2e: ['App corriendo en http://localhost:3000', 'npx playwright install'],
 };
 
@@ -63,7 +68,7 @@ const preconditionsByLayer: Record<AutomatedLayer, string[]> = {
 const runCommand = (suite: AutomatedSuite, name: string) =>
   suite.layer === 'e2e'
     ? `npx playwright test ${suite.file} -g "${name}"`
-    : `pnpm test -- "${suite.file}" -t "${name.replaceAll(' › ', ' ')}"`;
+    : `pnpm ${suite.layer === 'integration' ? 'test:db' : 'test'} -- "${suite.file}" -t "${name.replaceAll(' › ', ' ')}"`;
 
 export const automatedCases: TestCase[] = automatedSuites.flatMap((suite) =>
   suite.tests.map(([id, name]) => ({

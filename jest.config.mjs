@@ -11,6 +11,8 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   // Scope to src/ only — keeps Playwright tests/example.spec.ts out of Jest
   testMatch: ['<rootDir>/src/**/*.test.ts'],
+  // Los de integración necesitan Postgres y corren aparte con `pnpm test:db` (jest.db.config.mjs)
+  testPathIgnorePatterns: ['/node_modules/', '\\.db\\.test\\.ts$'],
   clearMocks: true,
   // next/jest can't parse JSONC comments in tsconfig.json so path aliases are
   // not auto-generated; list them here explicitly.

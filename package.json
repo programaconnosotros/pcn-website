@@ -31,6 +31,7 @@
     "prepare": "husky",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:db": "jest --config jest.db.config.mjs",
     "db:diagram": "node scripts/generate-db-schema.mjs && prettier --write 'src/app/(platform)/desarrollo/db-schema.ts'",
     "qa:cases": "node scripts/generate-automated-cases.mjs",
     "github:stats": "node scripts/update-github-stats.mjs",

@@ -29,7 +29,7 @@ export type TestCaseType = 'manual' | 'automatizado';
 export type TestCasePriority = 'alta' | 'media' | 'baja';
 
 /** Where an automated test runs: a pure function, a server action, a route handler or a browser. */
-export type AutomatedLayer = 'unit' | 'server-action' | 'route-handler' | 'e2e';
+export type AutomatedLayer = 'unit' | 'server-action' | 'route-handler' | 'integration' | 'e2e';
 
 export type TestCase = {
   /** `TC-GAL-001` for manual cases, `TC-GAL-A001` for automated ones. */

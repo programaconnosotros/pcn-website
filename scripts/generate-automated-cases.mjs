@@ -1,6 +1,7 @@
 // Writes the list of automated test cases that /desarrollo/calidad shows: every Jest test under
-// src/ (taken from a real `jest --json` run, so names match what Jest reports) plus the Playwright
-// specs in tests/. Run it after adding, renaming or removing tests: `pnpm qa:cases`.
+// src/ (taken from real `jest --json` runs, so names match what Jest reports: `pnpm test` and the
+// integration suite of `pnpm test:db`, which needs the local Postgres) plus the Playwright specs
+// in tests/. Run it after adding, renaming or removing tests: `pnpm qa:cases`.
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -44,6 +45,7 @@ const AREAS = [
   [/^src\/app\/\(platform\)\/desarrollo\//, 'plataforma'],
   [/^src\/components\/desarrollo\//, 'plataforma'],
   [/^src\/lib\/tab-title/, 'plataforma'],
+  [/^src\/(lib\/sql-safety|test\/)/, 'plataforma'],
   [/^src\/components\/os\//, 'pcn-os'],
   [/^tests\/.*\.spec\.ts$/, 'plataforma'],
 ];
@@ -77,6 +79,8 @@ const HIGH = [
   /^src\/actions\/users\/set-user-role/,
   /^src\/actions\/upload\//,
   /^src\/app\/api\/galeria\/\[id\]\/descargar/,
+  /^src\/(lib\/sql-safety|test\/sql-injection)/,
+  /\.db\.test\.ts$/,
 ];
 const LOW = [
   /^src\/lib\/(changelog|rss|ics|github-contributions|achievements)/,
@@ -86,6 +90,7 @@ const LOW = [
 
 const layerOf = (file) => {
   if (file.startsWith('tests/')) return 'e2e';
+  if (file.endsWith('.db.test.ts')) return 'integration';
   if (file.startsWith('src/actions/')) return 'server-action';
   if (/\/route\.test\.ts$/.test(file)) return 'route-handler';
   return 'unit';
@@ -101,17 +106,29 @@ const priorityOf = (file) =>
   HIGH.some((p) => p.test(file)) ? 'alta' : LOW.some((p) => p.test(file)) ? 'baja' : 'media';
 
 // ─── Jest ────────────────────────────────────────────────────────────────────
-const dir = mkdtempSync(join(tmpdir(), 'pcn-qa-'));
-const report = join(dir, 'jest.json');
-try {
-  execFileSync('node_modules/.bin/jest', ['--json', `--outputFile=${report}`, '--silent'], {
-    stdio: ['ignore', 'ignore', 'inherit'],
-  });
-} catch {
-  // A failing test still lands in the report; the list of cases doesn't depend on it passing.
-}
-const jest = JSON.parse(readFileSync(report, 'utf8'));
-rmSync(dir, { recursive: true, force: true });
+const runJest = (config) => {
+  const dir = mkdtempSync(join(tmpdir(), 'pcn-qa-'));
+  const report = join(dir, 'jest.json');
+  try {
+    execFileSync(
+      'node_modules/.bin/jest',
+      [...(config ? ['--config', config] : []), '--json', `--outputFile=${report}`, '--silent'],
+      { stdio: ['ignore', 'ignore', 'inherit'] },
+    );
+  } catch {
+    // A failing test still lands in the report; the list of cases doesn't depend on it passing.
+  }
+  try {
+    return JSON.parse(readFileSync(report, 'utf8'));
+  } catch {
+    throw new Error(`jest ${config ?? ''} wrote no report (for test:db, is Postgres running?)`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+const jest = {
+  testResults: [...runJest().testResults, ...runJest('jest.db.config.mjs').testResults],
+};
 
 // A suite that crashed before running (e.g. a timeout under load) reports no tests at all;
 // writing that would silently drop its cases, so stop instead.

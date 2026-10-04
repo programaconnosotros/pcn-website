@@ -88,9 +88,10 @@ const ItemList = ({ items, planned }: { items: QualityItem[]; planned?: boolean 
 );
 
 // How the automated suite splits by layer, widest at the bottom like the testing pyramid.
-const layers: AutomatedLayer[] = ['e2e', 'route-handler', 'server-action', 'unit'];
+const layers: AutomatedLayer[] = ['e2e', 'integration', 'route-handler', 'server-action', 'unit'];
 const layerDetail: Record<AutomatedLayer, string> = {
   e2e: 'navegador real con Playwright contra la app corriendo',
+  integration: 'server actions y queries contra un Postgres real (pnpm test:db)',
   'route-handler': 'endpoints de src/app/api con Request y Response reales',
   'server-action': 'src/actions con Prisma, cookies y headers mockeados',
   unit: 'funciones puras de src/lib, schemas y contenido',
