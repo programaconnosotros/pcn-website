@@ -12,6 +12,8 @@ import type { ModelName } from '@/lib/prisma-models';
 // several, add a shared cacheHandler (e.g. Redis) or each one keeps serving its own copy.
 
 const DAY = 86_400;
+// Next drops data cache entries over 2MB (with a warning that doesn't say which read it was).
+const MAX_ENTRY_BYTES = 2 * 1024 * 1024;
 
 export const modelTag = (model: ModelName) => `db:${model}`;
 
@@ -87,7 +89,12 @@ export const cached = <Args extends unknown[], Result>(
         process.env.NODE_ENV === 'production'
           ? await run()
           : await tracking.run({ name, models: declared, warned: new Set() }, run);
-      return JSON.stringify(result, encode);
+      const json = JSON.stringify(result, encode);
+      if (json.length > MAX_ENTRY_BYTES)
+        console.warn(
+          `[cache] ${name} is ${json.length} bytes: Next doesn't cache entries over 2MB`,
+        );
+      return json;
     },
     [name],
     { tags: models.map(modelTag), revalidate },
