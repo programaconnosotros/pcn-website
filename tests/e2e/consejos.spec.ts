@@ -27,7 +27,7 @@ const openPublishDialog = async (page: Page) => {
   return dialog;
 };
 
-const publish = async (page: Page, content: string) => {
+const publish = async (page: Page, content: string, { invalid = false } = {}) => {
   const dialog = await openPublishDialog(page);
   const textbox = dialog.getByPlaceholder('Escribí acá tu consejo...');
   // El diálogo recién abierto puede re-renderizarse con el refresh del servidor: reintenta el texto
@@ -35,7 +35,12 @@ const publish = async (page: Page, content: string) => {
     await textbox.fill(content);
     await expect(textbox).toHaveValue(content, { timeout: 1_000 });
   }).toPass();
-  // Espera la respuesta de la action: el formulario se limpia recién ahí (ver el BUG más abajo)
+  // Un texto inválido lo frena el form: no hay action que esperar
+  if (invalid) {
+    await dialog.getByRole('button', { name: 'publicar();' }).click();
+    return dialog;
+  }
+  // Espera la respuesta de la action: el formulario se limpia recién ahí
   await Promise.all([
     page.waitForResponse(
       (response) =>
@@ -55,7 +60,7 @@ test.describe('con un usuario propio', () => {
     const content = `Consejo ${uniqueId('e2e-con')}`; // ~20 caracteres
     const dialog = await publish(page, content);
 
-    await expect(page.getByText('Publicando consejo...')).toBeVisible();
+    // El toast de carga ya pasó a éxito cuando publish() vuelve (espera la respuesta de la action)
     await expect(page.getByText('Consejo publicado! 👏')).toBeVisible();
     await expect(dialog).toBeHidden();
 
@@ -70,7 +75,7 @@ test.describe('con un usuario propio', () => {
     await signIn(page, user);
     await page.goto('/consejos');
 
-    const dialog = await publish(page, '123456789');
+    const dialog = await publish(page, '123456789', { invalid: true });
     await expect(dialog.getByText('Tenés que escribir al menos 10 caracteres')).toBeVisible();
 
     await dialog.getByPlaceholder('Escribí acá tu consejo...').fill('a'.repeat(1001));
@@ -258,14 +263,18 @@ test.describe('con un usuario propio', () => {
     await page.goto(`/consejos/${advise.id}`);
 
     const comment = `Comentario ${uniqueId('e2e-con')}`;
-    await page.getByPlaceholder('Escribe tu comentario...').fill(comment);
-    await page.getByRole('button', { name: 'enviarComentario();' }).click();
+    // Next puede dejar oculta una copia de la página anterior: solo el campo visible
+    await page.getByPlaceholder('Escribe tu comentario...').filter({ visible: true }).fill(comment);
+    await page
+      .getByRole('button', { name: 'enviarComentario();' })
+      .filter({ visible: true })
+      .click();
     await expect(page.getByText('Comentario creado')).toBeVisible();
     await expect(page.getByRole('paragraph').filter({ hasText: comment })).toBeVisible();
 
     await page.getByRole('button', { name: 'Responder' }).first().click();
     const reply = `Respuesta ${uniqueId('e2e-con')}`;
-    await page.getByPlaceholder('Escribe tu respuesta...').fill(reply);
+    await page.getByPlaceholder('Escribe tu respuesta...').filter({ visible: true }).fill(reply);
     await page.getByRole('button', { name: 'enviarRespuesta();' }).click();
     await expect(page.getByRole('paragraph').filter({ hasText: reply })).toBeVisible();
 

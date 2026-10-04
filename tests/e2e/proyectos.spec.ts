@@ -374,7 +374,12 @@ test.describe('sin sesión', () => {
     await expect(page.getByRole('button', { name: /^Acciones de / })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'ordenar();' })).toHaveCount(0);
 
-    await page.getByRole('link', { name: 'iniciarSesion();' }).first().click();
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: 'iniciarSesion();' })
+      .filter({ visible: true })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
   });
 

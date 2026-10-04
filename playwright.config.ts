@@ -23,6 +23,9 @@ export default defineConfig({
   use: {
     baseURL: E2E_BASE_URL,
     locale: 'es-AR',
+    // Sin animaciones (el sitio respeta prefers-reduced-motion): un botón que late nunca queda
+    // "estable" para hacerle click
+    contextOptions: { reducedMotion: 'reduce' },
     timezoneId: 'America/Argentina/Buenos_Aires',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
