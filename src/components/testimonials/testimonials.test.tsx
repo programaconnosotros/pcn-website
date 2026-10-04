@@ -245,9 +245,16 @@ describe('TestimonialForm', () => {
     expect(onSuccess).not.toHaveBeenCalled();
   });
 
-  // BUG: when saving fails, onSubmit re-throws the action's error (`await promise` without a
-  // catch), so react-hook-form's handleSubmit rejects and the browser gets an unhandled promise
-  // rejection on top of the error toast. It can't be an `it.failing` test: Jest reports the
-  // unhandled rejection as a failure of its own. Handle it like handleDelete does.
-  it.todo('handles a failed save without an unhandled rejection');
+  it('handles a failed save without an unhandled rejection', async () => {
+    (createTestimonial as jest.Mock).mockRejectedValue(new Error('falló'));
+    const onSuccess = jest.fn();
+    const user = userEvent.setup();
+    render(<TestimonialForm onCancel={jest.fn()} onSuccess={onSuccess} />);
+
+    await write(user, 'Una experiencia genial');
+    await user.click(screen.getByRole('button', { name: /crear\(\);/ }));
+
+    await waitFor(() => expect(screen.getByRole('button', { name: /crear\(\);/ })).toBeEnabled());
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
 });

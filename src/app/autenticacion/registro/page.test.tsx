@@ -63,9 +63,7 @@ describe('SignUpPage', () => {
   });
   afterEach(() => consoleError.mockRestore());
 
-  // BUG: defaultValues sets `password: undefined`, so the password input starts uncontrolled and
-  // React warns when the user types into it. It should default to ''.
-  it.failing('keeps the password input controlled from the start', async () => {
+  it('keeps the password input controlled from the start', async () => {
     const user = userEvent.setup();
     render(<SignUpPage />);
 

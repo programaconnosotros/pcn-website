@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Loader2 } from 'lucide-react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface DeleteAdviseDialogProps {
   adviseId: string;
@@ -24,14 +25,18 @@ export const DeleteAdviseDialog = ({ adviseId, isOpen, onOpenChange }: DeleteAdv
 
   const handleDelete = () => {
     startTransition(async () => {
-      await toast.promise(deleteAdvise(adviseId), {
+      // toast.promise devuelve el id del toast: se espera la action para que la transición dure lo
+      // que tarda en borrarse
+      const promise = deleteAdvise(adviseId);
+      toast.promise(promise, {
         loading: 'Eliminando consejo...',
         success: () => {
           onOpenChange(false);
           return 'Consejo eliminado correctamente';
         },
-        error: 'Error al eliminar el consejo',
+        error: (error) => actionErrorMessage(error, 'Error al eliminar el consejo'),
       });
+      await promise.catch(() => {});
     });
   };
 

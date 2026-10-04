@@ -72,6 +72,8 @@ export function TestimonialForm({
 
       await promise;
       onSuccess();
+    } catch {
+      // Error ya manejado por toast.promise
     } finally {
       setIsSubmitting(false);
     }

@@ -35,16 +35,22 @@ export const EditAdviseDialog = ({
 
   const onSubmitEditAdvise = async ({ content }: AdviseFormData) => {
     setIsSubmitting(true);
+    // toast.promise devuelve el id del toast: se espera la action para que el botón quede en
+    // "editando" mientras corre
+    const promise = editAdvise({ id: adviseId, content });
+    toast.promise(promise, {
+      loading: 'Editando consejo...',
+      success: () => {
+        form.reset({ content });
+        onOpenChange(false);
+        return 'Tu consejo fue editado exitosamente.';
+      },
+      error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
+    });
     try {
-      await toast.promise(editAdvise({ id: adviseId, content }), {
-        loading: 'Editando consejo...',
-        success: () => {
-          form.reset({ content });
-          onOpenChange(false);
-          return 'Tu consejo fue editado exitosamente.';
-        },
-        error: (error) => actionErrorMessage(error, 'Ocurrió un error al editar el consejo'),
-      });
+      await promise;
+    } catch {
+      // El toast ya avisó del error
     } finally {
       setIsSubmitting(false);
     }

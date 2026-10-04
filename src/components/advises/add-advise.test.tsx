@@ -72,10 +72,7 @@ describe('AddAdvise', () => {
     );
   });
 
-  // BUG: `await toast.promise(...)` doesn't wait for the action (sonner returns a toast id, not a
-  // promise), so the dialog closes right away even when publishing fails, hiding the error
-  // context and the text the user wrote.
-  it.failing('keeps the dialog open when publishing fails', async () => {
+  it('keeps the dialog open when publishing fails', async () => {
     createMock.mockRejectedValue(new Error('boom'));
     const user = userEvent.setup();
     render(<AddAdvise />);

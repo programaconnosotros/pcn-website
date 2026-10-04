@@ -81,10 +81,7 @@ describe('LikeButton', () => {
     expect(toggleMock).toHaveBeenCalledTimes(1);
   });
 
-  // BUG: the optimistic update runs outside a transition, so React discards it right away (and
-  // warns "An optimistic state update occurred outside a transition or action"): the heart and
-  // the counter don't change until the server action finishes and the page re-renders.
-  it.failing('shows the like optimistically while the action runs', async () => {
+  it('shows the like optimistically while the action runs', async () => {
     toggleMock.mockReturnValue(new Promise(() => {}));
     render(<LikeButton adviseId="a1" likes={[]} session={session} />);
 

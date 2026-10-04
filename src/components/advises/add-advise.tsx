@@ -32,16 +32,22 @@ export const AddAdvise = () => {
 
   async function onSubmit({ content }: AdviseFormData) {
     setIsSubmitting(true);
+    // toast.promise devuelve el id del toast, no la promesa: se espera la action en sí, así el
+    // diálogo queda abierto (con lo escrito) si falla
+    const promise = createAdvise(content);
+    toast.promise(promise, {
+      loading: 'Publicando consejo...',
+      success: () => {
+        form.reset();
+        return 'Consejo publicado! 👏';
+      },
+      error: (error) => actionErrorMessage(error, 'Ocurrió un error al publicar el consejo'),
+    });
     try {
-      await toast.promise(createAdvise(content), {
-        loading: 'Publicando consejo...',
-        success: () => {
-          form.reset();
-          return 'Consejo publicado! 👏';
-        },
-        error: (error) => actionErrorMessage(error, 'Ocurrió un error al publicar el consejo'),
-      });
+      await promise;
       setDialogOpen(false);
+    } catch {
+      // El toast ya avisó del error
     } finally {
       setIsSubmitting(false);
     }

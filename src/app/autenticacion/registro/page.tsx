@@ -69,7 +69,7 @@ function SignUpContent() {
     defaultValues: {
       name: '',
       email: '',
-      password: undefined,
+      password: '',
       confirmPassword: '',
       phoneNumber: '',
       country: '',

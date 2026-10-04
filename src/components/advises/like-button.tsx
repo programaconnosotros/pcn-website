@@ -3,8 +3,9 @@
 import { toggleLike } from '@/actions/advises/like-advise';
 import type { SessionWithUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { Heart } from 'lucide-react';
-import { useOptimistic, useState } from 'react';
+import { startTransition, useOptimistic, useState } from 'react';
 import { toast } from 'sonner';
 
 type LikeRef = { userId: string };
@@ -41,15 +42,20 @@ export function LikeButton({
     if (isLiking) return;
 
     setIsLiking(true);
-    try {
+    // El cambio optimista va dentro de una transición: fuera de una, React lo descarta y el
+    // corazón no cambia hasta que responde el servidor. Si la action falla, al terminar la
+    // transición vuelve solo al estado real.
+    startTransition(async () => {
       toggleOptimisticLike(userId);
-      await toggleLike(adviseId);
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      toggleOptimisticLike(userId);
-    } finally {
-      setIsLiking(false);
-    }
+      try {
+        await toggleLike(adviseId);
+      } catch (error) {
+        console.error('Error toggling like:', error);
+        toast.error(actionErrorMessage(error, 'No se pudo guardar el me gusta'));
+      } finally {
+        setIsLiking(false);
+      }
+    });
   };
 
   return (
