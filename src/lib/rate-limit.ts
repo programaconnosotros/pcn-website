@@ -2,6 +2,7 @@ import { cookies, headers } from 'next/headers';
 import { clientIpFrom } from '@/lib/client-ip';
 import { rateLimitDigest } from '@/lib/rate-limit-messages';
 import { findSession } from '@/lib/session';
+import { alertRateLimitHit } from '@/lib/security-alerts';
 
 type RateLimitRule = { limit: number; windowSeconds: number };
 
@@ -67,7 +68,9 @@ export const getRateLimitWait = async (name: RateLimitName) => {
   if (session?.user.role === 'ADMIN') return 0;
 
   const identity = session ? `user:${session.user.id}` : `ip:${await getClientIp()}`;
-  return consumeRateLimit(`${name}:${identity}`, RATE_LIMITS[name]);
+  const wait = consumeRateLimit(`${name}:${identity}`, RATE_LIMITS[name]);
+  if (wait > 0) await alertRateLimitHit(name, identity);
+  return wait;
 };
 
 /**

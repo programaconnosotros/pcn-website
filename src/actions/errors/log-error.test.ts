@@ -2,7 +2,10 @@ import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { alertServerError } from '@/lib/security-alerts';
 import { logError, logClientError } from './log-error';
+
+jest.mock('@/lib/security-alerts', () => ({ alertServerError: jest.fn() }));
 
 const adminUser = {
   id: 'user-admin',
@@ -63,6 +66,7 @@ describe('logError', () => {
         }),
       }),
     );
+    expect(alertServerError).toHaveBeenCalledWith('Something went wrong', '/api/test');
   });
 
   it('does not log errors for admin users', async () => {

@@ -5,6 +5,7 @@ import { cookies, headers } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 import { clientIpFrom } from '@/lib/client-ip';
+import { alertServerError } from '@/lib/security-alerts';
 
 // Tope de cada campo: estas actions se pueden llamar sin login, así que nadie debería poder
 // guardar textos gigantes en la base.
@@ -61,6 +62,8 @@ export const logError = async (
           : null,
       },
     });
+
+    await alertServerError(errorMessage, additionalData?.path);
   } catch (logError) {
     // Silenciar errores de logging para no crear un loop infinito
     console.error('Error logging error:', logError);

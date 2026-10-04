@@ -3,6 +3,9 @@ import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
 
 jest.unmock('@/lib/rate-limit');
+jest.mock('@/lib/security-alerts', () => ({ alertRateLimitHit: jest.fn() }));
+
+import { alertRateLimitHit } from '@/lib/security-alerts';
 
 import {
   RATE_LIMITS,
@@ -106,5 +109,16 @@ describe('enforceRateLimit', () => {
 
     await exhaust('comment');
     await expect(enforceRateLimit('comment')).resolves.toBeUndefined();
+  });
+
+  it('warns the admins when an IP hits the sign-in limit (possible brute force)', async () => {
+    mockCookies();
+    mockHeaders({ 'x-forwarded-for': '203.0.113.7' });
+
+    await exhaust('signIn');
+    expect(alertRateLimitHit).not.toHaveBeenCalled();
+
+    await expect(enforceRateLimit('signIn')).rejects.toThrow(/^RATE_LIMIT:signIn:\d+$/);
+    expect(alertRateLimitHit).toHaveBeenCalledWith('signIn', 'ip:203.0.113.7');
   });
 });
