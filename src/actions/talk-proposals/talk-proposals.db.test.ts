@@ -263,27 +263,20 @@ describe('createTalkFromProposal', () => {
     expect(await prisma.talk.count({ where: { proposalId } })).toBe(1);
   });
 
-  // BUG: createTalkFromProposal (src/actions/talks/create-talk-from-proposal.ts) checks
-  // `proposal.talk` and then creates the talk outside a transaction, so a double click (two
-  // requests at once) both pass the check and the second one fails with Prisma's raw unique
-  // constraint error on Talk.proposalId (P2002) instead of returning `alreadyExists`.
-  it.failing(
-    'a double click (two conversions at once) answers both with the same talk',
-    async () => {
-      const event = await openEvent();
-      const admin = await createAdmin();
-      const { proposalId } = await submitProposal(event.id);
-      await queueSessions([admin.id, admin.id]);
+  it('a double click (two conversions at once) answers both with the same talk', async () => {
+    const event = await openEvent();
+    const admin = await createAdmin();
+    const { proposalId } = await submitProposal(event.id);
+    await queueSessions([admin.id, admin.id]);
 
-      const results = await Promise.allSettled([
-        createTalkFromProposal(proposalId),
-        createTalkFromProposal(proposalId),
-      ]);
+    const results = await Promise.allSettled([
+      createTalkFromProposal(proposalId),
+      createTalkFromProposal(proposalId),
+    ]);
 
-      expect(results.map((r) => r.status)).toEqual(['fulfilled', 'fulfilled']);
-      expect(await prisma.talk.count({ where: { proposalId } })).toBe(1);
-    },
-  );
+    expect(results.map((r) => r.status)).toEqual(['fulfilled', 'fulfilled']);
+    expect(await prisma.talk.count({ where: { proposalId } })).toBe(1);
+  });
 
   it('rejects outsiders, organizers of other events and missing proposals', async () => {
     const event = await openEvent();

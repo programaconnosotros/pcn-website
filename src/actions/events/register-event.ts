@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { hasEventEnded } from '@/lib/event-status';
 import {
   activeWaitlistWhere,
   lockEvent,
@@ -52,6 +53,11 @@ export const registerEvent = async (
 
       if (event.externalRegistrationUrl) {
         throw new Error('La inscripción a este evento se hace en un sitio externo');
+      }
+
+      // Un evento que ya terminó no acepta inscripciones (y no deben contar como asistencia)
+      if (hasEventEnded(event)) {
+        throw new Error('Este evento ya terminó');
       }
 
       // Si quedó algún lugar libre, primero es de quienes ya estaban esperando

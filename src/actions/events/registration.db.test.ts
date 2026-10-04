@@ -218,10 +218,7 @@ describe('registerEvent', () => {
     expect(await activeRegistrations(event.id)).toBe(2);
   });
 
-  // BUG: registerEvent (src/actions/events/register-event.ts) never checks the event's date, so
-  // anyone can still register to a past event by calling the action, and that registration then
-  // counts as "attended" for the achievements (src/lib/achievement-metrics.ts).
-  it.failing('does not accept registrations to an event that already ended', async () => {
+  it('does not accept registrations to an event that already ended', async () => {
     const event = await createTestEvent({ date: daysFromNow(-30) });
     const user = await createUser();
     await actAs(user.id);

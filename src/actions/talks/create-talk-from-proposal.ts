@@ -40,28 +40,40 @@ export const createTalkFromProposal = async (proposalId: string) => {
     return { success: true, talkId: proposal.talk.id, alreadyExists: true };
   }
 
-  const talk = await prisma.talk.create({
-    data: {
-      eventId: proposal.eventId,
-      proposalId: proposal.id,
-      title: proposal.title,
-      description: proposal.description,
-      speakers: {
-        create: proposal.speakers.map((s, idx) => ({
-          userId: s.userId ?? null,
-          speakerName: s.speakerName,
-          speakerPhone: s.speakerPhone,
-          isProfessional: s.isProfessional,
-          jobTitle: s.jobTitle,
-          enterprise: s.enterprise,
-          isStudent: s.isStudent,
-          career: s.career,
-          studyPlace: s.studyPlace,
-          order: idx,
-        })),
+  // Un doble click convierte la misma propuesta dos veces a la vez: la segunda choca con la
+  // restricción única de proposalId y responde con la charla que creó la primera.
+  const talk = await prisma.talk
+    .create({
+      data: {
+        eventId: proposal.eventId,
+        proposalId: proposal.id,
+        title: proposal.title,
+        description: proposal.description,
+        speakers: {
+          create: proposal.speakers.map((s, idx) => ({
+            userId: s.userId ?? null,
+            speakerName: s.speakerName,
+            speakerPhone: s.speakerPhone,
+            isProfessional: s.isProfessional,
+            jobTitle: s.jobTitle,
+            enterprise: s.enterprise,
+            isStudent: s.isStudent,
+            career: s.career,
+            studyPlace: s.studyPlace,
+            order: idx,
+          })),
+        },
       },
-    },
-  });
+    })
+    .catch(async (error: unknown) => {
+      if ((error as { code?: string }).code !== 'P2002') throw error;
+      return null;
+    });
+
+  if (!talk) {
+    const existing = await prisma.talk.findUniqueOrThrow({ where: { proposalId: proposal.id } });
+    return { success: true, talkId: existing.id, alreadyExists: true };
+  }
 
   revalidatePath(`/eventos/${proposal.eventId}/charlas`);
   revalidatePath(`/eventos/${proposal.eventId}/propuestas-de-charlas`);
