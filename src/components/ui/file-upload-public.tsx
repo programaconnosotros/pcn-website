@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
 import { postUploadForm } from '@/lib/upload-form';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -48,6 +49,13 @@ export function FileUploadPublic({
     if (!file) return;
 
     setError(null);
+
+    // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
+    if (!isAllowedImage(file)) {
+      setError(IMAGE_TYPE_ERROR);
+      if (inputRef.current) inputRef.current.value = '';
+      return;
+    }
 
     // Validar tamaño
     if (file.size > maxSize) {

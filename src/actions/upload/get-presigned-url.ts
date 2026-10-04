@@ -3,9 +3,9 @@
 import { getImageUploadForm } from '@/lib/s3';
 import { cookies } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { ALLOWED_IMAGE_TYPES, IMAGE_TYPE_ERROR } from '@/lib/image-types';
 import { findSession } from '@/lib/session';
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const USER_UPLOAD_FOLDERS = ['profiles', 'project-logos'];
 
 type GetPresignedUrlParams = {
@@ -34,10 +34,8 @@ export async function getPresignedUrl({ contentType, folder = 'events' }: GetPre
     throw new Error('No tienes permisos para subir archivos');
   }
 
-  if (!ALLOWED_TYPES.includes(contentType)) {
-    throw new Error(
-      'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)',
-    );
+  if (!ALLOWED_IMAGE_TYPES.includes(contentType)) {
+    throw new Error(IMAGE_TYPE_ERROR);
   }
 
   return getImageUploadForm(contentType, folder);

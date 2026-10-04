@@ -112,6 +112,23 @@ describe('CommentSection', () => {
     );
   });
 
+  it('adds a reply to a reply to the same thread, so it shows up', async () => {
+    createMock.mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(<CommentSection adviseId="a1" comments={comments} session={buildSession()} />);
+
+    // El segundo "Responder" es el de la respuesta de Carla
+    await user.click(screen.getAllByRole('button', { name: 'Responder' })[1]);
+    await write(user, 'Escribe tu respuesta...', 'Y yo');
+    await user.click(screen.getByRole('button', { name: 'enviarRespuesta();' }));
+
+    expect(createMock).toHaveBeenCalledWith({
+      content: 'Y yo',
+      adviseId: 'a1',
+      parentCommentId: 'c1',
+    });
+  });
+
   it('shows validation errors on the reply form', async () => {
     const user = userEvent.setup();
     render(<CommentSection adviseId="a1" comments={comments} session={buildSession()} />);

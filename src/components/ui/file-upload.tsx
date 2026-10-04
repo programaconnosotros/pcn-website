@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
 import { postUploadForm } from '@/lib/upload-form';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
 
 type FileUploadProps = {
   value?: string;
@@ -66,9 +67,15 @@ export function FileUpload({
   const handleMultipleFiles = async (files: File[]) => {
     setError(null);
 
-    const tooLarge = files.filter((file) => file.size > maxSize);
-    const valid = files.filter((file) => file.size <= maxSize);
+    const wrongType = files.filter((file) => !isAllowedImage(file));
+    const tooLarge = files.filter((file) => isAllowedImage(file) && file.size > maxSize);
+    const valid = files.filter((file) => isAllowedImage(file) && file.size <= maxSize);
     const errors: string[] = [];
+    if (wrongType.length > 0) {
+      errors.push(
+        `${wrongType.map((f) => f.name).join(', ')}: no es una imagen JPEG, PNG, WebP o GIF`,
+      );
+    }
     if (tooLarge.length > 0) {
       errors.push(
         `${tooLarge.map((f) => f.name).join(', ')}: demasiado grande (máx. ${Math.round(maxSize / 1024 / 1024)}MB)`,
@@ -107,6 +114,13 @@ export function FileUpload({
     if (!file) return;
 
     setError(null);
+
+    // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
+    if (!isAllowedImage(file)) {
+      setError(IMAGE_TYPE_ERROR);
+      resetInput();
+      return;
+    }
 
     // Validar tamaño
     if (file.size > maxSize) {

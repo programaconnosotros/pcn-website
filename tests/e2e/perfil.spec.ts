@@ -193,12 +193,6 @@ test.describe('editing my profile', () => {
   });
 
   test('TC-PER-003 Foto de perfil (tipo no permitido)', async ({ page, db }) => {
-    // BUG: en producción el error de getPresignedUrl (src/actions/upload/get-presigned-url.ts:37)
-    // llega redactado como "Minified React error #441; visit https://react.dev/errors/441…" y
-    // actionErrorMessage (src/lib/rate-limit-messages.ts:83) solo reconoce el texto viejo "An error
-    // occurred in the Server Components render", así que el formulario muestra el error crudo de
-    // React en vez de "Tipo de archivo no permitido…" (ni siquiera el genérico "Error al subir").
-    test.fail();
     const user = await createUser(db, PREFIX);
     await openOwnProfileForm(page, user);
 

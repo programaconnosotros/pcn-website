@@ -36,6 +36,10 @@ type CommentSectionProps = {
 export const CommentSection = ({ adviseId, comments, session }: CommentSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  // De cada respuesta, el comentario que abre su hilo
+  const threadOf = new Map(
+    comments.flatMap((comment) => comment.replies.map((reply) => [reply.id, comment.id] as const)),
+  );
 
   const {
     register,
@@ -57,7 +61,8 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
       await createComment({
         content: data.content,
         adviseId,
-        parentCommentId: replyingTo,
+        // Los hilos tienen dos niveles: responder una respuesta la suma al mismo hilo
+        parentCommentId: replyingTo ? threadOf.get(replyingTo) ?? replyingTo : null,
       });
 
       reset();

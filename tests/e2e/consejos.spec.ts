@@ -126,11 +126,6 @@ test.describe('con un usuario propio', () => {
   });
 
   test('si publicar falla, el diálogo queda abierto con el texto', async ({ page, db }) => {
-    // BUG: src/components/advises/add-advise.tsx:33 hace `await toast.promise(...)`, pero en sonner 2
-    // toast.promise devuelve el id del toast, no la promesa: el diálogo se cierra apenas se envía,
-    // aunque la action falle (rate limit, error de red), y el form.reset() del éxito llega después
-    // y borra lo que se esté escribiendo si se reabrió el diálogo.
-    test.fail();
     const user = await createUser(db, 'e2e-con');
     await signIn(page, user);
     await page.goto('/consejos');
@@ -298,11 +293,6 @@ test.describe('con un usuario propio', () => {
   });
 
   test('responder a una respuesta queda visible en el consejo', async ({ page, db }) => {
-    // BUG: CommentSection (src/components/advises/comment-section.tsx) ofrece "Responder" también
-    // en las respuestas y guarda la nueva con parentCommentId = la respuesta, pero
-    // getConsejoDetail (src/lib/consejos-server.ts) solo trae comentarios raíz y sus respuestas
-    // directas: la respuesta a una respuesta se guarda, muestra "Comentario creado" y nunca aparece.
-    test.fail();
     const user = await createUser(db, 'e2e-con');
     const id = uniqueId('e2e-con');
     const parentContent = `Raíz ${uniqueId('e2e-con')}`;

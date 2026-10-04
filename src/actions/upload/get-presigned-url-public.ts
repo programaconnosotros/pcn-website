@@ -2,8 +2,7 @@
 
 import { getImageUploadForm } from '@/lib/s3';
 import { enforceRateLimit } from '@/lib/rate-limit';
-
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+import { ALLOWED_IMAGE_TYPES, IMAGE_TYPE_ERROR } from '@/lib/image-types';
 
 type GetPresignedUrlPublicParams = {
   contentType: string;
@@ -16,10 +15,8 @@ type GetPresignedUrlPublicParams = {
 export async function getPresignedUrlPublic({ contentType }: GetPresignedUrlPublicParams) {
   await enforceRateLimit('upload');
 
-  if (!ALLOWED_TYPES.includes(contentType)) {
-    throw new Error(
-      'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)',
-    );
+  if (!ALLOWED_IMAGE_TYPES.includes(contentType)) {
+    throw new Error(IMAGE_TYPE_ERROR);
   }
 
   // Siempre usar la carpeta registration-profiles para mayor seguridad
