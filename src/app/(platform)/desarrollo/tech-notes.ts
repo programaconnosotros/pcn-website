@@ -1075,6 +1075,93 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;`,
         docsUrl: 'https://www.prisma.io/docs',
       },
       {
+        id: 'cache-de-datos',
+        name: 'Cache de datos',
+        tagline: 'lecturas cacheadas que cada escritura vence sola',
+        what: 'Un cache de datos guarda el resultado de una consulta para no repetirla en cada request. Lo difícil no es guardar sino invalidar: saber cuándo lo guardado dejó de ser cierto. Next.js trae un data cache del lado del servidor (`unstable_cache`) donde cada entrada lleva tags, y `revalidateTag` vence todas las entradas de un tag de una vez.',
+        concepts: [
+          {
+            term: 'unstable_cache',
+            detail:
+              'Envuelve una función async: la primera llamada con ciertos argumentos consulta la base y guarda el resultado; las siguientes lo leen de memoria o de `.next/cache` hasta que vence o se invalida.',
+          },
+          {
+            term: 'tags',
+            detail:
+              'Etiquetas de cada entrada. `revalidateTag(tag, { expire: 0 })` vence todas las que la llevan y el próximo request las recalcula.',
+          },
+          {
+            term: 'invalidación por tabla',
+            detail:
+              'Cada lectura cacheada se etiqueta con las tablas que lee (`db:Event`); escribir en una tabla vence su tag. Más grueso que invalidar fila por fila, pero no hay forma de olvidarse un caso.',
+          },
+          {
+            term: 'datos que dependen de la hora',
+            detail:
+              'Lo que cambia con el reloj (qué eventos son próximos) no se cachea filtrado: se cachea la lista completa y se filtra en cada request.',
+          },
+        ],
+        usage: [
+          'Casi todo lo que el sitio muestra es igual para todos y cambia poco, así que las lecturas públicas pasan por `cached()` (`src/lib/cache.ts`): eventos, charlas, galería, consejos, proyectos, miembros, perfiles, logros, el feed, la búsqueda, el sitemap. Una página vista por alguien sin sesión no toca Postgres; con sesión, solo la busca a ella y lo propio (tu inscripción, tus likes).',
+          'Nadie invalida a mano: el cliente de Prisma tiene una extensión que, después de cada escritura, calcula qué tablas tocó (incluidas las escrituras anidadas y lo que se borra en cascada, a partir de las relaciones del schema) y vence sus tags. Una server action nueva no tiene que acordarse de nada.',
+          'Al cachear una lectura nueva hay que declarar todas las tablas que lee, incluidas las de los `include` y los filtros por relación. En desarrollo, si una lectura cacheada toca una tabla que no declaró, la consola avisa con `[cache] <nombre> reads <Tabla>`.',
+          'Las URLs firmadas de la galería vencen, así que se cachean las filas sin firmar y se firman después; cada firma se guarda durante su hora. Las tablas de tracking, logs, sesiones y tokens no se cachean nunca.',
+        ],
+        examples: [
+          {
+            file: 'src/lib/event-index.ts',
+            lang: 'ts',
+            caption: 'Una lectura cacheada: un nombre, la consulta y las tablas que lee.',
+            code: `export const listEventIndex = cached(
+  'event-index',
+  () =>
+    prisma.event.findMany({
+      where: { deletedAt: null },
+      orderBy: { date: 'asc' },
+      select: { id: true, name: true, date: true, endDate: true },
+    }),
+  { models: ['Event'] },
+);`,
+          },
+          {
+            file: 'src/actions/events/fetch-upcoming-events.ts',
+            lang: 'ts',
+            caption: 'Lo que depende de la hora se filtra sobre la lista cacheada.',
+            code: `export const fetchUpcomingEvents = async (limit: number = 5) => {
+  const now = new Date();
+  const events = await listEventIndex();
+  return events
+    .filter(({ date, endDate }) => date >= now || (endDate !== null && endDate >= now))
+    .slice(0, limit)
+    .map(({ id, name, date }) => ({ id, name, date }));
+};`,
+          },
+          {
+            file: 'src/lib/prisma.ts',
+            lang: 'ts',
+            caption: 'Cada escritura vence las lecturas de las tablas que tocó.',
+            code: `}).$extends({
+  name: 'data-cache',
+  query: {
+    $allModels: {
+      async $allOperations({ model, operation, args, query }) {
+        if (!WRITES.has(operation)) {
+          if (process.env.NODE_ENV !== 'production') checkCachedRead(modelsIn(model, args));
+          return query(args);
+        }
+        const result = await query(args);
+        expireModels(modelsIn(model, args, isDelete(operation)));
+        return result;
+      },
+    },
+  },
+});`,
+          },
+        ],
+        docsUrl: 'https://nextjs.org/docs/app/api-reference/functions/unstable_cache',
+        sourcePath: 'src/lib/cache.ts',
+      },
+      {
         id: 'postgres',
         name: 'PostgreSQL',
         tagline: 'la base de datos relacional',

@@ -15,6 +15,14 @@ Each worktree gets an isolated Postgres database (provisioned automatically by t
 
 No port conflicts, no extra config needed.
 
+## Data cache
+
+Reads that are the same for everyone go through `cached()` (`src/lib/cache.ts`) and declare every
+table they read; every Prisma write expires those tables' cached reads automatically (extension in
+`src/lib/prisma.ts`), so server actions don't invalidate by hand. Cache rows, not signed URLs or
+anything filtered by the current time. In dev, `[cache] <name> reads <Model>` means a table is
+missing from `models`.
+
 ## Generated data
 
 - GitHub numbers shown on the site come from the committed snapshot `src/data/github-stats.json`; the site never calls the GitHub API at render time. Refresh with `pnpm github:stats` (skill: `actualizar-stats-github`).

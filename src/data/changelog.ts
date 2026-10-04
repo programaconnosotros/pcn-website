@@ -21,6 +21,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-04',
+    area: 'infra',
+    title: 'El sitio carga más rápido',
+    description:
+      'Eventos, charlas, galería, consejos, proyectos, miembros, perfiles, logros y la búsqueda se sirven desde un caché que se actualiza apenas cambia algo, así que la mayoría de las páginas ya no esperan a la base de datos.',
+    authors: ['agustin-sanc'],
+  },
+  {
     date: '2026-10-03',
     area: 'metricas',
     title: 'Métricas abiertas a todos',
