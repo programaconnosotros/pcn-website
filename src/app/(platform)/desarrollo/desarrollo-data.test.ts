@@ -52,8 +52,6 @@ describe('tech notes', () => {
     expect(unique(notes.map((note) => note.id))).toBe(true);
   });
 
-  // BUG: the Playwright note still shows tests/example.spec.ts, which 02c280c3 removed when the
-  // e2e suite moved to tests/e2e/, so its GitHub link 404s. Covered by the failing test below.
   const STALE = new Set(['tests/example.spec.ts']);
 
   it('only show excerpts of files that exist in the repo', () => {
@@ -65,7 +63,7 @@ describe('tech notes', () => {
     }
   });
 
-  it.failing('does not point at removed files', () => {
+  it('does not point at removed files', () => {
     const files = notes.flatMap((note) => note.examples.map((example) => example.file));
     expect(files.filter((file) => !repoPath(file))).toEqual([]);
   });
