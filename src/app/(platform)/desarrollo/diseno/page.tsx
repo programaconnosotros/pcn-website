@@ -14,6 +14,7 @@ import { GreenScale, SemanticSwatches } from '@/components/desarrollo/diseno/tok
 import { cn } from '@/lib/utils';
 import {
   borderRules,
+  cursorRules,
   darkModeRules,
   designDebt,
   iconRules,
@@ -108,6 +109,7 @@ const tocSections: TocSection[] = [
   { id: 'espaciado', title: 'Espaciado y densidad' },
   { id: 'bordes', title: 'Bordes y hairlines' },
   { id: 'movimiento', title: 'Movimiento' },
+  { id: 'cursor', title: 'Cursor' },
   { id: 'iconografia', title: 'Iconografía' },
   { id: 'modo-oscuro', title: 'Modo oscuro' },
   { id: 'voz', title: 'Voz y copy' },
@@ -373,6 +375,15 @@ const DisenoPage = () => (
               Las animaciones viven en <Code>tailwind.config.ts</Code> y <Code>globals.css</Code>.
             </Lead>
             <DefinitionList items={motionRules} />
+          </Section>
+
+          <Section id="cursor" title="Cursor">
+            <Lead>
+              Con mouse, el puntero es parte de la terminal: marca qué es clickeable y qué va a
+              pasar al hacer click. Vive en <Code>hacker-cursor.tsx</Code> y{' '}
+              <Code>globals.css</Code>.
+            </Lead>
+            <DefinitionList items={cursorRules} />
           </Section>
 
           <Section id="iconografia" title="Iconografía">

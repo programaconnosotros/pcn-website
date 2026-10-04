@@ -268,6 +268,39 @@ export const motionRules: Rule[] = [
   },
 ];
 
+export const cursorRules: Rule[] = [
+  {
+    term: 'Reposo',
+    detail:
+      'Un cuadrado verde con brillo que sigue al mouse exacto y cuatro corchetes de 26px que lo persiguen con un poco de inercia.',
+  },
+  {
+    term: 'Hover',
+    detail:
+      'Sobre algo clickeable los corchetes crecen a 42px, giran 90° y se iluminan, y al costado se tipea qué hace el click: cd (link interno), open ↗ (link externo), exec (botón) o lo que diga data-cursor.',
+  },
+  {
+    term: 'Presionado',
+    detail:
+      'El cuadrado se achica al 60%, los corchetes al 80% y se ponen blancos. Al soltar sale una ráfaga de caracteres hex y un pulso.',
+  },
+  {
+    term: 'Campos de texto',
+    detail:
+      'Inputs, textareas y contenteditable esconden el cursor hacker y muestran el I-beam nativo: para escribir hace falta ver dónde va el caret.',
+  },
+  {
+    term: 'Sobre color',
+    detail:
+      'La capa usa mix-blend-mode: difference, así el verde sobre fondo negro sigue verde y sobre un botón verde se vuelve oscuro.',
+  },
+  {
+    term: 'Apagado',
+    detail:
+      'En touch, lápiz, prefers-reduced-motion, PCN OS liviano y el layout clásico queda el cursor nativo.',
+  },
+];
+
 export const iconRules: Rule[] = [
   {
     term: 'lucide-react',

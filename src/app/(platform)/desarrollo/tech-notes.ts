@@ -2520,6 +2520,81 @@ if (suspended !== prevSuspended) {
         sourcePath: 'src/components/home',
       },
       {
+        id: 'cursor-hacker',
+        name: 'Cursor hacker',
+        tagline: 'un puntero propio que sigue al mouse sin trabar',
+        what: 'Un cursor personalizado esconde el nativo (`cursor: none`) y dibuja uno propio con elementos posicionados en `fixed` que se mueven con cada `pointermove`. El riesgo es que se sienta lento o trabe: hay que moverlo solo con `transform` (lo resuelve la GPU, sin recalcular el layout), agrupar las actualizaciones en un `requestAnimationFrame` y dejar de animar cuando no hay nada que mover. Las animaciones con inercia ("lerp": recorrer una fracción de la distancia que falta en cada frame) tienen que depender del tiempo y no de la cantidad de frames, o en una pantalla de 120 Hz van el doble de rápido que en una de 60 Hz.',
+        concepts: [
+          {
+            term: 'pointer events',
+            detail:
+              '`pointermove`, `pointerdown` y `pointerup` unifican mouse, touch y lápiz; `pointerType` dice cuál es, y el cursor solo reacciona a `mouse`.',
+          },
+          {
+            term: 'lerp por tiempo',
+            detail:
+              'Si en un frame de 60 Hz se recorre la fracción `r`, en `n` frames se recorre `1 - (1 - r)^n`. Con `n` medido desde el último frame, la inercia se siente igual en cualquier pantalla.',
+          },
+          {
+            term: 'loop que se detiene',
+            detail:
+              'El `requestAnimationFrame` se pide solo cuando algo se mueve y deja de pedirse cuando los corchetes llegaron: con el mouse quieto el cursor no gasta nada.',
+          },
+          {
+            term: 'mix-blend-mode: difference',
+            detail:
+              'Resta el color del elemento al del fondo: el verde sobre negro sigue verde y sobre un fondo verde da casi negro, así el cursor se ve sobre cualquier cosa.',
+          },
+          {
+            term: 'postMessage',
+            detail:
+              'La forma de que una página le hable a otra ventana o iframe del mismo origen. Es asíncrono: el mensaje llega en una tarea posterior.',
+          },
+        ],
+        usage: [
+          '`HackerCursor` está montado en el layout raíz y solo se activa con `(hover: hover) and (pointer: fine)`, sin `prefers-reduced-motion` y en el modo completo de PCN OS (en liviano y clásico queda el nativo). Recién cuando se activa agrega la clase `pcn-cursor` a `<html>`, que es la que esconde el cursor nativo: si el JS no corre, la página nunca queda sin puntero. Los campos de texto conservan el I-beam.',
+          'El cuadrado sigue al mouse exacto y los corchetes lo persiguen con inercia (`RING_FOLLOW`, la fracción por frame de 60 Hz, escalada al tiempo real del frame). Sobre algo clickeable los corchetes crecen y una etiqueta dice qué hace el click: `cd` para links internos, `open ↗` para externos, `exec` para botones, o el texto de un atributo `data-cursor`. Al soltar el click sale una ráfaga de caracteres hex que se borran solos al terminar su animación.',
+          'En PCN OS cada ventana es un iframe y el iframe se queda con los eventos del mouse. Para no tener dos cursores (o uno congelado en el borde), dentro de una ventana el componente no dibuja nada: esconde el nativo y le manda al escritorio cada movimiento por `postMessage`, con qué hay debajo. El escritorio busca de qué iframe vino el mensaje y le suma su `getBoundingClientRect()` para pasar las coordenadas a las suyas. Solo la última ventana que reportó puede esconder el cursor, porque un `blur` puede llegar tarde.',
+        ],
+        examples: [
+          {
+            file: 'src/components/ui/hacker-cursor.tsx',
+            lang: 'ts',
+            caption: 'La inercia de los corchetes, escalada al tiempo real de cada frame.',
+            code: `const render = (now: number) => {
+  frame = 0;
+  // Frames elapsed at 60 Hz since the last render; capped so a stalled tab doesn't teleport.
+  const frames = lastFrame ? Math.min((now - lastFrame) / (1000 / 60), 4) : 1;
+  lastFrame = now;
+  // Ease the brackets towards the pointer; snap once they're close enough to stop the loop.
+  const follow = ease(RING_FOLLOW, frames);
+  ringPos.x += (target.x - ringPos.x) * follow;
+  ringPos.y += (target.y - ringPos.y) * follow;
+  // …
+  if (settled) lastFrame = 0;
+  else frame = requestAnimationFrame(render);
+};`,
+          },
+          {
+            file: 'src/components/ui/hacker-cursor.tsx',
+            lang: 'ts',
+            caption:
+              'El escritorio pasa el puntero que reporta una ventana a sus propias coordenadas.',
+            code: `const frameElement = [...document.querySelectorAll('iframe')].find(
+  (iframe) => iframe.contentWindow === event.source,
+);
+if (!frameElement) return;
+// Window coordinates are relative to its page; shift them onto the desktop.
+const rect = frameElement.getBoundingClientRect();
+const x = rect.left + event.data.x;
+const y = rect.top + event.data.y;
+moveTo(x, y, event.data);`,
+          },
+        ],
+        docsUrl: 'https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events',
+        sourcePath: 'src/components/ui/hacker-cursor.tsx',
+      },
+      {
         id: 'pull-to-refresh',
         name: 'PWA · pull to refresh',
         tagline: 'el gesto de recargar que la app instalada no trae',
