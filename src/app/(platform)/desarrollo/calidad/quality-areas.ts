@@ -49,4 +49,6 @@ export type TestCase = {
   expected: string;
   /** Automated cases only: the test file and the full test name (describe › it). */
   automation?: { file: string; name: string; layer: AutomatedLayer };
+  /** Manual cases only: the e2e tests that automate it (named `TC-XXX-NNN …`). */
+  automatedBy?: { file: string; name: string; command: string }[];
 };

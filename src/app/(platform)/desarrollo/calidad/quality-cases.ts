@@ -72,6 +72,16 @@ const preconditionsByLayer: Record<AutomatedLayer, string[]> = {
   ],
 };
 
+const expectedByLayer: Record<AutomatedLayer, string> = {
+  unit: 'El test pasa. Corre en cada pre-push junto con el resto de la suite.',
+  component: 'El test pasa. Corre en cada pre-push junto con el resto de la suite.',
+  'server-action': 'El test pasa. Corre en cada pre-push junto con el resto de la suite.',
+  'route-handler': 'El test pasa. Corre en cada pre-push junto con el resto de la suite.',
+  integration:
+    'El test pasa contra Postgres real. Se corre con pnpm test:db al tocar queries, schema o server actions, y en la regresión semanal.',
+  e2e: 'El test pasa en Chromium (desktop, y Pixel 7 en los specs mobile). Corre en la regresión semanal.',
+};
+
 // Jest matches -t against the describe and test titles joined by spaces.
 const runCommand = (suite: AutomatedSuite, name: string) =>
   suite.layer === 'e2e'
@@ -87,14 +97,31 @@ export const automatedCases: TestCase[] = automatedSuites.flatMap((suite) =>
     priority: suite.priority,
     preconditions: preconditionsByLayer[suite.layer],
     steps: [runCommand(suite, name)],
-    expected:
-      suite.layer === 'e2e'
-        ? 'El test pasa en Chromium, Firefox y WebKit.'
-        : 'El test pasa. Corre en cada pre-push junto con el resto de la suite.',
+    expected: expectedByLayer[suite.layer],
     automation: { file: suite.file, name, layer: suite.layer },
   })),
 );
 
-export const testCases: TestCase[] = [...manualCases, ...automatedCases];
+// Los specs e2e se nombran con el id del caso manual que automatizan (`TC-AUT-001 …`): así cada
+// caso manual sabe qué tests lo cubren en la regresión semanal.
+const e2eTestsByCase = new Map<string, NonNullable<TestCase['automatedBy']>>();
+for (const suite of automatedSuites.filter((s) => s.layer === 'e2e')) {
+  for (const [, name] of suite.tests) {
+    const caseId = name.match(/(?:^|› )(TC-[A-Z]+-\d{3})\b/)?.[1];
+    if (!caseId) continue;
+    const tests = e2eTestsByCase.get(caseId) ?? [];
+    tests.push({ file: suite.file, name, command: runCommand(suite, name) });
+    e2eTestsByCase.set(caseId, tests);
+  }
+}
+
+const manualWithAutomation: TestCase[] = manualCases.map((c) =>
+  e2eTestsByCase.has(c.id) ? { ...c, automatedBy: e2eTestsByCase.get(c.id) } : c,
+);
+
+/** Manual cases that the weekly e2e regression already runs. */
+export const manualCasesAutomated = manualWithAutomation.filter((c) => c.automatedBy).length;
+
+export const testCases: TestCase[] = [...manualWithAutomation, ...automatedCases];
 
 export { AUTOMATED_CASES_UPDATED_AT, automatedSuites } from './automated-cases';

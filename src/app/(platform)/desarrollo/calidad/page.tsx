@@ -11,7 +11,9 @@ import {
   automatedCases,
   layerLabels,
   manualCases,
+  manualCasesAutomated,
 } from './quality-cases';
+import { coverage, type CoverageMetrics } from './coverage';
 import type { AutomatedLayer } from './quality-areas';
 import {
   qualityGates,
@@ -114,6 +116,28 @@ const layerCounts = layers.map((layer) => ({
 const maxLayer = Math.max(...layerCounts.map((l) => l.tests));
 const testFiles = new Set(automatedCases.map((c) => c.automation!.file)).size;
 
+const countLayer = (...kinds: AutomatedLayer[]) =>
+  automatedCases.filter((c) => kinds.includes(c.automation!.layer)).length;
+const prePushTests = countLayer('unit', 'component', 'server-action', 'route-handler');
+const integrationTests = countLayer('integration');
+const e2eTests = countLayer('e2e');
+const e2eFiles = new Set(
+  automatedCases.filter((c) => c.automation?.layer === 'e2e').map((c) => c.automation!.file),
+).size;
+
+const METRIC_LABELS: Record<keyof CoverageMetrics, string> = {
+  lines: 'líneas',
+  statements: 'sentencias',
+  functions: 'funciones',
+  branches: 'ramas',
+};
+
+const CoverageBar = ({ value }: { value: number }) => (
+  <span className="flex h-2 w-full bg-pcnGreen-200/40">
+    <span className="h-2 bg-pcnGreen/70" style={{ width: `${value}%` }} />
+  </span>
+);
+
 const updatedAt = new Date(`${AUTOMATED_CASES_UPDATED_AT}T12:00:00Z`).toLocaleDateString('es-AR', {
   day: 'numeric',
   month: 'long',
@@ -136,10 +160,13 @@ const CalidadPage = () => (
           <Intro>
             Este sitio lo usa una comunidad real: gente que se inscribe a eventos con cupo, sube
             fotos, deja su contraseña. Por eso lo tratamos como software serio: {testFiles} archivos
-            de tests automatizados con {automatedCases.length} casos que corren antes de cada push,
-            validación en el cliente y en el servidor, tipos estrictos y {manualCases.length} casos
-            manuales escritos para lo que todavía se prueba a mano. Todo está acá abajo, con el link
-            al código.
+            de tests automatizados con {automatedCases.length} casos en tres velocidades.{' '}
+            {prePushTests} tests unitarios y de componentes corren antes de cada push en segundos;{' '}
+            {integrationTests} tests de integración corren las server actions contra un Postgres
+            real; y una regresión e2e de {e2eTests} tests recorre el sitio en un navegador una vez
+            por semana, automatizando {manualCasesAutomated} de los {manualCases.length} casos
+            manuales. Los tests no corren en CI: es una decisión para que el pipeline de deploy siga
+            siendo rápido. Todo está acá abajo, con el link al código.
           </Intro>
           <ol className="space-y-2">
             {qualityGates.map((gate, i) => (
@@ -166,8 +193,9 @@ const CalidadPage = () => (
         <Section id="piramide" title="La suite automatizada por capa">
           <Intro>
             La mayoría de los tests están en la base de la pirámide: rápidos, sin red ni base de
-            datos, y la suite completa tarda segundos. Cada caso automatizado del repositorio de
-            abajo es uno de estos tests.
+            datos, y corren en cada push. Arriba, menos tests pero más reales: integración contra
+            Postgres y e2e en un navegador. Cada caso automatizado del repositorio de abajo es uno
+            de estos tests.
           </Intro>
           <RuledGrid className="grid-cols-1">
             {layerCounts.map(({ layer, tests, files }) => (
@@ -197,6 +225,79 @@ const CalidadPage = () => (
           </RuledGrid>
         </Section>
 
+        <Section id="cobertura" title="Cobertura">
+          <Intro>
+            Qué parte del código ejecutan los tests unitarios y de componentes (
+            <code className="font-mono text-pcnGreen">pnpm test:coverage</code>). La integración y
+            la regresión e2e cubren el mismo código desde afuera y no suman acá. Medido el{' '}
+            {updatedAt}; se actualiza con{' '}
+            <code className="font-mono text-pcnGreen">pnpm qa:cases</code>.
+          </Intro>
+          <RuledGrid className="grid-cols-1">
+            {coverage.groups.map((group) => (
+              <div
+                key={group.folder}
+                className={cn(ruledCellClassName, 'grid gap-2 px-3 py-2 sm:grid-cols-[200px_1fr]')}
+              >
+                <div className="font-mono text-xs">
+                  <p className="text-pcnGreen">{group.folder}</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {group.detail} · {group.files} archivos
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-4">
+                  {(Object.keys(METRIC_LABELS) as (keyof CoverageMetrics)[]).map((metric) => (
+                    <div key={metric} className="space-y-0.5 font-mono text-[11px]">
+                      <p className="flex justify-between text-muted-foreground">
+                        <span>{METRIC_LABELS[metric]}</span>
+                        <span className="text-foreground">{group[metric]}%</span>
+                      </p>
+                      <CoverageBar value={group[metric]} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </RuledGrid>
+          <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+            total: {coverage.total.lines}% de líneas · {coverage.total.branches}% de ramas ·{' '}
+            {coverage.total.functions}% de funciones
+          </p>
+        </Section>
+
+        <Section id="regresion" title="Regresión e2e semanal">
+          <Intro>
+            Una vez por semana (y antes de un release grande) corremos{' '}
+            <code className="font-mono text-pcnGreen">pnpm test:e2e</code>: recrea una base con
+            datos de prueba (un usuario por rol, eventos con y sin cupo, charlas, consejos), compila
+            el sitio en modo producción y lo recorre con Playwright en Chromium desktop y en un
+            Pixel 7. Son {e2eTests} tests en {e2eFiles} archivos: cada caso manual que automatizan
+            lleva su id en el nombre y abajo aparece marcado como{' '}
+            <span className="font-mono text-pcnGreen">e2e</span>. Lo que no se puede automatizar
+            (instalar la PWA, mails reales, subir a S3) sigue siendo manual.
+          </Intro>
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
+            <div>
+              <dt className="text-muted-foreground">casos manuales automatizados</dt>
+              <dd className="text-lg text-pcnGreen">
+                {manualCasesAutomated}/{manualCases.length}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">tests e2e</dt>
+              <dd className="text-lg text-pcnGreen">{e2eTests}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">integración (Postgres)</dt>
+              <dd className="text-lg text-pcnGreen">{integrationTests}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">pre-push</dt>
+              <dd className="text-lg text-pcnGreen">{prePushTests}</dd>
+            </div>
+          </dl>
+        </Section>
+
         <Section id="herramientas" title="Herramientas">
           <ItemList items={qualityTools} />
         </Section>
@@ -215,10 +316,11 @@ const CalidadPage = () => (
 
         <Section id="casos" title="Repositorio de casos de prueba">
           <Intro>
-            Todo lo que se prueba en el sitio, área por área. Los casos manuales son los que
-            corremos a mano antes de llevar cambios a producción; los automatizados salen directo de
-            la suite de Jest (y Playwright), con el archivo y el comando para correr cada uno. Podés
-            linkear un caso con <code className="font-mono text-pcnGreen">#TC-GAL-001</code>.
+            Todo lo que se prueba en el sitio, área por área. Los casos manuales describen cada
+            flujo paso a paso; los marcados <span className="font-mono text-pcnGreen">e2e</span> ya
+            los corre la regresión semanal. Los automatizados salen directo de Jest y Playwright,
+            con el archivo y el comando para correr cada uno. Podés linkear un caso con{' '}
+            <code className="font-mono text-pcnGreen">#TC-GAL-001</code>.
           </Intro>
           <TestCaseBrowser updatedAt={updatedAt} />
         </Section>

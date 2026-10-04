@@ -137,6 +137,14 @@ function CaseRow({
           >
             {testCase.type === 'manual' ? 'manual' : 'auto'}
           </span>
+          {testCase.automatedBy && (
+            <span
+              className="border border-pcnGreen-600 px-1 text-pcnGreen"
+              title="Lo corre la regresión e2e semanal"
+            >
+              e2e
+            </span>
+          )}
           <span
             className={cn('w-12 border px-1 text-center', priorityClassName[testCase.priority])}
           >
@@ -168,6 +176,26 @@ function CaseRow({
               >
                 {testCase.automation.file} ↗
               </a>
+            </div>
+          )}
+          {testCase.automatedBy && (
+            <div className="font-mono">
+              <p className="text-pcnGreen-600"># automatizado en la regresión e2e semanal</p>
+              <ul className="space-y-1">
+                {testCase.automatedBy.map((test) => (
+                  <li key={test.name}>
+                    <a
+                      href={`${REPO_BLOB_URL}/${test.file}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="break-all text-pcnGreen underline-offset-4 hover:underline"
+                    >
+                      {test.file} ↗
+                    </a>
+                    <code className="block break-all text-foreground">$ {test.command}</code>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
           {testCase.preconditions.length > 0 && (

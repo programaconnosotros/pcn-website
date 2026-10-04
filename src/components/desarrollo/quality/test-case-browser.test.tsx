@@ -24,6 +24,13 @@ jest.mock('@/app/(platform)/desarrollo/calidad/quality-cases', () => {
       preconditions: [],
       steps: ['Abrir un evento'],
       expected: 'Queda anotado',
+      automatedBy: [
+        {
+          file: 'tests/e2e/eventos-inscripcion.spec.ts',
+          name: 'TC-EVT-001 Anotarse a un evento',
+          command: 'pnpm test:e2e tests/e2e/eventos-inscripcion.spec.ts -g "TC-EVT-001"',
+        },
+      ],
     },
   ];
   // 51 automated auth cases, so the list pages.
@@ -107,6 +114,32 @@ describe('TestCaseBrowser', () => {
     await userEvent.click(row);
     expect(row).toHaveAttribute('aria-expanded', 'false');
     expect(document.getElementById('caso-TC-GAL-001')).toBeNull();
+  });
+
+  it('marks manual cases the e2e regression automates, with the spec and its command', async () => {
+    render(<TestCaseBrowser updatedAt="x" />);
+    const row = screen.getByRole('button', { name: /TC-EVT-001/ });
+    expect(within(row).getByText('e2e')).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('button', { name: /TC-GAL-001/ })).queryByText('e2e'),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(row);
+
+    const panel = document.getElementById('caso-TC-EVT-001')!;
+    expect(
+      within(panel).getByText('# automatizado en la regresión e2e semanal'),
+    ).toBeInTheDocument();
+    expect(
+      within(panel).getByRole('link', { name: 'tests/e2e/eventos-inscripcion.spec.ts ↗' }),
+    ).toBeInTheDocument();
+    expect(
+      within(panel).getByText(
+        '$ pnpm test:e2e tests/e2e/eventos-inscripcion.spec.ts -g "TC-EVT-001"',
+      ),
+    ).toBeInTheDocument();
+    // Sigue siendo un caso manual: sus pasos se muestran igual
+    expect(within(panel).getByText('# pasos')).toBeInTheDocument();
   });
 
   it('opens an automated case with its file and command', async () => {
