@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { findProgramForPath, visiblePrograms, type OsProgram } from './programs';
 import { GlobalSearch, openGlobalSearch } from '@/components/search/global-search';
 import { useDisplayMode } from './os-display-mode';
-import { isOsHost, isOsMessage } from './os-env';
+import { isOsHost, isOsMessage, postToOsWindow } from './os-env';
 import { dockReservedHeight } from './os-dock-geometry';
 import { OsMenuBar, type OsUser } from './os-menu-bar';
 import { OsWallpaper } from './os-wallpaper';
@@ -377,7 +377,12 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         dispatch({ type: 'location', id, path: event.data.path, title: event.data.title });
       if (event.data.type === 'open' && viewport)
         dispatch({ type: 'openPath', path: event.data.path, viewport });
-      if (event.data.type === 'session') router.refresh();
+      if (event.data.type === 'session') {
+        router.refresh();
+        for (const [otherId, iframe] of iframes.current)
+          if (otherId !== id && iframe.contentWindow)
+            postToOsWindow(iframe.contentWindow, { type: 'session' });
+      }
       if (event.data.type === 'search') openGlobalSearch(event.data.query);
       if (event.data.type === 'playMusic') {
         const set = findMusicSet(event.data.id);

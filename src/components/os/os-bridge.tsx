@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { isEmbedded, opensInOwnWindow, postToOsHost as post } from './os-env';
+import { usePathname, useRouter } from 'next/navigation';
+import { isEmbedded, isOsMessage, opensInOwnWindow, postToOsHost as post } from './os-env';
 
 /**
  * Runs inside a PCN OS window. Tells the desktop host where the window navigated to and when
@@ -10,9 +10,12 @@ import { isEmbedded, opensInOwnWindow, postToOsHost as post } from './os-env';
  * Links to profiles and event details (except from the /eventos listing) are handed to the host
  * so they open in a new window, and so is every link clicked on the home page, which stays open
  * as the desktop's starting point. Breadcrumb links always navigate the window they're in.
+ * When the user signs in or out in another window, the desktop relays it and this window
+ * re-renders so it stops showing the old session.
  */
 export function OsBridge() {
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isEmbedded()) return;
@@ -33,6 +36,16 @@ export function OsBridge() {
     window.addEventListener('pointerdown', onPointerDown, true);
     return () => window.removeEventListener('pointerdown', onPointerDown, true);
   }, []);
+
+  useEffect(() => {
+    if (!isEmbedded()) return;
+    const onMessage = (event: MessageEvent) => {
+      if (event.source !== window.parent || event.origin !== window.location.origin) return;
+      if (isOsMessage(event.data) && event.data.type === 'session') router.refresh();
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [router]);
 
   useEffect(() => {
     if (!isEmbedded()) return;

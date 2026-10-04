@@ -3,6 +3,7 @@
 import { ChevronsUpDown, IdCard, LogIn, LogOut, UserPen, UserPlus } from 'lucide-react';
 
 import { signOut } from '@/actions/auth/sign-out';
+import { notifyOsSessionChange } from '@/components/os/os-env';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +33,10 @@ const initials = (name: string) =>
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('');
+
+// signOut redirects, so its promise settles (rejecting with the redirect) once the session is
+// gone: only then can a PCN OS window tell the desktop to reload who it shows.
+const signOutAndNotifyOs = () => signOut().finally(notifyOsSessionChange);
 
 export function NavUser({ user }: { user: SessionUser | null }) {
   const { isMobile, isCollapsed } = useSidebar();
@@ -160,7 +165,7 @@ export function NavUser({ user }: { user: SessionUser | null }) {
               <DropdownMenuItem
                 className="flex cursor-pointer flex-row gap-2"
                 onClick={() =>
-                  toast.promise(signOut(), {
+                  toast.promise(signOutAndNotifyOs(), {
                     loading: 'Cerrando sesión...',
                     success: 'Sesión cerrada correctamente',
                     error: 'Error al cerrar sesión',
