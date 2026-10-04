@@ -66,13 +66,16 @@ const preconditionsByLayer: Record<AutomatedLayer, string[]> = {
     'pnpm install',
     'Postgres local corriendo (DATABASE_URL); pnpm test:db crea y borra su propia base con las migraciones',
   ],
-  e2e: ['App corriendo en http://localhost:3000', 'npx playwright install'],
+  e2e: [
+    'Postgres local corriendo (DATABASE_URL) y npx playwright install chromium',
+    'pnpm test:e2e recrea la base e2e con el seed, compila y levanta la app en el puerto 3300',
+  ],
 };
 
 // Jest matches -t against the describe and test titles joined by spaces.
 const runCommand = (suite: AutomatedSuite, name: string) =>
   suite.layer === 'e2e'
-    ? `npx playwright test ${suite.file} -g "${name}"`
+    ? `pnpm test:e2e ${suite.file} -g "${name}"`
     : `pnpm ${suite.layer === 'integration' ? 'test:db' : 'test'} -- "${suite.file}" -t "${name.replaceAll(' › ', ' ')}"`;
 
 export const automatedCases: TestCase[] = automatedSuites.flatMap((suite) =>

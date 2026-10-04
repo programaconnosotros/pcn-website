@@ -12,6 +12,7 @@
 
 # next.js
 /.next/
+/.next-e2e/
 /out/
 
 # production
@@ -49,6 +50,7 @@ next-env.d.ts
 node_modules/
 /test-results/
 /playwright-report/
+/tests/e2e/.auth/
 /blob-report/
 /playwright/.cache/
 

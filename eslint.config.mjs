@@ -2,7 +2,16 @@ import nextConfig from 'eslint-config-next/core-web-vitals';
 import prettierConfig from 'eslint-config-prettier';
 
 const config = [
-  { ignores: ['.claude/worktrees/**', 'src/generated/**'] },
+  {
+    ignores: [
+      '.claude/worktrees/**',
+      'src/generated/**',
+      '.next-e2e/**',
+      'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
+  },
   ...nextConfig,
   prettierConfig,
   {
@@ -44,6 +53,11 @@ const config = [
         },
       ],
     },
+  },
+  {
+    // Los fixtures de Playwright reciben una función `use` que no es un hook de React
+    files: ['tests/e2e/**'],
+    rules: { 'react-hooks/rules-of-hooks': 'off' },
   },
 ];
 

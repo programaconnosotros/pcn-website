@@ -3,7 +3,7 @@
 // integration suite of `pnpm test:db`, which needs the local Postgres) plus the Playwright specs
 // in tests/. Run it after adding, renaming or removing tests: `pnpm qa:cases`.
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 
@@ -51,6 +51,22 @@ const AREAS = [
     'plataforma',
   ],
   [/^src\/components\/os\//, 'pcn-os'],
+  [/^tests\/e2e\/(auth|login|registro|recuperar)/, 'auth'],
+  [/^tests\/e2e\/eventos/, 'eventos'],
+  [/^tests\/e2e\/charlas/, 'charlas'],
+  [/^tests\/e2e\/galeria/, 'galeria'],
+  [/^tests\/e2e\/(perfil|logros|setups)/, 'perfil'],
+  [/^tests\/e2e\/consejos/, 'consejos'],
+  [/^tests\/e2e\/testimonios/, 'testimonios'],
+  [/^tests\/e2e\/proyectos/, 'proyectos'],
+  [/^tests\/e2e\/lectura/, 'lectura'],
+  [/^tests\/e2e\/conversaciones/, 'conversaciones'],
+  [/^tests\/e2e\/entrevistas/, 'entrevistas'],
+  [/^tests\/e2e\/notificaciones/, 'notificaciones'],
+  [/^tests\/e2e\/(busqueda|miembros)/, 'busqueda'],
+  [/^tests\/e2e\/(os|pcn-os)/, 'pcn-os'],
+  [/^tests\/e2e\/(pwa|offline)/, 'pwa'],
+  [/^tests\/e2e\/admin/, 'admin'],
   [/^tests\/.*\.spec\.ts$/, 'plataforma'],
 ];
 
@@ -202,12 +218,26 @@ const files = jest.testResults.map((result) => ({
 }));
 
 // ─── Playwright ──────────────────────────────────────────────────────────────
-// Only listed, not run: these need a live server. Top-level `test('name', …)` calls.
-for (const name of readdirSync('tests').filter((f) => f.endsWith('.spec.ts'))) {
-  const source = readFileSync(join('tests', name), 'utf8');
-  const tests = [...source.matchAll(/^test\((['"`])(.+?)\1/gm)].map((m) => m[2]);
-  if (tests.length) files.push({ file: `tests/${name}`, tests });
-}
+// Only listed, not run (they need the e2e server): `playwright test --list` gives the real names,
+// describe blocks included. The same test in the desktop and mobile projects is listed once.
+const listed = JSON.parse(
+  execFileSync('node_modules/.bin/playwright', ['test', '--list', '--reporter=json'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }),
+);
+const e2e = new Map();
+const walk = (suite, titles) => {
+  for (const spec of suite.specs ?? []) {
+    if (spec.file.endsWith('.setup.ts')) continue;
+    const file = `tests/e2e/${spec.file}`;
+    if (!e2e.has(file)) e2e.set(file, new Set());
+    e2e.get(file).add([...titles, spec.title].join(' › '));
+  }
+  for (const child of suite.suites ?? []) walk(child, [...titles, child.title]);
+};
+for (const suite of listed.suites) walk(suite, []);
+for (const [file, tests] of e2e) files.push({ file, tests: [...tests] });
 
 files.sort((a, b) => a.file.localeCompare(b.file));
 

@@ -12,6 +12,12 @@ export const CODE_EXPIRATION_MINUTES = 15; // 15 minutos de expiración
  * @throws Error si las credenciales SMTP no están configuradas (solo en modo Gmail)
  */
 export const getEmailTransporter = () => {
+  // Suite e2e y desarrollo sin servidor de mail: no se manda nada (los tests leen el código de la
+  // base). Nunca se define en producción.
+  if (process.env.EMAIL_TRANSPORT === 'json') {
+    return nodemailer.createTransport({ jsonTransport: true });
+  }
+
   const smtpHost = process.env.SMTP_HOST;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;

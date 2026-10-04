@@ -17,6 +17,8 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // La suite e2e compila en su propia carpeta (pnpm test:e2e), así no pisa la de `pnpm dev`.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
   turbopack: {
     root: import.meta.dirname,

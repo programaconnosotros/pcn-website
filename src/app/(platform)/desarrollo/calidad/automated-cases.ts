@@ -3181,13 +3181,14 @@ export const automatedSuites: AutomatedSuite[] = [
     ],
   },
   {
-    file: 'tests/example.spec.ts',
+    file: 'tests/e2e/smoke.spec.ts',
     area: 'plataforma',
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-PLT-A256', 'has title'],
-      ['TC-PLT-A257', 'has menu item'],
+      ['TC-PLT-A256', 'home renders for anonymous visitors'],
+      ['TC-PLT-A257', 'seeded events show up in /eventos'],
+      ['TC-PLT-A258', 'signed in as a member › the session from auth.setup works'],
     ],
   },
 ];
