@@ -4,6 +4,8 @@ import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
 import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
+import { extractedConsejos } from '@/data/consejos-extraidos';
+import { fromAdvise, fromExtracted, sortByNewest } from '@/lib/consejos';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getUserIdentities } from '@/lib/identity-links';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
@@ -13,16 +15,33 @@ import type { ProfileProject, ProfileTab } from '@/components/profile/profile-se
 
 export const getProfileIdentities = cache((userId: string) => getUserIdentities(userId));
 
-export const getProfileAdvises = cache((userId: string) =>
-  prisma.advise.findMany({
-    where: { authorId: userId },
-    orderBy: { createdAt: 'desc' },
-    include: {
-      author: { select: { id: true, name: true, image: true } },
-      likes: true,
-    },
-  }),
-);
+// Consejos the user published plus the ones extracted from conversations under any WhatsApp
+// name an admin linked to them, newest first, like /consejos lists them.
+export const getProfileAdvises = cache(async (userId: string) => {
+  const [advises, identities, user] = await Promise.all([
+    prisma.advise.findMany({
+      where: { authorId: userId },
+      include: {
+        author: { select: { id: true, name: true, image: true } },
+        likes: { select: { userId: true } },
+        _count: { select: { comments: true } },
+      },
+    }),
+    getProfileIdentities(userId),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, image: true },
+    }),
+  ]);
+  // Every linked name resolves to this user, so extracted consejos credit their profile.
+  const profiles = user ? Object.fromEntries(identities.whatsapp.map((name) => [name, user])) : {};
+  return sortByNewest([
+    ...advises.map(fromAdvise),
+    ...extractedConsejos
+      .filter((consejo) => consejo.member in profiles)
+      .map((consejo) => fromExtracted(consejo, profiles)),
+  ]);
+});
 
 export const getProfileTalks = cache((userId: string) =>
   prisma.talk.findMany({

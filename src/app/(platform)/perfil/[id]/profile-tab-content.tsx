@@ -3,7 +3,7 @@ import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { AdviseCard } from '@/components/advises/advise-card';
-import { fromAdvise } from '@/lib/consejos';
+import type { Consejo } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ProfileArticles } from '@/components/profile/profile-articles';
@@ -108,21 +108,10 @@ const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
   </RuledGrid>
 );
 
-const AdviseRows = ({
-  advises,
-  session,
-}: {
-  advises: Awaited<ReturnType<typeof getProfileAdvises>>;
-  session: Session;
-}) => (
+const AdviseRows = ({ advises, session }: { advises: Consejo[]; session: Session }) => (
   <RuledGrid className="grid-cols-1 md:grid-cols-2">
-    {advises.map((advise) => (
-      <AdviseCard
-        key={advise.id}
-        session={session}
-        consejo={fromAdvise(advise)}
-        showAuthor={false}
-      />
+    {advises.map((consejo) => (
+      <AdviseCard key={consejo.id} session={session} consejo={consejo} showAuthor={false} />
     ))}
   </RuledGrid>
 );
