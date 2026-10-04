@@ -49,6 +49,8 @@ const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
   photoDownload: (wait) =>
     `Descargaste muchas fotos en poco tiempo. Para que la galería ande rápido para todos hay un límite por hora: vas a poder descargar de nuevo en ${wait}.`,
   log: (wait) => `Demasiados registros seguidos. Probá de nuevo en ${wait}.`,
+  // Nunca llega a la UI: las visitas se descartan en silencio al pasar el límite.
+  pageVisit: (wait) => `Demasiadas visitas seguidas: probá de nuevo en ${wait}.`,
 };
 
 /** El mensaje para mostrarle a quien llegó al límite de `name`. */

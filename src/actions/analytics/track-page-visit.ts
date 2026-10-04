@@ -4,8 +4,22 @@ import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
 import { findSession } from '@/lib/session';
 import { clientIpFrom } from '@/lib/client-ip';
+import { enforceRateLimit } from '@/lib/rate-limit';
+
+// Se llama sin login desde cada página: nadie debería poder llenar la tabla con rutas gigantes.
+const MAX_LENGTH = 500;
+const clip = (value: string | null) => (value ? value.slice(0, MAX_LENGTH) : null);
 
 export const trackPageVisit = async (path: string) => {
+  if (typeof path !== 'string' || !path.startsWith('/')) return;
+
+  // Pasado el límite se descarta en silencio: el tracking no puede romper la página
+  try {
+    await enforceRateLimit('pageVisit');
+  } catch {
+    return;
+  }
+
   try {
     const sessionId = (await cookies()).get('sessionId')?.value;
     let userId: string | undefined = undefined;
@@ -29,10 +43,10 @@ export const trackPageVisit = async (path: string) => {
     // Registrar la visita (solo para usuarios no-admin o anónimos)
     await prisma.pageVisit.create({
       data: {
-        path,
+        path: path.slice(0, MAX_LENGTH),
         userId: userId || null,
-        userAgent,
-        referer,
+        userAgent: clip(userAgent),
+        referer: clip(referer),
         ipAddress,
       },
     });

@@ -1,5 +1,3 @@
-'use server';
-
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { getEventManager } from '@/lib/event-access';

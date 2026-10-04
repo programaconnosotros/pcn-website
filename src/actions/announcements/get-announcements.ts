@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/admin';
 import { cached } from '@/lib/cache';
 
 export const fetchAnnouncements = async () => listPublishedAnnouncements();
@@ -24,8 +25,10 @@ const listPublishedAnnouncements = cached(
   { models: ['Announcement', 'User'] },
 );
 
-export const fetchAllAnnouncements = async () =>
-  prisma.announcement.findMany({
+/** Todos los anuncios, borradores incluidos: solo admins. */
+export const fetchAllAnnouncements = async () => {
+  await requireAdmin();
+  return prisma.announcement.findMany({
     orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
     include: {
       author: {
@@ -37,3 +40,4 @@ export const fetchAllAnnouncements = async () =>
       },
     },
   });
+};

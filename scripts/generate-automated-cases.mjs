@@ -32,6 +32,7 @@ const AREAS = [
   [/^src\/actions\/projects\//, 'proyectos'],
   [/^src\/actions\/(articles|content-marks)\//, 'lectura'],
   [/^src\/lib\/embeddable/, 'lectura'],
+  [/^src\/lib\/og\//, 'perfil'],
   [/^src\/app\/\(platform\)\/entrevistas\//, 'entrevistas'],
   [/^src\/actions\/notifications\//, 'notificaciones'],
   [/^src\/lib\/(search\/|people-search)/, 'busqueda'],
@@ -45,7 +46,7 @@ const AREAS = [
   [/^src\/app\/\(platform\)\/desarrollo\//, 'plataforma'],
   [/^src\/components\/desarrollo\//, 'plataforma'],
   [/^src\/lib\/tab-title/, 'plataforma'],
-  [/^src\/(lib\/sql-safety|test\/)/, 'plataforma'],
+  [/^src\/(lib\/(sql-safety|safe-fetch)|test\/)/, 'plataforma'],
   [/^src\/components\/os\//, 'pcn-os'],
   [/^tests\/.*\.spec\.ts$/, 'plataforma'],
 ];
@@ -79,7 +80,7 @@ const HIGH = [
   /^src\/actions\/users\/set-user-role/,
   /^src\/actions\/upload\//,
   /^src\/app\/api\/galeria\/\[id\]\/descargar/,
-  /^src\/(lib\/sql-safety|test\/sql-injection)/,
+  /^src\/(lib\/(sql-safety|safe-fetch)|test\/sql-injection)/,
   /\.db\.test\.ts$/,
 ];
 const LOW = [

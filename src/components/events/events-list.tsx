@@ -1,5 +1,3 @@
-'use server';
-
 import React from 'react';
 import { fetchEvents } from '@/actions/events/fetch-events';
 import { RuledGrid } from '@/components/ui/ruled-grid';

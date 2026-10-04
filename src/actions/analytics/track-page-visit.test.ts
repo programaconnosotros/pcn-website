@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { mockHeaders } from '@/test/headers';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import { trackPageVisit } from './track-page-visit';
 
 const adminUser = {
@@ -145,5 +146,36 @@ describe('trackPageVisit', () => {
     prismaMock.pageVisit.create.mockRejectedValue(new Error('DB error'));
 
     await expect(trackPageVisit('/crash')).resolves.toBeUndefined();
+  });
+
+  it('clips long paths and headers so nobody can fill the table', async () => {
+    mockCookies();
+    mockHeaders({ 'user-agent': 'U'.repeat(5000), referer: 'R'.repeat(5000) });
+    prismaMock.pageVisit.create.mockResolvedValue({} as any);
+
+    await trackPageVisit(`/${'A'.repeat(900_000)}`);
+
+    const { data } = prismaMock.pageVisit.create.mock.calls[0][0];
+    expect(data.path).toHaveLength(500);
+    expect(data.userAgent).toHaveLength(500);
+    expect(data.referer).toHaveLength(500);
+  });
+
+  it('ignores anything that is not a path of the site', async () => {
+    for (const path of ['https://evil.test', '', 42 as unknown as string]) {
+      await trackPageVisit(path);
+    }
+
+    expect(enforceRateLimit).not.toHaveBeenCalled();
+    expect(prismaMock.pageVisit.create).not.toHaveBeenCalled();
+  });
+
+  it('drops visits silently past the rate limit', async () => {
+    (enforceRateLimit as jest.Mock).mockRejectedValueOnce(new Error('RATE_LIMIT'));
+
+    await expect(trackPageVisit('/home')).resolves.toBeUndefined();
+
+    expect(enforceRateLimit).toHaveBeenCalledWith('pageVisit');
+    expect(prismaMock.pageVisit.create).not.toHaveBeenCalled();
   });
 });
