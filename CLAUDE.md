@@ -34,6 +34,15 @@ no longer is: don't assume Supabase (its pooler, dashboard or settings) for anyt
 - After changing `prisma/schema.prisma`, run `pnpm db:diagram` to regenerate the ER diagram data on `/desarrollo` (`src/app/(platform)/desarrollo/db-schema.ts`).
 - Prisma 7: `prisma generate` (run by `postinstall`/`prebuild`) writes the client to `src/generated/prisma` and the full datamodel to `src/generated/datamodel` (gitignored). Import types and the client from `@/generated/prisma/client`, or `@/generated/prisma/browser` in client components; never `@prisma/client`. The app connects through `@prisma/adapter-pg` with `pgAdapter()` (`src/lib/database-url.ts`), which keeps Prisma 6's URL semantics (sslmode, connection_limit); the CLI's URL comes from `prisma.config.ts`. Details in `docs/migracion-prisma-7.md`.
 
+## Security
+
+How the site covers the OWASP Top 10, and the rules for new code, are in `docs/seguridad-owasp.md`.
+In short: every server action checks the session or permissions itself (enforced by
+`src/lib/server-action-auth.test.ts`), validates input with zod, talks to the database only through
+Prisma or tagged `$queryRaw` (enforced by ESLint and `src/lib/sql-safety.test.ts`), and fetches
+user-supplied URLs only through `safeFetch`. `pnpm test:db` runs the integration suite against a
+throwaway local Postgres database.
+
 ## Pull requests
 
 When opening a PR that changes any UI, include screenshots in the description:
