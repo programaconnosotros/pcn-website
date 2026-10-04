@@ -33,7 +33,10 @@ describe('setUserRole', () => {
   it('does not let admins demote themselves', async () => {
     loginAs(admin);
 
-    await expect(setUserRole('admin-1', 'REGULAR')).rejects.toThrow('a vos mismo');
+    await expect(setUserRole('admin-1', 'REGULAR')).resolves.toEqual({
+      success: false,
+      error: 'No podés quitarte el rol de admin a vos mismo',
+    });
     expect(prismaMock.user.update).not.toHaveBeenCalled();
   });
 

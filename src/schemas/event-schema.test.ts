@@ -141,3 +141,30 @@ describe('eventSchema', () => {
     });
   });
 });
+
+describe('eventSchema dates', () => {
+  it.each([
+    ['before', '2026-05-01T18:00'],
+    ['equal to', '2026-05-01T19:00'],
+  ])('rejects an end date %s the start, on the endDate field', (_case, endDate) => {
+    const result = eventSchema.safeParse({ ...baseEvent, date: '2026-05-01T19:00', endDate });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toContainEqual(
+      expect.objectContaining({
+        path: ['endDate'],
+        message: 'La fecha de finalización debe ser posterior a la fecha de inicio',
+      }),
+    );
+  });
+
+  it('accepts an end date after the start, or none', () => {
+    expect(
+      eventSchema.safeParse({ ...baseEvent, date: '2026-05-01T19:00', endDate: '2026-05-01T22:00' })
+        .success,
+    ).toBe(true);
+    expect(
+      eventSchema.safeParse({ ...baseEvent, date: '2026-05-01T19:00', endDate: '' }).success,
+    ).toBe(true);
+  });
+});

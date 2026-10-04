@@ -131,31 +131,18 @@ test.describe('as an admin', () => {
     page,
     db,
   }) => {
-    // BUG: el formulario no valida el fin contra el inicio; lo hace la server action con un
-    // `throw new Error(...)` (src/actions/events/create-event.ts:39). En producción ese mensaje no
-    // llega al navegador: el toast muestra "Minified React error #441; visit
-    // https://react.dev/errors/441 …" (actionErrorMessage no reconoce ese texto) o, a lo sumo, el
-    // genérico "Ocurrió un error al crear el evento", nunca "La fecha de finalización debe ser
-    // posterior a la fecha de inicio". Lo mismo pasa al editar (update-event.ts:50).
-    test.fail();
     const name = `Fechas al revés ${uniqueId(PREFIX)}`;
     await gotoReady(page, '/eventos/nuevo');
     await fillInPersonEvent(page, name);
     await page.getByLabel('Fin (opcional)').fill(localInput(new Date(Date.now() + 19 * DAY)));
     await page.getByRole('button', { name: 'crearEvento();' }).click();
 
-    // La action responde con un toast de error y no crea el evento
+    // El form lo valida antes de llamar a la action: el mensaje queda al lado del campo
     await expect(
-      page
-        .getByRole('region', { name: /^Notifications/ })
-        .getByRole('listitem')
-        .filter({ hasNotText: 'Creando evento' }),
+      page.getByText('La fecha de finalización debe ser posterior a la fecha de inicio'),
     ).toBeVisible();
     await expect(page).toHaveURL(/\/eventos\/nuevo$/);
     expect(await db.event.count({ where: { name } })).toBe(0);
-    await expect(
-      page.getByText('La fecha de finalización debe ser posterior a la fecha de inicio'),
-    ).toBeVisible({ timeout: 3_000 });
   });
 
   test('creating an online event hides the address fields', async ({ page, db }) => {

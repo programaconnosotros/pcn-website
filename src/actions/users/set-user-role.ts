@@ -9,9 +9,10 @@ export const setUserRole = async (userId: string, role: 'ADMIN' | 'REGULAR') => 
   const admin = await requireAdmin();
 
   if (role !== 'ADMIN' && role !== 'REGULAR') throw new Error('Rol inválido');
-  // Evita que un admin se quede sin acceso por error
+  // Evita que un admin se quede sin acceso por error. Se devuelve, no se lanza: en producción el
+  // mensaje de un error lanzado no llega al navegador.
   if (admin.id === userId && role !== 'ADMIN') {
-    throw new Error('No podés quitarte el rol de admin a vos mismo');
+    return { success: false as const, error: 'No podés quitarte el rol de admin a vos mismo' };
   }
 
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
@@ -22,5 +23,5 @@ export const setUserRole = async (userId: string, role: 'ADMIN' | 'REGULAR') => 
   revalidatePath('/usuarios');
   revalidatePath(`/perfil/${userId}`);
 
-  return { success: true };
+  return { success: true as const };
 };

@@ -210,6 +210,22 @@ describe('UserFlagToggle', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('reverts and shows the error the action returns, like demoting yourself', async () => {
+    (setUserRole as jest.Mock).mockResolvedValue({
+      success: false,
+      error: 'No podés quitarte el rol de admin a vos mismo',
+    });
+    render(<UserFlagToggle flag="admin" userId="u1" userName="Ana" active />);
+
+    await userEvent.click(screen.getByRole('button'));
+
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith('No podés quitarte el rol de admin a vos mismo'),
+    );
+    expect(toast.success).not.toHaveBeenCalled();
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+  });
+
   it('ignores clicks while saving', async () => {
     (setAmbassador as jest.Mock).mockReturnValue(new Promise(() => {}));
     render(<UserFlagToggle flag="ambassador" userId="u1" userName="Ana" active={false} />);

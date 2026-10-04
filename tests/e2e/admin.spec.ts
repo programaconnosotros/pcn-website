@@ -162,11 +162,6 @@ test.describe('with an admin of its own', () => {
   });
 
   test('removing your own admin role explains why it failed', async ({ page }) => {
-    // BUG: setUserRole (src/actions/users/set-user-role.ts:13) lanza el motivo con `throw new
-    // Error(...)` y user-flag-toggle.tsx muestra `error.message`; en producción ese mensaje no llega
-    // al navegador y el toast dice "Minified React error #441; visit https://react.dev/errors/441 …"
-    // en vez de "No podés quitarte el rol de admin a vos mismo".
-    test.fail();
     await signIn(page, admin, '/usuarios');
     await page.waitForLoadState('networkidle');
     await findUser(page, admin.name);

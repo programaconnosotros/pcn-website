@@ -32,9 +32,10 @@ describe('setUserRole', () => {
     const admin = await quickUser({ role: 'ADMIN' });
     await actAs(admin.id);
 
-    await expect(setUserRole(admin.id, 'REGULAR')).rejects.toThrow(
-      'No podés quitarte el rol de admin a vos mismo',
-    );
+    await expect(setUserRole(admin.id, 'REGULAR')).resolves.toEqual({
+      success: false,
+      error: 'No podés quitarte el rol de admin a vos mismo',
+    });
     expect(await roleOf(admin.id)).toBe('ADMIN');
   });
 

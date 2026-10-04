@@ -120,6 +120,14 @@ export const eventSchema = z
     ),
   })
   .superRefine((data, ctx) => {
+    // En el form, no recién en el servidor: ahí el mensaje no llega al navegador en producción
+    if (data.endDate && new Date(data.endDate) <= new Date(data.date)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'La fecha de finalización debe ser posterior a la fecha de inicio',
+        path: ['endDate'],
+      });
+    }
     if (!data.isOnline) {
       if (!data.city || data.city.length < 2) {
         ctx.addIssue({

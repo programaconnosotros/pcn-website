@@ -7,6 +7,7 @@ import { setAmbassador } from '@/actions/users/set-ambassador';
 import { setCofounder } from '@/actions/users/set-cofounder';
 import { setUserRole } from '@/actions/users/set-user-role';
 import { MarkToggle } from '@/components/ui/mark-toggle';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type FlagConfig = {
   icon: LucideIcon;
@@ -64,11 +65,17 @@ export function UserFlagToggle({
     setActive(next);
     startTransition(async () => {
       try {
-        await config.save(userId, next);
+        const result = await config.save(userId, next);
+        // Errores esperados que la action devuelve (por ejemplo, quitarse el admin a uno mismo)
+        if (result && typeof result === 'object' && 'error' in result) {
+          setActive(!next);
+          toast.error(String(result.error));
+          return;
+        }
         toast.success(next ? config.on(userName) : config.off(userName));
       } catch (error) {
         setActive(!next);
-        toast.error(error instanceof Error ? error.message : 'No se pudo actualizar');
+        toast.error(actionErrorMessage(error, 'No se pudo actualizar', true));
       }
     });
   };
