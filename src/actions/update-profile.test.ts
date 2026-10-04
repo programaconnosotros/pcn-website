@@ -171,7 +171,33 @@ describe('updateProfile', () => {
     for (const field of ['role', 'emailVerified', 'password', 'isCofounder', 'id']) {
       expect(data).not.toHaveProperty(field);
     }
-    expect(data).toMatchObject({ name: 'Test User', email: 'test@example.com' });
+    expect(data).toMatchObject({ name: 'Test User' });
+  });
+
+  it('never changes the email, which would skip verifying the new address', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.user.update.mockResolvedValue({} as any);
+
+    await updateProfile({ ...validProfileData, email: 'victima@empresa.com' });
+
+    expect(prismaMock.user.update.mock.calls[0][0].data).not.toHaveProperty('email');
+  });
+
+  it.each([
+    [
+      'an image that is not https',
+      { image: 'javascript:alert(1)' },
+      'La imagen debe ser una URL https',
+    ],
+    ['a huge slogan', { slogan: 'x'.repeat(501) }, 'Máximo 500 caracteres'],
+    ['a huge name', { name: 'x'.repeat(101) }, 'Máximo 100 caracteres'],
+  ])('rejects %s', async (_case, override, message) => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await expect(updateProfile({ ...validProfileData, ...override })).rejects.toThrow(message);
+    expect(prismaMock.user.update).not.toHaveBeenCalled();
   });
 
   it('rejects invalid data without touching the database', async () => {

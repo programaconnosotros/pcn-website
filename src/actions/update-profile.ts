@@ -31,7 +31,9 @@ export const updateProfile = async (data: ProfileFormData) => {
   const parsed = profileSchema.safeParse(data);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
 
-  const { programmingLanguages, positions: rawPositions, ...userData } = parsed.data;
+  // El email no se cambia desde acá: quedaría marcado como verificado sin que nadie haya probado
+  // que es suyo, y bloquearía a su verdadero dueño.
+  const { programmingLanguages, positions: rawPositions, email: _email, ...userData } = parsed.data;
   const positions = rawPositions
     .filter((position) => position.jobTitle)
     .map((position) => ({ jobTitle: position.jobTitle, enterprise: position.enterprise || null }));

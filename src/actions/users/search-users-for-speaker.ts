@@ -26,6 +26,8 @@ async function requireAdmin() {
   if (!session || !(await canManageSomeEvent(session.user))) throw new Error('No autorizado');
 }
 
+const MAX_RESULTS = 20;
+
 const speakerSelect = {
   id: true,
   name: true,
@@ -41,7 +43,10 @@ const speakerSelect = {
 // Busca por cualquier parte del nombre, email, slogan, trabajo y estudio (ver searchPeople).
 export async function searchUsersForSpeaker(q: string, limit = 20): Promise<SpeakerUserOption[]> {
   await requireAdmin();
-  const trimmed = q.trim();
+  // El límite llega del navegador: sin tope, `limit` enorme devolvería el email y el teléfono de
+  // todos los usuarios a cualquier organizador.
+  limit = Math.min(Math.max(Math.trunc(Number(limit)) || 1, 1), MAX_RESULTS);
+  const trimmed = String(q ?? '').trim();
   if (!trimmed) {
     return prisma.user.findMany({ select: speakerSelect, orderBy: { name: 'asc' }, take: limit });
   }

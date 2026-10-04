@@ -20,13 +20,33 @@ const optionalUrl = z
     { message: 'La URL debe ser válida' },
   );
 
+// Textos libres con tope: el perfil se guarda tal cual llega, y sin tope cualquiera podría guardar
+// megas en un campo que después se muestra en todas partes.
+const optionalText = (max: number) =>
+  z
+    .string()
+    .max(max, { message: `Máximo ${max} caracteres` })
+    .optional()
+    .nullable();
+
 export const profileSchema = z.object({
-  name: z.string().min(3, { message: 'El nombre debe tener al menos 3 caracteres' }),
+  name: z
+    .string()
+    .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })
+    .max(100, { message: 'Máximo 100 caracteres' }),
   email: z.string().email({ message: 'El email debe ser válido' }),
-  phoneNumber: z.string().optional().nullable(),
-  image: z.string().optional().nullable(),
-  countryOfOrigin: z.string().optional().nullable(),
-  province: z.string().optional().nullable(),
+  phoneNumber: optionalText(30),
+  // La foto que se sube al bucket (o la que ya tenía): solo una URL https, nunca otro esquema.
+  image: z
+    .string()
+    .max(2048)
+    .refine((value) => value === '' || value.startsWith('https://'), {
+      message: 'La imagen debe ser una URL https',
+    })
+    .optional()
+    .nullable(),
+  countryOfOrigin: optionalText(100),
+  province: optionalText(100),
   xAccountUrl: optionalUrl,
   linkedinUrl: optionalUrl,
   gitHubUrl: optionalUrl,
@@ -34,7 +54,7 @@ export const profileSchema = z.object({
   youtubeUrl: optionalUrl,
   twitchUrl: optionalUrl,
   kickUrl: optionalUrl,
-  slogan: z.string().optional().nullable(),
+  slogan: optionalText(500),
   // Puestos actuales, en orden. Las filas sin cargo se descartan al guardar.
   positions: z
     .array(
@@ -44,8 +64,8 @@ export const profileSchema = z.object({
       }),
     )
     .max(5, { message: 'Podés cargar hasta 5 puestos' }),
-  career: z.string().optional().nullable(),
-  studyPlace: z.string().optional().nullable(),
+  career: optionalText(150),
+  studyPlace: optionalText(150),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),

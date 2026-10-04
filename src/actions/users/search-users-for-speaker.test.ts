@@ -152,6 +152,21 @@ describe('searchUsersForSpeaker', () => {
 
     expect(await searchUsersForSpeaker('admin', 5)).toHaveLength(5);
   });
+
+  it.each([1_000_000, Infinity, -5, Number.NaN])(
+    'caps a limit of %p sent by the browser at 20 results',
+    async (limit) => {
+      mockCookies({ sessionId: 'session-admin' });
+      prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+      prismaMock.user.findMany.mockResolvedValue([]);
+
+      await searchUsersForSpeaker('', limit);
+
+      const { take } = prismaMock.user.findMany.mock.calls[0][0] as { take: number };
+      expect(take).toBeGreaterThanOrEqual(1);
+      expect(take).toBeLessThanOrEqual(20);
+    },
+  );
 });
 
 describe('getUserForSpeaker', () => {

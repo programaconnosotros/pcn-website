@@ -401,8 +401,9 @@ export const ProfileForm = ({
                 <FormError error={form.formState.errors.name} />
               </Field>
 
-              <Field id="email" label="email">
-                <Input id="email" type="email" {...form.register('email')} />
+              <Field id="email" label="email" hint="no editable">
+                {/* Solo lectura: cambiarlo sin verificar la dirección nueva no es seguro */}
+                <Input id="email" type="email" readOnly {...form.register('email')} />
                 <FormError error={form.formState.errors.email} />
               </Field>
 
