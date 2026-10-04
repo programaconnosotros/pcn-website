@@ -18,17 +18,30 @@ export const isSignedGallerySrc = (src: string) =>
  * así la misma foto tiene la misma URL durante una hora y el navegador y CloudFront la
  * cachean. Las fotos que viven en /public se devuelven tal cual.
  */
+// Una URL firmada es la misma durante toda su hora: se guarda en vez de volver a firmar (RSA) la
+// misma foto en cada request. Al cambiar la hora se descartan las de la anterior.
+let signedHour = 0;
+const signedUrls = new Map<string, string>();
+
 export function signGallerySrc(src: string, now = Date.now()) {
   const expiresAt = new Date(Math.ceil(now / HOUR_MS) * HOUR_MS + HOUR_MS);
   if (!isSignedGallerySrc(src)) return { url: src, expiresAt };
   if (!KEY_PAIR_ID || !PRIVATE_KEY) throw new Error('Falta configurar la firma de CloudFront');
 
-  const url = getSignedUrl({
-    url: src,
-    keyPairId: KEY_PAIR_ID,
-    privateKey: PRIVATE_KEY,
-    dateLessThan: expiresAt.toISOString(),
-  });
+  if (expiresAt.getTime() !== signedHour) {
+    signedHour = expiresAt.getTime();
+    signedUrls.clear();
+  }
+  let url = signedUrls.get(src);
+  if (!url) {
+    url = getSignedUrl({
+      url: src,
+      keyPairId: KEY_PAIR_ID,
+      privateKey: PRIVATE_KEY,
+      dateLessThan: expiresAt.toISOString(),
+    });
+    signedUrls.set(src, url);
+  }
   return { url, expiresAt };
 }
 

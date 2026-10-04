@@ -679,13 +679,16 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-EVT-A067', 'fetchHomeEvents › fills the remaining slots with past events'],
-      ['TC-EVT-A068', 'fetchHomeEvents › skips past events when upcoming ones fill every slot'],
+      ['TC-EVT-A067', 'fetchHomeEvents › fills the remaining slots with the latest past events'],
+      [
+        'TC-EVT-A068',
+        'fetchHomeEvents › orders upcoming events soonest first and skips past ones when they fill every slot',
+      ],
       [
         'TC-EVT-A069',
-        'fetchHomeEvents › drops an event without end date once its day is over in Argentina',
+        'fetchHomeEvents › keeps an event without end date until its day is over in Argentina',
       ],
-      ['TC-EVT-A070', 'fetchHomeEvents › asks for the soonest upcoming events first'],
+      ['TC-EVT-A070', 'fetchHomeEvents › keeps an event that is still running until its end'],
     ],
   },
   {
@@ -694,13 +697,22 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-EVT-A071', 'fetchUpcomingEvents › returns upcoming events from prisma'],
+      [
+        'TC-EVT-A071',
+        'fetchUpcomingEvents › returns the events that start later or are still running, without endDate',
+      ],
       [
         'TC-EVT-A072',
         'fetchUpcomingEvents › returns an empty array when there are no upcoming events',
       ],
-      ['TC-EVT-A073', 'fetchUpcomingEvents › passes the limit to prisma when provided'],
-      ['TC-EVT-A074', 'fetchUpcomingEvents › defaults to a limit of 5'],
+      [
+        'TC-EVT-A073',
+        'fetchUpcomingEvents › keeps the first `limit` upcoming events, 5 by default',
+      ],
+      [
+        'TC-EVT-A074',
+        'fetchUpcomingEvents › reads every non-deleted event in date order, so the cached list fits any moment',
+      ],
     ],
   },
   {
@@ -2150,9 +2162,10 @@ export const automatedSuites: AutomatedSuite[] = [
         'TC-GAL-A047',
         'signGallerySrc › expires at the end of the next hour, so URLs stay stable for an hour',
       ],
-      ['TC-GAL-A048', 'signGallerySrc › leaves photos that live in /public untouched'],
+      ['TC-GAL-A048', 'signGallerySrc › signs again once the hour changes'],
+      ['TC-GAL-A049', 'signGallerySrc › leaves photos that live in /public untouched'],
       [
-        'TC-GAL-A049',
+        'TC-GAL-A050',
         'signGalleryItem › adds signed URLs for the thumbnail and the full file, ready to render',
       ],
     ],
@@ -2316,9 +2329,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-GAL-A050', 'optimizePhoto › shrinks large photos into a webp and a thumbnail'],
-      ['TC-GAL-A051', 'optimizePhoto › never enlarges small photos'],
-      ['TC-GAL-A052', 'optimizePhoto › applies the EXIF rotation'],
+      ['TC-GAL-A051', 'optimizePhoto › shrinks large photos into a webp and a thumbnail'],
+      ['TC-GAL-A052', 'optimizePhoto › never enlarges small photos'],
+      ['TC-GAL-A053', 'optimizePhoto › applies the EXIF rotation'],
     ],
   },
   {

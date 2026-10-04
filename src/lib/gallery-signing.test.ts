@@ -49,6 +49,17 @@ describe('signGallerySrc', () => {
     expect(later.url).toBe(first.url);
   });
 
+  it('signs again once the hour changes', () => {
+    const { signGallerySrc } = loadSigning();
+    const src = 'https://cdn.example.com/gallery/abc/thumb.webp';
+
+    const first = signGallerySrc(src, now);
+    const nextHour = signGallerySrc(src, now + 60 * 60 * 1000);
+
+    expect(nextHour.expiresAt.toISOString()).toBe('2026-10-01T13:00:00.000Z');
+    expect(nextHour.url).not.toBe(first.url);
+  });
+
   it('leaves photos that live in /public untouched', () => {
     const { signGallerySrc, isSignedGallerySrc } = loadSigning();
 

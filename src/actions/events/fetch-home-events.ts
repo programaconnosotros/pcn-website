@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { fetchEvents } from '@/actions/events/fetch-events';
 
 const TIME_ZONE = 'America/Argentina/Buenos_Aires';
 
@@ -10,44 +10,26 @@ const startOfTodayIn = (now: Date) =>
     `${new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(now)}T00:00:00-03:00`,
   );
 
-const include = {
-  _count: { select: { registrations: { where: { cancelledAt: null } } } },
-} as const;
-
 /**
  * The events the home's billboard shows: the upcoming ones first (soonest first), then the
  * latest that already happened to fill the remaining slots. An event still running counts as
- * upcoming until its end, or until the end of its day (in Argentina) when it has none.
+ * upcoming until its end, or until the end of its day (in Argentina) when it has none. Picked
+ * from the cached list of events, since which ones are upcoming depends on the time.
  */
 export const fetchHomeEvents = async (slots = 3) => {
   const now = new Date();
   const startOfToday = startOfTodayIn(now);
-  const upcoming = await prisma.event.findMany({
-    where: {
-      deletedAt: null,
-      OR: [
-        { date: { gte: now } },
-        { endDate: { gte: now } },
-        { endDate: null, date: { gte: startOfToday } },
-      ],
-    },
-    orderBy: { date: 'asc' },
-    take: slots,
-    include,
-  });
-  const past =
-    upcoming.length < slots
-      ? await prisma.event.findMany({
-          where: {
-            deletedAt: null,
-            id: { notIn: upcoming.map(({ id }) => id) },
-            date: { lt: now },
-          },
-          orderBy: { date: 'desc' },
-          take: slots - upcoming.length,
-          include,
-        })
-      : [];
+  const events = await fetchEvents();
+  const isUpcoming = ({ date, endDate }: (typeof events)[number]) =>
+    date >= now || (endDate ? endDate >= now : date >= startOfToday);
+  const upcoming = events
+    .filter(isUpcoming)
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(0, slots);
+  // fetchEvents comes newest first.
+  const past = events
+    .filter((event) => !isUpcoming(event) && event.date < now)
+    .slice(0, slots - upcoming.length);
   return { upcoming, past };
 };
 

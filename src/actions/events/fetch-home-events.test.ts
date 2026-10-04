@@ -1,63 +1,73 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchHomeEvents } from './fetch-home-events';
 
-const event = (id: string) => ({ id, name: id, deletedAt: null, _count: { registrations: 0 } });
+const NOW = new Date('2026-10-03T15:00:00Z'); // 12:00 in Argentina
+
+const event = (id: string, date: string, endDate: string | null = null) => ({
+  id,
+  name: id,
+  date: new Date(date),
+  endDate: endDate ? new Date(endDate) : null,
+  deletedAt: null,
+  _count: { registrations: 0, galleryItems: 0, talks: 0 },
+});
+
+// fetchEvents returns them newest first.
+const listed = (...events: ReturnType<typeof event>[]) =>
+  prismaMock.event.findMany.mockResolvedValue(
+    [...events].sort((a, b) => b.date.getTime() - a.date.getTime()) as any,
+  );
 
 describe('fetchHomeEvents', () => {
-  it('fills the remaining slots with past events', async () => {
-    prismaMock.event.findMany
-      .mockResolvedValueOnce([event('next')] as any)
-      .mockResolvedValueOnce([event('last'), event('before-last')] as any);
+  beforeEach(() => jest.useFakeTimers({ now: NOW }));
+  afterEach(() => jest.useRealTimers());
 
-    await expect(fetchHomeEvents()).resolves.toEqual({
-      upcoming: [event('next')],
-      past: [event('last'), event('before-last')],
-    });
-    expect(prismaMock.event.findMany).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        take: 2,
-        orderBy: { date: 'desc' },
-        where: expect.objectContaining({ id: { notIn: ['next'] } }),
-      }),
+  it('fills the remaining slots with the latest past events', async () => {
+    listed(
+      event('next', '2026-10-10T22:00:00Z'),
+      event('last', '2026-09-20T22:00:00Z'),
+      event('before-last', '2026-09-01T22:00:00Z'),
+      event('old', '2026-08-01T22:00:00Z'),
     );
+
+    const { upcoming, past } = await fetchHomeEvents();
+
+    expect(upcoming.map(({ id }) => id)).toEqual(['next']);
+    expect(past.map(({ id }) => id)).toEqual(['last', 'before-last']);
   });
 
-  it('skips past events when upcoming ones fill every slot', async () => {
-    prismaMock.event.findMany.mockResolvedValueOnce([event('a'), event('b'), event('c')] as any);
+  it('orders upcoming events soonest first and skips past ones when they fill every slot', async () => {
+    listed(
+      event('c', '2026-12-01T22:00:00Z'),
+      event('a', '2026-10-05T22:00:00Z'),
+      event('b', '2026-11-01T22:00:00Z'),
+      event('d', '2027-01-01T22:00:00Z'),
+      event('last', '2026-09-20T22:00:00Z'),
+    );
 
-    const { past } = await fetchHomeEvents();
+    const { upcoming, past } = await fetchHomeEvents();
 
+    expect(upcoming.map(({ id }) => id)).toEqual(['a', 'b', 'c']);
     expect(past).toEqual([]);
-    expect(prismaMock.event.findMany).toHaveBeenCalledTimes(1);
   });
 
-  it('drops an event without end date once its day is over in Argentina', async () => {
-    jest.useFakeTimers({ now: new Date('2026-10-03T15:00:00Z') });
-    prismaMock.event.findMany.mockResolvedValue([]);
-
-    await fetchHomeEvents();
-
-    expect(prismaMock.event.findMany).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        where: expect.objectContaining({
-          OR: expect.arrayContaining([
-            { endDate: null, date: { gte: new Date('2026-10-03T03:00:00Z') } },
-          ]),
-        }),
-      }),
+  it('keeps an event without end date until its day is over in Argentina', async () => {
+    listed(
+      event('this-morning', '2026-10-03T11:00:00Z'),
+      event('yesterday', '2026-10-02T22:00:00Z'),
     );
-    jest.useRealTimers();
+
+    const { upcoming, past } = await fetchHomeEvents();
+
+    expect(upcoming.map(({ id }) => id)).toEqual(['this-morning']);
+    expect(past.map(({ id }) => id)).toEqual(['yesterday']);
   });
 
-  it('asks for the soonest upcoming events first', async () => {
-    prismaMock.event.findMany.mockResolvedValue([]);
+  it('keeps an event that is still running until its end', async () => {
+    listed(event('running', '2026-10-01T12:00:00Z', '2026-10-05T12:00:00Z'));
 
-    await fetchHomeEvents();
+    const { upcoming } = await fetchHomeEvents();
 
-    expect(prismaMock.event.findMany).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({ orderBy: { date: 'asc' }, take: 3 }),
-    );
+    expect(upcoming.map(({ id }) => id)).toEqual(['running']);
   });
 });

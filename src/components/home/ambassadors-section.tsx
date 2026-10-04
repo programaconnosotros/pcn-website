@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { cn } from '@/lib/utils';
 import { GeistMono } from 'geist/font/mono';
 import { CalendarPlus, Lightbulb, MessageSquare, Users } from 'lucide-react';
@@ -24,13 +25,20 @@ const initials = (name: string) =>
     .join('')
     .toUpperCase();
 
+const listAmbassadors = cached(
+  'ambassadors',
+  () =>
+    prisma.user.findMany({
+      where: { isAmbassador: true },
+      select: { id: true, name: true, image: true },
+      orderBy: { name: 'asc' },
+    }),
+  { models: ['User'] },
+);
+
 /** The PCN Ambassadors program: what ambassadors do and who they are. */
 export const AmbassadorsSection = async () => {
-  const ambassadors = await prisma.user.findMany({
-    where: { isAmbassador: true },
-    select: { id: true, name: true, image: true },
-    orderBy: { name: 'asc' },
-  });
+  const ambassadors = await listAmbassadors();
 
   return (
     <section id="ambassadors" className="scroll-mt-20">
