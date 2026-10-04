@@ -12,7 +12,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { conversations } from '@/data/whatsapp-conversations';
 import { getEventCover, getEventMemories } from '@/lib/gallery';
 import { getIdentityMap } from '@/lib/identity-links';
-import prisma from '@/lib/prisma';
+import { getEventCounts } from '@/lib/event-index';
 import { MemoryConversations } from './memory-conversations';
 import { MemoryCoverPicker } from './memory-cover-picker';
 import { MemoryHero } from './memory-hero';
@@ -47,26 +47,18 @@ export async function PastEventMemory({
 }) {
   const isExternalEvent = !!event.externalRegistrationUrl;
   const eventConversations = conversations.filter((c) => c.eventId === event.id);
-  const [memories, cover, talks, registrations, catalogNumber, profiles] = await Promise.all([
+  const [memories, cover, talks, counts, profiles] = await Promise.all([
     getEventMemories(event.id, MEMORY_PREVIEW + 1),
     getEventCover(event.id, event.coverPhotoId),
     fetchPublicTalks(event.id),
-    isExternalEvent
-      ? Promise.resolve([])
-      : prisma.eventRegistration.groupBy({
-          by: ['cancelledAt'],
-          where: { eventId: event.id },
-          _count: true,
-        }),
-    // Same numbering as the /eventos museum: the first event ever is Nº 001.
-    prisma.event.count({ where: { deletedAt: null, date: { lte: event.date } } }),
+    getEventCounts(event.id),
     eventConversations.length > 0 ? getIdentityMap('whatsapp') : Promise.resolve({}),
   ]);
 
-  const activeRegistrations = registrations
-    .filter((row) => row.cancelledAt === null)
-    .reduce((sum, row) => sum + row._count, 0);
-  const totalRegistrations = registrations.reduce((sum, row) => sum + row._count, 0);
+  // Same numbering as the /eventos museum: the first event ever is Nº 001.
+  const { catalogNumber } = counts;
+  const activeRegistrations = isExternalEvent ? 0 : counts.activeRegistrations;
+  const totalRegistrations = isExternalEvent ? 0 : counts.totalRegistrations;
 
   // Without landscape photos, any photo of the night still beats the flyer.
   const covers = cover.covers.length > 0 ? cover.covers : cover.photos.slice(0, 1);

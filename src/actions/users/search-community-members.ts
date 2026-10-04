@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { requireSessionUser } from '@/actions/projects/get-session-user';
 import { searchPeople } from '@/lib/people-search';
 
@@ -13,26 +14,34 @@ export type CommunityMemberOption = {
 // Búsqueda de usuarios para cualquier miembro logueado. Solo devuelve datos públicos; busca por
 // cualquier parte del nombre, slogan, trabajo y estudio. El email solo cuenta cuando busca un
 // admin, para no dejar averiguar a quién pertenece una dirección.
+// Everyone, cached: the search runs on every keystroke. Emails only come along for admins.
+const listSearchablePeople = cached(
+  'searchable-people',
+  (withEmail: boolean) =>
+    prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        email: withEmail,
+        slogan: true,
+        jobTitle: true,
+        enterprise: true,
+        career: true,
+        studyPlace: true,
+        positions: { select: { jobTitle: true, enterprise: true } },
+      },
+    }),
+  { models: ['User', 'UserPosition'] },
+);
+
 export async function searchCommunityMembers(q: string): Promise<CommunityMemberOption[]> {
   const user = await requireSessionUser();
   const trimmed = q.trim();
   if (trimmed.length < 2) return [];
   const isAdmin = user.role === 'ADMIN';
 
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      email: isAdmin,
-      slogan: true,
-      jobTitle: true,
-      enterprise: true,
-      career: true,
-      studyPlace: true,
-      positions: { select: { jobTitle: true, enterprise: true } },
-    },
-  });
+  const users = await listSearchablePeople(isAdmin);
 
   return searchPeople(users, trimmed, {
     name: (person) => person.name,

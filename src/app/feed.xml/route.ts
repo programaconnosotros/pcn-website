@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { buildRssFeed, type FeedItem } from '@/lib/rss';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -17,41 +18,50 @@ const formatEventDate = (date: Date) =>
     timeZone: 'America/Argentina/Buenos_Aires',
   }).format(date);
 
+const loadFeedSources = cached(
+  'rss-sources',
+  async () => {
+    const [announcements, events, talks] = await Promise.all([
+      prisma.announcement.findMany({
+        where: { published: true },
+        orderBy: { createdAt: 'desc' },
+        take: ITEMS_PER_SOURCE,
+        select: { id: true, title: true, content: true, createdAt: true, eventId: true },
+      }),
+      prisma.event.findMany({
+        where: { deletedAt: null },
+        orderBy: { createdAt: 'desc' },
+        take: ITEMS_PER_SOURCE,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          date: true,
+          isOnline: true,
+          placeName: true,
+          city: true,
+          createdAt: true,
+        },
+      }),
+      prisma.talk.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: ITEMS_PER_SOURCE,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          speakers: { select: { speakerName: true }, orderBy: { order: 'asc' } },
+        },
+      }),
+    ]);
+    return { announcements, events, talks };
+  },
+  { models: ['Announcement', 'Event', 'Talk', 'TalkSpeaker'] },
+);
+
 export async function GET() {
-  const [announcements, events, talks] = await Promise.all([
-    prisma.announcement.findMany({
-      where: { published: true },
-      orderBy: { createdAt: 'desc' },
-      take: ITEMS_PER_SOURCE,
-      select: { id: true, title: true, content: true, createdAt: true, eventId: true },
-    }),
-    prisma.event.findMany({
-      where: { deletedAt: null },
-      orderBy: { createdAt: 'desc' },
-      take: ITEMS_PER_SOURCE,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        date: true,
-        isOnline: true,
-        placeName: true,
-        city: true,
-        createdAt: true,
-      },
-    }),
-    prisma.talk.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: ITEMS_PER_SOURCE,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        createdAt: true,
-        speakers: { select: { speakerName: true }, orderBy: { order: 'asc' } },
-      },
-    }),
-  ]);
+  const { announcements, events, talks } = await loadFeedSources();
 
   const items: FeedItem[] = [
     ...announcements.map((a) => ({

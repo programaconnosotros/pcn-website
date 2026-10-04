@@ -23,7 +23,8 @@ import { googleMapsEmbedUrl } from '@/lib/google-maps';
 import { canEditEvent } from '@/lib/event-permissions';
 import { PersonLink } from '@/components/people/person-link';
 import { findSession } from '@/lib/session';
-import { activeWaitlistWhere, getWaitlistPosition } from '@/lib/event-waitlist';
+import { getWaitlistPosition } from '@/lib/event-waitlist';
+import { getEventCounts } from '@/lib/event-index';
 import { hasEventEnded } from '@/lib/event-status';
 import { PastEventMemory } from '@/components/events/memory/past-event-memory';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
@@ -137,33 +138,29 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
       : null;
 
   // Todo lo que sigue depende solo del evento y la sesión: se pide en paralelo.
-  const [registration, currentRegistrations, waitlistCount, registrations, eventAnnouncements] =
-    await Promise.all([
-      // Si el usuario ya está registrado (solo inscripciones activas)
-      userId && !isExternalEvent
-        ? prisma.eventRegistration.findFirst({
-            where: { eventId: id, userId, cancelledAt: null },
-            select: { id: true },
-          })
-        : null,
-      // Inscripciones activas, para el cupo
-      event.capacity !== null && !isExternalEvent
-        ? prisma.eventRegistration.count({ where: { eventId: id, cancelledAt: null } })
-        : null,
-      // Cuántos esperan en la lista de espera
-      !isExternalEvent
-        ? prisma.eventWaitlistEntry.count({ where: activeWaitlistWhere(id) })
-        : Promise.resolve(0),
-      // Inscripciones, para el resumen de quien gestiona el evento (solo inscripción interna)
-      canEdit && !isExternalEvent
-        ? prisma.eventRegistration.findMany({
-            where: { eventId: id },
-            select: { cancelledAt: true },
-          })
-        : Promise.resolve([] as { cancelledAt: Date | null }[]),
-      getEventAnnouncements(id),
-    ]);
+  const [registration, counts, registrations, eventAnnouncements] = await Promise.all([
+    // Si el usuario ya está registrado (solo inscripciones activas)
+    userId && !isExternalEvent
+      ? prisma.eventRegistration.findFirst({
+          where: { eventId: id, userId, cancelledAt: null },
+          select: { id: true },
+        })
+      : null,
+    // Inscripciones activas (para el cupo) y cuántos esperan en la lista de espera
+    !isExternalEvent ? getEventCounts(id) : null,
+    // Inscripciones, para el resumen de quien gestiona el evento (solo inscripción interna)
+    canEdit && !isExternalEvent
+      ? prisma.eventRegistration.findMany({
+          where: { eventId: id },
+          select: { cancelledAt: true },
+        })
+      : Promise.resolve([] as { cancelledAt: Date | null }[]),
+    getEventAnnouncements(id),
+  ]);
 
+  const currentRegistrations =
+    event.capacity !== null && counts ? counts.activeRegistrations : null;
+  const waitlistCount = counts?.waitlist ?? 0;
   const isRegistered = !!registration;
   const registrationId = registration?.id ?? null;
 

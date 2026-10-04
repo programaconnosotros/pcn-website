@@ -25,3 +25,31 @@ export const getEventNames = async (ids: string[]) => {
       .map((event) => [event.id, event.name]),
   );
 };
+
+/**
+ * The public numbers of an event's page: active registrations (for the capacity), people on
+ * the waitlist, registrations by status (for a past event's memory) and its catalog number in
+ * the /eventos museum (the first event ever is Nº 001).
+ */
+export const getEventCounts = cached(
+  'event-counts',
+  async (eventId: string) => {
+    const event = await prisma.event.findFirst({
+      where: { id: eventId, deletedAt: null },
+      select: { date: true },
+    });
+    const [registrations, waitlist, catalogNumber] = await Promise.all([
+      prisma.eventRegistration.groupBy({ by: ['cancelledAt'], where: { eventId }, _count: true }),
+      prisma.eventWaitlistEntry.count({
+        where: { eventId, cancelledAt: null, promotedAt: null },
+      }),
+      event ? prisma.event.count({ where: { deletedAt: null, date: { lte: event.date } } }) : 0,
+    ]);
+    const active = registrations
+      .filter((row) => row.cancelledAt === null)
+      .reduce((sum, row) => sum + row._count, 0);
+    const total = registrations.reduce((sum, row) => sum + row._count, 0);
+    return { activeRegistrations: active, totalRegistrations: total, waitlist, catalogNumber };
+  },
+  { models: ['Event', 'EventRegistration', 'EventWaitlistEntry'] },
+);

@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { Github, Instagram, Linkedin, Pencil, Twitch, Youtube } from 'lucide-react';
 import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
@@ -30,21 +31,13 @@ import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
 
-export const revalidate = 0;
-
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const user = await prisma.user.findUnique({
-    where: { id: params.id },
-    select: {
-      name: true,
-      slogan: true,
-    },
-  });
+  const user = await findProfileUser(params.id);
 
   if (!user) {
     return {
@@ -98,11 +91,35 @@ const KickLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-async function getUser(id: string) {
-  try {
-    const user = await prisma.user.findUnique({
+// The profile's own data, shared by the metadata and the page. Cached: contact data is in it,
+// but the page only shows it to members with a session.
+const findProfileUser = cached(
+  'profile-user',
+  (id: string) =>
+    prisma.user.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        phoneNumber: true,
+        isAmbassador: true,
+        isCofounder: true,
+        countryOfOrigin: true,
+        province: true,
+        slogan: true,
+        jobTitle: true,
+        enterprise: true,
+        career: true,
+        studyPlace: true,
+        xAccountUrl: true,
+        linkedinUrl: true,
+        gitHubUrl: true,
+        instagramUrl: true,
+        youtubeUrl: true,
+        twitchUrl: true,
+        kickUrl: true,
         badges: {
           include: { badge: true },
           orderBy: { awardedAt: 'asc' },
@@ -119,52 +136,44 @@ async function getUser(id: string) {
           orderBy: { order: 'asc' },
         },
       },
-    });
+    }),
+  { models: ['User', 'UserBadge', 'Badge', 'UserLanguage', 'UserPosition'] },
+);
 
-    if (!user) {
-      notFound();
-    }
+async function getUser(id: string) {
+  const user = await findProfileUser(id);
+  if (!user) notFound();
 
-    // Seleccionar solo los campos necesarios del usuario
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      isAmbassador: user.isAmbassador,
-      isCofounder: user.isCofounder,
-      customBadges: user.badges,
-      countryOfOrigin: user.countryOfOrigin,
-      province: user.province,
-      phoneNumber: (user as any).phoneNumber ?? null,
-      slogan: user.slogan,
-      // Perfiles que todavía no guardaron puestos muestran el cargo único que tenían.
-      positions:
-        user.positions.length > 0
-          ? user.positions
-          : user.jobTitle || user.enterprise
-            ? [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise }]
-            : [],
-      career: user.career,
-      studyPlace: user.studyPlace,
-      xAccountUrl: user.xAccountUrl,
-      linkedinUrl: user.linkedinUrl,
-      gitHubUrl: user.gitHubUrl,
-      instagramUrl: user.instagramUrl,
-      youtubeUrl: user.youtubeUrl,
-      twitchUrl: user.twitchUrl,
-      kickUrl: user.kickUrl,
-      languages: user.languages,
-    };
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    // Si el error es porque el usuario no existe, usar notFound
-    if (error instanceof Error && error.message.includes('Record to find does not exist')) {
-      notFound();
-    }
-    // Re-lanzar el error original para debugging
-    throw error;
-  }
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image,
+    isAmbassador: user.isAmbassador,
+    isCofounder: user.isCofounder,
+    customBadges: user.badges,
+    countryOfOrigin: user.countryOfOrigin,
+    province: user.province,
+    phoneNumber: user.phoneNumber,
+    slogan: user.slogan,
+    // Perfiles que todavía no guardaron puestos muestran el cargo único que tenían.
+    positions:
+      user.positions.length > 0
+        ? user.positions
+        : user.jobTitle || user.enterprise
+          ? [{ jobTitle: user.jobTitle ?? '', enterprise: user.enterprise }]
+          : [],
+    career: user.career,
+    studyPlace: user.studyPlace,
+    xAccountUrl: user.xAccountUrl,
+    linkedinUrl: user.linkedinUrl,
+    gitHubUrl: user.gitHubUrl,
+    instagramUrl: user.instagramUrl,
+    youtubeUrl: user.youtubeUrl,
+    twitchUrl: user.twitchUrl,
+    kickUrl: user.kickUrl,
+    languages: user.languages,
+  };
 }
 
 export default async function ProfilePage(props: ProfilePageProps) {

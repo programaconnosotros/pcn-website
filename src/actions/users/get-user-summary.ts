@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { visibleGalleryItem } from '@/lib/gallery';
 import { ACHIEVEMENTS, earnedAchievements } from '@/lib/achievements';
 import { getUserAchievementMetrics } from '@/lib/achievement-metrics';
@@ -38,67 +39,94 @@ export type UserSummary = {
  */
 export async function getUserSummary(userId: string): Promise<UserSummary | null> {
   if (typeof userId !== 'string' || userId.length === 0 || userId.length > 64) return null;
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      slogan: true,
-      jobTitle: true,
-      enterprise: true,
-      career: true,
-      studyPlace: true,
-      province: true,
-      countryOfOrigin: true,
-      isCofounder: true,
-      isAmbassador: true,
-      createdAt: true,
-      positions: {
-        select: { jobTitle: true, enterprise: true },
-        orderBy: { order: 'asc' },
-        take: 1,
-      },
-      languages: { select: { language: true }, take: 6 },
-    },
-  });
-  if (!user) return null;
-
-  const [metrics, advises, photos] = await Promise.all([
-    getUserAchievementMetrics(userId),
-    prisma.advise.count({ where: { authorId: userId } }),
-    prisma.galleryItem.count({ where: { ...visibleGalleryItem, tags: { some: { userId } } } }),
-  ]);
-
-  // Profiles that never saved positions still have the single job they had before.
-  const position = user.positions[0] ?? { jobTitle: user.jobTitle, enterprise: user.enterprise };
-  const role =
-    [position.jobTitle, position.enterprise].filter(Boolean).join(' @ ') ||
-    [user.career, user.studyPlace].filter(Boolean).join(' @ ') ||
-    null;
-
-  return {
-    id: user.id,
-    name: user.name,
-    image: user.image,
-    slogan: user.slogan,
-    role,
-    location: [user.province, user.countryOfOrigin].filter(Boolean).join(', ') || null,
-    memberSince: user.createdAt.toISOString(),
-    isCofounder: user.isCofounder,
-    isAmbassador: user.isAmbassador,
-    languages: user.languages.map(({ language }) => language),
-    stats: {
-      talks: metrics.talksGiven,
-      eventsAttended: metrics.eventsAttended,
-      eventsOrganized: metrics.eventsOrganized,
-      advises,
-      projects: metrics.projectsShared,
-      photos,
-      commits: metrics.commits,
-      contributorRank: metrics.contributorRank,
-    },
-    achievements: { earned: earnedAchievements(metrics).length, total: ACHIEVEMENTS.length },
-  };
+  return buildUserSummary(userId);
 }
+
+// Cached per user: hover cards open on every mention. Achievement counts change when an event's
+// date passes, so entries are also recomputed every hour.
+const buildUserSummary = cached(
+  'user-summary',
+  async (userId: string): Promise<UserSummary | null> => {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        slogan: true,
+        jobTitle: true,
+        enterprise: true,
+        career: true,
+        studyPlace: true,
+        province: true,
+        countryOfOrigin: true,
+        isCofounder: true,
+        isAmbassador: true,
+        createdAt: true,
+        positions: {
+          select: { jobTitle: true, enterprise: true },
+          orderBy: { order: 'asc' },
+          take: 1,
+        },
+        languages: { select: { language: true }, take: 6 },
+      },
+    });
+    if (!user) return null;
+
+    const [metrics, advises, photos] = await Promise.all([
+      getUserAchievementMetrics(userId),
+      prisma.advise.count({ where: { authorId: userId } }),
+      prisma.galleryItem.count({ where: { ...visibleGalleryItem, tags: { some: { userId } } } }),
+    ]);
+
+    // Profiles that never saved positions still have the single job they had before.
+    const position = user.positions[0] ?? { jobTitle: user.jobTitle, enterprise: user.enterprise };
+    const role =
+      [position.jobTitle, position.enterprise].filter(Boolean).join(' @ ') ||
+      [user.career, user.studyPlace].filter(Boolean).join(' @ ') ||
+      null;
+
+    return {
+      id: user.id,
+      name: user.name,
+      image: user.image,
+      slogan: user.slogan,
+      role,
+      location: [user.province, user.countryOfOrigin].filter(Boolean).join(', ') || null,
+      memberSince: user.createdAt.toISOString(),
+      isCofounder: user.isCofounder,
+      isAmbassador: user.isAmbassador,
+      languages: user.languages.map(({ language }) => language),
+      stats: {
+        talks: metrics.talksGiven,
+        eventsAttended: metrics.eventsAttended,
+        eventsOrganized: metrics.eventsOrganized,
+        advises,
+        projects: metrics.projectsShared,
+        photos,
+        commits: metrics.commits,
+        contributorRank: metrics.contributorRank,
+      },
+      achievements: { earned: earnedAchievements(metrics).length, total: ACHIEVEMENTS.length },
+    };
+  },
+  {
+    models: [
+      'User',
+      'UserPosition',
+      'UserLanguage',
+      'Advise',
+      'GalleryItem',
+      'GalleryItemTag',
+      'TalkSpeaker',
+      'IdentityLink',
+      'ContentMark',
+      'EventOrganizer',
+      'Event',
+      'EventRegistration',
+      'Project',
+      'ProjectMember',
+    ],
+    revalidate: 3600,
+  },
+);

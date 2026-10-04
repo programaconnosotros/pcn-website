@@ -1,43 +1,66 @@
 import type { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { getStaticIndex, rankEntries, toEntry } from '@/lib/search/search-index';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 
 const MAX_QUERY_LENGTH = 100;
 const DB_CANDIDATES = 20;
 
+// Everything searchable in the database, cached: a few hundred short rows, so filtering them in
+// memory is cheaper than four ILIKE scans per keystroke.
+const loadSearchCorpus = cached(
+  'search-corpus',
+  async () => {
+    const [events, talks, advises, projects] = await Promise.all([
+      prisma.event.findMany({
+        where: { deletedAt: null },
+        orderBy: { date: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          date: true,
+          placeName: true,
+          city: true,
+          isOnline: true,
+        },
+      }),
+      prisma.talk.findMany({
+        select: { title: true, description: true, speakers: { select: { speakerName: true } } },
+      }),
+      prisma.advise.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, content: true, author: { select: { name: true } } },
+      }),
+      prisma.project.findMany({
+        select: { title: true, description: true, techStack: true, url: true },
+      }),
+    ]);
+    return { events, talks, advises, projects };
+  },
+  { models: ['Event', 'Talk', 'TalkSpeaker', 'Advise', 'User', 'Project'] },
+);
+
 const loadDatabaseEntries = async (query: string) => {
-  const contains = { contains: query, mode: 'insensitive' as const };
-  const [events, talks, advises, projects] = await Promise.all([
-    prisma.event.findMany({
-      where: { deletedAt: null, OR: [{ name: contains }, { description: contains }] },
-      orderBy: { date: 'desc' },
-      take: DB_CANDIDATES,
-      select: { id: true, name: true, date: true, placeName: true, city: true, isOnline: true },
-    }),
-    prisma.talk.findMany({
-      where: {
-        OR: [
-          { title: contains },
-          { description: contains },
-          { speakers: { some: { speakerName: contains } } },
-        ],
-      },
-      take: DB_CANDIDATES,
-      select: { title: true, speakers: { select: { speakerName: true } } },
-    }),
-    prisma.advise.findMany({
-      where: { OR: [{ content: contains }, { author: { name: contains } }] },
-      orderBy: { createdAt: 'desc' },
-      take: DB_CANDIDATES,
-      select: { id: true, content: true, author: { select: { name: true } } },
-    }),
-    prisma.project.findMany({
-      where: { OR: [{ title: contains }, { description: contains }] },
-      take: DB_CANDIDATES,
-      select: { title: true, description: true, techStack: true, url: true },
-    }),
-  ]);
+  const needle = query.toLocaleLowerCase('es');
+  const contains = (...texts: (string | null | undefined)[]) =>
+    texts.some((text) => text?.toLocaleLowerCase('es').includes(needle));
+  const corpus = await loadSearchCorpus();
+  const events = corpus.events
+    .filter((event) => contains(event.name, event.description))
+    .slice(0, DB_CANDIDATES);
+  const talks = corpus.talks
+    .filter((talk) =>
+      contains(talk.title, talk.description, ...talk.speakers.map((s) => s.speakerName)),
+    )
+    .slice(0, DB_CANDIDATES);
+  const advises = corpus.advises
+    .filter((advise) => contains(advise.content, advise.author.name))
+    .slice(0, DB_CANDIDATES);
+  const projects = corpus.projects
+    .filter((project) => contains(project.title, project.description))
+    .slice(0, DB_CANDIDATES);
 
   const dateFormatter = new Intl.DateTimeFormat('es-AR', {
     dateStyle: 'medium',
