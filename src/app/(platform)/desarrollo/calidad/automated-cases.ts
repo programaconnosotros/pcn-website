@@ -1213,6 +1213,10 @@ export const automatedSuites: AutomatedSuite[] = [
         'createTalkFromProposal › returns alreadyExists true when proposal already has a talk',
       ],
       ['TC-CHA-A025', 'createTalkFromProposal › creates talk and revalidates paths on success'],
+      [
+        'TC-CHA-A026',
+        "createTalkFromProposal › copies the speakers' phones, which the client omits unless asked for",
+      ],
     ],
   },
   {
@@ -1221,15 +1225,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-CHA-A026', 'createTalk › throws when no sessionId cookie is present'],
-      ['TC-CHA-A027', 'createTalk › throws when session is not found in db'],
-      ['TC-CHA-A028', 'createTalk › throws when user role is not ADMIN'],
-      ['TC-CHA-A029', 'createTalk › throws a validation error when schema parsing fails'],
+      ['TC-CHA-A027', 'createTalk › throws when no sessionId cookie is present'],
+      ['TC-CHA-A028', 'createTalk › throws when session is not found in db'],
+      ['TC-CHA-A029', 'createTalk › throws when user role is not ADMIN'],
+      ['TC-CHA-A030', 'createTalk › throws a validation error when schema parsing fails'],
       [
-        'TC-CHA-A030',
+        'TC-CHA-A031',
         'createTalk › creates talk and revalidates /charlas when no eventId is given',
       ],
-      ['TC-CHA-A031', 'createTalk › revalidates event-specific path when eventId is provided'],
+      ['TC-CHA-A032', 'createTalk › revalidates event-specific path when eventId is provided'],
     ],
   },
   {
@@ -1238,15 +1242,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-CHA-A032', 'deleteTalk › throws when no sessionId cookie is present'],
-      ['TC-CHA-A033', 'deleteTalk › throws when session is not found in db'],
-      ['TC-CHA-A034', 'deleteTalk › throws when user role is not ADMIN'],
-      ['TC-CHA-A035', 'deleteTalk › throws when talk does not exist'],
+      ['TC-CHA-A033', 'deleteTalk › throws when no sessionId cookie is present'],
+      ['TC-CHA-A034', 'deleteTalk › throws when session is not found in db'],
+      ['TC-CHA-A035', 'deleteTalk › throws when user role is not ADMIN'],
+      ['TC-CHA-A036', 'deleteTalk › throws when talk does not exist'],
       [
-        'TC-CHA-A036',
+        'TC-CHA-A037',
         'deleteTalk › deletes talk and revalidates /charlas when talk has no eventId',
       ],
-      ['TC-CHA-A037', 'deleteTalk › revalidates event-specific path when talk has an eventId'],
+      ['TC-CHA-A038', 'deleteTalk › revalidates event-specific path when talk has an eventId'],
     ],
   },
   {
@@ -1255,8 +1259,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-CHA-A038', 'fetchEventsForSelect › returns events ordered by date descending'],
-      ['TC-CHA-A039', 'fetchEventsForSelect › returns an empty array when no events exist'],
+      ['TC-CHA-A039', 'fetchEventsForSelect › returns events ordered by date descending'],
+      ['TC-CHA-A040', 'fetchEventsForSelect › returns an empty array when no events exist'],
     ],
   },
   {
@@ -1265,11 +1269,11 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-CHA-A040', 'fetchPublicTalks › returns an empty array when there are no talks'],
-      ['TC-CHA-A041', 'fetchPublicTalks › sorts talks by event date descending'],
-      ['TC-CHA-A042', 'fetchPublicTalks › places talks with a date before talks without a date'],
-      ['TC-CHA-A043', 'fetchPublicTalks › sorts talks without any date by createdAt descending'],
-      ['TC-CHA-A044', 'fetchPublicTalks › uses manualEventDate when event is null'],
+      ['TC-CHA-A041', 'fetchPublicTalks › returns an empty array when there are no talks'],
+      ['TC-CHA-A042', 'fetchPublicTalks › sorts talks by event date descending'],
+      ['TC-CHA-A043', 'fetchPublicTalks › places talks with a date before talks without a date'],
+      ['TC-CHA-A044', 'fetchPublicTalks › sorts talks without any date by createdAt descending'],
+      ['TC-CHA-A045', 'fetchPublicTalks › uses manualEventDate when event is null'],
     ],
   },
   {
@@ -1279,10 +1283,17 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-CHA-A045',
+        'TC-CHA-A046',
         "fetchTalks › returns the event's talks with the speakers' phones for its managers",
       ],
-      ['TC-CHA-A046', 'fetchTalks › rejects anyone who does not manage the event'],
+      ['TC-CHA-A047', 'fetchTalks › rejects anyone who does not manage the event'],
+      [
+        'TC-CHA-A048',
+        "fetchTalkForEdit › returns the talk with the speakers' phones to whoever manages its event",
+      ],
+      ['TC-CHA-A049', 'fetchTalkForEdit › leaves talks without an event to admins'],
+      ['TC-CHA-A050', 'fetchTalkForEdit › rejects anyone who does not manage the event'],
+      ['TC-CHA-A051', 'fetchTalkForEdit › fails when the talk does not exist'],
     ],
   },
   {
@@ -1291,13 +1302,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-CHA-A047', 'updateTalk › throws when no sessionId cookie is present'],
-      ['TC-CHA-A048', 'updateTalk › throws when session is not found in db'],
-      ['TC-CHA-A049', 'updateTalk › throws when user role is not ADMIN'],
-      ['TC-CHA-A050', 'updateTalk › throws when talk does not exist'],
-      ['TC-CHA-A051', 'updateTalk › updates talk and revalidates paths on success'],
+      ['TC-CHA-A052', 'updateTalk › throws when no sessionId cookie is present'],
+      ['TC-CHA-A053', 'updateTalk › throws when session is not found in db'],
+      ['TC-CHA-A054', 'updateTalk › throws when user role is not ADMIN'],
+      ['TC-CHA-A055', 'updateTalk › throws when talk does not exist'],
+      ['TC-CHA-A056', 'updateTalk › updates talk and revalidates paths on success'],
       [
-        'TC-CHA-A052',
+        'TC-CHA-A057',
         'updateTalk › falls back to existing eventId for revalidation when new data has no eventId',
       ],
     ],

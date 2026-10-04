@@ -21,7 +21,11 @@ export const createTalkFromProposal = async (proposalId: string) => {
 
   const proposal = await prisma.talkProposal.findUnique({
     where: { id: proposalId },
-    include: { talk: true, speakers: { orderBy: { order: 'asc' } } },
+    // Los teléfonos pasan de la propuesta a la charla; el cliente los omite por defecto
+    include: {
+      talk: true,
+      speakers: { orderBy: { order: 'asc' }, omit: { speakerPhone: false } },
+    },
   });
 
   if (!proposal) {

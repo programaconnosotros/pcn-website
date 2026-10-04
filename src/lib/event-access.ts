@@ -23,14 +23,14 @@ export async function canManageEventById(
   return !!event && canEditEvent(user, event);
 }
 
-/** El usuario logueado si puede gestionar el evento, o null. */
-export async function getEventManager(eventId: string) {
+/** El usuario logueado si puede gestionar el evento (sin evento, solo admins), o null. */
+export async function getEventManager(eventId: string | null) {
   const user = (await getCurrentSession())?.user;
   return (await canManageEventById(user, eventId)) ? user! : null;
 }
 
 /** Para Server Actions: lanza un error salvo que quien llama gestione el evento. */
-export async function requireEventManager(eventId: string) {
+export async function requireEventManager(eventId: string | null) {
   const user = await getEventManager(eventId);
   if (!user) throw new Error('No autorizado');
   return user;

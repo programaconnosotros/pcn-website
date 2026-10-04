@@ -23,6 +23,8 @@ import { TalkForm } from './talk-form';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { externalTalks } from '@/components/videos/videos';
 import { deleteTalk } from '@/actions/talks/delete-talk';
+import { fetchTalkForEdit } from '@/actions/talks/fetch-talks';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { CommunityTalks, type TalkWithEvent } from './community-talks';
 
 interface Props {
@@ -32,7 +34,9 @@ interface Props {
 
 export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
   const [showCreate, setShowCreate] = useState(false);
-  const [editingTalk, setEditingTalk] = useState<TalkWithEvent | null>(null);
+  const [editingTalk, setEditingTalk] = useState<Awaited<
+    ReturnType<typeof fetchTalkForEdit>
+  > | null>(null);
   const [deletingTalk, setDeletingTalk] = useState<TalkWithEvent | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [tab, setTab] = useState('comunidad');
@@ -41,6 +45,15 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('tab') === 'externas') setTab('externas');
   }, []);
+
+  // El listado no trae los teléfonos de los oradores y el form los reescribe: se piden al editar
+  const handleEdit = async (talk: TalkWithEvent) => {
+    try {
+      setEditingTalk(await fetchTalkForEdit(talk.id));
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'Error al abrir la charla'));
+    }
+  };
 
   const handleDelete = async () => {
     if (!deletingTalk) return;
@@ -92,7 +105,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
           <CommunityTalks
             talks={talks}
             isAdmin={isAdmin}
-            onEdit={setEditingTalk}
+            onEdit={handleEdit}
             onDelete={setDeletingTalk}
           />
 

@@ -55,7 +55,7 @@ const baseProposal = {
       id: 'speaker-1',
       userId: null,
       speakerName: 'Alice',
-      speakerPhone: '',
+      speakerPhone: '+54 9 11 5555-0000',
       isProfessional: true,
       jobTitle: 'Dev',
       enterprise: 'Corp',
@@ -122,5 +122,29 @@ describe('createTalkFromProposal', () => {
     expect(revalidatePath).toHaveBeenCalledWith(`/eventos/${EVENT_ID}/charlas`);
     expect(revalidatePath).toHaveBeenCalledWith(`/eventos/${EVENT_ID}/propuestas-de-charlas`);
     expect(revalidatePath).toHaveBeenCalledWith('/charlas');
+  });
+
+  it("copies the speakers' phones, which the client omits unless asked for", async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talkProposal.findUnique.mockResolvedValue(baseProposal as any);
+    prismaMock.talk.create.mockResolvedValue({ id: 'new-talk' } as any);
+
+    await createTalkFromProposal(PROPOSAL_ID);
+
+    expect(prismaMock.talkProposal.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: expect.objectContaining({
+          speakers: expect.objectContaining({ omit: { speakerPhone: false } }),
+        }),
+      }),
+    );
+    expect(prismaMock.talk.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        speakers: {
+          create: [expect.objectContaining({ speakerPhone: '+54 9 11 5555-0000' })],
+        },
+      }),
+    });
   });
 });
