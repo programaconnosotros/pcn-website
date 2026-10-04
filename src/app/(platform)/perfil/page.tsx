@@ -35,7 +35,7 @@ const Profile = async () => {
   });
 
   if (!user) {
-    console.error('Usuario no encontrawdo, redireccionando a /home');
+    console.error('Usuario no encontrado, redireccionando a /home');
     redirect('/');
   }
 

@@ -110,9 +110,7 @@ describe('/monitoreo', () => {
     expect(fetchLogs).toHaveBeenCalledWith(1, 50, undefined);
   });
 
-  // BUG: src/app/(platform)/monitoreo/page.tsx:95-96 — `Math.max(1, parseInt('abc'))` is NaN, so
-  // a hand-edited `?errorPage=abc` asks Prisma for `skip: NaN` and the page crashes.
-  it.failing('falls back to the first page when the page number is not a number', async () => {
+  it('falls back to the first page when the page number is not a number', async () => {
     signInAsAdmin();
     await renderPage(page({ errorPage: 'abc', logPage: 'x' }));
 

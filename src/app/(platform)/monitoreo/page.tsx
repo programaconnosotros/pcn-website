@@ -78,6 +78,12 @@ type Props = {
   }>;
 };
 
+// ?errorPage=abc no puede llegar a Prisma como skip: NaN
+const pageNumber = (value?: string) => {
+  const page = Number.parseInt(value ?? '', 10);
+  return Number.isFinite(page) && page > 0 ? page : 1;
+};
+
 const MonitoreoPage = async ({ searchParams }: Props) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
@@ -92,8 +98,8 @@ const MonitoreoPage = async ({ searchParams }: Props) => {
   }
 
   const params = await searchParams;
-  const errorPage = Math.max(1, parseInt(params.errorPage || '1', 10));
-  const logPage = Math.max(1, parseInt(params.logPage || '1', 10));
+  const errorPage = pageNumber(params.errorPage);
+  const logPage = pageNumber(params.logPage);
   const logLevel = params.logLevel;
 
   const [errorsData, errorStats, logsData, logStats] = await Promise.all([
