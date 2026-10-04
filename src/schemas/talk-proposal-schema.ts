@@ -3,11 +3,12 @@ import { z } from 'zod';
 export const talkProposalSpeakerSchema = z
   .object({
     userId: z
-      .string()
-      .cuid()
+      // Los forms mandan '' cuando no hay usuario vinculado: se acepta y queda null
+      .literal('')
+      .or(z.string().cuid())
       .optional()
       .nullable()
-      .transform((v) => (v === '' ? null : v ?? null)),
+      .transform((v) => v || null),
     speakerName: z
       .string()
       .min(3, { message: 'El nombre debe tener al menos 3 caracteres' })

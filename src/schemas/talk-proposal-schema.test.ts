@@ -60,7 +60,7 @@ describe('talkProposalSpeakerSchema', () => {
   });
 
   // BUG: the transform maps '' to null, but .cuid() runs first and rejects ''.
-  it.failing('treats an empty user id as no linked user', () => {
+  it('treats an empty user id as no linked user', () => {
     expect(talkProposalSpeakerSchema.parse({ ...professional, userId: '' }).userId).toBeNull();
   });
 

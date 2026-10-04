@@ -1550,20 +1550,24 @@ jest.mock('next/navigation', () => ({
           },
           {
             term: 'projects',
-            detail: 'Un mismo test corre en varios navegadores o tamaños de pantalla.',
+            detail:
+              'Un mismo test corre en varios navegadores o tamaños de pantalla: acá, Desktop Chrome y un Pixel 7 para los specs mobile.',
           },
         ],
         usage: [
-          'Los tests E2E están en `tests/` y corren en los tres motores. Además usamos Playwright para las capturas de las PRs: `pnpm screenshot /ruta` abre cada ruta en Chromium y guarda la página completa.',
+          'La suite E2E de regresión está en `tests/e2e/` y corre una vez por semana con `pnpm test:e2e`: recrea una base con datos de prueba, compila la app y la recorre en Chromium (desktop y mobile), con un test por caso de /desarrollo/calidad. Además usamos Playwright para las capturas de las PRs: `pnpm screenshot /ruta` abre cada ruta en Chromium y guarda la página completa.',
         ],
         examples: [
           {
-            file: 'tests/example.spec.ts',
+            file: 'tests/e2e/smoke.spec.ts',
             lang: 'ts',
-            code: `test('has title', async ({ page }) => {
-  await page.goto('http://localhost:3000');
+            code: `test.describe('signed in as a member', () => {
+  test.use({ as: 'member' });
 
-  await expect(page).toHaveTitle('programaConNosotros');
+  test('the session from auth.setup works', async ({ page, db }) => {
+    await page.goto('/notificaciones');
+    await expect(page).toHaveURL(/\\/notificaciones/);
+  });
 });`,
           },
           {

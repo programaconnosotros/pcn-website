@@ -32,11 +32,12 @@ const yearSchema = z
 
 export const projectMemberSchema = z.object({
   userId: z
-    .string()
-    .cuid()
+    // Los forms mandan '' cuando no hay usuario vinculado: se acepta y queda null
+    .literal('')
+    .or(z.string().cuid())
     .optional()
     .nullable()
-    .transform((v) => (v === '' ? null : v ?? null)),
+    .transform((v) => v || null),
   memberName: z
     .string()
     .min(2, { message: 'El nombre debe tener al menos 2 caracteres' })

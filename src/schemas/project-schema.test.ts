@@ -99,7 +99,7 @@ describe('projectMemberSchema', () => {
 
   // BUG: the transform maps '' to null, but .cuid() runs first and rejects '', so an empty
   // user id never reaches it (the forms send null today, which hides it).
-  it.failing('treats an empty user id as no linked user', () => {
+  it('treats an empty user id as no linked user', () => {
     expect(projectMemberSchema.parse({ memberName: 'Ana', userId: '' }).userId).toBeNull();
   });
 
