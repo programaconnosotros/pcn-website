@@ -39,6 +39,9 @@ const dom = createJestConfig({
   displayName: 'dom',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.dom.ts'],
+  // Rendering in jsdom and typing with user-event is slower than plain functions, more so on a
+  // busy machine; 5s made the bigger component tests flaky.
+  testTimeout: 15_000,
   testMatch: ['<rootDir>/src/**/*.test.tsx'],
 });
 
