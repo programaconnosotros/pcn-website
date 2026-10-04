@@ -215,7 +215,8 @@ La estructura de archivos del proyecto sigue las convenciones de Next.js:
 │   ├── api/             # Rutas de API
 │   ├── components/      # Componentes React reutilizables
 │   └── lib/             # Funciones y utilidades compartidas
-├── prisma/              # Configuración y migraciones de Prisma
+├── prisma/              # Schema, migraciones y seed de Prisma
+├── prisma.config.ts     # Configuración del CLI de Prisma (URL de migraciones, seed)
 ├── public/              # Archivos estáticos accesibles públicamente
 ├── .env                 # Variables de entorno (no incluido en el repositorio)
 ├── .env.example         # Plantilla para variables de entorno

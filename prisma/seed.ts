@@ -1,6 +1,9 @@
-import { PrismaClient, TalkProposalStatus } from '@prisma/client';
+import 'dotenv/config';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient, TalkProposalStatus } from '../src/generated/prisma/client';
+import { pgConfig } from '../src/lib/database-url';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter: new PrismaPg(pgConfig(process.env.DATABASE_URL).pool) });
 
 type SpeakerSeedData = {
   userId?: string | null;

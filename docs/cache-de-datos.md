@@ -112,8 +112,9 @@ mano: el cliente de Prisma (`src/lib/prisma.ts`) tiene una extensión que corre 
 Después de cada escritura (`create`, `update`, `upsert`, `delete` y sus variantes `Many`):
 
 1. `modelsIn` (`src/lib/prisma-models.ts`) recorre los argumentos con el grafo de relaciones del
-   schema (`Prisma.dmmf`) y junta todas las tablas que la escritura toca, incluidas las
-   **escrituras anidadas** (`members: { create: [...] }` toca `ProjectMember`).
+   schema (el datamodel que escribe el generator `datamodel`) y junta todas las tablas que la
+   escritura toca, incluidas las **escrituras anidadas** (`members: { create: [...] }` toca
+   `ProjectMember`).
 2. Si es un borrado, suma las tablas que dependen de la borrada, **transitivamente**: borrar un
    usuario borra sus consejos, que borran sus likes y comentarios.
 3. `expireModels` llama a `revalidateTag('db:<Tabla>', { expire: 0 })` para cada una, y el
@@ -292,16 +293,16 @@ invalidación. En Jest `unstable_cache` está mockeado como una función que no 
 
 ## Archivos
 
-| Archivo                                                  | Qué tiene                                                  |
-| -------------------------------------------------------- | ---------------------------------------------------------- |
-| `src/lib/cache.ts`                                       | `cached()`, `expireModels`, tablas no cacheables, avisos.  |
-| `src/lib/prisma-models.ts`                               | Grafo de relaciones y `modelsIn`.                          |
-| `src/lib/prisma.ts`                                      | Extensión que vence el cache en cada escritura.            |
-| `src/lib/event-index.ts`                                 | Índice de eventos y contadores cacheados.                  |
-| `src/lib/gallery.ts`, `src/lib/gallery-signing.ts`       | Galería cacheada sin firmar y firmas guardadas por hora.   |
-| `src/lib/achievement-metrics.ts`                         | Métricas de logros cacheadas por hora.                     |
-| `src/app/(platform)/perfil/[id]/profile-data.ts`         | Loaders cacheados de cada pestaña del perfil.              |
-| `src/app/api/search/route.ts`                            | Corpus del buscador filtrado en memoria.                   |
-| `prisma/migrations/20261014120000_add_hot_path_indexes/` | Índices nuevos.                                            |
-| `src/lib/cache.test.ts`, `src/lib/prisma-models.test.ts` | Tests.                                                     |
-| `jest.setup.ts`, `jest.config.mjs`                       | Mock de `unstable_cache` y resolución de `@prisma/client`. |
+| Archivo                                                  | Qué tiene                                                 |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| `src/lib/cache.ts`                                       | `cached()`, `expireModels`, tablas no cacheables, avisos. |
+| `src/lib/prisma-models.ts`                               | Grafo de relaciones y `modelsIn`.                         |
+| `src/lib/prisma.ts`                                      | Extensión que vence el cache en cada escritura.           |
+| `src/lib/event-index.ts`                                 | Índice de eventos y contadores cacheados.                 |
+| `src/lib/gallery.ts`, `src/lib/gallery-signing.ts`       | Galería cacheada sin firmar y firmas guardadas por hora.  |
+| `src/lib/achievement-metrics.ts`                         | Métricas de logros cacheadas por hora.                    |
+| `src/app/(platform)/perfil/[id]/profile-data.ts`         | Loaders cacheados de cada pestaña del perfil.             |
+| `src/app/api/search/route.ts`                            | Corpus del buscador filtrado en memoria.                  |
+| `prisma/migrations/20261014120000_add_hot_path_indexes/` | Índices nuevos.                                           |
+| `src/lib/cache.test.ts`, `src/lib/prisma-models.test.ts` | Tests.                                                    |
+| `jest.setup.ts`                                          | Mock de `unstable_cache`.                                 |

@@ -4,7 +4,7 @@ import { useState, type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Bookmark, BookCheck, ChevronDown, Plus, Upload } from 'lucide-react';
-import type { Event } from '@prisma/client';
+import type { Event } from '@/generated/prisma/browser';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Megaphone, User as UserIcon, Pin } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Announcement, User } from '@prisma/client';
+import { Announcement, User } from '@/generated/prisma/browser';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 

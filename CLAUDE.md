@@ -27,6 +27,7 @@ missing from `models`.
 
 - GitHub numbers shown on the site come from the committed snapshot `src/data/github-stats.json`; the site never calls the GitHub API at render time. Refresh with `pnpm github:stats` (skill: `actualizar-stats-github`).
 - After changing `prisma/schema.prisma`, run `pnpm db:diagram` to regenerate the ER diagram data on `/desarrollo` (`src/app/(platform)/desarrollo/db-schema.ts`).
+- Prisma 7: `prisma generate` (run by `postinstall`/`prebuild`) writes the client to `src/generated/prisma` and the full datamodel to `src/generated/datamodel` (gitignored). Import types and the client from `@/generated/prisma/client`, or `@/generated/prisma/browser` in client components; never `@prisma/client`. The app connects through `@prisma/adapter-pg` with `pgConfig()` (`src/lib/database-url.ts`); the CLI's URL comes from `prisma.config.ts`.
 
 ## Pull requests
 

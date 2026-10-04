@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
-import { Testimonial } from '@prisma/client';
+import { Testimonial } from '@/generated/prisma/browser';
 
 type TestimonialCardProps = {
   testimonial: Testimonial & {

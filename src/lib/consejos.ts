@@ -1,4 +1,4 @@
-import type { Advise, Like, User } from '@prisma/client';
+import type { Advise, Like, User } from '@/generated/prisma/client';
 import type { ExtractedConsejo } from '@/data/consejos-extraidos';
 import type { LinkedUser } from '@/lib/identity-links';
 

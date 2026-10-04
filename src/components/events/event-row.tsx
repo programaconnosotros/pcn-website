@@ -4,7 +4,7 @@ import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ChevronRight, MapPin, Video } from 'lucide-react';
 import Link from 'next/link';
-import type { Event } from '@prisma/client';
+import type { Event } from '@/generated/prisma/browser';
 
 type EventWithCount = Event & { _count: { registrations: number } };
 

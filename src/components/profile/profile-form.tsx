@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
-import { User, UserPosition } from '@prisma/client';
+import { User, UserPosition } from '@/generated/prisma/browser';
 import {
   Form,
   FormControl,

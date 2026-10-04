@@ -1010,7 +1010,12 @@ React.useEffect(() => {
           {
             term: 'Prisma Client',
             detail:
-              '`prisma.user.findUnique({ where, select, include })`: consultas tipadas, con autocompletado de campos y relaciones.',
+              '`prisma.user.findUnique({ where, select, include })`: consultas tipadas, con autocompletado de campos y relaciones. Se genera como código TypeScript del proyecto en `src/generated/prisma` (no se commitea).',
+          },
+          {
+            term: 'driver adapter',
+            detail:
+              'Desde Prisma 7 el cliente no trae un engine en Rust: arma el SQL en TypeScript y lo manda por `pg`, el driver de Postgres de Node, a través de `@prisma/adapter-pg`. `prisma.config.ts` define la URL que usa el CLI para migrar.',
           },
           {
             term: 'migraciones',
@@ -1055,10 +1060,13 @@ ALTER TABLE "User" ADD COLUMN "instagramUrl" TEXT;`,
           {
             file: 'src/lib/prisma.ts',
             lang: 'ts',
-            code: `import { PrismaClient } from '@prisma/client';
+            code: `import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@/generated/prisma/client';
+import { pgConfig } from '@/lib/database-url';
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  const { pool, schema } = pgConfig(process.env.DATABASE_URL);
+  return new PrismaClient({ adapter: new PrismaPg(pool, { schema }) });
 };
 
 declare const globalThis: {

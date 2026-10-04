@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Announcement } from '@prisma/client';
+import { Announcement } from '@/generated/prisma/browser';
 import { EventOptionLabel } from '@/components/events/event-option-label';
 
 interface EventOption {

@@ -2,7 +2,7 @@ import nextConfig from 'eslint-config-next/core-web-vitals';
 import prettierConfig from 'eslint-config-prettier';
 
 const config = [
-  { ignores: ['.claude/worktrees/**'] },
+  { ignores: ['.claude/worktrees/**', 'src/generated/**'] },
   ...nextConfig,
   prettierConfig,
   {

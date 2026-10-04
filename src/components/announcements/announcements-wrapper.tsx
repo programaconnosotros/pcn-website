@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { AnnouncementCard } from './announcement-card';
 import { AnnouncementForm } from './announcement-form';
-import { Announcement, User } from '@prisma/client';
+import { Announcement, User } from '@/generated/prisma/browser';
 import { createAnnouncement } from '@/actions/announcements/create-announcement';
 import { AnnouncementFormData } from '@/schemas/announcement-schema';
 import { toast } from 'sonner';

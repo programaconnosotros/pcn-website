@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { TalkProposalStatus } from '@prisma/client';
+import { TalkProposalStatus } from '@/generated/prisma/browser';
 import { updateTalkProposalStatus } from '@/actions/talk-proposals/update-talk-proposal-status';
 import { deleteTalkProposal } from '@/actions/talk-proposals/delete-talk-proposal';
 import { createTalkFromProposal } from '@/actions/talks/create-talk-from-proposal';

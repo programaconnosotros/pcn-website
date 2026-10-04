@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { cache } from 'react';
 import { cookies } from 'next/headers';
-import type { Session, User } from '@prisma/client';
+import type { Session, User } from '@/generated/prisma/client';
 import prisma from '@/lib/prisma';
 
 /** El usuario logueado tal como lo devuelve la sesión: todo menos el hash de la contraseña. */

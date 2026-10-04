@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { TestimonialForm } from '@/components/testimonials/testimonial-form';
 import { useRouter } from 'next/navigation';
-import { Testimonial } from '@prisma/client';
+import { Testimonial } from '@/generated/prisma/browser';
 
 type TestimonialDetailActionsProps = {
   testimonial: Testimonial;

@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
-import { TalkProposalStatus } from '@prisma/client';
+import { TalkProposalStatus } from '@/generated/prisma/client';
 import { findSession } from '@/lib/session';
 
 export const updateTalkProposalStatus = async (id: string, status: TalkProposalStatus) => {

@@ -1,10 +1,6 @@
 // Writes the snapshot of prisma/schema.prisma that /desarrollo draws as an ER diagram.
 // Run it after changing the schema (and `prisma generate`): `pnpm db:diagram`.
-import { writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const { Prisma } = require('@prisma/client');
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const OUT = 'src/app/(platform)/desarrollo/db-schema.ts';
 
@@ -43,7 +39,10 @@ const domainOf = Object.fromEntries(
   Object.entries(DOMAINS).flatMap(([domain, models]) => models.map((model) => [model, domain])),
 );
 
-const { models, enums } = Prisma.dmmf.datamodel;
+// Lo escribe el generator `datamodel` del schema en cada `prisma generate`.
+const { models, enums } = JSON.parse(
+  readFileSync('src/generated/datamodel/datamodel.json', 'utf8'),
+);
 const missing = models.map((m) => m.name).filter((name) => !domainOf[name]);
 if (missing.length) throw new Error(`Sin dominio en DOMAINS: ${missing.join(', ')}`);
 

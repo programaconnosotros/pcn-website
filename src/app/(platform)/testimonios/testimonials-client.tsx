@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { RuledGrid } from '@/components/ui/ruled-grid';
-import { Testimonial } from '@prisma/client';
+import { Testimonial } from '@/generated/prisma/browser';
 
 type TestimonialWithUser = Testimonial & {
   user: {

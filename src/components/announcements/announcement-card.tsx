@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { MoreVertical, Edit, Trash2, Pin, User as UserIcon } from 'lucide-react';
-import { Announcement, User } from '@prisma/client';
+import { Announcement, User } from '@/generated/prisma/browser';
 import { AnnouncementForm } from './announcement-form';
 import { DeleteAnnouncementDialog } from './delete-announcement-dialog';
 import { updateAnnouncement } from '@/actions/announcements/update-announcement';

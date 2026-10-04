@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Like } from '@prisma/client';
+import { Like } from '@/generated/prisma/client';
 
 type Content = {
   id: string;

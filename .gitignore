@@ -63,3 +63,6 @@ dist
 # WhatsApp chat exports are private: never commit them (see .claude/skills/agregar-conversaciones)
 whatsapp-chat*.txt
 _chat.txt
+
+# Prisma Client (pnpm prisma generate)
+/src/generated/

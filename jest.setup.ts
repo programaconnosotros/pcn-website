@@ -1,6 +1,6 @@
 import { mockReset } from 'jest-mock-extended';
 import type { DeepMockProxy } from 'jest-mock-extended';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@/generated/prisma/client';
 
 // ─── Prisma ──────────────────────────────────────────────────────────────────
 // Use require() inside the factory to avoid jest.mock hoisting issues with

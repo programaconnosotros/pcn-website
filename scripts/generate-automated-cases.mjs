@@ -37,7 +37,10 @@ const AREAS = [
   [/^src\/actions\/users\/get-user-summary/, 'perfil'],
   [/^src\/actions\/(users|logs|errors|analytics|identity-links)\//, 'admin'],
   [/^src\/actions\/upload\//, 'plataforma'],
-  [/^src\/lib\/(rate-limit|client-ip|email|s3|changelog|rss|cache|prisma-models)/, 'plataforma'],
+  [
+    /^src\/lib\/(rate-limit|client-ip|email|s3|changelog|rss|cache|prisma-models|database-url)/,
+    'plataforma',
+  ],
   [/^src\/app\/\(platform\)\/desarrollo\//, 'plataforma'],
   [/^src\/components\/desarrollo\//, 'plataforma'],
   [/^src\/lib\/tab-title/, 'plataforma'],

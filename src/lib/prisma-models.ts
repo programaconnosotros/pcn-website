@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@/generated/prisma/client';
+import datamodel from '@/generated/datamodel/datamodel.json';
 
 // Which tables a Prisma call reads or writes, worked out from its arguments and the schema's
 // relations. The data cache (src/lib/cache.ts) tags every cached read with the tables it
@@ -7,7 +8,17 @@ import { Prisma } from '@prisma/client';
 
 export type ModelName = Prisma.ModelName;
 
-const models = Prisma.dmmf.datamodel.models;
+type Field = {
+  name: string;
+  kind: string;
+  type: string;
+  isList: boolean;
+  relationName?: string | null;
+  relationFromFields?: readonly string[];
+};
+
+// El datamodel lo escribe el generator `datamodel` del schema (prisma/datamodel-generator.mjs).
+const models: { name: string; fields: Field[] }[] = datamodel.models;
 
 /** model → relation field → related model. */
 const relations = new Map<string, Map<string, string>>(

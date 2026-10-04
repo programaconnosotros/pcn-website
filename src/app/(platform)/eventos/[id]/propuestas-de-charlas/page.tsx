@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { LocalDateTime } from '@/components/ui/local-date-time';
 import { WhatsappSpeakerButton } from '@/components/talk-proposals/whatsapp-speaker-button';
 import { ProposalStatusActions } from '@/components/talk-proposals/proposal-status-actions';
-import { TalkProposalStatus } from '@prisma/client';
+import { TalkProposalStatus } from '@/generated/prisma/client';
 import type { Metadata } from 'next';
 import { tabTitle } from '@/lib/tab-title';
 

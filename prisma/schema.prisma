@@ -1,11 +1,18 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
+// El datamodel completo en JSON para el cache y el diagrama de /desarrollo (ver el generator).
+generator datamodel {
+  provider = "node prisma/datamodel-generator.mjs"
+  output   = "../src/generated/datamodel"
+}
+
+// Las URLs de conexión no van acá: la app se conecta con DATABASE_URL a través del adapter de pg
+// (src/lib/prisma.ts) y el CLI (migraciones) con la que define prisma.config.ts.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 enum Role {

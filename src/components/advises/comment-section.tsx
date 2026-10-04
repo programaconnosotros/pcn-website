@@ -3,7 +3,7 @@
 import { createComment } from '@/actions/comments/create-comment';
 import { formatDate } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User } from '@prisma/client';
+import { User } from '@/generated/prisma/browser';
 import type { SessionWithUser } from '@/lib/session';
 
 type Author = Pick<User, 'id' | 'name' | 'image'>;
@@ -15,7 +15,7 @@ import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import Link from 'next/link';
-import { Comment } from '@prisma/client';
+import { Comment } from '@/generated/prisma/browser';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 const commentSchema = z.object({

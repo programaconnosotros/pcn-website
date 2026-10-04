@@ -5,7 +5,7 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { TestimonialActionButton } from '@/components/testimonials/testimonial-action-button';
 import { TestimonialsClient, TestimonialsClientRef } from './testimonials-client';
-import { Testimonial } from '@prisma/client';
+import { Testimonial } from '@/generated/prisma/browser';
 
 type TestimonialWithUser = Testimonial & {
   user: {
