@@ -17,8 +17,10 @@ const testDatabaseUrl = () => {
   if (!LOCAL_HOSTS.has(url.hostname)) {
     throw new Error(`pnpm test:db solo corre contra un Postgres local, no contra ${url.hostname}`);
   }
+  // Cada corrida usa su propia base (el global setup fija TEST_DATABASE_NAME antes de levantar
+  // los workers), así dos `pnpm test:db` o una corrida de e2e en paralelo no se pisan.
   const name = url.pathname.slice(1) || 'postgres';
-  url.pathname = `/${name.endsWith(SUFFIX) ? name : `${name}${SUFFIX}`}`;
+  url.pathname = `/${process.env.TEST_DATABASE_NAME ?? `${name}${SUFFIX}`}`;
   return url.toString();
 };
 
@@ -31,4 +33,10 @@ const maintenanceUrl = () => {
 
 const testDatabaseName = () => new URL(testDatabaseUrl()).pathname.slice(1);
 
-module.exports = { testDatabaseUrl, maintenanceUrl, testDatabaseName };
+/** Un nombre nuevo para la base de una corrida: `<base>_integration_test_<pid>`. */
+const newTestDatabaseName = (kind = 'integration_test') => {
+  const name = baseUrl().pathname.slice(1) || 'postgres';
+  return `${name}_${kind}_${process.pid}`;
+};
+
+module.exports = { testDatabaseUrl, maintenanceUrl, testDatabaseName, newTestDatabaseName };
