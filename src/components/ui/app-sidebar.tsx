@@ -108,6 +108,7 @@ const comunidadItems: NavItem[] = [
   { title: 'Setups', url: '/setups', icon: MonitorSmartphone },
   { title: 'Partners', url: '/partners', icon: Handshake },
   { title: 'Changelog', url: '/changelog', icon: History },
+  { title: 'Métricas', url: '/metricas', icon: Activity },
   { title: 'Redes', icon: Share2, items: socialNetworks },
 ];
 
@@ -115,7 +116,6 @@ const getAdminItems = (unreadCount: number): NavItem[] => [
   { title: 'Panel', url: '/admin', icon: Gauge },
   { title: 'Usuarios', url: '/usuarios', icon: Users },
   { title: 'Analíticas', url: '/analiticas', icon: LayoutDashboard },
-  { title: 'Métricas', url: '/metricas', icon: Activity },
   { title: 'Visitas', url: '/visitas', icon: Eye },
   { title: 'Notificaciones', url: '/notificaciones', icon: Bell, badge: unreadCount },
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },

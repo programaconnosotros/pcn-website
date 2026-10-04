@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { unstable_cache } from 'next/cache';
 import prisma from '@/lib/prisma';
 
 // Product metrics for /metricas: traffic, modules, pages, the signup funnel and engagement for
@@ -6,7 +7,12 @@ import prisma from '@/lib/prisma';
 // aggregated in Postgres so the page stays fast as PageVisit grows. Admin visits are never
 // tracked (see trackPageVisit), so these numbers are real members and visitors.
 
-import { METRICS_TIME_ZONE, previousRange, type MetricsRange } from '@/lib/metrics-range';
+import {
+  METRICS_TIME_ZONE,
+  parseMetricsRange,
+  previousRange,
+  type MetricsRange,
+} from '@/lib/metrics-range';
 
 const DAY = 86_400_000;
 
@@ -303,3 +309,37 @@ export const getProductMetrics = async (range: MetricsRange, ownHosts: string[])
 };
 
 export type ProductMetrics = Awaited<ReturnType<typeof getProductMetrics>>;
+
+/** How long a computed dashboard is reused. The page is public, so anyone can ask for it. */
+export const METRICS_CACHE_SECONDS = 3600;
+
+type RangeParams = { rango?: string; desde?: string; hasta?: string };
+
+// The JSON cache turns Dates into strings; bring them back.
+const reviveDates = (metrics: ProductMetrics): ProductMetrics => ({
+  ...metrics,
+  range: { ...metrics.range, from: new Date(metrics.range.from), to: new Date(metrics.range.to) },
+  previous: { from: new Date(metrics.previous.from), to: new Date(metrics.previous.to) },
+  series: {
+    ...metrics.series,
+    points: metrics.series.points.map((point) => ({ ...point, day: new Date(point.day) })),
+  },
+});
+
+const cachedProductMetrics = unstable_cache(
+  (params: RangeParams, ownHosts: string[]) =>
+    getProductMetrics(parseMetricsRange(params), ownHosts),
+  ['product-metrics'],
+  { revalidate: METRICS_CACHE_SECONDS },
+);
+
+/**
+ * getProductMetrics for the page's query string, computed at most once an hour per range. The
+ * cache key is the preset (`30d`) or the custom dates, not the instants they resolve to, so a
+ * preset keeps hitting the same entry while `now` moves.
+ */
+export const getCachedProductMetrics = async (params: RangeParams, ownHosts: string[]) => {
+  const { preset } = parseMetricsRange(params);
+  const key = preset ? { rango: preset } : { desde: params.desde, hasta: params.hasta };
+  return reviveDates(await cachedProductMetrics(key, ownHosts));
+};

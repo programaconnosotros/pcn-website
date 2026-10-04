@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-03',
+    area: 'metricas',
+    title: 'Métricas abiertas a todos',
+    description:
+      'La app Métricas ahora es pública: cualquiera puede ver el tráfico del sitio, los módulos y páginas más usados, el funnel de registro y el engagement de la comunidad. Los números se actualizan cada hora.',
+    authors: ['agustin-sanc'],
+    href: '/metricas',
+  },
+  {
+    date: '2026-10-03',
     area: 'entrevistas',
     title: 'Entrevistas de seguridad informática',
     description:

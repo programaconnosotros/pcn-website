@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Activity } from 'lucide-react';
-import { requireAdminPage } from '@/lib/admin';
 import { PageTitle } from '@/components/ui/page-title';
 import { RangeFilter } from '@/components/admin/metrics/range-filter';
 import { TrafficChart } from '@/components/admin/metrics/traffic-chart';
@@ -15,17 +14,15 @@ import {
   SignupFunnel,
   TopPages,
 } from '@/components/admin/metrics/metrics-panels';
-import { getProductMetrics } from '@/lib/product-metrics';
-import { METRICS_TIME_ZONE, parseMetricsRange } from '@/lib/metrics-range';
+import { getCachedProductMetrics } from '@/lib/product-metrics';
+import { METRICS_TIME_ZONE } from '@/lib/metrics-range';
 import { tabTitle } from '@/lib/tab-title';
 
-// Admin-only page: keep it out of search results.
 export const metadata: Metadata = {
-  title: tabTitle.sudo('metricas'),
-  robots: { index: false, follow: false },
+  title: tabTitle.ls('metricas'),
+  description:
+    'Las métricas de producto de programaConNosotros, abiertas: tráfico, módulos más usados, funnel de registro y engagement.',
 };
-
-export const revalidate = 0;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -54,10 +51,9 @@ const percent = (value: number) =>
 type Props = { searchParams: Promise<{ rango?: string; desde?: string; hasta?: string }> };
 
 export default async function MetricasPage(props: Props) {
-  await requireAdminPage();
-  const range = parseMetricsRange(await props.searchParams);
-  const metrics = await getProductMetrics(range, OWN_HOSTS);
+  const metrics = await getCachedProductMetrics(await props.searchParams, OWN_HOSTS);
   const {
+    range,
     traffic,
     previousTraffic,
     signups,
@@ -119,6 +115,7 @@ export default async function MetricasPage(props: Props) {
             {' '}
             · comparado con {shortDate.format(metrics.previous.from)} →{' '}
             {shortDate.format(new Date(metrics.previous.to.getTime() - 1))} · sin visitas de admins
+            · se actualiza cada hora
           </span>
         </p>
 

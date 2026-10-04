@@ -43,6 +43,7 @@ const STATIC_ROUTES = [
   '/setups',
   '/partners',
   '/changelog',
+  '/metricas',
   '/feed',
   '/usuarios',
 ];

@@ -260,7 +260,7 @@ export const adminCases = defineManualCases('admin', [
     title: 'Las páginas de administración están protegidas',
     priority: 'alta',
     pre: ['Usuario común logueado y, aparte, sesión cerrada'],
-    steps: ['Abrir /admin, /monitoreo, /analiticas, /metricas, /visitas, /vinculos y /usuarios'],
+    steps: ['Abrir /admin, /monitoreo, /analiticas, /visitas, /vinculos y /usuarios'],
     expected:
       'Ninguna muestra datos: todas redirigen fuera del panel (/usuarios a /miembros) y no aparecen en el sidebar.',
   },
@@ -299,7 +299,7 @@ export const adminCases = defineManualCases('admin', [
   {
     title: 'Rango de métricas',
     priority: 'baja',
-    pre: ['Admin'],
+    pre: ['Sesión cerrada'],
     steps: ['En /metricas elegir 90d', 'Cargar ?desde=2026-01-01&hasta=2026-02-01'],
     expected:
       'Los gráficos se recalculan y el encabezado muestra "$ metrics --from … --to …" con el rango.',
