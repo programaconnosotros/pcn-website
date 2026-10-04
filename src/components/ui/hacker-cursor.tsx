@@ -12,6 +12,10 @@ const HEX = '0123456789ABCDEF';
 const PARTICLES = 10;
 const RING_SIZE = 26;
 const RING_HOVER_SIZE = 42;
+// Share of the remaining distance the brackets cover per 60 Hz frame (scaled to the real frame
+// time, so 120 Hz screens don't make them twice as snappy).
+const RING_FOLLOW = 0.4;
+const RING_RESIZE = 0.35;
 
 const labelFor = (element: Element) => {
   const custom = element.closest('[data-cursor]')?.getAttribute('data-cursor');
@@ -98,13 +102,20 @@ export function HackerCursor() {
     let visible = false;
     let pressed = false;
     let frame = 0;
+    let lastFrame = 0;
 
-    const render = () => {
+    const ease = (rate: number, frames: number) => 1 - Math.pow(1 - rate, frames);
+
+    const render = (now: number) => {
       frame = 0;
+      // Frames elapsed at 60 Hz since the last render; capped so a stalled tab doesn't teleport.
+      const frames = lastFrame ? Math.min((now - lastFrame) / (1000 / 60), 4) : 1;
+      lastFrame = now;
       // Ease the brackets towards the pointer; snap once they're close enough to stop the loop.
-      ringPos.x += (target.x - ringPos.x) * 0.22;
-      ringPos.y += (target.y - ringPos.y) * 0.22;
-      ringSize += (targetSize - ringSize) * 0.25;
+      const follow = ease(RING_FOLLOW, frames);
+      ringPos.x += (target.x - ringPos.x) * follow;
+      ringPos.y += (target.y - ringPos.y) * follow;
+      ringSize += (targetSize - ringSize) * ease(RING_RESIZE, frames);
       const settled =
         Math.abs(target.x - ringPos.x) < 0.1 &&
         Math.abs(target.y - ringPos.y) < 0.1 &&
@@ -121,7 +132,8 @@ export function HackerCursor() {
       ring.style.width = ring.style.height = `${ringSize}px`;
       label.style.transform = `translate3d(${ringPos.x + ringSize / 2 + 6}px, ${ringPos.y}px, 0) translateY(-50%)`;
 
-      if (!settled) frame = requestAnimationFrame(render);
+      if (settled) lastFrame = 0;
+      else frame = requestAnimationFrame(render);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(render);
