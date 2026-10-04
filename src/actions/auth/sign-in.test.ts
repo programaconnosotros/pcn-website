@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
+import { DUMMY_PASSWORD_HASH } from '@/lib/password';
 import { signIn } from './sign-in';
 
 jest.mock('bcryptjs');
@@ -41,6 +42,16 @@ describe('signIn', () => {
 
     expect(result).toEqual({ success: false, error: 'INVALID_CREDENTIALS' });
     expect(prismaMock.session.create).not.toHaveBeenCalled();
+  });
+
+  it('still runs bcrypt when no user is found, so the timing does not reveal the email', async () => {
+    prismaMock.user.findUnique.mockResolvedValue(null);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+
+    const result = await signIn(validInput);
+
+    expect(bcryptMock.compare).toHaveBeenCalledWith(validInput.password, DUMMY_PASSWORD_HASH);
+    expect(result).toEqual({ success: false, error: 'INVALID_CREDENTIALS' });
   });
 
   it('returns INVALID_CREDENTIALS when password is wrong', async () => {

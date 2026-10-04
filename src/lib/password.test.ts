@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { BCRYPT_COST, hashPassword, needsRehash } from './password';
+import { BCRYPT_COST, DUMMY_PASSWORD_HASH, hashPassword, needsRehash } from './password';
 
 describe('password hashing', () => {
   it('hashes with the current cost', async () => {
@@ -20,5 +20,9 @@ describe('password hashing', () => {
     const currentHash = bcrypt.hashSync('secret-password', BCRYPT_COST);
 
     expect(needsRehash(currentHash)).toBe(false);
+  });
+
+  it('keeps the dummy hash at the current cost, so unknown emails take as long as real ones', () => {
+    expect(bcrypt.getRounds(DUMMY_PASSWORD_HASH)).toBe(BCRYPT_COST);
   });
 });

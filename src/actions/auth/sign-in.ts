@@ -3,7 +3,7 @@
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
-import { hashPassword, needsRehash } from '@/lib/password';
+import { DUMMY_PASSWORD_HASH, hashPassword, needsRehash } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
 import { safeRedirectPath } from '@/lib/safe-redirect';
@@ -35,13 +35,11 @@ export const signIn = async (
       omit: { password: false },
     });
 
-    if (!user) {
-      return { success: false, error: 'INVALID_CREDENTIALS' };
-    }
+    // Sin usuario se compara igual contra un hash falso: responder antes delataría por el tiempo
+    // que el email no está registrado.
+    const isPasswordValid = await bcrypt.compare(password, user?.password ?? DUMMY_PASSWORD_HASH);
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
+    if (!user || !isPasswordValid) {
       return { success: false, error: 'INVALID_CREDENTIALS' };
     }
 
