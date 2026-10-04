@@ -12,7 +12,7 @@ export type AutomatedSuite = {
   tests: [string, string][];
 };
 
-export const AUTOMATED_CASES_UPDATED_AT = '2026-10-03';
+export const AUTOMATED_CASES_UPDATED_AT = '2026-10-04';
 
 export const automatedSuites: AutomatedSuite[] = [
   {
@@ -1925,6 +1925,32 @@ export const automatedSuites: AutomatedSuite[] = [
     ],
   },
   {
+    file: 'src/lib/client-ip.test.ts',
+    area: 'plataforma',
+    layer: 'unit',
+    priority: 'alta',
+    tests: [
+      [
+        'TC-PLT-A028',
+        'clientIpFrom › uses the viewer address CloudFront sends when the origin secret matches',
+      ],
+      ['TC-PLT-A029', 'clientIpFrom › strips the port from an IPv6 viewer address'],
+      [
+        'TC-PLT-A030',
+        'clientIpFrom › ignores a viewer address sent without the right origin secret',
+      ],
+      [
+        'TC-PLT-A031',
+        'clientIpFrom › ignores the viewer address when no origin secret is configured',
+      ],
+      [
+        'TC-PLT-A032',
+        'clientIpFrom › takes the last x-forwarded-for entry, the one kamal-proxy adds',
+      ],
+      ['TC-PLT-A033', 'clientIpFrom › falls back to x-real-ip and then to null'],
+    ],
+  },
+  {
     file: 'src/lib/consejos.test.ts',
     area: 'consejos',
     layer: 'unit',
@@ -1956,15 +1982,15 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-PLT-A028',
+        'TC-PLT-A034',
         'getSender › uses a default address when there is no SMTP account (local MailHog)',
       ],
       [
-        'TC-PLT-A029',
+        'TC-PLT-A035',
         'getSender › uses the authenticated SMTP account as the address (Gmail in production)',
       ],
-      ['TC-PLT-A030', 'sendEmail › sends from a sender that includes an address'],
-      ['TC-PLT-A031', 'sendEmail › turns a transport failure into a user-facing error'],
+      ['TC-PLT-A036', 'sendEmail › sends from a sender that includes an address'],
+      ['TC-PLT-A037', 'sendEmail › turns a transport failure into a user-facing error'],
     ],
   },
   {
@@ -2289,23 +2315,23 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-PLT-A032', 'formatWait › formats 1 seconds as "1 segundo"'],
-      ['TC-PLT-A033', 'formatWait › formats 45 seconds as "45 segundos"'],
-      ['TC-PLT-A034', 'formatWait › formats 60 seconds as "1 minuto"'],
-      ['TC-PLT-A035', 'formatWait › formats 61 seconds as "2 minutos"'],
-      ['TC-PLT-A036', 'formatWait › formats 540 seconds as "9 minutos"'],
-      ['TC-PLT-A037', 'formatWait › formats 3600 seconds as "1 hora"'],
-      ['TC-PLT-A038', 'formatWait › formats 7200 seconds as "2 horas"'],
-      ['TC-PLT-A039', 'rateLimitMessage › says what was limited, why, and how long to wait'],
+      ['TC-PLT-A038', 'formatWait › formats 1 seconds as "1 segundo"'],
+      ['TC-PLT-A039', 'formatWait › formats 45 seconds as "45 segundos"'],
+      ['TC-PLT-A040', 'formatWait › formats 60 seconds as "1 minuto"'],
+      ['TC-PLT-A041', 'formatWait › formats 61 seconds as "2 minutos"'],
+      ['TC-PLT-A042', 'formatWait › formats 540 seconds as "9 minutos"'],
+      ['TC-PLT-A043', 'formatWait › formats 3600 seconds as "1 hora"'],
+      ['TC-PLT-A044', 'formatWait › formats 7200 seconds as "2 horas"'],
+      ['TC-PLT-A045', 'rateLimitMessage › says what was limited, why, and how long to wait'],
       [
-        'TC-PLT-A040',
+        'TC-PLT-A046',
         'parseRateLimitError › reads the digest, which is what reaches the browser in production',
       ],
-      ['TC-PLT-A041', 'parseRateLimitError › reads the message in development'],
-      ['TC-PLT-A042', 'parseRateLimitError › ignores other errors and unknown forms'],
-      ['TC-PLT-A043', 'actionErrorMessage › explains a rate limit even in production'],
-      ['TC-PLT-A044', "actionErrorMessage › never shows Next's generic production message"],
-      ['TC-PLT-A045', 'actionErrorMessage › shows the action message only when asked to'],
+      ['TC-PLT-A047', 'parseRateLimitError › reads the message in development'],
+      ['TC-PLT-A048', 'parseRateLimitError › ignores other errors and unknown forms'],
+      ['TC-PLT-A049', 'actionErrorMessage › explains a rate limit even in production'],
+      ['TC-PLT-A050', "actionErrorMessage › never shows Next's generic production message"],
+      ['TC-PLT-A051', 'actionErrorMessage › shows the action message only when asked to'],
     ],
   },
   {
@@ -2315,22 +2341,22 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-PLT-A046',
+        'TC-PLT-A052',
         'consumeRateLimit › allows hits up to the limit and then returns the seconds to wait',
       ],
-      ['TC-PLT-A047', 'consumeRateLimit › frees slots once they leave the window'],
-      ['TC-PLT-A048', 'consumeRateLimit › tracks keys independently'],
-      ['TC-PLT-A049', 'enforceRateLimit › limits anonymous visitors by IP'],
+      ['TC-PLT-A053', 'consumeRateLimit › frees slots once they leave the window'],
+      ['TC-PLT-A054', 'consumeRateLimit › tracks keys independently'],
+      ['TC-PLT-A055', 'enforceRateLimit › limits anonymous visitors by IP'],
       [
-        'TC-PLT-A050',
+        'TC-PLT-A056',
         'enforceRateLimit › ignores client-written x-forwarded-for entries before the proxy hop',
       ],
       [
-        'TC-PLT-A051',
+        'TC-PLT-A057',
         'enforceRateLimit › throws a RateLimitError whose digest carries the form and the wait',
       ],
-      ['TC-PLT-A052', 'enforceRateLimit › limits logged-in users by user id'],
-      ['TC-PLT-A053', 'enforceRateLimit › never limits admins'],
+      ['TC-PLT-A058', 'enforceRateLimit › limits logged-in users by user id'],
+      ['TC-PLT-A059', 'enforceRateLimit › never limits admins'],
     ],
   },
   {
@@ -2339,12 +2365,12 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'baja',
     tests: [
-      ['TC-PLT-A054', 'escapeXml › escapes the five XML special characters'],
+      ['TC-PLT-A060', 'escapeXml › escapes the five XML special characters'],
       [
-        'TC-PLT-A055',
+        'TC-PLT-A061',
         'buildRssFeed › lists items newest first with escaped text and RFC 822 dates',
       ],
-      ['TC-PLT-A056', 'buildRssFeed › renders a valid channel with no items'],
+      ['TC-PLT-A062', 'buildRssFeed › renders a valid channel with no items'],
     ],
   },
   {
@@ -2354,14 +2380,14 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-PLT-A057',
+        'TC-PLT-A063',
         'getImageUploadForm › caps the upload size and names the key after the content type',
       ],
-      ['TC-PLT-A058', 'getImageUploadForm › rejects content types that are not images'],
-      ['TC-PLT-A059', 'deleteObjects › does nothing without keys'],
-      ['TC-PLT-A060', 'deleteObjects › deletes in batches of 1000 keys'],
-      ['TC-PLT-A061', 'deleteObjects › fails when S3 reports keys it could not delete'],
-      ['TC-PLT-A062', 'deleteObjects › only logs the failure when cleaning up'],
+      ['TC-PLT-A064', 'getImageUploadForm › rejects content types that are not images'],
+      ['TC-PLT-A065', 'deleteObjects › does nothing without keys'],
+      ['TC-PLT-A066', 'deleteObjects › deletes in batches of 1000 keys'],
+      ['TC-PLT-A067', 'deleteObjects › fails when S3 reports keys it could not delete'],
+      ['TC-PLT-A068', 'deleteObjects › only logs the failure when cleaning up'],
     ],
   },
   {
@@ -2434,13 +2460,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-PLT-A063', 'tabSlug › drops accents and punctuation'],
-      ['TC-PLT-A064', 'tabSlug › cuts long names at a word boundary'],
-      ['TC-PLT-A065', 'tabSlug › never returns an empty slug'],
-      ['TC-PLT-A066', 'tabTitle › builds shell commands'],
-      ['TC-PLT-A067', 'tabTitleSubject › returns what a nested path points at'],
-      ['TC-PLT-A068', 'tabTitleSubject › ignores top-level listings and plain commands'],
-      ['TC-PLT-A069', 'osTabTitle › follows the focused window'],
+      ['TC-PLT-A069', 'tabSlug › drops accents and punctuation'],
+      ['TC-PLT-A070', 'tabSlug › cuts long names at a word boundary'],
+      ['TC-PLT-A071', 'tabSlug › never returns an empty slug'],
+      ['TC-PLT-A072', 'tabTitle › builds shell commands'],
+      ['TC-PLT-A073', 'tabTitleSubject › returns what a nested path points at'],
+      ['TC-PLT-A074', 'tabTitleSubject › ignores top-level listings and plain commands'],
+      ['TC-PLT-A075', 'osTabTitle › follows the focused window'],
     ],
   },
   {
@@ -2502,8 +2528,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-PLT-A070', 'has title'],
-      ['TC-PLT-A071', 'has menu item'],
+      ['TC-PLT-A076', 'has title'],
+      ['TC-PLT-A077', 'has menu item'],
     ],
   },
 ];

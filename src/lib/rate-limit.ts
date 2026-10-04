@@ -1,4 +1,5 @@
 import { cookies, headers } from 'next/headers';
+import { clientIpFrom } from '@/lib/client-ip';
 import { rateLimitDigest } from '@/lib/rate-limit-messages';
 import { findSession } from '@/lib/session';
 
@@ -48,19 +49,8 @@ export const consumeRateLimit = (key: string, { limit, windowSeconds }: RateLimi
 
 export const resetRateLimits = () => hits.clear();
 
-/**
- * IP de quien hace el request. Se toma la última entrada de `x-forwarded-for`, la que agrega
- * kamal-proxy con la IP real de la conexión: las anteriores las puede escribir el cliente, y
- * confiar en ellas permitiría esquivar el límite cambiando el header en cada intento.
- */
-export const getClientIp = async () => {
-  const headerStore = await headers();
-  return (
-    headerStore.get('x-forwarded-for')?.split(',').at(-1)?.trim() ||
-    headerStore.get('x-real-ip') ||
-    'unknown'
-  );
-};
+/** IP de quien hace el request (ver `clientIpFrom`), para contar los envíos de anónimos. */
+export const getClientIp = async () => clientIpFrom(await headers()) ?? 'unknown';
 
 /**
  * Segundos que quien envía (usuario logueado, o IP si es anónimo) tiene que esperar para volver a

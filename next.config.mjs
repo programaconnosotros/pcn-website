@@ -25,9 +25,28 @@ const nextConfig = {
     // native app. Pull to refresh (`router.refresh()`) and server actions that revalidate still
     // fetch fresh data right away.
     staleTimes: { dynamic: 300 },
+    // Behind CloudFront the server is reached as origin.programaconnosotros.com, so the Host that
+    // Next compares against the browser's Origin header in its server action CSRF check is not the
+    // public domain anymore. The public domain is still a valid origin for server actions.
+    serverActions: { allowedOrigins: ['programaconnosotros.com'] },
   },
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      // Images and fonts in public/ have no hash in their name, so Next serves them with
+      // max-age=0 and CloudFront would ask the server for them again on every request. Browsers
+      // keep them for an hour and CloudFront for a week; each deploy invalidates CloudFront
+      // (.github/workflows/deployment.yml), so a replaced file shows up right after it ships.
+      {
+        source: '/:path*\\.(webp|png|jpg|jpeg|gif|svg|avif|ico|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [{ source: '/sponsors', destination: '/partners', permanent: true }];

@@ -37,7 +37,7 @@ const AREAS = [
   [/^src\/actions\/users\/get-user-summary/, 'perfil'],
   [/^src\/actions\/(users|logs|errors|analytics|identity-links)\//, 'admin'],
   [/^src\/actions\/upload\//, 'plataforma'],
-  [/^src\/lib\/(rate-limit|email|s3|changelog|rss)/, 'plataforma'],
+  [/^src\/lib\/(rate-limit|client-ip|email|s3|changelog|rss)/, 'plataforma'],
   [/^src\/app\/\(platform\)\/desarrollo\//, 'plataforma'],
   [/^src\/components\/desarrollo\//, 'plataforma'],
   [/^src\/lib\/tab-title/, 'plataforma'],
@@ -69,7 +69,7 @@ const CODES = {
 // formatting and static content checks are low. Everything else is medium.
 const HIGH = [
   /^src\/actions\/auth\//,
-  /^src\/lib\/(password|session|verification-codes|safe-redirect|rate-limit\.|event-access|event-permissions|event-waitlist|gallery-signing|embeddable|s3)/,
+  /^src\/lib\/(password|session|verification-codes|safe-redirect|rate-limit\.|client-ip|event-access|event-permissions|event-waitlist|gallery-signing|embeddable|s3)/,
   /^src\/actions\/events\/(register-event|cancel-registration|check-event-capacity|organizer-actions|delete-registration)/,
   /^src\/actions\/users\/set-user-role/,
   /^src\/actions\/upload\//,

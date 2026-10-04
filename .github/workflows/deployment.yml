@@ -64,6 +64,9 @@ jobs:
           echo "AWS_CLOUDFRONT_KEY_PAIR_ID=${{ secrets.AWS_CLOUDFRONT_KEY_PAIR_ID }}" >> $GITHUB_ENV
           echo "AWS_CLOUDFRONT_PRIVATE_KEY_BASE64=${{ secrets.AWS_CLOUDFRONT_PRIVATE_KEY_BASE64 }}" >> $GITHUB_ENV
 
+          # CloudFront in front of programaconnosotros.com
+          echo "CLOUDFRONT_ORIGIN_SECRET=${{ secrets.CLOUDFRONT_ORIGIN_SECRET }}" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -99,3 +102,9 @@ jobs:
 
       - name: Run Kamal deploy
         run: kamal deploy
+
+      # Images in public/ keep their name when replaced, so drop CloudFront's cached copies once
+      # the new version is live. Skipped until the distribution exists.
+      - name: Invalidate CloudFront cache
+        if: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID != '' }}
+        run: aws cloudfront create-invalidation --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" --paths '/*'

@@ -11,7 +11,12 @@ image: pcn-website
 # If using something like Cloudflare, it is recommended to set encryption mode
 # in Cloudflare's SSL/TLS setting to "Full" to enable end-to-end encryption.
 proxy:
-  host: programaconnosotros.com
+  # CloudFront reaches the server as origin.programaconnosotros.com (a DNS record pointing straight
+  # at this host); programaconnosotros.com itself points at CloudFront. Both get a Let's Encrypt
+  # certificate here, so the site keeps working before and after the DNS switch.
+  hosts:
+    - programaconnosotros.com
+    - origin.programaconnosotros.com
   ssl: true
   app_port: 3000
 
@@ -50,6 +55,7 @@ env:
     - AWS_CLOUDFRONT_PRIVATE_KEY_BASE64
     - SMTP_USER
     - SMTP_PASS
+    - CLOUDFRONT_ORIGIN_SECRET
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.

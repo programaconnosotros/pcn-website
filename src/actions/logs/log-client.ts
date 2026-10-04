@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { clientIpFrom } from '@/lib/client-ip';
 
 // Tope de cada campo: estas actions se pueden llamar sin login, así que nadie debería poder
 // guardar textos gigantes en la base.
@@ -43,7 +44,7 @@ export const logClient = async (data: {
     // Obtener información del request
     const headersList = await headers();
     const userAgent = headersList.get('user-agent') || null;
-    const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null;
+    const ipAddress = clientIpFrom(headersList);
 
     await prisma.appLog.create({
       data: {

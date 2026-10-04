@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { cookies, headers } from 'next/headers';
 import { findSession } from '@/lib/session';
+import { clientIpFrom } from '@/lib/client-ip';
 
 export const trackPageVisit = async (path: string) => {
   try {
@@ -23,7 +24,7 @@ export const trackPageVisit = async (path: string) => {
     const headersList = await headers();
     const userAgent = headersList.get('user-agent') || null;
     const referer = headersList.get('referer') || null;
-    const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null;
+    const ipAddress = clientIpFrom(headersList);
 
     // Registrar la visita (solo para usuarios no-admin o anónimos)
     await prisma.pageVisit.create({
