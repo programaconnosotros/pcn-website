@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { ProfileFormData } from '@/schemas/profile-schema';
+import { profileSchema, type ProfileFormData } from '@/schemas/profile-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -25,7 +25,13 @@ export const updateProfile = async (data: ProfileFormData) => {
     redirect('/');
   }
 
-  const { programmingLanguages, positions: rawPositions, ...userData } = data;
+  // Lo que llega es lo que mande el navegador, no lo que muestra el form: sin validar, alguien
+  // podría agregar `role: 'ADMIN'`, `emailVerified` o `password` y Prisma los guardaría. El schema
+  // descarta todo campo que no sea del perfil.
+  const parsed = profileSchema.safeParse(data);
+  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+
+  const { programmingLanguages, positions: rawPositions, ...userData } = parsed.data;
   const positions = rawPositions
     .filter((position) => position.jobTitle)
     .map((position) => ({ jobTitle: position.jobTitle, enterprise: position.enterprise || null }));

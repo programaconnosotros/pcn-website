@@ -151,4 +151,37 @@ describe('updateProfile', () => {
     );
     expect(prismaMock.userPosition.createMany).not.toHaveBeenCalled();
   });
+
+  it('ignores fields outside the profile, so nobody can make themselves admin', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.user.update.mockResolvedValue({} as any);
+
+    await updateProfile({
+      ...validProfileData,
+      role: 'ADMIN',
+      emailVerified: true,
+      password: 'hash-elegido',
+      isCofounder: true,
+      id: 'otro-usuario',
+    } as ProfileFormData);
+
+    const { data, where } = prismaMock.user.update.mock.calls[0][0];
+    expect(where).toEqual({ id: 'user-1' });
+    for (const field of ['role', 'emailVerified', 'password', 'isCofounder', 'id']) {
+      expect(data).not.toHaveProperty(field);
+    }
+    expect(data).toMatchObject({ name: 'Test User', email: 'test@example.com' });
+  });
+
+  it('rejects invalid data without touching the database', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await expect(updateProfile({ ...validProfileData, email: 'no-es-un-email' })).rejects.toThrow(
+      'El email debe ser válido',
+    );
+
+    expect(prismaMock.user.update).not.toHaveBeenCalled();
+  });
 });
