@@ -1,6 +1,6 @@
 import { AddAdvise } from '@/components/advises/add-advise';
 import { cookies } from 'next/headers';
-import prisma from '@/lib/prisma';
+import { listAdvises } from '@/lib/consejos-server';
 import { ConsejosClient } from './consejos-client';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
@@ -37,16 +37,7 @@ const AdvicePage = async () => {
   // La sesión y los consejos no dependen entre sí: se piden a la vez.
   const [session, advises, profiles] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
-    prisma.advise.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        author: { select: { id: true, name: true, image: true } },
-        likes: { select: { userId: true } },
-        _count: { select: { comments: true } },
-      },
-    }),
+    listAdvises(),
     getIdentityMap('whatsapp'),
   ]);
 

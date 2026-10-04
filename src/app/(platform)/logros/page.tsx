@@ -17,10 +17,9 @@ import {
   type DisplayBadge,
 } from '@/lib/badges';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { cn } from '@/lib/utils';
 import { tabTitle } from '@/lib/tab-title';
-
-export const revalidate = 0;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -217,31 +216,57 @@ function AchievementRow({
   );
 }
 
+// Everything but the viewer's own progress is the same for everyone: one cached read.
+const getLogrosData = cached(
+  'logros',
+  async () => {
+    const [metrics, members, roleHolders, customBadges] = await Promise.all([
+      getAchievementMetrics(),
+      prisma.user.count(),
+      prisma.user.findMany({
+        where: { OR: [{ isCofounder: true }, { isAmbassador: true }] },
+        select: { id: true, name: true, image: true, isCofounder: true, isAmbassador: true },
+      }),
+      prisma.badge.findMany({
+        orderBy: { createdAt: 'asc' },
+        include: {
+          awards: { select: { user: { select: { id: true, name: true, image: true } } } },
+        },
+      }),
+    ]);
+    // Everyone who earned at least one achievement, to put a face on each holder.
+    const users = await prisma.user.findMany({
+      where: { id: { in: [...metrics.keys()] } },
+      select: { id: true, name: true, image: true },
+    });
+    return { metrics: [...metrics.entries()], members, roleHolders, customBadges, users };
+  },
+  {
+    models: [
+      'User',
+      'Badge',
+      'UserBadge',
+      'TalkSpeaker',
+      'IdentityLink',
+      'ContentMark',
+      'EventOrganizer',
+      'Event',
+      'EventRegistration',
+      'Project',
+      'ProjectMember',
+      'Advise',
+    ],
+    revalidate: 3600,
+  },
+);
+
 export default async function LogrosPage() {
-  const [session, metrics, members, roleHolders, customBadges] = await Promise.all([
-    getCurrentSession(),
-    getAchievementMetrics(),
-    prisma.user.count(),
-    prisma.user.findMany({
-      where: { OR: [{ isCofounder: true }, { isAmbassador: true }] },
-      select: { id: true, name: true, image: true, isCofounder: true, isAmbassador: true },
-    }),
-    prisma.badge.findMany({
-      orderBy: { createdAt: 'asc' },
-      include: {
-        awards: { select: { user: { select: { id: true, name: true, image: true } } } },
-      },
-    }),
-  ]);
+  const [session, data] = await Promise.all([getCurrentSession(), getLogrosData()]);
+  const { members, roleHolders, customBadges, users } = data;
+  const metrics = new Map(data.metrics);
 
   const viewerId = session?.user?.id;
   const viewerMetrics = viewerId ? metrics.get(viewerId) ?? EMPTY_METRICS : null;
-
-  // Everyone who earned at least one achievement, to put a face on each holder.
-  const users = await prisma.user.findMany({
-    where: { id: { in: [...metrics.keys()] } },
-    select: { id: true, name: true, image: true },
-  });
   const holdersOf = (achievement: Achievement) =>
     users
       .filter((user) => {

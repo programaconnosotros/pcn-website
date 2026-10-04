@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 
 export const setupSelect = {
   id: true,
@@ -21,14 +22,25 @@ export type SetupSort = 'recientes' | 'populares';
 export const parseSetupSort = (value: unknown): SetupSort =>
   value === 'populares' ? 'populares' : 'recientes';
 
-export const fetchSetups = (sort: SetupSort = 'recientes') =>
-  prisma.setup.findMany({
-    select: setupSelect,
-    orderBy:
-      sort === 'populares'
-        ? [{ likes: { _count: 'desc' } }, { createdAt: 'desc' }]
-        : { createdAt: 'desc' },
-  });
+const SETUP_MODELS = ['Setup', 'SetupLike', 'User'] as const;
 
-export const fetchSetup = (id: string) =>
-  prisma.setup.findUnique({ where: { id }, select: setupSelect });
+const listSetups = cached(
+  'setups',
+  (sort: SetupSort) =>
+    prisma.setup.findMany({
+      select: setupSelect,
+      orderBy:
+        sort === 'populares'
+          ? [{ likes: { _count: 'desc' } }, { createdAt: 'desc' }]
+          : { createdAt: 'desc' },
+    }),
+  { models: SETUP_MODELS },
+);
+
+export const fetchSetups = (sort: SetupSort = 'recientes') => listSetups(sort);
+
+export const fetchSetup = cached(
+  'setup',
+  (id: string) => prisma.setup.findUnique({ where: { id }, select: setupSelect }),
+  { models: SETUP_MODELS },
+);

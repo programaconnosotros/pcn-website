@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { HISTORIA_FLYERS } from '@/components/historia/event-flyers';
 
 const PHOTOS_PER_EVENT = 8;
@@ -18,6 +19,16 @@ export interface HistoriaEvent {
  */
 export const getHistoriaEvents = async (): Promise<HistoriaEvent[]> => {
   try {
+    return await listHistoriaEvents();
+  } catch (error) {
+    console.error('historia: failed to load the events', error);
+    return [];
+  }
+};
+
+const listHistoriaEvents = cached(
+  'historia-events',
+  async (): Promise<HistoriaEvent[]> => {
     const events = await prisma.event.findMany({
       where: { deletedAt: null, flyerImages: { hasSome: Object.values(HISTORIA_FLYERS) } },
       select: {
@@ -39,8 +50,6 @@ export const getHistoriaEvents = async (): Promise<HistoriaEvent[]> => {
       photos: galleryItems,
       photoCount: _count.galleryItems,
     }));
-  } catch (error) {
-    console.error('historia: failed to load the events', error);
-    return [];
-  }
-};
+  },
+  { models: ['Event', 'GalleryItem'] },
+);

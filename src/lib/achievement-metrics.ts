@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
@@ -20,11 +21,7 @@ const linkedNames = async (source: 'github' | 'whatsapp', userIds?: string[]) =>
   return byUser;
 };
 
-/**
- * Achievement metrics per user id. Pass `userIds` to load only those users; leave it out for
- * every user that has any activity. Users with no activity at all are left out of the map.
- */
-export const getAchievementMetrics = async (
+const computeAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
   const forUsers = userIds ? { userId: { in: userIds } } : {};
@@ -141,6 +138,38 @@ export const getAchievementMetrics = async (
 
   return metrics;
 };
+
+// Cached as entries (a Map doesn't survive JSON). Attending or organizing counts once the event
+// date passes, which no write marks, so entries are also recomputed every hour.
+const cachedAchievementMetrics = cached(
+  'achievement-metrics',
+  async (userIds: string[] | null) => [
+    ...(await computeAchievementMetrics(userIds ?? undefined)).entries(),
+  ],
+  {
+    models: [
+      'TalkSpeaker',
+      'IdentityLink',
+      'ContentMark',
+      'EventOrganizer',
+      'Event',
+      'EventRegistration',
+      'Project',
+      'ProjectMember',
+      'Advise',
+    ],
+    revalidate: 3600,
+  },
+);
+
+/**
+ * Achievement metrics per user id. Pass `userIds` to load only those users; leave it out for
+ * every user that has any activity. Users with no activity at all are left out of the map.
+ */
+export const getAchievementMetrics = async (
+  userIds?: string[],
+): Promise<Map<string, AchievementMetrics>> =>
+  new Map(await cachedAchievementMetrics(userIds ?? null));
 
 /** Achievement metrics for one user. */
 export const getUserAchievementMetrics = async (userId: string) =>

@@ -3,8 +3,10 @@ import { changelog } from '@/data/changelog';
 import { conversations } from '@/data/whatsapp-conversations';
 import { galleryQuery } from '@/lib/gallery-filters';
 import { visibleGalleryItem } from '@/lib/gallery';
-import { signGalleryItem } from '@/lib/gallery-signing';
+import { signGallerySrc } from '@/lib/gallery-signing';
 import prisma from '@/lib/prisma';
+import { cached } from '@/lib/cache';
+import { getEventNames } from '@/lib/event-index';
 
 export type FeedKind =
   | 'evento'
@@ -131,9 +133,8 @@ const galleryItems = async (): Promise<FeedItem[]> => {
         batch.length === 1
           ? `/galeria/${first.id}`
           : `/galeria${galleryQuery({ eventId: first.event?.id })}`,
-      thumbs: batch
-        .slice(0, 4)
-        .map((item) => ({ id: item.id, src: signGalleryItem(item).thumbUrl })),
+      // Signed in fetchFeed, after the cache.
+      thumbs: batch.slice(0, 4).map((item) => ({ id: item.id, src: item.thumbSrc })),
     };
   });
 };
@@ -193,13 +194,7 @@ const conversationItems = async (): Promise<FeedItem[]> => {
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, PER_SOURCE);
   const eventIds = [...new Set(latest.flatMap((c) => (c.eventId ? [c.eventId] : [])))];
-  const events = eventIds.length
-    ? await prisma.event.findMany({
-        where: { id: { in: eventIds }, deletedAt: null },
-        select: { id: true, name: true },
-      })
-    : [];
-  const eventNames = new Map(events.map((event) => [event.id, event.name]));
+  const eventNames = new Map(Object.entries(await getEventNames(eventIds)));
 
   return latest.map((conversation) => ({
     id: `conversacion-${conversationHref(conversation)}`,
@@ -233,19 +228,35 @@ const changelogItems = (): FeedItem[] =>
       href: entry.href ?? '/changelog',
     }));
 
+const buildFeed = cached(
+  'feed',
+  async (): Promise<FeedItem[]> => {
+    const sources = await Promise.all([
+      eventItems(),
+      talkItems(),
+      galleryItems(),
+      setupItems(),
+      projectItems(),
+      conversationItems(),
+      changelogItems(),
+    ]);
+    return sources
+      .flat()
+      .sort((a, b) => b.day.localeCompare(a.day) || b.sortKey.localeCompare(a.sortKey))
+      .slice(0, MAX_ITEMS);
+  },
+  {
+    models: ['Event', 'Talk', 'TalkSpeaker', 'User', 'GalleryItem', 'Setup', 'Project'],
+  },
+);
+
 /** What's been going on in the community lately, from every corner of the site, newest first. */
-export const fetchFeed = async (): Promise<FeedItem[]> => {
-  const sources = await Promise.all([
-    eventItems(),
-    talkItems(),
-    galleryItems(),
-    setupItems(),
-    projectItems(),
-    conversationItems(),
-    changelogItems(),
-  ]);
-  return sources
-    .flat()
-    .sort((a, b) => b.day.localeCompare(a.day) || b.sortKey.localeCompare(a.sortKey))
-    .slice(0, MAX_ITEMS);
-};
+export const fetchFeed = async (): Promise<FeedItem[]> =>
+  (await buildFeed()).map((item) =>
+    item.thumbs
+      ? {
+          ...item,
+          thumbs: item.thumbs.map(({ id, src }) => ({ id, src: signGallerySrc(src).url })),
+        }
+      : item,
+  );
