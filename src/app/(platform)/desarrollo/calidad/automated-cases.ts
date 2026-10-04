@@ -339,17 +339,21 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       ['TC-AUT-A018', 'signIn › returns INVALID_CREDENTIALS when no user is found'],
-      ['TC-AUT-A019', 'signIn › returns INVALID_CREDENTIALS when password is wrong'],
-      ['TC-AUT-A020', 'signIn › returns EMAIL_NOT_VERIFIED when email is not yet verified'],
-      ['TC-AUT-A021', 'signIn › creates a session, sets the cookie, and returns success'],
-      ['TC-AUT-A022', 'signIn › includes the redirectTo value from input in the success response'],
-      ['TC-AUT-A023', 'signIn › rehashes a password stored with an older bcrypt cost'],
-      ['TC-AUT-A024', 'signIn › does not rehash a password that already uses the current cost'],
       [
-        'TC-AUT-A025',
+        'TC-AUT-A019',
+        'signIn › still runs bcrypt when no user is found, so the timing does not reveal the email',
+      ],
+      ['TC-AUT-A020', 'signIn › returns INVALID_CREDENTIALS when password is wrong'],
+      ['TC-AUT-A021', 'signIn › returns EMAIL_NOT_VERIFIED when email is not yet verified'],
+      ['TC-AUT-A022', 'signIn › creates a session, sets the cookie, and returns success'],
+      ['TC-AUT-A023', 'signIn › includes the redirectTo value from input in the success response'],
+      ['TC-AUT-A024', 'signIn › rehashes a password stored with an older bcrypt cost'],
+      ['TC-AUT-A025', 'signIn › does not rehash a password that already uses the current cost'],
+      [
+        'TC-AUT-A026',
         'signIn › falls back to the home page when redirectTo points to another site',
       ],
-      ['TC-AUT-A026', 'signIn › returns INVALID_CREDENTIALS on invalid input (zod failure)'],
+      ['TC-AUT-A027', 'signIn › returns INVALID_CREDENTIALS on invalid input (zod failure)'],
     ],
   },
   {
@@ -359,10 +363,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-AUT-A027',
+        'TC-AUT-A028',
         'signOut › deletes the session row and cookie, then redirects to the sign-in page',
       ],
-      ['TC-AUT-A028', 'signOut › still redirects even when there is no sessionId cookie'],
+      ['TC-AUT-A029', 'signOut › still redirects even when there is no sessionId cookie'],
     ],
   },
   {
@@ -371,10 +375,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'alta',
     tests: [
-      ['TC-AUT-A029', 'verifyEmailCode › throws when the token is not found'],
-      ['TC-AUT-A030', 'verifyEmailCode › throws when the user is not found despite a valid token'],
+      ['TC-AUT-A030', 'verifyEmailCode › throws when the token is not found'],
+      ['TC-AUT-A031', 'verifyEmailCode › throws when the user is not found despite a valid token'],
       [
-        'TC-AUT-A031',
+        'TC-AUT-A032',
         'verifyEmailCode › runs the transaction, creates a session, sets the cookie, and returns success',
       ],
     ],
@@ -386,12 +390,12 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-AUT-A032',
+        'TC-AUT-A033',
         'verifyResetCode › returns INVALID_CODE when the code does not match an active token',
       ],
-      ['TC-AUT-A033', 'verifyResetCode › returns success when the code is valid'],
+      ['TC-AUT-A034', 'verifyResetCode › returns success when the code is valid'],
       [
-        'TC-AUT-A034',
+        'TC-AUT-A035',
         'verifyResetCode › returns RATE_LIMIT without checking the code when the caller is over the limit',
       ],
     ],
@@ -1453,6 +1457,11 @@ export const automatedSuites: AutomatedSuite[] = [
         'updateProfile › replaces the positions, skipping rows without a job title, and mirrors the first one',
       ],
       ['TC-PER-A028', 'updateProfile › clears the mirrored job fields when there are no positions'],
+      [
+        'TC-PER-A029',
+        'updateProfile › ignores fields outside the profile, so nobody can make themselves admin',
+      ],
+      ['TC-PER-A030', 'updateProfile › rejects invalid data without touching the database'],
     ],
   },
   {
@@ -1515,11 +1524,11 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-PER-A029', 'getUserSummary › returns null for unknown users'],
-      ['TC-PER-A030', 'getUserSummary › ignores empty ids without querying'],
-      ['TC-PER-A031', 'getUserSummary › summarizes the public profile and activity counts'],
+      ['TC-PER-A031', 'getUserSummary › returns null for unknown users'],
+      ['TC-PER-A032', 'getUserSummary › ignores empty ids without querying'],
+      ['TC-PER-A033', 'getUserSummary › summarizes the public profile and activity counts'],
       [
-        'TC-PER-A032',
+        'TC-PER-A034',
         'getUserSummary › falls back to the legacy job, then to studies, for the role',
       ],
     ],
@@ -1885,48 +1894,48 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'baja',
     tests: [
-      ['TC-PER-A033', 'earnedAchievements › earns nothing without activity'],
-      ['TC-PER-A034', 'earnedAchievements › earns speaker after one talk'],
+      ['TC-PER-A035', 'earnedAchievements › earns nothing without activity'],
+      ['TC-PER-A036', 'earnedAchievements › earns speaker after one talk'],
       [
-        'TC-PER-A035',
+        'TC-PER-A037',
         'earnedAchievements › earns contributor for any commit and top contributor only at #1',
       ],
-      ['TC-PER-A036', 'earnedAchievements › earns espectador after watching 25 talks'],
-      ['TC-PER-A037', 'earnedAchievements › earns organizador after organizing an event'],
-      ['TC-PER-A038', 'earnedAchievements › earns productor after organizing 10 events'],
-      ['TC-PER-A039', 'earnedAchievements › earns lector after reading 25 articles'],
-      ['TC-PER-A040', 'earnedAchievements › earns habitué after going to 10 events'],
-      ['TC-PER-A041', 'earnedAchievements › earns conversador after 100 conversations'],
-      ['TC-PER-A042', 'earnedAchievements › earns builder after sharing a project'],
-      ['TC-PER-A043', 'earnedAchievements › earns consejero after 25 consejos'],
-      ['TC-PER-A044', 'earnedAchievements › caps progress at the target'],
-      ['TC-PER-A045', 'getAchievementMetrics › counts talks per speaker'],
-      ['TC-PER-A046', 'getAchievementMetrics › ranks users by their linked GitHub logins'],
-      ['TC-PER-A047', 'getAchievementMetrics › counts only watched videos that are talks'],
-      [
-        'TC-PER-A048',
-        'getAchievementMetrics › counts only organized events that already happened and were not deleted',
-      ],
-      ['TC-PER-A049', 'getAchievementMetrics › counts the articles marked as read'],
+      ['TC-PER-A038', 'earnedAchievements › earns espectador after watching 25 talks'],
+      ['TC-PER-A039', 'earnedAchievements › earns organizador after organizing an event'],
+      ['TC-PER-A040', 'earnedAchievements › earns productor after organizing 10 events'],
+      ['TC-PER-A041', 'earnedAchievements › earns lector after reading 25 articles'],
+      ['TC-PER-A042', 'earnedAchievements › earns habitué after going to 10 events'],
+      ['TC-PER-A043', 'earnedAchievements › earns conversador after 100 conversations'],
+      ['TC-PER-A044', 'earnedAchievements › earns builder after sharing a project'],
+      ['TC-PER-A045', 'earnedAchievements › earns consejero after 25 consejos'],
+      ['TC-PER-A046', 'earnedAchievements › caps progress at the target'],
+      ['TC-PER-A047', 'getAchievementMetrics › counts talks per speaker'],
+      ['TC-PER-A048', 'getAchievementMetrics › ranks users by their linked GitHub logins'],
+      ['TC-PER-A049', 'getAchievementMetrics › counts only watched videos that are talks'],
       [
         'TC-PER-A050',
+        'getAchievementMetrics › counts only organized events that already happened and were not deleted',
+      ],
+      ['TC-PER-A051', 'getAchievementMetrics › counts the articles marked as read'],
+      [
+        'TC-PER-A052',
         'getAchievementMetrics › counts registrations to past events that were not cancelled',
       ],
       [
-        'TC-PER-A051',
+        'TC-PER-A053',
         'getAchievementMetrics › counts the conversations their linked WhatsApp names took part in',
       ],
-      ['TC-PER-A052', 'getAchievementMetrics › counts each project once per author or member'],
-      [
-        'TC-PER-A053',
-        'getAchievementMetrics › leaves out the other members of a project when loading some users',
-      ],
-      ['TC-PER-A054', 'getAchievementMetrics › counts published consejos per author'],
+      ['TC-PER-A054', 'getAchievementMetrics › counts each project once per author or member'],
       [
         'TC-PER-A055',
+        'getAchievementMetrics › leaves out the other members of a project when loading some users',
+      ],
+      ['TC-PER-A056', 'getAchievementMetrics › counts published consejos per author'],
+      [
+        'TC-PER-A057',
         'getAchievementMetrics › adds the consejos extracted from conversations to their linked WhatsApp names',
       ],
-      ['TC-PER-A056', 'getAchievementMetrics › returns empty metrics for a user without activity'],
+      ['TC-PER-A058', 'getAchievementMetrics › returns empty metrics for a user without activity'],
     ],
   },
   {
@@ -2217,47 +2226,47 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'baja',
     tests: [
       [
-        'TC-PER-A057',
+        'TC-PER-A059',
         'getGitHubTotalContributions › sums the contributions of every year in one batched request',
       ],
-      ['TC-PER-A058', 'getGitHubTotalContributions › returns null when the total is 0'],
+      ['TC-PER-A060', 'getGitHubTotalContributions › returns null when the total is 0'],
       [
-        'TC-PER-A059',
+        'TC-PER-A061',
         'getGitHubTotalContributions › returns null when the user has no contribution years',
       ],
-      ['TC-PER-A060', 'getGitHubTotalContributions › returns null and logs on an HTTP error'],
-      ['TC-PER-A061', 'getGitHubTotalContributions › returns null and logs on GraphQL errors'],
+      ['TC-PER-A062', 'getGitHubTotalContributions › returns null and logs on an HTTP error'],
+      ['TC-PER-A063', 'getGitHubTotalContributions › returns null and logs on GraphQL errors'],
       [
-        'TC-PER-A062',
+        'TC-PER-A064',
         'getGitHubTotalContributions › returns null when fetch rejects (e.g. timeout)',
       ],
       [
-        'TC-PER-A063',
+        'TC-PER-A065',
         'getGitHubTotalContributions › returns null without calling GitHub when there is no token',
       ],
       [
-        'TC-PER-A064',
+        'TC-PER-A066',
         'getGitHubTotalContributions › returns null without calling GitHub when there is no login',
       ],
-      ['TC-PER-A065', 'githubLoginFromUrl › extracts the login from https://github.com/octocat'],
+      ['TC-PER-A067', 'githubLoginFromUrl › extracts the login from https://github.com/octocat'],
       [
-        'TC-PER-A066',
+        'TC-PER-A068',
         'githubLoginFromUrl › extracts the login from https://www.github.com/octo-cat/',
       ],
       [
-        'TC-PER-A067',
+        'TC-PER-A069',
         'githubLoginFromUrl › extracts the login from github.com/octocat?tab=repositories',
       ],
       [
-        'TC-PER-A068',
+        'TC-PER-A070',
         'githubLoginFromUrl › extracts the login from http://github.com/octocat/some-repo',
       ],
-      ['TC-PER-A069', 'githubLoginFromUrl › extracts the login from octocat'],
-      ['TC-PER-A070', 'githubLoginFromUrl › returns null for null'],
-      ['TC-PER-A071', 'githubLoginFromUrl › returns null for '],
-      ['TC-PER-A072', 'githubLoginFromUrl › returns null for https://gitlab.com/octocat'],
-      ['TC-PER-A073', 'githubLoginFromUrl › returns null for https://github.com/'],
-      ['TC-PER-A074', 'githubLoginFromUrl › returns null for https://github.com/orgs/some-org'],
+      ['TC-PER-A071', 'githubLoginFromUrl › extracts the login from octocat'],
+      ['TC-PER-A072', 'githubLoginFromUrl › returns null for null'],
+      ['TC-PER-A073', 'githubLoginFromUrl › returns null for '],
+      ['TC-PER-A074', 'githubLoginFromUrl › returns null for https://gitlab.com/octocat'],
+      ['TC-PER-A075', 'githubLoginFromUrl › returns null for https://github.com/'],
+      ['TC-PER-A076', 'githubLoginFromUrl › returns null for https://github.com/orgs/some-org'],
     ],
   },
   {
@@ -2340,9 +2349,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'alta',
     tests: [
-      ['TC-AUT-A035', 'password hashing › hashes with the current cost'],
-      ['TC-AUT-A036', 'password hashing › flags hashes made with a lower cost, which still verify'],
-      ['TC-AUT-A037', 'password hashing › leaves current hashes alone'],
+      ['TC-AUT-A036', 'password hashing › hashes with the current cost'],
+      ['TC-AUT-A037', 'password hashing › flags hashes made with a lower cost, which still verify'],
+      ['TC-AUT-A038', 'password hashing › leaves current hashes alone'],
+      [
+        'TC-AUT-A039',
+        'password hashing › keeps the dummy hash at the current cost, so unknown emails take as long as real ones',
+      ],
     ],
   },
   {
@@ -2475,19 +2488,19 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'alta',
     tests: [
-      ['TC-AUT-A038', 'safeRedirectPath › keeps the same-site path /eventos/abc'],
+      ['TC-AUT-A040', 'safeRedirectPath › keeps the same-site path /eventos/abc'],
       [
-        'TC-AUT-A039',
+        'TC-AUT-A041',
         'safeRedirectPath › keeps the same-site path /eventos/abc/proponer-charla?autoRegister=true',
       ],
-      ['TC-AUT-A040', 'safeRedirectPath › keeps the same-site path /perfil#datos'],
-      ['TC-AUT-A041', 'safeRedirectPath › rejects https://evil.example'],
-      ['TC-AUT-A042', 'safeRedirectPath › rejects //evil.example'],
-      ['TC-AUT-A043', 'safeRedirectPath › rejects /\\evil.example'],
-      ['TC-AUT-A044', 'safeRedirectPath › rejects /\\/evil.example'],
-      ['TC-AUT-A045', 'safeRedirectPath › rejects javascript:alert(1)'],
-      ['TC-AUT-A046', 'safeRedirectPath › rejects eventos'],
-      ['TC-AUT-A047', 'safeRedirectPath › returns the fallback when there is no value'],
+      ['TC-AUT-A042', 'safeRedirectPath › keeps the same-site path /perfil#datos'],
+      ['TC-AUT-A043', 'safeRedirectPath › rejects https://evil.example'],
+      ['TC-AUT-A044', 'safeRedirectPath › rejects //evil.example'],
+      ['TC-AUT-A045', 'safeRedirectPath › rejects /\\evil.example'],
+      ['TC-AUT-A046', 'safeRedirectPath › rejects /\\/evil.example'],
+      ['TC-AUT-A047', 'safeRedirectPath › rejects javascript:alert(1)'],
+      ['TC-AUT-A048', 'safeRedirectPath › rejects eventos'],
+      ['TC-AUT-A049', 'safeRedirectPath › returns the fallback when there is no value'],
     ],
   },
   {
@@ -2517,20 +2530,64 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-AUT-A048',
+        'TC-AUT-A050',
         'hashSessionToken › is a stable sha256 hex digest that differs from the token',
       ],
       [
-        'TC-AUT-A049',
+        'TC-AUT-A051',
         'findSession › looks up the hashed token and only matches sessions that have not expired',
       ],
       [
-        'TC-AUT-A050',
+        'TC-AUT-A052',
         'createSession › stores the hash of a random token and puts the token in the cookie',
       ],
-      ['TC-AUT-A051', 'createSession › uses a different token every time'],
-      ['TC-AUT-A052', "createSession › clears the user's expired sessions"],
-      ['TC-AUT-A053', 'deleteCurrentSession › deletes the session row and the cookie'],
+      ['TC-AUT-A053', 'createSession › uses a different token every time'],
+      ['TC-AUT-A054', "createSession › clears the user's expired sessions"],
+      ['TC-AUT-A055', 'deleteCurrentSession › deletes the session row and the cookie'],
+    ],
+  },
+  {
+    file: 'src/lib/sql-safety.test.ts',
+    area: 'plataforma',
+    layer: 'unit',
+    priority: 'alta',
+    tests: [
+      ['TC-PLT-A088', 'SQL injection: static check › scans the whole app'],
+      [
+        'TC-PLT-A089',
+        'SQL injection: static check › only talks to the database through parameterized queries',
+      ],
+      ['TC-PLT-A090', 'SQL injection: static check › the detector › flags $queryRawUnsafe'],
+      ['TC-PLT-A091', 'SQL injection: static check › the detector › flags $executeRawUnsafe'],
+      ['TC-PLT-A092', 'SQL injection: static check › the detector › flags Prisma.raw'],
+      ['TC-PLT-A093', 'SQL injection: static check › the detector › flags $queryRaw as a function'],
+      ['TC-PLT-A094', 'SQL injection: static check › the detector › flags $queryRaw passed around'],
+      ['TC-PLT-A095', 'SQL injection: static check › the detector › flags a direct driver'],
+      ['TC-PLT-A096', 'SQL injection: static check › the detector › flags a required driver'],
+      ['TC-PLT-A097', 'SQL injection: static check › the detector › flags a dynamic driver import'],
+      ['TC-PLT-A098', 'SQL injection: static check › the detector › accepts a tagged $queryRaw'],
+      ['TC-PLT-A099', 'SQL injection: static check › the detector › accepts a tagged $executeRaw'],
+      [
+        'TC-PLT-A100',
+        'SQL injection: static check › the detector › accepts $queryRaw with Prisma.sql',
+      ],
+      ['TC-PLT-A101', 'SQL injection: static check › the detector › accepts the Prisma query API'],
+      [
+        'TC-PLT-A102',
+        'SQL injection: static check › the detector › accepts text that mentions the APIs',
+      ],
+      [
+        'TC-PLT-A103',
+        "SQL injection: static check › sends \"' OR '1'='1\" as a parameter, never as SQL text",
+      ],
+      [
+        'TC-PLT-A104',
+        'SQL injection: static check › sends "\'; DROP TABLE \\"User\\"; --" as a parameter, never as SQL text',
+      ],
+      [
+        'TC-PLT-A105',
+        'SQL injection: static check › sends "1 UNION SELECT password FROM \\"User\\"" as a parameter, never as SQL text',
+      ],
     ],
   },
   {
@@ -2539,13 +2596,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-PLT-A088', 'tabSlug › drops accents and punctuation'],
-      ['TC-PLT-A089', 'tabSlug › cuts long names at a word boundary'],
-      ['TC-PLT-A090', 'tabSlug › never returns an empty slug'],
-      ['TC-PLT-A091', 'tabTitle › builds shell commands'],
-      ['TC-PLT-A092', 'tabTitleSubject › returns what a nested path points at'],
-      ['TC-PLT-A093', 'tabTitleSubject › ignores top-level listings and plain commands'],
-      ['TC-PLT-A094', 'osTabTitle › follows the focused window'],
+      ['TC-PLT-A106', 'tabSlug › drops accents and punctuation'],
+      ['TC-PLT-A107', 'tabSlug › cuts long names at a word boundary'],
+      ['TC-PLT-A108', 'tabSlug › never returns an empty slug'],
+      ['TC-PLT-A109', 'tabTitle › builds shell commands'],
+      ['TC-PLT-A110', 'tabTitleSubject › returns what a nested path points at'],
+      ['TC-PLT-A111', 'tabTitleSubject › ignores top-level listings and plain commands'],
+      ['TC-PLT-A112', 'osTabTitle › follows the focused window'],
     ],
   },
   {
@@ -2555,35 +2612,35 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-AUT-A054',
+        'TC-AUT-A056',
         'findValidEmailVerificationToken › returns null when there is no active token',
       ],
       [
-        'TC-AUT-A055',
+        'TC-AUT-A057',
         'findValidEmailVerificationToken › reserves an attempt and returns the token when the code matches',
       ],
       [
-        'TC-AUT-A056',
+        'TC-AUT-A058',
         'findValidEmailVerificationToken › gives the attempt back when the code matches',
       ],
       [
-        'TC-AUT-A057',
+        'TC-AUT-A059',
         'findValidEmailVerificationToken › returns null and keeps the attempt spent when the code is wrong',
       ],
       [
-        'TC-AUT-A058',
+        'TC-AUT-A060',
         'findValidEmailVerificationToken › rejects even the right code once the attempts are used up',
       ],
       [
-        'TC-AUT-A059',
+        'TC-AUT-A061',
         'findValidPasswordResetToken › returns the token when the code matches and attempts remain',
       ],
       [
-        'TC-AUT-A060',
+        'TC-AUT-A062',
         'findValidPasswordResetToken › rejects the right code once the attempts are used up',
       ],
       [
-        'TC-AUT-A061',
+        'TC-AUT-A063',
         'findValidPasswordResetToken › lets the same right code pass both reset steps after four wrong guesses',
       ],
     ],
@@ -2602,13 +2659,369 @@ export const automatedSuites: AutomatedSuite[] = [
     ],
   },
   {
+    file: 'src/test/sql-injection.db.test.ts',
+    area: 'plataforma',
+    layer: 'integration',
+    priority: 'alta',
+    tests: [
+      [
+        'TC-PLT-A113',
+        'a query built by concatenating input (the vulnerable baseline) › leaks every user with a tautology',
+      ],
+      [
+        'TC-PLT-A114',
+        'a query built by concatenating input (the vulnerable baseline) › runs the injected sleep',
+      ],
+      [
+        'TC-PLT-A115',
+        'a query built by concatenating input (the vulnerable baseline) › returns nothing for the same tautology when parameterized',
+      ],
+      [
+        'TC-PLT-A116',
+        "SQL injection with \"' OR '1'='1\" › does not sign anyone in, through the email or the password",
+      ],
+      [
+        'TC-PLT-A117',
+        "SQL injection with \"' OR '1'='1\" › does not issue a password reset code for an existing account",
+      ],
+      [
+        'TC-PLT-A118',
+        "SQL injection with \"' OR '1'='1\" › stores an advise and a comment exactly as typed",
+      ],
+      [
+        'TC-PLT-A119',
+        "SQL injection with \"' OR '1'='1\" › stores profile fields as text and only changes the caller",
+      ],
+      [
+        'TC-PLT-A120',
+        "SQL injection with \"' OR '1'='1\" › stores a project with the payload in its text fields and tech stack",
+      ],
+      [
+        'TC-PLT-A121',
+        "SQL injection with \"' OR '1'='1\" › finds nothing extra when the payload is a search or an id",
+      ],
+      [
+        'TC-PLT-A122',
+        "SQL injection with \"' OR '1'='1\" › runs the raw metrics queries with the payload as a parameter",
+      ],
+      [
+        'TC-PLT-A123',
+        'SQL injection with "\' OR 1=1 --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A124',
+        'SQL injection with "\' OR 1=1 --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A125',
+        'SQL injection with "\' OR 1=1 --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A126',
+        'SQL injection with "\' OR 1=1 --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A127',
+        'SQL injection with "\' OR 1=1 --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A128',
+        'SQL injection with "\' OR 1=1 --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A129',
+        'SQL injection with "\' OR 1=1 --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A130',
+        'SQL injection with "admin\'--" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A131',
+        'SQL injection with "admin\'--" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A132',
+        'SQL injection with "admin\'--" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A133',
+        'SQL injection with "admin\'--" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A134',
+        'SQL injection with "admin\'--" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A135',
+        'SQL injection with "admin\'--" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A136',
+        'SQL injection with "admin\'--" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A137',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A138',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A139',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A140',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A141',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A142',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A143',
+        'SQL injection with "\'; DROP TABLE \\"User\\"; --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A144',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A145',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A146',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A147',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A148',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A149',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A150',
+        'SQL injection with "\'); DELETE FROM \\"Session\\"; --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A151',
+        'SQL injection with "\\" OR \\"\\"=\\"" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A152',
+        'SQL injection with "\\" OR \\"\\"=\\"" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A153',
+        'SQL injection with "\\" OR \\"\\"=\\"" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A154',
+        'SQL injection with "\\" OR \\"\\"=\\"" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A155',
+        'SQL injection with "\\" OR \\"\\"=\\"" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A156',
+        'SQL injection with "\\" OR \\"\\"=\\"" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A157',
+        'SQL injection with "\\" OR \\"\\"=\\"" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A158',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A159',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A160',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A161',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A162',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A163',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A164',
+        'SQL injection with "\' UNION SELECT id, email, password FROM \\"User\\" --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A165',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A166',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A167',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A168',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A169',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A170',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A171',
+        'SQL injection with "1; UPDATE \\"User\\" SET role = \'ADMIN\'; --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A172',
+        'SQL injection with "%\' OR name LIKE \'%" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A173',
+        'SQL injection with "%\' OR name LIKE \'%" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A174',
+        'SQL injection with "%\' OR name LIKE \'%" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A175',
+        'SQL injection with "%\' OR name LIKE \'%" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A176',
+        'SQL injection with "%\' OR name LIKE \'%" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A177',
+        'SQL injection with "%\' OR name LIKE \'%" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A178',
+        'SQL injection with "%\' OR name LIKE \'%" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A179',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A180',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A181',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A182',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A183',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A184',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A185',
+        'SQL injection with "\\\\\'; SELECT pg_sleep(3); --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A186',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A187',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A188',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A189',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A190',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A191',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A192',
+        'SQL injection with "\' OR pg_sleep(3) IS NOT NULL --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+      [
+        'TC-PLT-A193',
+        'SQL injection with "$1 $2 ? ?; --" › does not sign anyone in, through the email or the password',
+      ],
+      [
+        'TC-PLT-A194',
+        'SQL injection with "$1 $2 ? ?; --" › does not issue a password reset code for an existing account',
+      ],
+      [
+        'TC-PLT-A195',
+        'SQL injection with "$1 $2 ? ?; --" › stores an advise and a comment exactly as typed',
+      ],
+      [
+        'TC-PLT-A196',
+        'SQL injection with "$1 $2 ? ?; --" › stores profile fields as text and only changes the caller',
+      ],
+      [
+        'TC-PLT-A197',
+        'SQL injection with "$1 $2 ? ?; --" › stores a project with the payload in its text fields and tech stack',
+      ],
+      [
+        'TC-PLT-A198',
+        'SQL injection with "$1 $2 ? ?; --" › finds nothing extra when the payload is a search or an id',
+      ],
+      [
+        'TC-PLT-A199',
+        'SQL injection with "$1 $2 ? ?; --" › runs the raw metrics queries with the payload as a parameter',
+      ],
+    ],
+  },
+  {
     file: 'tests/example.spec.ts',
     area: 'plataforma',
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-PLT-A095', 'has title'],
-      ['TC-PLT-A096', 'has menu item'],
+      ['TC-PLT-A200', 'has title'],
+      ['TC-PLT-A201', 'has menu item'],
     ],
   },
 ];
