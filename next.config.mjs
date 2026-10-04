@@ -1,11 +1,14 @@
 // Headers de seguridad para todas las respuestas. El sitio se muestra en iframes solo dentro de
 // sí mismo (PCN OS abre las páginas en ventanas), así que no se deja embeber desde otros dominios.
 const securityHeaders = [
-  { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
+  // includeSubDomains: los subdominios (origin., etc.) también solo por HTTPS.
+  { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  // Para todo lo que no es una página (API, archivos). Las páginas suman la CSP con nonce que
+  // restringe scripts (src/proxy.ts, src/lib/csp.ts); el navegador aplica ambas.
   {
     key: 'Content-Security-Policy',
     value: "frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'",

@@ -46,7 +46,7 @@ const AREAS = [
   [/^src\/app\/\(platform\)\/desarrollo\//, 'plataforma'],
   [/^src\/components\/desarrollo\//, 'plataforma'],
   [/^src\/lib\/tab-title/, 'plataforma'],
-  [/^src\/(lib\/(sql-safety|safe-fetch)|test\/)/, 'plataforma'],
+  [/^src\/(lib\/(sql-safety|safe-fetch|csp|server-action-auth)|test\/|proxy)/, 'plataforma'],
   [/^src\/components\/os\//, 'pcn-os'],
   [/^tests\/.*\.spec\.ts$/, 'plataforma'],
 ];
@@ -80,7 +80,7 @@ const HIGH = [
   /^src\/actions\/users\/set-user-role/,
   /^src\/actions\/upload\//,
   /^src\/app\/api\/galeria\/\[id\]\/descargar/,
-  /^src\/(lib\/(sql-safety|safe-fetch)|test\/sql-injection)/,
+  /^src\/(lib\/(sql-safety|safe-fetch|csp|server-action-auth)|test\/sql-injection|proxy)/,
   /\.db\.test\.ts$/,
 ];
 const LOW = [

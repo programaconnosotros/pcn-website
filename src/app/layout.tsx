@@ -16,6 +16,8 @@ import { AppSplash } from '@/components/app-splash';
 import { APPLE_STARTUP_IMAGES } from '@/lib/apple-splash';
 import './globals.css';
 import { HOME_TAB_TITLE, TAB_TITLE_TEMPLATE } from '@/lib/tab-title';
+import { headers } from 'next/headers';
+import { NONCE_HEADER } from '@/lib/csp';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -68,6 +70,10 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  // El nonce de la CSP de este request (src/proxy.ts): sin él, el navegador no corre el script
+  // inline del <head>.
+  const nonce = (await headers()).get(NONCE_HEADER) ?? undefined;
+
   return (
     <html
       lang="es"
@@ -75,11 +81,15 @@ const RootLayout = async ({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT + OS_MODE_SCRIPT }} />
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: EMBED_DETECTION_SCRIPT + OS_MODE_SCRIPT }}
+        />
       </head>
       <body className={GeistSans.className}>
         <AppSplash />
         <ThemeProvider
+          nonce={nonce}
           attribute="class"
           defaultTheme="dark"
           forcedTheme="dark"
