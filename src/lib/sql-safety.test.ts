@@ -33,7 +33,8 @@ const sourceFiles = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) return entry.name === 'generated' ? [] : sourceFiles(path);
-    return /\.tsx?$/.test(entry.name) && !entry.name.endsWith('.test.ts') ? [path] : [];
+    // Los tests mockean Prisma: un `$queryRaw` ahí no llega a ninguna base
+    return /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name) ? [path] : [];
   });
 
 const isPrismaSqlTag = (node: ts.Node) =>
