@@ -36,7 +36,7 @@ const logical: ArchitectureView = {
     db[("PostgreSQL")]
     s3[("S3")]
     cdn["CloudFront"]
-    smtp["SMTP<br/>Gmail · MailHog"]
+    smtp["Email<br/>Resend · MailHog"]
   end
   rsc --> router
   cc -- "llamadas RPC" --> actions
@@ -50,7 +50,7 @@ const logical: ArchitectureView = {
   lib --> orm --> db
   lib -- "SDK de AWS" --> s3
   lib -- "URLs firmadas" --> cdn
-  lib -- "nodemailer" --> smtp
+  lib -- "Resend API · SMTP local" --> smtp
   cdn --> s3
   cc -. "sube archivos con URL prefirmada" .-> s3`,
   components: [
@@ -115,9 +115,9 @@ const logical: ArchitectureView = {
         'S3 guarda los archivos subidos (flyers, fotos de perfil, logos, galería) y CloudFront los sirve desde la CDN. La galería es privada: solo se ve con URLs que el servidor firma al renderizar.',
     },
     {
-      term: 'SMTP',
+      term: 'Email',
       detail:
-        'Los emails transaccionales (código de verificación, recuperar clave, avisos de eventos) se arman con React Email y se envían con nodemailer: por Gmail en producción y por MailHog en local.',
+        'Los emails transaccionales (código de verificación, recuperar clave, avisos de eventos) se arman con React Email y se envían por la API de Resend en producción y por SMTP a MailHog en local (nodemailer).',
     },
   ],
 };
@@ -140,13 +140,13 @@ const physical: ArchitectureView = {
     ecr[("ECR<br/>registry de imágenes")]
     db[("PostgreSQL")]
   end
-  gmail["Gmail SMTP"]
+  resend["Resend"]
   gh["GitHub<br/>repo · Actions"]
   user --> dns --> proxy
   proxy --> app
   app --> db
   app --> s3
-  app --> gmail
+  app --> resend
   user -- "imágenes y video" --> cf --> s3
   user -- "subidas con URL prefirmada" --> s3
   ecr -- "docker pull" --> ec2
@@ -175,7 +175,7 @@ const physical: ArchitectureView = {
     {
       term: 'Contenedor pcn-website',
       detail:
-        'La imagen construida con Dockerfile.prod (Node 24, pnpm build) que corre next start. Recibe la configuración (base, AWS, SMTP) como variables de entorno secretas.',
+        'La imagen construida con Dockerfile.prod (Node 24, pnpm build) que corre next start. Recibe la configuración (base, AWS, Resend) como variables de entorno secretas.',
     },
     {
       term: 'PostgreSQL',
@@ -198,9 +198,9 @@ const physical: ArchitectureView = {
         'Amazon Elastic Container Registry: donde el pipeline sube cada imagen nueva y de donde el servidor la descarga al desplegar.',
     },
     {
-      term: 'Gmail SMTP',
+      term: 'Resend',
       detail:
-        'El servidor de correo saliente de producción, autenticado con una cuenta propia del proyecto.',
+        'El servicio que manda los emails de producción por API, desde el dominio verificado del sitio (RESEND_API_KEY).',
     },
     {
       term: 'GitHub',
@@ -286,7 +286,7 @@ const local: ArchitectureView = {
   id: 'local',
   title: 'Entorno de desarrollo local',
   summary:
-    'Lo mismo que producción, pero en tu máquina y con reemplazos locales: Postgres en Docker en vez de la base de producción y MailHog en vez de Gmail. Hay dos formas de levantarlo.',
+    'Lo mismo que producción, pero en tu máquina y con reemplazos locales: Postgres en Docker en vez de la base de producción y MailHog en vez de Resend. Hay dos formas de levantarlo.',
   source: `flowchart TB
   subgraph compose["docker-compose up -d"]
     web["web<br/>next dev · localhost:3000"]

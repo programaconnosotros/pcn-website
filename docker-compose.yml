@@ -47,5 +47,3 @@ services:
       - AWS_CLOUDFRONT_URL=${AWS_CLOUDFRONT_URL}
       - SMTP_HOST=${SMTP_HOST:-mailhog}
       - SMTP_PORT=${SMTP_PORT:-1025}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}

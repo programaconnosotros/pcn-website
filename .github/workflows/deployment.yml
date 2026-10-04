@@ -51,9 +51,8 @@ jobs:
           echo "AUTH_GITHUB_SECRET=${{ secrets.AUTH_GITHUB_SECRET }}" >> $GITHUB_ENV
           echo "AUTH_TRUST_HOST=${{ secrets.AUTH_TRUST_HOST }}" >> $GITHUB_ENV
 
-          # Email
-          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> $GITHUB_ENV
-          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> $GITHUB_ENV
+          # Email (Resend)
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> $GITHUB_ENV
 
           # AWS
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV

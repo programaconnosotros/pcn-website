@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import {
   CODE_EXPIRATION_MINUTES,
   RATE_LIMIT_SECONDS,
@@ -11,14 +12,22 @@ import {
 } from './email';
 
 jest.mock('nodemailer');
+jest.mock('resend', () => ({ Resend: jest.fn() }));
 
 const sendMail = jest.fn();
+const resendSend = jest.fn();
 const ORIGINAL_ENV = process.env;
+const message = { to: 'user@example.com', subject: 'Hola', html: '<p>hola</p>' };
 
 beforeEach(() => {
-  process.env = { ...ORIGINAL_ENV, SMTP_HOST: 'localhost', SMTP_PORT: '1025', SMTP_USER: '' };
+  process.env = { ...ORIGINAL_ENV, SMTP_HOST: 'localhost', SMTP_PORT: '1025' };
+  delete process.env.RESEND_API_KEY;
+  delete process.env.EMAIL_FROM;
+  delete process.env.EMAIL_TRANSPORT;
   sendMail.mockReset().mockResolvedValue({});
+  resendSend.mockReset().mockResolvedValue({ data: { id: 'email-1' }, error: null });
   (nodemailer.createTransport as jest.Mock).mockReturnValue({ sendMail });
+  (Resend as unknown as jest.Mock).mockImplementation(() => ({ emails: { send: resendSend } }));
 });
 
 afterAll(() => {
@@ -26,39 +35,98 @@ afterAll(() => {
 });
 
 describe('getSender', () => {
-  it('uses a default address when there is no SMTP account (local MailHog)', () => {
+  it('uses the no-reply address of the site by default', () => {
     expect(getSender()).toEqual({
       name: 'Agus de PCN',
       address: 'no-reply@programaconnosotros.com',
     });
   });
 
-  it('uses the authenticated SMTP account as the address (Gmail in production)', () => {
-    process.env.SMTP_USER = 'pcn@gmail.com';
+  it('can be changed with EMAIL_FROM', () => {
+    process.env.EMAIL_FROM = 'hola@programaconnosotros.com';
 
-    expect(getSender()).toEqual({ name: 'Agus de PCN', address: 'pcn@gmail.com' });
+    expect(getSender()).toEqual({ name: 'Agus de PCN', address: 'hola@programaconnosotros.com' });
   });
 });
 
-describe('sendEmail', () => {
-  it('sends from a sender that includes an address', async () => {
-    await sendEmail({ to: 'user@example.com', subject: 'Hola', html: '<p>hola</p>' });
+describe('sendEmail with Resend (production)', () => {
+  beforeEach(() => {
+    process.env.RESEND_API_KEY = 're_test';
+    delete process.env.SMTP_HOST;
+  });
 
-    expect(sendMail).toHaveBeenCalledWith(
-      expect.objectContaining({
-        from: { name: 'Agus de PCN', address: 'no-reply@programaconnosotros.com' },
-        to: 'user@example.com',
-      }),
+  it('sends through the Resend API with the key and a "Name <address>" sender', async () => {
+    await sendEmail(message);
+
+    expect(Resend).toHaveBeenCalledWith('re_test');
+    expect(resendSend).toHaveBeenCalledWith({
+      from: 'Agus de PCN <no-reply@programaconnosotros.com>',
+      ...message,
+    });
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+
+  it('turns an error answered by Resend into a user-facing error', async () => {
+    resendSend.mockResolvedValue({ data: null, error: { message: 'Domain not verified' } });
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to send email:',
+      'Resend: Domain not verified',
     );
+  });
+
+  it('turns a network failure into a user-facing error', async () => {
+    resendSend.mockRejectedValue(new Error('fetch failed'));
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
+  });
+
+  it('never reaches Resend in the e2e suite, even with a key', async () => {
+    process.env.EMAIL_TRANSPORT = 'json';
+
+    await sendEmail(message);
+
+    expect(resendSend).not.toHaveBeenCalled();
+    expect(nodemailer.createTransport).toHaveBeenCalledWith({ jsonTransport: true });
+  });
+});
+
+describe('sendEmail without Resend (local MailHog)', () => {
+  it('sends through the local SMTP host from a sender with an address', async () => {
+    await sendEmail(message);
+
+    expect(Resend).not.toHaveBeenCalled();
+    expect(sendMail).toHaveBeenCalledWith({
+      from: { name: 'Agus de PCN', address: 'no-reply@programaconnosotros.com' },
+      ...message,
+    });
   });
 
   it('turns a transport failure into a user-facing error', async () => {
     sendMail.mockRejectedValue(new Error('550 Invalid syntax in MAIL command'));
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    await expect(
-      sendEmail({ to: 'user@example.com', subject: 'Hola', html: '<p>hola</p>' }),
-    ).rejects.toThrow('Error al enviar el email');
+    await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
+  });
+
+  it('says email is not configured when there is neither Resend nor an SMTP host', async () => {
+    delete process.env.SMTP_HOST;
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(sendEmail(message)).rejects.toThrow(
+      'Error de configuración: el envío de emails no está configurado',
+    );
+  });
+
+  it('handles failures that are not Errors', async () => {
+    sendMail.mockRejectedValue('boom');
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(sendEmail(message)).rejects.toThrow('Error al enviar el email');
+    expect(consoleError).toHaveBeenCalledWith('Failed to send email:', 'Unknown error');
   });
 });
 
@@ -85,10 +153,8 @@ describe('getEmailTransporter', () => {
     });
   });
 
-  it('defaults the local port to 1025 and authenticates when credentials are set', () => {
+  it('defaults the local port to 1025', () => {
     delete process.env.SMTP_PORT;
-    process.env.SMTP_USER = 'user';
-    process.env.SMTP_PASS = 'pass';
 
     getEmailTransporter();
 
@@ -96,49 +162,14 @@ describe('getEmailTransporter', () => {
       host: 'localhost',
       port: 1025,
       secure: false,
-      auth: { user: 'user', pass: 'pass' },
     });
   });
 
-  it('uses Gmail without an SMTP host', () => {
+  it('refuses to send without an SMTP host (Gmail is gone)', () => {
     delete process.env.SMTP_HOST;
-    process.env.SMTP_USER = 'pcn@gmail.com';
-    process.env.SMTP_PASS = 'secret';
 
-    getEmailTransporter();
-
-    expect(createTransport()).toHaveBeenCalledWith({
-      service: 'gmail',
-      auth: { user: 'pcn@gmail.com', pass: 'secret' },
-    });
-  });
-
-  it('refuses Gmail without credentials', () => {
-    delete process.env.SMTP_HOST;
-    delete process.env.SMTP_PASS;
-
-    expect(() => getEmailTransporter()).toThrow('SMTP credentials not configured');
-  });
-});
-
-describe('sendEmail configuration errors', () => {
-  it('says the credentials are missing', async () => {
-    delete process.env.SMTP_HOST;
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    await expect(sendEmail({ to: 'a@b.c', subject: 's', html: 'h' })).rejects.toThrow(
-      'Error de configuración: Las credenciales de email no están configuradas',
-    );
-  });
-
-  it('handles failures that are not Errors', async () => {
-    sendMail.mockRejectedValue('boom');
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    await expect(sendEmail({ to: 'a@b.c', subject: 's', html: 'h' })).rejects.toThrow(
-      'Error al enviar el email',
-    );
-    expect(consoleError).toHaveBeenCalledWith('Failed to send email:', 'Unknown error');
+    expect(() => getEmailTransporter()).toThrow('Email not configured');
+    expect(createTransport()).not.toHaveBeenCalled();
   });
 });
 

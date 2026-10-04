@@ -1366,42 +1366,34 @@ return { uploadUrl, fileUrl: publicFileUrl(uniqueFileName), key: uniqueFileName 
       },
       {
         id: 'email',
-        name: 'Nodemailer + React Email + MailHog',
+        name: 'Resend + React Email + MailHog',
         tagline: 'emails reales en prod, atrapados en local',
-        what: 'Nodemailer es la librería estándar de Node para mandar emails por SMTP. React Email permite escribir el contenido del email como un componente de React y convertirlo a HTML con `render`. MailHog es un servidor SMTP falso para desarrollo: acepta todos los emails y los muestra en una interfaz web, así podés probar flujos de verificación sin mandarle nada a nadie.',
+        what: 'Resend es un servicio para mandar emails desde código con una API: se verifica el dominio una vez (registros DNS) y cada email es una llamada con el remitente, el destinatario y el HTML. React Email permite escribir el contenido del email como un componente de React y convertirlo a HTML con `render`. MailHog es un servidor SMTP falso para desarrollo: acepta todos los emails y los muestra en una interfaz web, así podés probar flujos de verificación sin mandarle nada a nadie; en local Nodemailer le habla por SMTP.',
         concepts: [
           {
             term: 'SMTP',
             detail: 'El protocolo con el que los servidores se pasan emails.',
           },
           {
-            term: 'transport',
+            term: 'dominio verificado',
             detail:
-              'La configuración de a dónde manda Nodemailer: un host SMTP cualquiera o un servicio conocido como Gmail.',
+              'Resend solo manda desde direcciones de un dominio que probaste que es tuyo con registros DNS (SPF y DKIM), que además evitan que los emails caigan en spam.',
           },
         ],
         usage: [
-          'Los códigos de verificación de cuenta y de recuperación de contraseña se mandan por email. Las plantillas son componentes en `src/components/auth` con estilos inline (los clientes de email ignoran casi todo el CSS externo) y `@react-email/render` las convierte a HTML. Con Docker Compose, MailHog queda en http://localhost:18025 para ver lo que el sitio "envió".',
+          'Los códigos de verificación de cuenta y de recuperación de contraseña se mandan por email. Las plantillas son componentes en `src/components/auth` con estilos inline (los clientes de email ignoran casi todo el CSS externo) y `@react-email/render` las convierte a HTML. En producción salen por Resend; con Docker Compose, MailHog queda en http://localhost:18025 para ver lo que el sitio "envió".',
         ],
         examples: [
           {
             file: 'src/lib/email.ts',
             lang: 'ts',
-            code: `return nodemailer.createTransport({
-  host: smtpHost,
-  port: Number(process.env.SMTP_PORT ?? 1025),
-  secure: false,
-  ...(smtpUser && smtpPass ? { auth: { user: smtpUser, pass: smtpPass } } : {}),
+            code: `const { error } = await new Resend(apiKey).emails.send({
+  from: formatSender(getSender()),
+  to,
+  subject,
+  html,
 });
-// …
-// Modo producción: Gmail requiere credenciales obligatoriamente
-return nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: smtpUser,
-    pass: smtpPass,
-  },
-});`,
+if (error) throw new Error(\`Resend: \${error.message}\`);`,
           },
           {
             file: 'src/actions/auth/send-verification-code.ts',
