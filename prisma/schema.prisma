@@ -103,6 +103,8 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Advise {
@@ -117,6 +119,9 @@ model Advise {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
 }
 
 model Comment {
@@ -135,6 +140,10 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([adviseId])
+  @@index([authorId])
+  @@index([parentCommentId])
 }
 
 model UserLanguage {
@@ -191,6 +200,7 @@ model Event {
 
   @@index([shortcut])
   @@index([createdById])
+  @@index([deletedAt, date])
 }
 
 // Personas que organizan un evento (ambassadors o no). Pueden editarlo y gestionarlo, y el
@@ -250,6 +260,8 @@ model GalleryItem {
 
   @@index([takenAt])
   @@index([eventId])
+  @@index([uploadedById])
+  @@index([createdAt])
 }
 
 // Persona que aparece en una foto o video. La etiquetan los admins o la propia persona.
@@ -320,6 +332,7 @@ model Like {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, adviseId])
+  @@index([adviseId])
 }
 
 model JobOffers {
@@ -449,9 +462,9 @@ model Notification {
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@index([read])
   @@index([createdAt])
+  @@index([userId, read])
 }
 
 model ErrorLog {
