@@ -54,7 +54,8 @@ Medido con builds de producción en local (`next start`), visitando cada ruta 10
 
 Con sesión iniciada queda solo la consulta de la sesión y lo propio de quien mira (su
 inscripción, sus likes). En local la base responde en microsegundos, así que la latencia casi no
-cambia; en producción cada query evitada es un viaje de red hasta el pooler de Supabase.
+cambia; en producción cada query evitada es un viaje de red hasta la base (Postgres en una
+instancia EC2 de AWS).
 
 ## Cómo funciona
 

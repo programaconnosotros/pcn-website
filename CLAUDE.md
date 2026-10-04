@@ -23,11 +23,16 @@ table they read; every Prisma write expires those tables' cached reads automatic
 anything filtered by the current time. In dev, `[cache] <name> reads <Model>` means a table is
 missing from `models`.
 
+## Production database
+
+Production runs on a self-hosted PostgreSQL on an AWS EC2 instance. It used to be on Supabase and
+no longer is: don't assume Supabase (its pooler, dashboard or settings) for anything.
+
 ## Generated data
 
 - GitHub numbers shown on the site come from the committed snapshot `src/data/github-stats.json`; the site never calls the GitHub API at render time. Refresh with `pnpm github:stats` (skill: `actualizar-stats-github`).
 - After changing `prisma/schema.prisma`, run `pnpm db:diagram` to regenerate the ER diagram data on `/desarrollo` (`src/app/(platform)/desarrollo/db-schema.ts`).
-- Prisma 7: `prisma generate` (run by `postinstall`/`prebuild`) writes the client to `src/generated/prisma` and the full datamodel to `src/generated/datamodel` (gitignored). Import types and the client from `@/generated/prisma/client`, or `@/generated/prisma/browser` in client components; never `@prisma/client`. The app connects through `@prisma/adapter-pg` with `pgConfig()` (`src/lib/database-url.ts`); the CLI's URL comes from `prisma.config.ts`.
+- Prisma 7: `prisma generate` (run by `postinstall`/`prebuild`) writes the client to `src/generated/prisma` and the full datamodel to `src/generated/datamodel` (gitignored). Import types and the client from `@/generated/prisma/client`, or `@/generated/prisma/browser` in client components; never `@prisma/client`. The app connects through `@prisma/adapter-pg` with `pgAdapter()` (`src/lib/database-url.ts`), which keeps Prisma 6's URL semantics (sslmode, connection_limit); the CLI's URL comes from `prisma.config.ts`. Details in `docs/migracion-prisma-7.md`.
 
 ## Pull requests
 

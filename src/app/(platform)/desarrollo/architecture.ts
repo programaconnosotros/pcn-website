@@ -180,7 +180,7 @@ const physical: ArchitectureView = {
     {
       term: 'PostgreSQL',
       detail:
-        'La base de producción también vive en AWS, separada del servidor de la app: el contenedor se puede reemplazar en cada deploy sin tocar los datos. Prisma se conecta con una URL que llega como secreto, y el pipeline de deploy usa una conexión directa para aplicar las migraciones.',
+        'La base de producción es un PostgreSQL propio en una instancia EC2 de AWS, fuera del contenedor de la app: el contenedor se puede reemplazar en cada deploy sin tocar los datos. Prisma se conecta con una URL que llega como secreto, y el pipeline de deploy aplica las migraciones con su propia URL (DIRECT_URL).',
     },
     {
       term: 'Bucket S3',

@@ -8,7 +8,7 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
-    // Las migraciones van por la conexión directa (sin pooler) cuando la hay. `prisma generate`
+    // Las migraciones usan DIRECT_URL si está definida y si no DATABASE_URL. `prisma generate`
     // no necesita base, así que no se exige ninguna de las dos (el build de Docker no las tiene).
     url: process.env.DIRECT_URL ?? process.env.DATABASE_URL,
   },
