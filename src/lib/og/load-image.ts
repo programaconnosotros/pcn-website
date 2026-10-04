@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
+import { safeFetch } from '@/lib/safe-fetch';
 
 // Satori (behind next/og) can only decode PNG and JPEG; WebP and AVIF photos fall back.
 const SUPPORTED_TYPES: Record<string, string> = {
@@ -28,11 +29,12 @@ export async function loadCardImage(src: string | null | undefined): Promise<str
 
   try {
     if (/^https?:\/\//.test(src)) {
-      const response = await fetch(src, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+      // La foto de un perfil es una URL que eligió su dueño: safeFetch no deja que apunte a la red
+      // interna y corta la descarga pasados MAX_BYTES.
+      const response = await safeFetch(src, { timeoutMs: TIMEOUT_MS, maxBytes: MAX_BYTES });
       const type = SUPPORTED_TYPES[response.headers.get('content-type')?.split(';')[0] ?? ''];
-      if (!response.ok || !type) return null;
-      const buffer = await response.arrayBuffer();
-      return buffer.byteLength <= MAX_BYTES ? toDataUrl(buffer, type) : null;
+      if (!response.ok || !type || !response.body) return null;
+      return toDataUrl(response.body, type);
     }
 
     if (src.startsWith('/')) {

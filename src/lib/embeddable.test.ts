@@ -1,70 +1,55 @@
-import { lookup } from 'node:dns/promises';
 import { isEmbeddable } from './embeddable';
+import { safeFetch } from './safe-fetch';
 
-jest.mock('node:dns/promises', () => ({ lookup: jest.fn() }));
+// The SSRF protection (internal addresses, redirects, DNS rebinding) lives in safeFetch and is
+// tested in safe-fetch.test.ts; here only the framing decision.
+jest.mock('./safe-fetch', () => ({ safeFetch: jest.fn() }));
 
-const lookupMock = lookup as unknown as jest.Mock;
-const fetchMock = jest.fn();
+const safeFetchMock = safeFetch as jest.Mock;
 
-const response = (status: number, headers: Record<string, string> = {}) =>
-  ({ status, ok: status >= 200 && status < 300, headers: new Headers(headers), body: null }) as any;
-
-beforeEach(() => {
-  global.fetch = fetchMock;
-  fetchMock.mockReset();
-  lookupMock.mockReset();
-  lookupMock.mockResolvedValue([{ address: '93.184.216.34', family: 4 }]);
+const response = (status: number, headers: Record<string, string> = {}) => ({
+  status,
+  ok: status >= 200 && status < 300,
+  headers: new Headers(headers),
+  body: null,
+  url: 'https://example.com',
 });
 
 describe('isEmbeddable', () => {
   it('accepts a public page without framing restrictions', async () => {
-    fetchMock.mockResolvedValue(response(200));
+    safeFetchMock.mockResolvedValue(response(200));
 
     await expect(isEmbeddable('https://example.com')).resolves.toBe(true);
+    expect(safeFetchMock).toHaveBeenCalledWith('https://example.com', { maxRedirects: 3 });
   });
 
   it('rejects pages that forbid framing', async () => {
-    fetchMock.mockResolvedValue(response(200, { 'x-frame-options': 'DENY' }));
+    safeFetchMock.mockResolvedValue(response(200, { 'x-frame-options': 'DENY' }));
     await expect(isEmbeddable('https://example.com')).resolves.toBe(false);
 
-    fetchMock.mockResolvedValue(
+    safeFetchMock.mockResolvedValue(
       response(200, { 'content-security-policy': "frame-ancestors 'self'" }),
     );
     await expect(isEmbeddable('https://example.com')).resolves.toBe(false);
   });
 
-  it.each([
-    'http://127.0.0.1:3000',
-    'http://169.254.169.254/latest/meta-data',
-    'http://10.0.0.5',
-    'http://192.168.1.1',
-    'http://[::1]/',
-    'file:///etc/passwd',
-  ])('never fetches internal or non-http URLs (%s)', async (url) => {
-    await expect(isEmbeddable(url)).resolves.toBe(false);
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('rejects hosts that resolve to a private address', async () => {
-    lookupMock.mockResolvedValue([{ address: '10.1.2.3', family: 4 }]);
-
-    await expect(isEmbeddable('https://sneaky.example')).resolves.toBe(false);
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('checks every redirect hop', async () => {
-    fetchMock.mockResolvedValueOnce(response(302, { location: 'http://127.0.0.1/admin' }));
-
-    await expect(isEmbeddable('https://example.com')).resolves.toBe(false);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('follows public redirects', async () => {
-    fetchMock
-      .mockResolvedValueOnce(response(301, { location: '/home' }))
-      .mockResolvedValueOnce(response(200));
+  it('accepts a CSP that lets any site frame the page', async () => {
+    safeFetchMock.mockResolvedValue(
+      response(200, { 'content-security-policy': "default-src 'self'; frame-ancestors *" }),
+    );
 
     await expect(isEmbeddable('https://example.com')).resolves.toBe(true);
-    expect(fetchMock.mock.calls[1][0].toString()).toBe('https://example.com/home');
+  });
+
+  it('rejects pages that answer with an error', async () => {
+    safeFetchMock.mockResolvedValue(response(404));
+
+    await expect(isEmbeddable('https://example.com')).resolves.toBe(false);
+  });
+
+  it('rejects URLs safeFetch refuses (internal addresses, bad schemes, timeouts)', async () => {
+    safeFetchMock.mockRejectedValue(new Error('169.254.169.254 apunta a una dirección interna'));
+
+    await expect(isEmbeddable('http://169.254.169.254/latest/meta-data')).resolves.toBe(false);
   });
 });
