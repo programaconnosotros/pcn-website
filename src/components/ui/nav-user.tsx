@@ -52,7 +52,10 @@ export function NavUser({ user }: { user: SessionUser | null }) {
               <Button asChild size="sm" className="w-full">
                 <Link href="/autenticacion/iniciar-sesion">
                   {iconOnly ? (
-                    <LogIn className="size-4" />
+                    <>
+                      <LogIn className="size-4" aria-hidden />
+                      <span className="sr-only">iniciarSesion();</span>
+                    </>
                   ) : (
                     <>
                       iniciarSesion(); <LogIn className="ml-2 size-4" />
@@ -68,7 +71,10 @@ export function NavUser({ user }: { user: SessionUser | null }) {
               >
                 <Link href="/autenticacion/registro">
                   {iconOnly ? (
-                    <UserPlus className="size-4" />
+                    <>
+                      <UserPlus className="size-4" aria-hidden />
+                      <span className="sr-only">Crear cuenta</span>
+                    </>
                   ) : (
                     <>
                       Crear cuenta <UserPlus className="ml-2 size-4" />

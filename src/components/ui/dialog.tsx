@@ -14,6 +14,7 @@ import {
   dialogOverlayClassName,
   dialogTitleClassName,
 } from '@/components/ui/dialog-surface';
+import { useRestoreFocus } from '@/components/ui/restore-focus';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -34,18 +35,26 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content ref={ref} className={cn(dialogContentClassName, className)} {...props}>
-      {children}
-      <DialogPrimitive.Close className={dialogCloseClassName}>
-        <X className="size-4 transition-transform duration-300 group-hover:rotate-90" />
-        <span className="sr-only">Cerrar</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+>(({ className, children, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  const restoreFocus = useRestoreFocus({ onOpenAutoFocus, onCloseAutoFocus });
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(dialogContentClassName, className)}
+        {...props}
+        {...restoreFocus}
+      >
+        {children}
+        <DialogPrimitive.Close className={dialogCloseClassName}>
+          <X className="size-4 transition-transform duration-300 group-hover:rotate-90" />
+          <span className="sr-only">Cerrar</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

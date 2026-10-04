@@ -64,7 +64,8 @@ export const PageTitle = ({ path, meta, action, className }: PageTitleProps) => 
         </nav>
       </div>
       {(meta || action) && (
-        <div className="flex items-center gap-3">
+        // Wraps (meta above the action) rather than pushing the page sideways on narrow screens.
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
           {meta && <p className="text-xs text-muted-foreground">{meta}</p>}
           {action}
         </div>

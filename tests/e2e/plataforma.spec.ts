@@ -91,11 +91,8 @@ test.describe('vim shortcuts', () => {
 
 test.describe('keyboard', () => {
   test('TC-PLT-003 Navegación completa con teclado', async ({ page }) => {
-    // BUG: al cerrar un diálogo con Esc el foco queda en <body> en vez de volver al botón que lo
-    // abrió (pasa con el resumen de /conversaciones, components/conversations/conversation-dialog.tsx,
-    // y con "Instalar PCN" de la home, components/ui/install-app-button.tsx). Lo demás del caso
+    // Al cerrar un diálogo con Esc el foco vuelve al botón que lo abrió. Lo demás del caso
     // (Tab, foco visible, trampa de foco, formulario) lo cubre el test siguiente.
-    test.fail();
     await page.goto('/conversaciones');
     const opener = page.getByRole('article').first().getByRole('heading').getByRole('button');
     await opener.focus();
@@ -177,27 +174,16 @@ test.describe('icon-only controls', () => {
               el.getAttribute('title') ||
               [...el.querySelectorAll('img[alt]')].map((img) => img.getAttribute('alt')).join(' '))
           ).trim();
-        return (
-          [...controls]
-            .filter((el) => el.getClientRects().length > 0 && !el.closest('[aria-hidden="true"]'))
-            .filter((el) => !name(el))
-            // Los links de ingreso del sidebar colapsado tienen su propio test (BUG, abajo)
-            .filter(
-              (el) =>
-                !/^\/autenticacion\/(iniciar-sesion|registro)$/.test(el.getAttribute('href') ?? ''),
-            )
-            .map((el) => el.outerHTML.slice(0, 160))
-        );
+        return [...controls]
+          .filter((el) => el.getClientRects().length > 0 && !el.closest('[aria-hidden="true"]'))
+          .filter((el) => !name(el))
+          .map((el) => el.outerHTML.slice(0, 160));
       });
       expect(unnamed).toEqual([]);
     });
   }
 
   test('the collapsed sidebar sign-in links have an accessible name', async ({ page }) => {
-    // BUG: con el sidebar colapsado, "iniciarSesion();" y "Crear cuenta" quedan como links de
-    // solo ícono sin aria-label ni texto oculto (components/ui/nav-user.tsx, rama `iconOnly`): un
-    // lector de pantalla anuncia solo "link".
-    test.fail();
     await page.goto('/changelog');
     await expect(page.locator('html[data-app-ready]')).toBeAttached();
     const links = page.locator(
@@ -232,7 +218,6 @@ test.describe('icon-only controls', () => {
 });
 
 test.describe('responsive', () => {
-  // /entrevistas queda afuera: a 360 px desborda (BUG, test aparte)
   const SECTIONS = [
     '/',
     '/eventos',
@@ -262,10 +247,8 @@ test.describe('responsive', () => {
   });
 
   test('/entrevistas has no horizontal scroll at 360px', async ({ page }) => {
-    // BUG: a 360 px las pestañas [simulador][guías][live coding] del encabezado
-    // (components/interviews/interviews-tabs.tsx, en el `action` del PageTitle) no entran y la
-    // página scrollea 33 px de costado.
-    test.fail();
+    // A 360 px "active recall" y las pestañas [simulador][guías][live coding] no entran en una
+    // línea: el `action` del PageTitle las baja en vez de scrollear de costado.
     await page.setViewportSize({ width: 360, height: 900 });
     await page.goto('/entrevistas');
     await expect(page.locator('html[data-app-ready]')).toBeAttached();

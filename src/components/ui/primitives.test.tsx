@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { Bookmark } from 'lucide-react';
 import {
@@ -96,6 +97,47 @@ describe('Dialog', () => {
     expect(within(dialog).getByText('pie')).toBeInTheDocument();
     await userEvent.click(within(dialog).getByRole('button', { name: 'Cerrar' }));
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  // Opened from a plain button (no DialogTrigger), Radix alone leaves focus on <body>.
+  const Controlled = ({ onCloseAutoFocus }: { onCloseAutoFocus?: (_event: Event) => void }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <button type="button" onClick={() => setOpen(true)}>
+          abrir
+        </button>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent aria-describedby={undefined} onCloseAutoFocus={onCloseAutoFocus}>
+            <DialogTitle>título</DialogTitle>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  };
+
+  it('gives focus back to the button that opened it without a trigger', async () => {
+    const user = userEvent.setup();
+    render(<Controlled />);
+    const opener = screen.getByRole('button', { name: 'abrir' });
+    opener.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('dialog')).toContainElement(document.activeElement as HTMLElement);
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).toBeNull();
+    await waitFor(() => expect(opener).toHaveFocus());
+  });
+
+  it("leaves focus alone when the caller's onCloseAutoFocus prevents it", async () => {
+    const user = userEvent.setup();
+    const onCloseAutoFocus = jest.fn((event: Event) => event.preventDefault());
+    render(<Controlled onCloseAutoFocus={onCloseAutoFocus} />);
+    const opener = screen.getByRole('button', { name: 'abrir' });
+    opener.focus();
+    await user.keyboard('{Enter}');
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(onCloseAutoFocus).toHaveBeenCalled());
+    expect(opener).not.toHaveFocus();
   });
 });
 
@@ -430,6 +472,14 @@ describe('PageTitle', () => {
   it('renders only the action', () => {
     render(<PageTitle path="x" action={<span>acción</span>} />);
     expect(screen.getByText('acción')).toBeInTheDocument();
+  });
+
+  it('lets the meta and action wrap instead of overflowing narrow screens', () => {
+    // /entrevistas at 360px: `active recall` plus the three tabs are wider than the screen.
+    render(<PageTitle path="entrevistas" meta="active recall" action={<nav>pestañas</nav>} />);
+    const row = screen.getByText('pestañas').parentElement!;
+    expect(row).toContainElement(screen.getByText('active recall'));
+    expect(row).toHaveClass('flex-wrap', 'min-w-0');
   });
 });
 

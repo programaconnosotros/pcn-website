@@ -5,6 +5,7 @@ import { ArrowUpRight, CornerDownLeft, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { DialogOverlay, DialogPortal } from '@/components/ui/dialog';
 import { dialogContentClassName } from '@/components/ui/dialog-surface';
+import { useRestoreFocus } from '@/components/ui/restore-focus';
 import { isEmbedded, postToOsHost } from '@/components/os/os-env';
 import { visiblePrograms } from '@/components/os/programs';
 import { SEARCH_GROUPS, type SearchResponse, type SearchResult } from '@/lib/search/types';
@@ -112,6 +113,7 @@ function GlobalSearchDialog({
   const listRef = useRef<HTMLDivElement>(null);
   const search = useSearchResults(query);
   const { results } = search;
+  const restoreFocus = useRestoreFocus();
 
   useEffect(() => {
     if (open) setQuery(initialQuery);
@@ -159,6 +161,7 @@ function GlobalSearchDialog({
         <DialogPrimitive.Content
           aria-describedby={undefined}
           onKeyDown={handleKeyDown}
+          {...restoreFocus}
           className={cn(
             dialogContentClassName,
             'flex max-w-2xl flex-col gap-0 p-0',

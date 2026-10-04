@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { ActivityGraph } from './activity-graph';
 import { ConversationDialog } from './conversation-dialog';
@@ -230,6 +230,38 @@ describe('ConversationDialog', () => {
     expect(screen.queryByText(/participante/)).not.toBeInTheDocument();
     await userEvent.click(screen.getByTitle('Cerrar (Esc)'));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('gives focus back to the row that opened it when closed with Esc', async () => {
+    const user = userEvent.setup();
+    // Like the page: a plain button (no Radix trigger) opens it and the dialog unmounts on close.
+    const Harness = () => {
+      const [index, setIndex] = useState<number | null>(null);
+      return (
+        <Providers>
+          <button type="button" onClick={() => setIndex(0)}>
+            abrir
+          </button>
+          <ConversationDialog
+            conversations={list}
+            index={index}
+            query=""
+            activeParticipant={null}
+            onNavigate={setIndex}
+            onClose={() => setIndex(null)}
+            onParticipantClick={jest.fn()}
+          />
+        </Providers>
+      );
+    };
+    render(<Harness />);
+    const opener = screen.getByRole('button', { name: 'abrir' });
+    opener.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await waitFor(() => expect(opener).toHaveFocus());
   });
 
   it('copies the deep link and reports clipboard failures', async () => {

@@ -123,12 +123,7 @@ test.describe('full mode', () => {
   });
 
   test('TC-OS-002 Ventanas: maximizar, minimizar, mover y cerrar', async ({ page }) => {
-    // BUG: el doble clic en la barra de título no maximiza. El pointerdown del primer clic arranca
-    // un arrastre (os-window.tsx, startDrag → onInteractionChange) y pcn-os.tsx pone el escudo
-    // `absolute inset-0 z-[2147483647]` sobre todo; el mouseup cae en el escudo, así que el
-    // dblclick sale en un ancestro común y nunca llega al onDoubleClick del <header>. Mover,
-    // minimizar y cerrar (y maximizar con su botón) los cubre el test siguiente.
-    test.fail();
+    // Mover, minimizar y cerrar (y maximizar con su botón) los cubre el test siguiente.
     await page.goto('/');
     await openFromDock(page, 'Eventos');
     const eventos = osWindow(page, 'Eventos');

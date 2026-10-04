@@ -13,6 +13,7 @@ import {
   dialogOverlayClassName,
   dialogTitleClassName,
 } from '@/components/ui/dialog-surface';
+import { useRestoreFocus } from '@/components/ui/restore-focus';
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -35,16 +36,20 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <AlertDialogPortal>
-    <AlertDialogOverlay />
-    <AlertDialogPrimitive.Content
-      ref={ref}
-      className={cn(dialogContentClassName, className)}
-      {...props}
-    />
-  </AlertDialogPortal>
-));
+>(({ className, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  const restoreFocus = useRestoreFocus({ onOpenAutoFocus, onCloseAutoFocus });
+  return (
+    <AlertDialogPortal>
+      <AlertDialogOverlay />
+      <AlertDialogPrimitive.Content
+        ref={ref}
+        className={cn(dialogContentClassName, className)}
+        {...props}
+        {...restoreFocus}
+      />
+    </AlertDialogPortal>
+  );
+});
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 // Alerts have no close button, so the header can span the full width.

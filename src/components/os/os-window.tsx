@@ -55,7 +55,9 @@ interface OsWindowProps {
   suspended?: boolean;
 }
 
-/** Strips the site-wide title template so the title bar shows only the page name. */
+/** Two title bar presses this close in time and space are a double click (maximize/restore). */
+const DOUBLE_CLICK_MS = 500;
+const DOUBLE_CLICK_SLOP = 4;
 
 /**
  * Follows the pointer until it is released, reporting the delta from where it started at most
@@ -246,9 +248,27 @@ export function OsWindow({
     el.style.height = `${next.h}px`;
   };
 
+  /** When and where the title bar was last pressed, to tell a double click from a drag. */
+  const lastPress = useRef<{ time: number; x: number; y: number } | null>(null);
+
   const startDrag = (event: React.PointerEvent) => {
     if (event.button !== 0) return;
     onFocus();
+    // A double click is detected here instead of with onDoubleClick: the first press puts the
+    // interaction shield over the page, so its release (and the dblclick) never reach the header.
+    const now = performance.now();
+    const previous = lastPress.current;
+    if (
+      previous &&
+      now - previous.time <= DOUBLE_CLICK_MS &&
+      Math.abs(event.clientX - previous.x) <= DOUBLE_CLICK_SLOP &&
+      Math.abs(event.clientY - previous.y) <= DOUBLE_CLICK_SLOP
+    ) {
+      lastPress.current = null;
+      onToggleMaximize();
+      return;
+    }
+    lastPress.current = { time: now, x: event.clientX, y: event.clientY };
     // Dragging a maximized window restores it under the pointer, like a desktop OS does.
     const ratio = (event.clientX - rect.x) / rect.w;
     const start: Rect = win.maximized
@@ -337,7 +357,6 @@ export function OsWindow({
     >
       <header
         onPointerDown={startDrag}
-        onDoubleClick={onToggleMaximize}
         className={cn(
           'relative flex h-7 shrink-0 cursor-default touch-none select-none items-center border-b bg-black px-1.5 font-mono',
           focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',

@@ -138,8 +138,35 @@ describe('OsWindow', () => {
 
   it('toggles maximize with a double click on the title bar', () => {
     const { props } = setup();
+    // Like a browser: the first press starts a drag whose release lands on the desktop's shield,
+    // so the native dblclick never reaches the header. The second press must do it.
+    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pointer('pointerup', 300, 60);
+    expect(props.onToggleMaximize).not.toHaveBeenCalled();
+    fireEvent.pointerDown(header(), { button: 0, clientX: 301, clientY: 61 });
+    expect(props.onToggleMaximize).toHaveBeenCalledTimes(1);
+    // That press doesn't start another drag (no shield to swallow the release)
+    expect(props.onInteractionChange).toHaveBeenCalledTimes(2);
+    pointer('pointerup', 301, 61);
+    // A native dblclick that does reach the header doesn't toggle it back
     fireEvent.doubleClick(header());
-    expect(props.onToggleMaximize).toHaveBeenCalled();
+    expect(props.onToggleMaximize).toHaveBeenCalledTimes(1);
+  });
+
+  it('treats slow or distant second presses as new drags, not a double click', () => {
+    const now = jest.spyOn(performance, 'now').mockReturnValue(1_000);
+    const { props } = setup();
+    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pointer('pointerup', 300, 60);
+    now.mockReturnValue(1_800);
+    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pointer('pointerup', 300, 60);
+    now.mockReturnValue(1_900);
+    fireEvent.pointerDown(header(), { button: 0, clientX: 340, clientY: 60 });
+    pointer('pointerup', 340, 60);
+    expect(props.onToggleMaximize).not.toHaveBeenCalled();
+    expect(props.onInteractionChange).toHaveBeenCalledTimes(6);
+    now.mockRestore();
   });
 
   it('focuses on any pointer down inside', () => {

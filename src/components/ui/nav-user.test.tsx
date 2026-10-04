@@ -47,11 +47,20 @@ describe('NavUser', () => {
     );
   });
 
-  it('shows only icons to visitors in a collapsed sidebar', () => {
+  it('shows only icons to visitors in a collapsed sidebar, still named for screen readers', () => {
     renderNav(null, false);
-    expect(screen.queryByText(/iniciarSesion/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Crear cuenta/)).not.toBeInTheDocument();
     expect(screen.getAllByRole('link')).toHaveLength(2);
+    expect(screen.getByRole('link', { name: 'iniciarSesion();' })).toHaveAttribute(
+      'href',
+      '/autenticacion/iniciar-sesion',
+    );
+    expect(screen.getByRole('link', { name: 'Crear cuenta' })).toHaveAttribute(
+      'href',
+      '/autenticacion/registro',
+    );
+    // The names are visually hidden: only the icons show
+    expect(screen.getByText('iniciarSesion();')).toHaveClass('sr-only');
+    expect(screen.getByText('Crear cuenta')).toHaveClass('sr-only');
   });
 
   it('shows the member with initials and admin badge and navigates from the menu', async () => {

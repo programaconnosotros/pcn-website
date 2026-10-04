@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PwaContext, type InstallGuide, type PwaContextValue } from '@/components/pwa-context';
 import { HeroInstallButton, InstallAppButton } from './install-app-button';
@@ -70,6 +70,18 @@ describe('HeroInstallButton', () => {
     if (note) expect(dialog).toHaveTextContent(`// ${note}`);
     else expect(dialog).not.toHaveTextContent('//');
     expect(value.installApp).not.toHaveBeenCalled();
+  });
+
+  it('gives focus back to the button when the steps are closed with Esc', async () => {
+    const user = userEvent.setup();
+    renderWith(<HeroInstallButton />, pwa({ canInstall: true, installGuide: 'ios' }));
+    const opener = screen.getByRole('button', { name: /instalarApp\(\);/ });
+    opener.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('dialog', { name: 'Instalar PCN' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    await waitFor(() => expect(opener).toHaveFocus());
   });
 
   it('does not open anything without a guide', async () => {
