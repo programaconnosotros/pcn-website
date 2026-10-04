@@ -28,16 +28,14 @@ beforeEach(() => {
   });
   jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
   // jsdom lays nothing out: give every field a real box for the caret to sit in.
-  jest
-    .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-    .mockReturnValue({
-      left: 0,
-      top: 0,
-      right: 200,
-      bottom: 30,
-      width: 200,
-      height: 30,
-    } as DOMRect);
+  jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+    left: 0,
+    top: 0,
+    right: 200,
+    bottom: 30,
+    width: 200,
+    height: 30,
+  } as DOMRect);
 });
 
 afterEach(() => {

@@ -1,4 +1,8 @@
 build
 coverage
 node_modules
-pnpm-lock.yamlsrc/generated
+pnpm-lock.yaml
+src/generated
+.next-e2e
+playwright-report
+test-results
