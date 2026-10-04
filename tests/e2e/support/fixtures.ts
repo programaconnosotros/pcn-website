@@ -12,7 +12,20 @@ export type OsMode = 'classic' | 'lite' | 'full';
 let prisma: PrismaClient | undefined;
 const database = () => (prisma ??= new PrismaClient({ adapter: pgAdapter(e2eDatabaseUrl()) }));
 
+/**
+ * Una IP de documentación (198.18.0.0/15) distinta por test. Sin proxy adelante, el servidor toma la
+ * última entrada de `x-forwarded-for` como IP del cliente, así cada test tiene sus propios rate
+ * limits (login, registro, códigos) en vez de compartir los de 127.0.0.1 con toda la suite.
+ */
+const ipFor = (seed: string) => {
+  let hash = 0;
+  for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return `198.${18 + (hash & 1)}.${(hash >> 8) & 255}.${(hash >> 16) & 255}`;
+};
+
 type Fixtures = {
+  /** La IP con la que el servidor ve los requests de este test (ver `ipFor`). */
+  clientIp: string;
   /** Sesión con la que arranca el test: un rol con storage state, o `null` para anónimo. */
   as: SignedInRole | null;
   osMode: OsMode;
@@ -22,6 +35,12 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   as: [null, { option: true }],
+  clientIp: async ({}, use, testInfo) => {
+    await use(ipFor(`${testInfo.testId}-${testInfo.retry}`));
+  },
+  extraHTTPHeaders: async ({ extraHTTPHeaders, clientIp }, use) => {
+    await use({ ...extraHTTPHeaders, 'x-forwarded-for': clientIp });
+  },
   osMode: ['classic', { option: true }],
   storageState: async ({ as }, use) => {
     await use(as ? storageStatePath(as) : { cookies: [], origins: [] });
