@@ -19,6 +19,7 @@ import { Announcement, User } from '@/generated/prisma/browser';
 import { createAnnouncement } from '@/actions/announcements/create-announcement';
 import { AnnouncementFormData } from '@/schemas/announcement-schema';
 import { toast } from 'sonner';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type AnnouncementWithAuthor = Announcement & {
   author: Pick<User, 'id' | 'name' | 'image'>;
@@ -51,7 +52,7 @@ export function AnnouncementsWrapper({
       toast.success('Anuncio creado exitosamente');
       setIsCreateOpen(false);
     } catch (error: any) {
-      toast.error(error.message || 'Error al crear el anuncio');
+      toast.error(actionErrorMessage(error, 'Error al crear el anuncio', true));
     } finally {
       setIsCreating(false);
     }

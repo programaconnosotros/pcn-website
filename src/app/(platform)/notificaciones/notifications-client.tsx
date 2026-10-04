@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Notification = {
   id: string;
@@ -100,7 +101,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
       toast.success('Notificación marcada como leída');
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message || 'Error al marcar la notificación como leída');
+      toast.error(actionErrorMessage(error, 'Error al marcar la notificación como leída', true));
     } finally {
       setMarkingAsRead(null);
     }
@@ -115,7 +116,9 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
       toast.success('Todas las notificaciones marcadas como leídas');
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message || 'Error al marcar las notificaciones como leídas');
+      toast.error(
+        actionErrorMessage(error, 'Error al marcar las notificaciones como leídas', true),
+      );
     } finally {
       setMarkingAllAsRead(false);
     }

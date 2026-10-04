@@ -16,6 +16,7 @@ import {
 import { toast } from 'sonner';
 import { deleteTalk } from '@/actions/talks/delete-talk';
 import { Trash2, Loader2 } from 'lucide-react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type Props = {
   talkId: string;
@@ -31,7 +32,7 @@ export function DeleteTalkButton({ talkId, talkTitle }: Props) {
       await deleteTalk(talkId);
       toast.success('Charla eliminada');
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar la charla');
+      toast.error(actionErrorMessage(error, 'Error al eliminar la charla', true));
     } finally {
       setIsPending(false);
     }

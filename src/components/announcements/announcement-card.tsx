@@ -27,6 +27,7 @@ import { AnnouncementFormData } from '@/schemas/announcement-schema';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type AnnouncementWithAuthor = Announcement & {
   author: Pick<User, 'id' | 'name' | 'image'>;
@@ -76,7 +77,7 @@ export function AnnouncementCard({
       toast.success('Anuncio actualizado exitosamente');
       setIsEditOpen(false);
     } catch (error: any) {
-      toast.error(error.message || 'Error al actualizar el anuncio');
+      toast.error(actionErrorMessage(error, 'Error al actualizar el anuncio', true));
     } finally {
       setIsUpdating(false);
     }

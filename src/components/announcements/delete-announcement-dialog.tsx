@@ -14,6 +14,7 @@ import {
 import { deleteAnnouncement } from '@/actions/announcements/delete-announcement';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 interface DeleteAnnouncementDialogProps {
   announcementId: string;
@@ -37,7 +38,7 @@ export function DeleteAnnouncementDialog({
       toast.success('Anuncio eliminado exitosamente');
       onOpenChange(false);
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar el anuncio');
+      toast.error(actionErrorMessage(error, 'Error al eliminar el anuncio', true));
     } finally {
       setIsDeleting(false);
     }

@@ -10,6 +10,7 @@ import { UserCombobox } from '@/components/admin/user-combobox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { IdentitySource, LinkedUser } from '@/lib/identity-links';
 import { cn } from '@/lib/utils';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 export type IdentityRow = {
   externalName: string;
@@ -66,7 +67,7 @@ export function IdentityLinksTable({
         toast.success(user ? `${externalName} → ${user.name}` : `${externalName} desvinculado`);
       } catch (error: any) {
         setRows(previous);
-        toast.error(error.message || 'No se pudo guardar el vínculo');
+        toast.error(actionErrorMessage(error, 'No se pudo guardar el vínculo', true));
       } finally {
         setPendingName(null);
       }

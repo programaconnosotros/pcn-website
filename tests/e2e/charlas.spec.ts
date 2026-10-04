@@ -19,7 +19,6 @@ test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
 const proposeUrl = (eventId: string) => `/eventos/${eventId}/proponer-charla`;
 const proposalsUrl = (eventId: string) => `/eventos/${eventId}/propuestas-de-charlas`;
-const NO_PERMISSION = 'No tenés permisos para realizar esta acción';
 
 const speakerBlock = (page: Page, n: number) =>
   page.getByRole('heading', { name: `Orador ${n}`, exact: true }).locator('xpath=../..');
@@ -232,21 +231,18 @@ test.describe('organizador de otro evento', () => {
     ).toBe('PENDING');
   });
 
-  test('el error al revisar una propuesta ajena dice que no hay permisos', async ({
+  test('el error al revisar una propuesta ajena explica que no la gestionás', async ({
     page,
     factory,
     db,
   }) => {
-    // BUG: las actions de propuestas lanzan Error('No tenés permisos…') y la UI muestra
-    // error.message, pero en producción el mensaje de un error lanzado no llega al navegador: el
-    // toast dice "Minified React error #441; visit https://react.dev/errors/441…".
-    // src/components/talk-proposals/proposal-status-actions.tsx:39 (y :55 y :65): debería usar
-    // actionErrorMessage o que las actions devuelvan el error en vez de lanzarlo.
-    test.fail();
     const { ownProposal } = await setup({ page, factory, db });
     const row = page.getByRole('row', { name: new RegExp(ownProposal.title) });
     await row.getByRole('button', { name: /aceptar/ }).click();
-    await expect(page.getByText(NO_PERMISSION)).toBeVisible({ timeout: 5_000 });
+    // En producción el mensaje de un error lanzado no llega: el aviso explica la causa probable y
+    // nunca muestra el error minificado de React
+    await expect(page.getByText(/Revisá que gestiones este evento/)).toBeVisible();
+    await expect(page.getByText(/Minified React error/)).toHaveCount(0);
   });
 
   test('tampoco puede abrir la página de propuestas del otro evento', async ({

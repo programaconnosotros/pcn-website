@@ -79,8 +79,12 @@ export const getRateLimitMessage = (error: unknown) => {
   return rateLimit ? rateLimitMessage(rateLimit.name, rateLimit.waitSeconds) : null;
 };
 
-// Lo que Next pone en lugar del mensaje real de un error de server action en producción
-const REDACTED_MESSAGE = 'An error occurred in the Server Components render';
+// Lo que Next pone en lugar del mensaje real de un error de server action en producción: el texto
+// de Next 15 y el error minificado de React que manda Next 16 (#441 y similares).
+const isRedactedMessage = (message: string) =>
+  message.startsWith('An error occurred in the Server Components render') ||
+  message.includes('Minified React error') ||
+  message.includes('react.dev/errors/');
 
 /**
  * Texto para avisar que falló una server action: el aviso de rate limit si corresponde; si no,
@@ -92,6 +96,6 @@ export const actionErrorMessage = (error: unknown, fallback: string, showMessage
   if (rateLimit) return rateLimit;
 
   const message = error instanceof Error ? error.message : '';
-  if (showMessage && message && !message.startsWith(REDACTED_MESSAGE)) return message;
+  if (showMessage && message && !isRedactedMessage(message)) return message;
   return fallback;
 };

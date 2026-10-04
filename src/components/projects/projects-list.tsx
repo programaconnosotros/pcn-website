@@ -49,6 +49,7 @@ import { deleteProject } from '@/actions/projects/delete-project';
 import { leaveProject } from '@/actions/projects/leave-project';
 import { reorderProjects } from '@/actions/projects/reorder-projects';
 import { fetchPublicProjects } from '@/actions/projects/fetch-public-projects';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type ProjectWithMembers = Awaited<ReturnType<typeof fetchPublicProjects>>[number];
 
@@ -289,7 +290,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
       toast.success('Orden guardado');
     } catch (error: any) {
       setItems(previous);
-      toast.error(error.message || 'No se pudo guardar el orden');
+      toast.error(actionErrorMessage(error, 'No se pudo guardar el orden', true));
     } finally {
       setSavingOrder(false);
     }
@@ -324,7 +325,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
       toast.success('Proyecto eliminado');
       setDeletingProject(null);
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar el proyecto');
+      toast.error(actionErrorMessage(error, 'Error al eliminar el proyecto', true));
     } finally {
       setIsDeleting(false);
     }
@@ -338,7 +339,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
       toast.success('Saliste del proyecto');
       setLeavingProject(null);
     } catch (error: any) {
-      toast.error(error.message || 'Error al salir del proyecto');
+      toast.error(actionErrorMessage(error, 'Error al salir del proyecto', true));
     } finally {
       setIsLeaving(false);
     }

@@ -63,7 +63,7 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
       toast.success('Charla eliminada');
       setDeletingTalk(null);
     } catch (error: any) {
-      toast.error(error.message || 'Error al eliminar la charla');
+      toast.error(actionErrorMessage(error, 'Error al eliminar la charla', true));
     } finally {
       setIsDeleting(false);
     }

@@ -34,6 +34,7 @@ import { EventOptionLabel } from '@/components/events/event-option-label';
 import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type EventOption = {
   id: string;
@@ -358,7 +359,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
       }
       onSuccess?.();
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar la charla');
+      toast.error(actionErrorMessage(error, 'Error al guardar la charla', true));
     } finally {
       setIsSubmitting(false);
     }

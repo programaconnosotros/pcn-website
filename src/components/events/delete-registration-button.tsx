@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type DeleteRegistrationButtonProps = {
   registrationId: string;
@@ -39,7 +40,7 @@ export function DeleteRegistrationButton({
         success: 'Inscripción eliminada exitosamente',
         error: (error) => {
           console.error('Error al eliminar inscripción', error);
-          return error.message || 'Ocurrió un error al eliminar la inscripción';
+          return actionErrorMessage(error, 'Ocurrió un error al eliminar la inscripción', true);
         },
       });
       setOpen(false);

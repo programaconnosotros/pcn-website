@@ -28,6 +28,7 @@ import {
   SectionBar,
   hasSelection,
 } from './table-parts';
+import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 type ErrorLog = {
   id: string;
@@ -89,7 +90,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
       toast.success('Error marcado como resuelto');
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message || 'Error al marcar el error como resuelto');
+      toast.error(actionErrorMessage(error, 'Error al marcar el error como resuelto', true));
     } finally {
       setMarkingAsResolved(null);
     }

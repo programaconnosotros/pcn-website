@@ -107,4 +107,12 @@ describe('rateLimitMessage for every form', () => {
   it('round-trips a digest into its message', () => {
     expect(getRateLimitMessage({ digest: rateLimitDigest('upload', 3600) })).toContain('1 hora');
   });
+
+  it('never shows the minified React error Next 16 sends instead of the message', () => {
+    const next16 = new Error(
+      'Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.',
+    );
+
+    expect(actionErrorMessage(next16, 'No se pudo guardar', true)).toBe('No se pudo guardar');
+  });
 });
