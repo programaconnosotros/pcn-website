@@ -92,9 +92,59 @@ const LOW = [
   /^tests\//,
 ];
 
+// Componentes y páginas, por carpeta: src/components/<carpeta>/ y src/app/(platform)/<ruta>/.
+// Se mira después de AREAS, así un patrón más específico de arriba gana.
+const FOLDER_AREAS = {
+  auth: 'auth',
+  autenticacion: 'auth',
+  events: 'eventos',
+  eventos: 'eventos',
+  announcements: 'eventos',
+  anuncios: 'eventos',
+  talks: 'charlas',
+  charlas: 'charlas',
+  'talk-proposals': 'charlas',
+  'photo-gallery': 'galeria',
+  galeria: 'galeria',
+  profile: 'perfil',
+  perfil: 'perfil',
+  badges: 'perfil',
+  logros: 'perfil',
+  setups: 'perfil',
+  advises: 'consejos',
+  consejos: 'consejos',
+  testimonials: 'testimonios',
+  testimonios: 'testimonios',
+  projects: 'proyectos',
+  proyectos: 'proyectos',
+  'web-reader': 'lectura',
+  lectura: 'lectura',
+  conversations: 'conversaciones',
+  conversaciones: 'conversaciones',
+  interviews: 'entrevistas',
+  entrevistas: 'entrevistas',
+  notificaciones: 'notificaciones',
+  search: 'busqueda',
+  people: 'busqueda',
+  comunity: 'busqueda',
+  users: 'busqueda',
+  miembros: 'busqueda',
+  usuarios: 'admin',
+  os: 'pcn-os',
+  admin: 'admin',
+  analytics: 'admin',
+  analiticas: 'admin',
+  errors: 'admin',
+  logs: 'admin',
+  monitoreo: 'admin',
+  metricas: 'admin',
+  visitas: 'admin',
+};
+
 const layerOf = (file) => {
   if (file.startsWith('tests/')) return 'e2e';
   if (file.endsWith('.db.test.ts')) return 'integration';
+  if (file.endsWith('.test.tsx')) return 'component';
   if (file.startsWith('src/actions/')) return 'server-action';
   if (/\/route\.test\.ts$/.test(file)) return 'route-handler';
   return 'unit';
@@ -102,8 +152,11 @@ const layerOf = (file) => {
 
 const areaOf = (file) => {
   const match = AREAS.find(([pattern]) => pattern.test(file));
-  if (!match) throw new Error(`${file}: no area matches it, add one to AREAS in this script`);
-  return match[1];
+  if (match) return match[1];
+  const folder = file.match(/^src\/(?:components|app\/\(platform\)|app)\/([^/]+)\//)?.[1];
+  if (folder && FOLDER_AREAS[folder]) return FOLDER_AREAS[folder];
+  if (/^src\/(components|app|hooks|lib|schemas|data)\//.test(file)) return 'plataforma';
+  throw new Error(`${file}: no area matches it, add one to AREAS in this script`);
 };
 
 const priorityOf = (file) =>

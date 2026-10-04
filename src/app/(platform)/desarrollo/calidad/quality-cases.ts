@@ -44,6 +44,7 @@ export const manualCases: TestCase[] = [
 
 export const layerLabels: Record<AutomatedLayer, string> = {
   unit: 'unit',
+  component: 'componente',
   'server-action': 'server action',
   'route-handler': 'route handler',
   integration: 'integración',
@@ -52,6 +53,10 @@ export const layerLabels: Record<AutomatedLayer, string> = {
 
 const preconditionsByLayer: Record<AutomatedLayer, string[]> = {
   unit: ['pnpm install'],
+  component: [
+    'pnpm install',
+    'jsdom con Testing Library; router de Next y server actions mockeados',
+  ],
   'server-action': [
     'pnpm install',
     'Prisma, cookies() y headers() mockeados por jest.setup.ts (no hace falta base de datos)',

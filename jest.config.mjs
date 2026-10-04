@@ -5,14 +5,7 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
-/** @type {import('jest').Config} */
-const config = {
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  // Scope to src/ only — keeps Playwright tests/example.spec.ts out of Jest
-  testMatch: ['<rootDir>/src/**/*.test.ts'],
-  // Los de integración necesitan Postgres y corren aparte con `pnpm test:db` (jest.db.config.mjs)
-  testPathIgnorePatterns: ['/node_modules/', '\\.db\\.test\\.ts$'],
+const shared = {
   clearMocks: true,
   // next/jest can't parse JSONC comments in tsconfig.json so path aliases are
   // not auto-generated; list them here explicitly.
@@ -23,4 +16,43 @@ const config = {
   },
 };
 
-export default createJestConfig(config);
+/**
+ * Two projects:
+ * - node: `*.test.ts` — lib, schemas, server actions and route handlers, with Prisma, cookies()
+ *   and headers() mocked by jest.setup.ts.
+ * - dom: `*.test.tsx` — React components rendered with Testing Library in jsdom
+ *   (jest.setup.dom.ts mocks the Next router and the browser APIs jsdom lacks).
+ * The integration suite against Postgres runs apart with `pnpm test:db` (jest.db.config.mjs).
+ */
+const node = createJestConfig({
+  ...shared,
+  displayName: 'node',
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  // Scope to src/ only — keeps the Playwright specs in tests/ out of Jest
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '\\.db\\.test\\.ts$'],
+});
+
+const dom = createJestConfig({
+  ...shared,
+  displayName: 'dom',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.dom.ts'],
+  testMatch: ['<rootDir>/src/**/*.test.tsx'],
+});
+
+const jestConfig = async () => ({
+  projects: [await node(), await dom()],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/generated/**',
+    '!src/test/**',
+    '!src/scripts/**',
+    '!src/**/*.d.ts',
+  ],
+  coverageReporters: ['text-summary', 'json-summary', 'html'],
+});
+
+export default jestConfig;

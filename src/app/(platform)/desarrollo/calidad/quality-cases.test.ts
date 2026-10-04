@@ -7,7 +7,7 @@ const testFilesUnder = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) return testFilesUnder(path);
-    return entry.name.endsWith('.test.ts') ? [path] : [];
+    return /\.test\.tsx?$/.test(entry.name) ? [path] : [];
   });
 
 describe('test case repository', () => {
