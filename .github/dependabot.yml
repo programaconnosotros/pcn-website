@@ -1,0 +1,23 @@
+# Dependabot avisa de dependencias con vulnerabilidades conocidas y abre PRs para actualizarlas.
+# No corre tests en CI: cada PR se revisa y se prueba localmente (pnpm test, pnpm test:db) antes de
+# mergearlo. Ver docs/seguridad-owasp.md (A03).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    # Las actualizaciones de seguridad se abren siempre; las de versión, agrupadas para que no
+    # lleguen 30 PRs sueltos por semana.
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    labels: [dependencies]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies]
