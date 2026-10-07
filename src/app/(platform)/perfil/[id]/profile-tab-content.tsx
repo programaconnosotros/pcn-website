@@ -157,12 +157,8 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
 
   return (
     <div className="mb-14 space-y-8">
-      <RuledGrid
-        className={cn(
-          'grid-cols-2',
-          contributions.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-5',
-        )}
-      >
+      {/* PCN contributions (PRs, commits, lines) are only in their own section below. */}
+      <RuledGrid className="grid-cols-2 sm:grid-cols-5">
         <ProfileStat label="proyectos" value={projects.length} href={tabHref('proyectos')} />
         <ProfileStat label="consejos" value={advises.length} href={tabHref('consejos')} />
         <ProfileStat label="charlas" value={talks.length} href={tabHref('charlas')} />
@@ -172,25 +168,6 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           value={conversations.length}
           href={tabHref('conversaciones')}
         />
-        {contributions.length > 0 && (
-          <>
-            <ProfileStat
-              label="PRs en pcn"
-              value={github.mergedPrs}
-              href={tabHref('contribuciones')}
-            />
-            <ProfileStat
-              label="commits en pcn"
-              value={github.commits.toLocaleString('es-AR')}
-              href={tabHref('contribuciones')}
-            />
-            <ProfileStat
-              label="líneas en pcn"
-              value={github.linesAdded === null ? '—' : github.linesAdded.toLocaleString('es-AR')}
-              href={tabHref('contribuciones')}
-            />
-          </>
-        )}
       </RuledGrid>
 
       {!hasActivity && (

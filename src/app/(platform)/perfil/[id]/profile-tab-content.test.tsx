@@ -201,26 +201,18 @@ describe('ProfileTabContent: resumen', () => {
     );
   });
 
-  it('adds the GitHub contribution stats when the member contributed to the site', async () => {
+  it('shows the PCN contributions only in their own section, not in the stats row', async () => {
     mockData({ contributions: 2 });
     await renderTab('resumen');
 
-    expect(stat('PRs en pcn')).toHaveTextContent('7');
-    expect(stat('commits en pcn')).toHaveTextContent((1234).toLocaleString('es-AR'));
-    expect(stat('líneas en pcn')).toHaveTextContent((1500).toLocaleString('es-AR'));
-    expect(stat('líneas en pcn')).toHaveAttribute('href', '/perfil/u1?tab=contribuciones');
+    expect(screen.queryByText('PRs en pcn')).not.toBeInTheDocument();
+    expect(screen.queryByText('commits en pcn')).not.toBeInTheDocument();
+    expect(screen.queryByText('líneas en pcn')).not.toBeInTheDocument();
+    expect(screen.getByText('contribuciones a pcn')).toBeInTheDocument();
     expect(jest.mocked(ContributionStats).mock.calls[0][0].totals).toEqual({
       mergedPrs: 100,
       commits: 1000,
     });
-  });
-
-  it('shows a dash when GitHub never had the line stats ready', async () => {
-    mockData();
-    m.getProfileContributions.mockResolvedValue(contributions(1, null) as never);
-    await renderTab('resumen');
-
-    expect(stat('líneas en pcn')).toHaveTextContent('—');
   });
 
   it('shows each talk with its speakers, video, date and place', async () => {
