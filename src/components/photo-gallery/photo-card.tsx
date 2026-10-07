@@ -16,6 +16,8 @@ interface PhotoCardProps {
   href: string;
   /** Shows a share key next to the download one. */
   onShare?: () => void;
+  /** Above the fold: load right away instead of lazily. */
+  priority?: boolean;
 }
 
 const cornerClassName =
@@ -24,7 +26,7 @@ const cornerClassName =
 // A dimmed, scanlined thumbnail that powers up on hover: full colour, lit corner brackets and a
 // file-name caption sliding up from the bottom. The photo is slightly taller than its frame and drifts
 // against the scroll (and away from the pointer), so the grid reads as windows onto a deeper layer.
-export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps) {
+export function PhotoCard({ photo, index, total, href, onShare, priority }: PhotoCardProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   useParallax(frameRef);
 
@@ -44,7 +46,8 @@ export function PhotoCard({ photo, index, total, href, onShare }: PhotoCardProps
           <img
             src={photo.thumbUrl}
             alt=""
-            loading="lazy"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
             decoding="async"
             className="h-full w-full object-cover object-top brightness-[0.8] saturate-[0.7] transition duration-500 ease-out group-focus-within:brightness-100 group-focus-within:saturate-100 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100"
           />

@@ -12,7 +12,7 @@ import { galleryQuery, isFiltered, type GalleryFilter } from '@/lib/gallery-filt
 import { cn } from '@/lib/utils';
 import { Check, ImagePlus, ListChecks } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { GalleryBulkBar } from './gallery-bulk-bar';
 import { GalleryFilters } from './gallery-filters';
 import type { EventOption } from './photo-event-select';
@@ -28,6 +28,41 @@ const normalize = (text: string) =>
     .toLowerCase();
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+
+/** Tiles mounted at first and added each time the end of the grid comes near. */
+export const GALLERY_PAGE_SIZE = 24;
+/** The first row loads eagerly: it's what the page opens with. */
+const EAGER_TILES = 4;
+
+/**
+ * How many of `total` tiles to mount: a page at first and another one each time the sentinel
+ * comes within a screen of the viewport. Resets when `resetKey` changes (a new search).
+ */
+function useIncrementalCount(total: number, resetKey: string) {
+  const [count, setCount] = useState(GALLERY_PAGE_SIZE);
+  const [prevKey, setPrevKey] = useState(resetKey);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  if (prevKey !== resetKey) {
+    setPrevKey(resetKey);
+    setCount(GALLERY_PAGE_SIZE);
+  }
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || count >= total || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting))
+          setCount((current) => Math.min(total, current + GALLERY_PAGE_SIZE));
+      },
+      { rootMargin: '100% 0px' },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [count, total]);
+
+  return { count: Math.min(count, total), sentinelRef };
+}
 
 interface GalleryProps {
   items: GalleryTile[];
@@ -67,6 +102,13 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
 
   // Only what's still in the gallery (and on screen) counts: a refresh or a search can hide items.
   const selected = filteredItems.filter((item) => selectedIds.has(item.id));
+
+  // Hundreds of tiles (each an image, with its hover effects) mount a page at a time.
+  const { count: shownCount, sentinelRef } = useIncrementalCount(
+    filteredItems.length,
+    searchQuery.trim(),
+  );
+  const shownItems = filteredItems.slice(0, shownCount);
 
   const exitSelection = () => {
     setIsSelecting(false);
@@ -199,7 +241,7 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
         <div className="mb-14">
           {/* Big enough to see the photos: one per row on phones, up to three on large screens. */}
           <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            {filteredItems.map((item, index) => {
+            {shownItems.map((item, index) => {
               const isSelected = selectedIds.has(item.id);
               return (
                 <div key={item.id} className={cn(ruledCellClassName, 'relative p-1')}>
@@ -207,6 +249,7 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
                     photo={item}
                     index={index}
                     total={filteredItems.length}
+                    priority={index < EAGER_TILES}
                     href={`/galeria/${item.id}${query}`}
                     onShare={() => setSharedItem(item)}
                   />
@@ -239,6 +282,15 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
               );
             })}
           </RuledGrid>
+          {shownCount < filteredItems.length && (
+            <div
+              ref={sentinelRef}
+              aria-hidden
+              className="flex h-16 items-center justify-center font-mono text-[11px] text-muted-foreground"
+            >
+              cargando {shownCount}/{filteredItems.length}…
+            </div>
+          )}
 
           {isSelecting && events && (
             <GalleryBulkBar

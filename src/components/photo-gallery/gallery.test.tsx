@@ -1,9 +1,9 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import type { GalleryTile } from '@/lib/gallery';
 import { buildTile } from '@/test/gallery';
-import { Gallery } from './gallery';
+import { GALLERY_PAGE_SIZE, Gallery } from './gallery';
 
 jest.mock('./gallery-bulk-bar', () => ({
   GalleryBulkBar: (props: {
@@ -187,5 +187,34 @@ describe('Gallery', () => {
     expect(screen.getByRole('region', { name: 'Edición masiva' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'listo' }));
     expect(screen.queryByRole('region', { name: 'Edición masiva' })).not.toBeInTheDocument();
+  });
+
+  it('mounts the tiles a page at a time, loading more as the end comes near', () => {
+    let trigger: (() => void) | null = null;
+    const original = globalThis.IntersectionObserver;
+    globalThis.IntersectionObserver = class {
+      constructor(callback: IntersectionObserverCallback) {
+        trigger = () =>
+          callback([{ isIntersecting: true } as IntersectionObserverEntry], this as never);
+      }
+      observe() {}
+      disconnect() {}
+      unobserve() {}
+      takeRecords() {
+        return [];
+      }
+    } as unknown as typeof IntersectionObserver;
+
+    const many = Array.from({ length: GALLERY_PAGE_SIZE + 5 }, (_, i) =>
+      buildTile({ id: `p${i}`, description: `Foto ${i}` }),
+    );
+    renderGallery({ items: many });
+    expect(screen.getAllByRole('link', { name: /^Ver foto/ })).toHaveLength(GALLERY_PAGE_SIZE);
+    expect(screen.getByText(`cargando ${GALLERY_PAGE_SIZE}/${many.length}…`)).toBeInTheDocument();
+
+    act(() => trigger?.());
+    expect(screen.getAllByRole('link', { name: /^Ver foto/ })).toHaveLength(many.length);
+    expect(screen.queryByText(/^cargando/)).not.toBeInTheDocument();
+    globalThis.IntersectionObserver = original;
   });
 });
