@@ -192,6 +192,21 @@ describe('OsWindow', () => {
     expect(props.onInteractionChange).toHaveBeenLastCalledWith(null);
   });
 
+  it('previews and snaps to the edge the pointer is dragged against', () => {
+    const snapZoneAt = jest.fn((x: number) => (x <= 12 ? ('left' as const) : null));
+    const { props } = setup({ snapZoneAt, onSnapPreview: jest.fn(), onSnap: jest.fn() });
+
+    // Moves are applied once per frame; the release flushes the last one.
+    fireEvent.pointerDown(header(), { button: 0, clientX: 300, clientY: 60 });
+    pointer('pointermove', 2, 60);
+    pointer('pointerup', 2, 60);
+
+    expect(snapZoneAt).toHaveBeenCalledWith(2, 60);
+    expect(jest.mocked(props.onSnapPreview!).mock.calls).toEqual([['left'], [null]]);
+    expect(props.onSnap).toHaveBeenCalledWith('left');
+    expect(props.onRectChange).not.toHaveBeenCalled();
+  });
+
   it('ignores secondary buttons and clicks without movement', () => {
     const { props } = setup();
     fireEvent.pointerDown(header(), { button: 2, clientX: 300, clientY: 60 });

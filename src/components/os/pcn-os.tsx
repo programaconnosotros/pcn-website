@@ -20,6 +20,14 @@ import {
   type Rect,
 } from './os-window-geometry';
 import { useOsMode } from './use-os-mode';
+import {
+  clampDivider,
+  snapRect,
+  snapZoneAt,
+  snappedPair,
+  splitRects,
+  type SnapZone,
+} from './os-snap';
 import { readSession, restoreOrder, toSession, writeSession, type SavedWindow } from './os-session';
 import { osTabTitle } from '@/lib/tab-title';
 
@@ -77,6 +85,10 @@ type OsAction =
   | { type: 'minimizeAll' }
   | { type: 'toggleMaximize'; id: string }
   | { type: 'rect'; id: string; rect: Rect }
+  /** Dropped against an edge: takes that half of the desktop, or the whole of it at the top. */
+  | { type: 'snap'; id: string; zone: SnapZone; rect: Rect }
+  /** The divider between two snapped windows moved: both resize, still meeting at it. */
+  | { type: 'divider'; leftId: string; rightId: string; left: Rect; right: Rect }
   /** The screen changed size: windows keep their share of the desktop. */
   | { type: 'fit'; from: Viewport; to: Viewport }
   | { type: 'location'; id: string; path: string; title: string | null };
@@ -113,13 +125,14 @@ const reducer = (state: OsState, action: OsAction): OsState => {
     }
     case 'restore': {
       const windows = action.windows.map(
-        ({ path, minimized, maximized, x, y, w, h }, index): OsWindowState => ({
+        ({ path, minimized, maximized, snap, x, y, w, h }, index): OsWindowState => ({
           id: `win-${state.nextId + index}`,
           src: path,
           path,
           title: null,
           minimized,
           maximized,
+          snap: snap ?? null,
           x,
           y,
           w,
@@ -161,7 +174,26 @@ const reducer = (state: OsState, action: OsAction): OsState => {
     case 'toggleMaximize':
       return updateWindow(state, action.id, (win) => ({ maximized: !win.maximized }));
     case 'rect':
-      return updateWindow(state, action.id, () => ({ ...action.rect, maximized: false }));
+      return updateWindow(state, action.id, () => ({
+        ...action.rect,
+        maximized: false,
+        snap: null,
+      }));
+    case 'snap':
+      return {
+        ...updateWindow(state, action.id, () =>
+          action.zone === 'top'
+            ? { maximized: true, snap: null }
+            : { ...action.rect, maximized: false, snap: action.zone },
+        ),
+        order: bringToFront(state.order, action.id),
+      };
+    case 'divider':
+      return updateWindow(
+        updateWindow(state, action.leftId, () => action.left),
+        action.rightId,
+        () => action.right,
+      );
     case 'fit':
       return {
         ...state,
@@ -268,6 +300,82 @@ const fitToDesktop = (rect: Rect, viewport: Viewport): Rect => {
 
 const readViewport = (): Viewport => ({ w: window.innerWidth, h: window.innerHeight });
 
+/**
+ * The vertical line between two windows snapped side by side. Dragging it resizes both; the
+ * windows only take the final position when it's released, like a window resize.
+ */
+function SplitDivider({
+  x,
+  area,
+  zIndex,
+  onMove,
+  onInteractionChange,
+}: {
+  x: number;
+  area: Rect;
+  zIndex: number;
+  onMove: (_x: number) => void;
+  onInteractionChange: (_cursor: string | null) => void;
+}) {
+  const [dragX, setDragX] = useState<number | null>(null);
+  const shown = dragX ?? x;
+
+  const startDrag = (event: React.PointerEvent) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    const startX = event.clientX;
+    let latest = x;
+    onInteractionChange('col-resize');
+    const move = (e: PointerEvent) => {
+      latest = clampDivider(x + e.clientX - startX, area);
+      setDragX(latest);
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      onInteractionChange(null);
+      setDragX(null);
+      if (latest !== x) onMove(latest);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  };
+
+  return (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Dividir el escritorio"
+      aria-valuenow={Math.round(((shown - area.x) / area.w) * 100)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      tabIndex={0}
+      onPointerDown={startDrag}
+      onKeyDown={(event) => {
+        const step = event.shiftKey ? 80 : 20;
+        if (event.key === 'ArrowLeft') onMove(clampDivider(x - step, area));
+        if (event.key === 'ArrowRight') onMove(clampDivider(x + step, area));
+      }}
+      className="group absolute flex w-3 -translate-x-1/2 cursor-col-resize touch-none justify-center outline-none"
+      style={{ left: shown, top: area.y, height: area.h, zIndex }}
+    >
+      <span
+        className={cn(
+          'h-full w-px bg-pcnGreen-400 transition-all group-hover:w-0.5 group-hover:bg-pcnGreen group-hover:shadow-[0_0_12px_2px_rgba(4,244,190,0.6)] group-focus-visible:w-0.5 group-focus-visible:bg-pcnGreen',
+          dragX !== null && 'w-0.5 bg-pcnGreen shadow-[0_0_12px_2px_rgba(4,244,190,0.6)]',
+        )}
+      />
+      <span className="absolute top-1/2 flex h-10 w-2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-sm border border-pcnGreen-400 bg-black">
+        <span className="size-0.5 rounded-full bg-pcnGreen" />
+        <span className="size-0.5 rounded-full bg-pcnGreen" />
+        <span className="size-0.5 rounded-full bg-pcnGreen" />
+      </span>
+    </div>
+  );
+}
+
 interface PcnOsProps {
   user: OsUser | null;
   isAdmin: boolean;
@@ -286,6 +394,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
   const [viewport, setViewport] = useState<Viewport | null>(null);
   /** Cursor to show while a window is being moved or resized; null when idle. */
   const [interactionCursor, setInteractionCursor] = useState<string | null>(null);
+  /** Where a window being dragged against an edge would snap, drawn under it. */
+  const [snapPreview, setSnapPreview] = useState<Rect | null>(null);
   const [launcherOpen, setLauncherOpen] = useState(false);
   const musicPlayer = useMusicPlayer();
   const { play: playMusic } = musicPlayer;
@@ -419,6 +529,8 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
     .map((win) => findProgramForPath(win.path))
     .filter((program, index, all) => all.findIndex((a) => a.id === program.id) === index);
 
+  const splitPair = snappedPair(state.windows, state.order);
+
   // A maximized window hides the desktop, so its background widgets can pause.
   const covered = state.windows.some((win) => win.maximized && !win.minimized);
   // Wallpaper and menu bar render from the start (they are what the server paints); the rest
@@ -466,6 +578,39 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
                   onMinimize={() => dispatch({ type: 'minimize', id: win.id })}
                   onToggleMaximize={() => dispatch({ type: 'toggleMaximize', id: win.id })}
                   onRectChange={(rect) => dispatch({ type: 'rect', id: win.id, rect })}
+                  snapZoneAt={(x, y) => snapZoneAt(x, y, viewport.w, MENU_BAR_HEIGHT)}
+                  onSnapPreview={(zone) =>
+                    setSnapPreview(
+                      zone === null
+                        ? null
+                        : zone === 'top'
+                          ? desktopArea(viewport)
+                          : snapRect(
+                              zone,
+                              desktopArea(viewport),
+                              state.windows,
+                              state.order,
+                              win.id,
+                            ),
+                    )
+                  }
+                  onSnap={(zone) =>
+                    dispatch({
+                      type: 'snap',
+                      id: win.id,
+                      zone,
+                      rect:
+                        zone === 'top'
+                          ? desktopArea(viewport)
+                          : snapRect(
+                              zone,
+                              desktopArea(viewport),
+                              state.windows,
+                              state.order,
+                              win.id,
+                            ),
+                    })
+                  }
                   onInteractionChange={setInteractionCursor}
                   registerIframe={(iframe) => {
                     if (iframe) iframes.current.set(win.id, iframe);
@@ -493,6 +638,37 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
               );
             })}
           </desktop.AnimatePresence>
+        )}
+
+        {snapPreview && (
+          <div
+            aria-hidden
+            data-testid="snap-preview"
+            className="pointer-events-none absolute z-[2147483646] rounded-md border-2 border-pcnGreen/70 bg-pcnGreen/10 shadow-[0_0_40px_-8px_rgba(4,244,190,0.6),inset_0_0_60px_-20px_rgba(4,244,190,0.5)] transition-all duration-150"
+            style={{
+              left: snapPreview.x + 4,
+              top: snapPreview.y + 4,
+              width: snapPreview.w - 8,
+              height: snapPreview.h - 8,
+            }}
+          />
+        )}
+
+        {desktop && viewport && splitPair && (
+          <SplitDivider
+            x={splitPair.dividerX}
+            area={desktopArea(viewport)}
+            zIndex={10 + state.order.length}
+            onInteractionChange={setInteractionCursor}
+            onMove={(x) =>
+              dispatch({
+                type: 'divider',
+                leftId: splitPair.left.id,
+                rightId: splitPair.right.id,
+                ...splitRects(desktopArea(viewport), x),
+              })
+            }
+          />
         )}
 
         {/* While a window is moved or resized, this shield sits over every iframe so the pointer

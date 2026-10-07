@@ -91,6 +91,13 @@ escudo transparente tapa los iframes para que no se traguen el puntero. Recién 
 el rect final al reducer, así ni el escritorio ni las otras ventanas se re-renderizan en cada
 movimiento.
 
+**Dividir el escritorio:** al arrastrar una ventana contra el borde izquierdo o derecho de la
+pantalla aparece un recuadro con la mitad que va a ocupar, y al soltarla se acomoda ahí (contra la
+barra de menú, se maximiza). Si del otro lado ya hay una ventana acoplada, la nueva ocupa lo que
+esa deja libre. Dos ventanas acopladas una al lado de la otra comparten una línea vertical que se
+arrastra (o se mueve con las flechas) para redimensionar las dos a la vez. La geometría está en
+`os-snap.ts`; mover o redimensionar una ventana a mano la desacopla.
+
 La sesión del escritorio se guarda en `sessionStorage` (`os-session.ts`) cada vez que cambia el
 estado: qué ventanas hay, en qué página está cada una, su rect, si está minimizada o maximizada y
 el orden de apilado. Al recargar la pestaña vuelven todas donde estaban (escaladas y ajustadas si

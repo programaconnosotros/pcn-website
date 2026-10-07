@@ -16,6 +16,7 @@ const saved = (path: string, extra: Partial<SavedWindow> = {}): SavedWindow => (
   h: 600,
   minimized: false,
   maximized: false,
+  snap: null,
   ...extra,
 });
 

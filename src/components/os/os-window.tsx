@@ -12,6 +12,7 @@ import {
   type Rect,
 } from './os-window-geometry';
 import type { OsProgram } from './programs';
+import type { SnapZone } from './os-snap';
 import { PcnLoader } from '@/components/ui/pcn-loader';
 import { tabTitleSubject } from '@/lib/tab-title';
 
@@ -42,6 +43,12 @@ interface OsWindowProps {
   onMinimize: () => void;
   onToggleMaximize: () => void;
   onRectChange: (_rect: Rect) => void;
+  /** Where the window would snap with the pointer at (x, y) on the screen, if anywhere. */
+  snapZoneAt?: (_x: number, _y: number) => SnapZone | null;
+  /** Shows (or, with null, hides) where the window would snap if dropped now. */
+  onSnapPreview?: (_zone: SnapZone | null) => void;
+  /** Dropped against an edge: snap to that half, or maximize at the top. */
+  onSnap?: (_zone: SnapZone) => void;
   /** Called with the cursor to show while moving or resizing, and with null when done. */
   onInteractionChange: (_cursor: string | null) => void;
   registerIframe: (_iframe: HTMLIFrameElement | null) => void;
@@ -174,6 +181,9 @@ export function OsWindow({
   onMinimize,
   onToggleMaximize,
   onRectChange,
+  snapZoneAt,
+  onSnapPreview,
+  onSnap,
   onInteractionChange,
   registerIframe,
   onIframeLoad,
@@ -275,17 +285,30 @@ export function OsWindow({
       ? { ...win, x: Math.round(event.clientX - win.w * ratio), y: rect.y }
       : rect;
     let latest: Rect | null = null;
+    let zone: SnapZone | null = null;
+    const pointerX = event.clientX;
+    const pointerY = event.clientY;
     onInteractionChange('default');
     trackPointer(
       event,
       (dx, dy) => {
         latest = clampRect({ ...start, x: start.x + dx, y: start.y + dy }, 'move');
         preview(latest, 'move');
+        const next = snapZoneAt?.(pointerX + dx, pointerY + dy) ?? null;
+        if (next !== zone) {
+          zone = next;
+          onSnapPreview?.(zone);
+        }
       },
       () => {
         onInteractionChange(null);
         if (!latest) return;
         settling.current = true;
+        if (zone) {
+          onSnapPreview?.(null);
+          onSnap?.(zone);
+          return;
+        }
         onRectChange(latest);
       },
     );

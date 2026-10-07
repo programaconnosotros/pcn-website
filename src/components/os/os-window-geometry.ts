@@ -17,6 +17,8 @@ export interface OsWindowState extends Rect {
   title: string | null;
   minimized: boolean;
   maximized: boolean;
+  /** Snapped to a half of the desktop (see os-snap.ts); moving or resizing it un-snaps it. */
+  snap?: 'left' | 'right' | null;
 }
 
 export type ClampMode = 'move' | 'resize';

@@ -17,6 +17,7 @@ export interface SavedWindow extends Rect {
   path: string;
   minimized: boolean;
   maximized: boolean;
+  snap?: 'left' | 'right' | null;
 }
 
 export interface OsSession {
@@ -54,6 +55,7 @@ const parseWindow = (value: unknown): SavedWindow | null => {
     h: Math.round(win.h),
     minimized: win.minimized === true,
     maximized: win.maximized === true,
+    snap: win.snap === 'left' || win.snap === 'right' ? win.snap : null,
   };
 };
 
@@ -88,7 +90,7 @@ export const toSession = (
   windows: order
     .map((id) => windows.find((win) => win.id === id))
     .filter((win): win is OsWindowState => !!win && isSafePath(win.path))
-    .map(({ path, x, y, w, h, minimized, maximized }) => ({
+    .map(({ path, x, y, w, h, minimized, maximized, snap }) => ({
       path,
       x,
       y,
@@ -96,6 +98,7 @@ export const toSession = (
       h,
       minimized,
       maximized,
+      snap: snap ?? null,
     })),
 });
 
