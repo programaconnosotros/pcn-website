@@ -60,6 +60,9 @@ import { consumeOpenSidebarRequest } from '@/components/os/os-display-mode';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { SidebarUpcomingEvents, type UpcomingEvent } from './sidebar-upcoming-events';
 
+/** A row of the sidebar's footer block: no own border or rounding, a hairline below. */
+const FOOTER_ROW = 'rounded-none border-0 border-b border-pcnGreen-200';
+
 const feedItem: NavItem = { title: 'Feed', url: '/feed', icon: Rss };
 
 const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }, feedItem];
@@ -210,11 +213,14 @@ export function AppSidebar(props: AppSidebarProps) {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="gap-1.5 border-t border-pcnGreen-200 px-3 pb-3 pt-2">
-        <InstallAppButton />
-        <OsClassicReturn />
-        <NavSecondary items={secondaryItems} className="p-0" />
-        <NavUser user={user} />
+      <SidebarFooter className="border-t border-pcnGreen-200 px-3 pb-3 pt-2">
+        {/* One ruled block: the controls share their borders instead of floating apart. */}
+        <div className="overflow-hidden rounded-sm border border-pcnGreen-200 bg-black/40">
+          <InstallAppButton className={FOOTER_ROW} />
+          <OsClassicReturn className={FOOTER_ROW} />
+          <NavSecondary items={secondaryItems} className="p-0" flush />
+          <NavUser user={user} flush />
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

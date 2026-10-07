@@ -26,6 +26,7 @@ import type { SessionUser } from '@/lib/session';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const initials = (name: string) =>
   name
@@ -39,7 +40,14 @@ const initials = (name: string) =>
 // gone: only then can a PCN OS window tell the desktop to reload who it shows.
 const signOutAndNotifyOs = () => signOut().finally(notifyOsSessionChange);
 
-export function NavUser({ user }: { user: SessionUser | null }) {
+export function NavUser({
+  user,
+  flush = false,
+}: {
+  user: SessionUser | null;
+  /** Inside a ruled block (the sidebar footer): no box of its own. */
+  flush?: boolean;
+}) {
   const { isMobile, isCollapsed } = useSidebar();
   const router = useRouter();
   const iconOnly = isCollapsed && !isMobile;
@@ -48,7 +56,7 @@ export function NavUser({ user }: { user: SessionUser | null }) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <div className="rounded-sm border border-pcnGreen-200 bg-black/60 p-2">
+          <div className={cn('p-2', !flush && 'rounded-sm border border-pcnGreen-200 bg-black/60')}>
             <div className="flex flex-col gap-1">
               <Button asChild size="sm" className="w-full">
                 <Link href="/autenticacion/iniciar-sesion">
@@ -96,9 +104,13 @@ export function NavUser({ user }: { user: SessionUser | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className={`h-14 rounded-sm border border-pcnGreen-200 bg-black/60 px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:border-pcnGreen-500 data-[state=open]:bg-sidebar-accent ${
-                iconOnly ? 'justify-center p-2' : ''
-              }`}
+              className={cn(
+                'h-14 px-2.5 transition-colors hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent',
+                flush
+                  ? 'rounded-none'
+                  : 'rounded-sm border border-pcnGreen-200 bg-black/60 data-[state=open]:border-pcnGreen-500',
+                iconOnly && 'justify-center p-2',
+              )}
             >
               <Avatar className="size-9 rounded-full ring-2 ring-pcnGreen/30">
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />
