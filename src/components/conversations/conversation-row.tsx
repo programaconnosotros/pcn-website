@@ -2,6 +2,7 @@ import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
 import { METER_SLOTS, formatShortDate, isGroupThread, shortHash } from './conversation-utils';
+import { Link2 } from 'lucide-react';
 import { ConversationEventLink } from './conversation-event';
 import { Highlight } from './highlight';
 import { ParticipantChip } from './participant-chip';
@@ -61,6 +62,16 @@ export function ConversationRow({
           <span className="shrink-0 border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
             <span className="sm:hidden">grupal</span>
             <span className="hidden sm:inline">muchos participantes</span>
+          </span>
+        )}
+        {conversation.links && conversation.links.length > 0 && (
+          <span
+            className="flex shrink-0 items-center gap-1 text-pcnGreen-600"
+            title={`${conversation.links.length} links compartidos`}
+          >
+            <Link2 className="size-3" aria-hidden />
+            {conversation.links.length}
+            <span className="sr-only"> links compartidos</span>
           </span>
         )}
         {participants.length > 0 && (

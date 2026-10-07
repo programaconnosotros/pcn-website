@@ -2,7 +2,8 @@
   {
     "title": "depot.dev redujo CI de 54 minutos a 1 minuto 49 segundos",
     "date": "2026-04-06",
-    "summary": "Se compartió en el grupo la historia de una empresa que reemplazó GitHub Actions con depot.dev para su pipeline de integración continua y logró reducir el tiempo de build de 54 minutos a 1 minuto y 49 segundos. El grupo reaccionó con entusiasmo ante este resultado y discutió qué técnicas usaba depot.dev para lograr semejante mejora, mencionando la caché inteligente de dependencias, los runners propios y la paralelización agresiva de tareas. Varios miembros expresaron interés en probarlo en sus propios proyectos. La discusión derivó en una conversación más amplia sobre optimización de pipelines de CI/CD y el impacto que tiene el tiempo de feedback en la productividad de los equipos de desarrollo."
+    "summary": "Se compartió en el grupo la historia de una empresa que reemplazó GitHub Actions con depot.dev para su pipeline de integración continua y logró reducir el tiempo de build de 54 minutos a 1 minuto y 49 segundos. El grupo reaccionó con entusiasmo ante este resultado y discutió qué técnicas usaba depot.dev para lograr semejante mejora, mencionando la caché inteligente de dependencias, los runners propios y la paralelización agresiva de tareas. Varios miembros expresaron interés en probarlo en sus propios proyectos. La discusión derivó en una conversación más amplia sobre optimización de pipelines de CI/CD y el impacto que tiene el tiempo de feedback en la productividad de los equipos de desarrollo.",
+    "links": ["https://www.youtube.com/watch?v=cPadQQMq3bc"]
   },
   {
     "title": "Debate sobre viabilidad económica de Anthropic y sus planes de precios",
@@ -32,7 +33,8 @@
   {
     "title": "Salvador Juárez creó Windows OS en web con React y Tailwind",
     "date": "2026-04-10",
-    "summary": "Salvador Juárez mostró al grupo un proyecto llamativo que había construido: una simulación completa de Windows en el navegador, implementada con React, Tailwind CSS y Lucide Icons desde cero. El proyecto incluía un bootmanager, ventanas arrastrables, y reproducía la estética de distintas versiones de Windows. El grupo reaccionó con entusiasmo ante el nivel de detalle y la creatividad del proyecto. Salvador compartió tanto el demo online como el repositorio en GitHub. Facundo García Martoni lo felicitó reiteradamente por la capacidad de construcción que demostraba, señalando que no dejaba de sorprenderle lo que hacía."
+    "summary": "Salvador Juárez mostró al grupo un proyecto llamativo que había construido: una simulación completa de Windows en el navegador, implementada con React, Tailwind CSS y Lucide Icons desde cero. El proyecto incluía un bootmanager, ventanas arrastrables, y reproducía la estética de distintas versiones de Windows. El grupo reaccionó con entusiasmo ante el nivel de detalle y la creatividad del proyecto. Salvador compartió tanto el demo online como el repositorio en GitHub. Facundo García Martoni lo felicitó reiteradamente por la capacidad de construcción que demostraba, señalando que no dejaba de sorprenderle lo que hacía.",
+    "links": ["https://github.com/shadownrx/windows"]
   },
   {
     "title": "Debate GraphQL vs REST vs tRPC en proyectos modernos de 2026",
@@ -42,17 +44,24 @@
   {
     "title": "Lanzamiento de Claude Opus 4.7 y debate Cursor vs Claude Max",
     "date": "2026-04-16",
-    "summary": "Se anunció el lanzamiento de Claude Opus 4.7, que llegó con un descuento del 50% en Cursor por tiempo limitado. El grupo aprovechó para debatir si valía más la pena pagar USD 20 de Cursor o USD 20 de Claude directamente. La conclusión generalizada fue que Cursor era claramente superior en valor: por el mismo precio daba acceso a Composer casi ilimitado más el acceso a múltiples modelos en API. El plan de Claude a USD 20 se consideró insuficiente porque se agotaba en pocos mensajes. Facundo García Martoni también señaló que el Cursor Ultra a USD 200 se podía gastar en 9 días si se usaba intensivamente con modelos de frontera como Opus."
+    "summary": "Se anunció el lanzamiento de Claude Opus 4.7, que llegó con un descuento del 50% en Cursor por tiempo limitado. El grupo aprovechó para debatir si valía más la pena pagar USD 20 de Cursor o USD 20 de Claude directamente. La conclusión generalizada fue que Cursor era claramente superior en valor: por el mismo precio daba acceso a Composer casi ilimitado más el acceso a múltiples modelos en API. El plan de Claude a USD 20 se consideró insuficiente porque se agotaba en pocos mensajes. Facundo García Martoni también señaló que el Cursor Ultra a USD 200 se podía gastar en 9 días si se usaba intensivamente con modelos de frontera como Opus.",
+    "links": [
+      "https://www.anthropic.com/news/claude-opus-4-7",
+      "https://x.com/claudeai/status/2044785261393977612",
+      "https://x.com/theo/status/2044680030706663726"
+    ]
   },
   {
     "title": "Blockchain y Stellar: Franco Pérez hace desarrollo en Tucumán",
     "date": "2026-04-17",
-    "summary": "Franco Pérez se presentó como desarrollador de blockchain en Tucumán y compartió información sobre el ecosistema de Stellar. Facundo Padilla mostró fotos y videos de un meetup que se había hecho en Salta con la comunidad de Stellar. También se habló de fud.markets, un proyecto cripto de nicho para el mercado 'degen CT' (crypto Twitter) que Thiago y Marc estaban por lanzar a mainnet después de haberlo construido en la hackathon de Aleph. Facundo Padilla sugirió automatizar la distribución de contenido a múltiples idiomas usando postiz para publicar en varias cuentas de X simultáneamente."
+    "summary": "Franco Pérez se presentó como desarrollador de blockchain en Tucumán y compartió información sobre el ecosistema de Stellar. Facundo Padilla mostró fotos y videos de un meetup que se había hecho en Salta con la comunidad de Stellar. También se habló de fud.markets, un proyecto cripto de nicho para el mercado 'degen CT' (crypto Twitter) que Thiago y Marc estaban por lanzar a mainnet después de haberlo construido en la hackathon de Aleph. Facundo Padilla sugirió automatizar la distribución de contenido a múltiples idiomas usando postiz para publicar en varias cuentas de X simultáneamente.",
+    "links": ["https://luma.com/ctvtvfn0", "https://stellar.org/es"]
   },
   {
     "title": "Debate sobre estimación de precios freelance en la era de la IA",
     "date": "2026-04-17",
-    "summary": "El grupo tuvo una conversación sobre cómo había cambiado la estimación de precios para proyectos freelance dado que la IA aceleró enormemente los tiempos de desarrollo. Varios miembros debatieron si era correcto cobrar lo mismo que antes cuando ahora un proyecto que tardaba tres semanas podía hacerse en tres días. Algunos argumentaban que el valor estaba en el resultado para el cliente, no en las horas invertidas, por lo que cobrar igual o más era perfectamente legítimo. Otros señalaban que la competencia iba a bajar los precios inevitablemente y que había que adaptarse. Se mencionó que la diferenciación pasaba por la calidad del diseño de soluciones, la velocidad de entrega y el criterio de arquitectura, cosas que la IA por sí sola no proveía."
+    "summary": "El grupo tuvo una conversación sobre cómo había cambiado la estimación de precios para proyectos freelance dado que la IA aceleró enormemente los tiempos de desarrollo. Varios miembros debatieron si era correcto cobrar lo mismo que antes cuando ahora un proyecto que tardaba tres semanas podía hacerse en tres días. Algunos argumentaban que el valor estaba en el resultado para el cliente, no en las horas invertidas, por lo que cobrar igual o más era perfectamente legítimo. Otros señalaban que la competencia iba a bajar los precios inevitablemente y que había que adaptarse. Se mencionó que la diferenciación pasaba por la calidad del diseño de soluciones, la velocidad de entrega y el criterio de arquitectura, cosas que la IA por sí sola no proveía.",
+    "links": ["https://x.com/theo/status/2045065089703919748"]
   },
   {
     "title": "Sueldos del mercado para desarrolladores en Argentina en 2026",
@@ -72,12 +81,16 @@
   {
     "title": "Claude Code habilitado para el plan Pro de Anthropic",
     "date": "2026-04-21",
-    "summary": "Anthropic habilitó Claude Code para el plan Pro de USD 20, lo que generó reacciones mixtas en el grupo. Algunos vieron como una buena noticia la democratización del acceso a Claude Code. Sin embargo, Thiago confirmó más tarde que en realidad era un test con el 2% de los nuevos usuarios que había durado solo unas horas antes de que lo revirtieran. La situación se enmarcó en el contexto de las críticas que el grupo venía haciendo a Anthropic por su falta de transparencia y sus decisiones inconsistentes sobre usage y pricing."
+    "summary": "Anthropic habilitó Claude Code para el plan Pro de USD 20, lo que generó reacciones mixtas en el grupo. Algunos vieron como una buena noticia la democratización del acceso a Claude Code. Sin embargo, Thiago confirmó más tarde que en realidad era un test con el 2% de los nuevos usuarios que había durado solo unas horas antes de que lo revirtieran. La situación se enmarcó en el contexto de las críticas que el grupo venía haciendo a Anthropic por su falta de transparencia y sus decisiones inconsistentes sobre usage y pricing.",
+    "links": ["https://x.com/i/status/2046713419978453374"]
   },
   {
     "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
     "date": "2026-04-23",
-    "summary": "El lanzamiento de GPT 5.5 generó una conversión significativa de miembros del grupo desde el ecosistema Anthropic hacia OpenAI. Facundo García Martoni fue el caso más notable: después de años despreciando los modelos GPT para codeo, adoptó GPT 5.5 Extra High en Codex como su modelo principal. Describió el código generado como muy limpio, con funciones y nombres descriptivos. Alejo verificó los resultados tras un refactor grande con GPT 5.5 en modo High y confirmó que había reducido líneas de código, reorganizado archivos y quedado todo funcionando. Sin embargo, también hubo casos donde el modelo falló en frontend: Facundo Padilla reportó que produjo resultados malos con un carousel y Juan Arismendi lo usó para planificar pero al ejecutar con Composer el resultado fue incorrecto. La discusión reveló que el modelo brillaba en backend y arquitectura pero era inconsistente en frontend."
+    "summary": "El lanzamiento de GPT 5.5 generó una conversión significativa de miembros del grupo desde el ecosistema Anthropic hacia OpenAI. Facundo García Martoni fue el caso más notable: después de años despreciando los modelos GPT para codeo, adoptó GPT 5.5 Extra High en Codex como su modelo principal. Describió el código generado como muy limpio, con funciones y nombres descriptivos. Alejo verificó los resultados tras un refactor grande con GPT 5.5 en modo High y confirmó que había reducido líneas de código, reorganizado archivos y quedado todo funcionando. Sin embargo, también hubo casos donde el modelo falló en frontend: Facundo Padilla reportó que produjo resultados malos con un carousel y Juan Arismendi lo usó para planificar pero al ejecutar con Composer el resultado fue incorrecto. La discusión reveló que el modelo brillaba en backend y arquitectura pero era inconsistente en frontend.",
+    "links": [
+      "https://www.linkedin.com/posts/gpt-55-is-a-new-class-of-intelligence-for-ugcPost-7453142946788507648-cPFg"
+    ]
   },
   {
     "title": "Guía de LinkedIn y búsqueda de empleo tecnológico compartida por Alejo",
@@ -87,12 +100,14 @@
   {
     "title": "Anthropic publicó bugs en Claude Code que degradaban el modelo",
     "date": "2026-04-24",
-    "summary": "Anthropic publicó una comunicación reconociendo que habían tenido bugs en Claude Code que hacían que el modelo se comportara de forma más limitada durante las semanas previas. Según la explicación, los modelos en otros harnesses funcionaban bien, pero el harness específico de Claude Code tenía problemas. El grupo reaccionó con algo de escepticismo: Facundo García Martoni señaló que Cursor no tenía ese problema porque no aplicaba ventanas de tiempo tan restrictivas. Iñaki Fernando Lozano explicó que Cursor incluso llegaba a contar el usage por más de 1x en horas pico para desincentivar la demanda excesiva. El incidente reforzó la percepción negativa que tenía parte del grupo sobre la comunicación y gestión de Anthropic."
+    "summary": "Anthropic publicó una comunicación reconociendo que habían tenido bugs en Claude Code que hacían que el modelo se comportara de forma más limitada durante las semanas previas. Según la explicación, los modelos en otros harnesses funcionaban bien, pero el harness específico de Claude Code tenía problemas. El grupo reaccionó con algo de escepticismo: Facundo García Martoni señaló que Cursor no tenía ese problema porque no aplicaba ventanas de tiempo tan restrictivas. Iñaki Fernando Lozano explicó que Cursor incluso llegaba a contar el usage por más de 1x en horas pico para desincentivar la demanda excesiva. El incidente reforzó la percepción negativa que tenía parte del grupo sobre la comunicación y gestión de Anthropic.",
+    "links": ["https://x.com/theo/status/2047374515852788069"]
   },
   {
     "title": "Debate: IA matando al desarrollador frontend y code review",
     "date": "2026-04-26",
-    "summary": "Facundo García Martoni abrió un debate controversial sobre si la IA había 'matado al frontend developer', argumentando que en Macch llevaba meses haciendo code review del frontend de manera extremadamente superficial porque los modelos rara vez se equivocaban en tecnologías battle-tested como shadcn y React. Propuso que el frontend era un 'leaf node' del producto y por ende candidato al skip del code review. Alejo defendió el valor del criterio humano en frontend: la IA fallaba en manejo de espacios blancos, proporciones dimensionales, uso de inline styles, decisiones entre flex y grid, y agregaba clases de Tailwind innecesarias. Agustín Sánchez señaló que si el frontend crashea la app, el producto falla independientemente del backend. El veredicto de Facundo fue skipear el code review de la implementación frontend (no del diseño UX/UI) apostando al 'embrace the exponentials'."
+    "summary": "Facundo García Martoni abrió un debate controversial sobre si la IA había 'matado al frontend developer', argumentando que en Macch llevaba meses haciendo code review del frontend de manera extremadamente superficial porque los modelos rara vez se equivocaban en tecnologías battle-tested como shadcn y React. Propuso que el frontend era un 'leaf node' del producto y por ende candidato al skip del code review. Alejo defendió el valor del criterio humano en frontend: la IA fallaba en manejo de espacios blancos, proporciones dimensionales, uso de inline styles, decisiones entre flex y grid, y agregaba clases de Tailwind innecesarias. Agustín Sánchez señaló que si el frontend crashea la app, el producto falla independientemente del backend. El veredicto de Facundo fue skipear el code review de la implementación frontend (no del diseño UX/UI) apostando al 'embrace the exponentials'.",
+    "links": ["https://tambo.co/"]
   },
   {
     "title": "Herramientas de code review con agentes: BugBot, CodeRabbit y SonarQube",
@@ -102,17 +117,26 @@
   {
     "title": "Debate sobre uso de Hermes como alternativa a openclaw para agentes autónomos",
     "date": "2026-04-26",
-    "summary": "Facundo Padilla impulsó activamente el reemplazo de openclaw por Hermes Agent de NousResearch en el grupo. Argumentó que openclaw funcionaba mal y gastaba tokens innecesariamente, mientras que Hermes tenía mejor arquitectura, consumía menos recursos (apenas 200MB en un VPS de 4GB de RAM) y la comunidad estaba construyendo cosas muy interesantes encima de él. Compartió que lo usaba con GPT 5.4 mini via GitHub Copilot por USD 10 mensuales ilimitados. Demostró capacidades avanzadas: Hermes con agent-browser de Vercel le permitió navegar la web desde Telegram tomando screenshots del browser headless, se conectó a una reunión de Zoom y hasta grabó la pantalla a 5fps. La comunidad reaccionó con entusiasmo y varios miembros comenzaron a probarlo."
+    "summary": "Facundo Padilla impulsó activamente el reemplazo de openclaw por Hermes Agent de NousResearch en el grupo. Argumentó que openclaw funcionaba mal y gastaba tokens innecesariamente, mientras que Hermes tenía mejor arquitectura, consumía menos recursos (apenas 200MB en un VPS de 4GB de RAM) y la comunidad estaba construyendo cosas muy interesantes encima de él. Compartió que lo usaba con GPT 5.4 mini via GitHub Copilot por USD 10 mensuales ilimitados. Demostró capacidades avanzadas: Hermes con agent-browser de Vercel le permitió navegar la web desde Telegram tomando screenshots del browser headless, se conectó a una reunión de Zoom y hasta grabó la pantalla a 5fps. La comunidad reaccionó con entusiasmo y varios miembros comenzaron a probarlo.",
+    "links": [
+      "https://github.com/NousResearch/hermes-agent/releases",
+      "https://x.com/juliandeangeIis/status/2048586071512936665"
+    ]
   },
   {
     "title": "Debate: repo de PCN open-source vs closed-source por seguridad",
     "date": "2026-04-27",
-    "summary": "Agustín Sánchez planteó la duda de si hacer el repositorio de PCN closed-source por razones de seguridad, argumentando que alguien podría analizar las vulnerabilidades del código con IA más fácilmente si era público. Victor Figueredo respondió que mantenerlo open-source tenía más ventajas: cerrado no garantiza seguridad porque el riesgo se reduce pero no se elimina, y en cambio open-source permite que miembros de la comunidad usen IA para descubrir y parchear vulnerabilidades antes de que las explote alguien externo. Facundo García Martoni coincidió y propuso incentivos para que la gente contribuya: remeras o tazas de PCN para quienes tengan una PR mergeada. Iñaki Fernando Lozano recomendó verificar que no hubiera datos críticos expuestos y tener buenos backups. La decisión fue mantenerlo open-source."
+    "summary": "Agustín Sánchez planteó la duda de si hacer el repositorio de PCN closed-source por razones de seguridad, argumentando que alguien podría analizar las vulnerabilidades del código con IA más fácilmente si era público. Victor Figueredo respondió que mantenerlo open-source tenía más ventajas: cerrado no garantiza seguridad porque el riesgo se reduce pero no se elimina, y en cambio open-source permite que miembros de la comunidad usen IA para descubrir y parchear vulnerabilidades antes de que las explote alguien externo. Facundo García Martoni coincidió y propuso incentivos para que la gente contribuya: remeras o tazas de PCN para quienes tengan una PR mergeada. Iñaki Fernando Lozano recomendó verificar que no hubiera datos críticos expuestos y tener buenos backups. La decisión fue mantenerlo open-source.",
+    "links": [
+      "https://github.com/programaconnosotros/pcn-website",
+      "https://programaconnosotros.com/desarrollo"
+    ]
   },
   {
     "title": "Charla de Matt Pocock sobre diseño de sistemas y skills de desarrollo agéntico",
     "date": "2026-04-27",
-    "summary": "Agustín Sánchez compartió una charla de Matt Pocock sobre desarrollo de software en la era de los agentes, que generó bastante discusión en el grupo. Facundo García Martoni compartió sus notas: usar la skill /grill-me antes del modo plan para llegar a un concepto de diseño compartido, desarrollar un glosario del lenguaje ubicuo del dominio, aprovechar TDD definiendo las unidades y qué mockear antes de implementar, y favorecer 'deep modules' sobre módulos superficiales. Citó a Kent Beck: 'Invest in the design of the system every day'. Facundo García Martoni también compartió las skills de Matt en GitHub (mattpocock/skills) y anunció que empezaría a usar /improve-codebase-architecture en Macch día por medio."
+    "summary": "Agustín Sánchez compartió una charla de Matt Pocock sobre desarrollo de software en la era de los agentes, que generó bastante discusión en el grupo. Facundo García Martoni compartió sus notas: usar la skill /grill-me antes del modo plan para llegar a un concepto de diseño compartido, desarrollar un glosario del lenguaje ubicuo del dominio, aprovechar TDD definiendo las unidades y qué mockear antes de implementar, y favorecer 'deep modules' sobre módulos superficiales. Citó a Kent Beck: 'Invest in the design of the system every day'. Facundo García Martoni también compartió las skills de Matt en GitHub (mattpocock/skills) y anunció que empezaría a usar /improve-codebase-architecture en Macch día por medio.",
+    "links": ["https://github.com/mattpocock/skills", "https://www.youtube.com/@aiDotEngineer"]
   },
   {
     "title": "Martin Uslenghi se presenta: IA en municipalidad de Tucumán y academia",
@@ -122,11 +146,19 @@
   {
     "title": "Comparativa Cursor vs Codex tras primeras horas de uso intensivo",
     "date": "2026-04-29",
-    "summary": "Facundo García Martoni compartió una comparativa detallada tras sus primeras horas usando Codex después de haberse quedado sin usage en Cursor Ultra. Listó los pros de Codex: el 'browser use' para debuggear frontend ya estaba implementado, un filtro de rama para ver los cambios de la rama actual, la posibilidad de referenciar partes del chat al estilo Canvas de ChatGPT, y un modo de anotaciones que hacía batch de comentarios antes de largarlos. Como contra principal: el Design Mode requería dos clicks en lugar de uno. También destacó el tema de accesibilidad para daltónicos: Codex marcaba las líneas agregadas/eliminadas con íconos además de color. Terminó haciendo downgrade de Cursor Ultra a Cursor Pro."
+    "summary": "Facundo García Martoni compartió una comparativa detallada tras sus primeras horas usando Codex después de haberse quedado sin usage en Cursor Ultra. Listó los pros de Codex: el 'browser use' para debuggear frontend ya estaba implementado, un filtro de rama para ver los cambios de la rama actual, la posibilidad de referenciar partes del chat al estilo Canvas de ChatGPT, y un modo de anotaciones que hacía batch de comentarios antes de largarlos. Como contra principal: el Design Mode requería dos clicks en lugar de uno. También destacó el tema de accesibilidad para daltónicos: Codex marcaba las líneas agregadas/eliminadas con íconos además de color. Terminó haciendo downgrade de Cursor Ultra a Cursor Pro.",
+    "links": ["https://x.com/i/status/2049865091739209868"]
   },
   {
     "title": "Zero to Agent Hackathon en Once57: proyectos del grupo PCN",
     "date": "2026-04-30",
-    "summary": "Se realizó el evento Zero to Agent en el cowork Once57, con buena participación de la comunidad PCN. Iván Taddei creó un agente orquestador para validar ideas de negocio con subagentes especializados (Analista de Mercado, CFO, Tech Architect) que generaban dashboards en tiempo real. Salvador Juárez desarrolló un entrenador de algoritmos con visualizaciones interactivas. Marcelo Álvarez construyó un Centro de Monitoreo de Crisis Climáticas que analizaba reportes de redes sociales con LLMs para despachar recursos de emergencia. Arturo Grande submitteó su proyecto desafia.tech (preguntados para indie hackers). Agustín Sánchez presentó Archicise (archicise.com), una plataforma para practicar arquitectura de sistemas con feedback de IA y diagramas de Excalidraw. Los proyectos podían submittearse hasta el lunes a las 4am."
+    "summary": "Se realizó el evento Zero to Agent en el cowork Once57, con buena participación de la comunidad PCN. Iván Taddei creó un agente orquestador para validar ideas de negocio con subagentes especializados (Analista de Mercado, CFO, Tech Architect) que generaban dashboards en tiempo real. Salvador Juárez desarrolló un entrenador de algoritmos con visualizaciones interactivas. Marcelo Álvarez construyó un Centro de Monitoreo de Crisis Climáticas que analizaba reportes de redes sociales con LLMs para despachar recursos de emergencia. Arturo Grande submitteó su proyecto desafia.tech (preguntados para indie hackers). Agustín Sánchez presentó Archicise (archicise.com), una plataforma para practicar arquitectura de sistemas con feedback de IA y diagramas de Excalidraw. Los proyectos podían submittearse hasta el lunes a las 4am.",
+    "links": [
+      "https://community.vercel.com/hackathons/zero-to-agent",
+      "https://quiz.desafia.tech",
+      "https://github.com/facmartoni/tool-design",
+      "https://github.com/facmartoni/prompt-design",
+      "https://www.linkedin.com/posts/nicolas-fuentes-garcia-7997a1236_el-d%C3%ADa-de-ayer-estuve-enzero-to-agent-tucum%C3%A1n-activity-7456050481321181184-ExPo"
+    ]
   }
 ]

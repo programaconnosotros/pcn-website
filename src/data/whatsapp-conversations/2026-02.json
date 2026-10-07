@@ -2,7 +2,11 @@
   {
     "title": "Lanzamiento de Codex por OpenAI",
     "date": "2026-02-02",
-    "summary": "OpenAI lanzó Codex, su nuevo modelo especializado en programación, y la noticia generó una discusión activa en el grupo. Varios miembros compararon Codex con Claude Code y con el modo agente de Cursor, debatiendo cuál ofrecía mejor calidad de código y comprensión de contexto en proyectos grandes. Se discutió también el modelo de precios de Codex y si resultaba competitivo frente a las alternativas existentes, con la conclusión general de que el mercado de herramientas de coding AI estaba volviéndose muy competitivo y los precios estaban bajando. Leandro Contrera mencionó que la proliferación de herramientas hacía cada vez más difícil mantenerse al día con todas las opciones, y que el verdadero diferenciador ya no era la herramienta sino la habilidad del desarrollador para integrarla efectivamente en su flujo de trabajo. La discusión concluyó con el consenso de que experimentar con múltiples herramientas y elegir la que mejor se adaptara al tipo de proyecto era la estrategia más pragmática."
+    "summary": "OpenAI lanzó Codex, su nuevo modelo especializado en programación, y la noticia generó una discusión activa en el grupo. Varios miembros compararon Codex con Claude Code y con el modo agente de Cursor, debatiendo cuál ofrecía mejor calidad de código y comprensión de contexto en proyectos grandes. Se discutió también el modelo de precios de Codex y si resultaba competitivo frente a las alternativas existentes, con la conclusión general de que el mercado de herramientas de coding AI estaba volviéndose muy competitivo y los precios estaban bajando. Leandro Contrera mencionó que la proliferación de herramientas hacía cada vez más difícil mantenerse al día con todas las opciones, y que el verdadero diferenciador ya no era la herramienta sino la habilidad del desarrollador para integrarla efectivamente en su flujo de trabajo. La discusión concluyó con el consenso de que experimentar con múltiples herramientas y elegir la que mejor se adaptara al tipo de proyecto era la estrategia más pragmática.",
+    "links": [
+      "https://www.linkedin.com/posts/openai_introducing-the-codex-app-activity-7424153492157767681-3Oh6",
+      "https://www.linkedin.com/posts/romainhuet_today-were-launching-the-codex-app-a-command-ugcPost-7424202697974652929-oXdj"
+    ]
   },
   {
     "title": "QA manual con Claude Cowork: testing asistido por IA",
@@ -37,7 +41,8 @@
   {
     "date": "2026-02-14",
     "title": "EndeavourOS vs Linux Mint: Hyprland en Mint y distros para developers",
-    "summary": "Matías trajo un debate sobre qué distribución de Linux era más conveniente para desarrollo: EndeavourOS (basada en Arch) versus Linux Mint (basada en Ubuntu/Debian). Los defensores de EndeavourOS destacaban el acceso al AUR y el rolling release. Los de Mint señalaban la estabilidad y el menor tiempo de configuración inicial. Se discutió si Hyprland, el compositor de ventanas Wayland, era compatible con Linux Mint, ya que originalmente estaba pensado para Arch. Facundo comentó que para trabajo sin distracciones prefería una distro más estable que no requiriera mantenimiento constante. Matías terminó argumentando que EndeavourOS era un buen punto medio entre el control de Arch y la facilidad de uso."
+    "summary": "Matías trajo un debate sobre qué distribución de Linux era más conveniente para desarrollo: EndeavourOS (basada en Arch) versus Linux Mint (basada en Ubuntu/Debian). Los defensores de EndeavourOS destacaban el acceso al AUR y el rolling release. Los de Mint señalaban la estabilidad y el menor tiempo de configuración inicial. Se discutió si Hyprland, el compositor de ventanas Wayland, era compatible con Linux Mint, ya que originalmente estaba pensado para Arch. Facundo comentó que para trabajo sin distracciones prefería una distro más estable que no requiriera mantenimiento constante. Matías terminó argumentando que EndeavourOS era un buen punto medio entre el control de Arch y la facilidad de uso.",
+    "links": ["https://endeavouros.com/"]
   },
   {
     "date": "2026-02-15",
@@ -47,17 +52,23 @@
   {
     "date": "2026-02-15",
     "title": "Claude Code: modo plan con Shift+Tab y estrategia Opus para planificación",
-    "summary": "Facundo compartió su descubrimiento del modo plan en Claude Code, activado con Shift+Tab, que hacía que el modelo planificara los cambios antes de ejecutarlos. El grupo mostró interés inmediato. Se discutió la estrategia de usar Claude Opus para la fase de planificación (donde el costo era menor por no generar tanto código) y luego Claude Sonnet para la fase de implementación. Agustín comentó que el modo plan reducía los errores de contexto en tareas que tocaban múltiples archivos. Facundo explicó que había configurado su Claude Code para usar Opus en plan mode por defecto y Sonnet para ejecución, logrando mejor calidad sin aumentar mucho el costo."
+    "summary": "Facundo compartió su descubrimiento del modo plan en Claude Code, activado con Shift+Tab, que hacía que el modelo planificara los cambios antes de ejecutarlos. El grupo mostró interés inmediato. Se discutió la estrategia de usar Claude Opus para la fase de planificación (donde el costo era menor por no generar tanto código) y luego Claude Sonnet para la fase de implementación. Agustín comentó que el modo plan reducía los errores de contexto en tareas que tocaban múltiples archivos. Facundo explicó que había configurado su Claude Code para usar Opus en plan mode por defecto y Sonnet para ejecución, logrando mejor calidad sin aumentar mucho el costo.",
+    "links": ["https://x.com/bcherny/status/2021699851499798911"]
   },
   {
     "date": "2026-02-17",
     "title": "Facundo Padilla lanza salta.dev construido 100% con Claude Code y Stitch",
-    "summary": "Facundo Padilla anunció el lanzamiento de salta.dev, un sitio de la comunidad de desarrolladores de Salta construido íntegramente con Claude Code y Google Stitch sin escribir código manualmente. El grupo lo felicitó y varios lo tomaron como prueba de concepto del workflow de IA que habían estado discutiendo. Facundo explicó el proceso: diseñó las pantallas en Stitch, exportó las imágenes como referencias visuales y le pidió a Claude Code que implementara el frontend usando esas imágenes como guía. El resultado fue un sitio moderno y funcional en pocas horas. El hilo generó mucha discusión sobre la viabilidad de este workflow para proyectos de clientes."
+    "summary": "Facundo Padilla anunció el lanzamiento de salta.dev, un sitio de la comunidad de desarrolladores de Salta construido íntegramente con Claude Code y Google Stitch sin escribir código manualmente. El grupo lo felicitó y varios lo tomaron como prueba de concepto del workflow de IA que habían estado discutiendo. Facundo explicó el proceso: diseñó las pantallas en Stitch, exportó las imágenes como referencias visuales y le pidió a Claude Code que implementara el frontend usando esas imágenes como guía. El resultado fue un sitio moderno y funcional en pocas horas. El hilo generó mucha discusión sobre la viabilidad de este workflow para proyectos de clientes.",
+    "links": ["https://salta.dev", "https://github.com/Salta-Dev/saltadev-website"]
   },
   {
     "date": "2026-02-17",
     "title": "PCN Dev Meetup: encuentro presencial en once57 cowork, Tucumán",
-    "summary": "Se anunció el PCN Dev Meetup para el 20 de febrero en once57, un espacio de coworking en Tucumán. El grupo organizó la participación con entusiasmo. Se discutieron los temas a cubrir en el encuentro: workflows con IA, experiencias con Claude Code, y proyectos de los miembros. Varios confirmaron asistencia. El meetup congregó a más de 20 personas de la comunidad. Después del evento, varios miembros compartieron fotos y comentaron que había sido una reunión muy productiva, con demos en vivo de herramientas de IA y conversaciones técnicas sobre proyectos reales."
+    "summary": "Se anunció el PCN Dev Meetup para el 20 de febrero en once57, un espacio de coworking en Tucumán. El grupo organizó la participación con entusiasmo. Se discutieron los temas a cubrir en el encuentro: workflows con IA, experiencias con Claude Code, y proyectos de los miembros. Varios confirmaron asistencia. El meetup congregó a más de 20 personas de la comunidad. Después del evento, varios miembros compartieron fotos y comentaron que había sido una reunión muy productiva, con demos en vivo de herramientas de IA y conversaciones técnicas sobre proyectos reales.",
+    "links": [
+      "https://programaconnosotros.com/meetup",
+      "https://www.linkedin.com/posts/programa-con-nosotros_new-devmeetup-este-viernes-nos-reunimos-activity-7429720813546708992-ki4B"
+    ]
   },
   {
     "date": "2026-02-19",
@@ -72,7 +83,8 @@
   {
     "date": "2026-02-22",
     "title": "Context drift en RAG y Knowledge Slots como solución para Macch",
-    "summary": "El grupo tuvo una discusión técnica profunda sobre el problema de context drift en sistemas RAG (Retrieval Augmented Generation): el fenómeno por el cual el modelo pierde coherencia cuando el contexto recuperado es contradictorio o muy extenso. Facundo García presentó la solución que estaban implementando en Macch: Knowledge Slots, un sistema de ranuras de conocimiento predefinidas que organizaban el contexto recuperado de manera estructurada antes de enviarlo al modelo. Se discutió cómo esta arquitectura reducía el ruido y mejoraba la consistencia de las respuestas. Varios miembros encontraron el concepto útil para sus propios proyectos con RAG."
+    "summary": "El grupo tuvo una discusión técnica profunda sobre el problema de context drift en sistemas RAG (Retrieval Augmented Generation): el fenómeno por el cual el modelo pierde coherencia cuando el contexto recuperado es contradictorio o muy extenso. Facundo García presentó la solución que estaban implementando en Macch: Knowledge Slots, un sistema de ranuras de conocimiento predefinidas que organizaban el contexto recuperado de manera estructurada antes de enviarlo al modelo. Se discutió cómo esta arquitectura reducía el ruido y mejoraba la consistencia de las respuestas. Varios miembros encontraron el concepto útil para sus propios proyectos con RAG.",
+    "links": ["https://screen.studio/share/ksiih5tS"]
   },
   {
     "date": "2026-02-26",
@@ -82,11 +94,17 @@
   {
     "date": "2026-02-26",
     "title": "Tips anti-distracción: Onesec, ScreenZen y Técnica Pomodoro",
-    "summary": "Rodrigo compartió su stack de herramientas para combatir las distracciones durante el trabajo: Onesec (que añade fricción al abrir apps distractoras), ScreenZen (para limitar tiempo en apps) y la técnica Pomodoro para bloques de trabajo concentrado. El grupo compartió sus propias estrategias. Matías mencionó que tenía el teléfono en modo avión durante sesiones de trabajo profundo. Facundo comentó que las notificaciones de Slack y WhatsApp eran los principales disruptores en trabajo remoto. Se discutió si las herramientas de restricción eran más efectivas que simplemente construir el hábito de no revisar el teléfono. La conversación generó varias recomendaciones prácticas."
+    "summary": "Rodrigo compartió su stack de herramientas para combatir las distracciones durante el trabajo: Onesec (que añade fricción al abrir apps distractoras), ScreenZen (para limitar tiempo en apps) y la técnica Pomodoro para bloques de trabajo concentrado. El grupo compartió sus propias estrategias. Matías mencionó que tenía el teléfono en modo avión durante sesiones de trabajo profundo. Facundo comentó que las notificaciones de Slack y WhatsApp eran los principales disruptores en trabajo remoto. Se discutió si las herramientas de restricción eran más efectivas que simplemente construir el hábito de no revisar el teléfono. La conversación generó varias recomendaciones prácticas.",
+    "links": [
+      "https://www.youtube.com/watch?v=7jVb1lLniEw",
+      "https://www.youtube.com/@reysu",
+      "https://listado.mercadolibre.com.ar/temporizador-breivs-doble-timer-pomodoro-digital-crono-iman"
+    ]
   },
   {
     "date": "2026-02-26",
     "title": "Jack Dorsey y Block: recorte del 50% del staff por automatización con IA",
-    "summary": "Volvió al grupo la noticia de que Jack Dorsey había ejecutado recortes del 50% del staff de Block, explicando públicamente que la IA permitía a equipos más pequeños hacer el trabajo de equipos grandes. El grupo tuvo reacciones divididas. Algunos argumentaron que era una señal de lo que venía para la industria tech. Otros cuestionaron si la justificación con IA era genuina o era una narrativa para cubrir decisiones financieras. Facundo comentó que las empresas que recortaban staff 'por IA' solían hacerlo también por razones de rentabilidad y que mezclar ambas justificaciones era engañoso. Se debatió la responsabilidad ética de los CEOs que usaban la IA como justificación para reducir costos laborales."
+    "summary": "Volvió al grupo la noticia de que Jack Dorsey había ejecutado recortes del 50% del staff de Block, explicando públicamente que la IA permitía a equipos más pequeños hacer el trabajo de equipos grandes. El grupo tuvo reacciones divididas. Algunos argumentaron que era una señal de lo que venía para la industria tech. Otros cuestionaron si la justificación con IA era genuina o era una narrativa para cubrir decisiones financieras. Facundo comentó que las empresas que recortaban staff 'por IA' solían hacerlo también por razones de rentabilidad y que mezclar ambas justificaciones era engañoso. Se debatió la responsabilidad ética de los CEOs que usaban la IA como justificación para reducir costos laborales.",
+    "links": ["https://x.com/i/status/2027129697092731343"]
   }
 ]

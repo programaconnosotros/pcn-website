@@ -12,7 +12,8 @@
   {
     "title": "Herramientas de productividad y gestión de proyectos: Notion vs Obsidian vs Trello",
     "date": "2025-06-04",
-    "summary": "Matias Gutierrez preguntó qué herramientas usaban para organizarse y gestionar proyectos, ya que no le encontraba la vuelta a Notion. Juan Arismendi recomendó Trello y lo describió en detalle: tableros por proyecto, fechas límite, checklists dentro de cada tarea, integración con Google Calendar. Marcelo Nuñez mencionó Linear como su favorita del laburo, con 250 tickets gratuitos. Facundo García Martoni hizo una defensa encendida de Obsidian sobre Notion: es local (sin latencia de servidor), los archivos son .md propios del usuario (no quedan rehenes de ninguna empresa), totalmente customizable con plugins de la comunidad como Kanbans, sincronización gratuita vía Remotely Save con OneDrive, colaboración en tiempo real con plugin gratuito, y bloques de código con highlight para múltiples lenguajes incluyendo GraphQL. Facundo Padilla presentó el combo Notion + Notion Calendar como su flujo actual. Leandro Contrera recomendó Clockify para time tracking personal del estudio: permite saber cuánto tiempo dedicás por materia y comparar semanas. Ariel Basabe mencionó Pumble como clon gratuito de Slack."
+    "summary": "Matias Gutierrez preguntó qué herramientas usaban para organizarse y gestionar proyectos, ya que no le encontraba la vuelta a Notion. Juan Arismendi recomendó Trello y lo describió en detalle: tableros por proyecto, fechas límite, checklists dentro de cada tarea, integración con Google Calendar. Marcelo Nuñez mencionó Linear como su favorita del laburo, con 250 tickets gratuitos. Facundo García Martoni hizo una defensa encendida de Obsidian sobre Notion: es local (sin latencia de servidor), los archivos son .md propios del usuario (no quedan rehenes de ninguna empresa), totalmente customizable con plugins de la comunidad como Kanbans, sincronización gratuita vía Remotely Save con OneDrive, colaboración en tiempo real con plugin gratuito, y bloques de código con highlight para múltiples lenguajes incluyendo GraphQL. Facundo Padilla presentó el combo Notion + Notion Calendar como su flujo actual. Leandro Contrera recomendó Clockify para time tracking personal del estudio: permite saber cuánto tiempo dedicás por materia y comparar semanas. Ariel Basabe mencionó Pumble como clon gratuito de Slack.",
+    "links": ["https://pumble.com/es/"]
   },
   {
     "title": "Autenticación segura para plataforma de juegos web con suscripción",
@@ -27,7 +28,8 @@
   {
     "title": "Outlier/Remotasks: changas entrenando modelos de IA",
     "date": "2025-06-06",
-    "summary": "Carlos Spagnolo compartió un mensaje de LinkedIn de Outlier ofreciéndole un rol remoto/freelance para entrenar modelos de IA. Juan Arismendi contó que había trabajado con ellos cuando se llamaban Remotasks y que son la misma empresa. Explicó en detalle cómo funcionaba: primero una entrevista con live coding simple, luego asignaban un sueldo por hora (en su caso $11/hora) y acceso a la plataforma. Las tareas incluían comparar dos respuestas de IA y elegir la mejor con justificación, inventar prompts de dificultad media, o crear respuestas modelo para entrenar la IA de clientes como Nvidia, OpenAI o Meta. Juan contó que en un día con incentivo especial llegó a hacer $300-400 dólares. El trabajo era muy repetitivo y podían bajarte el sueldo o dejar de mandarte tareas sin aviso. La discusión concluyó que sirve como changa flexible cuando no hay otro trabajo, pero el pago depende mucho de con qué proyecto te asignen."
+    "summary": "Carlos Spagnolo compartió un mensaje de LinkedIn de Outlier ofreciéndole un rol remoto/freelance para entrenar modelos de IA. Juan Arismendi contó que había trabajado con ellos cuando se llamaban Remotasks y que son la misma empresa. Explicó en detalle cómo funcionaba: primero una entrevista con live coding simple, luego asignaban un sueldo por hora (en su caso $11/hora) y acceso a la plataforma. Las tareas incluían comparar dos respuestas de IA y elegir la mejor con justificación, inventar prompts de dificultad media, o crear respuestas modelo para entrenar la IA de clientes como Nvidia, OpenAI o Meta. Juan contó que en un día con incentivo especial llegó a hacer $300-400 dólares. El trabajo era muy repetitivo y podían bajarte el sueldo o dejar de mandarte tareas sin aviso. La discusión concluyó que sirve como changa flexible cuando no hay otro trabajo, pero el pago depende mucho de con qué proyecto te asignen.",
+    "links": ["https://outlier.ai/"]
   },
   {
     "title": "Implementación de Maybe monad en Python para evitar null",
@@ -52,17 +54,28 @@
   {
     "title": "Informe salarial IT Argentina 2024 (CESSI): datos y debate",
     "date": "2025-06-10",
-    "summary": "Facundo Padilla compartió datos del informe de CESSI/OPSSI sobre el sector IT argentino: el 53% de las empresas actualiza sueldos trimestralmente, la mediana proyectada para el primer trimestre de 2025 era de $2.656.800, el 88% de las empresas trabaja en forma remota (39% total y 49% híbrido), y la rotación cayó al 20% en 2024. Ariel Basabe expresó escepticismo sobre los números, argumentando que los salarios reales que veía en el mercado de Buenos Aires eran mucho más bajos para juniors. Para ilustrarlo compartió una oferta real de una empresa en Belgrano buscando un analista .NET con 3 años de experiencia pagando solo $654.645 bruto mensuales, presencial. Alejo Boga señaló que el stack de esa empresa (tecnología vieja) explicaba los salarios bajos. El grupo coincidió en que era una oferta abusiva."
+    "summary": "Facundo Padilla compartió datos del informe de CESSI/OPSSI sobre el sector IT argentino: el 53% de las empresas actualiza sueldos trimestralmente, la mediana proyectada para el primer trimestre de 2025 era de $2.656.800, el 88% de las empresas trabaja en forma remota (39% total y 49% híbrido), y la rotación cayó al 20% en 2024. Ariel Basabe expresó escepticismo sobre los números, argumentando que los salarios reales que veía en el mercado de Buenos Aires eran mucho más bajos para juniors. Para ilustrarlo compartió una oferta real de una empresa en Belgrano buscando un analista .NET con 3 años de experiencia pagando solo $654.645 bruto mensuales, presencial. Alejo Boga señaló que el stack de esa empresa (tecnología vieja) explicaba los salarios bajos. El grupo coincidió en que era una oferta abusiva.",
+    "links": [
+      "https://cessi.org.ar/",
+      "https://informaticos.ar/ante-el-vergonzoso-comunicado-de-cessi-por-el-dictamen-del-mono-tech/"
+    ]
   },
   {
     "title": "Google AI Studio y Gemini 2.5 Pro: 1 millón de tokens gratis",
     "date": "2025-06-11",
-    "summary": "Gonzalo Morales comentó que había probado Google AI Studio por primera vez y le dejó una buena impresión. Explicó que la plataforma sirve para experimentar con los modelos de Google y que ofrecía 1.000.000 tokens gratuitos con Gemini 2.5 Pro Preview. Compartió el link directo (aistudio.google.com) y reconoció que su uso principal era ahorrar tiempo en tareas manuales, sin ser experto en IA. Facundo Padilla probó la plataforma en el momento y la encontró algo lenta para responder. Gonzalo confirmó que sí era más lenta que Claude pero que al ser gratuita le resultaba suficiente y cómoda. Agustín Sánchez había compartido días antes que Gemini Advanced incluía 2TB de almacenamiento en Google Drive como beneficio, haciendo el plan muy atractivo para quienes necesitaban esa combinación."
+    "summary": "Gonzalo Morales comentó que había probado Google AI Studio por primera vez y le dejó una buena impresión. Explicó que la plataforma sirve para experimentar con los modelos de Google y que ofrecía 1.000.000 tokens gratuitos con Gemini 2.5 Pro Preview. Compartió el link directo (aistudio.google.com) y reconoció que su uso principal era ahorrar tiempo en tareas manuales, sin ser experto en IA. Facundo Padilla probó la plataforma en el momento y la encontró algo lenta para responder. Gonzalo confirmó que sí era más lenta que Claude pero que al ser gratuita le resultaba suficiente y cómoda. Agustín Sánchez había compartido días antes que Gemini Advanced incluía 2TB de almacenamiento en Google Drive como beneficio, haciendo el plan muy atractivo para quienes necesitaban esa combinación.",
+    "links": ["https://aistudio.google.com/"]
   },
   {
     "title": "Recursos para aprender programación desde cero",
     "date": "2025-06-12",
-    "summary": "Un integrante preguntó si valía la pena aprender a programar y por dónde arrancar, sin saber nada del tema. Marcelo Nuñez respondió calurosamente recomendando empezar con Python (el más fácil de aprender) o TypeScript (permite hacer frontend y backend), aclarando que requería esfuerzo y dedicación. Facundo García Martoni sumó recursos concretos: FreeCodeCamp en español, los cursos de MiduDev, la app Brilliant y Boot.dev para aprender de forma lúdica, y el Curso de Fundamentos de Ingeniería de Software de Freddy Vega. Destacó que cuando uno se vuelve bueno aparece la plata, y que uno de los lujos del rubro es el trabajo remoto. Ariel Basabe compartió cuatro canales de YouTube en español que fueron sus mentores: Juan Diaz, pildorasinformaticas, Fernando Herrera y Código con Juan. Agregó que todo depende de cómo manejás la frustración cuando las cosas no salen de una."
+    "summary": "Un integrante preguntó si valía la pena aprender a programar y por dónde arrancar, sin saber nada del tema. Marcelo Nuñez respondió calurosamente recomendando empezar con Python (el más fácil de aprender) o TypeScript (permite hacer frontend y backend), aclarando que requería esfuerzo y dedicación. Facundo García Martoni sumó recursos concretos: FreeCodeCamp en español, los cursos de MiduDev, la app Brilliant y Boot.dev para aprender de forma lúdica, y el Curso de Fundamentos de Ingeniería de Software de Freddy Vega. Destacó que cuando uno se vuelve bueno aparece la plata, y que uno de los lujos del rubro es el trabajo remoto. Ariel Basabe compartió cuatro canales de YouTube en español que fueron sus mentores: Juan Diaz, pildorasinformaticas, Fernando Herrera y Código con Juan. Agregó que todo depende de cómo manejás la frustración cuando las cosas no salen de una.",
+    "links": [
+      "https://youtube.com/playlist?list=PL2Z95CSZ1N4GMwrkJUarWX6SqOyF_B84l",
+      "https://youtube.com/@pildorasinformaticas",
+      "https://youtube.com/@fernando_her85",
+      "https://youtube.com/channel/UCbQCKBuL_gYvl8Z8zvObJog/C%C3%B3digoconJuan"
+    ]
   },
   {
     "title": "Debate C# vs Java: performance, Blazor y stacks universitarios",
@@ -77,7 +90,8 @@
   {
     "title": "Librería para generar PDFs con tablas en JavaScript",
     "date": "2025-06-12",
-    "summary": "Agustín Sánchez preguntó al grupo qué librería recomendaban para generar PDFs con tablas en JavaScript. Matias Gutierrez recomendó HTML2PDF: la herramienta toma HTML con sus estilos tal cual y lo convierte en PDF, haciendo esencialmente un screenshot del contenido. Matias mostró un ejemplo de factura que había generado así. La solución de HTML2PDF fue bien recibida por su simplicidad: no requiere aprender una API específica de PDF sino simplemente escribir HTML y CSS normales."
+    "summary": "Agustín Sánchez preguntó al grupo qué librería recomendaban para generar PDFs con tablas en JavaScript. Matias Gutierrez recomendó HTML2PDF: la herramienta toma HTML con sus estilos tal cual y lo convierte en PDF, haciendo esencialmente un screenshot del contenido. Matias mostró un ejemplo de factura que había generado así. La solución de HTML2PDF fue bien recibida por su simplicidad: no requiere aprender una API específica de PDF sino simplemente escribir HTML y CSS normales.",
+    "links": ["https://www.instagram.com/reel/DK0SiVBuV59/"]
   },
   {
     "title": "Experiencia demostrable en entrevistas: freelance, startups y CVs en inglés",
@@ -87,12 +101,14 @@
   {
     "title": "Cómo deployar backend Java + PostgreSQL en un VPS con Docker",
     "date": "2025-06-13",
-    "summary": "Un integrante del grupo preguntó cómo desplegar un backend en Java con base de datos PostgreSQL en un VPS, sin idea de por dónde arrancar. Germán Navarro explicó que sin Docker habría que instalar manualmente JDK, Maven, Postgres e inicializar la base desde la CLI. Con Docker el proceso es mucho más limpio: un Dockerfile declara todos los pasos para resolver dependencias en el container, y las imágenes oficiales de Postgres permiten configurar todo con variables de entorno. Facundo Padilla explicó el concepto más a fondo: Docker descarga imágenes y crea un pipeline con reglas de networking aisladas para levantar el entorno limpio. Germán mencionó Kamal como herramienta de automatización de deployment que se usa en el repositorio de PCN (con GitHub Actions)."
+    "summary": "Un integrante del grupo preguntó cómo desplegar un backend en Java con base de datos PostgreSQL en un VPS, sin idea de por dónde arrancar. Germán Navarro explicó que sin Docker habría que instalar manualmente JDK, Maven, Postgres e inicializar la base desde la CLI. Con Docker el proceso es mucho más limpio: un Dockerfile declara todos los pasos para resolver dependencias en el container, y las imágenes oficiales de Postgres permiten configurar todo con variables de entorno. Facundo Padilla explicó el concepto más a fondo: Docker descarga imágenes y crea un pipeline con reglas de networking aisladas para levantar el entorno limpio. Germán mencionó Kamal como herramienta de automatización de deployment que se usa en el repositorio de PCN (con GitHub Actions).",
+    "links": ["https://kamal-deploy.org/", "https://github.com/programaconnosotros/pcn-website"]
   },
   {
     "title": "Apple lanza su propia herramienta de containers nativa (alternativa a Docker Desktop)",
     "date": "2025-06-16",
-    "summary": "Germán Navarro compartió un video sobre la herramienta de containers nativa que Apple sacó para Mac, que reemplazaría Docker Desktop, aunque todavía sin soporte para Compose. Facundo Padilla la comparó con Linux Containers. La reacción general fue de cansancio ante la tendencia de Apple de inventar sus propias versiones de herramientas existentes. También se mencionó OrbStack como una alternativa liviana a Docker Desktop para Mac. El grupo no vio razón urgente para migrar mientras Docker Desktop siga funcionando y Compose no sea soportado en la alternativa de Apple."
+    "summary": "Germán Navarro compartió un video sobre la herramienta de containers nativa que Apple sacó para Mac, que reemplazaría Docker Desktop, aunque todavía sin soporte para Compose. Facundo Padilla la comparó con Linux Containers. La reacción general fue de cansancio ante la tendencia de Apple de inventar sus propias versiones de herramientas existentes. También se mencionó OrbStack como una alternativa liviana a Docker Desktop para Mac. El grupo no vio razón urgente para migrar mientras Docker Desktop siga funcionando y Compose no sea soportado en la alternativa de Apple.",
+    "links": ["https://orbstack.dev/"]
   },
   {
     "title": "OverTheWire y cómo mejorar el manejo avanzado de la terminal",
@@ -107,17 +123,27 @@
   {
     "title": "delta: superpoderes para git diff en la terminal",
     "date": "2025-06-20",
-    "summary": "Facundo García Martoni compartió el repositorio github.com/dandavison/delta, describiendo el proyecto como un comando que le da 'superpoderes' a git diff. Destacó que el diff se ve clarísimo y con colores, muy similar al de Cursor o VS Code, y que lo encontró mientras intentaba migrar su flujo de trabajo a la terminal. Marcelo Nuñez reaccionó con entusiasmo, dijo que vive en la terminal y que lo iba a usar. Marcelo además compartió un video de Neovim para los que quisieran ir más a fondo. Facundo aclaró que había probado Neovim meses atrás sin poder acostumbrarse, pero que ahora se sentía obligado a intentarlo de nuevo."
+    "summary": "Facundo García Martoni compartió el repositorio github.com/dandavison/delta, describiendo el proyecto como un comando que le da 'superpoderes' a git diff. Destacó que el diff se ve clarísimo y con colores, muy similar al de Cursor o VS Code, y que lo encontró mientras intentaba migrar su flujo de trabajo a la terminal. Marcelo Nuñez reaccionó con entusiasmo, dijo que vive en la terminal y que lo iba a usar. Marcelo además compartió un video de Neovim para los que quisieran ir más a fondo. Facundo aclaró que había probado Neovim meses atrás sin poder acostumbrarse, pero que ahora se sentía obligado a intentarlo de nuevo.",
+    "links": ["https://github.com/dandavison/delta", "https://youtu.be/Mtgo-nP_r8Y"]
   },
   {
     "title": "SvelteKit vs Next.js: debate de frameworks frontend",
     "date": "2025-06-20",
-    "summary": "Exequiel De Freitas anunció que eligió 'no ser feliz con Next' y se pasó a SvelteKit para un proyecto de prueba. Marcelo Nuñez compartió el artículo de Northflank sobre por qué abandonaron Next.js. Agustín Sánchez lo leyó completo y planteó que le faltaba credibilidad porque no mostraban el código que tenían en Next.js; sospechó que no lo estaban usando bien. Marcelo explicó que la empresa se quejaba principalmente de la personalización del SSR y los problemas con SEO a gran escala, y que terminaron construyendo su propio framework. El takeaway principal que rescató Marcelo fue 'no enamorarse de un framework' y animarse a entender cómo funcionan por dentro. Exequiel citó a Goncy y sus proyectos integrales en Next como ejemplo de que el problema suele ser no saber usar bien el framework."
+    "summary": "Exequiel De Freitas anunció que eligió 'no ser feliz con Next' y se pasó a SvelteKit para un proyecto de prueba. Marcelo Nuñez compartió el artículo de Northflank sobre por qué abandonaron Next.js. Agustín Sánchez lo leyó completo y planteó que le faltaba credibilidad porque no mostraban el código que tenían en Next.js; sospechó que no lo estaban usando bien. Marcelo explicó que la empresa se quejaba principalmente de la personalización del SSR y los problemas con SEO a gran escala, y que terminaron construyendo su propio framework. El takeaway principal que rescató Marcelo fue 'no enamorarse de un framework' y animarse a entender cómo funcionan por dentro. Exequiel citó a Goncy y sus proyectos integrales en Next como ejemplo de que el problema suele ser no saber usar bien el framework.",
+    "links": [
+      "https://northflank.com/blog/why-we-ditched-next-js-and-never-looked-back",
+      "https://news.ycombinator.com/item?id=43129267",
+      "https://www.linkedin.com/posts/william-j-stewart_nextjs-makes-big-promises-at-scale-it-activity-7298740792628596736-iC85/"
+    ]
   },
   {
     "title": "NeetCode: plataforma de cursos para practicar programación",
     "date": "2025-06-22",
-    "summary": "Leandro Contrera compartió neetcode.io/courses preguntando si alguien la conocía. Agustín Sánchez respondió que no la conocía pero que tenía muy buena pinta. Facundo Padilla también la revisó y la encontró interesante. Agustín comentó que el recurso lo inspiró a crear una issue en el repositorio del website de PCN para agregar una sección similar de recursos de aprendizaje. El hilo fue breve pero dejó una acción concreta sobre el producto de la comunidad."
+    "summary": "Leandro Contrera compartió neetcode.io/courses preguntando si alguien la conocía. Agustín Sánchez respondió que no la conocía pero que tenía muy buena pinta. Facundo Padilla también la revisó y la encontró interesante. Agustín comentó que el recurso lo inspiró a crear una issue en el repositorio del website de PCN para agregar una sección similar de recursos de aprendizaje. El hilo fue breve pero dejó una acción concreta sobre el producto de la comunidad.",
+    "links": [
+      "https://neetcode.io/courses",
+      "https://github.com/programaconnosotros/pcn-website/issues/194"
+    ]
   },
   {
     "title": "Cursos gratuitos de IA de Google: 10 recursos",

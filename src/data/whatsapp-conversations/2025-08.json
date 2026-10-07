@@ -2,7 +2,8 @@
   {
     "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
     "date": "2025-08-07",
-    "summary": "Facundo García Martoni hizo un resumen de la conferencia de GPT-5: cambios de colores de chats, el modelo de voz mejoró, se aflojan los guardrails, el creador de Cursor fue invitado a hablar, viene finetuneado para frontend. Facundo fue escéptico: 'el core es igual'. Iñaki Fernando Lozano hizo una review más detallada: es aproximadamente un 40% más barato que Sonnet, hace más caso a las instrucciones, no repite innecesariamente, errorea menos en tool calls. Destacó el mejor performance con contexto largo. Sin embargo, tras una semana de uso intensivo, Facundo García Martoni siguió prefiriendo Claude Sonnet 4. Para la vida diaria apostaba a Gemini, especialmente por Deep Research y la calidad de generación de imágenes/video de Gemini 2.5 Pro."
+    "summary": "Facundo García Martoni hizo un resumen de la conferencia de GPT-5: cambios de colores de chats, el modelo de voz mejoró, se aflojan los guardrails, el creador de Cursor fue invitado a hablar, viene finetuneado para frontend. Facundo fue escéptico: 'el core es igual'. Iñaki Fernando Lozano hizo una review más detallada: es aproximadamente un 40% más barato que Sonnet, hace más caso a las instrucciones, no repite innecesariamente, errorea menos en tool calls. Destacó el mejor performance con contexto largo. Sin embargo, tras una semana de uso intensivo, Facundo García Martoni siguió prefiriendo Claude Sonnet 4. Para la vida diaria apostaba a Gemini, especialmente por Deep Research y la calidad de generación de imágenes/video de Gemini 2.5 Pro.",
+    "links": ["https://x.com/sama/status/1953893841381273969"]
   },
   {
     "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",

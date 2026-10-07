@@ -70,6 +70,8 @@ const PHONE_LIKE = /\+?\d[\d\s()\u2011-]{6,}\d/g;
 const isPhone = (text) => text.replace(/\D/g, '').length >= 8;
 const maskPhones = (text) => text.replace(PHONE_LIKE, (m) => (isPhone(m) ? '[teléfono]' : m));
 const hasPhone = (text) => (text.match(PHONE_LIKE) ?? []).some(isPhone);
+const PRIVATE_LINK =
+  /(chat\.whatsapp\.com|wa\.me|api\.whatsapp|meet\.google|zoom\.us\/j|calendly|forms\.gle|docs\.google\.com\/forms|drive\.google|bit\.ly|linktr\.ee|t\.me\/)/i;
 
 // Invisible direction marks WhatsApp wraps names, mentions and numbers in.
 const INVISIBLE = /[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g;
@@ -240,9 +242,20 @@ const check = () => {
     entries.forEach((entry, i) => {
       total++;
       const where = `${file}[${i}]`;
-      const keys = Object.keys(entry).sort().join(',');
+      const keys = Object.keys(entry)
+        .filter((key) => key !== 'links')
+        .sort()
+        .join(',');
       if (keys !== 'date,summary,title' && keys !== 'date,eventId,summary,title')
         problems.push(`${where}: campos ${keys}`);
+      if ('links' in entry) {
+        if (!Array.isArray(entry.links) || entry.links.length === 0)
+          problems.push(`${where}: links vacío`);
+        else
+          for (const url of entry.links)
+            if (!/^https?:\/\/\S+$/.test(url)) problems.push(`${where}: link inválido ${url}`);
+            else if (PRIVATE_LINK.test(url)) problems.push(`${where}: link privado ${url}`);
+      }
       if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date ?? '')) problems.push(`${where}: fecha inválida`);
       else if (!entry.date.startsWith(month)) problems.push(`${where}: ${entry.date} fuera de mes`);
       if (i > 0 && entry.date < entries[i - 1].date) problems.push(`${where}: fuera de orden`);

@@ -7,12 +7,20 @@
   {
     "date": "2025-05-03",
     "title": "Go para principiantes: recursos y primeros pasos en el lenguaje",
-    "summary": "Sebastián preguntó por dónde empezar a aprender Go. El grupo recomendó el tour oficial en tour.golang.org como primer paso, seguido del libro 'The Go Programming Language'. Facundo mencionó que Go tenía una curva de aprendizaje muy baja para quien ya sabía algún lenguaje compilado. Se destacaron las goroutines y channels como el concepto más importante a entender de Go para aprovechar su modelo de concurrencia. Alguien compartió el repositorio awesome-go como colección de librerías y recursos. Se discutió en qué contextos brillaba Go: CLIs, APIs de alto rendimiento y herramientas de infraestructura como Docker y Kubernetes que estaban escritas en Go."
+    "summary": "Sebastián preguntó por dónde empezar a aprender Go. El grupo recomendó el tour oficial en tour.golang.org como primer paso, seguido del libro 'The Go Programming Language'. Facundo mencionó que Go tenía una curva de aprendizaje muy baja para quien ya sabía algún lenguaje compilado. Se destacaron las goroutines y channels como el concepto más importante a entender de Go para aprovechar su modelo de concurrencia. Alguien compartió el repositorio awesome-go como colección de librerías y recursos. Se discutió en qué contextos brillaba Go: CLIs, APIs de alto rendimiento y herramientas de infraestructura como Docker y Kubernetes que estaban escritas en Go.",
+    "links": [
+      "https://stackoverflow.com/questions/38517593/relative-imports-in-go",
+      "https://github.com/Farber98/cc-solutions/blob/ab1c94e91ecb26fd0b5426830b1b67a5f99fb780/jsonparser/main.go"
+    ]
   },
   {
     "date": "2025-05-03",
     "title": "LeetCode: solución de sorted squares en O(n) con two pointers",
-    "summary": "Uno de los miembros compartió un problema de LeetCode que había resuelto recientemente: el de squares of a sorted array. Explicó que la solución naive era elevar al cuadrado y ordenar en O(n log n), pero que con la técnica de two pointers desde los extremos del array se podía resolver en O(n) aprovechando que el array estaba ordenado. El grupo siguió la explicación con interés y algunos propusieron variantes del problema. Facundo comentó que los dos pointers era uno de los patrones más útiles para dominar en entrevistas técnicas. Se discutió cuándo y cómo practicar LeetCode de manera efectiva sin gastar meses en problemas irrelevantes."
+    "summary": "Uno de los miembros compartió un problema de LeetCode que había resuelto recientemente: el de squares of a sorted array. Explicó que la solución naive era elevar al cuadrado y ordenar en O(n log n), pero que con la técnica de two pointers desde los extremos del array se podía resolver en O(n) aprovechando que el array estaba ordenado. El grupo siguió la explicación con interés y algunos propusieron variantes del problema. Facundo comentó que los dos pointers era uno de los patrones más útiles para dominar en entrevistas técnicas. Se discutió cuándo y cómo practicar LeetCode de manera efectiva sin gastar meses en problemas irrelevantes.",
+    "links": [
+      "https://leetcode.com/explore/featured/card/leetcodes-interview-crash-course-data-structures-and-algorithms/",
+      "https://youtu.be/uGrBHohIgQY"
+    ]
   },
   {
     "date": "2025-05-04",
@@ -22,7 +30,8 @@
   {
     "date": "2025-05-06",
     "title": "Uncle Bob y SOLID: crítica al dogmatismo técnico",
-    "summary": "Facundo Gelatti compartió sus reflexiones críticas sobre el dogmatismo en torno a Uncle Bob y los principios SOLID. Argumentó que muchos desarrolladores aplicaban SOLID mecánicamente sin entender el contexto en que cada principio tenía sentido. Varios miembros debatieron los límites del principio de responsabilidad única y cuándo la sobre-abstracción hacía el código más difícil de entender. Se mencionó que el propio Martin Fowler había dicho que el SRP era el más malinterpretado de los SOLID. Agustín señaló que los principios eran guías, no reglas absolutas, y que el pragmatismo dependía del tamaño y ciclo de vida del proyecto. La conversación fue técnicamente rica y generó múltiples perspectivas sobre el rol de los patrones en el diseño de software real."
+    "summary": "Facundo Gelatti compartió sus reflexiones críticas sobre el dogmatismo en torno a Uncle Bob y los principios SOLID. Argumentó que muchos desarrolladores aplicaban SOLID mecánicamente sin entender el contexto en que cada principio tenía sentido. Varios miembros debatieron los límites del principio de responsabilidad única y cuándo la sobre-abstracción hacía el código más difícil de entender. Se mencionó que el propio Martin Fowler había dicho que el SRP era el más malinterpretado de los SOLID. Agustín señaló que los principios eran guías, no reglas absolutas, y que el pragmatismo dependía del tamaño y ciclo de vida del proyecto. La conversación fue técnicamente rica y generó múltiples perspectivas sobre el rol de los patrones en el diseño de software real.",
+    "links": ["https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html"]
   },
   {
     "date": "2025-05-07",
@@ -52,7 +61,8 @@
   {
     "date": "2025-05-09",
     "title": "Arch Linux con Hyprland: setup minimalista de Matías",
-    "summary": "Matías compartió fotos de su setup con Arch Linux y el compositor de ventanas Hyprland, que había configurado desde cero. El grupo quedó impresionado con la estética del escritorio personalizado con colores, fuentes y animaciones. Se discutió la curva de aprendizaje de Arch Linux y si valía la pena el tiempo de configuración versus usar una distro como Manjaro o Fedora que venían más listas. Matías argumentó que la instalación manual de Arch le había enseñado cómo funcionaba Linux internamente. Varios preguntaron por su configuración de Neovim y los dotfiles. Facundo comentó que Hyprland era bonito pero que prefería algo más estable para trabajo."
+    "summary": "Matías compartió fotos de su setup con Arch Linux y el compositor de ventanas Hyprland, que había configurado desde cero. El grupo quedó impresionado con la estética del escritorio personalizado con colores, fuentes y animaciones. Se discutió la curva de aprendizaje de Arch Linux y si valía la pena el tiempo de configuración versus usar una distro como Manjaro o Fedora que venían más listas. Matías argumentó que la instalación manual de Arch le había enseñado cómo funcionaba Linux internamente. Varios preguntaron por su configuración de Neovim y los dotfiles. Facundo comentó que Hyprland era bonito pero que prefería algo más estable para trabajo.",
+    "links": ["https://www.reddit.com/r/unixporn/"]
   },
   {
     "date": "2025-05-09",
@@ -72,22 +82,28 @@
   {
     "date": "2025-05-12",
     "title": "Repositorio para aprender TypeScript: recursos recomendados",
-    "summary": "Alguien preguntó por recursos para aprender TypeScript de manera sistemática más allá de la documentación oficial. El grupo recomendó el repositorio type-challenges en GitHub como colección de ejercicios progresivos sobre el sistema de tipos. Se mencionó el curso de TypeScript de Matt Pocock como uno de los más actualizados. Facundo compartió que el error más común era usar TypeScript como si fuera JavaScript con anotaciones, sin aprovechar el sistema de tipos avanzado. Se recomendó también el handbook oficial y el playground de TypeScript para experimentar con tipos complejos en el browser sin configurar nada."
+    "summary": "Alguien preguntó por recursos para aprender TypeScript de manera sistemática más allá de la documentación oficial. El grupo recomendó el repositorio type-challenges en GitHub como colección de ejercicios progresivos sobre el sistema de tipos. Se mencionó el curso de TypeScript de Matt Pocock como uno de los más actualizados. Facundo compartió que el error más común era usar TypeScript como si fuera JavaScript con anotaciones, sin aprovechar el sistema de tipos avanzado. Se recomendó también el handbook oficial y el playground de TypeScript para experimentar con tipos complejos en el browser sin configurar nada.",
+    "links": ["https://github.com/IEEESBITBA/curso-typescript/tree/main"]
   },
   {
     "date": "2025-05-13",
     "title": "Firefox y Zen Browser vs Chrome y Brave: debate de navegadores",
-    "summary": "El grupo debatió qué navegador usar para desarrollo web. Firefox fue recomendado por sus herramientas de developer tools, especialmente el inspector de layout CSS que se consideraba superior al de Chrome. Zen Browser, un fork de Firefox con UI personalizada, fue mencionado como alternativa estética. Brave fue elogiado por el bloqueo de ads integrado y la privacidad, aunque algunos señalaban inconsistencias en la compatibilidad con sitios. Chrome fue defendido por ser el estándar de facto y representar mejor la experiencia de la mayoría de usuarios. Facundo mencionó que usaba Chrome para trabajo y Firefox como navegador de uso general por la privacidad."
+    "summary": "El grupo debatió qué navegador usar para desarrollo web. Firefox fue recomendado por sus herramientas de developer tools, especialmente el inspector de layout CSS que se consideraba superior al de Chrome. Zen Browser, un fork de Firefox con UI personalizada, fue mencionado como alternativa estética. Brave fue elogiado por el bloqueo de ads integrado y la privacidad, aunque algunos señalaban inconsistencias en la compatibilidad con sitios. Chrome fue defendido por ser el estándar de facto y representar mejor la experiencia de la mayoría de usuarios. Facundo mencionó que usaba Chrome para trabajo y Firefox como navegador de uso general por la privacidad.",
+    "links": ["https://www.diabrowser.com/finals/thanks"]
   },
   {
     "date": "2025-05-14",
     "title": "Dia: el nuevo browser de los creadores de Arc",
-    "summary": "Alguien compartió el anuncio de Dia, el nuevo navegador de The Browser Company, los creadores de Arc. El grupo que había usado Arc reaccionó con curiosidad sobre el nuevo proyecto. Facundo explicó que los creadores de Arc habían decidido pivotear a un browser con IA integrada como concepto central, alejándose del diseño de espacios y sidebar de Arc. Se debatió si Dia sería un salto real en la experiencia del navegador o solo otro browser con IA encima. Alguien señaló que Arc había tenido problemas de rendimiento y bugs que nunca se resolvieron bien. El grupo acordó esperar a la versión pública para probarlo."
+    "summary": "Alguien compartió el anuncio de Dia, el nuevo navegador de The Browser Company, los creadores de Arc. El grupo que había usado Arc reaccionó con curiosidad sobre el nuevo proyecto. Facundo explicó que los creadores de Arc habían decidido pivotear a un browser con IA integrada como concepto central, alejándose del diseño de espacios y sidebar de Arc. Se debatió si Dia sería un salto real en la experiencia del navegador o solo otro browser con IA encima. Alguien señaló que Arc había tenido problemas de rendimiento y bugs que nunca se resolvieron bien. El grupo acordó esperar a la versión pública para probarlo.",
+    "links": ["https://www.diabrowser.com/finals/thanks"]
   },
   {
     "date": "2025-05-16",
     "title": "Curso de system design de LeetCode: análisis y recomendación",
-    "summary": "Un miembro compartió que había empezado el curso de system design de LeetCode y preguntó si otros lo habían hecho. El grupo discutió el contenido del curso que cubría temas como consistent hashing, bases de datos distribuidas, caching con Redis y diseño de sistemas como URL shorteners y feeds de redes sociales. Facundo señaló que el system design era el área que más diferenciaba a ingenieros senior en entrevistas. Se comparó con otros recursos como Designing Data-Intensive Applications de Kleppmann, que el grupo consideraba la biblia del sistema distribuido. Alguien mencionó los videos de Gaurav Sen en YouTube como recurso gratuito de calidad."
+    "summary": "Un miembro compartió que había empezado el curso de system design de LeetCode y preguntó si otros lo habían hecho. El grupo discutió el contenido del curso que cubría temas como consistent hashing, bases de datos distribuidas, caching con Redis y diseño de sistemas como URL shorteners y feeds de redes sociales. Facundo señaló que el system design era el área que más diferenciaba a ingenieros senior en entrevistas. Se comparó con otros recursos como Designing Data-Intensive Applications de Kleppmann, que el grupo consideraba la biblia del sistema distribuido. Alguien mencionó los videos de Gaurav Sen en YouTube como recurso gratuito de calidad.",
+    "links": [
+      "https://leetcode.com/explore/interview/card/system-design-for-interviews-and-beyond/"
+    ]
   },
   {
     "date": "2025-05-16",
@@ -97,12 +113,20 @@
   {
     "date": "2025-05-19",
     "title": "Galería de setups de escritorio para desarrollo",
-    "summary": "Varios miembros del grupo compartieron fotos de sus setups de trabajo para desarrollo. Matías mostró su Arch Linux con Hyprland con una configuración actualizada. Otros compartieron setups con macOS con monitores externos, stands y teclados mecánicos. Se compararon las ventajas de tener monitor vertical (portrait mode) para leer código largo. Alguien mostró un setup minimalista con solo la laptop y elogios a la portabilidad. Facundo compartió su setup dual monitor. El hilo fue festivo y muchos miembros participaron con fotos o comentando las de otros."
+    "summary": "Varios miembros del grupo compartieron fotos de sus setups de trabajo para desarrollo. Matías mostró su Arch Linux con Hyprland con una configuración actualizada. Otros compartieron setups con macOS con monitores externos, stands y teclados mecánicos. Se compararon las ventajas de tener monitor vertical (portrait mode) para leer código largo. Alguien mostró un setup minimalista con solo la laptop y elogios a la portabilidad. Facundo compartió su setup dual monitor. El hilo fue festivo y muchos miembros participaron con fotos o comentando las de otros.",
+    "links": [
+      "https://www.reddit.com/r/unixporn/",
+      "https://www.reddit.com/r/unixporn/comments/1kntk5b/oc_completely_custom_opening_and_closing/"
+    ]
   },
   {
     "date": "2025-05-19",
     "title": "IA e impacto en el empleo tech: debate generacional y de carrera",
-    "summary": "El grupo tuvo una discusión profunda sobre el impacto de la IA en el empleo de desarrolladores. Algunos miembros recién empezando la carrera expresaron preocupación por si tenía sentido seguir aprendiendo a programar. Facundo y otros miembros más experimentados argumentaron que la IA era una herramienta que amplificaba capacidades, no que reemplazaba el pensamiento. Se debatió si los desarrolladores que sabían usar IA efectivamente reemplazarían a los que no. Alguien señaló la paradoja de que cada vez más las empresas querían desarrolladores que supieran usar IA, pero también que entendieran el código que la IA generaba. La conclusión mayoritaria fue que había que adaptarse y aprender a trabajar con IA como habilidad central."
+    "summary": "El grupo tuvo una discusión profunda sobre el impacto de la IA en el empleo de desarrolladores. Algunos miembros recién empezando la carrera expresaron preocupación por si tenía sentido seguir aprendiendo a programar. Facundo y otros miembros más experimentados argumentaron que la IA era una herramienta que amplificaba capacidades, no que reemplazaba el pensamiento. Se debatió si los desarrolladores que sabían usar IA efectivamente reemplazarían a los que no. Alguien señaló la paradoja de que cada vez más las empresas querían desarrolladores que supieran usar IA, pero también que entendieran el código que la IA generaba. La conclusión mayoritaria fue que había que adaptarse y aprender a trabajar con IA como habilidad central.",
+    "links": [
+      "https://www.linkedin.com/posts/midudev_microsoft-lo-cambia-todo-github-copilot-activity-7330315453229101056-Cr48",
+      "https://www.amazon.com/Smart-Until-Its-Dumb-intelligence/dp/1838337229"
+    ]
   },
   {
     "date": "2025-05-19",
@@ -142,12 +166,17 @@
   {
     "title": "N8N para automatizar agentes de IA en WhatsApp como freelance",
     "date": "2025-05-21",
-    "summary": "Mateo Lohezic preguntó por cursos de N8N que no fueran marketing vacío sobre 'hacerse millonario sin código'. Agustín Sánchez compartió un video de YouTube y Ariel Basabe recomendó un curso de Udemy ('Curso N8N: Crea agentes de IA sin programar') con link gratuito de Telegram. La suscripción de N8N cuesta $20/mes e incluye 5 workflows activos y 2500 ejecuciones, con lo que se puede atender a un cliente pagante. La API de OpenAI funciona por créditos (aprox $5/mes para un negocio chico), haciendo el costo total de un agente de IA rondear los $50 USD mensuales o menos. Matias Gutierrez mencionó que él usaba ManyChat con un cliente inmobiliario por $15/mes: asignación automática de chats según disponibilidad de agentes inmobiliarios, detección de palabras clave y derivación. Mateo criticó que ManyChat era solo un menú de opciones predefinidas y no un agente con IA real. Se discutieron casos de uso como bots de atención para gimnasios con múltiples sucursales, filtrado de leads y creación automática de entradas en CRMs."
+    "summary": "Mateo Lohezic preguntó por cursos de N8N que no fueran marketing vacío sobre 'hacerse millonario sin código'. Agustín Sánchez compartió un video de YouTube y Ariel Basabe recomendó un curso de Udemy ('Curso N8N: Crea agentes de IA sin programar') con link gratuito de Telegram. La suscripción de N8N cuesta $20/mes e incluye 5 workflows activos y 2500 ejecuciones, con lo que se puede atender a un cliente pagante. La API de OpenAI funciona por créditos (aprox $5/mes para un negocio chico), haciendo el costo total de un agente de IA rondear los $50 USD mensuales o menos. Matias Gutierrez mencionó que él usaba ManyChat con un cliente inmobiliario por $15/mes: asignación automática de chats según disponibilidad de agentes inmobiliarios, detección de palabras clave y derivación. Mateo criticó que ManyChat era solo un menú de opciones predefinidas y no un agente con IA real. Se discutieron casos de uso como bots de atención para gimnasios con múltiples sucursales, filtrado de leads y creación automática de entradas en CRMs.",
+    "links": [
+      "https://youtu.be/SF8Ddp0RaF8",
+      "https://www.udemy.com/course/curso-n8n-crea-agentes-de-ia-sin-programar/"
+    ]
   },
   {
     "title": "NotebookLM de Google: resúmenes y podcasts con IA",
     "date": "2025-05-22",
-    "summary": "Mauricio Chaile compartió NotebookLM de Google como una herramienta para hacer resúmenes e interactuar con documentos usando IA. Facundo García Martoni dijo que ya lo usaba y que su feature estrella era la generación de podcasts, y que recientemente había añadido soporte en español, lo que abría posibilidades enormes para estudiantes que no sabían inglés. Mauricio probó la generación de podcast con un libro de patrones y compartió el link de audio. Agustín Sánchez preguntó si generaba el podcast con voz y todo para ayudar a estudiar, Facundo y Mauricio confirmaron que sí, y que también podía generar mapas conceptuales. Mauricio señaló que el soporte en español todavía estaba limitado al momento. La herramienta fue especialmente recomendada para compartirla con conocidos fuera del mundo IT que estuvieran estudiando, como forma de revolucionar su manera de repasar contenido."
+    "summary": "Mauricio Chaile compartió NotebookLM de Google como una herramienta para hacer resúmenes e interactuar con documentos usando IA. Facundo García Martoni dijo que ya lo usaba y que su feature estrella era la generación de podcasts, y que recientemente había añadido soporte en español, lo que abría posibilidades enormes para estudiantes que no sabían inglés. Mauricio probó la generación de podcast con un libro de patrones y compartió el link de audio. Agustín Sánchez preguntó si generaba el podcast con voz y todo para ayudar a estudiar, Facundo y Mauricio confirmaron que sí, y que también podía generar mapas conceptuales. Mauricio señaló que el soporte en español todavía estaba limitado al momento. La herramienta fue especialmente recomendada para compartirla con conocidos fuera del mundo IT que estuvieran estudiando, como forma de revolucionar su manera de repasar contenido.",
+    "links": ["https://notebooklm.google/"]
   },
   {
     "title": "Facundo García Martoni consiguió trabajo como Senior Full-Stack Engineer",
@@ -157,7 +186,8 @@
   {
     "title": "Git merge vs rebase: diferencias y cuándo usar cada uno",
     "date": "2025-05-28",
-    "summary": "Marcelo Nuñez preguntó con humildad la diferencia entre merge y rebase en Git. Ariel Basabe dio una explicación completa: el rebase reescribe el historial de commits moviendo la secuencia a una nueva base, obteniendo un historial más lineal y limpio, a diferencia del merge que crea un nuevo commit de fusión visible. Explicó que el rebase interactivo (git rebase --interactive) permite editar, combinar (squash) o eliminar commits, y que su principal precaución es no hacer rebase de commits ya pusheados a un repositorio público porque reescribe la historia y complica la colaboración. Diego destacó que el rebase puede generar conflictos que requieren resolución manual. Ariel compartió también un video de YouTube explicativo. Días después, Facundo García Martoni compartió su flujo modernizado de Git: usar git switch en lugar de checkout, git rebase origin/main en lugar de pull para mantener historia lineal, y un ejemplo de su laburo donde usó rebase entre ramas dependientes para no bloquear trabajo mientras esperaba revisión de una PR."
+    "summary": "Marcelo Nuñez preguntó con humildad la diferencia entre merge y rebase en Git. Ariel Basabe dio una explicación completa: el rebase reescribe el historial de commits moviendo la secuencia a una nueva base, obteniendo un historial más lineal y limpio, a diferencia del merge que crea un nuevo commit de fusión visible. Explicó que el rebase interactivo (git rebase --interactive) permite editar, combinar (squash) o eliminar commits, y que su principal precaución es no hacer rebase de commits ya pusheados a un repositorio público porque reescribe la historia y complica la colaboración. Diego destacó que el rebase puede generar conflictos que requieren resolución manual. Ariel compartió también un video de YouTube explicativo. Días después, Facundo García Martoni compartió su flujo modernizado de Git: usar git switch en lugar de checkout, git rebase origin/main en lugar de pull para mantener historia lineal, y un ejemplo de su laburo donde usó rebase entre ramas dependientes para no bloquear trabajo mientras esperaba revisión de una PR.",
+    "links": ["https://www.youtube.com/watch?v=_kheHCD5m7Q"]
   },
   {
     "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { useState, type ReactNode } from 'react';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { ActivityGraph } from './activity-graph';
-import { ConversationDialog } from './conversation-dialog';
+import { ConversationDialog, linkLabel } from './conversation-dialog';
 import { ConversationEventsContext } from './conversation-event';
 import { ConversationRow } from './conversation-row';
 import { formatShortDate, shortHash, toSentences } from './conversation-utils';
@@ -35,6 +35,7 @@ const group: Conversation = {
   date: '2025-06-10',
   summary: 'Muchos opinaron sobre IA.',
   participants: ['A', 'B', 'C', 'D', 'E', 'F'],
+  links: ['https://www.github.com/vercel/ai?tab=readme', 'https://anthropic.com/'],
 };
 const solo: Conversation = {
   title: 'Solo',
@@ -157,6 +158,10 @@ describe('ConversationRow', () => {
     expect(screen.getByText('muchos participantes')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /^@ ?F$/ })).toBeInTheDocument();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.getAllByText('links compartidos', { exact: false })).toHaveLength(1);
+    expect(screen.getByText('links compartidos', { exact: false }).parentElement).toHaveTextContent(
+      '2',
+    );
   });
 });
 
@@ -204,6 +209,29 @@ describe('ConversationDialog', () => {
 
     await userEvent.click(within(dialog).getByRole('button', { name: /^@ ?Ana$/ }));
     expect(onParticipantClick).toHaveBeenCalledWith('Ana');
+  });
+
+  it('keeps the links shared in the conversation clickable', () => {
+    renderDialog(1);
+
+    const dialog = screen.getByRole('dialog', { name: 'Charla grupal' });
+    expect(within(dialog).getByText('links compartidos', { exact: false })).toHaveTextContent(
+      '2 links compartidos',
+    );
+    const link = within(dialog).getByRole('link', { name: /github\.com/ });
+    expect(link).toHaveAttribute('href', 'https://www.github.com/vercel/ai?tab=readme');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveTextContent('github.com/vercel/ai?tab=readme');
+    expect(within(dialog).getByRole('link', { name: 'anthropic.com' })).toBeInTheDocument();
+  });
+
+  it('labels links by host and path, falling back to the raw text', () => {
+    expect(linkLabel('https://www.github.com/a/b?x=1')).toEqual({
+      host: 'github.com',
+      rest: '/a/b?x=1',
+    });
+    expect(linkLabel('https://anthropic.com/')).toEqual({ host: 'anthropic.com', rest: '' });
+    expect(linkLabel('no es un link')).toEqual({ host: 'no es un link', rest: '' });
   });
 
   it('steps with the buttons and the arrow keys', async () => {

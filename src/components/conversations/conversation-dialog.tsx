@@ -3,7 +3,7 @@
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import type { Conversation } from '@/data/whatsapp-conversations';
 import { cn } from '@/lib/utils';
-import { Check, ChevronLeft, ChevronRight, Link2, X } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, ExternalLink, Link2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
   METER_SLOTS,
@@ -74,6 +74,17 @@ interface ConversationDialogProps {
   onClose: () => void;
   onParticipantClick: (_name: string) => void;
 }
+
+/** `https://www.github.com/a/b?x=1` → host `github.com`, rest `/a/b?x=1`. */
+export const linkLabel = (url: string) => {
+  try {
+    const { hostname, pathname, search } = new URL(url);
+    const rest = `${pathname === '/' ? '' : pathname}${search}`;
+    return { host: hostname.replace(/^www\./, ''), rest };
+  } catch {
+    return { host: url, rest: '' };
+  }
+};
 
 // The full summary on the terminal dialog: a `~/conversaciones/<hash>` path bar with a counter
 // and prev/next key caps, the date and participant meter, the title, the summary as numbered
@@ -214,6 +225,37 @@ export function ConversationDialog({
                 </li>
               ))}
             </ol>
+
+            {conversation.links && conversation.links.length > 0 && (
+              <div className="flex flex-col gap-2 border-t border-dashed border-pcnGreen-200 pt-4">
+                <p className="text-[11px] text-muted-foreground">
+                  <span className="text-pcnGreen-600">$ grep -o https:// </span>
+                  {conversation.links.length}{' '}
+                  {conversation.links.length === 1 ? 'link compartido' : 'links compartidos'}
+                </p>
+                <ul className="flex flex-col gap-1 text-xs">
+                  {conversation.links.map((url) => {
+                    const { host, rest } = linkLabel(url);
+                    return (
+                      <li key={url}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="group/link flex min-w-0 items-center gap-1.5 text-foreground/85 hover:text-pcnGreen"
+                        >
+                          <ExternalLink className="size-3 shrink-0 text-pcnGreen-600" />
+                          <span className="shrink-0 text-pcnGreen">{host}</span>
+                          <span className="min-w-0 truncate text-muted-foreground group-hover/link:text-pcnGreen">
+                            {rest}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
 
             {conversation.participants.length > 0 && (
               <div className="flex flex-col gap-2 border-t border-dashed border-pcnGreen-200 pt-4">

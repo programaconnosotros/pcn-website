@@ -37,7 +37,12 @@
   {
     "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
     "date": "2025-10-14",
-    "summary": "Fede Valle consultó sobre Stripe al crear su cuenta y encontrar que Argentina no estaba disponible como país. Josefina Japaze confirmó que Stripe no está disponible para pesos argentinos, y Ariel Basabe agregó que tampoco para su app de turnos podían usarlo. Ariel recomendó Lemon Squeezy como alternativa, pero un integrante venezolano del grupo advirtió que no lo usaran porque se caía constantemente, y recomendó en cambio Polar.sh. Facundo García Martoni mencionó DLocal Go como opción que había funcionado en su caso. El grupo migró al tema de MercadoPago Checkout Pro: Josefina tenía dos problemas en sandbox, las tarjetas de prueba no le dejaban hacer pagos y los pagos que sí pasaban no llegaban al webhook. Germán Navarro confirmó que ese era un problema famoso de MP desde hace años. Marcelo Nuñez declaró odiar los webhooks profundamente, aunque aclaró que los de Stripe andaban mucho mejor y hasta se podían probar con la CLI de Stripe. Fede Valle finalmente logró hacerlo funcionar."
+    "summary": "Fede Valle consultó sobre Stripe al crear su cuenta y encontrar que Argentina no estaba disponible como país. Josefina Japaze confirmó que Stripe no está disponible para pesos argentinos, y Ariel Basabe agregó que tampoco para su app de turnos podían usarlo. Ariel recomendó Lemon Squeezy como alternativa, pero un integrante venezolano del grupo advirtió que no lo usaran porque se caía constantemente, y recomendó en cambio Polar.sh. Facundo García Martoni mencionó DLocal Go como opción que había funcionado en su caso. El grupo migró al tema de MercadoPago Checkout Pro: Josefina tenía dos problemas en sandbox, las tarjetas de prueba no le dejaban hacer pagos y los pagos que sí pasaban no llegaban al webhook. Germán Navarro confirmó que ese era un problema famoso de MP desde hace años. Marcelo Nuñez declaró odiar los webhooks profundamente, aunque aclaró que los de Stripe andaban mucho mejor y hasta se podían probar con la CLI de Stripe. Fede Valle finalmente logró hacerlo funcionar.",
+    "links": [
+      "https://www.lemonsqueezy.com/",
+      "https://polar.sh",
+      "https://www.reddit.com/r/devsarg/comments/1fttnbt/no_me_funciona_el_sand_box_de_mercado_pago_cuando/"
+    ]
   },
   {
     "title": "Scrum Master: un rol en extinción",
@@ -47,11 +52,17 @@
   {
     "title": "Extensiones para reducir distracciones en el browser",
     "date": "2025-10-26",
-    "summary": "Leandro Contrera compartió Unhook, una extensión para Chrome, Firefox y Edge que elimina features de YouTube para reducir distracciones. Facundo García Martoni sumó en la misma línea Undistracted (bloquea features adictivas de redes sociales en Chrome y Firefox), Social Focus (para Safari en iPhone y Mac), y One Sec (para apps nativas del teléfono que frena el impulso de abrir apps adictivas). Juan Arismendi recomendó StayFree, que tiene app desktop, Android y extensiones que se pueden sincronizar. Ariel Basabe agradeció los datos."
+    "summary": "Leandro Contrera compartió Unhook, una extensión para Chrome, Firefox y Edge que elimina features de YouTube para reducir distracciones. Facundo García Martoni sumó en la misma línea Undistracted (bloquea features adictivas de redes sociales en Chrome y Firefox), Social Focus (para Safari en iPhone y Mac), y One Sec (para apps nativas del teléfono que frena el impulso de abrir apps adictivas). Juan Arismendi recomendó StayFree, que tiene app desktop, Android y extensiones que se pueden sincronizar. Ariel Basabe agradeció los datos.",
+    "links": ["https://unhook.app/"]
   },
   {
     "title": "Focus y la trampa de hacer demasiadas cosas a la vez",
     "date": "2025-10-29",
-    "summary": "Facundo García Martoni compartió una reflexión sobre el focus a partir de hablar de proyectos múltiples: contó que en distintos momentos de su vida tuvo que aplicar la regla de 'elegir una cosa'. Se entusiasmó con el boxeo al punto de sacar la licencia amateur y preparar peleas, lo que lo hizo estancarse en su carrera de software. Después le pasó lo mismo con el tiro deportivo. En ambos casos tuvo que decirse a sí mismo que su pasión real era la tecnología y cortar con lo nuevo. Fue claro en que no está mal tener hobbies, pero que para ser excelente en un campo o emprender con éxito hay que hacer sacrificios. Tobías Paz Posse reconoció que le pasaba algo similar. Facundo recomendó el libro 'The Molecule of More' de Daniel Z. Lieberman, que explica los mecanismos de dopamina detrás de videojuegos, casinos, redes sociales y relaciones. Leandro Contrera comentó que él tiene un control parental de 30 minutos diarios para Lichess para no perderse horas en el ajedrez."
+    "summary": "Facundo García Martoni compartió una reflexión sobre el focus a partir de hablar de proyectos múltiples: contó que en distintos momentos de su vida tuvo que aplicar la regla de 'elegir una cosa'. Se entusiasmó con el boxeo al punto de sacar la licencia amateur y preparar peleas, lo que lo hizo estancarse en su carrera de software. Después le pasó lo mismo con el tiro deportivo. En ambos casos tuvo que decirse a sí mismo que su pasión real era la tecnología y cortar con lo nuevo. Fue claro en que no está mal tener hobbies, pero que para ser excelente en un campo o emprender con éxito hay que hacer sacrificios. Tobías Paz Posse reconoció que le pasaba algo similar. Facundo recomendó el libro 'The Molecule of More' de Daniel Z. Lieberman, que explica los mecanismos de dopamina detrás de videojuegos, casinos, redes sociales y relaciones. Leandro Contrera comentó que él tiene un control parental de 30 minutos diarios para Lichess para no perderse horas en el ajedrez.",
+    "links": [
+      "https://www.mercadolibre.com.ar/the-molecule-of-more-de-daniel-z-lieberman-editorial-gardners-tapa-blanda-en-ingles-2019/p/MLA23733297",
+      "https://open.spotify.com/episode/4pBeN6USx7PjgEu1E5fj2b",
+      "https://www.youtube.com/watch?v=5Za_FjTPbAQ"
+    ]
   }
 ]

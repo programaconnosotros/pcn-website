@@ -8,6 +8,8 @@ export interface Conversation {
   eventId?: string;
   /** Community members named in the summary, in order of first mention. */
   participants: string[];
+  /** Links shared in the thread itself (articles, repos, tools discussed), most relevant first. */
+  links?: string[];
 }
 
 import m202504 from './2025-04.json';
