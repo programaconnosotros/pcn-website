@@ -1657,7 +1657,7 @@ pnpm build`,
           {
             file: 'Dockerfile.prod',
             lang: 'dockerfile',
-            code: `FROM node:24.16.0
+            code: `FROM node:24.21.0
 WORKDIR /app
 COPY . .
 RUN npm install -g pnpm@9.4.0
