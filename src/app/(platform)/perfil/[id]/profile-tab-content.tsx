@@ -399,7 +399,7 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
     case 'contribuciones': {
       const github = await getProfileContributions(userId);
       content = github.contributions.length ? (
-        <ContributionStats contributions={github.contributions} totals={github.totals} />
+        <ContributionStats contributions={github.contributions} totals={github.totals} detailed />
       ) : (
         <EmptyLine>
           {github.linked

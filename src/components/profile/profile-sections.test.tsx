@@ -182,4 +182,36 @@ describe('profile sections', () => {
     expect(screen.getByText('líneas agregadas').nextSibling).toHaveTextContent('—');
     expect(screen.getByText('del total').nextSibling).toHaveTextContent('0%');
   });
+
+  it('summarizes what the person did in the repo, by kind, only in the detailed view', () => {
+    const withPulls = {
+      ...contributor('ada', 10),
+      pulls: [
+        { number: 12, title: 'feat(eventos): sponsor logos', mergedAt: '2026-09-01T00:00:00Z' },
+        { number: 9, title: 'fix: login loop', mergedAt: '2026-08-01T00:00:00Z' },
+        { number: 3, title: 'feat: setups', mergedAt: '2026-07-01T00:00:00Z' },
+      ],
+    };
+    const { unmount } = render(
+      <ContributionStats contributions={[withPulls]} totals={{ mergedPrs: 3, commits: 9 }} />,
+    );
+    expect(screen.queryByRole('region', { name: 'Qué hizo en el repo' })).not.toBeInTheDocument();
+    unmount();
+
+    render(
+      <ContributionStats
+        contributions={[withPulls]}
+        totals={{ mergedPrs: 3, commits: 9 }}
+        detailed
+      />,
+    );
+    const summary = screen.getByRole('region', { name: 'Qué hizo en el repo' });
+    expect(summary).toHaveTextContent('2features');
+    expect(summary).toHaveTextContent('1fixes');
+    expect(within(summary).getByRole('link', { name: '#12' })).toHaveAttribute(
+      'href',
+      'https://github.com/programaconnosotros/pcn-website/pull/12',
+    );
+    expect(within(summary).getByText('Sponsor logos')).toBeInTheDocument();
+  });
 });

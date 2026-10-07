@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { groupPulls, pullSummary } from '@/lib/pull-kinds';
 import Link from 'next/link';
 import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import type { Conversation } from '@/data/whatsapp-conversations';
@@ -270,9 +271,12 @@ const BAR_WIDTH = 24;
 export const ContributionStats = ({
   contributions,
   totals,
+  detailed = false,
 }: {
   contributions: ContributorStat[];
   totals: { mergedPrs: number; commits: number };
+  /** In the contributions tab: also what they did, PR by PR. */
+  detailed?: boolean;
 }) => {
   const mergedPrs = contributions.reduce((sum, c) => sum + c.mergedPrs, 0);
   const commits = contributions.reduce((sum, c) => sum + c.commits, 0);
@@ -280,7 +284,9 @@ export const ContributionStats = ({
   const linesAdded = contributions.some((c) => c.linesAdded === null)
     ? null
     : contributions.reduce((sum, c) => sum + (c.linesAdded ?? 0), 0);
-  const share = totals.mergedPrs > 0 ? mergedPrs / totals.mergedPrs : 0;
+  // Capped: with several linked logins or a stale total, the share could go past 100% and break
+  // the bar.
+  const share = totals.mergedPrs > 0 ? Math.min(1, mergedPrs / totals.mergedPrs) : 0;
   const filled = Math.round(share * BAR_WIDTH);
 
   return (
@@ -326,6 +332,77 @@ export const ContributionStats = ({
           </Link>
         </li>
       </ul>
+      {detailed && <PullsSummary contributions={contributions} />}
     </div>
   );
 };
+
+const REPO_PULL_URL = 'https://github.com/programaconnosotros/pcn-website/pull';
+const PULLS_PER_KIND = 6;
+const pullDate = new Intl.DateTimeFormat('es-AR', { month: 'short', year: 'numeric' });
+
+/**
+ * What the person did in the repo: their merged PRs counted by kind (features, fixes, config…)
+ * and the latest of each kind, linked to GitHub.
+ */
+function PullsSummary({ contributions }: { contributions: ContributorStat[] }) {
+  const pulls = contributions
+    .flatMap((contributor) => contributor.pulls ?? [])
+    .sort((a, b) => b.mergedAt.localeCompare(a.mergedAt));
+  if (pulls.length === 0) return null;
+  const groups = groupPulls(pulls);
+
+  return (
+    <section aria-label="Qué hizo en el repo" className="space-y-3 pt-2">
+      <p className="font-mono text-xs text-muted-foreground">
+        <span className="text-pcnGreen-500">$ </span>git log --merges | resumen
+      </p>
+      <ul className="flex flex-wrap gap-1.5 font-mono text-[11px]">
+        {groups.map((group) => (
+          <li
+            key={group.kind}
+            className="flex items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2 py-1"
+          >
+            <span className="font-semibold tabular-nums text-pcnGreen">{group.pulls.length}</span>
+            <span className="text-muted-foreground">{group.label}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
+        {groups.map((group) => (
+          <div key={group.kind}>
+            <h4 className="mb-1.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              {group.label}
+            </h4>
+            <ul className="space-y-1">
+              {group.pulls.slice(0, PULLS_PER_KIND).map((pull) => (
+                <li key={pull.number} className="flex items-baseline gap-2 text-xs">
+                  <a
+                    href={`${REPO_PULL_URL}/${pull.number}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 font-mono text-pcnGreen-700 hover:text-pcnGreen"
+                  >
+                    #{pull.number}
+                  </a>
+                  <span className="min-w-0 flex-1 text-foreground/85">
+                    {pullSummary(pull.title)}
+                  </span>
+                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                    {pullDate.format(new Date(pull.mergedAt))}
+                  </span>
+                </li>
+              ))}
+              {group.pulls.length > PULLS_PER_KIND && (
+                <li className="font-mono text-[11px] text-muted-foreground">
+                  +{group.pulls.length - PULLS_PER_KIND} más
+                </li>
+              )}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

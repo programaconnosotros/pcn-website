@@ -16,7 +16,11 @@ export type ContributorStat = {
   linesDeleted: number | null;
   /** Start (ISO) of the first week with one of their commits, or `null` when unknown. */
   firstContributionWeek: string | null;
+  /** Their merged PRs, newest first (missing in snapshots taken before it was collected). */
+  pulls?: ContributorPull[];
 };
+
+export type ContributorPull = { number: number; title: string; mergedAt: string };
 
 export type LanguageShare = { name: string; percent: number };
 

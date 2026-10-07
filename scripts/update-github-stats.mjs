@@ -91,9 +91,15 @@ const humans = contributors.filter((contributor) => contributor.type !== 'Bot');
 const merged = pulls.filter((pull) => pull.merged_at);
 
 const mergedByAuthor = new Map();
-for (const pull of merged) {
+// Each author's merged PRs (newest first), for the summary of what they did on their profile.
+const pullsByAuthor = new Map();
+for (const pull of [...merged].sort((a, b) => Date.parse(b.merged_at) - Date.parse(a.merged_at))) {
   const login = pull.user?.login;
-  if (login) mergedByAuthor.set(login, (mergedByAuthor.get(login) ?? 0) + 1);
+  if (!login) continue;
+  mergedByAuthor.set(login, (mergedByAuthor.get(login) ?? 0) + 1);
+  const list = pullsByAuthor.get(login) ?? [];
+  list.push({ number: pull.number, title: pull.title.trim(), mergedAt: pull.merged_at });
+  pullsByAuthor.set(login, list);
 }
 
 const activityByAuthor = new Map();
@@ -112,12 +118,15 @@ const languageShares = Object.entries(languages)
   .map(([name, bytes]) => ({ name, percent: (bytes / languageBytes) * 100 }))
   .sort((a, b) => b.percent - a.percent);
 
-// code_frequency covers every commit; the per-author totals are the fallback while it computes.
+// code_frequency covers every commit. While GitHub computes it, keep the previous value (as the
+// warning says): the per-author totals measure something else and would make the number jump.
+// They're only a starting point for a first snapshot.
 const linesOfCode = frequency
   ? frequency.reduce((sum, [, added, deleted]) => sum + added + deleted, 0)
-  : activity
-    ? [...activityByAuthor.values()].reduce((sum, a) => sum + a.added - a.deleted, 0)
-    : (previous?.linesOfCode ?? null);
+  : (previous?.linesOfCode ??
+    (activity
+      ? [...activityByAuthor.values()].reduce((sum, a) => sum + a.added - a.deleted, 0)
+      : null));
 
 const topContributors = humans
   .map((contributor) => {
@@ -129,6 +138,7 @@ const topContributors = humans
       htmlUrl: contributor.html_url,
       commits: contributor.contributions,
       mergedPrs: mergedByAuthor.get(contributor.login) ?? 0,
+      pulls: pullsByAuthor.get(contributor.login) ?? [],
       linesAdded: activity ? (stats?.added ?? 0) : (before?.linesAdded ?? null),
       linesDeleted: activity ? (stats?.deleted ?? 0) : (before?.linesDeleted ?? null),
       firstContributionWeek: activity
