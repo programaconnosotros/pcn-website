@@ -53,8 +53,12 @@ describe('announcementSchema', () => {
 describe('setupSchema', () => {
   it('trims the title and description', () => {
     expect(
-      setupSchema.parse({ title: '  Mi setup  ', description: '  Dos monitores y un gato  ' }),
-    ).toEqual({ title: 'Mi setup', description: 'Dos monitores y un gato' });
+      setupSchema.parse({
+        title: '  Mi setup  ',
+        description: '  Dos monitores y un gato  ',
+        date: '2025-01-10',
+      }),
+    ).toEqual({ title: 'Mi setup', description: 'Dos monitores y un gato', date: '2025-01-10' });
   });
 
   it('counts the length after trimming', () => {
