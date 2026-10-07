@@ -13,6 +13,13 @@ export type AchievementMetrics = {
   commits: number;
   /** Their spot among the repo's contributors (1 = top), or `null` if they never contributed. */
   contributorRank: number | null;
+  /** Their spot among speakers by talks given (1 = gave the most, ties share it), or `null`. */
+  speakerRank: number | null;
+  /**
+   * Their spot among the people in /conversaciones by conversations taken part in (1 = the most,
+   * ties share it), or `null` if they aren't in any or their WhatsApp name isn't linked.
+   */
+  conversationsRank: number | null;
   /** Talks from /charlas they marked as watched. */
   talksWatched: number;
   /** Events they organized that already happened. */
@@ -36,6 +43,8 @@ export const EMPTY_METRICS: AchievementMetrics = {
   talksGiven: 0,
   commits: 0,
   contributorRank: null,
+  speakerRank: null,
+  conversationsRank: null,
   talksWatched: 0,
   eventsOrganized: 0,
   articlesRead: 0,
@@ -56,7 +65,10 @@ export type Achievement = DisplayBadge & {
   progress: (_metrics: AchievementMetrics) => { current: number; target: number };
 };
 
-type CountMetric = Exclude<keyof AchievementMetrics, 'contributorRank'>;
+type CountMetric = Exclude<
+  keyof AchievementMetrics,
+  'contributorRank' | 'speakerRank' | 'conversationsRank'
+>;
 
 /** Progress towards `target` of a plain count. */
 const count = (metric: CountMetric, target: number) => (metrics: AchievementMetrics) => ({
@@ -97,6 +109,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Mandá una propuesta de charla cuando un evento abra el call for speakers.',
     href: '/eventos',
     progress: count('talksGiven', 1),
+  },
+  {
+    id: 'top-speaker',
+    name: 'Top speaker',
+    description: 'Es quien más charlas dio en la comunidad.',
+    icon: 'crown',
+    tone: 'purple',
+    goal: 'ser #1 en charlas dadas',
+    howTo: 'Dá más charlas que nadie en los eventos de la comunidad.',
+    href: '/charlas',
+    progress: ({ speakerRank }) => ({ current: speakerRank === 1 ? 1 : 0, target: 1 }),
   },
   {
     id: 'talks-watched-25',
@@ -155,7 +178,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'conversations-100',
-    name: 'Conversador',
+    name: 'Locuaz',
     description: 'Participó en 100 conversaciones interesantes del grupo de WhatsApp o más.',
     icon: 'messages',
     tone: 'red',
@@ -163,6 +186,20 @@ export const ACHIEVEMENTS: Achievement[] = [
     howTo: 'Sumate a las charlas del grupo: las mejores quedan resumidas en /conversaciones.',
     href: '/conversaciones',
     progress: count('conversations', 100),
+  },
+  {
+    id: 'top-conversations',
+    name: 'Alma del grupo',
+    description: 'Es quien participó en más conversaciones interesantes del grupo de WhatsApp.',
+    icon: 'flame',
+    tone: 'red',
+    goal: 'ser #1 en conversaciones',
+    howTo: 'Participá en más charlas destacadas del grupo que nadie.',
+    href: '/conversaciones',
+    progress: ({ conversationsRank }) => ({
+      current: conversationsRank === 1 ? 1 : 0,
+      target: 1,
+    }),
   },
   {
     id: 'project-shared',
@@ -194,14 +231,20 @@ export const isAchieved = (achievement: Achievement, metrics: AchievementMetrics
   return current >= target;
 };
 
+/** Badges a higher one makes redundant: the top contributor doesn't also show "Contributor". */
+const SUPERSEDED_BY: Record<string, string> = { contributor: 'top-contributor' };
+
 /** The achievements a user already earned, in `ACHIEVEMENTS` order. */
-export const earnedAchievements = (metrics: AchievementMetrics) =>
-  ACHIEVEMENTS.filter((achievement) => isAchieved(achievement, metrics)).map(
-    ({ id, name, description, icon, tone }) => ({
+export const earnedAchievements = (metrics: AchievementMetrics) => {
+  const earned = ACHIEVEMENTS.filter((achievement) => isAchieved(achievement, metrics));
+  const ids = new Set(earned.map(({ id }) => id));
+  return earned
+    .filter(({ id }) => !(SUPERSEDED_BY[id] && ids.has(SUPERSEDED_BY[id])))
+    .map(({ id, name, description, icon, tone }) => ({
       id,
       name,
       description,
       icon,
       tone,
-    }),
-  );
+    }));
+};

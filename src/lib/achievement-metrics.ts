@@ -21,6 +21,18 @@ const linkedNames = async (source: 'github' | 'whatsapp', userIds?: string[]) =>
   return byUser;
 };
 
+/** Dense rank of `value` among `values`, highest first: 1 for the top value, ties share it. */
+export const denseRank = (value: number, values: number[]) =>
+  new Set(values.filter((other) => other > value)).size + 1;
+
+// How many conversations each name in /conversaciones took part in, for the conversations rank.
+const conversationsByName = (() => {
+  const counts = new Map<string, number>();
+  for (const { participants } of conversations)
+    for (const name of new Set(participants)) counts.set(name, (counts.get(name) ?? 0) + 1);
+  return counts;
+})();
+
 const computeAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
@@ -38,6 +50,7 @@ const computeAchievementMetrics = async (
     registrations,
     projects,
     advises,
+    allSpeakers,
   ] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
@@ -83,7 +96,16 @@ const computeAchievementMetrics = async (
       where: userIds ? { authorId: { in: userIds } } : undefined,
       _count: { _all: true },
     }),
+    // Every speaker's count, to rank them even when loading a single profile.
+    userIds
+      ? prisma.talkSpeaker.groupBy({
+          by: ['userId'],
+          where: { userId: { not: null } },
+          _count: { _all: true },
+        })
+      : null,
   ]);
+  const speakerCounts = (allSpeakers ?? talkSpeakers).map(({ _count }) => _count._all);
 
   const metrics = new Map<string, AchievementMetrics>();
   const of = (userId: string) => {
@@ -96,7 +118,9 @@ const computeAchievementMetrics = async (
   };
 
   for (const { userId, _count } of talkSpeakers) {
-    if (userId) of(userId).talksGiven = _count._all;
+    if (!userId) continue;
+    of(userId).talksGiven = _count._all;
+    of(userId).speakerRank = denseRank(_count._all, speakerCounts);
   }
 
   for (const { userId, _count } of watchedTalks) of(userId).talksWatched = _count._all;
@@ -118,7 +142,12 @@ const computeAchievementMetrics = async (
     const taken = conversations.filter(({ participants }) =>
       participants.some((name) => names.includes(name)),
     ).length;
-    if (taken > 0) of(userId).conversations = taken;
+    if (taken > 0) {
+      of(userId).conversations = taken;
+      // Ranked by their busiest linked name among everyone in the conversations.
+      const best = Math.max(...names.map((name) => conversationsByName.get(name) ?? 0));
+      of(userId).conversationsRank = denseRank(best, [...conversationsByName.values()]);
+    }
 
     const given = extractedConsejos.filter(({ member }) => names.includes(member)).length;
     if (given > 0) of(userId).consejos += given;

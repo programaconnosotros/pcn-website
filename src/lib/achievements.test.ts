@@ -18,11 +18,23 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, talksGiven: 1 })).toEqual(['speaker']);
   });
 
-  it('earns contributor for any commit and top contributor only at #1', () => {
+  it('earns contributor for any commit and top contributor (instead) only at #1', () => {
     expect(ids({ ...EMPTY_METRICS, commits: 3, contributorRank: 2 })).toEqual(['contributor']);
+    // The top contributor doesn't also show "Contributor".
     expect(ids({ ...EMPTY_METRICS, commits: 300, contributorRank: 1 })).toEqual([
       'top-contributor',
-      'contributor',
+    ]);
+  });
+
+  it('earns top speaker and the conversations crown only at #1', () => {
+    expect(ids({ ...EMPTY_METRICS, talksGiven: 3, speakerRank: 2 })).toEqual(['speaker']);
+    expect(ids({ ...EMPTY_METRICS, talksGiven: 9, speakerRank: 1 })).toEqual([
+      'speaker',
+      'top-speaker',
+    ]);
+    expect(ids({ ...EMPTY_METRICS, conversations: 120, conversationsRank: 1 })).toEqual([
+      'conversations-100',
+      'top-conversations',
     ]);
   });
 
@@ -51,7 +63,7 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, eventsAttended: 10 })).toEqual(['events-attended-10']);
   });
 
-  it('earns conversador after 100 conversations', () => {
+  it('earns locuaz after 100 conversations', () => {
     expect(ids({ ...EMPTY_METRICS, conversations: 99 })).toEqual([]);
     expect(ids({ ...EMPTY_METRICS, conversations: 100 })).toEqual(['conversations-100']);
   });
@@ -92,7 +104,41 @@ describe('getAchievementMetrics', () => {
 
     const metrics = await getAchievementMetrics();
 
-    expect(metrics.get('user-1')).toEqual({ ...EMPTY_METRICS, talksGiven: 2 });
+    expect(metrics.get('user-1')).toEqual({ ...EMPTY_METRICS, talksGiven: 2, speakerRank: 1 });
+  });
+
+  it('ranks speakers against everyone, even when loading a single profile', async () => {
+    (prismaMock.talkSpeaker.groupBy as jest.Mock).mockImplementation(async ({ where }: any) =>
+      where.userId.in
+        ? [{ userId: 'user-2', _count: { _all: 3 } }]
+        : [
+            { userId: 'user-1', _count: { _all: 7 } },
+            { userId: 'user-2', _count: { _all: 3 } },
+            { userId: 'user-3', _count: { _all: 7 } },
+          ],
+    );
+
+    const metrics = await getAchievementMetrics(['user-2']);
+    expect(metrics.get('user-2')).toMatchObject({ talksGiven: 3, speakerRank: 2 });
+  });
+
+  it('crowns whoever took part in the most conversations', async () => {
+    const counts = new Map<string, number>();
+    for (const { participants } of conversations)
+      for (const name of new Set(participants)) counts.set(name, (counts.get(name) ?? 0) + 1);
+    const [top] = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    const other = [...counts.entries()].find(([, count]) => count < top[1])!;
+    prismaMock.identityLink.findMany.mockImplementation((async ({ where }: any) =>
+      where.source === 'whatsapp'
+        ? [
+            { userId: 'user-1', externalName: top[0] },
+            { userId: 'user-2', externalName: other[0] },
+          ]
+        : []) as any);
+
+    const metrics = await getAchievementMetrics();
+    expect(metrics.get('user-1')).toMatchObject({ conversations: top[1], conversationsRank: 1 });
+    expect(metrics.get('user-2')?.conversationsRank).toBeGreaterThan(1);
   });
 
   it('ranks users by their linked GitHub logins', async () => {
