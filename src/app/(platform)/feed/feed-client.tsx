@@ -2,6 +2,8 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useRealtime } from '@/components/realtime/use-realtime';
 import { ArrowUpRight } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -101,6 +103,10 @@ interface FeedClientProps {
 
 export function FeedClient({ items, today, aside }: FeedClientProps) {
   const [filter, setFilter] = useState<Filter>('todo');
+  const router = useRouter();
+  // Live news arrive as a banner instead of moving the list while someone reads it.
+  const [news, setNews] = useState(0);
+  useRealtime(['feed'], () => setNews((count) => count + 1));
 
   // Only offer filters for kinds that actually have something to show.
   const filters = useMemo<Filter[]>(
@@ -147,6 +153,20 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
             </div>
           </div>
         </StickyHeader>
+
+        {news > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setNews(0);
+              router.refresh();
+            }}
+            className="mb-4 flex w-full max-w-3xl items-center justify-center gap-2 border border-pcnGreen-600 bg-pcnGreen/10 py-2 font-mono text-xs text-pcnGreen transition-colors hover:bg-pcnGreen/20"
+          >
+            <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-pcnGreen" />
+            {news === 1 ? 'hay 1 novedad' : `hay ${news} novedades`} · tocá para verlas
+          </button>
+        )}
 
         {/* One column of news, easy to read top to bottom, with the side panels pinned at its
             right when there's room for them. */}

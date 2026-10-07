@@ -1,8 +1,12 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FeedItem } from '@/lib/feed';
 import { renderInPlatform } from '@/test/platform';
+import { mockRouter } from '@/test/dom';
+import { useRealtime } from '@/components/realtime/use-realtime';
 import { FeedClient } from './feed-client';
+
+jest.mock('@/components/realtime/use-realtime', () => ({ useRealtime: jest.fn() }));
 
 const items: FeedItem[] = [
   {
@@ -89,5 +93,19 @@ describe('FeedClient', () => {
     renderInPlatform(<FeedClient items={[]} today="2025-03-10" />);
 
     expect(screen.getByText('nada nuevo por acá todavía')).toBeInTheDocument();
+  });
+
+  it('announces live news in a banner that refreshes the feed', async () => {
+    renderInPlatform(<FeedClient items={items} today="2025-03-10" />);
+    expect(screen.queryByText(/novedad/)).not.toBeInTheDocument();
+    const [topics, onMessage] = jest.mocked(useRealtime).mock.lastCall!;
+    expect(topics).toEqual(['feed']);
+
+    act(() => onMessage({ topic: 'feed' }));
+    expect(screen.getByRole('button', { name: /hay 1 novedad/ })).toBeInTheDocument();
+    act(() => onMessage({ topic: 'feed' }));
+    await userEvent.click(screen.getByRole('button', { name: /hay 2 novedades/ }));
+    expect(mockRouter.refresh).toHaveBeenCalled();
+    expect(screen.queryByText(/novedades/)).not.toBeInTheDocument();
   });
 });
