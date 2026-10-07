@@ -5,7 +5,6 @@ import {
   isOsHost,
   isOsMessage,
   notifyOsSessionChange,
-  opensInOwnWindow,
   postToOsHost,
   postToOsWindow,
 } from './os-env';
@@ -28,21 +27,6 @@ afterEach(() => {
   root.removeAttribute(MODE_ATTR);
   window.matchMedia = originalMatchMedia;
   jest.restoreAllMocks();
-});
-
-describe('opensInOwnWindow', () => {
-  it.each([
-    ['/perfil/abc', '/feed', true],
-    ['/eventos/meetup-1', '/feed', true],
-    ['/eventos/meetup-1', '/eventos', false],
-    ['/eventos/nuevo', '/feed', false],
-    ['/perfil/abc', '/eventos/nuevo', false],
-    ['/perfil/abc', '/eventos/meetup-1/editar', false],
-    ['/feed', '/', false],
-    ['/perfil/abc/extra', '/feed', false],
-  ])('%s from %s → %s', (path, from, expected) => {
-    expect(opensInOwnWindow(path, from)).toBe(expected);
-  });
 });
 
 describe('isOsMessage', () => {

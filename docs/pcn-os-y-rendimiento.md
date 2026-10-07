@@ -62,17 +62,19 @@ de un iframe. Corre antes del primer paint, así que el CSS ya sabe qué rol tie
 Host y ventanas son del mismo origen y se hablan con mensajes tipados (`OsMessage` en
 `os-env.ts`), todos con `source: 'pcn-os'`:
 
-| Mensaje     | De → a         | Para qué                                                      |
-| ----------- | -------------- | ------------------------------------------------------------- |
-| `location`  | ventana → host | La ventana navegó: actualizar título y ruta en la barra.      |
-| `focus`     | ventana → host | Se tocó la ventana: traerla al frente.                        |
-| `open`      | ventana → host | Un link que abre otra ventana (perfiles, detalle de eventos). |
-| `search`    | ventana → host | ⌘K dentro de una ventana abre el buscador del escritorio.     |
-| `playMusic` | ventana → host | La música sigue sonando aunque se cierre la ventana.          |
-| `cursor`    | ventana → host | El cursor hacker se dibuja una sola vez, en el escritorio.    |
+| Mensaje     | De → a         | Para qué                                                   |
+| ----------- | -------------- | ---------------------------------------------------------- |
+| `location`  | ventana → host | La ventana navegó: actualizar título y ruta en la barra.   |
+| `focus`     | ventana → host | Se tocó la ventana: traerla al frente.                     |
+| `open`      | ventana → host | "Abrir en nueva ventana" desde el menú del click derecho.  |
+| `search`    | ventana → host | ⌘K dentro de una ventana abre el buscador del escritorio.  |
+| `playMusic` | ventana → host | La música sigue sonando aunque se cierre la ventana.       |
+| `cursor`    | ventana → host | El cursor hacker se dibuja una sola vez, en el escritorio. |
 
-`OsBridge` corre en cada ventana y manda esos mensajes. Intercepta los clicks en fase de
-captura para que un link que debe abrir otra ventana no llegue a navegar con `<Link>`.
+`OsBridge` corre en cada ventana y manda esos mensajes. Los links navegan la ventana en la que se
+hace click, como una pestaña del navegador. El click derecho sobre un link del sitio reemplaza el
+menú del navegador por uno propio: abrir en una ventana nueva del escritorio, en una pestaña nueva
+o copiar el enlace (con Shift + click derecho sigue apareciendo el del navegador).
 
 ### Estado del escritorio
 

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- the bridge sees the plain anchors <Link> renders */
 import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { mockRouter, setLocation } from '@/test/dom';
 import { OsBridge } from './os-bridge';
 import { OS_MESSAGE_SOURCE } from './os-env';
@@ -18,6 +19,15 @@ const renderBridge = (links: React.ReactNode = null) =>
 const click = (element: Element, init: MouseEventInit = {}) => {
   const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
   element.dispatchEvent(event);
+  return event.defaultPrevented;
+};
+
+/** Right-clicks an element and returns whether the bridge replaced the browser's menu. */
+const contextMenu = (element: Element, init: MouseEventInit = {}) => {
+  const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, ...init });
+  act(() => {
+    element.dispatchEvent(event);
+  });
   return event.defaultPrevented;
 };
 
@@ -83,74 +93,85 @@ describe('OsBridge', () => {
     expect(mockRouter.refresh).toHaveBeenCalledTimes(1);
   });
 
-  it('hands profile and event links to the desktop', () => {
+  it('lets every link navigate the window it was clicked in', () => {
+    window.history.replaceState(null, '', '/');
     renderBridge(
       <>
-        <a href="/perfil/abc?tab=1">perfil</a>
+        <a href="/perfil/abc">perfil</a>
         <a href="/eventos/meetup">evento</a>
+        <a href="/feed">feed</a>
       </>,
     );
-    expect(click(screen.getByText('perfil'))).toBe(true);
+    for (const text of ['perfil', 'evento', 'feed'])
+      expect(click(screen.getByText(text))).toBe(false);
+    expect(sent().filter((m) => m.type === 'open')).toEqual([]);
+  });
+
+  it('offers to open a link in a new window from its right-click menu', async () => {
+    renderBridge(<a href="/perfil/abc?tab=1">perfil</a>);
+    expect(contextMenu(screen.getByText('perfil'))).toBe(true);
+
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Abrir en nueva ventana' }));
     expect(sent()).toContainEqual({
       source: OS_MESSAGE_SOURCE,
       type: 'open',
       path: '/perfil/abc?tab=1',
     });
-    expect(click(screen.getByText('evento'))).toBe(true);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
-  it('opens every link from the home page in a new window', () => {
-    window.history.replaceState(null, '', '/');
-    renderBridge(<a href="/feed">feed</a>);
-    expect(click(screen.getByText('feed'))).toBe(true);
-    expect(sent()).toContainEqual({ source: OS_MESSAGE_SOURCE, type: 'open', path: '/feed' });
+  it('can open the link in a browser tab or copy it instead', async () => {
+    const open = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const writeText = jest.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    renderBridge(<a href="/eventos/meetup">evento</a>);
+
+    contextMenu(screen.getByText('evento'));
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Abrir en una pestaña nueva' }));
+    expect(open).toHaveBeenCalledWith(
+      `${window.location.origin}/eventos/meetup`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+
+    contextMenu(screen.getByText('evento'));
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Copiar enlace' }));
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/eventos/meetup`);
+    open.mockRestore();
   });
 
-  it('lets the window navigate itself otherwise', () => {
+  it('closes the menu with Escape', async () => {
+    renderBridge(<a href="/perfil/abc">perfil</a>);
+    contextMenu(screen.getByText('perfil'));
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('keeps the browser menu for anything that is not a link of the site', () => {
     renderBridge(
       <>
-        <a href="/eventos">listado</a>
-        <a href="/perfil/abc" target="_blank">
-          nueva pestaña
-        </a>
+        <a href="https://example.com/perfil/abc">externo</a>
+        <a href="/api/perfil/abc">api</a>
         <a href="/perfil/abc" download>
           descarga
         </a>
-        <a href="https://example.com/perfil/abc">externo</a>
-        <a href="/api/perfil/abc">api</a>
-        <a href="/feed">misma página</a>
-        <nav aria-label="breadcrumb">
-          <a href="/perfil/abc">miga</a>
-        </nav>
+        <a href="/perfil/abc">perfil</a>
         <span>sin link</span>
       </>,
     );
-    for (const text of [
-      'listado',
-      'nueva pestaña',
-      'descarga',
-      'externo',
-      'api',
-      'misma página',
-      'miga',
-      'sin link',
-    ])
-      expect(click(screen.getByText(text))).toBe(false);
-
-    const profile = screen.getByText('miga');
-    expect(click(profile, { metaKey: true })).toBe(false);
-    expect(click(profile, { button: 1 })).toBe(false);
-    expect(sent().filter((m) => m.type === 'open')).toEqual([]);
+    for (const text of ['externo', 'api', 'descarga', 'sin link'])
+      expect(contextMenu(screen.getByText(text))).toBe(false);
+    expect(contextMenu(screen.getByText('perfil'), { shiftKey: true })).toBe(false);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
-  it('ignores clicks something else already handled', () => {
+  it('leaves alone a right click something else already handled', () => {
     renderBridge(<a href="/perfil/abc">perfil</a>);
-    const link = screen.getByText('perfil');
     // A capture listener on window runs before the bridge's one on document.
     const handled = (e: Event) => e.preventDefault();
-    window.addEventListener('click', handled, { capture: true });
-    click(link);
-    window.removeEventListener('click', handled, { capture: true });
-    expect(sent().filter((m) => m.type === 'open')).toEqual([]);
+    window.addEventListener('contextmenu', handled, { capture: true });
+    contextMenu(screen.getByText('perfil'));
+    window.removeEventListener('contextmenu', handled, { capture: true });
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 });
