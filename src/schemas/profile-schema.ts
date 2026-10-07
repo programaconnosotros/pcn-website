@@ -84,5 +84,7 @@ export const profileSchema = z.object({
 });
 
 export type ProfileFormData = z.infer<typeof profileSchema>;
+/** Los valores del form antes de validar: los campos con `.default()` pueden faltar. */
+export type ProfileFormInput = z.input<typeof profileSchema>;
 /** What the action accepts: fields with a default (like `specialties`) may be left out. */
 export type ProfileInput = z.input<typeof profileSchema>;

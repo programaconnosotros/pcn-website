@@ -48,6 +48,6 @@ export const galleryItemIdsSchema = z
 
 export const parseGalleryItemIds = (ids: string[]) => {
   const parsed = galleryItemIdsSchema.safeParse(ids);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Selección inválida');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Selección inválida');
   return parsed.data;
 };

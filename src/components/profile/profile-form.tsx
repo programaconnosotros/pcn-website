@@ -16,7 +16,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
+import { ProfileFormData, ProfileFormInput, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
 import { UserPosition } from '@/generated/prisma/browser';
 import {
@@ -125,7 +125,7 @@ export const ProfileForm = ({
   user: SessionUser & { positions: UserPosition[] };
   languages: UserProgrammingLanguage[];
 }) => {
-  const form = useForm<ProfileFormData>({
+  const form = useForm<ProfileFormInput, unknown, ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user.name ?? '',
@@ -153,6 +153,7 @@ export const ProfileForm = ({
   const [userLanguages, setUserLanguages] = useState<UserProgrammingLanguage[]>(languages || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const values = form.watch();
+  const selectedSpecialties = values.specialties ?? [];
   const dirtyCount = Object.keys(form.formState.dirtyFields).length;
 
   useEffect(() => {
@@ -263,7 +264,7 @@ export const ProfileForm = ({
       id: 'especialidades',
       title: 'especialidades',
       optional: true,
-      checks: [values.specialties.length > 0],
+      checks: [selectedSpecialties.length > 0],
     },
   ].map((section) => ({
     ...section,
@@ -619,7 +620,7 @@ export const ProfileForm = ({
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {group.specialties.map((specialty) => {
-                      const selected = values.specialties.includes(specialty.id);
+                      const selected = selectedSpecialties.includes(specialty.id);
                       return (
                         <button
                           key={specialty.id}
@@ -629,8 +630,8 @@ export const ProfileForm = ({
                             form.setValue(
                               'specialties',
                               selected
-                                ? values.specialties.filter((id) => id !== specialty.id)
-                                : [...values.specialties, specialty.id],
+                                ? selectedSpecialties.filter((id) => id !== specialty.id)
+                                : [...selectedSpecialties, specialty.id],
                               { shouldDirty: true },
                             )
                           }

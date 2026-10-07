@@ -43,7 +43,7 @@ const regularSession = {
 };
 
 const TALK_ID = 'talk-1';
-const EVENT_ID = 'cTestEventId1234';
+const EVENT_ID = 'ctesteventid1234';
 
 const existingTalk = {
   id: TALK_ID,
@@ -153,7 +153,7 @@ describe('updateTalk edge cases', () => {
         : { createdById: 'someone', deletedAt: null, organizers: [] }) as never);
 
     await expect(
-      updateTalk(TALK_ID, { ...validData, eventId: 'cOtherEventId9999' }),
+      updateTalk(TALK_ID, { ...validData, eventId: 'cothereventid9999' }),
     ).rejects.toThrow('No tenés permisos');
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });

@@ -42,7 +42,7 @@ const regularSession = {
 };
 
 const PROPOSAL_ID = 'proposal-1';
-const EVENT_ID = 'cTestEventId1234';
+const EVENT_ID = 'ctesteventid1234';
 
 const baseProposal = {
   id: PROPOSAL_ID,

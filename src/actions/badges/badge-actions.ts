@@ -39,7 +39,7 @@ export async function listBadges() {
 export async function createBadge(input: BadgeInput, userId?: string) {
   const admin = await requireAdmin();
   const parsed = badgeSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
 
   // El usuario se valida antes de crear nada: si no existe, no queda una insignia huérfana que un
   // reintento duplicaría.

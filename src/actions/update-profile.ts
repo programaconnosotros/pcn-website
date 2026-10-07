@@ -29,7 +29,7 @@ export const updateProfile = async (data: ProfileInput) => {
   // podría agregar `role: 'ADMIN'`, `emailVerified` o `password` y Prisma los guardaría. El schema
   // descarta todo campo que no sea del perfil.
   const parsed = profileSchema.safeParse(data);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
 
   // El email no se cambia desde acá: quedaría marcado como verificado sin que nadie haya probado
   // que es suyo, y bloquearía a su verdadero dueño.

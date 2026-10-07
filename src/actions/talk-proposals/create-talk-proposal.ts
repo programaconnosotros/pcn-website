@@ -36,7 +36,7 @@ export const createTalkProposal = async (eventId: string, data: TalkProposalForm
 
   const parsed = talkProposalSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+    throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   }
 
   const proposalData = parsed.data;
