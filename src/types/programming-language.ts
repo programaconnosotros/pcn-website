@@ -34,6 +34,8 @@ export const programmingLanguages: ProgrammingLanguage[] = [
   { id: 'elixir', name: 'Elixir', ext: 'ex', color: '#c49cf0' },
   { id: 'scala', name: 'Scala', ext: 'scala', color: '#ff6161' },
   { id: 'haskell', name: 'Haskell', ext: 'hs', color: '#b49be6' },
+  { id: 'smalltalk', name: 'Smalltalk', ext: 'st', color: '#4ec9b0' },
+  { id: 'prolog', name: 'Prolog', ext: 'pl', color: '#ff7a6b' },
   { id: 'lua', name: 'Lua', ext: 'lua', color: '#7d96ff' },
   { id: 'zig', name: 'Zig', ext: 'zig', color: '#f7a41d' },
   { id: 'r', name: 'R', ext: 'r', color: '#5aa9f0' },
