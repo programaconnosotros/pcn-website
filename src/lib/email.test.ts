@@ -37,7 +37,7 @@ afterAll(() => {
 describe('getSender', () => {
   it('uses the no-reply address of the site by default', () => {
     expect(getSender()).toEqual({
-      name: 'Agus de PCN',
+      name: 'programaConNosotros',
       address: 'no-reply@programaconnosotros.com',
     });
   });
@@ -45,7 +45,10 @@ describe('getSender', () => {
   it('can be changed with EMAIL_FROM', () => {
     process.env.EMAIL_FROM = 'hola@programaconnosotros.com';
 
-    expect(getSender()).toEqual({ name: 'Agus de PCN', address: 'hola@programaconnosotros.com' });
+    expect(getSender()).toEqual({
+      name: 'programaConNosotros',
+      address: 'hola@programaconnosotros.com',
+    });
   });
 });
 
@@ -60,7 +63,7 @@ describe('sendEmail with Resend (production)', () => {
 
     expect(Resend).toHaveBeenCalledWith('re_test');
     expect(resendSend).toHaveBeenCalledWith({
-      from: 'Agus de PCN <no-reply@programaconnosotros.com>',
+      from: 'programaConNosotros <no-reply@programaconnosotros.com>',
       ...message,
     });
     expect(sendMail).not.toHaveBeenCalled();
@@ -100,7 +103,7 @@ describe('sendEmail without Resend (local MailHog)', () => {
 
     expect(Resend).not.toHaveBeenCalled();
     expect(sendMail).toHaveBeenCalledWith({
-      from: { name: 'Agus de PCN', address: 'no-reply@programaconnosotros.com' },
+      from: { name: 'programaConNosotros', address: 'no-reply@programaconnosotros.com' },
       ...message,
     });
   });

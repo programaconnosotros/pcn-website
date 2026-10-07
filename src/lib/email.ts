@@ -64,7 +64,7 @@ export const checkRateLimit = (lastTokenCreatedAt: Date | null): number => {
   return 0;
 };
 
-const SENDER_NAME = 'Agus de PCN';
+const SENDER_NAME = 'programaConNosotros';
 const DEFAULT_SENDER_ADDRESS = 'no-reply@programaconnosotros.com';
 
 /**
