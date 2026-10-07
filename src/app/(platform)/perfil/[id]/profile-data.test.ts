@@ -90,6 +90,17 @@ describe('getProfileTalks / getProfileEvents', () => {
     );
   });
 
+  it('puts the newest talks first, by event date or the one typed in, undated last', async () => {
+    prismaMock.talk.findMany.mockResolvedValue([
+      { id: 'undated', event: null, manualEventDate: null },
+      { id: 'old', event: { date: new Date('2023-01-01') }, manualEventDate: null },
+      { id: 'manual', event: null, manualEventDate: new Date('2025-01-01') },
+      { id: 'new', event: { date: new Date('2026-01-01') }, manualEventDate: null },
+    ] as any);
+    const talks = await getProfileTalks('u1');
+    expect(talks.map((talk) => talk.id)).toEqual(['new', 'manual', 'old', 'undated']);
+  });
+
   it('lists the events the user organized that were not deleted', async () => {
     prismaMock.event.findMany.mockResolvedValue([{ id: 'e1' }] as any);
     await expect(getProfileEvents('u1')).resolves.toEqual([{ id: 'e1' }]);

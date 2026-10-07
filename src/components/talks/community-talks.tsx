@@ -83,7 +83,10 @@ const Placeholder = ({ title }: { title: string }) => (
 
 interface TalkCellProps {
   talk: TalkWithEvent;
-  index: number;
+  /** The talk's #number on /charlas; left out where it isn't known, like a profile. */
+  index?: number;
+  /** Shows the whole title, speakers, event and place instead of cutting them short. */
+  fullText?: boolean;
   isAdmin: boolean;
   onPlay: () => void;
   onSlides: () => void;
@@ -104,6 +107,7 @@ const linkClass =
 export const TalkCell = ({
   talk,
   index,
+  fullText = false,
   isAdmin,
   onPlay,
   onSlides,
@@ -118,6 +122,7 @@ export const TalkCell = ({
   // Videos that aren't on YouTube can't be embedded, so they open in a new tab instead.
   const primaryAction = videoId ? onPlay : talk.slideImages.length > 0 ? onSlides : null;
   const frameRef = useRef<HTMLSpanElement>(null);
+  const cut = fullText ? 'break-words' : 'truncate';
   useParallax(frameRef);
 
   return (
@@ -162,9 +167,11 @@ export const TalkCell = ({
           className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.22)_0_1px,transparent_1px_3px)] transition-opacity duration-500 group-hover:opacity-0"
         />
 
-        <span className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm">
-          #{String(index).padStart(3, '0')}
-        </span>
+        {index !== undefined && (
+          <span className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm">
+            #{String(index).padStart(3, '0')}
+          </span>
+        )}
 
         {videoId && (
           <span className="absolute inset-0 flex items-center justify-center">
@@ -192,12 +199,20 @@ export const TalkCell = ({
           <button
             type="button"
             onClick={primaryAction}
-            className="line-clamp-2 flex-1 text-left font-mono text-sm font-semibold leading-snug after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen"
+            className={cn(
+              'flex-1 text-left font-mono text-sm font-semibold leading-snug after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen',
+              !fullText && 'line-clamp-2',
+            )}
           >
             {talk.title}
           </button>
         ) : (
-          <h3 className="line-clamp-2 flex-1 font-mono text-sm font-semibold leading-snug">
+          <h3
+            className={cn(
+              'flex-1 font-mono text-sm font-semibold leading-snug',
+              !fullText && 'line-clamp-2',
+            )}
+          >
             {talk.title}
           </h3>
         )}
@@ -227,7 +242,7 @@ export const TalkCell = ({
 
       <div className="flex flex-col gap-0.5 font-mono text-[11px]">
         {talk.speakers.length > 0 && (
-          <p className="flex items-center gap-1.5 truncate text-muted-foreground">
+          <p className={cn('flex items-center gap-1.5 text-muted-foreground', cut)}>
             {avatars.length > 0 ? (
               <span className="flex shrink-0 -space-x-1.5">
                 {avatars.slice(0, 3).map((speaker) => (
@@ -243,7 +258,7 @@ export const TalkCell = ({
             ) : (
               <span className="text-pcnGreen-500">@</span>
             )}
-            <span className="truncate">
+            <span className={cut}>
               {talk.speakers.map((speaker, i) => (
                 <span key={speaker.id}>
                   {i > 0 && ', '}
@@ -263,7 +278,7 @@ export const TalkCell = ({
           </p>
         )}
         {eventTitle && (
-          <p className="truncate text-muted-foreground/70">
+          <p className={cn('text-muted-foreground/70', cut)}>
             <span className="text-pcnGreen-500">$ </span>
             {talk.event?.id ? (
               <Link
@@ -278,15 +293,26 @@ export const TalkCell = ({
           </p>
         )}
         {(date || location) && (
-          <p className="flex items-center gap-1 truncate text-muted-foreground/60">
-            {date && <span className="tabular-nums text-pcnGreen-600">{formatDate(date)}</span>}
-            {date && location && <span>·</span>}
-            {location && (
-              <>
-                <MapPin className="size-3 shrink-0 text-pcnGreen-500" />
-                <span className="truncate">{location}</span>
-              </>
+          <p
+            className={cn(
+              'flex gap-1 text-muted-foreground/60',
+              fullText ? 'flex-col' : 'items-center truncate',
             )}
+          >
+            {date && <span className="tabular-nums text-pcnGreen-600">{formatDate(date)}</span>}
+            {date && location && !fullText && <span>·</span>}
+            {location &&
+              (fullText ? (
+                <span>
+                  <MapPin className="mr-1 inline size-3 align-[-2px] text-pcnGreen-500" />
+                  {location}
+                </span>
+              ) : (
+                <>
+                  <MapPin className="size-3 shrink-0 text-pcnGreen-500" />
+                  <span className="truncate">{location}</span>
+                </>
+              ))}
           </p>
         )}
       </div>

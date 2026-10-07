@@ -73,9 +73,24 @@ const talk = (overrides: Record<string, unknown> = {}) => ({
   id: 'talk-1',
   title: 'Testing en serio',
   portraitUrl: 'https://img/talk.jpg',
-  videoUrl: 'https://youtube.com/watch?v=1',
-  speakers: [{ speakerName: 'Ana' }, { speakerName: 'Bruno' }],
-  event: { date: new Date('2025-06-10T22:00:00Z'), placeName: 'Hub', city: 'Tucumán' },
+  videoUrl: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+  slidesUrl: null,
+  slideImages: [],
+  manualEventTitle: null,
+  manualEventDate: null,
+  manualEventLocation: null,
+  speakers: [
+    { id: 's1', speakerName: 'Ana', user: null },
+    { id: 's2', speakerName: 'Bruno', user: null },
+  ],
+  event: {
+    id: 'e1',
+    name: 'Meetup',
+    date: new Date('2025-06-10T22:00:00Z'),
+    placeName: 'Hub',
+    city: 'Tucumán',
+    isOnline: false,
+  },
   ...overrides,
 });
 
@@ -145,9 +160,8 @@ const section = (label: string) =>
     .find((heading) => heading.textContent?.match(new RegExp(`^#${label}(\\(|ver|$)`)))!
     .parentElement!;
 
-/** A talk's row: photo, title line, speakers and meta. */
-const talkCell = (title: string) =>
-  screen.getByRole('heading', { name: title }).parentElement!.parentElement!.parentElement!;
+/** A talk's cell: cover, title, speakers, event and links. */
+const talkCell = (title: string) => screen.getByText(title).closest('article')!;
 
 describe('ProfileCountsLoader', () => {
   it('hands the counts to the tab bar', async () => {
@@ -241,32 +255,36 @@ describe('ProfileTabContent: resumen', () => {
     });
   });
 
-  it('shows each talk with its speakers, video, date and place', async () => {
+  it('shows each talk with its cover, whole title, speakers, event and place', async () => {
     mockData();
+    const longTitle = 'Un título larguísimo que en /charlas se cortaría a las dos líneas';
     m.getProfileTalks.mockResolvedValue([
-      talk(),
+      talk({ title: longTitle }),
       talk({ id: 't2', title: 'Sin evento', portraitUrl: null, videoUrl: null, event: null }),
-      talk({ id: 't3' }),
+      talk({ id: 't3', title: 'Tercera' }),
+      talk({ id: 't4', title: 'Cuarta' }),
     ] as never);
-    await renderTab('resumen');
+    const { container } = await renderTab('resumen');
 
     const talks = section('charlas');
     expect(within(talks).getByRole('link', { name: /ver todo/ })).toBeInTheDocument();
-    expect(within(talks).getByText('(3)')).toBeInTheDocument();
-    const first = talkCell('Testing en serio');
-    expect(within(first).getByRole('img')).toHaveAttribute('src', 'https://img/talk.jpg');
-    expect(within(first).getByRole('link', { name: /youtube/ })).toHaveAttribute(
+    expect(within(talks).getByText('(4)')).toBeInTheDocument();
+    const first = talkCell(longTitle);
+    expect(within(first).getByText(longTitle)).not.toHaveClass('line-clamp-2');
+    expect(first.querySelector('img')).toHaveAttribute('src', 'https://img/talk.jpg');
+    expect(within(first).getByRole('button', { name: /video/ })).toBeInTheDocument();
+    expect(within(first).getByRole('link', { name: 'Meetup' })).toHaveAttribute(
       'href',
-      'https://youtube.com/watch?v=1',
+      '/eventos/e1',
     );
-    expect(within(first).getByText('Ana, Bruno')).toBeInTheDocument();
-    expect(within(first).getByText(/Hub, Tucumán/)).toBeInTheDocument();
+    expect(within(first).getByText('Hub, Tucumán')).toBeInTheDocument();
+    // No #number: it's the talk's place on /charlas, unknown here.
+    expect(within(first).queryByText(/^#\d{3}$/)).not.toBeInTheDocument();
     const second = talkCell('Sin evento');
-    expect(within(second).queryByRole('img')).not.toBeInTheDocument();
-    expect(within(second).queryByRole('link')).not.toBeInTheDocument();
-    expect(within(second).queryByText('@')).not.toBeInTheDocument();
-    // Only two talks in the preview
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(2);
+    expect(second.querySelector('img')).not.toBeInTheDocument();
+    expect(within(second).queryByRole('button', { name: /video/ })).not.toBeInTheDocument();
+    // One full row in the preview
+    expect(container.querySelectorAll('article')).toHaveLength(3);
   });
 });
 

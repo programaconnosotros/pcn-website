@@ -1,12 +1,12 @@
 import type { ComponentProps } from 'react';
 import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
 import { AdviceCard } from '@/components/advice/advice-card';
 import type { Consejo } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { ProfileArticles } from '@/components/profile/profile-articles';
+import { ProfileTalks } from '@/components/profile/profile-talks';
 import { ProfileTabCounts } from '@/components/profile/profile-tab-nav';
 import { profileTabHref } from '@/components/profile/profile-tabs';
 import {
@@ -43,6 +43,8 @@ const PREVIEW = 2;
 const ARTICLES_PREVIEW = 3;
 const CONVERSATIONS_PREVIEW = 4;
 const SETUPS_PREVIEW = 3;
+// One full row of talk cells.
+const TALKS_PREVIEW = 3;
 // The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
 // row half empty when the person has more photos than fit.
 const PHOTOS_PREVIEW_COLUMNS = 3;
@@ -56,7 +58,6 @@ const photosPreviewCount = (total: number) =>
 
 type Session = ComponentProps<typeof AdviceCard>['session'];
 
-type ProfileTalk = Awaited<ReturnType<typeof getProfileTalks>>[number];
 type ProfileSetup = Awaited<ReturnType<typeof getProfileSetups>>[number];
 
 const SetupGrid = ({ setups, session }: { setups: ProfileSetup[]; session: Session }) => (
@@ -69,62 +70,6 @@ const SetupGrid = ({ setups, session }: { setups: ProfileSetup[]; session: Sessi
         showAuthor={false}
       />
     ))}
-  </RuledGrid>
-);
-
-const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
-  <RuledGrid className="grid-cols-1">
-    {talks.map((talk) => {
-      const location = [talk.event?.placeName, talk.event?.city].filter(Boolean).join(', ');
-      const meta = [
-        talk.event?.date &&
-          new Date(talk.event.date).toLocaleDateString('es-AR', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          }),
-        location,
-      ]
-        .filter(Boolean)
-        .join(' · ');
-      return (
-        <div key={talk.id} className={cn(ruledCellClassName, 'flex gap-3 p-3')}>
-          {talk.portraitUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={talk.portraitUrl}
-              alt={`Foto de la charla "${talk.title}"`}
-              className="h-16 w-16 shrink-0 object-cover"
-            />
-          )}
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <div className="flex items-center gap-2 font-mono text-sm">
-              <h3 className="truncate font-semibold">{talk.title}</h3>
-              {talk.videoUrl && (
-                <a
-                  href={talk.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-auto flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground hover:text-pcnGreen"
-                >
-                  youtube
-                  <ArrowUpRight className="h-3 w-3" />
-                </a>
-              )}
-            </div>
-            <p className="truncate text-xs text-muted-foreground">
-              {talk.speakers.map((speaker) => speaker.speakerName).join(', ')}
-            </p>
-            {meta && (
-              <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-                <span className="text-pcnGreen-500">@ </span>
-                {meta}
-              </p>
-            )}
-          </div>
-        </div>
-      );
-    })}
   </RuledGrid>
 );
 
@@ -219,9 +164,9 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="charlas"
             count={talks.length}
-            href={talks.length > PREVIEW ? tabHref('charlas') : undefined}
+            href={talks.length > TALKS_PREVIEW ? tabHref('charlas') : undefined}
           />
-          <TalkRows talks={talks.slice(0, PREVIEW)} />
+          <ProfileTalks talks={talks.slice(0, TALKS_PREVIEW)} />
         </section>
       )}
 
@@ -329,7 +274,7 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
     case 'charlas': {
       const talks = await getProfileTalks(userId);
       content = talks.length ? (
-        <TalkRows talks={talks} />
+        <ProfileTalks talks={talks} />
       ) : (
         <EmptyLine>{firstName} todavía no dio ninguna charla.</EmptyLine>
       );

@@ -59,16 +59,27 @@ export const getProfileAdvice = cached(
 
 export const getProfileTalks = cached(
   'profile-talks',
-  (userId: string) =>
-    prisma.talk.findMany({
+  async (userId: string) => {
+    // Same shape as /charlas, so the profile shows them with the same cell.
+    const talks = await prisma.talk.findMany({
       where: { speakers: { some: { userId } } },
       include: {
-        event: { select: { date: true, placeName: true, city: true } },
-        speakers: { orderBy: { order: 'asc' } },
+        event: {
+          select: { id: true, name: true, date: true, placeName: true, city: true, isOnline: true },
+        },
+        speakers: {
+          include: { user: { select: { id: true, name: true, image: true } } },
+          orderBy: { order: 'asc' },
+        },
       },
-      orderBy: [{ event: { date: 'desc' } }, { createdAt: 'desc' }],
-    }),
-  { models: ['Talk', 'TalkSpeaker', 'Event'] },
+      orderBy: { createdAt: 'desc' },
+    });
+    // Newest first by the event's date, or the date typed in for talks outside our events.
+    const date = (talk: (typeof talks)[number]) =>
+      (talk.event?.date ?? talk.manualEventDate)?.getTime() ?? -Infinity;
+    return talks.sort((a, b) => date(b) - date(a));
+  },
+  { models: ['Talk', 'TalkSpeaker', 'Event', 'User'] },
 );
 
 export const getProfileProjects = cached(
