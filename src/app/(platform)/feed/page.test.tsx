@@ -7,6 +7,7 @@ import Loading from './loading';
 import FeedPage from './page';
 
 jest.mock('@/lib/feed', () => ({ fetchFeed: jest.fn(), toFeedDay: jest.fn() }));
+jest.mock('./feed-aside', () => ({ FeedAside: () => null }));
 jest.mock('./feed-client', () => ({ FeedClient: jest.fn(() => null) }));
 jest.mock('@/components/skeletons/page-skeletons', () => ({
   PageTitleSkeleton: () => null,
@@ -25,7 +26,11 @@ describe('FeedPage', () => {
     render(await FeedPage());
 
     expect(toFeedDay).toHaveBeenCalledWith(now);
-    expect(jest.mocked(FeedClient).mock.calls[0][0]).toEqual({ items, today: '2026-05-01' });
+    expect(jest.mocked(FeedClient).mock.calls[0][0]).toEqual({
+      items,
+      today: '2026-05-01',
+      aside: expect.anything(),
+    });
   });
 });
 

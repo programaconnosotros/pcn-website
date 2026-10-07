@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { PageTitle } from '@/components/ui/page-title';
@@ -95,9 +95,11 @@ interface FeedClientProps {
   items: FeedItem[];
   /** The community's current day, computed on the server so "hoy" matches the feed's days. */
   today: string;
+  /** Pinned beside the feed on wide screens: the next event, announcements, partners. */
+  aside?: ReactNode;
 }
 
-export function FeedClient({ items, today }: FeedClientProps) {
+export function FeedClient({ items, today, aside }: FeedClientProps) {
   const [filter, setFilter] = useState<Filter>('todo');
 
   // Only offer filters for kinds that actually have something to show.
@@ -122,7 +124,8 @@ export function FeedClient({ items, today }: FeedClientProps) {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4">
-        <StickyHeader>
+        {/* Pinned on large screens, so the filters stay at hand along the whole feed. */}
+        <StickyHeader pinnedOnDesktop>
           <PageTitle path="feed" meta="tail -f comunidad.log" />
 
           {/* Scrolls sideways instead of wrapping when the window is narrow. */}
@@ -145,34 +148,48 @@ export function FeedClient({ items, today }: FeedClientProps) {
           </div>
         </StickyHeader>
 
-        {byDay.length === 0 ? (
-          <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
-            <span className="text-pcnGreen-500">$ </span>nada nuevo por acá todavía
-          </p>
-        ) : (
-          <div className="mb-14 space-y-6">
-            {byDay.map(([day, dayItems]) => (
-              <section key={day}>
-                <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  <span className="text-pcnGreen">{'>'}</span>
-                  <time dateTime={day} className="text-foreground">
-                    {dayLabel(day, today)}
-                  </time>
-                  <span
-                    aria-hidden
-                    className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
-                  />
-                  <span className="tabular-nums">[{dayItems.length}]</span>
-                </h2>
-                <RuledGrid className="grid-cols-1 xl:grid-cols-2">
-                  {dayItems.map((item) => (
-                    <FeedRow key={item.id} item={item} />
-                  ))}
-                </RuledGrid>
-              </section>
-            ))}
+        {/* One column of news, easy to read top to bottom, with the side panels pinned at its
+            right when there's room for them. */}
+        <div className="flex items-start gap-6">
+          <div className="min-w-0 max-w-3xl flex-1">
+            {byDay.length === 0 ? (
+              <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>nada nuevo por acá todavía
+              </p>
+            ) : (
+              <div className="mb-14 space-y-6">
+                {byDay.map(([day, dayItems]) => (
+                  <section key={day}>
+                    <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      <span className="text-pcnGreen">{'>'}</span>
+                      <time dateTime={day} className="text-foreground">
+                        {dayLabel(day, today)}
+                      </time>
+                      <span
+                        aria-hidden
+                        className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                      />
+                      <span className="tabular-nums">[{dayItems.length}]</span>
+                    </h2>
+                    <RuledGrid className="grid-cols-1">
+                      {dayItems.map((item) => (
+                        <FeedRow key={item.id} item={item} />
+                      ))}
+                    </RuledGrid>
+                  </section>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+          {aside && (
+            <aside
+              aria-label="Destacados"
+              className="sticky top-[calc(var(--sticky-header-offset,0px)+1rem)] mb-14 hidden w-72 shrink-0 xl:block"
+            >
+              {aside}
+            </aside>
+          )}
+        </div>
       </div>
     </div>
   );
