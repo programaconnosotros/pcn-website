@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { extractedConsejos } from '@/data/consejos-extraidos';
+import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { communityCourses, externalCourses } from './(platform)/cursos/courses';
@@ -73,7 +73,7 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
     return [
       ...events.map((e) => ({ url: `${SITE_URL}/eventos/${e.id}`, lastModified: e.updatedAt })),
       ...advice.map((a) => ({ url: `${SITE_URL}/consejos/${a.id}`, lastModified: a.updatedAt })),
-      ...extractedConsejos.map((c) => ({
+      ...(await visibleExtractedConsejos()).map((c) => ({
         url: `${SITE_URL}/consejos/${c.id}`,
         lastModified: new Date(c.conversation.date),
       })),

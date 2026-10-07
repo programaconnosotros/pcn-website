@@ -22,6 +22,14 @@ import { useConsejoTopics } from '@/components/advice/topic-picker';
 
 const TopicsProbe = () => <p data-testid="topics">{useConsejoTopics().join(',')}</p>;
 
+jest.mock('@/lib/hidden-consejos', () => ({
+  visibleExtractedConsejos: async () =>
+    jest.requireMock('@/data/consejos-extraidos').extractedConsejos,
+}));
+jest.mock('@/actions/advice/hide-extracted-consejo', () => ({
+  hideExtractedConsejo: jest.fn(),
+  restoreExtractedConsejo: jest.fn(),
+}));
 jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/lib/consejos-server', () => ({

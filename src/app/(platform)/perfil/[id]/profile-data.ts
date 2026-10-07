@@ -5,7 +5,7 @@ import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
 import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
-import { extractedConsejos } from '@/data/consejos-extraidos';
+import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
 import { listExtractedActivity } from '@/lib/consejos-server';
 import { getCollaborationStats } from '@/lib/github-stats';
@@ -26,7 +26,7 @@ export const getProfileIdentities = cache((userId: string) => getUserIdentities(
 export const getProfileAdvice = cached(
   'profile-advice',
   async (userId: string) => {
-    const [advice, identities, user, activity] = await Promise.all([
+    const [advice, identities, user, activity, extractedConsejos] = await Promise.all([
       prisma.advice.findMany({
         where: { authorId: userId },
         include: {
@@ -41,6 +41,7 @@ export const getProfileAdvice = cached(
         select: { id: true, name: true, image: true },
       }),
       listExtractedActivity(),
+      visibleExtractedConsejos(),
     ]);
     // Every linked name resolves to this user, so extracted consejos credit their profile.
     const profiles = user
@@ -53,7 +54,7 @@ export const getProfileAdvice = cached(
         .map((consejo) => fromExtracted(consejo, profiles, activity[consejo.id])),
     ]);
   },
-  { models: ['Advice', 'User', 'Like', 'Comment', 'IdentityLink'] },
+  { models: ['Advice', 'User', 'Like', 'Comment', 'IdentityLink', 'HiddenConsejo'] },
 );
 
 export const getProfileTalks = cached(

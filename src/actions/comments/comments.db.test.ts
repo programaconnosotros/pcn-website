@@ -4,7 +4,12 @@ import { actAs } from '@/test/db/fixtures';
 import { expiredModel, makeAdvice, quickUser } from '@/test/db/actions-fixtures';
 import { toggleLike } from '@/actions/advice/like-advice';
 import { extractedConsejos } from '@/data/consejos-extraidos';
-import { listExtractedActivity } from '@/lib/consejos-server';
+import { getConsejoDetail, listExtractedActivity } from '@/lib/consejos-server';
+import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
+import {
+  hideExtractedConsejo,
+  restoreExtractedConsejo,
+} from '@/actions/advice/hide-extracted-consejo';
 
 // Comentarios y respuestas de los consejos contra Postgres real.
 
@@ -178,5 +183,21 @@ describe('consejos extracted from the conversations', () => {
     await expect(
       prisma.comment.create({ data: { content: 'Huérfano', authorId: user.id } }),
     ).rejects.toThrow();
+  });
+});
+
+describe('hidden extracted consejos', () => {
+  it('leave the list, the detail and the search, and come back when restored', async () => {
+    const [extracted] = extractedConsejos;
+    const admin = await quickUser({ role: 'ADMIN' });
+    await actAs(admin.id);
+
+    await hideExtractedConsejo(extracted.id);
+    expect((await visibleExtractedConsejos()).map(({ id }) => id)).not.toContain(extracted.id);
+    expect(await getConsejoDetail(extracted.id)).toBeNull();
+
+    await restoreExtractedConsejo(extracted.id);
+    expect((await visibleExtractedConsejos()).map(({ id }) => id)).toContain(extracted.id);
+    expect(await getConsejoDetail(extracted.id)).not.toBeNull();
   });
 });

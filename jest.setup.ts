@@ -51,6 +51,8 @@ jest.mock('@/lib/rate-limit', () => ({
 // ─── Reset mocks between tests ───────────────────────────────────────────────
 beforeEach(() => {
   mockReset(prismaMock);
+  // Many pages list the extracted consejos minus the hidden ones: by default nobody hid any.
+  prismaMock.hiddenConsejo.findMany.mockResolvedValue([]);
 });
 
 // ─── Silence console.error in test output ────────────────────────────────────

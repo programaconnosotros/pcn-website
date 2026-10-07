@@ -54,7 +54,8 @@ model User {
   // repo, src/components/especialidades/specialties.ts, sin clave foránea).
   specialties          String[]              @default([])
   sessions             Session[]
-  advice              Advice[]
+  advice               Advice[]
+  hiddenConsejos       HiddenConsejo[]
   languages            UserLanguage[]
   comments             Comment[]
   likes                Like[]
@@ -136,6 +137,17 @@ model Advice {
 
   @@index([authorId])
   @@index([createdAt])
+}
+
+/// A consejo extracted from the conversations (an `auto-` id) that the member it's attributed to,
+/// or an admin, took off the site.
+model HiddenConsejo {
+  extractedId String   @id
+  hiddenBy    User?    @relation(fields: [hiddenById], references: [id], onDelete: SetNull)
+  hiddenById  String?
+  createdAt   DateTime @default(now())
+
+  @@index([hiddenById])
 }
 
 model Comment {

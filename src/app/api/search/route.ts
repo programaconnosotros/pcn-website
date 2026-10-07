@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getStaticIndex, rankEntries, toEntry } from '@/lib/search/search-index';
+import { listHiddenConsejoIds } from '@/lib/hidden-consejos';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 import { visibleGalleryItem } from '@/lib/gallery';
 
@@ -249,15 +250,23 @@ export async function GET(request: NextRequest) {
   }
 
   let databaseEntries: Awaited<ReturnType<typeof loadDatabaseEntries>> = [];
+  let hidden = new Set<string>();
   try {
-    databaseEntries = await loadDatabaseEntries(query);
+    const [entries, hiddenIds] = await Promise.all([
+      loadDatabaseEntries(query),
+      listHiddenConsejoIds(),
+    ]);
+    databaseEntries = entries;
+    hidden = new Set(hiddenIds.map((id) => `/consejos/${id}`));
   } catch (error) {
     // Static content is still searchable when the database is unavailable.
     console.error('search: database lookup failed', error);
   }
 
   const order = new Map(SEARCH_GROUPS.map((group, index) => [group.type, index]));
-  const results = rankEntries([...getStaticIndex(), ...databaseEntries], query).sort(
+  // Extracted consejos their member took down stay out of the static index's results.
+  const staticEntries = getStaticIndex().filter(({ href }) => !hidden.has(href));
+  const results = rankEntries([...staticEntries, ...databaseEntries], query).sort(
     (a, b) => (order.get(a.type) ?? 99) - (order.get(b.type) ?? 99),
   );
 

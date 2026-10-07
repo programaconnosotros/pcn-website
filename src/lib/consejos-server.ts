@@ -2,6 +2,7 @@ import { findExtractedConsejo } from '@/data/consejos-extraidos';
 import { getIdentityMap } from '@/lib/identity-links';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
+import { listHiddenConsejoIds } from '@/lib/hidden-consejos';
 import { fromAdvice, fromExtracted, type ExtractedActivity } from '@/lib/consejos';
 
 const authorSelect = { select: { id: true, name: true, image: true } } as const;
@@ -85,11 +86,13 @@ const findAdvice = cached(
 export const getConsejoDetail = async (id: string) => {
   const extracted = findExtractedConsejo(id);
   if (extracted) {
-    const [profiles, activity, comments] = await Promise.all([
+    const [profiles, activity, comments, hidden] = await Promise.all([
       getIdentityMap('whatsapp'),
       listExtractedActivity(),
       findExtractedComments(id),
+      listHiddenConsejoIds(),
     ]);
+    if (hidden.includes(id)) return null;
     return { consejo: fromExtracted(extracted, profiles, activity[id]), comments };
   }
 

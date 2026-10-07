@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
 import { getIdentityMap } from '@/lib/identity-links';
-import { extractedConsejos } from '@/data/consejos-extraidos';
+import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -35,11 +35,12 @@ const AdvicePage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   // La sesión y los consejos no dependen entre sí: se piden a la vez.
-  const [session, advice, profiles, activity] = await Promise.all([
+  const [session, advice, profiles, activity, extractedConsejos] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
     listAdvice(),
     getIdentityMap('whatsapp'),
     listExtractedActivity(),
+    visibleExtractedConsejos(),
   ]);
 
   const consejos = sortByNewest([

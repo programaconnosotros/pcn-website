@@ -14,6 +14,7 @@ import { CommentSection } from './comment-section';
 import { CopyConsejoLink, ShareConsejo } from './consejo-share';
 import { consejoHash, keyCapClassName } from './consejo-utils';
 import { LikeButton } from './like-button';
+import { HideConsejoButton } from './hide-consejo-button';
 
 const Kbd = ({ children }: { children: React.ReactNode }) => (
   <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">{children}</kbd>
@@ -49,6 +50,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
   const isAuthor = !!session?.user?.id && session.user.id === consejo.author.id;
   const isAdmin = session?.user?.role === 'ADMIN';
   const canEditOrDelete = !consejo.source && (isAuthor || isAdmin);
+  const canHide = !!consejo.source && (isAuthor || isAdmin);
   const date = consejo.createdAt.slice(0, 10);
   const title = `Consejo de ${consejo.author.name}`;
   const TitleTag = variant === 'modal' ? DialogTitle : 'h1';
@@ -190,6 +192,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
                   automáticamente del resumen de una conversación del grupo de WhatsApp.{' '}
                   {consejo.author.name} no lo publicó manualmente.
                 </p>
+                {canHide && <HideConsejoButton consejoId={consejo.id} />}
               </div>
             )}
           </div>

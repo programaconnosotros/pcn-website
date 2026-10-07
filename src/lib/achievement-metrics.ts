@@ -3,7 +3,7 @@ import { cached } from '@/lib/cache';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { externalTalks } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
-import { extractedConsejos } from '@/data/consejos-extraidos';
+import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { EMPTY_METRICS, type AchievementMetrics } from '@/lib/achievements';
 
 // The counts behind each achievement (src/lib/achievements), for some users or for everyone.
@@ -37,6 +37,7 @@ const computeAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
   const forUsers = userIds ? { userId: { in: userIds } } : {};
+  const extractedConsejos = await visibleExtractedConsejos();
 
   const now = new Date();
   const [
@@ -186,6 +187,7 @@ const cachedAchievementMetrics = cached(
       'Project',
       'ProjectMember',
       'Advice',
+      'HiddenConsejo',
     ],
     revalidate: 3600,
   },
