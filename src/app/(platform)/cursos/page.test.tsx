@@ -6,13 +6,15 @@ import { CoursesBrowser } from '@/components/courses/courses-browser';
 import { CoursePlayer } from '@/components/courses/course-player';
 import { CourseRow } from '@/components/courses/course-row';
 import { RelatedArticles } from '@/components/courses/related-articles';
-import { communityCourses, externalCourses } from './courses';
+import { communityCourses, courseTeachers, externalCourses } from './courses';
 import Courses, { metadata } from './page';
 import Loading from './loading';
 import Course, { generateMetadata } from './[courseId]/page';
+import { getIdentityMap } from '@/lib/identity-links';
 import CourseLoading from './[courseId]/loading';
 import CourseImage from './[courseId]/opengraph-image';
 
+jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn(async () => ({})) }));
 jest.mock('@/lib/og/terminal-card', () => ({
   OG_SIZE: { width: 1200, height: 630 },
   OG_CONTENT_TYPE: 'image/png',
@@ -86,6 +88,18 @@ describe('/cursos/[courseId]', () => {
   it('says when the course does not exist', async () => {
     renderInPlatform(await Course(params('nope')));
     expect(screen.getByText('El curso no existe.')).toBeInTheDocument();
+  });
+
+  it('links the teachers who are platform users to their profiles', async () => {
+    const [teacher] = courseTeachers(community);
+    jest.mocked(getIdentityMap).mockResolvedValueOnce({
+      [teacher]: { id: 'u-teacher', name: teacher, image: null },
+    });
+    renderInPlatform(await Course(params(community.id)));
+    expect(screen.getByRole('link', { name: teacher })).toHaveAttribute(
+      'href',
+      '/perfil/u-teacher',
+    );
   });
 
   it('plays a community course without the disclaimer', async () => {

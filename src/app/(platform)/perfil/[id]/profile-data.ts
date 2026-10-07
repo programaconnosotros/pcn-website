@@ -12,6 +12,7 @@ import { getUserIdentities } from '@/lib/identity-links';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
 import { setupSelect } from '@/lib/setups';
 import { videoSpeakers, videos as allVideos } from '@/components/videos/videos';
+import { communityCourses, courseTeachers, externalCourses } from '@/app/(platform)/cursos/courses';
 
 // One loader per profile section, so a tab only waits for its own data while the overview and
 // the tab counts reuse whatever the other loaders fetched. The ones that read the database are
@@ -120,6 +121,16 @@ export const getProfileVideos = cache(async (userId: string) => {
   return allVideos.filter((video) => videoSpeakers(video).some((name) => names.has(name)));
 });
 
+// Courses from /cursos the user taught, through the teacher names linked to them in /vinculos,
+// newest first.
+export const getProfileCourses = cache(async (userId: string) => {
+  const names = new Set((await getProfileIdentities(userId)).cursos);
+  if (names.size === 0) return [];
+  return [...communityCourses, ...externalCourses]
+    .filter((course) => courseTeachers(course).some((name) => names.has(name)))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+});
+
 // Setups the user shared, by their own date like /setups lists them.
 export const getProfileSetups = cached(
   'profile-setups',
@@ -205,6 +216,7 @@ export const getProfileCounts = cache(
       talks,
       articles,
       videos,
+      courses,
       events,
       photos,
       setups,
@@ -216,6 +228,7 @@ export const getProfileCounts = cache(
       getProfileTalks(userId),
       getProfileArticles(userId),
       getProfileVideos(userId),
+      getProfileCourses(userId),
       getProfileEvents(userId),
       getProfilePhotos(userId),
       getProfileSetups(userId),
@@ -228,6 +241,7 @@ export const getProfileCounts = cache(
       charlas: talks.length,
       articulos: articles.length,
       videos: videos.length,
+      cursos: courses.length,
       eventos: events.length,
       fotos: photos.length,
       setups: setups.length,

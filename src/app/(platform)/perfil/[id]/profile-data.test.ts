@@ -260,6 +260,7 @@ describe('getProfileCounts', () => {
       charlas: 2,
       articulos: 0,
       videos: 0,
+      cursos: 0,
       eventos: 1,
       fotos: 0,
       setups: 1,

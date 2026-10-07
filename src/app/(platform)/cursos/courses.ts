@@ -1,3 +1,5 @@
+import { splitPeople } from '@/lib/people-names';
+
 export type Course = {
   id: string;
   name: string;
@@ -204,3 +206,6 @@ export const externalCourses: Array<Course> = [
 export const getCourseById = (courseId: string) =>
   communityCourses.find((course) => course.id === courseId) ||
   externalCourses.find((course) => course.id === courseId);
+
+/** Who taught a course, one name each. */
+export const courseTeachers = (course: Pick<Course, 'teachedBy'>) => splitPeople(course.teachedBy);

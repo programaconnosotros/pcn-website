@@ -33,6 +33,7 @@ import {
   getProfileSetups,
   getProfileTalks,
   getProfileVideos,
+  getProfileCourses,
 } from './profile-data';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { SetupTile } from '@/components/setups/setup-tile';
@@ -352,6 +353,51 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
           {firstName} todavía no aparece en ningún video de{' '}
           <Link href="/videos" className="text-pcnGreen hover:underline">
             /videos
+          </Link>
+          .
+        </EmptyLine>
+      );
+      break;
+    }
+    case 'cursos': {
+      const courses = await getProfileCourses(userId);
+      content = courses.length ? (
+        <RuledGrid className="grid-cols-1">
+          {courses.map((course) => (
+            <Link
+              key={course.id}
+              href={`/cursos/${course.id}`}
+              className={cn(ruledCellClassName, 'group flex flex-col gap-1 p-3')}
+            >
+              <span className="flex items-center gap-2 font-mono text-sm">
+                <span className="font-semibold group-hover:text-pcnGreen">{course.name}</span>
+                {course.isMadeByCommunity && (
+                  <span className="rounded-sm border border-pcnGreen-400 px-1 text-[10px] text-pcnGreen">
+                    pcn
+                  </span>
+                )}
+              </span>
+              <span className="font-mono text-[11px] text-muted-foreground">
+                <span className="text-pcnGreen-500">@ </span>
+                {course.date.toLocaleDateString('es-AR', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  timeZone: 'UTC',
+                })}
+                {course.hours ? ` · ${course.hours}h` : ''}
+              </span>
+              <span className="line-clamp-2 text-xs text-muted-foreground">
+                {course.description}
+              </span>
+            </Link>
+          ))}
+        </RuledGrid>
+      ) : (
+        <EmptyLine>
+          {firstName} todavía no dio ningún curso de{' '}
+          <Link href="/cursos" className="text-pcnGreen hover:underline">
+            /cursos
           </Link>
           .
         </EmptyLine>

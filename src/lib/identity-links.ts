@@ -1,7 +1,14 @@
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 
-export const IDENTITY_SOURCES = ['whatsapp', 'github', 'articulos', 'historia', 'videos'] as const;
+export const IDENTITY_SOURCES = [
+  'whatsapp',
+  'github',
+  'articulos',
+  'historia',
+  'videos',
+  'cursos',
+] as const;
 export type IdentitySource = (typeof IDENTITY_SOURCES)[number];
 
 export type LinkedUser = { id: string; name: string; image: string | null };
@@ -42,5 +49,6 @@ export const getUserIdentities = async (userId: string) => {
     github: of('github'),
     articulos: of('articulos'),
     videos: of('videos'),
+    cursos: of('cursos'),
   };
 };

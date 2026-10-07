@@ -36,6 +36,11 @@ jest.mock('@/app/(platform)/lectura/articles', () => ({
   ],
 }));
 jest.mock('@/components/historia/people', () => ({ HISTORIA_PEOPLE: ['Zoe', 'Abel'] }));
+jest.mock('@/app/(platform)/cursos/courses', () => ({
+  communityCourses: [{ teachedBy: 'Ana y Zoe' }],
+  externalCourses: [{ teachedBy: 'Dalto' }],
+  courseTeachers: (course: { teachedBy: string }) => course.teachedBy.split(' y '),
+}));
 jest.mock('@/components/videos/videos', () => ({
   videos: [{ speaker: 'Ana (Acme) y Leo' }, { speaker: 'Ana' }, { speaker: undefined }],
   videoSpeakers: (video: { speaker?: string }) =>
@@ -49,6 +54,7 @@ const links: Record<string, Record<string, typeof ana>> = {
   articulos: { Zoe: { id: 'u-zoe', name: 'Zoe', image: null } },
   historia: {},
   videos: { Leo: { id: 'u-leo', name: 'Leo', image: null } },
+  cursos: {},
 };
 
 const contributor = (login: string, mergedPrs: number) => ({
@@ -142,7 +148,7 @@ describe('/vinculos', () => {
     expect(tableProps('historia').rows.map((row) => row.externalName)).toEqual(['Zoe', 'Abel']);
     expect(
       screen.getByText(
-        '1/4 de whatsapp · 2/3 de github · 1/3 de artículos · 0/2 de historia · 1/2 de videos',
+        '1/4 de whatsapp · 2/3 de github · 1/3 de artículos · 0/2 de historia · 1/2 de videos · 0/3 de cursos',
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
@@ -151,6 +157,7 @@ describe('/vinculos', () => {
       'artículos',
       'historia',
       'videos',
+      'cursos',
     ]);
   });
 

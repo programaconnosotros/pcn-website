@@ -5,7 +5,10 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
-import { communityCourses, externalCourses, getCourseById } from '../courses';
+import { communityCourses, courseTeachers, externalCourses, getCourseById } from '../courses';
+import { getIdentityMap } from '@/lib/identity-links';
+import Link from 'next/link';
+import { Fragment } from 'react';
 import { articles } from '../../lectura/articles';
 import { CourseRow } from '@/components/courses/course-row';
 import { RelatedArticles } from '@/components/courses/related-articles';
@@ -77,6 +80,9 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
 
   if (!course) return <div>El curso no existe.</div>;
 
+  // Teachers who are platform users, linked in /vinculos.
+  const teacherProfiles = await getIdentityMap('cursos');
+
   // Community courses first, then the newest, so ties in relevance favor what we made.
   const otherCourses = [...communityCourses, ...externalCourses]
     .filter((other) => other.id !== course.id)
@@ -116,7 +122,23 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
         <p className="text-sm leading-6 text-muted-foreground">{course.description}</p>
         <p className="font-mono text-[11px] text-muted-foreground/70">
           <span className="text-pcnGreen-500">@ </span>
-          {course.teachedBy}
+          {courseTeachers(course).some((name) => teacherProfiles[name])
+            ? courseTeachers(course).map((name, index) => (
+                <Fragment key={name}>
+                  {index > 0 && ', '}
+                  {teacherProfiles[name] ? (
+                    <Link
+                      href={`/perfil/${teacherProfiles[name].id}`}
+                      className="text-pcnGreen-700 underline-offset-2 hover:text-pcnGreen hover:underline"
+                    >
+                      {name}
+                    </Link>
+                  ) : (
+                    name
+                  )}
+                </Fragment>
+              ))
+            : course.teachedBy}
         </p>
       </div>
     </section>

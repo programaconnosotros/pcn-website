@@ -41,6 +41,7 @@ describe('getUserIdentities', () => {
       github: ['ana-dev'],
       articulos: ['Ana Pérez'],
       videos: ['Ana P.'],
+      cursos: [],
     });
     expect(prismaMock.identityLink.findMany).toHaveBeenCalledWith({
       where: { userId: 'u1' },
@@ -55,6 +56,7 @@ describe('getUserIdentities', () => {
       github: [],
       articulos: [],
       videos: [],
+      cursos: [],
     });
   });
 });

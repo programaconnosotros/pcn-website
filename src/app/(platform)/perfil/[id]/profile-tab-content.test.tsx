@@ -27,6 +27,7 @@ jest.mock('./profile-data', () => ({
   getProfileSetups: jest.fn(),
   getProfileTalks: jest.fn(),
   getProfileVideos: jest.fn(),
+  getProfileCourses: jest.fn(),
 }));
 jest.mock('@/components/videos/video-grid', () => ({
   VideoGrid: ({ videos }: { videos: unknown[] }) => <p>{videos.length} videos</p>,
@@ -98,6 +99,16 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   m.getProfilePhotos.mockResolvedValue(list(sizes.photos ?? 0, 'f') as never);
   m.getProfileConversations.mockResolvedValue(list(sizes.conversations ?? 0, 'w') as never);
   m.getProfileVideos.mockResolvedValue(list(sizes.videos ?? 0, 'v') as never);
+  m.getProfileCourses.mockResolvedValue(
+    Array.from({ length: sizes.courses ?? 0 }, (_, i) => ({
+      id: `c${i + 1}`,
+      name: `Curso ${i + 1}`,
+      description: 'Sobre algo',
+      date: new Date('2020-06-27T00:00:00Z'),
+      hours: 2,
+      isMadeByCommunity: i === 0,
+    })) as never,
+  );
   m.getProfileSetups.mockResolvedValue(
     Array.from({ length: sizes.setups ?? 0 }, (_, i) => ({
       id: `s${i + 1}`,
@@ -324,6 +335,18 @@ describe('ProfileTabContent: one section', () => {
     await renderTab('setups');
     expect(screen.getByText(/todavía no compartió su/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'setup' })).toHaveAttribute('href', '/setups');
+  });
+
+  it('cursos lists the courses the member taught with their date, or points to /cursos', async () => {
+    mockData({ courses: 2 });
+    const { unmount } = await renderTab('cursos');
+    expect(screen.getByRole('link', { name: /Curso 1/ })).toHaveAttribute('href', '/cursos/c1');
+    expect(screen.getAllByText(/27 de junio de 2020 · 2h/)).toHaveLength(2);
+    unmount();
+
+    mockData();
+    await renderTab('cursos');
+    expect(screen.getByText(/no dio ningún curso/)).toBeInTheDocument();
   });
 
   it('videos lists the videos the member is credited in, or points to /videos', async () => {

@@ -9,11 +9,13 @@ import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
 import { IDENTITY_SOURCES } from '@/lib/identity-links';
 import { HISTORIA_PEOPLE } from '@/components/historia/people';
 import { videoSpeakers, videos } from '@/components/videos/videos';
+import { communityCourses, courseTeachers, externalCourses } from '@/app/(platform)/cursos/courses';
 
 const memberNames = new Set(members.map((member) => member.name));
 const authorNames = new Set(articles.flatMap(articleAuthors));
 const historiaNames = new Set<string>(HISTORIA_PEOPLE);
 const speakerNames = new Set(videos.flatMap(videoSpeakers));
+const teacherNames = new Set([...communityCourses, ...externalCourses].flatMap(courseTeachers));
 
 const REVALIDATED_PAGE = {
   whatsapp: '/conversaciones',
@@ -21,6 +23,7 @@ const REVALIDATED_PAGE = {
   articulos: '/lectura',
   historia: '/historia',
   videos: '/videos',
+  cursos: '/cursos',
 };
 
 const linkSchema = z
@@ -39,13 +42,15 @@ const linkSchema = z
             ? historiaNames.has(externalName)
             : source === 'videos'
               ? speakerNames.has(externalName)
-              : /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i.test(externalName),
+              : source === 'cursos'
+                ? teacherNames.has(externalName)
+                : /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i.test(externalName),
     { message: 'Nombre desconocido' },
   );
 
 /**
  * Links a WhatsApp member, a GitHub login, an article author, a person mentioned in /historia or
- * someone credited in a video to a platform user, or unlinks it when `userId` is null. Admins only.
+ * someone credited in a video or a course to a platform user, or unlinks it when `userId` is null. Admins only.
  */
 export const setIdentityLink = async (input: z.input<typeof linkSchema>) => {
   await requireAdmin();
