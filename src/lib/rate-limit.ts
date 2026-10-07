@@ -19,6 +19,8 @@ export const RATE_LIMITS = {
   comment: { limit: 20, windowSeconds: 10 * 60 },
   editContent: { limit: 30, windowSeconds: 10 * 60 },
   eventRegistration: { limit: 20, windowSeconds: 10 * 60 },
+  // Mails to everyone signed up for an event: a handful an hour is plenty.
+  eventBroadcast: { limit: 5, windowSeconds: 60 * 60 },
   upload: { limit: 20, windowSeconds: 10 * 60 },
   photoDownload: { limit: 30, windowSeconds: 60 * 60 },
   log: { limit: 60, windowSeconds: 10 * 60 },

@@ -13,10 +13,24 @@ import EventRegistrationsPage, { generateMetadata } from './page';
 import Loading from './loading';
 
 jest.mock('@/lib/event-access', () => ({ getEventManager: jest.fn() }));
+jest.mock('@/lib/prisma', () => ({
+  __esModule: true,
+  default: { eventBroadcast: { findMany: jest.fn(async () => []) } },
+}));
 jest.mock('@/actions/events/fetch-event', () => ({ fetchEvent: jest.fn() }));
 jest.mock('@/actions/events/get-event-registrations', () => ({
   getEventRegistrations: jest.fn(),
   getEventWaitlist: jest.fn(),
+}));
+jest.mock('@/actions/events/event-broadcast', () => ({
+  getBroadcastAudienceCounts: jest.fn(async () => ({
+    confirmados: 2,
+    'lista-de-espera': 1,
+    todos: 3,
+  })),
+}));
+jest.mock('@/components/events/event-broadcast-form', () => ({
+  EventBroadcastForm: () => <p>broadcast</p>,
 }));
 jest.mock('@/components/events/registrations-data-table', () => ({
   RegistrationsDataTable: jest.fn(() => <div data-testid="registrations" />),

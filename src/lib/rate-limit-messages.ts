@@ -44,6 +44,8 @@ const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
     `Hiciste muchos cambios seguidos. Para proteger el sitio hay un límite de ediciones: vas a poder guardar de nuevo en ${wait}.`,
   eventRegistration: (wait) =>
     `Hiciste muchas inscripciones o cancelaciones seguidas. Para cuidar los cupos de los eventos hay un límite: probá de nuevo en ${wait}.`,
+  eventBroadcast: (wait) =>
+    `Mandaste varios mails a los inscriptos en poco tiempo. Para no saturar sus casillas hay un límite por hora: vas a poder mandar otro en ${wait}.`,
   upload: (wait) =>
     `Subiste muchos archivos en poco tiempo. Para cuidar el almacenamiento hay un límite de subidas: vas a poder subir de nuevo en ${wait}.`,
   photoDownload: (wait) =>

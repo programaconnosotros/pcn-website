@@ -85,6 +85,7 @@ model User {
   articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
   setups               Setup[]
   flyerDesigns         EventFlyerDesigner[]
+  eventBroadcasts      EventBroadcast[]
   setupLikes           SetupLike[]
 
   createdAt DateTime @default(now())
@@ -211,6 +212,7 @@ model Event {
   waitlistEntries EventWaitlistEntry[]
   sponsors        Sponsor[]
   flyerDesigners  EventFlyerDesigner[]
+  broadcasts      EventBroadcast[]
   announcements   Announcement[]
   talkProposals   TalkProposal[]
   talks           Talk[]
@@ -434,6 +436,28 @@ model EventWaitlistEntry {
   @@unique([eventId, userId])
   @@index([eventId, cancelledAt, promotedAt, createdAt])
   @@index([userId])
+}
+
+// Un mail que quien gestiona un evento mandó a sus inscriptos (a todos, a los confirmados o a la
+// lista de espera). Queda el historial para no repetir envíos y saber qué se le dijo a quién.
+model EventBroadcast {
+  id         String  @id @default(cuid())
+  eventId    String
+  authorId   String?
+  // "confirmados", "lista-de-espera" o "todos" (validado en src/actions/events/event-broadcast).
+  audience   String
+  subject    String
+  message    String
+  recipients Int
+  failed     Int     @default(0)
+
+  event  Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([eventId, createdAt])
+  @@index([authorId])
 }
 
 // Quién diseñó cada flyer de un evento: ninguno, uno o varios por flyer. Puede ser alguien con

@@ -612,6 +612,16 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'x',
+        type: 'Float',
+        optional: true,
+      },
+      {
+        name: 'y',
+        type: 'Float',
+        optional: true,
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },
@@ -664,6 +674,31 @@ export const dbModels: DbModel[] = [
       {
         name: 'date',
         type: 'DateTime',
+      },
+      {
+        name: 'os',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'browser',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'editor',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'terminal',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'otherSoftware',
+        type: 'String',
+        optional: true,
       },
       {
         name: 'createdAt',
@@ -906,6 +941,88 @@ export const dbModels: DbModel[] = [
       },
     ],
     uniques: [['eventId', 'userId']],
+  },
+  {
+    name: 'EventBroadcast',
+    domain: 'eventos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'eventId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'audience',
+        type: 'String',
+      },
+      {
+        name: 'subject',
+        type: 'String',
+      },
+      {
+        name: 'message',
+        type: 'String',
+      },
+      {
+        name: 'recipients',
+        type: 'Int',
+      },
+      {
+        name: 'failed',
+        type: 'Int',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
+    name: 'EventFlyerDesigner',
+    domain: 'eventos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'eventId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'flyerSrc',
+        type: 'String',
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
   },
   {
     name: 'Sponsor',
@@ -2017,6 +2134,38 @@ export const dbRelations: DbRelation[] = [
     optional: false,
     many: true,
     onDelete: 'Cascade',
+  },
+  {
+    from: 'EventBroadcast',
+    to: 'Event',
+    label: 'event',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'EventBroadcast',
+    to: 'User',
+    label: 'author',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
+  },
+  {
+    from: 'EventFlyerDesigner',
+    to: 'Event',
+    label: 'event',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'EventFlyerDesigner',
+    to: 'User',
+    label: 'user',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
   {
     from: 'Sponsor',

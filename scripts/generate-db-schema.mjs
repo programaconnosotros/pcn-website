@@ -25,6 +25,8 @@ const DOMAINS = {
     'EventOrganizer',
     'EventRegistration',
     'EventWaitlistEntry',
+    'EventFlyerDesigner',
+    'EventBroadcast',
     'Sponsor',
     'Announcement',
   ],

@@ -19,6 +19,9 @@ import {
 import { LocalDateTime } from '@/components/ui/local-date-time';
 import type { Metadata } from 'next';
 import { tabTitle } from '@/lib/tab-title';
+import prisma from '@/lib/prisma';
+import { getBroadcastAudienceCounts } from '@/actions/events/event-broadcast';
+import { EventBroadcastForm } from '@/components/events/event-broadcast-form';
 
 // A 'use server' file can only export async functions, so the title comes from here.
 export async function generateMetadata(): Promise<Metadata> {
@@ -42,9 +45,16 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
   }
 
   // Obtener todas las inscripciones
-  const [registrations, waitlist] = await Promise.all([
+  const [registrations, waitlist, broadcastCounts, broadcasts] = await Promise.all([
     getEventRegistrations(id),
     getEventWaitlist(id),
+    getBroadcastAudienceCounts(id),
+    prisma.eventBroadcast.findMany({
+      where: { eventId: id },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      include: { author: { select: { name: true } } },
+    }),
   ]);
 
   const activeRegistrations = registrations.filter((r) => r.cancelledAt === null);
@@ -136,6 +146,28 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
               </div>
             </section>
           )}
+
+          <section className="mb-4 border border-pcnGreen-200">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="text-pcnGreen-500">{'// '}</span>
+              mandar un mail a los inscriptos
+            </h2>
+            <div className="p-3">
+              <EventBroadcastForm
+                eventId={id}
+                counts={broadcastCounts}
+                history={broadcasts.map((broadcast) => ({
+                  id: broadcast.id,
+                  audience: broadcast.audience,
+                  subject: broadcast.subject,
+                  recipients: broadcast.recipients,
+                  failed: broadcast.failed,
+                  createdAt: broadcast.createdAt,
+                  author: broadcast.author?.name ?? null,
+                }))}
+              />
+            </div>
+          </section>
 
           <section className="mb-14 border border-pcnGreen-200">
             <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
