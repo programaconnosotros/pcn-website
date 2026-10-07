@@ -4,6 +4,7 @@ import {
 } from '@/components/interviews/interview-guides-list';
 import { InterviewsTabs } from '@/components/interviews/interviews-tabs';
 import { PageTitle } from '@/components/ui/page-title';
+import { StickyHeader } from '@/components/ui/sticky-header';
 import { endpointCourses } from '@/data/recommended-courses';
 import type { Metadata } from 'next';
 import { AREAS } from '../questions/types';
@@ -13,7 +14,7 @@ import { tabTitle } from '@/lib/tab-title';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 const DESCRIPTION =
-  'Guías para prepararte para entrevistas técnicas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, DevOps, diseño UX/UI, product engineering y project management. Marcá cada sección como leída y seguí tu progreso.';
+  'Guías para prepararte para entrevistas de frontend, backend, AI engineering, agentic engineering, quality engineering, seguridad informática, DevOps, diseño UX/UI, product engineering, project management, soft skills y liderazgo, tech lead, software architect y engineering manager. Marcá cada sección como leída y seguí tu progreso.';
 
 export const metadata: Metadata = {
   title: tabTitle.ls('entrevistas/guias'),
@@ -86,11 +87,14 @@ const GuiasPage = () => {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mb-14 mt-4">
-        <PageTitle
-          path="entrevistas/guias"
-          meta={`${items.length + crossTrackGuides.length} guías · ${sectionCount} secciones`}
-          action={<InterviewsTabs active="guias" />}
-        />
+        {/* Pinned while scrolling the long list of guides, with the tabs at hand. */}
+        <StickyHeader pinnedOnDesktop>
+          <PageTitle
+            path="entrevistas/guias"
+            meta={`${items.length + crossTrackGuides.length} guías · ${sectionCount} secciones`}
+            action={<InterviewsTabs active="guias" />}
+          />
+        </StickyHeader>
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Qué estudiar antes de una entrevista, área por área: cómo suele ser el proceso, los temas
           que más se preguntan de junior a senior y qué tenés que poder explicar en voz alta. Cuando
