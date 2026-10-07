@@ -63,8 +63,8 @@ test('another tab closes the open menu and navigates', async ({ page }) => {
   await page.goto('/');
   await tabBar(page).getByRole('button', { name: 'Abrir menú' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  await tabBar(page).getByRole('link', { name: 'Cursos', includeHidden: true }).click();
-  await expect(page).toHaveURL(/\/cursos$/);
+  await tabBar(page).getByRole('link', { name: 'Feed', includeHidden: true }).click();
+  await expect(page).toHaveURL(/\/feed$/);
   await expect(page.getByRole('dialog')).toBeHidden();
 });
 

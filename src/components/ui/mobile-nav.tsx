@@ -15,9 +15,9 @@ import {
   ArrowUpRight,
   CalendarDays,
   ChevronRight,
-  GraduationCap,
   Home,
   MessageCircle,
+  Rss,
   Search,
   SquareTerminal,
   X,
@@ -44,8 +44,8 @@ const isActivePath = (pathname: string, url: string) =>
 
 const tabItems = [
   { title: 'Inicio', url: '/', icon: Home },
+  { title: 'Feed', url: '/feed', icon: Rss },
   { title: 'Eventos', url: '/eventos', icon: CalendarDays },
-  { title: 'Cursos', url: '/cursos', icon: GraduationCap },
   { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
 ];
 
