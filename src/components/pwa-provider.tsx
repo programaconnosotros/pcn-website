@@ -125,7 +125,7 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
       // A worker left over from a production build served on the same localhost port keeps
       // answering /_next/static with its cached chunks, so edits never show up. Drop it.
       void navigator.serviceWorker
-        .getRegistrations()
+        .getRegistrations?.()
         .then((registrations) =>
           Promise.all(registrations.map((registration) => registration.unregister())),
         )
