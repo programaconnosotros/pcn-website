@@ -20,6 +20,11 @@ export type AchievementMetrics = {
    * ties share it), or `null` if they aren't in any or their WhatsApp name isn't linked.
    */
   conversationsRank: number | null;
+  /**
+   * Their spot among users by consejos (published plus extracted from /conversaciones; 1 = the
+   * most, ties share it), or `null` if they have none.
+   */
+  consejosRank: number | null;
   /** Talks from /charlas they marked as watched. */
   talksWatched: number;
   /** Events they organized that already happened. */
@@ -45,6 +50,7 @@ export const EMPTY_METRICS: AchievementMetrics = {
   contributorRank: null,
   speakerRank: null,
   conversationsRank: null,
+  consejosRank: null,
   talksWatched: 0,
   eventsOrganized: 0,
   articlesRead: 0,
@@ -67,7 +73,7 @@ export type Achievement = DisplayBadge & {
 
 type CountMetric = Exclude<
   keyof AchievementMetrics,
-  'contributorRank' | 'speakerRank' | 'conversationsRank'
+  'contributorRank' | 'speakerRank' | 'conversationsRank' | 'consejosRank'
 >;
 
 /** Progress towards `target` of a plain count. */
@@ -217,12 +223,24 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Consejero',
     description: 'Tiene 25 consejos publicados en la comunidad o más.',
     icon: 'lightbulb',
-    tone: 'gold',
+    tone: 'green',
     goal: 'tener 25 consejos',
     howTo:
       'Publicá en /consejos lo que aprendiste. También suman los consejos tuyos extraídos de /conversaciones.',
     href: '/consejos',
     progress: count('consejos', 25),
+  },
+  {
+    id: 'top-consejos',
+    name: 'Top consejero',
+    description: 'Es quien más consejos compartió en la comunidad.',
+    icon: 'lightbulb',
+    tone: 'gold',
+    goal: 'ser #1 en consejos',
+    howTo:
+      'Publicá en /consejos más que nadie. También suman los consejos tuyos extraídos de /conversaciones.',
+    href: '/consejos',
+    progress: ({ consejosRank }) => ({ current: consejosRank === 1 ? 1 : 0, target: 1 }),
   },
 ];
 

@@ -33,6 +33,20 @@ const conversationsByName = (() => {
   return counts;
 })();
 
+/** Each user's consejos: the ones they published plus the ones extracted under their WhatsApp names. */
+const consejosByUser = (
+  advice: { authorId: string; _count: { _all: number } }[],
+  whatsappNames: Map<string, string[]>,
+  extracted: { member: string }[],
+) => {
+  const counts = new Map(advice.map(({ authorId, _count }) => [authorId, _count._all]));
+  for (const [userId, names] of whatsappNames) {
+    const given = extracted.filter(({ member }) => names.includes(member)).length;
+    if (given > 0) counts.set(userId, (counts.get(userId) ?? 0) + given);
+  }
+  return counts;
+};
+
 const computeAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
@@ -52,6 +66,8 @@ const computeAchievementMetrics = async (
     projects,
     advice,
     allSpeakers,
+    allAdvice,
+    allWhatsappNames,
   ] = await Promise.all([
     prisma.talkSpeaker.groupBy({
       by: ['userId'],
@@ -105,8 +121,17 @@ const computeAchievementMetrics = async (
           _count: { _all: true },
         })
       : null,
+    // Same for consejos: everyone's published ones and WhatsApp names.
+    userIds ? prisma.advice.groupBy({ by: ['authorId'], _count: { _all: true } }) : null,
+    userIds ? linkedNames('whatsapp') : null,
   ]);
   const speakerCounts = (allSpeakers ?? talkSpeakers).map(({ _count }) => _count._all);
+  const consejoCounts = consejosByUser(
+    allAdvice ?? advice,
+    allWhatsappNames ?? whatsappNames,
+    extractedConsejos,
+  );
+  const everyConsejoCount = [...consejoCounts.values()];
 
   const metrics = new Map<string, AchievementMetrics>();
   const of = (userId: string) => {
@@ -129,7 +154,12 @@ const computeAchievementMetrics = async (
   for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
   for (const { userId, _count } of registrations) of(userId).eventsAttended = _count._all;
 
-  for (const { authorId, _count } of advice) of(authorId).consejos = _count._all;
+  for (const userId of userIds ?? consejoCounts.keys()) {
+    const total = consejoCounts.get(userId) ?? 0;
+    if (total === 0) continue;
+    of(userId).consejos = total;
+    of(userId).consejosRank = denseRank(total, everyConsejoCount);
+  }
 
   for (const { authorId, members } of projects) {
     // Someone listed both as author and as member still shared the project once.
@@ -149,9 +179,6 @@ const computeAchievementMetrics = async (
       const best = Math.max(...names.map((name) => conversationsByName.get(name) ?? 0));
       of(userId).conversationsRank = denseRank(best, [...conversationsByName.values()]);
     }
-
-    const given = extractedConsejos.filter(({ member }) => names.includes(member)).length;
-    if (given > 0) of(userId).consejos += given;
   }
 
   // Contributors are ranked like /desarrollo lists them: merged PRs, then commits.

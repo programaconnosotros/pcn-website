@@ -147,6 +147,7 @@ describe('/logros', () => {
         contributorRank: 1,
         speakerRank: 1,
         conversationsRank: 1,
+        consejosRank: 1,
         talksWatched: 99,
         eventsOrganized: 99,
         articlesRead: 99,

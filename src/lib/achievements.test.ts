@@ -38,6 +38,15 @@ describe('earnedAchievements', () => {
     ]);
   });
 
+  it('earns consejero at 25 consejos and top consejero (too) only at #1', () => {
+    expect(ids({ ...EMPTY_METRICS, consejos: 30, consejosRank: 2 })).toEqual(['consejos-25']);
+    expect(ids({ ...EMPTY_METRICS, consejos: 3, consejosRank: 1 })).toEqual(['top-consejos']);
+    expect(ids({ ...EMPTY_METRICS, consejos: 90, consejosRank: 1 })).toEqual([
+      'consejos-25',
+      'top-consejos',
+    ]);
+  });
+
   it('earns espectador after watching 25 talks', () => {
     expect(ids({ ...EMPTY_METRICS, talksWatched: 24 })).toEqual([]);
     expect(ids({ ...EMPTY_METRICS, talksWatched: 25 })).toEqual(['talks-watched-25']);
