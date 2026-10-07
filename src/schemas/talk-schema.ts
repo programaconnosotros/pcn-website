@@ -86,7 +86,7 @@ export const talkSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'El rol es requerido para profesionales',
           path: ['jobTitle'],
@@ -96,7 +96,7 @@ export const talkSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La empresa es requerida para profesionales',
           path: ['enterprise'],
@@ -109,7 +109,7 @@ export const talkSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La carrera es requerida para estudiantes',
           path: ['career'],
@@ -119,7 +119,7 @@ export const talkSpeakerSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 1,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La universidad es requerida para estudiantes',
           path: ['studyPlace'],

@@ -43,7 +43,7 @@ const regularSession = {
 };
 
 // Valid CUID: starts with 'c', at least 8 non-space non-hyphen chars after it
-const EVENT_ID = 'cTestEventId1234';
+const EVENT_ID = 'ctesteventid1234';
 
 const validData: TalkFormData = {
   title: 'Test Talk Title',

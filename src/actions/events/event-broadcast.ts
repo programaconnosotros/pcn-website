@@ -72,7 +72,7 @@ export async function sendEventBroadcast(eventId: string, input: z.input<typeof 
   const manager = await requireEventManager(eventId);
   await enforceRateLimit('eventBroadcast');
   const parsed = broadcastSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   const { audience, subject, message } = parsed.data;
 
   const event = await prisma.event.findFirst({

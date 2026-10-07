@@ -17,7 +17,7 @@ async function requireUser() {
 
 const parsePost = async (input: ForumPostFormData) => {
   const parsed = forumPostSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   const category = await prisma.forumCategory.findUnique({
     where: { id: parsed.data.categoryId },
     select: { id: true },

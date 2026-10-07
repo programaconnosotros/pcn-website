@@ -27,7 +27,7 @@ export const completePasswordReset = async (
     return {
       success: false,
       error: 'WEAK_PASSWORD',
-      message: parsedPassword.error.errors[0].message,
+      message: parsedPassword.error.issues[0].message,
     };
   }
 

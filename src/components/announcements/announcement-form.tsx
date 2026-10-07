@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { announcementSchema, AnnouncementFormData } from '@/schemas/announcement-schema';
+import {
+  announcementSchema,
+  AnnouncementFormData,
+  AnnouncementFormInput,
+} from '@/schemas/announcement-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -56,7 +60,7 @@ export function AnnouncementForm({
   isLoading = false,
   submitLabel = 'guardar();',
 }: AnnouncementFormProps) {
-  const form = useForm<AnnouncementFormData>({
+  const form = useForm<AnnouncementFormInput, unknown, AnnouncementFormData>({
     resolver: zodResolver(announcementSchema),
     defaultValues: {
       title: defaultValues?.title || '',

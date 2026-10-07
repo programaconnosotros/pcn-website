@@ -14,7 +14,7 @@ export const createProject = async (data: ProjectFormData) => {
 
   const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+    throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   }
 
   const projectData = parsed.data;

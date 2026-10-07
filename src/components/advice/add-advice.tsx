@@ -16,7 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { createAdvice } from '@actions/advice/create-advice';
-import { adviceSchema, AdviceFormData } from '@/schemas/advice-schema';
+import { adviceSchema, AdviceFormData, AdviceFormInput } from '@/schemas/advice-schema';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { TopicPicker } from './topic-picker';
 
@@ -24,7 +24,7 @@ export const AddAdvice = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<AdviceFormData>({
+  const form = useForm<AdviceFormInput, unknown, AdviceFormData>({
     resolver: zodResolver(adviceSchema),
     defaultValues: {
       content: '',
@@ -94,7 +94,7 @@ export const AddAdvice = () => {
               name="tags"
               render={({ field }) => (
                 <FormItem>
-                  <TopicPicker value={field.value} onChange={field.onChange} />
+                  <TopicPicker value={field.value ?? []} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}

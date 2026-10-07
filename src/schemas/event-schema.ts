@@ -158,7 +158,7 @@ export const eventSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 2,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La ciudad debe tener al menos 2 caracteres',
           path: ['city'],
@@ -168,7 +168,7 @@ export const eventSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 2,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'El nombre del lugar debe tener al menos 2 caracteres',
           path: ['placeName'],
@@ -178,7 +178,7 @@ export const eventSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 5,
-          type: 'string',
+          origin: 'string',
           inclusive: true,
           message: 'La dirección debe tener al menos 5 caracteres',
           path: ['address'],
