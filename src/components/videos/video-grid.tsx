@@ -43,18 +43,30 @@ const WATCH_FILTERS = [
 
 type WatchFilter = (typeof WATCH_FILTERS)[number]['value'];
 
+/**
+ * Hides the videos that would leave the last row half empty at the grid's column count (two
+ * columns from `sm`, three from `lg`), so a short preview always fills its rows.
+ */
+export const fillRowsClassName = (index: number, total: number) =>
+  cn(
+    index >= Math.floor(total / 2) * 2 && 'sm:max-lg:hidden',
+    index >= Math.floor(total / 3) * 3 && 'lg:hidden',
+  );
+
 const VideoCell = ({
   video,
   onPlay,
   watched,
   onToggleWatched,
+  className,
 }: {
   video: Video;
   onPlay: () => void;
   watched: boolean;
   onToggleWatched: () => void;
+  className?: string;
 }) => (
-  <div className={cn(ruledCellClassName, 'group relative flex flex-col gap-2 p-3')}>
+  <div className={cn(ruledCellClassName, 'group relative flex flex-col gap-2 p-3', className)}>
     <span className="relative block aspect-video overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -117,8 +129,11 @@ export function VideoGrid({
   videos,
   toolbar = true,
   searchable = false,
+  fillRows = false,
 }: {
   videos: Video[];
+  /** For short previews: leave out what would sit alone in a half-empty last row. */
+  fillRows?: boolean;
   /** Shows the watch progress and the watched/unwatched filter above the grid. */
   toolbar?: boolean;
   /** Adds a search box that filters by title, speaker, channel (the event, for talks) or year. */
@@ -219,9 +234,10 @@ export function VideoGrid({
       )}
 
       <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {visibleVideos.map((video) => (
+        {visibleVideos.map((video, index) => (
           <VideoCell
             key={video.id}
+            className={fillRows ? fillRowsClassName(index, visibleVideos.length) : undefined}
             video={video}
             onPlay={() => setPlaying(video)}
             watched={watchedIds.has(video.id)}

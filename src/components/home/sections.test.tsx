@@ -256,7 +256,7 @@ describe('static home sections', () => {
       </>,
     );
     expect(screen.getByText(/radios$/)).toBeInTheDocument();
-    expect(screen.getAllByText('3 videos')).toHaveLength(2);
+    expect(screen.getAllByText('4 videos')).toHaveLength(2);
   });
 
   it('StatCard-based cards link to their pages', () => {

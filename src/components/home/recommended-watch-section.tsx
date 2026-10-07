@@ -2,7 +2,8 @@ import { SectionHeader } from '@/components/home/section-header';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { externalTalks, otherVideos } from '@/components/videos/videos';
 
-const LATEST = 3;
+// Four fills two rows of two and, with the fourth hidden, one row of three (see `fillRows`).
+const LATEST = 4;
 
 /** The newest external talks and videos the community recommends, playable in place. */
 export const RecommendedWatchSection = () => (
@@ -14,7 +15,7 @@ export const RecommendedWatchSection = () => (
         description="Charlas de conferencias de todo el mundo que vale la pena ver."
         action={{ label: 'Ver todas', href: '/charlas?tab=externas' }}
       />
-      <VideoGrid videos={externalTalks.slice(0, LATEST)} toolbar={false} />
+      <VideoGrid videos={externalTalks.slice(0, LATEST)} toolbar={false} fillRows />
     </div>
 
     <div>
@@ -24,7 +25,7 @@ export const RecommendedWatchSection = () => (
         description="Tutoriales y explicaciones para seguir aprendiendo a tu ritmo."
         action={{ label: 'Ver todos', href: '/videos' }}
       />
-      <VideoGrid videos={otherVideos.slice(0, LATEST)} toolbar={false} />
+      <VideoGrid videos={otherVideos.slice(0, LATEST)} toolbar={false} fillRows />
     </div>
   </section>
 );
