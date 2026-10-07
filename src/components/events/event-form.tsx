@@ -43,6 +43,7 @@ import {
 } from '@/components/ui/select';
 import { partners } from '@/data/partners';
 import { FlyerDesignersField } from '@/components/events/flyer-designers-field';
+import { DateInput } from '@/components/ui/date-input';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -82,6 +83,8 @@ export function EventForm({
   });
 
   const isOnline = !!form.watch('isOnline');
+  // The end can't be before the start's day.
+  const startDay = form.watch('date')?.slice(0, 10) || undefined;
 
   const sponsors = form.watch('sponsors') ?? [];
   const { fields, append, remove } = useFieldArray({
@@ -162,7 +165,7 @@ export function EventForm({
                           Inicio
                         </FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} />
+                          <DateInput withTime required {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -180,7 +183,7 @@ export function EventForm({
                           Fin (opcional)
                         </FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} />
+                          <DateInput withTime min={startDay} {...field} />
                         </FormControl>
                         <FormDescription>
                           Si el evento tiene una duración específica

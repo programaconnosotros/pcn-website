@@ -26,12 +26,12 @@ jest.setTimeout(20_000);
 describe('PhotoEditForm', () => {
   it('saves the date, description and event, then goes back to the photo', async () => {
     jest.mocked(updateGalleryItem).mockResolvedValue(undefined as never);
-    const { container } = render(<PhotoEditForm photo={photo} events={events} />);
+    render(<PhotoEditForm photo={photo} events={events} />);
 
-    const date = container.querySelector('input[type="datetime-local"]') as HTMLInputElement;
-    expect(date).toHaveValue('2030-05-10T20:30');
-    fireEvent.change(date, { target: { value: '2030-05-10T21:00' } });
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Brindis' } });
+    const date = screen.getByLabelText('Fecha');
+    expect(date).toHaveValue('2030-05-10 20:30');
+    fireEvent.change(date, { target: { value: '2030-05-10 21:00' } });
+    fireEvent.change(document.querySelector('textarea')!, { target: { value: 'Brindis' } });
     await userEvent.click(screen.getByRole('combobox'));
     await userEvent.click(await screen.findByRole('option', { name: /Meetup/ }));
     await userEvent.click(screen.getByRole('button', { name: 'guardarCambios();' }));

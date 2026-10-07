@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { CalendarRange } from 'lucide-react';
 import { RANGE_PRESETS, type RangePreset } from '@/lib/metrics-range';
 import { cn } from '@/lib/utils';
+import { DateInput } from '@/components/ui/date-input';
 
 const inputDate = (date: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(date);
@@ -66,30 +66,9 @@ export function RangeFilter({
           if (desde && hasta && desde <= hasta) go(`desde=${desde}&hasta=${hasta}`);
         }}
       >
-        <CalendarRange className="size-3.5 text-pcnGreen-600" aria-hidden />
-        <label className="sr-only" htmlFor="metricas-desde">
-          Desde
-        </label>
-        <input
-          id="metricas-desde"
-          type="date"
-          value={desde}
-          max={hasta}
-          onChange={(event) => setDesde(event.target.value)}
-          className="bg-transparent text-muted-foreground outline-none [color-scheme:dark] focus:text-foreground"
-        />
+        <DateInput bare required aria-label="Desde" value={desde} max={hasta} onChange={setDesde} />
         <span className="text-pcnGreen-500">→</span>
-        <label className="sr-only" htmlFor="metricas-hasta">
-          Hasta
-        </label>
-        <input
-          id="metricas-hasta"
-          type="date"
-          value={hasta}
-          min={desde}
-          onChange={(event) => setHasta(event.target.value)}
-          className="bg-transparent text-muted-foreground outline-none [color-scheme:dark] focus:text-foreground"
-        />
+        <DateInput bare required aria-label="Hasta" value={hasta} min={desde} onChange={setHasta} />
         <button type="submit" className="ml-1 text-pcnGreen-700 hover:text-pcnGreen">
           aplicar
         </button>

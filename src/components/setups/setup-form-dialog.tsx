@@ -39,6 +39,7 @@ import {
   todayInputValue,
   type SetupFormData,
 } from '@/schemas/setup-schema';
+import { DateInput } from '@/components/ui/date-input';
 
 const MAX_MB = Math.round(SETUP_MAX_BYTES / 1024 / 1024);
 
@@ -274,7 +275,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                   <FormItem>
                     <FormLabel>Fecha</FormLabel>
                     <FormControl>
-                      <Input type="date" max={todayInputValue()} {...field} />
+                      <DateInput max={todayInputValue()} required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

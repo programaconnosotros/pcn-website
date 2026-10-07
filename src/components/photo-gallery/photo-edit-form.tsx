@@ -7,7 +7,6 @@ import { Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { deleteGalleryItem, updateGalleryItem } from '@/actions/gallery/gallery-actions';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   AlertDialog,
@@ -22,6 +21,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toDateTimeInput } from './date-input';
 import { PhotoEventSelect, type EventOption } from './photo-event-select';
+import { DateInput } from '@/components/ui/date-input';
 
 type Props = {
   photo: {
@@ -91,12 +91,13 @@ export function PhotoEditForm({ photo, events }: Props) {
 
       <div className="space-y-4">
         <Field label="fecha">
-          <Input
-            type="datetime-local"
+          <DateInput
+            withTime
             value={takenAt}
-            onChange={(event) => setTakenAt(event.target.value)}
+            onChange={setTakenAt}
             required
-            className="max-w-xs font-mono text-xs"
+            aria-label="Fecha"
+            className="max-w-xs text-xs"
           />
         </Field>
         <Field label="descripción (opcional)">

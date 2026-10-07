@@ -13,7 +13,6 @@ import {
 import { MAX_VIDEO_BYTES } from '@/actions/gallery/gallery-schema';
 import { formatDuration } from '@/lib/gallery-filters';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -32,6 +31,7 @@ import {
   readVideo,
   type VideoInfo,
 } from './upload-media';
+import { DateInput } from '@/components/ui/date-input';
 
 type Status = 'pending' | 'compressing' | 'uploading' | 'done' | 'error';
 
@@ -391,13 +391,13 @@ export function PhotoUploader({
                   ) : item.unsupported ? null : (
                     <>
                       <div className="grid gap-2 sm:grid-cols-2 lg:max-w-2xl">
-                        <Input
-                          type="datetime-local"
+                        <DateInput
+                          withTime
                           value={item.takenAt}
-                          onChange={(event) => changeTakenAt(item, event.target.value)}
+                          onChange={(value) => changeTakenAt(item, value)}
                           disabled={item.status === 'compressing' || item.status === 'uploading'}
                           aria-label="Fecha"
-                          className="font-mono text-xs"
+                          className="text-xs"
                         />
                         <PhotoEventSelect
                           events={events}

@@ -35,6 +35,7 @@ import { fetchTalks } from '@/actions/talks/fetch-talks';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { DateInput } from '@/components/ui/date-input';
 
 type EventOption = {
   id: string;
@@ -429,12 +430,7 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
               <FormItem>
                 <FormLabel>Fecha del evento</FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={!!selectedEvent}
-                  />
+                  <DateInput {...field} disabled={!!selectedEvent} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

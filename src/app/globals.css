@@ -429,9 +429,26 @@
       transform: translateX(-6px);
     }
   }
+  /* The date picker's grid (components/ui/date-input.tsx) flickers in when the month changes. */
+  .date-grid-in {
+    animation: date-grid-in 0.22s ease-out both;
+  }
+  @keyframes date-grid-in {
+    0% {
+      opacity: 0;
+      filter: brightness(2);
+      clip-path: inset(0 0 100% 0);
+    }
+    100% {
+      opacity: 1;
+      filter: none;
+      clip-path: inset(0);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .menu-surface[data-state],
-    .menu-surface [role] {
+    .menu-surface [role],
+    .date-grid-in {
       animation: none;
     }
   }
