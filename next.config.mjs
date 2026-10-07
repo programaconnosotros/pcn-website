@@ -34,6 +34,11 @@ const nextConfig = {
     // Next compares against the browser's Origin header in its server action CSRF check is not the
     // public domain anymore. The public domain is still a valid origin for server actions.
     serverActions: { allowedOrigins: ['programaconnosotros.com'] },
+    // Next 16.4, development only: compile a dynamic import() (the PCN OS programs, dialogs,
+    // charts) the first time the browser asks for it instead of up front, and let Turbopack drop
+    // unreachable work from memory and its disk cache in long `pnpm dev` sessions.
+    turbopackLazyDynamicImports: true,
+    turbopackGc: true,
   },
   async headers() {
     return [
