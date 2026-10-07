@@ -1,46 +1,46 @@
 {
-  "updatedAt": "2026-10-03T22:05:28.143Z",
+  "updatedAt": "2026-10-07T06:29:14.332Z",
   "stars": 21,
   "forks": 9,
-  "commits": 1812,
-  "contributors": 16,
-  "mergedPrs": 100,
-  "openPrs": 4,
-  "medianHoursToMerge": 1.6452777777777778,
+  "commits": 1918,
+  "contributors": 17,
+  "mergedPrs": 101,
+  "openPrs": 3,
+  "medianHoursToMerge": 1.6497222222222223,
   "createdAt": "2024-06-21T03:44:11Z",
-  "pushedAt": "2026-10-03T20:41:28Z",
+  "pushedAt": "2026-10-07T04:15:34Z",
   "weeklyCommits": [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 226, 197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 39,
-    13, 0, 12, 3, 0, 67, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 422
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 143, 281, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 19, 84, 3,
+    10, 0, 15, 0, 20, 47, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 570
   ],
   "languages": [
     {
       "name": "TypeScript",
-      "percent": 98.18160146133413
+      "percent": 98.6128492430871
     },
     {
       "name": "JavaScript",
-      "percent": 0.7597299750776945
+      "percent": 0.7508489263392683
     },
     {
       "name": "CSS",
-      "percent": 0.7541836175118878
+      "percent": 0.4507213239336708
     },
     {
       "name": "Shell",
-      "percent": 0.2218139654863278
+      "percent": 0.13621361088311826
     },
     {
       "name": "Ruby",
-      "percent": 0.07182028833395283
+      "percent": 0.042887415415984446
     },
     {
       "name": "Dockerfile",
-      "percent": 0.006534617641168414
+      "percent": 0.003902140577023016
     },
     {
       "name": "Makefile",
-      "percent": 0.004316074614845804
+      "percent": 0.0025773397638361897
     }
   ],
   "linesOfCode": 141466,
@@ -49,10 +49,257 @@
       "login": "agustin-sanc",
       "avatarUrl": "https://avatars.githubusercontent.com/u/55034666?v=4",
       "htmlUrl": "https://github.com/agustin-sanc",
-      "commits": 1760,
+      "commits": 1865,
       "mergedPrs": 49,
-      "linesAdded": 234855,
-      "linesDeleted": 107533,
+      "pulls": [
+        {
+          "number": 305,
+          "title": "feat(proyectos): add community software projects showcase page",
+          "mergedAt": "2026-06-28T22:57:15Z"
+        },
+        {
+          "number": 303,
+          "title": "feat(cursos): add logos to course cards",
+          "mergedAt": "2026-06-12T19:36:21Z"
+        },
+        {
+          "number": 304,
+          "title": "feat(herramientas): replace pricing badge with typing and paradigm badges for languages",
+          "mergedAt": "2026-06-11T19:42:45Z"
+        },
+        {
+          "number": 300,
+          "title": "feat(lectura): add 3 Martin Fowler articles to artículos tab",
+          "mergedAt": "2026-06-11T19:36:07Z"
+        },
+        {
+          "number": 302,
+          "title": "feat(desarrollo): enrich page with architecture, toolchain, and conventions",
+          "mergedAt": "2026-06-11T19:35:39Z"
+        },
+        {
+          "number": 301,
+          "title": "fix(especialidades): left-align page header to match other pages",
+          "mergedAt": "2026-06-11T19:35:07Z"
+        },
+        {
+          "number": 296,
+          "title": "build(node): migrate to Node 24 LTS and make pnpm dev use portless by default",
+          "mergedAt": "2026-06-11T18:55:54Z"
+        },
+        {
+          "number": 299,
+          "title": "feat(lectura): add 38 new books with covers and 5 new categories",
+          "mergedAt": "2026-06-11T17:29:09Z"
+        },
+        {
+          "number": 295,
+          "title": "test(actions): add Jest unit tests for all server actions",
+          "mergedAt": "2026-06-11T16:41:59Z"
+        },
+        {
+          "number": 297,
+          "title": "feat(herramientas): add AI SDK, Playwright, Portless and mark Jest as used",
+          "mergedAt": "2026-06-11T16:40:17Z"
+        },
+        {
+          "number": 298,
+          "title": "feat(sidebar): move Herramientas to top-level nav after Especialidades",
+          "mergedAt": "2026-06-11T16:39:25Z"
+        },
+        {
+          "number": 294,
+          "title": "feat(worktrees): isolated Postgres DB per Claude Code worktree",
+          "mergedAt": "2026-06-11T04:35:15Z"
+        },
+        {
+          "number": 293,
+          "title": "feat(herramientas): build herramientas page with tabs, extended catalog, and used-here badges",
+          "mergedAt": "2026-06-11T04:26:48Z"
+        },
+        {
+          "number": 290,
+          "title": "feat(sidebar): promote recursos to top-level section with Más recursos dropdown",
+          "mergedAt": "2026-06-11T03:43:39Z"
+        },
+        {
+          "number": 292,
+          "title": "feat(lectura): add design ebooks and landing page article",
+          "mergedAt": "2026-06-11T03:43:03Z"
+        },
+        {
+          "number": 291,
+          "title": "ci+test: Jest harness, lint-staged pre-commit, and pre-push test run",
+          "mergedAt": "2026-06-11T03:41:18Z"
+        },
+        {
+          "number": 289,
+          "title": "fix(lectura): guard against null parsed.content before sanitizeHtml",
+          "mergedAt": "2026-06-11T02:59:59Z"
+        },
+        {
+          "number": 288,
+          "title": "feat(cursos): add Patterns.dev as external interactive course",
+          "mergedAt": "2026-06-11T02:59:29Z"
+        },
+        {
+          "number": 287,
+          "title": "feat(lectura): in-platform article reader with new content",
+          "mergedAt": "2026-06-11T01:21:56Z"
+        },
+        {
+          "number": 285,
+          "title": "feat(conversaciones): apply cursos card style with gradient and hover lift",
+          "mergedAt": "2026-06-10T20:14:47Z"
+        },
+        {
+          "number": 284,
+          "title": "feat(series-y-peliculas): pin featured titles to top of grid",
+          "mergedAt": "2026-06-10T16:26:00Z"
+        },
+        {
+          "number": 283,
+          "title": "feat(preguntas-frecuentes): replace accordion with always-expanded card grid",
+          "mergedAt": "2026-06-10T16:25:31Z"
+        },
+        {
+          "number": 282,
+          "title": "feat(conversaciones): add 36 summaries from May–June 2026 chat export",
+          "mergedAt": "2026-06-10T16:19:07Z"
+        },
+        {
+          "number": 281,
+          "title": "feat(lectura): add 9 articles and sort by publish date",
+          "mergedAt": "2026-06-10T15:49:47Z"
+        },
+        {
+          "number": 280,
+          "title": "fix(software-util): replace broken logos and fix cramped grid layout",
+          "mergedAt": "2026-06-10T15:27:28Z"
+        },
+        {
+          "number": 279,
+          "title": "feat(cursos): add Next.js interactive website course",
+          "mergedAt": "2026-06-10T14:17:35Z"
+        },
+        {
+          "number": 278,
+          "title": "feat(lectura): add articles tab with industry blog posts",
+          "mergedAt": "2026-06-10T14:12:20Z"
+        },
+        {
+          "number": 277,
+          "title": "refactor(sidebar): reorder recursos items and fix series y peliculas casing",
+          "mergedAt": "2026-06-10T14:09:16Z"
+        },
+        {
+          "number": 275,
+          "title": "feat(series-y-peliculas): add movies and series page to Recursos",
+          "mergedAt": "2026-06-10T02:50:26Z"
+        },
+        {
+          "number": 276,
+          "title": "content(cursos): shorten long course descriptions",
+          "mergedAt": "2026-06-10T02:50:11Z"
+        },
+        {
+          "number": 274,
+          "title": "feat(lectura): add 6 new books with cover images",
+          "mergedAt": "2026-06-10T02:29:39Z"
+        },
+        {
+          "number": 273,
+          "title": "feat(influencers): add 22 new software engineering content creators",
+          "mergedAt": "2026-06-10T01:57:15Z"
+        },
+        {
+          "number": 272,
+          "title": "feat(lectura): add 12 new books, cover portraits, ISBN, and alphabetical sort",
+          "mergedAt": "2026-06-10T01:55:36Z"
+        },
+        {
+          "number": 271,
+          "title": "feat(cursos): add new courses and unified grid layout",
+          "mergedAt": "2026-06-10T01:52:29Z"
+        },
+        {
+          "number": 270,
+          "title": "feat(sidebar): move Recursos first and Redes last in Comunidad section",
+          "mergedAt": "2026-06-10T01:52:07Z"
+        },
+        {
+          "number": 269,
+          "title": "feat(software-util): add 19 tools, three-tier pricing badges, and alphabetical sort",
+          "mergedAt": "2026-06-10T01:34:17Z"
+        },
+        {
+          "number": 268,
+          "title": "feat(inscripciones): add search, sorting, wider columns, and summary cards",
+          "mergedAt": "2026-06-10T00:49:02Z"
+        },
+        {
+          "number": 267,
+          "title": "feat(historia): enhance historia page with fullscreen, sections, and WhatsApp",
+          "mergedAt": "2026-06-10T00:18:39Z"
+        },
+        {
+          "number": 266,
+          "title": "feat(historia): enrich page with production events 2021-2026",
+          "mergedAt": "2026-06-09T18:45:05Z"
+        },
+        {
+          "number": 265,
+          "title": "feat(usuarios): load users server-side, increase page size and column widths",
+          "mergedAt": "2026-06-09T18:00:20Z"
+        },
+        {
+          "number": 264,
+          "title": "style(eventos): make event detail columns equal width",
+          "mergedAt": "2026-06-09T16:49:52Z"
+        },
+        {
+          "number": 263,
+          "title": "feat(eventos): improve event detail page layout and OG metadata",
+          "mergedAt": "2026-06-09T16:00:29Z"
+        },
+        {
+          "number": 262,
+          "title": "fix(registro): keep submit button disabled after successful sign-up",
+          "mergedAt": "2026-06-09T15:40:41Z"
+        },
+        {
+          "number": 261,
+          "title": "feat(usuarios): replace user card grid with shadcn DataTable",
+          "mergedAt": "2026-06-09T15:33:24Z"
+        },
+        {
+          "number": 260,
+          "title": "feat(eventos): generalize event URL shortcuts via a shortcut field",
+          "mergedAt": "2026-06-09T02:10:57Z"
+        },
+        {
+          "number": 259,
+          "title": "feat(eventos): multi-image flyer carousel + optional flyers",
+          "mergedAt": "2026-06-08T03:08:46Z"
+        },
+        {
+          "number": 63,
+          "title": "feat: remove edit profile section from user profile page (#62)",
+          "mergedAt": "2025-04-08T14:35:43Z"
+        },
+        {
+          "number": 55,
+          "title": "feat: add languages in user detail page",
+          "mergedAt": "2025-03-27T21:34:05Z"
+        },
+        {
+          "number": 46,
+          "title": "[PCN - #15] - Recreate Sidebar (#19)",
+          "mergedAt": "2025-03-03T19:02:09Z"
+        }
+      ],
+      "linesAdded": 327906,
+      "linesDeleted": 119484,
       "firstContributionWeek": "2024-06-16T00:00:00.000Z"
     },
     {
@@ -61,6 +308,58 @@
       "htmlUrl": "https://github.com/FacuBzn",
       "commits": 9,
       "mergedPrs": 10,
+      "pulls": [
+        {
+          "number": 167,
+          "title": "Work offers",
+          "mergedAt": "2025-07-05T18:09:47Z"
+        },
+        {
+          "number": 170,
+          "title": "fix: update header text for influencers page",
+          "mergedAt": "2025-05-29T04:48:32Z"
+        },
+        {
+          "number": 91,
+          "title": "Like advise optimistic",
+          "mergedAt": "2025-05-20T02:40:31Z"
+        },
+        {
+          "number": 85,
+          "title": "Like advises",
+          "mergedAt": "2025-05-09T22:28:59Z"
+        },
+        {
+          "number": 68,
+          "title": "Influencer section",
+          "mergedAt": "2025-05-08T21:55:44Z"
+        },
+        {
+          "number": 67,
+          "title": "feat: add edit profile button for user profiles",
+          "mergedAt": "2025-04-12T21:02:48Z"
+        },
+        {
+          "number": 62,
+          "title": "feat: remove edit profile section from user profile page",
+          "mergedAt": "2025-04-08T14:34:22Z"
+        },
+        {
+          "number": 53,
+          "title": "Mostrar lenguajes favoritos en pantalla de consejos",
+          "mergedAt": "2025-03-27T20:58:49Z"
+        },
+        {
+          "number": 52,
+          "title": "Optimize public images",
+          "mergedAt": "2025-03-27T20:53:07Z"
+        },
+        {
+          "number": 49,
+          "title": "Allow users set preferred language",
+          "mergedAt": "2025-03-27T20:51:10Z"
+        }
+      ],
       "linesAdded": 2974,
       "linesDeleted": 405,
       "firstContributionWeek": "2025-03-23T00:00:00.000Z"
@@ -71,6 +370,58 @@
       "htmlUrl": "https://github.com/MatiasDG539",
       "commits": 9,
       "mergedPrs": 10,
+      "pulls": [
+        {
+          "number": 187,
+          "title": "[PCN - #177 & #178] - Fallos en la vista mobile",
+          "mergedAt": "2025-06-05T18:39:22Z"
+        },
+        {
+          "number": 185,
+          "title": "[PCN - #171] - Fijar encabezados en todas las paginas",
+          "mergedAt": "2025-06-05T03:24:04Z"
+        },
+        {
+          "number": 184,
+          "title": "[PCN - #129] - Inconsistencia en la alineación del botón del menú",
+          "mergedAt": "2025-06-01T17:19:29Z"
+        },
+        {
+          "number": 183,
+          "title": "[PCN - #103] - Corregir posición del titulo Galeria de fotos",
+          "mergedAt": "2025-06-01T17:15:28Z"
+        },
+        {
+          "number": 179,
+          "title": "PCN [#150] - Configuración de envío de mails con Nodemailer",
+          "mergedAt": "2025-05-30T22:33:22Z"
+        },
+        {
+          "number": 127,
+          "title": "[PCN #126] - Reparar vista mensaje de carga",
+          "mergedAt": "2025-05-21T22:51:12Z"
+        },
+        {
+          "number": 125,
+          "title": "[PCN-#81] - Reparar vista mobile del toggle button del sidebar.",
+          "mergedAt": "2025-05-21T22:50:28Z"
+        },
+        {
+          "number": 82,
+          "title": "[PCN - #80] - Agregar preview de botones \"Crear cuenta\" e \"Iniciar sesion\" en sidebar",
+          "mergedAt": "2025-05-08T22:39:32Z"
+        },
+        {
+          "number": 58,
+          "title": "Correccion de estilos de botones login en version mobile y desktop",
+          "mergedAt": "2025-04-12T21:30:44Z"
+        },
+        {
+          "number": 19,
+          "title": "[PCN - #15] - Recreate Sidebar",
+          "mergedAt": "2025-03-03T18:39:32Z"
+        }
+      ],
       "linesAdded": 3915,
       "linesDeleted": 2835,
       "firstContributionWeek": "2025-03-02T00:00:00.000Z"
@@ -81,6 +432,53 @@
       "htmlUrl": "https://github.com/MauriJC",
       "commits": 9,
       "mergedPrs": 9,
+      "pulls": [
+        {
+          "number": 189,
+          "title": "[PCN-92] Agregar página con directorio de miembros de PCN",
+          "mergedAt": "2025-06-23T22:26:27Z"
+        },
+        {
+          "number": 182,
+          "title": "[PCN#174] Desnivel en la posición del encabezado de la pagina Consejos",
+          "mergedAt": "2025-06-01T00:31:50Z"
+        },
+        {
+          "number": 175,
+          "title": "[PCN-148] Crear un notificador para discord cuando una rama se mergee a testing",
+          "mergedAt": "2025-05-29T00:16:14Z"
+        },
+        {
+          "number": 162,
+          "title": "[PCN-148] Validación incorrecta del campo de contraseña al crear una cuenta",
+          "mergedAt": "2025-05-27T16:18:07Z"
+        },
+        {
+          "number": 161,
+          "title": "[PCN-159 ] Error en la funcionalidad de restablecimiento de contraseña + fix en sign up",
+          "mergedAt": "2025-05-27T16:09:36Z"
+        },
+        {
+          "number": 158,
+          "title": "[PCN #123] Corregir campo de texto de registro de usuario",
+          "mergedAt": "2025-05-23T22:29:40Z"
+        },
+        {
+          "number": 77,
+          "title": "Images optimization",
+          "mergedAt": "2025-05-08T21:58:55Z"
+        },
+        {
+          "number": 79,
+          "title": "fix: Event List no está cargando los eventos #78",
+          "mergedAt": "2025-04-21T20:09:56Z"
+        },
+        {
+          "number": 17,
+          "title": "feat (events): Implementación de funcionalidad para eventos",
+          "mergedAt": "2025-04-07T20:41:48Z"
+        }
+      ],
       "linesAdded": 1875,
       "linesDeleted": 247,
       "firstContributionWeek": "2025-04-06T00:00:00.000Z"
@@ -91,6 +489,38 @@
       "htmlUrl": "https://github.com/nicofuentesg",
       "commits": 6,
       "mergedPrs": 6,
+      "pulls": [
+        {
+          "number": 186,
+          "title": "[PCN-133] feat(setups): compartí tu setup (S3 + nueva estética)",
+          "mergedAt": "2026-10-02T18:25:28Z"
+        },
+        {
+          "number": 180,
+          "title": "[152-PCN] feat: Add SoftwareRecommendationCard component",
+          "mergedAt": "2025-06-05T03:23:07Z"
+        },
+        {
+          "number": 169,
+          "title": "[PCN-40] change routes to english a spanish",
+          "mergedAt": "2025-05-29T04:47:15Z"
+        },
+        {
+          "number": 166,
+          "title": "[99-PCN] Fix youtube button position",
+          "mergedAt": "2025-05-27T21:34:29Z"
+        },
+        {
+          "number": 164,
+          "title": "[ PCN-106 ] remove followers count",
+          "mergedAt": "2025-05-27T16:24:18Z"
+        },
+        {
+          "number": 59,
+          "title": "feat(photos): add photo gallery section",
+          "mergedAt": "2025-04-12T21:27:07Z"
+        }
+      ],
       "linesAdded": 4548,
       "linesDeleted": 2115,
       "firstContributionWeek": "2025-04-06T00:00:00.000Z"
@@ -101,6 +531,28 @@
       "htmlUrl": "https://github.com/gmanavarro",
       "commits": 7,
       "mergedPrs": 4,
+      "pulls": [
+        {
+          "number": 181,
+          "title": "Agregar colaboradores",
+          "mergedAt": "2025-06-01T19:57:36Z"
+        },
+        {
+          "number": 48,
+          "title": "feat: add comment section on advise page",
+          "mergedAt": "2025-04-07T20:43:32Z"
+        },
+        {
+          "number": 45,
+          "title": "feat: add user profile fields and public user profile page",
+          "mergedAt": "2025-03-04T02:42:20Z"
+        },
+        {
+          "number": 21,
+          "title": "Add kamal deployment configuration",
+          "mergedAt": "2025-02-06T01:45:26Z"
+        }
+      ],
       "linesAdded": 2350,
       "linesDeleted": 158,
       "firstContributionWeek": "2025-02-02T00:00:00.000Z"
@@ -111,6 +563,18 @@
       "htmlUrl": "https://github.com/SpagnoloCarlos",
       "commits": 2,
       "mergedPrs": 2,
+      "pulls": [
+        {
+          "number": 60,
+          "title": "Invite devs to work on the project",
+          "mergedAt": "2025-04-08T22:14:11Z"
+        },
+        {
+          "number": 57,
+          "title": "Visual adjustments on course page",
+          "mergedAt": "2025-04-08T21:49:07Z"
+        }
+      ],
       "linesAdded": 281,
       "linesDeleted": 2,
       "firstContributionWeek": "2025-04-06T00:00:00.000Z"
@@ -121,6 +585,18 @@
       "htmlUrl": "https://github.com/contrera-lean",
       "commits": 2,
       "mergedPrs": 2,
+      "pulls": [
+        {
+          "number": 203,
+          "title": "[PCN - #56] - Agregar GitHub a las redes sociales de cada perfil Feat add GitHub profile | Mejoras en el Dockerfile",
+          "mergedAt": "2025-12-20T23:20:27Z"
+        },
+        {
+          "number": 198,
+          "title": "[PCN - #192] - Agregar tema claro a modal de lenguajes de programacion",
+          "mergedAt": "2025-12-17T20:03:39Z"
+        }
+      ],
       "linesAdded": 87,
       "linesDeleted": 41,
       "firstContributionWeek": "2025-12-14T00:00:00.000Z"
@@ -131,6 +607,13 @@
       "htmlUrl": "https://github.com/Alejoboga20",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 4,
+          "title": "[PCN-5] Setup Prisma",
+          "mergedAt": "2024-08-16T19:32:38Z"
+        }
+      ],
       "linesAdded": 2429,
       "linesDeleted": 1799,
       "firstContributionWeek": "2024-08-11T00:00:00.000Z"
@@ -141,6 +624,13 @@
       "htmlUrl": "https://github.com/cortesjpb",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 6,
+          "title": "[PCN-24] Adding new migration commands",
+          "mergedAt": "2024-08-30T15:48:14Z"
+        }
+      ],
       "linesAdded": 5,
       "linesDeleted": 11,
       "firstContributionWeek": "2024-08-25T00:00:00.000Z"
@@ -151,6 +641,13 @@
       "htmlUrl": "https://github.com/facmartoni",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 313,
+          "title": "feat(eventos): abrir borrador en Google Calendar",
+          "mergedAt": "2026-09-29T17:14:05Z"
+        }
+      ],
       "linesAdded": 109,
       "linesDeleted": 1,
       "firstContributionWeek": "2026-09-27T00:00:00.000Z"
@@ -161,8 +658,32 @@
       "htmlUrl": "https://github.com/FedericoV21",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 256,
+          "title": "feat(eventos): lista de espera con promoción automática",
+          "mergedAt": "2026-10-02T19:03:38Z"
+        }
+      ],
       "linesAdded": 1541,
       "linesDeleted": 299,
+      "firstContributionWeek": "2026-09-27T00:00:00.000Z"
+    },
+    {
+      "login": "luki1qq",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/74109221?v=4",
+      "htmlUrl": "https://github.com/luki1qq",
+      "commits": 1,
+      "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 315,
+          "title": "fix(os): la barra del escritorio sigue mostrando 'Iniciar sesión' tras loguearse en una ventana",
+          "mergedAt": "2026-10-04T02:15:07Z"
+        }
+      ],
+      "linesAdded": 15,
+      "linesDeleted": 1,
       "firstContributionWeek": "2026-09-27T00:00:00.000Z"
     },
     {
@@ -171,6 +692,13 @@
       "htmlUrl": "https://github.com/Chelo154",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 196,
+          "title": "Fix/docker fix",
+          "mergedAt": "2025-07-14T15:08:24Z"
+        }
+      ],
       "linesAdded": 25,
       "linesDeleted": 17,
       "firstContributionWeek": "2025-07-13T00:00:00.000Z"
@@ -181,6 +709,13 @@
       "htmlUrl": "https://github.com/MaxiR23",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 308,
+          "title": "feat(sponsors): add sponsors page to Comunidad sidebar section",
+          "mergedAt": "2026-09-11T22:14:54Z"
+        }
+      ],
       "linesAdded": 124,
       "linesDeleted": 10,
       "firstContributionWeek": "2026-09-06T00:00:00.000Z"
@@ -191,6 +726,13 @@
       "htmlUrl": "https://github.com/shadownrx",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 307,
+          "title": "feat: instalar PCN como app (PWA) con pantalla offline",
+          "mergedAt": "2026-10-02T17:29:03Z"
+        }
+      ],
       "linesAdded": 701,
       "linesDeleted": 10,
       "firstContributionWeek": "2026-09-27T00:00:00.000Z"
@@ -201,6 +743,13 @@
       "htmlUrl": "https://github.com/emilianogsh",
       "commits": 1,
       "mergedPrs": 1,
+      "pulls": [
+        {
+          "number": 160,
+          "title": "Setup Playwright",
+          "mergedAt": "2025-05-24T23:38:36Z"
+        }
+      ],
       "linesAdded": 586,
       "linesDeleted": 6,
       "firstContributionWeek": "2025-05-18T00:00:00.000Z"
