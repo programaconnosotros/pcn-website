@@ -27,11 +27,13 @@ recuperación), por qué el secreto se guarda cifrado y qué hay que cuidar de l
 - Al iniciar sesión, con la contraseña correcta el login no crea la sesión: abre un intento de 10
   minutos (`TwoFactorChallenge`, en una cookie httpOnly y guardado como hash, igual que las
   sesiones) y pide el código. 5 códigos incorrectos cierran el intento y hay que volver a ingresar
-  la contraseña.
+  la contraseña. Cada código descuenta su intento antes de revisarse, así que mandar muchos a la
+  vez no da más de 5 chances. Además de por IP, se limitan a 10 cada 15 minutos por cuenta.
 - Sirve el código de la app o uno de recuperación. Un código de la app no se puede reusar
   (`twoFactorLastStep` guarda el último paso de 30 segundos usado) y cada código de recuperación
-  sirve una sola vez.
-- Desactivarlo o generar códigos de recuperación nuevos también pide un código.
+  sirve una sola vez. `claimSecondFactor` lo gasta con una escritura condicional, así que dos
+  pedidos simultáneos con el mismo código no pasan los dos.
+- Desactivarlo o generar códigos de recuperación nuevos también pide un código, que queda gastado.
 
 Los códigos siguen el estándar RFC 6238 y se calculan con `node:crypto`, sin dependencias
 (`src/lib/totp.ts`), verificados contra los vectores de prueba del RFC.
