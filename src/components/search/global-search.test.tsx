@@ -117,7 +117,26 @@ describe('GlobalSearch', () => {
 
     fetchMock.mockRejectedValueOnce(new Error('offline'));
     await search('x');
+    // A failed request isn't "no results": it says so and offers to try again.
+    expect(screen.getByRole('alert')).toHaveTextContent('no se pudo buscar');
+    expect(screen.queryByText('find: ‘zzzx’: sin resultados')).not.toBeInTheDocument();
+
+    fetchMock.mockResolvedValueOnce(jsonResponse({ query: 'zzzx', results: [] }));
+    await user.click(screen.getByRole('button', { name: /reintentar/ }));
+    await act(async () => jest.advanceTimersByTime(150));
     expect(screen.getByText('find: ‘zzzx’: sin resultados')).toBeInTheDocument();
+  });
+
+  it('shows a scanner while the first results load, and warns when it is slow', async () => {
+    fetchMock.mockReturnValueOnce(new Promise(() => {}));
+    render(<GlobalSearch onNavigate={jest.fn()} />);
+    act(() => openGlobalSearch());
+    await search('react');
+
+    expect(screen.getByRole('status')).toHaveTextContent(/buscando en ~\//);
+    expect(screen.getByText('buscando…')).toBeInTheDocument();
+    await act(async () => jest.advanceTimersByTime(1500));
+    expect(screen.getByText(/está tardando más de lo normal/)).toBeInTheDocument();
   });
 
   it('closes with the esc button and does nothing on Enter without results', async () => {

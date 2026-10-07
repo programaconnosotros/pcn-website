@@ -1,14 +1,19 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { ArrowUpRight, CornerDownLeft, Loader2 } from 'lucide-react';
+import { ArrowUpRight, CornerDownLeft, Loader2, RotateCw } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { DialogOverlay, DialogPortal } from '@/components/ui/dialog';
 import { dialogContentClassName } from '@/components/ui/dialog-surface';
 import { useRestoreFocus } from '@/components/ui/restore-focus';
 import { isEmbedded, postToOsHost } from '@/components/os/os-env';
 import { visiblePrograms } from '@/components/os/programs';
-import { SEARCH_GROUPS, type SearchResponse, type SearchResult } from '@/lib/search/types';
+import {
+  SEARCH_GROUPS,
+  SEARCH_SCOPES,
+  type SearchResponse,
+  type SearchResult,
+} from '@/lib/search/types';
 import { cn } from '@/lib/utils';
 
 const OPEN_SEARCH_EVENT = 'pcn:open-search';
@@ -50,47 +55,124 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
   <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">{children}</kbd>
 );
 
+/** After this long, the search says it's taking longer than usual. */
+const SLOW_MS = 1500;
+
 const useSearchResults = (query: string) => {
-  const [state, setState] = useState<{ query: string; results: SearchResult[] }>({
+  const [state, setState] = useState<{ query: string; results: SearchResult[]; failed: boolean }>({
     query: '',
     results: [],
+    failed: false,
   });
   const [loading, setLoading] = useState(false);
+  const [slow, setSlow] = useState(false);
+  /** Bumped to run the same query again after a failure. */
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const trimmed = query.trim();
     if (!trimmed) {
       setLoading(false);
+      setSlow(false);
       return;
     }
 
     const controller = new AbortController();
     setLoading(true);
+    setSlow(false);
+    const slowTimeout = window.setTimeout(() => setSlow(true), SLOW_MS);
     const timeout = window.setTimeout(async () => {
       try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`, {
           signal: controller.signal,
         });
+        if (!response.ok) throw new Error(`search: ${response.status}`);
         const data: SearchResponse = await response.json();
-        setState({ query: trimmed, results: data.results });
+        setState({ query: trimmed, results: data.results, failed: false });
       } catch (error) {
-        if ((error as Error).name !== 'AbortError') setState({ query: trimmed, results: [] });
+        if ((error as Error).name !== 'AbortError')
+          setState({ query: trimmed, results: [], failed: true });
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+          setSlow(false);
+          window.clearTimeout(slowTimeout);
+        }
       }
     }, DEBOUNCE_MS);
 
     return () => {
       controller.abort();
       window.clearTimeout(timeout);
+      window.clearTimeout(slowTimeout);
     };
-  }, [query]);
+  }, [query, attempt]);
+
+  const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
   const trimmed = query.trim();
-  if (!trimmed) return { loading: false, results: SECTION_RESULTS };
+  if (!trimmed)
+    return { loading: false, slow: false, failed: false, results: SECTION_RESULTS, retry };
+  const settled = state.query === trimmed && !loading;
   // Keep showing the previous results while the next ones load, so the list doesn't flash.
-  return { loading, results: state.results, settled: state.query === trimmed && !loading };
+  return {
+    loading,
+    slow,
+    failed: settled && state.failed,
+    results: state.results,
+    /** Results shown belong to an older query (or none yet): dim them, or show the scanner. */
+    stale: state.query !== trimmed,
+    settled,
+    retry,
+  };
 };
+
+/** Cycles through the places being searched, like a scanner walking the filesystem. */
+const ScanningScopes = () => {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const interval = window.setInterval(() => setIndex((i) => (i + 1) % SEARCH_SCOPES.length), 140);
+    return () => window.clearInterval(interval);
+  }, []);
+  return (
+    <span className="text-pcnGreen">
+      ~/{SEARCH_SCOPES[index].replace(/\s+/g, '-')}
+      <span className="cursor-blink" />
+    </span>
+  );
+};
+
+/** What the list shows while the first results for a query are on their way. */
+const SearchSkeleton = ({ slow }: { slow: boolean }) => (
+  <div role="status" aria-live="polite" className="px-4 py-2 text-xs">
+    <p className="text-muted-foreground">
+      <span className="text-pcnGreen-600">&gt; </span>
+      buscando en <ScanningScopes />
+    </p>
+    {slow && (
+      <p className="mt-1 text-[11px] text-amber-300/80">
+        # está tardando más de lo normal, ya casi…
+      </p>
+    )}
+    <div aria-hidden className="mt-3 flex flex-col gap-3">
+      {[72, 54, 64, 40].map((width, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <span className="text-pcnGreen-300">&gt;</span>
+          <span className="flex flex-1 flex-col gap-1.5">
+            <span
+              className="h-3 animate-pulse rounded-sm bg-pcnGreen-200"
+              style={{ width: `${width}%`, animationDelay: `${i * 120}ms` }}
+            />
+            <span
+              className="h-2.5 w-1/4 animate-pulse rounded-sm bg-pcnGreen-100"
+              style={{ animationDelay: `${i * 120 + 60}ms` }}
+            />
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 interface GlobalSearchDialogProps {
   open: boolean;
@@ -152,7 +234,12 @@ function GlobalSearchDialog({
     event.preventDefault();
   };
 
-  const showEmpty = query.trim() !== '' && 'settled' in search && search.settled && !results.length;
+  const searching = query.trim() !== '';
+  const showEmpty =
+    searching && 'settled' in search && search.settled && !search.failed && !results.length;
+  // First results for this query still on their way: show the scanner instead of the old list.
+  const showSkeleton =
+    searching && search.loading && 'stale' in search && (search.stale || !results.length);
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(next) => !next && onClose()}>
@@ -175,7 +262,13 @@ function GlobalSearchDialog({
         >
           <DialogPrimitive.Title className="sr-only">Buscar en todo el sitio</DialogPrimitive.Title>
 
-          <label className="flex items-center gap-2 border-b border-dashed border-pcnGreen-200 px-3 py-3 text-sm">
+          <label className="relative flex items-center gap-2 border-b border-dashed border-pcnGreen-200 px-3 py-3 text-sm">
+            {search.loading && (
+              <span
+                aria-hidden
+                className="search-scan pointer-events-none absolute inset-x-0 -bottom-px h-px overflow-hidden"
+              />
+            )}
             <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
               $ find ~ -iname
             </span>
@@ -183,7 +276,7 @@ function GlobalSearchDialog({
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="eventos, cursos, charlas, conversaciones…"
+              placeholder="perfiles, eventos, conversaciones, consejos, historia…"
               aria-label="Buscar en todo el sitio"
               role="combobox"
               aria-expanded
@@ -211,6 +304,21 @@ function GlobalSearchDialog({
             aria-label="Resultados"
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-2"
           >
+            {showSkeleton && <SearchSkeleton slow={search.slow} />}
+
+            {search.failed && (
+              <div role="alert" className="px-4 py-6 text-xs">
+                <span className="text-red-400/90">find: no se pudo buscar (¿sin conexión?)</span>
+                <button
+                  type="button"
+                  onClick={search.retry}
+                  className="mt-2 flex items-center gap-1.5 text-pcnGreen hover:underline"
+                >
+                  <RotateCw className="size-3" /> reintentar
+                </button>
+              </div>
+            )}
+
             {showEmpty && (
               <p className="px-4 py-6 text-xs">
                 <span className="text-red-400/90">find: ‘{query.trim()}’: sin resultados</span>
@@ -220,78 +328,86 @@ function GlobalSearchDialog({
               </p>
             )}
 
-            {groups.map((group) => (
-              <section key={group.type} className="pb-1">
-                <h3 className="px-4 pb-1 pt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  <span className="text-pcnGreen-500">{'// '}</span>
-                  {query.trim() ? group.label : 'ir a'}
-                </h3>
-                <ul>
-                  {group.items.map(({ result, index }) => {
-                    const selected = index === active;
-                    return (
-                      <li
-                        key={`${result.type}:${result.href}:${index}`}
-                        id={`global-search-${index}`}
-                        data-index={index}
-                        role="option"
-                        aria-selected={selected}
-                        onMouseMove={() => active !== index && setActive(index)}
-                        onClick={() => select(result)}
-                        className={cn(
-                          'relative flex cursor-pointer items-center gap-3 px-4 py-1.5 text-sm',
-                          selected && 'bg-pcnGreen/[0.08]',
-                        )}
-                      >
-                        {selected && (
-                          <span
-                            aria-hidden
-                            className="absolute inset-y-0 left-0 w-0.5 bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.8)]"
-                          />
-                        )}
-                        <span
-                          aria-hidden
+            {!showSkeleton &&
+              groups.map((group) => (
+                <section
+                  key={group.type}
+                  className={cn(
+                    'pb-1 transition-opacity duration-200',
+                    // Results of the previous query, while the new ones load.
+                    search.loading && 'opacity-60',
+                  )}
+                >
+                  <h3 className="px-4 pb-1 pt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-pcnGreen-500">{'// '}</span>
+                    {query.trim() ? group.label : 'ir a'}
+                  </h3>
+                  <ul>
+                    {group.items.map(({ result, index }) => {
+                      const selected = index === active;
+                      return (
+                        <li
+                          key={`${result.type}:${result.href}:${index}`}
+                          id={`global-search-${index}`}
+                          data-index={index}
+                          role="option"
+                          aria-selected={selected}
+                          onMouseMove={() => active !== index && setActive(index)}
+                          onClick={() => select(result)}
                           className={cn(
-                            'shrink-0 text-pcnGreen-500',
-                            selected && 'text-glow text-pcnGreen',
+                            'relative flex cursor-pointer items-center gap-3 px-4 py-1.5 text-sm',
+                            selected && 'bg-pcnGreen/[0.08]',
                           )}
                         >
-                          {'>'}
-                        </span>
-                        <span className="min-w-0 flex-1">
+                          {selected && (
+                            <span
+                              aria-hidden
+                              className="absolute inset-y-0 left-0 w-0.5 bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.8)]"
+                            />
+                          )}
                           <span
+                            aria-hidden
                             className={cn(
-                              'block truncate',
-                              selected ? 'text-pcnGreen' : 'text-foreground/90',
+                              'shrink-0 text-pcnGreen-500',
+                              selected && 'text-glow text-pcnGreen',
                             )}
                           >
-                            {result.title}
+                            {'>'}
                           </span>
-                          {result.subtitle && (
-                            <span className="block truncate text-[11px] text-muted-foreground">
-                              {result.subtitle}
+                          <span className="min-w-0 flex-1">
+                            <span
+                              className={cn(
+                                'block truncate',
+                                selected ? 'text-pcnGreen' : 'text-foreground/90',
+                              )}
+                            >
+                              {result.title}
                             </span>
-                          )}
-                        </span>
-                        {isExternal(result.href) ? (
-                          <ArrowUpRight
-                            aria-label="se abre en otra pestaña"
-                            className="size-3.5 shrink-0 text-pcnGreen-600"
-                          />
-                        ) : (
-                          selected && (
-                            <CornerDownLeft
-                              aria-hidden
+                            {result.subtitle && (
+                              <span className="block truncate text-[11px] text-muted-foreground">
+                                {result.subtitle}
+                              </span>
+                            )}
+                          </span>
+                          {isExternal(result.href) ? (
+                            <ArrowUpRight
+                              aria-label="se abre en otra pestaña"
                               className="size-3.5 shrink-0 text-pcnGreen-600"
                             />
-                          )
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
+                          ) : (
+                            selected && (
+                              <CornerDownLeft
+                                aria-hidden
+                                className="size-3.5 shrink-0 text-pcnGreen-600"
+                              />
+                            )
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              ))}
           </div>
 
           <p className="flex items-center gap-4 border-t border-dashed border-pcnGreen-200 px-3 py-1.5 text-[10px] text-muted-foreground max-sm:hidden">
@@ -305,7 +421,11 @@ function GlobalSearchDialog({
               <Kbd>esc</Kbd> cerrar
             </span>
             <span className="ml-auto tabular-nums">
-              {query.trim() ? `${results.length} resultados` : `${results.length} secciones`}
+              {!query.trim()
+                ? `${results.length} secciones`
+                : search.loading
+                  ? 'buscando…'
+                  : `${results.length} resultados`}
             </span>
           </p>
         </DialogPrimitive.Content>
