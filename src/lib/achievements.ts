@@ -192,7 +192,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'Alma del grupo',
     description: 'Es quien participó en más conversaciones interesantes del grupo de WhatsApp.',
     icon: 'flame',
-    tone: 'red',
+    tone: 'gold',
     goal: 'ser #1 en conversaciones',
     howTo: 'Participá en más charlas destacadas del grupo que nadie.',
     href: '/conversaciones',
