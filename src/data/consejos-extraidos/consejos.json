@@ -16,12 +16,252 @@
     "tags": ["carrera"]
   },
   {
+    "id": "auto-839b52d-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-10-02",
+    "title": "Pasión, autoconocimiento y aprender por cuenta propia sin esperar a la empresa",
+    "content": "Saber aprender y desbloquearte solo es más importante que nunca. No esperes que la empresa te facilite todo: si no paga una suscripción de IA, pensá en pagártela vos, porque es invertir en vos mismo.",
+    "tags": ["carrera", "aprendizaje", "ia"]
+  },
+  {
+    "id": "auto-fa3d66c-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-10-02",
+    "title": "Por qué tantos desarrolladores rechazan la IA: ego, miedo y resistencia al cambio",
+    "content": "Si todavía rechazás la IA, probá armar un proyecto propio de cero con ella. Es probable que no la hayas usado de verdad, y ahí la IA te ayuda justo donde sentís miedo, como un lenguaje o la arquitectura.",
+    "tags": ["aprendizaje", "ia"]
+  },
+  {
+    "id": "auto-a8b1d37-sebastian-soraire",
+    "member": "Sebastián Soraire",
+    "date": "2026-10-02",
+    "title": "¿Sigue teniendo sentido aprender a programar a mano con agentes que escriben el código?",
+    "content": "Aprendé las bases (bucles, listas, funciones, algoritmos y cómo el hardware los soporta): no cambian entre lenguajes y te sirven para saber qué falla cuando lo que hizo la IA se rompe. Sin eso, es una caja negra.",
+    "tags": ["aprendizaje", "carrera"]
+  },
+  {
+    "id": "auto-a8b1d37-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-10-02",
+    "title": "¿Sigue teniendo sentido aprender a programar a mano con agentes que escriben el código?",
+    "content": "Si estás aprendiendo, invertí en una suscripción, quemá tokens y rompé cosas: el ida y vuelta con la IA te enseña, y favorece a los autodidactas.",
+    "tags": ["aprendizaje", "ia"]
+  },
+  {
+    "id": "auto-a8b1d37-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-10-02",
+    "title": "¿Sigue teniendo sentido aprender a programar a mano con agentes que escriben el código?",
+    "content": "Cuando delegás mucho en agentes, leé con más atención el SQL de las migraciones, porque toca los datos de los usuarios. Trabajá siempre con backups y un harness que te permita revertir.",
+    "tags": ["bases-de-datos", "ia", "seguridad"]
+  },
+  {
+    "id": "auto-d404711-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-10-02",
+    "title": "Code review del comportamiento y las skills como lenguaje de más alto nivel",
+    "content": "En code review, enfocate en el comportamiento: backend, migraciones y modelo de datos, y verificá que la lógica de negocio refleje lo que querés. Usá skills que te entrevisten antes de implementar y escribí skills en lugar de scripts largos.",
+    "tags": ["ia", "testing", "productividad"]
+  },
+  {
+    "id": "auto-d404711-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-10-02",
+    "title": "Code review del comportamiento y las skills como lenguaje de más alto nivel",
+    "content": "Que la potencia de las herramientas no mate tu curiosidad: el criterio técnico de saber cómo funcionan las cosas por detrás te permite definir buenos requerimientos y crear buenas skills propias.",
+    "tags": ["aprendizaje", "ia"]
+  },
+  {
+    "id": "auto-864256a-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2026-10-02",
+    "title": "Entender el problema del cliente antes de construir, ahora que programar es barato",
+    "content": "Antes de construir, entendé por qué una solución le conviene más al cliente que otra: muchas veces cree que su problema se resuelve de una manera y, mirándolo mejor, se resuelve de otra.",
+    "tags": ["carrera", "freelance", "arquitectura"]
+  },
+  {
+    "id": "auto-864256a-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-10-02",
+    "title": "Entender el problema del cliente antes de construir, ahora que programar es barato",
+    "content": "En la toma de requerimientos, no aceptes al pie de la letra lo que pide el cliente. Preguntá para qué lo quiere: con práctica distinguís un problema real de un capricho.",
+    "tags": ["freelance", "carrera"]
+  },
+  {
+    "id": "auto-864256a-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-10-02",
+    "title": "Entender el problema del cliente antes de construir, ahora que programar es barato",
+    "content": "Como una feature sale en un par de prompts, definí bien el requerimiento antes de construir, o vas a sobretrabajar cosas que el cliente nunca va a usar.",
+    "tags": ["freelance", "productividad"]
+  },
+  {
+    "id": "auto-c764b11-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-10-02",
+    "title": "Ser engineering manager: personas, feedback y el margen bruto de una agencia",
+    "content": "Ser manager no es un rol al que haya que aspirar por estar arriba del tech lead: quien prefiere lo técnico no está estancado. El rol es en gran parte gestión de personas, no ingeniería.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-05d48f8-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-10-02",
+    "title": "El rol de QA cuando los agentes también pueden probar",
+    "content": "Pedile a un agente que use el navegador y verifique lo que implementó. Pero el criterio de un QA no se reemplaza: el desarrollador ve algo lindo que funciona y lo da por terminado.",
+    "tags": ["testing", "ia"]
+  },
+  {
+    "id": "auto-5ded988-leandro-andriani",
+    "member": "Leandro Andriani",
+    "date": "2026-10-02",
+    "title": "Cómo conseguir el primer trabajo como desarrollador junior hoy",
+    "content": "Si empezás, buscá clientes cerca tuyo, como el comercio de la vuelta que no tiene nada hecho. También podés entrar a una empresa por un puesto básico de sistemas o soporte y crecer desde adentro con curiosidad.",
+    "tags": ["carrera", "freelance"]
+  },
+  {
+    "id": "auto-5ded988-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-10-02",
+    "title": "Cómo conseguir el primer trabajo como desarrollador junior hoy",
+    "content": "Si estás buscando tu primer trabajo, ponete al día con agentic engineering y resolvé problemas con las herramientas de hoy. Si apuntás a empresas tradicionales, preparate para LeetCode, system design y un buen CV.",
+    "tags": ["carrera", "entrevistas"]
+  },
+  {
+    "id": "auto-33f5372-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-10-02",
+    "title": "Para hacer primero hay que ser: predisposición, networking y merecer las oportunidades",
+    "content": "Si recién empezás, no compitas con quien lleva cinco años en backend: destacate estando al día con los agentes, involucrándote en el negocio, comunicando bien y mostrando garra para aprender rápido.",
+    "tags": ["carrera", "aprendizaje"]
+  },
+  {
+    "id": "auto-33f5372-leo-apaza",
+    "member": "Leo Apaza",
+    "date": "2026-10-02",
+    "title": "Para hacer primero hay que ser: predisposición, networking y merecer las oportunidades",
+    "content": "Practicá entrevistas, incluso frente al espejo respondiendo preguntas como qué es un agente en un minuto, y conocé cómo aportar valor en cada empresa o proyecto.",
+    "tags": ["entrevistas", "carrera"]
+  },
+  {
+    "id": "auto-33f5372-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-10-02",
+    "title": "Para hacer primero hay que ser: predisposición, networking y merecer las oportunidades",
+    "content": "Para ser un gran ingeniero mañana, empezá hoy a ser la persona que merece esas oportunidades: estudiá, hacé proyectos, socializá, rodeate de gente que sabe más y compartí lo que aprendés.",
+    "tags": ["carrera", "comunidad", "aprendizaje"]
+  },
+  {
+    "id": "auto-643c865-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-10-02",
+    "title": "Qué aprender hoy: fundamentos, harness, skills y cómo perderle el miedo a otro lenguaje",
+    "content": "Para perderle el miedo a otro lenguaje, leé la guía de learnxinyminutes.com. Con eso podés hacer code review en un sistema que no conocías en tres o cuatro días. Lo que más lleva tiempo son los fundamentos: algoritmos, estructuras de datos y paradigmas.",
+    "tags": ["aprendizaje", "carrera"]
+  },
+  {
+    "id": "auto-643c865-leandro-andriani",
+    "member": "Leandro Andriani",
+    "date": "2026-10-02",
+    "title": "Qué aprender hoy: fundamentos, harness, skills y cómo perderle el miedo a otro lenguaje",
+    "content": "Aprendé a escribir tus propias skills en lugar de usar las de otros, para no cargar skills que consumen demasiado o un AGENTS.md de 50.000 tokens sin saber qué tiene.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-643c865-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-10-02",
+    "title": "Qué aprender hoy: fundamentos, harness, skills y cómo perderle el miedo a otro lenguaje",
+    "content": "Para entender qué problema resuelve una librería, practicá a mano el concepto central. En un proyecto con datos delicados, dominá Postgres: joins y row level security se pueden debatir con un agente o bajar a pseudocódigo.",
+    "tags": ["aprendizaje", "bases-de-datos"]
+  },
+  {
+    "id": "auto-3d5df0c-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-29",
+    "title": "Reviews adversariales con agentes, QA en el navegador y tests unitarios tramposos",
+    "content": "En la skill o el prompt aclará que el agente no altere tests indebidamente para hacerlos pasar. Los unitarios siguen valiendo porque son más rápidos que los e2e.",
+    "tags": ["testing", "ia"]
+  },
+  {
+    "id": "auto-3d5df0c-agustin-ponce-de-leon",
+    "member": "Agustin Ponce de León",
+    "date": "2026-09-29",
+    "title": "Reviews adversariales con agentes, QA en el navegador y tests unitarios tramposos",
+    "content": "Verificá con navegador y e2e en Playwright, y reducí tests unitarios que rara vez detectan algo: cuando fallan, el agente suele modificarlos para que pasen.",
+    "tags": ["testing", "ia"]
+  },
+  {
     "id": "auto-329d65d-martin-uslenghi",
     "member": "Martin Uslenghi",
     "date": "2026-09-28",
     "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
     "content": "Para servir imágenes en producción por URL, mirá Cloudflare R2: tiene un free tier generoso y no cobra el egreso de datos.",
     "tags": ["devops"]
+  },
+  {
+    "id": "auto-329d65d-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-28",
+    "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
+    "content": "Con Cloudinary, lo que cobra es el redimensionamiento vía su API: redimensioná las imágenes en tu propio backend antes de subirlas y aprovechá los 50 GB gratuitos.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-329d65d-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2026-09-28",
+    "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
+    "content": "Ojo con el free tier de Cloudinary: al superarlo le bloquearon las imágenes. Se pasó a Supabase Storage sin problemas.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-f5a6941-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-28",
+    "title": "Acelerar el CI saliendo de GitHub Actions: Blacksmith y Depot",
+    "content": "Si el CI es lento, probá Depot: con el cache de capas de Docker, un pipeline que tardaba 53 minutos en GitHub Actions bajó a unos 2.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-bd157c7-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-09-28",
+    "title": "Darle acceso a producción a los agentes para depurar bugs",
+    "content": "Para depurar bugs de producción con un agente, trabajá sobre un tenant de laboratorio que replique datos productivos, con reglas que limiten al agente a identificar y proponer. Revisá y probá en una rama de la base antes de aplicar.",
+    "tags": ["seguridad", "bases-de-datos", "ia"]
+  },
+  {
+    "id": "auto-bd157c7-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-28",
+    "title": "Darle acceso a producción a los agentes para depurar bugs",
+    "content": "Si le das a un agente acceso a producción, que sea de solo lectura.",
+    "tags": ["seguridad", "ia"]
+  },
+  {
+    "id": "auto-dfddd79-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-26",
+    "title": "Qué vale la pena aprender como desarrollador en la era de los agentes",
+    "content": "Aprender un lenguaje ya no multiplica tu valor: sumá entender sistemas completos y lo que el cliente necesita, y dirigir agentes con harness, loops y contexto. Para la base de un lenguaje, usá learnxinyminutes.com y después leé código real.",
+    "tags": ["carrera", "aprendizaje", "ia"]
+  },
+  {
+    "id": "auto-dfddd79-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-26",
+    "title": "Qué vale la pena aprender como desarrollador en la era de los agentes",
+    "content": "Poné tu valor en product engineering, arquitectura, agentic engineering, AI engineering y platform engineering: un senior que domina agentic engineering se vuelve aún más valioso.",
+    "tags": ["carrera", "arquitectura", "ia"]
+  },
+  {
+    "id": "auto-5685d9d-ale-bardin",
+    "member": "Ale Bardin",
+    "date": "2026-09-24",
+    "title": "Orca, herdr y cómo seguir trabajando con agentes desde el celular",
+    "content": "Para seguir sesiones de Claude Code desde el celular, usá el comando /rc de control remoto.",
+    "tags": ["herramientas", "ia", "productividad"]
   },
   {
     "id": "auto-ce32801-agustin-sanchez",
@@ -32,12 +272,100 @@
     "tags": ["carrera"]
   },
   {
+    "id": "auto-0c9dcf2-fabio-ramos",
+    "member": "Fabio Ramos",
+    "date": "2026-09-23",
+    "title": "Cuánto cobrar por una landing page hecha con IA",
+    "content": "Para cotizar una landing, partí del valor de tu hora multiplicado por el tiempo invertido y ajustá según el cliente. Considerá también la visibilidad que el trabajo puede darte.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-55a5809-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-23",
+    "title": "La keynote de DHH en Rails World y el fin de programar a mano",
+    "content": "Con agentes, el lenguaje a dominar ahora es el inglés: probó que podés ejecutar proyectos en lenguajes que nunca usaste a mano si sabés explicar qué querés.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-b0ea48f-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2026-09-23",
+    "title": "Traducciones i18n: PRs gigantes, i18nexus y validación humana",
+    "content": "Si querés que gente de negocio valide las traducciones, probá i18nexus: cargás la frase con su clave, genera las traducciones, permite importar tus JSON y tiene plan gratuito de unas 100 cadenas.",
+    "tags": ["herramientas", "frontend"]
+  },
+  {
     "id": "auto-8f54646-inaki-fernando-lozano",
     "member": "Iñaki Fernando Lozano",
     "date": "2026-09-22",
     "title": "Latencia en la nube desde Argentina: Ohio, São Paulo, Santiago o us-central1",
     "content": "Desplegá en la región más cercana a tus usuarios: la latencia está limitada por la distancia física de la fibra óptica. Una región en Estados Unidos solo tiene sentido si tus clientes están allá.",
     "tags": ["devops"]
+  },
+  {
+    "id": "auto-0d59ffb-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-22",
+    "title": "Implementar frontend con IA: modelos, skills de diseño y validación con capturas",
+    "content": "Para frontend usá siempre una librería de componentes más skills como Impeccable. Que el modelo más capaz planifique y el más chico ejecute, y pedile que saque capturas de la UI y corrija lo que vea mal.",
+    "tags": ["frontend", "ia"]
+  },
+  {
+    "id": "auto-8f54646-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-22",
+    "title": "Latencia en la nube desde Argentina: Ohio, São Paulo, Santiago o us-central1",
+    "content": "Antes de migrar todo a otra región cloud, probá con un par de máquinas: la latencia depende también de qué tan nuevas son las máquinas de cada región, no solo de la distancia.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-9a90bdd-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-21",
+    "title": "Cómo cambia la code review cuando el código lo escribe un LLM",
+    "content": "Al revisar código de un LLM, enfocate menos en la gramática y más en cómo se relaciona con el todo: si es lo bastante genérico, si se integra con lo futuro y si la UX escala. Antes de desarrollar, usá grill-with-docs y PRDs para reducir la ambigüedad.",
+    "tags": ["ia", "arquitectura", "testing"]
+  },
+  {
+    "id": "auto-6c31a41-jeremias-alvarez",
+    "member": "Jeremias Alvarez",
+    "date": "2026-09-21",
+    "title": "Qué suscripción de IA para programar conviene con 100 USD: Claude, Cursor o alternativas",
+    "content": "Con el plan de 20 USD de Cursor, elegí el modelo según la tarea en lugar del modo automático: los modelos externos como Opus agotan la cuota rápido.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-389adc0-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-18",
+    "title": "Flujos de code review con agentes y el costo de los minutos de GitHub Actions",
+    "content": "Para ahorrar minutos de GitHub Actions, corré lints y tests localmente y usá Actions solo para deploys y migraciones. Iterá con review agéntica hasta que no queden problemas y recién ahí hacé revisión humana.",
+    "tags": ["devops", "testing"]
+  },
+  {
+    "id": "auto-389adc0-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-18",
+    "title": "Flujos de code review con agentes y el costo de los minutos de GitHub Actions",
+    "content": "Priorizá chequeos deterministas: tests unitarios y de integración, e2e en CI, hooks de pre-commit, SonarQube y Semgrep.",
+    "tags": ["testing", "devops"]
+  },
+  {
+    "id": "auto-7d38f2d-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-17",
+    "title": "Code review de código generado por agentes: bots en PRs, babysit y gates de validación",
+    "content": "En code review con agentes, no uses skills que siempre encuentran algo: te hacen perder tiempo en detalles menores. Los primeros uno a tres hallazgos suelen ser los importantes; usá Bugbot y CodeRabbit en cada PR y un agente que haga babysit.",
+    "tags": ["ia", "testing"]
+  },
+  {
+    "id": "auto-7d38f2d-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-17",
+    "title": "Code review de código generado por agentes: bots en PRs, babysit y gates de validación",
+    "content": "Sumá a tu review un agente que valide los comentarios del reviewer y los clasifique en urgent, high y minor, y configurá por proyecto la cantidad de rondas según el riesgo.",
+    "tags": ["ia", "testing"]
   },
   {
     "id": "auto-f538d2c-agustin-sanchez",
@@ -48,12 +376,156 @@
     "tags": ["ia"]
   },
   {
+    "id": "auto-2947e42-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-16",
+    "title": "Arquitectura de despliegue para un SaaS ERP ante fallas del hosting y uso de Vercel",
+    "content": "Para proyectos serios, usá nubes grandes (AWS, GCP o Azure): suelen ser incluso más baratas gracias a sus créditos iniciales.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-2947e42-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-16",
+    "title": "Arquitectura de despliegue para un SaaS ERP ante fallas del hosting y uso de Vercel",
+    "content": "Vercel te da tres entornos: production, preview (para staging y PRs) y development (para el local). Para varios proyectos conviene el plan de 20 USD.",
+    "tags": ["devops", "frontend"]
+  },
+  {
+    "id": "auto-f538d2c-jesus-zelarayan",
+    "member": "Jesús Zelarayan",
+    "date": "2026-09-16",
+    "title": "Cómo reducir el consumo de tokens en Claude y cuándo usar CLI o interfaz gráfica",
+    "content": "Para gastar menos tokens, transcribí los documentos con NotebookLM y pasale al modelo texto plano en lugar de PDF.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-a2fefb0-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-10",
+    "title": "Orquestar con Fable y ejecutar con Grok: flujo Linear, Orca y agentes con validación local",
+    "content": "Para orquestar agentes con Orca, planificá con grill-me, volcá las tareas en Linear y dejá un orquestador caro que dispare workers más baratos. Validá localmente con pre-commit antes del CI, revisá a mano y mergeá.",
+    "tags": ["ia", "devops", "productividad"]
+  },
+  {
+    "id": "auto-3260f40-franco-miranda",
+    "member": "Franco Miranda",
+    "date": "2026-09-10",
+    "title": "Qué modelos usar para planificar y para ejecutar, y el costo de los límites de uso",
+    "content": "Planificá con un modelo fuerte usando /grill-with-docs y ejecutá con uno más barato: sale mejor en costo-resultado. Probá antes de pagar por modelos más caros que no mejoran el resultado.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-fe196af-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-10",
+    "title": "Seguridad al trabajar con agentes: WhatsApp en VPS, skills de terceros y permisos por bot",
+    "content": "Las skills de terceros pueden contener instrucciones maliciosas: revisá su contenido y el AGENTS.md cuando recibas un repo.",
+    "tags": ["seguridad", "ia"]
+  },
+  {
+    "id": "auto-fe196af-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-10",
+    "title": "Seguridad al trabajar con agentes: WhatsApp en VPS, skills de terceros y permisos por bot",
+    "content": "No dejes que tus bots sean multitarea: ponéles reglas estrictas, tokens de GitHub distintos con permisos mínimos, protegé la rama main y mergeá a mano.",
+    "tags": ["seguridad", "ia"]
+  },
+  {
+    "id": "auto-c785a18-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-09",
+    "title": "Loop engineering, harness engineering y skills para trabajar con agentes",
+    "content": "Crear skills propias está infravalorado: funcionan como mini programas, y cualquier tarea que repetís dos veces merece una. Si te preocupa lo que haga un loop largo, resolvelo primero con harness engineering.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-f4f190e-tomas-fernandez-murga",
+    "member": "Tomas Fernandez Murga",
+    "date": "2026-09-09",
+    "title": "Pasarelas de pago en Argentina: Rebill, OneInfinite y alternativas a Mercado Pago",
+    "content": "Rebill es muy fácil de integrar para procesar pagos y suscripciones, aunque necesitás una empresa constituida.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-bf7fd45-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-08",
+    "title": "Cuánto cuesta implementar 2FA hoy en una aplicación",
+    "content": "Agregar 2FA hoy es una tarea normal: si tu librería o framework ya trae el mecanismo, solo lo activás, y hacerlo desde cero tampoco es complicado.",
+    "tags": ["seguridad", "backend"]
+  },
+  {
+    "id": "auto-c6f8b49-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-08",
+    "title": "Diseñar equipos de bots con roles propios: la skill grill-me-to-bot-team",
+    "content": "Al armar equipos de agentes, no copies los roles humanos tradicionales: definí los que encajen mejor con una separación de responsabilidades para agentes. Mantené el contexto de cada agente acotado.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-97c2962-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-09-07",
+    "title": "Plantilla de CV en Typst para mejorar contenido y formato",
+    "content": "Para mejorar tu CV, usá la plantilla silver-dev-cv de Typst: pasale el código a tu LLM, charlá tu experiencia para que genere el contenido ya formateado y volvé a pegarlo en Typst.",
+    "tags": ["carrera", "herramientas"]
+  },
+  {
+    "id": "auto-4aeb245-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-07",
+    "title": "Seguimiento de reviews de PR por eventos en Cursor en lugar de loops de polling",
+    "content": "Cuando tengas varias PRs abiertas, usá la función Listening de Cursor en lugar de loops de polling: el agente reacciona a cada comentario del reviewer sin gastar tokens esperando.",
+    "tags": ["ia", "productividad", "herramientas"]
+  },
+  {
+    "id": "auto-57557aa-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-05",
+    "title": "Chatwoot como base de un sistema de atención con agentes: escalado stateless y costos de inferencia",
+    "content": "Para escalar horizontalmente, externalizá Redis a un servicio administrado y separá la base de datos: así las instancias quedan casi stateless y las podés replicar en VMs o Cloud Run según el tráfico.",
+    "tags": ["arquitectura", "devops", "backend"]
+  },
+  {
+    "id": "auto-102cf7c-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-05",
+    "title": "Suite de skills de Matt Pocock: grill-me y el flujo de especificación a implementación",
+    "content": "Llegá al grilleo con la idea muy trabajada: las preguntas se vuelven muy granulares, llegó a unas 50. Con grill-me, las skills marcan un camino claro, aunque el proceso es lento y consume muchos tokens.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-102cf7c-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-09-05",
+    "title": "Suite de skills de Matt Pocock: grill-me y el flujo de especificación a implementación",
+    "content": "Para estabilizar tu proceso de ingeniería con agentes, probá la suite de skills de Matt Pocock en este orden: /grill-with-docs, /to-spec, /to-tickets, /implement y /review.",
+    "tags": ["ia", "productividad"]
+  },
+  {
     "id": "auto-975f004-ezequiel-sanchez",
     "member": "Ezequiel Sánchez",
     "date": "2026-09-04",
     "title": "Ubuntu, Alpine o Debian para un VPS con Coolify y n8n",
     "content": "Para un servidor, considerá una distro liviana como Alpine: menos paquetes instalados significa menos superficie de ataque. Y administrá tus servidores solo por CLI.",
     "tags": ["devops", "seguridad"]
+  },
+  {
+    "id": "auto-975f004-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-09-04",
+    "title": "Ubuntu, Alpine o Debian para un VPS con Coolify y n8n",
+    "content": "Para el host de un VPS, las versiones LTS de Ubuntu son una buena opción por estabilidad y adopción. Investigá zram (swap comprimido en RAM) si andás justo de memoria.",
+    "tags": ["devops"]
+  },
+  {
+    "id": "auto-975f004-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-04",
+    "title": "Ubuntu, Alpine o Debian para un VPS con Coolify y n8n",
+    "content": "En un VPS, deshabilitá el acceso root: es una medida básica de seguridad.",
+    "tags": ["seguridad", "devops"]
   },
   {
     "id": "auto-dd021d3-fabio-ramos",
@@ -64,12 +536,116 @@
     "tags": ["freelance"]
   },
   {
+    "id": "auto-dd021d3-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-09-02",
+    "title": "Qué preguntar en una entrevista con un cliente potencial",
+    "content": "Para entrevistas y negociaciones con clientes, leé Cómo ganar amigos e influir sobre las personas, de Dale Carnegie. Lo demás es conocer bien el producto y mostrarte dispuesto a resolver, con confianza pero sin soberbia.",
+    "tags": ["freelance", "aprendizaje"]
+  },
+  {
+    "id": "auto-ddd4524-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-09-01",
+    "title": "Combinar Fable, Grok y Composer según costo y velocidad",
+    "content": "Si un modelo rápido tiene fecha de corte vieja, conectalo a Context7 para que consulte documentación actualizada. Grok rinde muy bien en frontend si le das una librería de UI como shadcn.",
+    "tags": ["ia", "frontend", "herramientas"]
+  },
+  {
+    "id": "auto-35ca560-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-09-01",
+    "title": "Loop engineering en la práctica: requisitos del repositorio y auditoría de preparación",
+    "content": "Para aplicar loop engineering, el repo necesita alta calidad técnica: tests con buen coverage, buena arquitectura, convenciones documentadas, linters, typechecks, git hooks o controles en CI y deploy automatizado.",
+    "tags": ["ia", "arquitectura", "testing"]
+  },
+  {
+    "id": "auto-35ca560-franco-miranda",
+    "member": "Franco Miranda",
+    "date": "2026-09-01",
+    "title": "Loop engineering en la práctica: requisitos del repositorio y auditoría de preparación",
+    "content": "Antes de dejar corriendo algo grande con un agente, usá la skill grill-with-docs: te interroga sobre los requisitos y reduce la ambigüedad.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-55bebef-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-31",
+    "title": "Harnesses para TDD y SDD con agentes",
+    "content": "Para TDD desde cero con agentes, escribí escenarios en Gherkin y después implementalos con librerías de BDD como pytest-bdd o behave: documentás primero y validás de forma determinística. Para SDD usá frameworks como OpenSpec cuando arrancás un proyecto de cero.",
+    "tags": ["testing", "ia"]
+  },
+  {
     "id": "auto-031ad48-agustin-sanchez",
     "member": "Agustín Sánchez",
     "date": "2026-08-29",
     "title": "Monolito o microservicios cuando el código lo escriben agentes; el ingeniero multi-stack",
     "content": "No saltes a microservicios por defecto: en la gran mayoría de los casos son sobreingeniería. Lo que ahorrás por un lado lo gastás desplegando infraestructura y escribiendo código extra para resolver los problemas propios de ese patrón.",
     "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-861148c-ezequiel-sanchez",
+    "member": "Ezequiel Sánchez",
+    "date": "2026-08-29",
+    "title": "Seguridad en TV boxes y laboratorios de red con nftables, Suricata y Proxmox",
+    "content": "Para trabajar con routers, usá Dropbear, un servidor SSH liviano para equipos con pocos recursos. Un laboratorio aislado con nftables y Suricata sirve para analizar, por ejemplo, APKs maliciosas.",
+    "tags": ["seguridad", "devops"]
+  },
+  {
+    "id": "auto-f1568e0-leandro-andriani",
+    "member": "Leandro Andriani",
+    "date": "2026-08-26",
+    "title": "Cuánto cobrar por proyectos de software como freelance",
+    "content": "Para cotizar un proyecto, tomá el valor de tu hora, sumale un plus y multiplicalo por las horas estimadas.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-f1568e0-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-26",
+    "title": "Cuánto cobrar por proyectos de software como freelance",
+    "content": "No te regales: se paga el conocimiento, y los clientes serios suelen pagar mejor.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-46a5d97-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-26",
+    "title": "Linear como alternativa a Jira para equipos chicos",
+    "content": "Linear es una buena alternativa a Jira para equipos chicos: cuesta alrededor de 10 dólares por usuario y el plan gratuito permite 250 issues activos, así que siendo ordenado podés usarlo mucho tiempo sin pagar.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-79a382a-franco-perez",
+    "member": "Franco Perez",
+    "date": "2026-08-25",
+    "title": "Dónde encontrar skills para agentes y cómo elegirlas",
+    "content": "Para buscar skills de un agente, usá find-skills del directorio skills.sh; te sugiere opciones según lo que necesitás.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-51805d6-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-23",
+    "title": "Mejoras visuales con Fable y feedback sobre una landing",
+    "content": "Cuando le pedís cambios visuales a un agente, trabajá de a uno y hacé commit de cada cambio, así comparás antes y después y podés volver atrás.",
+    "tags": ["ia", "frontend", "productividad"]
+  },
+  {
+    "id": "auto-d663d8d-mateo-antenucci",
+    "member": "Mateo Antenucci",
+    "date": "2026-08-22",
+    "title": "Sincronizar Obsidian entre Mac y iPhone sin pagar el servicio oficial",
+    "content": "Para sincronizar Obsidian entre Mac y iPhone sin pagar, usá iCloud: se ofrece como opción al crear la bóveda y funciona muy bien entre dispositivos Apple.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-6dc6509-ezequiel-sanchez",
+    "member": "Ezequiel Sánchez",
+    "date": "2026-08-22",
+    "title": "Distribuciones Linux: Omarchy, CachyOS y otras alternativas",
+    "content": "Si probás Omarchy, configurá snapshots integrados con el gestor de arranque: una actualización mal hecha puede romper el sistema.",
+    "tags": ["herramientas", "devops"]
   },
   {
     "id": "auto-29c3773-inaki-fernando-lozano",
@@ -88,12 +664,212 @@
     "tags": ["ia"]
   },
   {
+    "id": "auto-29c3773-salvador-juarez",
+    "member": "Salvador Juárez",
+    "date": "2026-08-21",
+    "title": "Estilos rotos en Windows 7 con Next.js y Tailwind recientes",
+    "content": "Si tenés que soportar navegadores viejos, usá Tailwind v3: la v4 apunta a navegadores modernos y usa funciones de CSS recientes.",
+    "tags": ["frontend"]
+  },
+  {
+    "id": "auto-8b9afc1-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-20",
+    "title": "Hermes Agent y la capa gratuita de Nous Research para tareas agénticas",
+    "content": "Para ahorrar costos, dejá que modelos gratuitos hagan el trabajo pesado y repetitivo, y pasá el resultado a un modelo de frontera para refinarlo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-b94d666-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-20",
+    "title": "Loop engineering: cómo lograr que la IA desarrolle un backlog sin supervisión paso a paso",
+    "content": "Si sos el cuello de botella acompañando a la IA paso a paso, probá loop engineering: armá un loop que refine el backlog y otro que lo desarrolle, cada uno como una skill, y seguí los issues en GitHub Projects. También sirve para marketing o gestión de proyectos.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-6db02bb-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-20",
+    "title": "Fable para interfaces, la skill Impeccable y el rol del design engineer",
+    "content": "Para sacarle el aspecto genérico de lo generado por IA, usá la skill Impeccable y empezá desde un brandbook extenso. Con eso armó un UI kit completo en un día.",
+    "tags": ["frontend", "ia"]
+  },
+  {
+    "id": "auto-ec8c852-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-08-20",
+    "title": "Plataformas para cobrar con cripto, Mercado Pago y tarjetas desde una app",
+    "content": "Para cobrar desde el exterior, LemonSqueezy funciona como merchant of record y se encarga de facturación e impuestos. Stripe también sirve pero requiere constituir una LLC en Estados Unidos.",
+    "tags": ["freelance", "backend"]
+  },
+  {
+    "id": "auto-d1ef445-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-19",
+    "title": "Cuánto cuesta mantener loops de agentes",
+    "content": "El costo de un loop de agentes depende de cuán bien refinado esté cada issue antes de que lo tome, de la complejidad de la arquitectura y del modelo y esfuerzo de cada paso. Cortá el trabajo en pedazos chicos para evitar alucinaciones.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-9bc463c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-19",
+    "title": "Elegir proveedor cloud: créditos iniciales en AWS, Azure y GCP",
+    "content": "Para elegir nube, mirá los créditos: GCP da 300 USD que no vencen enseguida (Azure da 200 que expiran rápido), y con suerte podés acceder a créditos para startups.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-ba16163-tomas-fernandez-murga",
+    "member": "Tomas Fernandez Murga",
+    "date": "2026-08-19",
+    "title": "Herramientas para tomar notas de reuniones",
+    "content": "Para tomar notas de reuniones probá Fathom, que es gratuito y te deja grabar lo que quieras. Wispr Flow también sirve para reuniones presenciales.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-661d67f-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2026-08-19",
+    "title": "Usar IA para buscar nombre y logo de un producto",
+    "content": "Para encontrar nombre de producto, pasale a una IA palabras relacionadas y pedile 100 opciones con variantes en latín, italiano e inglés, nombres de animales y palabras inventadas. Aunque termines armándolo vos, te da muchas ideas.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-661d67f-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-19",
+    "title": "Usar IA para buscar nombre y logo de un producto",
+    "content": "Generá nombres de producto con una IA, pero revisá que el dominio esté disponible y que sean fáciles de pronunciar.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-a3c7709-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-19",
+    "title": "Lanzamiento de la landing v3 de Macch: proceso de diseño y chat con IA en el hero",
+    "content": "Para diseñar una landing, definí un concepto aunque sea abstracto, pedile al agente un lab aparte para prototipar de 3 a 5 alternativas, elegí una e iterala a fondo. Guardá los textos en un archivo tipo i18n que también alimente el system prompt si tenés chat.",
+    "tags": ["frontend", "ia"]
+  },
+  {
+    "id": "auto-412913b-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-18",
+    "title": "Qué presupuesto de IA asignar a un desarrollador full time",
+    "content": "El gasto en IA depende más de cómo manejás el contexto, los prompts y los modelos que del plan. Con Claude Max de 100 USD cubre su trabajo full time; pasaría al de 200 solo por tener loops de agentes corriendo en paralelo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-e2cf81c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-18",
+    "title": "Code review con agentes: revisión adversarial y filtro de comentarios",
+    "content": "No dejes que la misma IA escriba y revise sola: hacé siempre revisión adversarial, con varias IA.",
+    "tags": ["ia", "testing"]
+  },
+  {
+    "id": "auto-e2cf81c-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-18",
+    "title": "Code review con agentes: revisión adversarial y filtro de comentarios",
+    "content": "Armá el code review con agentes en dos pasos: un agente revisa y deja comentarios, y otro evalúa cuáles vale la pena resolver y filtra los problemas menores. Pueden ser el mismo modelo, siempre que sean agentes distintos.",
+    "tags": ["ia", "testing"]
+  },
+  {
+    "id": "auto-4572572-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-18",
+    "title": "Herramientas de diseño UX/UI e iteración de frontend con agentes",
+    "content": "Para iterar el frontend con agentes, usá el Annotation Mode de Codex o el Design Mode de Cursor: marcás los elementos de la página y el agente los modifica.",
+    "tags": ["frontend", "ia", "herramientas"]
+  },
+  {
+    "id": "auto-aab01ec-franco-miranda",
+    "member": "Franco Miranda",
+    "date": "2026-08-17",
+    "title": "Separar cuentas de trabajo y personales en VS Code, Cursor y Claude",
+    "content": "Para separar cuentas de trabajo y personales, usá perfiles de VS Code (o su versión portable) con un acceso directo para cada uno. En Claude, que no tiene perfiles, logueate por flags desde la consola con alias.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-ad9f5c0-franco-miranda",
+    "member": "Franco Miranda",
+    "date": "2026-08-17",
+    "title": "Caídas de GitHub y alternativas: Gitea, GitLab y Origin",
+    "content": "Si GitHub parece caído, mirá isgithubcooked.com: la página de estado oficial no siempre refleja los problemas.",
+    "tags": ["herramientas", "devops"]
+  },
+  {
+    "id": "auto-107ca78-salvador-juarez",
+    "member": "Salvador Juárez",
+    "date": "2026-08-15",
+    "title": "Landing page en el monorepo del producto o en un repositorio separado",
+    "content": "Separá la landing del repo principal cuando es la parte pública: así cada parte evoluciona por su lado y el núcleo del proyecto queda aparte.",
+    "tags": ["arquitectura", "frontend"]
+  },
+  {
+    "id": "auto-001ac20-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-14",
+    "title": "Probar una app de iOS sin pagar la cuenta de desarrollador de Apple",
+    "content": "Antes de pagar la cuenta de desarrollador de Apple para una app interna, evaluá una PWA: en casos B2B suele ser la mejor opción.",
+    "tags": ["frontend", "herramientas"]
+  },
+  {
+    "id": "auto-0e986ca-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-14",
+    "title": "Una landing de hackathon con Grok 4.6 y la skill Impeccable",
+    "content": "Para una landing con buen diseño, probá un modelo potente con la skill Impeccable y tomá la web oficial del evento o producto como referencia. Después auditá el resultado: el trabajo es mitad tuyo y mitad del agente.",
+    "tags": ["frontend", "ia"]
+  },
+  {
     "id": "auto-e4238b2-facundo-garcia-martoni",
     "member": "Facundo García Martoni",
     "date": "2026-08-12",
     "title": "Incidente de colas en un SaaS multi-tenant y cómo rediseñarlas por tenant y prioridad",
     "content": "En un SaaS multi-tenant no compartas una única cola de trabajos entre todos los clientes: dale a cada tenant su propio conjunto de colas divididas por prioridad, así un pico de uno no le mete demora a todos los demás.",
     "tags": ["arquitectura", "backend"]
+  },
+  {
+    "id": "auto-ab75ee8-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-12",
+    "title": "Vicios de escritura de los LLMs y la idea de un WRITING.md",
+    "content": "Los LLM tienen vicios de escritura (muletillas, palabras repetidas). Probá sumar a tus proyectos un WRITING.md con pautas de estilo para los agentes, igual que un AGENTS.md pero dedicado a la escritura.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-1f3fea8-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-12",
+    "title": "Costos de CI con GitHub Actions: self-hosted runners, Depot y Blacksmith",
+    "content": "Si los minutos de CI de GitHub Actions se te disparan, probá Depot.dev (o Blacksmith) en lugar de armar tus propios runners: le resultó lo más eficiente en producción.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-1f3fea8-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-12",
+    "title": "Costos de CI con GitHub Actions: self-hosted runners, Depot y Blacksmith",
+    "content": "Si los loops de agentes te generan decenas de PRs por día y se te van los minutos de CI, corré las verificaciones localmente y reservá GitHub Actions para lo imprescindible. Depender de un proveedor tiene riesgo: puede cambiar el precio de un día para el otro.",
+    "tags": ["devops", "productividad"]
+  },
+  {
+    "id": "auto-4d97502-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-07",
+    "title": "Revisar el código de los agentes: una migración de Vertex a OpenRouter como ejemplo",
+    "content": "Seguí revisando el código que escriben los agentes, pero leé el código y no un resumen. Si el agente interpreta 'simple' como 'menos líneas', puede hacerte un traductor rígido en vez de un contrato por proveedor; reducí la ambigüedad antes con plan mode o grill-with-docs.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-df1f9de-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-08-07",
+    "title": "Desarrollar en un VPS con tmux para no depender de la notebook",
+    "content": "Si querés que los agentes sigan trabajando sin tu notebook, desarrollá en un VPS por SSH y usá tmux para mantener las sesiones vivas aunque se corte la conexión. Dejá un AGENTS.md con reglas y límites para no saturar el servidor.",
+    "tags": ["devops", "ia", "productividad"]
   },
   {
     "id": "auto-9e4c791-benjamin-cortes",
@@ -104,12 +880,92 @@
     "tags": ["seguridad", "ia"]
   },
   {
+    "id": "auto-b22a69b-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-05",
+    "title": "Heartbeats en Codex y scheduled wakeups en Claude Code para tareas con espera",
+    "content": "Los heartbeats de Codex sirven para todo lo que tiene una espera incierta: chequear cada 5 minutos si ya propagó un DNS o cada 10 si una casilla nueva ya recibe mails. Se definen con un prompt, como un cron descartable.",
+    "tags": ["herramientas", "ia", "productividad"]
+  },
+  {
+    "id": "auto-d10397f-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-05",
+    "title": "Hoja de ruta para aprovechar al máximo el desarrollo con agentes",
+    "content": "Para aprovechar mejor a los agentes, usá skills, goals, loops y tareas programadas, y dejá en el repo tests automatizados, linters, CI/CD, code review automático y buena documentación. Conectá MCPs y APIs para que tengan observabilidad y resuelvan más solos.",
+    "tags": ["ia", "productividad", "devops"]
+  },
+  {
+    "id": "auto-d10397f-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-08-05",
+    "title": "Hoja de ruta para aprovechar al máximo el desarrollo con agentes",
+    "content": "Si querés sacarle más provecho a los agentes, investigá harness engineering: diseñar el entorno, las herramientas y las reglas que rodean al agente.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-9e4c791-lucas-juarez",
+    "member": "Lucas Juárez",
+    "date": "2026-08-05",
+    "title": "Agentes que operan la nube por CLI: el MCP de AWS y los permisos",
+    "content": "Cuando le des a un agente acceso a la nube por CLI, configurá bien los hooks para bloquear comandos peligrosos y usá un usuario con permisos limitados.",
+    "tags": ["seguridad", "ia", "devops"]
+  },
+  {
+    "id": "auto-96d0483-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-08-05",
+    "title": "Registrar un dominio .com.ar a nombre de otra persona",
+    "content": "Para un dominio .com.ar, registralo directo en NIC Argentina (nic.ar): sale cerca de la mitad que en un hosting, se puede transferir al CUIL/CUIT del titular y con clave fiscal nivel 2 queda en el momento.",
+    "tags": ["herramientas", "freelance"]
+  },
+  {
     "id": "auto-23017f2-facundo-garcia-martoni",
     "member": "Facundo García Martoni",
     "date": "2026-08-04",
     "title": "Ataque de supply chain en npm (keyv/cacheable) y cómo protegerse con pnpm",
     "content": "Activá minimumReleaseAge en pnpm: impide instalar versiones publicadas hace muy poco y te protege de las versiones maliciosas recién subidas en ataques de supply chain.",
     "tags": ["seguridad", "herramientas"]
+  },
+  {
+    "id": "auto-4e414d8-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-08-03",
+    "title": "Loop engineering, skills de workflow y el handoff entre Claude Design y Claude Code",
+    "content": "Para trabajar con loops de agentes, primero refiná los issues con una skill propia para que no quede ambigüedad. Después otra skill que tome los de la columna Ready to Develop, los implemente con tests unitarios, de integración y e2e, y los deje listos para QA con una checklist.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-c1cebdd-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-08-02",
+    "title": "¿Tiene sentido seguir escribiendo código a mano?",
+    "content": "Si ya sabés programar, delegá el código en agentes: hoy escribirlo a mano es poco racional, salvo que estés aprendiendo. Con una suscripción de 20 USD de Cursor ya podés hacer muchísimo.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-b7a72d1-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-07-31",
+    "title": "Skill Wayfinder de Matt Pocock frente a grill-with-docs",
+    "content": "Probá Wayfinder de Matt Pocock en dominios donde el agente puede encontrar la definición por su cuenta. Para temas muy específicos de tu caso, grill-with-docs sigue siendo mejor.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-7439151-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-29",
+    "title": "Opus 5, frameworks de SDD y por qué más contexto no siempre es mejor",
+    "content": "Más contexto no siempre es mejor: a partir de unos 300.000 tokens el modelo empieza a fallar aunque soporte un millón. Preferí specs en archivos .md y skills puntuales; GSD tiene buena documentación.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-d75cd8a-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-28",
+    "title": "Comparación de límites de uso entre Claude, Codex y Cursor",
+    "content": "Desconfiá de funciones que consumen mucho uso sin dar resultados: el Deep Scan de Codex Security entraba en un bucle que se comía el uso semanal. Vigilá tu consumo.",
+    "tags": ["ia", "herramientas"]
   },
   {
     "id": "auto-e922ab6-facundo-garcia-martoni",
@@ -120,12 +976,100 @@
     "tags": ["seguridad", "backend"]
   },
   {
+    "id": "auto-0d4f2ba-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-27",
+    "title": "Integrar WhatsApp a un agente: Baileys, API oficial o Kapso",
+    "content": "Para un agente personal usá Baileys; para algo comercial chico o mediano probá Kapso. La API oficial de Meta es complicada de configurar. Para acceder a tu máquina local, Tailscale crea una red privada entre dispositivos.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-e8687a6-juan-farber",
+    "member": "Juan Farber",
+    "date": "2026-07-27",
+    "title": "Reducir el gasto de tokens con OpenCode Go, modelos baratos y herramientas de contexto",
+    "content": "Para gastar menos tokens combiná un modelo económico con herramientas como rtk, caveman, dynamic context pruning y graphify. Pasó de unos 20 USD por sesión a menos de un dólar.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-e8687a6-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-27",
+    "title": "Reducir el gasto de tokens con OpenCode Go, modelos baratos y herramientas de contexto",
+    "content": "Las herramientas de indexado de contexto solo valen la pena si les encontrás un uso concreto, como indexar tus notas de Obsidian para que tu agente encuentre información más fácil.",
+    "tags": ["ia", "productividad"]
+  },
+  {
     "id": "auto-d362f16-facundo-padilla",
     "member": "Facundo Padilla",
     "date": "2026-07-26",
     "title": "Cómo presupuestar un ecommerce a medida",
     "content": "Si el cliente no define todo al detalle, no cierres un precio fijo: cobrá por hora y pedí un porcentaje por adelantado. Y antes de arrancar preguntá por qué no usan una solución ya hecha, como Tiendanube o Empretienda.",
     "tags": ["freelance"]
+  },
+  {
+    "id": "auto-7bad8ab-franco-perez",
+    "member": "Franco Perez",
+    "date": "2026-07-26",
+    "title": "Orca como entorno para manejar proyectos, worktrees y agentes",
+    "content": "Probá Orca, un entorno pensado para agentes que organiza proyectos, worktrees y agentes en una barra lateral. Trae navegador integrado para copiar un elemento y pegarlo en la terminal del agente.",
+    "tags": ["herramientas", "ia"]
+  },
+  {
+    "id": "auto-d7d8657-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-25",
+    "title": "Auditoría de costos de Vercel con un agente y debate sobre usar staging",
+    "content": "Auditá tus cuentas de Vercel: un agente con computer use puede detectar gastos innecesarios, como deployments corriendo en máquinas de 30 vCPUs. Además, el código boilerplate (equipos, permisos) está tan aprendido por los LLMs que conviene implementarlo en casa.",
+    "tags": ["devops", "ia"]
+  },
+  {
+    "id": "auto-d7d8657-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-25",
+    "title": "Auditoría de costos de Vercel con un agente y debate sobre usar staging",
+    "content": "Evitá testear en producción: tener un ambiente de staging te da un lugar seguro para probar.",
+    "tags": ["devops", "testing"]
+  },
+  {
+    "id": "auto-2043eea-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-25",
+    "title": "Cómo explicar Claude Code, CLAUDE.md y la ventana de contexto a personas no técnicas",
+    "content": "CLAUDE.md es un archivo que le da al agente un contexto mínimo del proyecto y donde fijás reglas o cosas que no debe hacer. Para quienes no pueden pagar suscripciones, sirve la capa gratuita de ChatGPT o Big Pickle en OpenCode.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-5ea492c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-24",
+    "title": "Más confianza en GPT-5.6 Sol y agentes aislados por tenant guardados en la base de datos",
+    "content": "Para features de complejidad baja o media podés saltarte el Plan Mode y desarrollar varias mejoras seguidas para testearlas al final. Seguí haciendo code review completo: el valor está en dominar el codebase y la arquitectura.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-b91a8b3-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-07-23",
+    "title": "Error 131030 al responder con el número de prueba de WhatsApp Cloud API",
+    "content": "Con el número de prueba de WhatsApp Cloud API tenés que registrar específicamente los destinatarios permitidos en el panel de Meta, o recibís el error 131030.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-4a44355-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-22",
+    "title": "Programar con IA con presupuesto propio: planes, modelos y herramientas para ahorrar tokens",
+    "content": "Para ahorrar tokens probá codebase-memory MCP, rtk (reduce la salida de comandos que llega al contexto) y el esquema orquestador de gentle-ai. Para modelos gratuitos probá Groq y como opción barata OpenCode Go.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-4a44355-nacho-albarracin",
+    "member": "Nacho Albarracin",
+    "date": "2026-07-22",
+    "title": "Programar con IA con presupuesto propio: planes, modelos y herramientas para ahorrar tokens",
+    "content": "Con presupuesto propio, el plan de 20 USD de Cursor es el que más rinde: en modo automático usa Composer, que funciona muy bien.",
+    "tags": ["ia", "herramientas"]
   },
   {
     "id": "auto-f8d904e-mateo-antenucci",
@@ -136,12 +1080,316 @@
     "tags": ["backend"]
   },
   {
+    "id": "auto-f8d904e-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-20",
+    "title": "OCR de documentos, facturas y fotos de comprobantes: LLMs multimodales vs librerías tradicionales",
+    "content": "Para OCR de comprobantes e imágenes, un modelo multimodal barato como Gemini 3.1 Flash Lite recibe imágenes y PDFs de forma nativa. Delegá al modelo el preprocesamiento y evitás armar pipelines complejos.",
+    "tags": ["ia", "backend"]
+  },
+  {
+    "id": "auto-f8d904e-agustin-navarro",
+    "member": "Agustin Navarro",
+    "date": "2026-07-20",
+    "title": "OCR de documentos, facturas y fotos de comprobantes: LLMs multimodales vs librerías tradicionales",
+    "content": "Para PDFs con texto, probá primero librerías de Python como pypdf o pdfplumber y recurrí a un servicio externo si no alcanza.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-f68ed5f-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-15",
+    "title": "Medición empírica del ahorro de tokens de codebase-memory MCP",
+    "content": "Medí vos mismo antes de creer promesas de ahorro de tokens: repetí el mismo prompt con y sin la herramienta y comparalo. Desconfiá de números muy llamativos.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-dc93124-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-15",
+    "title": "Cómo evitar el diseño genérico de IA en interfaces generadas por agentes",
+    "content": "Para evitar el diseño genérico de IA: armá un brandbook, construí un design system, usá impeccable para ajustar espaciados y auditar con Playwright, y cerrá con taste-skill para darle un toque distintivo.",
+    "tags": ["frontend", "ia"]
+  },
+  {
+    "id": "auto-dc93124-franco-perez",
+    "member": "Franco Perez",
+    "date": "2026-07-15",
+    "title": "Cómo evitar el diseño genérico de IA en interfaces generadas por agentes",
+    "content": "Antes de pulir la interfaz con impeccable, pasá por ui-ux-pro-max, una skill de diseño que ayuda a encaminar la UI.",
+    "tags": ["frontend", "ia"]
+  },
+  {
+    "id": "auto-b5ee31a-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-14",
+    "title": "Comparativa de modelos abiertos: Kimi K2.7 Code, MiniMax M3 y GLM 5.2",
+    "content": "Elegí el modelo según la tarea: uno muy rápido es mejor para escribir código y otro es mejor para tareas agénticas. No hay uno que gane en todo.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-86ebb64-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-13",
+    "title": "La velocidad de los modelos como factor clave y Grok 4.5 como alternativa en Cursor",
+    "content": "Más multitasking no siempre es mejor: el trabajo en paralelo con worktrees puede agotarte. Considerá tomar un feature y completarlo en una tarde; la velocidad del modelo importa mucho en tu flujo.",
+    "tags": ["productividad", "ia"]
+  },
+  {
+    "id": "auto-8c2e95a-martin-uslenghi",
+    "member": "Martin Uslenghi",
+    "date": "2026-07-11",
+    "title": "Agregar screenshots a pull requests generadas por agentes y limitaciones de GitHub",
+    "content": "La API de GitHub no permite subir imágenes al crear una PR. Alojá las imágenes en un CDN propio e incluí el link en el Markdown.",
+    "tags": ["herramientas", "devops"]
+  },
+  {
+    "id": "auto-8c2e95a-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-11",
+    "title": "Agregar screenshots a pull requests generadas por agentes y limitaciones de GitHub",
+    "content": "Si tus builds de CI en GitHub Actions son lentos, probá Depot, un servicio para acelerar builds.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-e39df85-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-10",
+    "title": "Construir una interfaz de chat con IA que genera consultas SQL: librerías y modelos",
+    "content": "Para una UI de chat con IA, usá librerías como AI Elements de Vercel, assistant-ui y tool-ui para renderizar resultados de herramientas. Parece fácil pero cuesta, sobre todo por el streaming de texto. Gemini 3.1 Flash Lite es barato y muy agéntico.",
+    "tags": ["frontend", "ia", "herramientas"]
+  },
+  {
+    "id": "auto-5a7a722-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-10",
+    "title": "Exponer servicios locales con Cloudflare Tunnel, ngrok y DuckDNS",
+    "content": "Con Cloudflare Tunnel podés tener un subdominio funcionando en menos de dos minutos y resolver los hosts por nombre de contenedor de Docker. A diferencia de ngrok gratuito, permite usar dominios propios.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-5a7a722-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-10",
+    "title": "Exponer servicios locales con Cloudflare Tunnel, ngrok y DuckDNS",
+    "content": "Para pruebas puntuales con permisos más laxos que producción, la URL efímera del ngrok gratuito es una ventaja: se descarta al terminar. Una URL fija de un túnel podría quedar expuesta como riesgo.",
+    "tags": ["seguridad", "devops"]
+  },
+  {
+    "id": "auto-5a7a722-nahuel-serrudo",
+    "member": "Nahuel Serrudo",
+    "date": "2026-07-10",
+    "title": "Exponer servicios locales con Cloudflare Tunnel, ngrok y DuckDNS",
+    "content": "Para obtener subdominios gratuitos con DNS dinámico, probá DuckDNS.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-84d49d0-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-09",
+    "title": "Primeras impresiones de la nueva app unificada de Codex y ChatGPT con GPT-5.6",
+    "content": "Usá un solo modelo por hilo: cambiar entre variantes obliga a compactar el contexto. Si ves que los archivos nuevos no aparecen en la vista de cambios, probá git add -N.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-07b9fe8-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-07-08",
+    "title": "Cómo aprovechar el acceso temporal a Fable 5: orquestador vs ejecutor",
+    "content": "Usá el modelo más caro como orquestador: delegale solo las partes del plan o del código que requieren más criterio y dejá el resto a modelos más baratos. Así te rinde mucho más el cupo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-0bfe921-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-07-08",
+    "title": "Executors y planificación de hilos en servidores HTTP vs enrutadores LLM en sistemas multiagente",
+    "content": "No compares un enrutador basado en LLM con un task scheduler: el primero no es determinista ni acotado, el segundo es una estructura sólida y bien definida. Tené en cuenta límites, colas y monitoreo en servicios con muchos usuarios.",
+    "tags": ["arquitectura", "backend"]
+  },
+  {
+    "id": "auto-21359b1-lucas-juarez",
+    "member": "Lucas Juárez",
+    "date": "2026-07-07",
+    "title": "Herramientas para armar dashboards y visualizaciones de datos con ayuda de IA",
+    "content": "Para armar tableros y explorar datos con facilidad probá Metabase, una herramienta open source de BI.",
+    "tags": ["herramientas", "bases-de-datos"]
+  },
+  {
+    "id": "auto-21359b1-agustin-navarro",
+    "member": "Agustin Navarro",
+    "date": "2026-07-07",
+    "title": "Herramientas para armar dashboards y visualizaciones de datos con ayuda de IA",
+    "content": "Apache Superset es una plataforma open source de BI que ofrece integración con MCP para crear gráficos desde un prompt. Grafana y Datadog funcionan mejor para dashboards de infraestructura.",
+    "tags": ["herramientas", "ia"]
+  },
+  {
+    "id": "auto-21359b1-luciano-lagoria",
+    "member": "Luciano Lagoria",
+    "date": "2026-07-07",
+    "title": "Herramientas para armar dashboards y visualizaciones de datos con ayuda de IA",
+    "content": "Aprendé Grafana para dashboards: da mucha libertad y es una herramienta que aparece seguido en el mercado.",
+    "tags": ["herramientas", "carrera"]
+  },
+  {
+    "id": "auto-dfbac35-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-02",
+    "title": "Qué suscripción de IA para programar conviene según el presupuesto",
+    "content": "Con poco presupuesto, el mejor retorno es OpenCode Go y después Cursor de 20 USD con Composer. Subí a planes de 100 o 200 USD de Codex o Claude solo cuando lo necesites.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-f22cbc8-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-02",
+    "title": "Cómo reducir las confirmaciones de permisos en Claude Code y otros agentes",
+    "content": "Para evitar confirmaciones constantes en agentes, la clave es planificar bien antes. Dejá trabajar varios agentes en paralelo en worktrees solo cuando el plan esté cuidadosamente definido.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-b8e36ff-leonel-perez",
+    "member": "Leonel Pérez",
+    "date": "2026-07-01",
+    "title": "Opciones para desplegar un backend de bajo tráfico al menor costo",
+    "content": "Con muy poco tráfico, podés usar funciones serverless (por ejemplo en GCP, casi gratis) si no te molesta el cold start. Ojo que eso no incluye la base de datos: si necesitás una, conviene un VPS.",
+    "tags": ["devops", "backend"]
+  },
+  {
+    "id": "auto-b8e36ff-nacho-albarracin",
+    "member": "Nacho Albarracin",
+    "date": "2026-07-01",
+    "title": "Opciones para desplegar un backend de bajo tráfico al menor costo",
+    "content": "Para un backend de poco tráfico, un VPS barato (por ejemplo de DonWeb, con 2 vCPU y 4 GB de RAM) puede ser lo más conveniente.",
+    "tags": ["devops", "backend"]
+  },
+  {
+    "id": "auto-5a42e88-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-07-01",
+    "title": "Cómo elegir el nombre de un producto o SaaS",
+    "content": "Para nombrar un producto: mantené el nombre corto, no lo nombres por el producto (un pivot lo dejaría desactualizado) y definí entre tres y cinco valores de marca para buscar palabras en distintos idiomas y alterarlas levemente. No te obsesiones con el .com.",
+    "tags": ["carrera", "freelance"]
+  },
+  {
+    "id": "auto-5a42e88-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-07-01",
+    "title": "Cómo elegir el nombre de un producto o SaaS",
+    "content": "Para inspirarte con nombres de producto, mirá cómo se nombran las herramientas de DevOps como Ansible, Docker, Kubernetes o Podman.",
+    "tags": ["carrera"]
+  },
+  {
     "id": "auto-3ec108f-marcelo-nunez",
     "member": "Marcelo Nuñez",
     "date": "2026-06-30",
     "title": "Recursos para aprender Docker desde cero",
     "content": "La mejor forma de aprender Docker es práctica: agarrá una aplicación propia y dockerizala, empaquetándola en una imagen de contenedor con todas sus dependencias.",
     "tags": ["aprendizaje", "devops"]
+  },
+  {
+    "id": "auto-3ec108f-leonel-perez",
+    "member": "Leonel Pérez",
+    "date": "2026-06-30",
+    "title": "Recursos para aprender Docker desde cero",
+    "content": "Para empezar con Docker, mirá el video introductorio del canal Hola Mundo, que es muy claro.",
+    "tags": ["devops", "aprendizaje"]
+  },
+  {
+    "id": "auto-60a95e5-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-30",
+    "title": "Resumen diario del feed de X con twscrape, Hermes y un cron",
+    "content": "Para bloquear redes sociales en horarios que te distraen, usá NextDNS: filtra por DNS y permite programar horarios.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-ed22d28-nacho-albarracin",
+    "member": "Nacho Albarracin",
+    "date": "2026-06-27",
+    "title": "Herramientas para transcribir reuniones sin que se sume un bot a la llamada",
+    "content": "Para transcribir reuniones sin que se sume un bot visible, probá Fathom o Granola, que captura el audio desde tu propia computadora.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-b79b2ff-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-27",
+    "title": "Flujos de planificación y auditoría con skills para agentes: superpowers, ponytail, engram y gentle-ai",
+    "content": "Combiná superpowers para planificar con ponytail para auditar el resultado, y sumá engram como memoria. Superpowers tiende a sobreingeniería, así que auditá siempre; además, nuclei es un escáner de seguridad que podés integrar en pre-commit y CI/CD.",
+    "tags": ["ia", "seguridad", "herramientas"]
+  },
+  {
+    "id": "auto-9a22fff-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-06-26",
+    "title": "Anuncio de GPT-5.6 y cómo interpretar los benchmarks de modelos",
+    "content": "Desconfiá de los benchmarks: muchos ya están muy vistos y los modelos se entrenan para rendir bien en ellos (overfitting). Investigá conceptos como modelos jagged antes de sacar conclusiones y compará con tu uso real.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-c240222-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-26",
+    "title": "CRM interno agent-first controlado mediante una skill y una API REST",
+    "content": "Para exponer tu sistema a un agente no hace falta una CLI: documentá el contrato REST de tu API dentro de una skill. Con eso el agente puede operarlo y hasta automatizar tareas programadas.",
+    "tags": ["ia", "arquitectura", "backend"]
+  },
+  {
+    "id": "auto-c240222-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-26",
+    "title": "CRM interno agent-first controlado mediante una skill y una API REST",
+    "content": "Antes de dejar que un agente toque tu sistema, pensá cómo lo vas a autenticar: JWT, OAuth, un secreto permanente o un esquema de clave pública tipo SSH tienen distintos costos y riesgos.",
+    "tags": ["seguridad", "arquitectura", "ia"]
+  },
+  {
+    "id": "auto-3282e44-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-25",
+    "title": "Git worktrees vs Git Flow para trabajar con varios agentes en paralelo",
+    "content": "No confundas Git Flow con worktrees: Git Flow es una convención de ramas para coordinar a varios desarrolladores; los worktrees resuelven que una misma persona trabaje en varias ramas a la vez sin stash. Son la herramienta natural para correr varios agentes en paralelo, cada uno aislado.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-3e47905-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-24",
+    "title": "Construir una feature compleja \"como una escultura\": de un prototipo generado por IA a entender el sistema",
+    "content": "Para una feature compleja, empezá con una sesión larga de preguntas (grill-with-docs y to-prd), fijá como criterio de aceptación una prueba end to end demostrable y dejá trabajar al agente con /goal. Después simplificá y usá /teach para entender lo que generó: es como esculpir, de la piedra a la forma.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-3e47905-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-24",
+    "title": "Construir una feature compleja \"como una escultura\": de un prototipo generado por IA a entender el sistema",
+    "content": "Para comunicación en tiempo real con voz o video, mirá LiveKit, un framework open source.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-8cfc4a5-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-06-23",
+    "title": "WebSockets, TCP y UDP: cuándo usar comunicación en tiempo real",
+    "content": "Usá WebSockets cuando el servidor necesite enviar datos sin que el cliente pregunte, como en un chat; con HTTP tendrías que hacer polling. En juegos se usa mucho UDP, que no garantiza entrega ni orden pero evita bloqueos.",
+    "tags": ["backend", "arquitectura"]
+  },
+  {
+    "id": "auto-3315005-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-20",
+    "title": "Loops con agentes: automatizar la revisión de PRs y el ciclo de desarrollo",
+    "content": "Armá un loop para el code review: al terminar la rama, abrí la PR y dejá que un agente corrija el CI y evalúe los comentarios de los bots según las decisiones de diseño del proyecto hasta que quede en verde. Pedile un reporte final de qué aplicó y qué descartó.",
+    "tags": ["ia", "productividad", "devops"]
+  },
+  {
+    "id": "auto-e87e2fd-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-06-19",
+    "title": "Cómo evitar costos inesperados en Vercel y otras plataformas de hosting",
+    "content": "En Vercel configurá el firewall y un límite de gasto en todos tus proyectos. Desactivá la optimización de imágenes si no la necesitás, porque viene activada por defecto y puede salir cara.",
+    "tags": ["devops", "seguridad"]
   },
   {
     "id": "auto-7479b2d-facundo-padilla",
@@ -160,12 +1408,340 @@
     "tags": ["carrera"]
   },
   {
+    "id": "auto-f2c4849-exequiel-de-freitas",
+    "member": "Exequiel De Freitas",
+    "date": "2026-06-18",
+    "title": "Cómo implementar envíos y seguimiento de pedidos en un sistema de ventas",
+    "content": "Para seguimiento de pedidos con clientes chicos y medianos alcanza con Google Maps y WebSockets para actualizaciones en tiempo real. Para clientes de logística grandes, preparate para integrarte con Sitrack, que es muy usado en el sector.",
+    "tags": ["backend", "arquitectura"]
+  },
+  {
+    "id": "auto-f2c4849-sebastian-soraire",
+    "member": "Sebastián Soraire",
+    "date": "2026-06-18",
+    "title": "Cómo implementar envíos y seguimiento de pedidos en un sistema de ventas",
+    "content": "Antes de usar la API de Google Maps, ojo con el plan gratuito: limita consultas y precisión. Evaluá también las APIs de seguimiento de correos como Andreani, OCA o Correo Argentino.",
+    "tags": ["backend"]
+  },
+  {
+    "id": "auto-f2c4849-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-06-18",
+    "title": "Cómo implementar envíos y seguimiento de pedidos en un sistema de ventas",
+    "content": "Leé bien los límites del plan gratuito de cualquier API y configurá topes de gasto cerca del 90%. Evitás cobros inesperados.",
+    "tags": ["devops", "productividad"]
+  },
+  {
+    "id": "auto-0dc36b5-sebastian-soraire",
+    "member": "Sebastián Soraire",
+    "date": "2026-06-18",
+    "title": "Consejos para construir una carrera acelerada en tecnología",
+    "content": "Cuidá el orden y evitá la multitarea, y trabajá el autoconocimiento: conocerte te ayuda a tomar mejores decisiones de carrera.",
+    "tags": ["carrera", "productividad"]
+  },
+  {
+    "id": "auto-d00e179-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-17",
+    "title": "Skill open source para facturar en ARCA desde Hermes y manejo de errores en operaciones irreversibles",
+    "content": "Para operaciones irreversibles (como facturar), no dejes que el agente corrija por su cuenta: usá una cola con reintentos y chequeá el estado del servicio antes de operar. Es más determinista y ahorra tokens.",
+    "tags": ["arquitectura", "ia", "backend"]
+  },
+  {
+    "id": "auto-d00e179-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-17",
+    "title": "Skill open source para facturar en ARCA desde Hermes y manejo de errores en operaciones irreversibles",
+    "content": "Ante acciones irreversibles, mostrá siempre un borrador antes de ejecutar y guardá las credenciales en una carpeta local. Validá primero el flujo con una operación de monto mínimo.",
+    "tags": ["seguridad", "ia", "arquitectura"]
+  },
+  {
+    "id": "auto-77c3179-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2026-06-16",
+    "title": "Opciones económicas para hostear aplicaciones React y Node: VPS, Render, Railway y alternativas",
+    "content": "Para un servidor Node con WebSockets o un bot de Telegram, mirá Seenode (desde 3 dólares). Evitá el plan gratuito de Render si necesitás respuesta inmediata: tiene arranques en frío de unos 50 segundos.",
+    "tags": ["devops", "backend"]
+  },
+  {
+    "id": "auto-77c3179-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2026-06-16",
+    "title": "Opciones económicas para hostear aplicaciones React y Node: VPS, Render, Railway y alternativas",
+    "content": "El plan gratuito de Render apaga el servicio por inactividad; podés evitarlo con UptimeRobot, que hace una petición cada cinco minutos. Pero la base de datos gratuita se elimina al mes, así que para producción hay que pagarla.",
+    "tags": ["devops", "bases-de-datos"]
+  },
+  {
+    "id": "auto-77c3179-martin-uslenghi",
+    "member": "Martin Uslenghi",
+    "date": "2026-06-16",
+    "title": "Opciones económicas para hostear aplicaciones React y Node: VPS, Render, Railway y alternativas",
+    "content": "Para lógica simple sin servidor probá Cloudflare Workers: su plan gratuito es generoso.",
+    "tags": ["devops", "backend"]
+  },
+  {
+    "id": "auto-18899fa-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-13",
+    "title": "Aprendizajes de las charlas del evento de la comunidad",
+    "content": "Tomá notas de las charlas y aplicalas enseguida: trabajar con tres a cinco worktrees a la vez le permitió resolver unos diez tickets en seis horas. Además, recordá que las expresiones regulares no sirven para procesar JSON o XML, lo que ayuda a detectar malas soluciones de un modelo.",
+    "tags": ["aprendizaje", "productividad"]
+  },
+  {
+    "id": "auto-aad68f6-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-12",
+    "title": "Qué suscripción de IA pagar para programar: Claude, Codex o Cursor, y herramientas de diseño",
+    "content": "Para diseño de UI probá Stitch de Google, pero especificale bien lo que querés porque improvisa. La skill Impeccable te ayuda a llevar diseños a código con bastante fidelidad.",
+    "tags": ["ia", "frontend", "herramientas"]
+  },
+  {
+    "id": "auto-aad68f6-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-06-12",
+    "title": "Qué suscripción de IA pagar para programar: Claude, Codex o Cursor, y herramientas de diseño",
+    "content": "No cambies de herramienta solo por seguir la corriente: si Claude te da los frontends que querés, quedate con él aunque Codex sea mejor en general. Probá con tu propio caso de uso.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-1b36b04-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-11",
+    "title": "Hermes como asistente personal: gateway al grupo, recordatorios por voz y control por Tailscale",
+    "content": "Si le das a un agente acceso a tus herramientas, configuralo para obedecer solo tus instrucciones y probá intentos de prompt injection antes de confiar en él. Para recordatorios, un cron que chequea por Tailscale si tu Mac está desbloqueada permite elegir el canal de aviso.",
+    "tags": ["seguridad", "ia"]
+  },
+  {
+    "id": "auto-89775a7-mauro-torres",
+    "member": "Mauro Torres",
+    "date": "2026-06-10",
+    "title": "Casos de uso, configuración y proveedores de modelos para Hermes Agent",
+    "content": "Para arrancar con Hermes Agent, usá los modelos gratuitos del portal de Nous Research porque la configuración inicial consume muchos tokens. Para tareas largas probá el comando /goal y los perfiles para tener agentes aislados por tarea.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-89775a7-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-10",
+    "title": "Casos de uso, configuración y proveedores de modelos para Hermes Agent",
+    "content": "Clasificá mails con expresiones regulares y activá un agente solo cuando una regla no alcanza. Es más barato y predecible que pasar todo por un modelo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-08ee24b-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-09",
+    "title": "Primeras impresiones de Fable, el nuevo modelo de Anthropic",
+    "content": "Usá el modelo más potente solo para las bases del proyecto (brandbook, sistema de diseño, arquitectura) y dividí los planes grandes en tareas chicas para que las ejecute un modelo más barato. Las tareas enormes de una sola vez desperdician tokens y el modelo desvaría cuando se llena el contexto.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-f33ee54-mauro-torres",
+    "member": "Mauro Torres",
+    "date": "2026-06-09",
+    "title": "Comparación de Codex, Claude Code y otros entornos de trabajo con agentes",
+    "content": "Importa más el flujo de trabajo que el CLI o el modelo. Por ejemplo: un agente fuerte para proyectos grandes, uno con modelos gratuitos para los chicos, todo dentro de una terminal como Warp y conectado a Linear o GitHub Projects.",
+    "tags": ["ia", "productividad", "herramientas"]
+  },
+  {
+    "id": "auto-680b3fd-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-09",
+    "title": "Capas de memoria para agentes: memory.md, Mem0, Engram, OpenSpec y el concepto de LLM wiki",
+    "content": "Desconfiá de la memoria automática de los agentes: suele ensuciar el contexto y quitar más de lo que agrega. Si querés memoria de largo plazo, probá Mem0, que tiene plan gratuito generoso y plugins para Codex y Claude Code.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-680b3fd-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-09",
+    "title": "Capas de memoria para agentes: memory.md, Mem0, Engram, OpenSpec y el concepto de LLM wiki",
+    "content": "Engram sirve para tareas chicas, pero para especificaciones más exigentes usá OpenSpec con archivos .md. Archivos de texto versionados le dan al agente contexto más confiable.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-680b3fd-mauro-torres",
+    "member": "Mauro Torres",
+    "date": "2026-06-09",
+    "title": "Capas de memoria para agentes: memory.md, Mem0, Engram, OpenSpec y el concepto de LLM wiki",
+    "content": "Guardá el conocimiento de tus agentes en Markdown siguiendo el concepto de LLM wiki: una base de archivos que el propio modelo mantiene y que podés visualizar como grafo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-28b5f2a-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-09",
+    "title": "Debate sobre el costo futuro de la IA y el rol de los modelos locales y chinos",
+    "content": "Un buen harness (scripts reutilizables, herramientas estáticas, skills y casos borde bien detallados) hace al modelo más determinista, incluso con modelos baratos. Invertí en el harness antes que en pagar el modelo más caro.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-239e265-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-08",
+    "title": "Worktrees y consumo de tokens: prácticas para trabajar con agentes de código",
+    "content": "Para cuidar tokens en Claude, usá Opus para planificar, Sonnet para ejecutar y Haiku para comandos simples. El modo opusplan automatiza justamente esa división.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-239e265-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-06-08",
+    "title": "Worktrees y consumo de tokens: prácticas para trabajar con agentes de código",
+    "content": "Trabajá con una sesión principal orquestadora que delegue cambios acotados a subagentes para no llenar su contexto. Cuando te acerques al límite, generá un resumen de traspaso y compactá la conversación.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-239e265-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-08",
+    "title": "Worktrees y consumo de tokens: prácticas para trabajar con agentes de código",
+    "content": "En Codex configurá un local environment que prepare un worktree al iniciar cada conversación y una automatización semanal que borre los que ya no usás. Así los worktrees no se te acumulan.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-00396e6-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-08",
+    "title": "Herramientas para crear videos de lanzamiento de features: Hyperframes, Remotion y Screen Studio",
+    "content": "Para grabar la pantalla en videos de lanzamiento, Screen Studio funciona muy bien. Para generar videos con agentes probá la skill de Hyperframes más un DESIGN.md que describa tu sistema de diseño.",
+    "tags": ["herramientas", "ia"]
+  },
+  {
+    "id": "auto-67754c3-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-08",
+    "title": "Codex /goal y Computer Use para automatizar testing e investigación técnica",
+    "content": "Probá automatizar parte del testing manual con Computer Use de Codex y el comando /goal: el agente prueba casos borde manejando la app, lee los logs y reporta. Aprovechá para testear flujos que son tediosos de repetir a mano.",
+    "tags": ["testing", "ia"]
+  },
+  {
+    "id": "auto-2b39554-mateo-antenucci",
+    "member": "Mateo Antenucci",
+    "date": "2026-06-07",
+    "title": "Harness engineering en la práctica: AGENTS.md, CLAUDE.md, skills y pre-commit hooks",
+    "content": "Si Claude Code no lee tu AGENTS.md, creá un symlink entre CLAUDE.md y AGENTS.md para mantener una sola fuente de instrucciones.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-2b39554-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-07",
+    "title": "Harness engineering en la práctica: AGENTS.md, CLAUDE.md, skills y pre-commit hooks",
+    "content": "Usá un index.md corto (unas 200 líneas como máximo) que apunte a documentación por módulo, en lugar de un único archivo gigante de instrucciones para el agente.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-2b39554-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2026-06-07",
+    "title": "Harness engineering en la práctica: AGENTS.md, CLAUDE.md, skills y pre-commit hooks",
+    "content": "Los agentes a veces se saltean los pre-commit hooks con --no-verify. Corré los mismos chequeos también en una GitHub Action para que no dependan de que el agente los respete.",
+    "tags": ["devops", "ia", "testing"]
+  },
+  {
+    "id": "auto-2b39554-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-07",
+    "title": "Harness engineering en la práctica: AGENTS.md, CLAUDE.md, skills y pre-commit hooks",
+    "content": "Convertí las reglas de tu repo en una skill corta (menos de 50 líneas) e invocala explícitamente. Es más confiable que esperar que el agente lea un archivo largo.",
+    "tags": ["ia", "productividad"]
+  },
+  {
     "id": "auto-ad1ffc7-leandro-contrera",
     "member": "Leandro Contrera",
     "date": "2026-06-05",
     "title": "Opus 4.8 max fast: más rápido pero olvidadizo con los detalles",
     "content": "Aunque el modelo soporte una ventana de contexto enorme, mantenete por debajo del 50% de contexto por tarea para que no pierda de vista los requerimientos iniciales.",
     "tags": ["ia"]
+  },
+  {
+    "id": "auto-ac90231-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-06-05",
+    "title": "Skills y frameworks recomendados para SDD y front-end",
+    "content": "Volcá toda la documentación relevante de tu proyecto a NotebookLM para tenerla accesible desde cualquier herramienta. Para spec-driven development probá grill-with-docs de Matt Pocock para armar el PRD y gsd para ejecutar el plan.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-887b73a-mario-radich",
+    "member": "Mario Radich",
+    "date": "2026-06-05",
+    "title": "GUIs para PostgreSQL: DataGrip, DBeaver, pgAdmin y Beekeeper",
+    "content": "Si buscás una GUI para PostgreSQL, probá Beekeeper Studio: es open source y multiplataforma. DataGrip, DBeaver y pgAdmin son otras opciones, así que probá un par y quedate con la que te resulte más cómoda.",
+    "tags": ["bases-de-datos", "herramientas"]
+  },
+  {
+    "id": "auto-973fcb5-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-06-04",
+    "title": "Claude vs Codex para programar y Composer para implementar planes",
+    "content": "Para obtener código que compila y pasa los tests al primer intento, combiná TDD con las skills de Matt Pocock. Pedile al agente que escriba primero los tests y recién después la implementación.",
+    "tags": ["testing", "ia"]
+  },
+  {
+    "id": "auto-05c78c9-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-06-02",
+    "title": "Costos de re-reviews con bots de PR y alternativas más económicas",
+    "content": "Para abaratar el code review automatizado combiná varios bots en vez de depender de uno: Bugbot, CodeRabbit y Qodo, que tiene plan gratuito de por vida y reviews de buena calidad.",
+    "tags": ["herramientas", "ia"]
+  },
+  {
+    "id": "auto-2df1b80-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-05-29",
+    "title": "Permisos en Codex CLI: bypass de aprobaciones por sesión",
+    "content": "Si no querés aprobar cada comando en Codex CLI, usá el modo de bypass de permisos por sesión: aprueba durante esa sesión y no persiste a la siguiente. Revisá igual qué configuración tenés, porque varía según agente y si usás app o CLI.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-4b8b18a-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-05-25",
+    "title": "Grammarly para pulir prompts y documentación técnica",
+    "content": "Pulí tus prompts y textos técnicos en inglés con Grammarly (o las Writing Tools de Apple en macOS), pero mantené tu propio estilo de redacción en vez de delegarle la escritura entera al modelo.",
+    "tags": ["ingles", "herramientas"]
+  },
+  {
+    "id": "auto-250e5d1-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-05-23",
+    "title": "macch-babysit: cinco revisores de PR concurrentes en minutos",
+    "content": "Corré varios revisores de código en paralelo sobre tu PR (por ejemplo CodeRabbit, Qodo, Bugbot y React Review) con un agente que los coordine. Así bajás el code review de horas a minutos.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-77489c7-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-05-22",
+    "title": "Comparativa detallada Codex vs Cursor y uso de worktrees en Codex",
+    "content": "Si usás Codex, aprovechá git worktrees junto con un script de configuración del entorno local para aislar tareas largas. Cada tarea queda en su propia copia sin pisar las demás.",
+    "tags": ["ia", "herramientas", "productividad"]
+  },
+  {
+    "id": "auto-2cfa843-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-05-05",
+    "title": "Debate final sobre stacks de suscripciones: Cursor + Codex como combo óptimo",
+    "content": "Si tenés presupuesto limitado, combiná Cursor de USD 20 (Composer para tareas livianas e iteración rápida) con un plan fuerte de Codex para las tareas pesadas de arquitectura y backend. Repartí el trabajo entre herramientas según cuánto razonamiento exige cada tarea.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-bdee58e-nacho-tello",
+    "member": "Nacho Tello",
+    "date": "2026-05-05",
+    "title": "Joel comparte su desorientación: el mercado cambió y no sabe por dónde empezar",
+    "content": "Si sentís que el ecosistema de agentes y herramientas de IA te quedó grande, empezá viendo videos de Midudev sobre OpenCode y workflows actuales. Un recorrido guiado te ordena más que intentar leer todo suelto.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-9b5553d-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-05-02",
+    "title": "Obsidian vs Notion para gestión de conocimiento personal y profesional",
+    "content": "Usá Notion para lo que necesitás a mano en todos tus dispositivos (gastos, documentación personal) y Obsidian para notas técnicas que querés en markdown local y 100% privadas. Elegí según el caso de uso en vez de buscar una sola herramienta para todo.",
+    "tags": ["herramientas", "productividad"]
   },
   {
     "id": "auto-94f3cc0-victor-figueredo",
@@ -176,12 +1752,316 @@
     "tags": ["open-source", "seguridad"]
   },
   {
+    "id": "auto-94f3cc0-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-04-27",
+    "title": "Debate: repo de PCN open-source vs closed-source por seguridad",
+    "content": "Antes de abrir (o mantener abierto) un repo, verificá que no haya datos críticos expuestos y tené buenos backups.",
+    "tags": ["seguridad", "open-source"]
+  },
+  {
+    "id": "auto-94f3cc0-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-27",
+    "title": "Debate: repo de PCN open-source vs closed-source por seguridad",
+    "content": "Para incentivar contribuciones a un proyecto open source, regalá algo simbólico como remeras o tazas a quien tenga una PR mergeada.",
+    "tags": ["open-source", "comunidad"]
+  },
+  {
+    "id": "auto-0a69649-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-27",
+    "title": "Charla de Matt Pocock sobre diseño de sistemas y skills de desarrollo agéntico",
+    "content": "Antes del modo plan usá una skill tipo /grill-me para llegar a un diseño compartido con la IA. Armá un glosario del lenguaje ubicuo del dominio, definí qué mockear antes de aplicar TDD y preferí módulos profundos a superficiales.",
+    "tags": ["ia", "arquitectura", "testing"]
+  },
+  {
+    "id": "auto-cff9ee7-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-04-26",
+    "title": "Herramientas de code review con agentes: BugBot, CodeRabbit y SonarQube",
+    "content": "Sumá un revisor automático de PRs: BugBot de Cursor es muy bueno, y se puede combinar con Copilot y CodeRabbit. Probá varias herramientas, porque algunas no comentan nada en PRs donde otras detectan varios problemas.",
+    "tags": ["herramientas", "ia", "testing"]
+  },
+  {
+    "id": "auto-cff9ee7-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-04-26",
+    "title": "Herramientas de code review con agentes: BugBot, CodeRabbit y SonarQube",
+    "content": "Armá un pipeline de calidad: pre-commit hooks, SonarQube para análisis estático, Trivy para seguridad de paquetes y Semgrep para ciberseguridad.",
+    "tags": ["seguridad", "devops", "testing"]
+  },
+  {
+    "id": "auto-cff9ee7-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-26",
+    "title": "Herramientas de code review con agentes: BugBot, CodeRabbit y SonarQube",
+    "content": "Poné Biome y TSC en el pre-commit de tu proyecto TypeScript: atrapás errores de lint y tipos antes de que lleguen a la revisión.",
+    "tags": ["herramientas", "frontend", "testing"]
+  },
+  {
+    "id": "auto-4afa270-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-04-24",
+    "title": "Guía de LinkedIn y búsqueda de empleo tecnológico compartida por Alejo",
+    "content": "Además de postularte, contactá directamente a los reclutadores de las empresas que te interesan: es una forma de salir de la pila de postulaciones.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-71a99e9-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-23",
+    "title": "GPT 5.5 supera a Opus 4.7 y genera conversión masiva al ecosistema OpenAI",
+    "content": "Probá GPT 5.5 en modo Extra High para backend y arquitectura: genera código limpio, con funciones y nombres descriptivos. Revisá bien su trabajo en frontend, donde es más inconsistente.",
+    "tags": ["ia", "backend"]
+  },
+  {
+    "id": "auto-909b31b-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-04-16",
+    "title": "Debate GraphQL vs REST vs tRPC en proyectos modernos de 2026",
+    "content": "En proyectos TypeScript full-stack, las Server Functions de Next.js (antes Server Actions) o tRPC te dan type-safety de punta a punta sin generar código. Dejá GraphQL para APIs públicas o con varios clientes con necesidades distintas.",
+    "tags": ["arquitectura", "backend", "frontend"]
+  },
+  {
+    "id": "auto-e239ca5-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-10",
+    "title": "Meetup PCN en Xetro: charla sobre agentes de IA en producción",
+    "content": "Al diseñar agentes de IA para producción, preferí una flota de subagentes con responsabilidades específicas y un router en vez de un único 'God agent'. Cuidá el contexto y las herramientas de cada uno y dales objetivos de negocio.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-7f6e113-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-04-08",
+    "title": "Crashout: juego multiplayer de carreras hecho con Go y Next.js",
+    "content": "En un juego multiplayer, hacé que el servidor sea la fuente de verdad del estado y que el frontend solo muestre lo que dicta. Así evitás el cheating del lado del cliente.",
+    "tags": ["arquitectura", "seguridad", "backend"]
+  },
+  {
+    "id": "auto-bb3a1c0-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-07",
+    "title": "GPT 5.4 se convirtió en alternativa fuerte a Claude degradado",
+    "content": "Si un modelo prioriza código que funciona sobre código legible, guialo con un archivo de reglas de código (como coderules.mdc) y una skill de estilo. GPT 5.4 en modo alto es muy bueno para encontrar bugs de backend.",
+    "tags": ["ia", "backend"]
+  },
+  {
+    "id": "auto-d993418-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-04-07",
+    "title": "Cursor Composer 2 se convirtió en el favorito del grupo para desarrollo",
+    "content": "Usá un modelo rápido y barato como Cursor Composer para la mayoría de las tareas (frontend, iteración rápida, investigar el codebase, mensajes de commit) y reservá los modelos pesados para arquitectura o tareas muy complejas.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-5d3e40a-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-03-31",
+    "title": "Filtración del código fuente de Claude CLI y ataque supply chain en Axios",
+    "content": "Pasá todo el código por pre-commit hooks con herramientas como SonarQube y Semgrep para detectar problemas y vulnerabilidades antes de que lleguen al repositorio. Es una buena defensa frente a ataques de supply chain.",
+    "tags": ["seguridad", "devops", "testing"]
+  },
+  {
+    "id": "auto-be3698f-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-03-28",
+    "title": "Cursor debug mode y estrategia de batches para ahorrar tokens",
+    "content": "Para ahorrar tokens con modelos grandes, juntá hasta 10 fixes en una lista numerada y mandalos en un solo prompt. Las listas numeradas le sirven más al modelo que los bullets para seguir cada punto.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-be3698f-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-03-28",
+    "title": "Cursor debug mode y estrategia de batches para ahorrar tokens",
+    "content": "Para alcances amplios, como un módulo entero, hacé un único prompt muy elaborado en vez de muchos chicos: así no contaminás el contexto.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-4ae9b97-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-03-10",
+    "title": "Git fixup commits y rebase interactivo: flujo de trabajo para código limpio",
+    "content": "Para mantener un historial limpio usá `git commit --fixup=<hash>` al corregir un commit anterior y después `git rebase -i --autosquash`. Los fixups se aplastan solos sobre el commit original.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-21f4945-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-03-06",
+    "title": "Git worktrees con scripts de clonación de base de datos",
+    "content": "Si trabajás con agentes en paralelo, automatizá los git worktrees con un script bash que cree el directorio, clone la base de datos local y configure las variables de entorno. Cada tarea queda aislada.",
+    "tags": ["ia", "productividad", "bases-de-datos"]
+  },
+  {
+    "id": "auto-c4c3750-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-02-22",
+    "title": "Context drift en RAG y Knowledge Slots como solución para Macch",
+    "content": "En sistemas RAG, para evitar el context drift (el modelo pierde coherencia con contexto contradictorio o muy largo) organizá lo recuperado en ranuras de conocimiento predefinidas antes de enviarlo al modelo. Menos ruido, respuestas más consistentes.",
+    "tags": ["ia", "arquitectura"]
+  },
+  {
+    "id": "auto-4682650-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-02-13",
+    "title": "Google Stitch para UI: metaprompt, generación de pantallas y flujo con Claude",
+    "content": "Para diseñar interfaces con IA: generá primero un metaprompt detallado de la app, creá las pantallas en Google Stitch y pasale esas imágenes a Claude Code para que implemente el frontend. Las imágenes sirven de referencia visual y reducen la ambigüedad.",
+    "tags": ["ia", "frontend", "herramientas"]
+  },
+  {
+    "id": "auto-095b714-martin-esteban",
+    "member": "Martín Esteban",
+    "date": "2026-02-12",
+    "title": "Full-stack vs especialización: debate sobre el perfil del desarrollador moderno",
+    "content": "Los desarrolladores que entienden tanto el dominio técnico como el negocio son los más difíciles de reemplazar. Además de la técnica, aprendé sobre el problema que resuelve tu producto.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-6300e32-nicolas-borda",
+    "member": "Nicolás Borda",
+    "date": "2026-02-11",
+    "title": "QA manual con Claude Cowork: testing asistido por IA",
+    "content": "Podés usar IA para pasar casos de prueba escritos en lenguaje natural a scripts de Playwright o Cypress. Revisalos y ajustalos igual, pero te ahorran mucho tiempo.",
+    "tags": ["testing", "ia"]
+  },
+  {
+    "id": "auto-4f47424-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-02-02",
+    "title": "Lanzamiento de Codex por OpenAI",
+    "content": "No te obsesiones con seguirle el ritmo a todas las herramientas de IA: lo que diferencia es cómo las integrás en tu flujo de trabajo. Probá varias y quedate con la que mejor se adapte al tipo de proyecto.",
+    "tags": ["ia", "productividad"]
+  },
+  {
     "id": "auto-e09e735-martin-esteban",
     "member": "Martín Esteban",
     "date": "2026-01-26",
     "title": "PostgreSQL avanzado: discusión técnica sobre índices y performance",
     "content": "Si una consulta lenta sobre una tabla con millones de registros solo trabaja con los activos, probá un índice parcial que filtre esos registros: puede bajar la query de decenas de segundos a milisegundos.",
     "tags": ["bases-de-datos"]
+  },
+  {
+    "id": "auto-8e52972-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-14",
+    "title": "Lanzamiento de funciones admin y bulk messaging en Macch",
+    "content": "Para envíos masivos por WhatsApp, usá una cola con reintentos exponenciales y respetá los límites de la API de Meta. Usá plantillas pre-aprobadas porque sin aprobación no podés escribir fuera de conversaciones iniciadas por el usuario.",
+    "tags": ["backend", "arquitectura"]
+  },
+  {
+    "id": "auto-ebab830-joaquin-sarmiento",
+    "member": "Joaquin Sarmiento",
+    "date": "2026-01-09",
+    "title": "Warp Terminal: recomendaciones de terminal para developers",
+    "content": "Tené cuidado al usar una terminal con IA como Warp para instalaciones complejas que modifican archivos del sistema: puede romper cosas. Revisá siempre los comandos antes de ejecutarlos.",
+    "tags": ["herramientas", "seguridad"]
+  },
+  {
+    "id": "auto-9d054cd-juan-farber",
+    "member": "Juan Farber",
+    "date": "2026-01-09",
+    "title": "Deepwiki.com: herramienta para entender repositorios de código",
+    "content": "Para entender rápido un repo que no conocés, probá Deepwiki.com: indexa el repositorio y te deja hacer preguntas en lenguaje natural sobre el código.",
+    "tags": ["herramientas", "aprendizaje"]
+  },
+  {
+    "id": "auto-88959b1-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-09",
+    "title": "Minificación de prompts para reducir costo de tokens",
+    "content": "Para bajar el costo de tokens, minificá tus prompts como si fueran código: sacá palabras redundantes y adjetivos y abstraé lógica con símbolos, por ejemplo 'si pasa x, se hace y' como 'x -> y'. También evitá repetir contexto.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-a36bda9-benjamin-cortes",
+    "member": "Benjamin Cortes",
+    "date": "2026-01-09",
+    "title": "ARCA (ex-AFIP): integración de sistemas con la API fiscal argentina",
+    "content": "Para integrar facturación electrónica con ARCA (ex AFIP), mirá afipsdk.com, que simplifica mucho el trabajo aunque el plan gratuito tiene límites.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-a36bda9-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-01-09",
+    "title": "ARCA (ex-AFIP): integración de sistemas con la API fiscal argentina",
+    "content": "Si necesitás integrar con ARCA gratis, probá PyAfipWS: es open source y 100% gratuita.",
+    "tags": ["backend", "open-source"]
+  },
+  {
+    "id": "auto-57278db-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2026-01-08",
+    "title": "Context7 MCP: documentación actualizada para modelos de IA",
+    "content": "Instalá el MCP de Context7 en tu herramienta de IA (por ejemplo Gemini CLI) para que consulte documentación actualizada. Evita que genere código con APIs deprecadas o inexistentes.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-57278db-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-08",
+    "title": "Context7 MCP: documentación actualizada para modelos de IA",
+    "content": "Si tu modelo no conoce una librería nueva, pegá la documentación en texto plano como contexto del prompt. Es una alternativa simple a instalar un MCP.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-587dba9-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2026-01-08",
+    "title": "Clockify y Plaky para gestión de tiempo y tareas",
+    "content": "Para trackear tiempo en un equipo sin pagar, probá Clockify: tiene versión gratuita con equipos y reportes detallados.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-0cfd5b0-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-01-07",
+    "title": "Agentic engineering: Agustín explica el paradigma y sus herramientas",
+    "content": "Para trabajar con agentes de IA usá modo plan en Cursor, Git Worktrees para paralelizar sin conflictos y un revisor automático de PRs. Vos concentrate en arquitectura, especificaciones y revisión: cuanto mejor es tu base de ingeniería, más partido le sacás.",
+    "tags": ["ia", "productividad", "arquitectura"]
+  },
+  {
+    "id": "auto-12bfa38-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-06",
+    "title": "Prompt engineering: los humanos lo hacen mejor que los LLMs",
+    "content": "Escribí vos mismo los system prompts de tus agentes: pedirle a un LLM que los redacte pasa tests superficiales pero después aparecen alucinaciones. Y evitá parchear el prompt una y otra vez, porque termina monstruoso e ilegible; reescribilo.",
+    "tags": ["ia"]
+  },
+  {
+    "id": "auto-4737ea6-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-06",
+    "title": "Render vs AWS/GCP para deploy: providers chicos vs grandes",
+    "content": "Para deployar tu proyecto, considerá ir directo a AWS o GCP ayudándote con IA: la experiencia en grandes providers es muy pedida y si tu proyecto crece vas a terminar migrando igual. GCP regala créditos al crear la cuenta y AWS tiene free tier por un año.",
+    "tags": ["devops", "carrera"]
+  },
+  {
+    "id": "auto-221820f-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2026-01-06",
+    "title": "Devin como agente de código en entornos empresariales",
+    "content": "Si usás un agente autónomo como Devin, escribile un playbook detallado: sin instrucciones específicas asume cosas por su cuenta y mete cambios que no pediste. Con un buen playbook sigue las reglas muy bien.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-b1d9883-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2026-01-06",
+    "title": "uv como gestor de paquetes Python: siempre uv, nunca otra cosa",
+    "content": "Para gestionar dependencias en Python usá uv: es rápido, reproducible y reemplaza bien a pip y Poetry. Migrar un proyecto de Poetry a uv suele ser un cambio que el equipo agradece.",
+    "tags": ["herramientas", "backend"]
+  },
+  {
+    "id": "auto-7359efc-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2026-01-04",
+    "title": "Slack vs Discord: diferencias reales en el trabajo",
+    "content": "Antes de elegir Slack para tu equipo o comunidad, fijate que en la versión free los mensajes viejos se van borrando. Si necesitás historial, Discord te lo da gratis.",
+    "tags": ["herramientas", "comunidad"]
   },
   {
     "id": "auto-64f7220-joaquin-sarmiento",
@@ -192,12 +2072,100 @@
     "tags": ["devops", "herramientas"]
   },
   {
+    "id": "auto-f9ca9a7-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2026-01-01",
+    "title": "DDD: libros y recursos para aprender más allá de la facultad",
+    "content": "Para aprender DDD de verdad no alcanza la facultad: leé el libro original de Eric Evans, 'Domain-Driven Design Distilled' e 'Implementing Domain-Driven Design' de Vaughn Vernon, y hacé proyectos propios. Los videos gratuitos de la academia Codely también ayudan.",
+    "tags": ["arquitectura", "aprendizaje"]
+  },
+  {
+    "id": "auto-f849611-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-12-31",
+    "title": "LM Studio y modelos locales: distilación y cuantización",
+    "content": "Usá LM Studio para probar modelos locales y ver hasta cuánta cuantización aguantan sin perder demasiada calidad. Se puede conectar con AnythingLLM como interfaz.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-a74b557-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-12-30",
+    "title": "Lanzamiento de macch.ai: la startup de Facundo García Martoni",
+    "content": "Para una landing de un producto, armala en Framer: te da un CMS y te deja correr ads por nicho sin mucho esfuerzo. Combinalo con herramientas de IA para copy y mockups para salir rápido.",
+    "tags": ["herramientas", "frontend"]
+  },
+  {
     "id": "auto-7e363a0-esteban-sanchez",
     "member": "Esteban Sánchez",
     "date": "2025-12-29",
     "title": "Agentes con OpenCode en proyectos con deuda técnica",
     "content": "En proyectos grandes con deuda técnica, definí agentes como archivos Markdown que especifiquen en detalle de qué son expertos, con ejemplos. Así no repetís ese contexto en cada prompt; igual contá con revisar y limpiar lo que hacen.",
     "tags": ["ia"]
+  },
+  {
+    "id": "auto-ed89c3a-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-12-29",
+    "title": "Gestor de contraseñas: KeePassXC vs Bitwarden",
+    "content": "Para gestionar contraseñas probá KeePassXC: es open source, tiene interfaz fácil y una extensión de navegador para no tipear claves a mano.",
+    "tags": ["seguridad", "herramientas"]
+  },
+  {
+    "id": "auto-ed89c3a-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-12-29",
+    "title": "Gestor de contraseñas: KeePassXC vs Bitwarden",
+    "content": "Si preferís un gestor de contraseñas en la nube, Bitwarden es una gran opción: muy confiable y económica. Elegí uno y usalo siempre en vez de reciclar claves.",
+    "tags": ["seguridad", "herramientas"]
+  },
+  {
+    "id": "auto-52da896-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-12-29",
+    "title": "El futuro de la programación con IA y el ownership del código",
+    "content": "En la era de la IA, la skill clave es armar la arquitectura del proyecto de modo que puedas delegar tareas de código a un agente sin que falle. Invertí en diseñar y especificar bien el sistema.",
+    "tags": ["ia", "arquitectura", "carrera"]
+  },
+  {
+    "id": "auto-7e363a0-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-12-29",
+    "title": "Agentes con OpenCode en proyectos con deuda técnica",
+    "content": "Para trabajar con varios agentes en paralelo usá Git Worktrees y servilos con virtual hosts (por ejemplo en Apache), así podés ver varias ramas a la vez mientras cada agente termina lo suyo.",
+    "tags": ["ia", "herramientas", "productividad"]
+  },
+  {
+    "id": "auto-d59a78c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-12-29",
+    "title": "LottieFiles para animaciones frontend",
+    "content": "Para animaciones en tu landing o app probá LottieFiles: tiene una enorme biblioteca de animaciones Lottie que se integran en la web de forma muy simple.",
+    "tags": ["frontend", "herramientas"]
+  },
+  {
+    "id": "auto-af52c11-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-12-28",
+    "title": "Arquitectura lógica vs física y diseño de bajo y alto nivel",
+    "content": "Si usás Windows, instalá WSL para correr Linux adentro de Windows: la shell de Linux y PowerShell conviven sin que tengas que reemplazar nada.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-8ad0752-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-12-27",
+    "title": "Startup vs empresa grande: dónde aprende más un junior",
+    "content": "Si estás empezando, priorizá una startup o una consultora chica: ahí tomás más ownership y resolvés problemas grandes. En empresas grandes a los juniors muchas veces les dan tareas menores.",
+    "tags": ["carrera"]
+  },
+  {
+    "id": "auto-11fecb0-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-12-27",
+    "title": "Python: tipos, flotantes, truthy/falsy y el módulo Decimal",
+    "content": "Para cálculos con dinero o donde importe la precisión en Python, usá el módulo `decimal` y no floats: con floats `0.1 + 0.2 == 0.3` da False. Recordá además que en Python `==` compara valores, no tipos (4.0 == 4).",
+    "tags": ["backend", "aprendizaje"]
   },
   {
     "id": "auto-2c1851e-german-navarro",
@@ -208,12 +2176,188 @@
     "tags": ["arquitectura"]
   },
   {
+    "id": "auto-5cbb00e-nicolas-fuentes",
+    "member": "Nicolas Fuentes",
+    "date": "2025-12-17",
+    "title": "Claude Code como alternativa a Cursor para Python",
+    "content": "Antes de pasarte a Claude Code tené en cuenta que tiene límites de uso diarios (se renuevan cada 5 horas) y semanales. Si agotás el semanal, la alternativa es pagar por prompt y sale muy caro, así que dosificá el uso.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-bccc11b-mateo-lohezic",
+    "member": "Mateo Lohezic",
+    "date": "2025-12-15",
+    "title": "Plataforma de cursos: video hosting con MUX",
+    "content": "Para alojar videos de una plataforma de cursos probá MUX: es muy simple de integrar, el costo arranca bajo (con una capa de crédito incluida) y hasta permite streaming en vivo.",
+    "tags": ["herramientas", "freelance"]
+  },
+  {
+    "id": "auto-33cd0bd-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-12-11",
+    "title": "Comparativa de modelos AI: quién usa qué y para qué",
+    "content": "Pensá el gasto en modelos de IA contra el tiempo que te ahorran: si un modelo caro te ahorra horas de debug y te entrega más, gastar 100 USD en créditos puede ser una decisión obvia. Usá el modelo de punta donde rinde y modelos chicos y baratos para lo demás.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-2717080-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-12-09",
+    "title": "T3 Stack, MongoDB vs relacional y refactoring de proyectos",
+    "content": "Si querés un stack con buena salida laboral y velocidad de desarrollo, mirá el T3 Stack (Next.js, Tailwind, TypeScript, tRPC, Drizzle y una base como Supabase). Se usa en empresas reales y en el website de PCN.",
+    "tags": ["arquitectura", "frontend", "backend"]
+  },
+  {
+    "id": "auto-2717080-mauricio-chaile",
+    "member": "Mauricio Chaile",
+    "date": "2025-12-09",
+    "title": "T3 Stack, MongoDB vs relacional y refactoring de proyectos",
+    "content": "Elegí stacks populares como el T3: la IA tiene muchísimo código de ejemplo de ellos y alucina menos al generarte código.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-90f0cbf-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-12-05",
+    "title": "AI Engineer JR en Canadá: el nuevo rol del mercado",
+    "content": "El rol de 'AI Engineer' todavía no está maduro: en muchas empresas es un backend que sabe usar APIs de OpenAI, Ollama o LangChain. Aprovechá ahora que está en formación para aprender a integrar IA en tus proyectos.",
+    "tags": ["carrera", "ia"]
+  },
+  {
     "id": "auto-3a45612-mateo-lohezic",
     "member": "Mateo Lohezic",
     "date": "2025-12-04",
     "title": "Cotización freelance: precios, contratos y estrategias",
     "content": "Cobrá precio cerrado por etapas bien definidas (planificación, diseño, desarrollo, soporte): los cambios de diseño van solo en su etapa y cualquier feature nueva es otro presupuesto. Sumá un pequeño colchón para aceptar pedidos chicos sin costo.",
     "tags": ["freelance"]
+  },
+  {
+    "id": "auto-3a45612-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-12-04",
+    "title": "Cotización freelance: precios, contratos y estrategias",
+    "content": "Cuando cotices un proyecto, definí bien la etapa de soporte: qué cubre y por cuánto tiempo. Si no, terminás arreglando bugs gratis después del lanzamiento.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-1988090-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-11-25",
+    "title": "Deploy en VPS vs Vercel: vCPUs, Render y DonWeb",
+    "content": "Si vas a correr Next en un VPS propio, dimensionalo con RAM de sobra: Next es muy hambriento de memoria. Antes de elegir plan fijate en los vCPUs y la RAM reales, no solo en el precio.",
+    "tags": ["devops", "frontend"]
+  },
+  {
+    "id": "auto-1988090-matias-gutierrez",
+    "member": "Matias Gutierrez",
+    "date": "2025-11-25",
+    "title": "Deploy en VPS vs Vercel: vCPUs, Render y DonWeb",
+    "content": "En proyectos de cliente, pedile que pague el hosting (por ejemplo Vercel) a su nombre. Te saca el costo y la responsabilidad de encima y simplifica el deploy.",
+    "tags": ["freelance", "devops"]
+  },
+  {
+    "id": "auto-25066e6-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-11-21",
+    "title": "Estimación en talles de remera vs story points",
+    "content": "Estimá en talles de remera o story points de Fibonacci en vez de horas: medís complejidad y no dependés del seniority de quien lo hace (una tarea M la saca un senior en un día y un junior en tres). Tené en cuenta que así cuesta más calcular la velocidad individual por sprint.",
+    "tags": ["productividad", "carrera"]
+  },
+  {
+    "id": "auto-085911d-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-11-21",
+    "title": "Prettier en Windows: CRLF vs LF y cómo solucionarlo",
+    "content": "Si Prettier te tira errores raros en Windows, sospechá del fin de línea: VSCode usa CRLF y el ecosistema JavaScript espera LF. Fijá `endOfLine: lf` en la config de Prettier (o en .editorconfig) para que valga para todo el repo.",
+    "tags": ["herramientas", "frontend"]
+  },
+  {
+    "id": "auto-3b55c95-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-10-29",
+    "title": "Focus y la trampa de hacer demasiadas cosas a la vez",
+    "content": "Para ser excelente en un campo, elegí una cosa y enfocate: hobbies están bien, pero hacen falta sacrificios. Si te cuesta con la dopamina, el libro The Molecule of More explica los mecanismos.",
+    "tags": ["productividad", "aprendizaje"]
+  },
+  {
+    "id": "auto-3b55c95-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2025-10-29",
+    "title": "Focus y la trampa de hacer demasiadas cosas a la vez",
+    "content": "Poné control parental o límites de tiempo en las apps que te quitan horas, por ejemplo 30 minutos diarios, para no perderte en ellas.",
+    "tags": ["productividad"]
+  },
+  {
+    "id": "auto-a3057b9-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-10-26",
+    "title": "Extensiones para reducir distracciones en el browser",
+    "content": "Para reducir distracciones, probá Undistracted, Social Focus (Safari) y One Sec (apps del teléfono): bloquean features adictivas de redes sociales.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-a3057b9-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2025-10-26",
+    "title": "Extensiones para reducir distracciones en el browser",
+    "content": "Si querés medir y limitar tu tiempo de pantalla, StayFree tiene app desktop, Android y extensiones que se sincronizan.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-ce5d4ce-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-10-23",
+    "title": "Scrum Master: un rol en extinción",
+    "content": "De Scrum quedate con lo bueno: respuesta rápida al cambio, colaboración y entregas incrementales. Dejá las formalidades que agregan carga sin aportar valor.",
+    "tags": ["carrera", "productividad"]
+  },
+  {
+    "id": "auto-675082f-josefina-japaze",
+    "member": "Josefina Japaze",
+    "date": "2025-10-14",
+    "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
+    "content": "Stripe no está disponible para cobrar en pesos argentinos. Si integrás Checkout Pro de Mercado Pago, probalo en sandbox desde temprano porque los webhooks pueden fallar.",
+    "tags": ["backend", "freelance"]
+  },
+  {
+    "id": "auto-675082f-ariel-basabe",
+    "member": "Ariel Basabe",
+    "date": "2025-10-14",
+    "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
+    "content": "Si Stripe no te funciona en Argentina, mirá Lemon Squeezy como alternativa para cobrar en línea.",
+    "tags": ["freelance", "backend"]
+  },
+  {
+    "id": "auto-675082f-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-10-14",
+    "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
+    "content": "Para cobrar desde Argentina, DLocal Go es una opción que funcionó en su caso. Probalo si Stripe no está disponible.",
+    "tags": ["freelance", "backend"]
+  },
+  {
+    "id": "auto-675082f-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-10-14",
+    "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
+    "content": "Los webhooks de Stripe andan mucho mejor que otros y podés probarlos con la CLI de Stripe. Aprovechala en desarrollo.",
+    "tags": ["backend", "testing"]
+  },
+  {
+    "id": "auto-abe4b36-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-10-12",
+    "title": "n8n: herramienta de automatización intermedia entre código y no-code",
+    "content": "Probá n8n para automatizar: podés crear formularios web y llevar las respuestas a Slack, Sheets o Telegram sin código manual. Es un intermedio entre código y no-code.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-2bfa20b-alejo-boga",
+    "member": "Alejo Boga",
+    "date": "2025-10-04",
+    "title": "Reddit como canal de validación de startups",
+    "content": "Para descubrir nichos con oportunidad, mirá los batches de Y Combinator en ycombinator.com/companies y fijate en qué industrias reciben inversión.",
+    "tags": ["comunidad", "carrera"]
   },
   {
     "id": "auto-67872f2-fede-valle",
@@ -232,12 +2376,324 @@
     "tags": ["arquitectura"]
   },
   {
+    "id": "auto-c8c5f7f-kevin-martin",
+    "member": "Kevin Martin",
+    "date": "2025-09-30",
+    "title": "Problemas con Supabase direct connection en proyectos",
+    "content": "Si la conexión directa a Supabase te da errores como P1001 con Prisma, probá cambiar a la conexión pooled.",
+    "tags": ["bases-de-datos", "backend"]
+  },
+  {
+    "id": "auto-c8c5f7f-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2025-09-30",
+    "title": "Problemas con Supabase direct connection en proyectos",
+    "content": "Con Prisma podés necesitar dos connection strings en Supabase, pero con Drizzle alcanza una. Revisá cuál usa tu ORM para migraciones y para consultas.",
+    "tags": ["bases-de-datos", "backend"]
+  },
+  {
+    "id": "auto-8f9b4b5-exequiel-de-freitas",
+    "member": "Exequiel De Freitas",
+    "date": "2025-09-30",
+    "title": "LMS con NestJS/Next y el principio KISS vs SOLID",
+    "content": "Un buen código funciona, está ordenado para entenderse meses después, es razonablemente performante y está documentado. No persigas la perfección.",
+    "tags": ["arquitectura", "productividad"]
+  },
+  {
+    "id": "auto-8f9b4b5-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2025-09-30",
+    "title": "LMS con NestJS/Next y el principio KISS vs SOLID",
+    "content": "No pierdas tiempo queriendo hacer todo perfecto: priorizá hacerlo simple y que ande.",
+    "tags": ["arquitectura", "productividad"]
+  },
+  {
+    "id": "auto-d0b0d0c-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-09-29",
+    "title": "Java y Spring: el framework inevitable del backend Java",
+    "content": "Si querés hacer APIs REST con Java, aprendé Spring: es el framework dominante. Si ya conocés NestJS, te va a resultar familiar porque se inspiró en Spring.",
+    "tags": ["backend", "aprendizaje"]
+  },
+  {
+    "id": "auto-fe192cf-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-09-27",
+    "title": "Resumen de charlas en Nerdearla 2025",
+    "content": "Cuando programes con IA, commiteá seguido para poder revertir si la IA rompe algo. Y contribuí a open source: te abre puertas, y los tests automatizados te permiten refactorizar con confianza.",
+    "tags": ["ia", "testing", "open-source"]
+  },
+  {
+    "id": "auto-bc4b9d5-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-09-22",
+    "title": "Patrones de diseño de arquitectura: MVC, MVP y MVVM en contexto web y mobile",
+    "content": "React es una librería de UI y no implementa MVC por defecto. Con Next.js podés aproximarlo: pages como vistas, server actions como controladores y un ORM como modelo.",
+    "tags": ["arquitectura", "frontend"]
+  },
+  {
+    "id": "auto-bc4b9d5-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-09-22",
+    "title": "Patrones de diseño de arquitectura: MVC, MVP y MVVM en contexto web y mobile",
+    "content": "En Next.js podés ver MVC así: pages como vistas, server actions como controladores y Prisma como modelo. Conocé también MVP y MVVM, usados en desktop y mobile nativo.",
+    "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-2b9809c-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-09-11",
+    "title": "Arquitectura ágil y diagramas: debate sobre metodologías de equipos",
+    "content": "La metodología ágil no condiciona la arquitectura: diseñá igual. Usá Excalidraw para armar diagramas de arquitectura física y de base de datos con multiplicidad, y ajustá la documentación a la madurez del equipo.",
+    "tags": ["arquitectura", "herramientas"]
+  },
+  {
+    "id": "auto-2b9809c-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-09-11",
+    "title": "Arquitectura ágil y diagramas: debate sobre metodologías de equipos",
+    "content": "El punto del manifiesto ágil era tener feedback más rápido con el cliente, no eliminar el diseño. Escuchá el planteo de Uncle Bob sobre eso.",
+    "tags": ["arquitectura"]
+  },
+  {
+    "id": "auto-50f2051-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-09-09",
+    "title": "Ataque de supply chain a paquetes populares de NPM (chalk, debug, ansi-regex)",
+    "content": "Cuando se compromete un paquete popular de npm, revisá tu lockfile y evitá actualizar a versiones recién publicadas sin mirar. Fijá versiones y estate atento a alertas como las de socket.dev.",
+    "tags": ["seguridad", "devops"]
+  },
+  {
+    "id": "auto-dcccd89-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-09-08",
+    "title": "Claude 4.1 Opus para animación CSS compleja y búsqueda de experto",
+    "content": "Para tareas complejas de CSS, como animar una mascota, probá modelos distintos: en su caso Opus fue el único que dio algo decente tras varios prompts. Sabé que la IA todavía está lejos de hacer buen CSS drawing.",
+    "tags": ["ia", "frontend"]
+  },
+  {
+    "id": "auto-a8ddd3e-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-08-26",
+    "title": "Debate UTN: ¿C o Python para enseñar programación?",
+    "content": "Lo más importante para aprender programación no es el lenguaje sino los contenidos: algoritmos y estructuras de datos. Enfocate en entender esos fundamentos.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-a8ddd3e-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-08-26",
+    "title": "Debate UTN: ¿C o Python para enseñar programación?",
+    "content": "Aprender un lenguaje de bajo nivel como C++ o Rust te obliga a pensar como la computadora y entender que la memoria no es infinita. Es como aprender a manejar en manual antes del automático.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-a8ddd3e-jeremias-moreno-ivanoff",
+    "member": "Jeremías Moreno Ivanoff",
+    "date": "2025-08-26",
+    "title": "Debate UTN: ¿C o Python para enseñar programación?",
+    "content": "Con C++ aprendés a construir las soluciones, no solo a usar las que ya existen. Si querés entender de verdad, arrancá por lo bajo.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-ffa179d-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-08-16",
+    "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+    "content": "Conectá MCP a Cursor para crear tickets en Linear y pull requests sin salir del chat: un solo prompt reemplaza saltar entre tres apps.",
+    "tags": ["ia", "productividad", "herramientas"]
+  },
+  {
+    "id": "auto-ffa179d-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-08-16",
+    "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+    "content": "Probá los servidores MCP de herramientas que ya usás: el de Stripe crea productos y webhooks en minutos, el de Supabase sirve para MVPs rápidos, y Vercel también tiene el suyo.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-ffa179d-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-08-16",
+    "title": "MCP: primera experiencia integrando Linear y GitHub desde Cursor",
+    "content": "Mirá los MCP de browser devtools y de MercadoPago: sirven para que el agente inspeccione la página o integre pagos.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-83053a4-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-08-07",
+    "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
+    "content": "Probá GPT-5 si querés un modelo más barato que Sonnet, que sigue mejor las instrucciones, falla menos en tool calls y rinde bien con contexto largo.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-83053a4-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-08-07",
+    "title": "GPT-5 lanzamiento: review detallada y comparativa de modelos",
+    "content": "No te dejes llevar solo por el hype de un modelo nuevo: probalo una semana en tu flujo real. Y para el día a día, Gemini es muy bueno por su Deep Research y su generación de imágenes y video.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-89692d8-ariel-basabe",
+    "member": "Ariel Basabe",
+    "date": "2025-07-30",
+    "title": "Debate Cursor vs Windsurf vs Claude Code como herramientas de codeo IA",
+    "content": "Si Cursor te frustra, probá alternativas como Windsurf, que tiene buenos resultados. Para completions hay también plugins gratuitos para VS Code.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-2f4e7c5-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-07-25",
+    "title": "Tip de Cursor: evitar comandos pager en la terminal",
+    "content": "Si usás Cursor, evitá comandos con pager (less, more, git diff): el agente queda atrapado. Agregá --no-pager en git o redirigí a | cat, y creá una regla para que genere un test por cada feature.",
+    "tags": ["ia", "testing", "herramientas"]
+  },
+  {
+    "id": "auto-2f4e7c5-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-07-25",
+    "title": "Tip de Cursor: evitar comandos pager en la terminal",
+    "content": "Si un agente de IA ejecuta comandos en la terminal, cuidá los que abren una interfaz interactiva como un pager: quedan colgados. Desactivá el pager o redirigí la salida.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
     "id": "auto-c65e651-agustin-sanchez",
     "member": "Agustín Sánchez",
     "date": "2025-07-23",
     "title": "Estimación de presupuesto para proyecto freelance complejo",
     "content": "Para presupuestar, estimá las horas totales, multiplicalas por tu costo por hora y sumá un 20% de buffer de riesgo. Antes de refinar al detalle, pasá una estimación ballpark para ver si el cliente está dispuesto a pagar.",
     "tags": ["freelance"]
+  },
+  {
+    "id": "auto-c65e651-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-07-23",
+    "title": "Estimación de presupuesto para proyecto freelance complejo",
+    "content": "Antes de aceptar un proyecto, recordá que el documento de requerimientos puede funcionar como evidencia legal. Leelo con atención y asegurate de que refleje lo acordado.",
+    "tags": ["freelance"]
+  },
+  {
+    "id": "auto-c65e651-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-07-23",
+    "title": "Estimación de presupuesto para proyecto freelance complejo",
+    "content": "Para estimar un proyecto grande, descomponé el documento de requerimientos en features individuales y estimá cada una por separado.",
+    "tags": ["freelance", "productividad"]
+  },
+  {
+    "id": "auto-c65e651-matias-gutierrez",
+    "member": "Matias Gutierrez",
+    "date": "2025-07-23",
+    "title": "Estimación de presupuesto para proyecto freelance complejo",
+    "content": "Si un proyecto es grande, empezá por el core (en una app de mapas, la geolocalización y la visualización) y construí el resto sobre eso.",
+    "tags": ["freelance", "arquitectura"]
+  },
+  {
+    "id": "auto-6dce2d2-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-07-23",
+    "title": "Devin como agente de IA para desarrollo autónomo",
+    "content": "Los agentes de IA como Devin ayudan cuando detectan que una tarea es demasiado compleja y la dividen en subtareas. Dividir tareas grandes en partes chicas también funciona cuando trabajás con otros agentes de IA.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-9938eb7-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-07-08",
+    "title": "Cursor facturación inesperada: el rugpull de Max mode",
+    "content": "En Cursor, el uso ilimitado del plan Pro aplica solo al modo auto, no al modo MAX con modelos pesados. Antes de activar usage-based pricing, setea un límite de gasto.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-9938eb7-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-07-08",
+    "title": "Cursor facturación inesperada: el rugpull de Max mode",
+    "content": "Cuidado con usar MAX mode con modelos pesados como Opus para tareas simples: se puede disparar el gasto. Para reemplazos mecánicos usá una herramienta como sed.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-6af038c-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-07-08",
+    "title": "Tips avanzados de Cursor: prompt queue, voice input y rules",
+    "content": "En Cursor, poné el schema SQL de las tablas como contexto, usá la prompt queue para encolar varios prompts y fijá un límite de gasto mensual. También podés dictar prompts por voz con una app como Whispr.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-6af038c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-07-08",
+    "title": "Tips avanzados de Cursor: prompt queue, voice input y rules",
+    "content": "Escribir los prompts en vez de dictarlos te deja pensar más despacio, volver atrás e iterarlos. Probá ambos y quedate con lo que te dé mejores resultados.",
+    "tags": ["ia", "productividad"]
+  },
+  {
+    "id": "auto-747404c-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-07-05",
+    "title": "Flasheo de BIOS con CH341A y Libreboot en ThinkPad",
+    "content": "Antes de flashear una BIOS con un programador CH341A, tené claro que podés brickear la máquina, aunque es recuperable. Libreboot elimina límites arbitrarios y puede hacer arrancar la máquina más rápido.",
+    "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-0e9c580-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-07-01",
+    "title": "Django vs FastAPI y ecosistema Python para backend",
+    "content": "Para gestionar dependencias en Python, probá uv en vez de Poetry: es más rápido por estar escrito en Rust y maneja las versiones de Python por vos. Django tiene un ORM, migraciones y panel de admin excelentes, aunque es más lento en lo ultra crítico.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-0e9c580-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-07-01",
+    "title": "Django vs FastAPI y ecosistema Python para backend",
+    "content": "Para linting en Python, usá Ruff: es rápido y reemplaza a Pylance en ese rol.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-845e247-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-07-01",
+    "title": "Arquitectura FastAPI para sistema de análisis de CVs con IA",
+    "content": "Organizá un backend FastAPI en cuatro módulos: routes (rutas y estructura de requests/responses), service (lógica de negocio), model (objetos o dataclasses) y db. FastAPI genera la documentación OpenAPI automáticamente, y combina bien con SQLAlchemy y PostgreSQL.",
+    "tags": ["arquitectura", "backend"]
+  },
+  {
+    "id": "auto-845e247-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-07-01",
+    "title": "Arquitectura FastAPI para sistema de análisis de CVs con IA",
+    "content": "Si necesitás un backend Python rápido de armar, FastAPI lo hacés en dos patadas. Es buena opción para exponer un sistema de IA.",
+    "tags": ["backend"]
+  },
+  {
+    "id": "auto-fa7878d-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-06-27",
+    "title": "MacBook con chip M vs Intel: qué conviene comprar",
+    "content": "No compres una MacBook con procesador Intel: son muy lentas. Elegí una con chip Apple (M1 en adelante), con 16 GB de RAM si vas a desarrollar mobile con Android Studio.",
+    "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-8507c9e-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-27",
+    "title": "Script bash para git diff limpio y contexto para LLMs",
+    "content": "Armate una función bash que muestre el diff neto de tu rama, excluyendo archivos .lock. Sirve para code review y para pasarle a un LLM en Cursor contexto crudo y preciso de tus cambios.",
+    "tags": ["ia", "herramientas", "productividad"]
+  },
+  {
+    "id": "auto-d55810a-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-27",
+    "title": "Teclados mecánicos: modding, switches y colección",
+    "content": "Si querés mejorar tu teclado mecánico, probá el modding: Case Foam con goma EVA, tape mod y lubricar switches y estabilizadores. En Argentina podés conseguir lubricantes en cytinfo.com.ar.",
+    "tags": ["herramientas"]
   },
   {
     "id": "auto-4fd4cc5-marcelo-nunez",
@@ -248,12 +2704,164 @@
     "tags": ["frontend", "aprendizaje"]
   },
   {
+    "id": "auto-dfb5884-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2025-06-20",
+    "title": "Por qué las ThinkPad son tan buscadas",
+    "content": "Si buscás una notebook para laburar muchos años, las ThinkPad están pensadas para el servicio técnico: duran muchísimo, son fáciles de reparar y las partes se cambian a mano.",
+    "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-cae5f02-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-20",
+    "title": "delta: superpoderes para git diff en la terminal",
+    "content": "Probá delta, un pager para git diff que muestra los cambios con colores y claridad, similares a los de Cursor o VS Code. Es ideal si querés llevar tu flujo de trabajo a la terminal.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-4fd4cc5-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-06-20",
+    "title": "SvelteKit vs Next.js: debate de frameworks frontend",
+    "content": "Cuando leas un artículo sobre por qué alguien abandonó un framework, fijate si muestra el código que tenían: muchas veces el problema es no usar bien la herramienta. Evaluá la fuente antes de cambiar de stack.",
+    "tags": ["frontend", "arquitectura"]
+  },
+  {
     "id": "auto-92d7685-victor-figueredo",
     "member": "Victor Figueredo",
     "date": "2025-06-19",
     "title": "OverTheWire y cómo mejorar el manejo avanzado de la terminal",
     "content": "Para mejorar en la terminal, jugá los wargames de OverTheWire: te obligan a usar la consola para avanzar de nivel, y eso enseña mucho más que leer un manual.",
     "tags": ["aprendizaje", "seguridad"]
+  },
+  {
+    "id": "auto-92d7685-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-06-19",
+    "title": "OverTheWire y cómo mejorar el manejo avanzado de la terminal",
+    "content": "Dominá primero grep y cut, que son los más útiles en el día a día, y dejá awk para después porque se usa poco. Aprendé la terminal restringiéndote de usar herramientas gráficas.",
+    "tags": ["herramientas", "aprendizaje"]
+  },
+  {
+    "id": "auto-bcfff1c-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-06-16",
+    "title": "Apple lanza su propia herramienta de containers nativa (alternativa a Docker Desktop)",
+    "content": "Si Docker Desktop te resulta pesado en Mac, mirá OrbStack, una alternativa más liviana. La herramienta nativa de Apple todavía no soporta Compose.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-f69c401-mateo-lohezic",
+    "member": "Mateo Lohezic",
+    "date": "2025-06-13",
+    "title": "Experiencia demostrable en entrevistas: freelance, startups y CVs en inglés",
+    "content": "Si sos freelance, ponele un nombre de marca unipersonal en el CV en vez de escribir solo \"freelance\". Vendé la variedad de clientes y el trato con ellos como tu valor diferencial.",
+    "tags": ["freelance", "carrera"]
+  },
+  {
+    "id": "auto-f69c401-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-06-13",
+    "title": "Experiencia demostrable en entrevistas: freelance, startups y CVs en inglés",
+    "content": "En las entrevistas, lo más importante es poder hablar de tu trabajo con convicción y sin dejar dudas, más allá de tu historial formal.",
+    "tags": ["entrevistas", "carrera"]
+  },
+  {
+    "id": "auto-93cc56a-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-06-13",
+    "title": "Cómo deployar backend Java + PostgreSQL en un VPS con Docker",
+    "content": "Para deployar un backend en un VPS, usá Docker: un Dockerfile resuelve las dependencias y las imágenes oficiales de Postgres se configuran con variables de entorno. Para automatizar el deploy, mirá Kamal con GitHub Actions.",
+    "tags": ["devops", "backend"]
+  },
+  {
+    "id": "auto-93cc56a-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-06-13",
+    "title": "Cómo deployar backend Java + PostgreSQL en un VPS con Docker",
+    "content": "Entendé qué hace Docker: descarga imágenes y levanta un entorno limpio con reglas de red aisladas. Eso te permite reproducir el mismo ambiente en cualquier servidor.",
+    "tags": ["devops", "aprendizaje"]
+  },
+  {
+    "id": "auto-3e25ea4-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-06-12",
+    "title": "Recursos para aprender programación desde cero",
+    "content": "Si recién arrancás, empezá con Python (el más fácil) o TypeScript (te sirve para front y back). Va a requerir esfuerzo y dedicación, no hay atajos.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-3e25ea4-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-12",
+    "title": "Recursos para aprender programación desde cero",
+    "content": "Para aprender desde cero, combiná FreeCodeCamp en español, los cursos de MiduDev, Boot.dev para aprender jugando y el curso de Fundamentos de Ingeniería de Software de Freddy Vega.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-3e25ea4-ariel-basabe",
+    "member": "Ariel Basabe",
+    "date": "2025-06-12",
+    "title": "Recursos para aprender programación desde cero",
+    "content": "Hay buenos canales de YouTube en español para aprender: Juan Diaz, pildorasinformaticas, Fernando Herrera y Código con Juan. Aprender a programar depende de cómo manejás la frustración cuando las cosas no salen a la primera.",
+    "tags": ["aprendizaje"]
+  },
+  {
+    "id": "auto-92e8e0f-matias-gutierrez",
+    "member": "Matias Gutierrez",
+    "date": "2025-06-12",
+    "title": "Librería para generar PDFs con tablas en JavaScript",
+    "content": "Para generar PDFs con tablas en JS, probá html2pdf: tomás HTML con sus estilos y lo convertís a PDF, sin aprender una API específica de PDF.",
+    "tags": ["frontend", "herramientas"]
+  },
+  {
+    "id": "auto-5c6a4e8-gonzalo-morales",
+    "member": "Gonzalo Morales",
+    "date": "2025-06-11",
+    "title": "Google AI Studio y Gemini 2.5 Pro: 1 millón de tokens gratis",
+    "content": "Probá Google AI Studio para experimentar con los modelos de Gemini: ofrece tokens gratuitos y sirve para ahorrar tiempo en tareas manuales. Es más lento que otras opciones, pero la gratuidad lo compensa.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-5a015ee-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-06-10",
+    "title": "Prisma ORM vs Drizzle en TypeScript: pros y contras",
+    "content": "Si una query se complica en Prisma, usá SQL directo en vez de forzar el ORM. Prisma a veces dispara varias queries por resultado, mientras Drizzle arma una sola; no hay un ORM perfecto en TypeScript, elegí por legibilidad y mantenibilidad.",
+    "tags": ["bases-de-datos", "backend"]
+  },
+  {
+    "id": "auto-5a015ee-exequiel-de-freitas",
+    "member": "Exequiel De Freitas",
+    "date": "2025-06-10",
+    "title": "Prisma ORM vs Drizzle en TypeScript: pros y contras",
+    "content": "Prisma funciona muy bien en proyectos chicos a medianos, pero puede complicarse en contextos más complejos. Evaluá la complejidad de tu proyecto antes de comprometerte con un ORM.",
+    "tags": ["bases-de-datos", "backend"]
+  },
+  {
+    "id": "auto-aad9d1d-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-07",
+    "title": "Git avanzado: staging parcial, worktrees y comandos modernos",
+    "content": "Usá git worktree para tener varias ramas abiertas en carpetas separadas y evitar el git stash cuando trabajás en varios tickets. Además, git add stagea los cambios hasta ese momento, así que podés seguir editando y commitear solo lo stageado.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-aad9d1d-german-navarro",
+    "member": "Germán Navarro",
+    "date": "2025-06-07",
+    "title": "Git avanzado: staging parcial, worktrees y comandos modernos",
+    "content": "En un monorepo, aprovechá la notación de doble punto de Git para comparar commits entre dos referencias y buildear solo los servicios que cambiaron, por ejemplo junto con Turborepo.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-544b398-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-07",
+    "title": "Terminal Warp llega a Windows: IA integrada en la consola",
+    "content": "Probá Warp como terminal: tiene autocompletado inteligente de comandos y bloques de ejecución al estilo Jupyter para bash. Está disponible para Windows y trae IA integrada.",
+    "tags": ["herramientas", "ia", "productividad"]
   },
   {
     "id": "auto-d32b023-facundo-garcia-martoni",
@@ -272,6 +2880,22 @@
     "tags": ["ingles"]
   },
   {
+    "id": "auto-d32b023-facundo-padilla",
+    "member": "Facundo Padilla",
+    "date": "2025-06-06",
+    "title": "Cómo aprender inglés técnico para IT: métodos e inmersión",
+    "content": "Para practicar conversación en inglés sin pagar, probá free4talk.com: es gratis y podés charlar con hablantes de distintos idiomas.",
+    "tags": ["ingles"]
+  },
+  {
+    "id": "auto-d32b023-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-06-06",
+    "title": "Cómo aprender inglés técnico para IT: métodos e inmersión",
+    "content": "Empezá viendo series con subtítulos en inglés y googleá las palabras que no entiendas. Sumá artículos técnicos y Twitter para acostumbrarte al vocabulario de IT.",
+    "tags": ["ingles", "aprendizaje"]
+  },
+  {
     "id": "auto-0da9ed1-facundo-padilla",
     "member": "Facundo Padilla",
     "date": "2025-06-05",
@@ -280,12 +2904,132 @@
     "tags": ["seguridad", "backend"]
   },
   {
+    "id": "auto-cc27c07-leandro-contrera",
+    "member": "Leandro Contrera",
+    "date": "2025-06-04",
+    "title": "Herramientas de productividad y gestión de proyectos: Notion vs Obsidian vs Trello",
+    "content": "Para estudiar o trabajar, medí tu tiempo con una herramienta como Clockify: te permite ver cuánto dedicás a cada materia o proyecto y comparar semanas.",
+    "tags": ["productividad"]
+  },
+  {
+    "id": "auto-cc27c07-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-04",
+    "title": "Herramientas de productividad y gestión de proyectos: Notion vs Obsidian vs Trello",
+    "content": "Probá Obsidian como alternativa a Notion: trabaja en local, tus notas son archivos .md que son tuyos y se amplía con plugins como Kanban. Podés sincronizar gratis con Remotely Save.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-cc27c07-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2025-06-04",
+    "title": "Herramientas de productividad y gestión de proyectos: Notion vs Obsidian vs Trello",
+    "content": "Si Notion te resulta complicado, Trello es simple: un tablero por proyecto, fechas límite, checklists dentro de cada tarea e integración con Google Calendar.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-cc27c07-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-06-04",
+    "title": "Herramientas de productividad y gestión de proyectos: Notion vs Obsidian vs Trello",
+    "content": "Mirá Linear para gestionar tickets: tiene un plan gratuito con 250 tickets y es muy cómodo para equipos chicos.",
+    "tags": ["productividad", "herramientas"]
+  },
+  {
+    "id": "auto-0a1a5c8-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-06-01",
+    "title": "Debate OS: Windows vs Linux vs Mac para programar",
+    "content": "Con WSL ya podés correr apps con GUI en Windows, así que el dual boot casi no hace falta. Si querés Arch sin el dolor, probá Manjaro; y ojo con los drivers de Nvidia en Linux, que pueden dar muchos dolores de cabeza.",
+    "tags": ["herramientas", "productividad"]
+  },
+  {
+    "id": "auto-0a1a5c8-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-06-01",
+    "title": "Debate OS: Windows vs Linux vs Mac para programar",
+    "content": "No actualices Windows y WSL al mismo tiempo en la máquina donde trabajás: Docker se puede romper y perder un día entero reinstalando. Una Mac con chip M o Linux te dan Docker nativo sin tantas fricciones.",
+    "tags": ["devops", "herramientas"]
+  },
+  {
+    "id": "auto-f0fd279-marcelo-nunez",
+    "member": "Marcelo Nuñez",
+    "date": "2025-05-31",
+    "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",
+    "content": "Para elegir backend, pesá la demanda del mercado y el equipo: JS/TS tiene mucha demanda y soporte, Python es muy rápido de aprender, y Java tiene gran performance pero suele ser overkill en proyectos chicos. Si tus compañeros ya usan JS en el front, TS en el back simplifica todo.",
+    "tags": ["backend", "carrera"]
+  },
+  {
+    "id": "auto-f0fd279-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-05-31",
+    "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",
+    "content": "Si necesitás un panel de administración rápido, considerá Django: su admin dashboard es la feature estrella del framework y te ahorra un montón de trabajo.",
+    "tags": ["backend", "herramientas"]
+  },
+  {
+    "id": "auto-f0fd279-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-05-31",
+    "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",
+    "content": "Para tu primer backend con login incluido, un framework como CodeIgniter en PHP tiene curva de aprendizaje tranquila y autenticación integrada. Elegí algo que puedas dominar sin pelearte con la configuración.",
+    "tags": ["backend", "aprendizaje"]
+  },
+  {
+    "id": "auto-f0fd279-juan-farber",
+    "member": "Juan Farber",
+    "date": "2025-05-31",
+    "title": "Elección de backend para proyecto estudiantil: PHP, JS, Python o Java",
+    "content": "Cualquier lenguaje que ya conozcas sirve para hacer un backend seguro, así que no pierdas tiempo buscando el lenguaje perfecto. Si el equipo usa JS en el front, hacer el back también en JS simplifica la colaboración.",
+    "tags": ["backend", "aprendizaje"]
+  },
+  {
     "id": "auto-ab0d3af-ariel-basabe",
     "member": "Ariel Basabe",
     "date": "2025-05-28",
     "title": "Git merge vs rebase: diferencias y cuándo usar cada uno",
     "content": "Usá rebase para mantener un historial lineal y el rebase interactivo para combinar, editar o eliminar commits, pero nunca hagas rebase de commits ya pusheados a un repo público: reescribe la historia y complica la colaboración.",
     "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-67fcc1f-facundo-garcia-martoni",
+    "member": "Facundo García Martoni",
+    "date": "2025-05-22",
+    "title": "NotebookLM de Google: resúmenes y podcasts con IA",
+    "content": "Probá NotebookLM de Google para estudiar: genera resúmenes, mapas conceptuales y podcasts a partir de tus documentos, y ya soporta español. Es muy útil para repasar contenido de materias o libros.",
+    "tags": ["ia", "aprendizaje", "herramientas"]
+  },
+  {
+    "id": "auto-67fcc1f-mauricio-chaile",
+    "member": "Mauricio Chaile",
+    "date": "2025-05-22",
+    "title": "NotebookLM de Google: resúmenes y podcasts con IA",
+    "content": "Subí un libro técnico a NotebookLM y generá un podcast para repasar patrones o conceptos. Ojo que el soporte en español todavía puede ser limitado.",
+    "tags": ["ia", "aprendizaje"]
+  },
+  {
+    "id": "auto-fd2be5b-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-05-21",
+    "title": "Auriculares inalámbricos: recomendaciones y experiencias",
+    "content": "Antes de comprar auriculares Bluetooth para trabajar con Mac, revisá si hay problemas de compatibilidad conocidos: algunos Sony se cortan con las Mac M1 al sacar y volver a poner el auricular. Los AirPods Pro fueron la opción más cómoda y de mayor batería que probó.",
+    "tags": ["herramientas"]
+  },
+  {
+    "id": "auto-b5d1468-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-05-21",
+    "title": "N8N para automatizar agentes de IA en WhatsApp como freelance",
+    "content": "Si vas a ofrecer agentes de IA con n8n, calculá el costo total antes de cotizar: la suscripción más la API de OpenAI por créditos rondan los 50 USD mensuales o menos por cliente. Para aprender, buscá tutoriales prácticos en vez de cursos de marketing vacío.",
+    "tags": ["freelance", "ia"]
+  },
+  {
+    "id": "auto-b5d1468-matias-gutierrez",
+    "member": "Matias Gutierrez",
+    "date": "2025-05-21",
+    "title": "N8N para automatizar agentes de IA en WhatsApp como freelance",
+    "content": "Para un cliente que necesita derivar chats entre agentes, una herramienta como ManyChat resuelve asignación automática, detección de palabras clave y derivación por unos 15 USD al mes. Entendé la diferencia con un agente de IA real antes de ofrecerlo.",
+    "tags": ["freelance", "herramientas"]
   },
   {
     "id": "auto-36e4d50-inaki-fernando-lozano",
@@ -302,5 +3046,37 @@
     "title": "App de escritorio Windows para empresa de eventos: stack recomendado",
     "content": "Si armás una app de escritorio con Electron, usá React solo en lugar de Next.js: las rutas dinámicas de Next dan problemas dentro de Electron. Si te interesa Rust, Tauri es una alternativa similar.",
     "tags": ["frontend", "herramientas"]
+  },
+  {
+    "id": "auto-8aa4e3d-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-05-20",
+    "title": "Debate sobre arquitectura monolítica vs distribuida",
+    "content": "Un monolito puede exponer APIs y seguir siendo monolito: la arquitectura es distribuida cuando tenés procesos o servicios independientes separados. Si querés escalar, pensá en Docker y Kubernetes antes que en levantar VMs a mano.",
+    "tags": ["arquitectura", "devops"]
+  },
+  {
+    "id": "auto-a7bb361-inaki-fernando-lozano",
+    "member": "Iñaki Fernando Lozano",
+    "date": "2025-05-20",
+    "title": "App de escritorio Windows para empresa de eventos: stack recomendado",
+    "content": "Si venís de JS y tenés que hacer una app de escritorio, Electron te deja usar frameworks web y acceder a Node para lo nativo. Es el camino con menor curva de aprendizaje, y apps como VS Code y Postman están hechas así.",
+    "tags": ["frontend", "herramientas"]
+  },
+  {
+    "id": "auto-54bd59b-agustin-sanchez",
+    "member": "Agustín Sánchez",
+    "date": "2025-05-20",
+    "title": "Copilot open source y nueva feature: asignar GitHub issues a la IA",
+    "content": "Probá asignarle un issue de GitHub a Copilot: desarrolla la feature y abre la pull request solo. Sirve sobre todo para features chicas y bien descriptas.",
+    "tags": ["ia", "herramientas"]
+  },
+  {
+    "id": "auto-54bd59b-juan-arismendi",
+    "member": "Juan Arismendi",
+    "date": "2025-05-20",
+    "title": "Copilot open source y nueva feature: asignar GitHub issues a la IA",
+    "content": "Si no querés pagar una herramienta de IA, la capa gratuita de Copilot tiene un límite de completions y ediciones que rara vez se alcanza en el uso normal. Es una buena forma de empezar sin gastar.",
+    "tags": ["ia", "herramientas"]
   }
 ]
