@@ -4,9 +4,17 @@ on:
     branches:
       - main
 
+# One deploy at a time: a later push waits for the running one instead of racing it on the
+# servers. Never cancel a deploy in progress, that is what leaves Kamal's lock behind.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # A stuck deploy shouldn't hold the queue forever
+    timeout-minutes: 30
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -96,8 +104,11 @@ jobs:
       # Prisma migrations run from the Kamal pre-deploy hook (.kamal/hooks/pre-deploy),
       # after the new image is pulled on the servers and right before it boots.
 
-      # - name: Release Kamal deploy lock
-      #   run: kamal lock release
+      # With the concurrency group above no other deploy can be running, so a lock found here was
+      # left by a run that died midway (cancelled, timed out). Releasing it lets this one go
+      # through instead of failing until someone SSHes in.
+      - name: Release stale Kamal deploy lock
+        run: kamal lock release
 
       - name: Run Kamal deploy
         run: kamal deploy
