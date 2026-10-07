@@ -27,13 +27,19 @@ describe('AdviceOptions', () => {
       render(<AdviceOptions adviceId="a1" content={original} />);
 
       await choose(user, 'Editar');
-      const textarea = screen.getByRole('textbox');
+      const textarea = screen.getByRole('textbox', { name: 'Consejo' });
       expect(textarea).toHaveValue(original);
       await user.clear(textarea);
       await user.paste('Un consejo editado y largo');
+      await user.click(screen.getByRole('button', { name: '#ia' }));
+      await user.type(screen.getByRole('textbox', { name: 'Nueva categoría' }), 'Diseño UX{Enter}');
       await user.click(screen.getByRole('button', { name: 'guardarCambios();' }));
 
-      expect(editAdvice).toHaveBeenCalledWith({ id: 'a1', content: 'Un consejo editado y largo' });
+      expect(editAdvice).toHaveBeenCalledWith({
+        id: 'a1',
+        content: 'Un consejo editado y largo',
+        tags: ['ia', 'diseno-ux'],
+      });
       await waitFor(() =>
         expect(toast.success).toHaveBeenCalledWith('Tu consejo fue editado exitosamente.'),
       );
@@ -45,7 +51,7 @@ describe('AdviceOptions', () => {
       render(<AdviceOptions adviceId="a1" content={original} />);
 
       await choose(user, 'Editar');
-      await user.clear(screen.getByRole('textbox'));
+      await user.clear(screen.getByRole('textbox', { name: 'Consejo' }));
       await user.click(screen.getByRole('button', { name: 'guardarCambios();' }));
 
       expect(

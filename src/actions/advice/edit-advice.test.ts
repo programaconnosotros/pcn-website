@@ -107,7 +107,7 @@ describe('editAdvice', () => {
 
     expect(prismaMock.advice.update).toHaveBeenCalledWith({
       where: { id: 'advice-1' },
-      data: { content: validContent },
+      data: { content: validContent, tags: [] },
     });
     expect(revalidatePath).toHaveBeenCalledWith('/consejos');
   });

@@ -7,10 +7,10 @@ import { cookies } from 'next/headers';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 
-export const createAdvice = async (content: string) => {
+export const createAdvice = async (content: string, tags: string[] = []) => {
   await enforceRateLimit('createContent');
 
-  const validatedData = adviceSchema.parse({ content });
+  const validatedData = adviceSchema.parse({ content, tags });
 
   const sessionId = (await cookies()).get('sessionId');
 
@@ -29,6 +29,7 @@ export const createAdvice = async (content: string) => {
   await prisma.advice.create({
     data: {
       content: validatedData.content,
+      tags: validatedData.tags,
       author: { connect: { id: user.id } },
     },
   });

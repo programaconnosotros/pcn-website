@@ -2,7 +2,7 @@
 
 import { DialogClose, DialogTitle } from '@/components/ui/dialog';
 import { formatLongDate, toSentences } from '@/components/conversations/conversation-utils';
-import type { Consejo } from '@/lib/consejos';
+import { consejoTopics, type Consejo } from '@/lib/consejos';
 import type { ConsejoDetail } from '@/lib/consejos-server';
 import type { SessionWithUser } from '@/lib/session';
 import { cn } from '@/lib/utils';
@@ -127,7 +127,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
                 auto-extraído
               </span>
             )}
-            {consejo.tags.map((tag) => (
+            {consejoTopics(consejo).map((tag) => (
               <span key={tag} className="text-pcnGreen-600">
                 #{tag}
               </span>
@@ -166,7 +166,11 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
                   <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
                 )}
                 {canEditOrDelete && (
-                  <AdviceOptions adviceId={consejo.id} content={consejo.content} />
+                  <AdviceOptions
+                    adviceId={consejo.id}
+                    content={consejo.content}
+                    tags={consejo.tags}
+                  />
                 )}
               </span>
             </div>

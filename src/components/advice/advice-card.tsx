@@ -143,7 +143,9 @@ export const AdviceCard = ({
           {consejo.likes && (
             <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
           )}
-          {canEditOrDelete && <AdviceOptions adviceId={consejo.id} content={consejo.content} />}
+          {canEditOrDelete && (
+            <AdviceOptions adviceId={consejo.id} content={consejo.content} tags={consejo.tags} />
+          )}
         </span>
       </header>
 

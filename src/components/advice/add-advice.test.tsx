@@ -47,7 +47,7 @@ describe('AddAdvice', () => {
     await write(user, 'Leé la documentación oficial');
     await user.click(screen.getByRole('button', { name: 'publicar();' }));
 
-    expect(createMock).toHaveBeenCalledWith('Leé la documentación oficial');
+    expect(createMock).toHaveBeenCalledWith('Leé la documentación oficial', []);
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith('Consejo publicado! 👏'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 

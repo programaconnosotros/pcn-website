@@ -11,10 +11,12 @@ import { editAdvice } from '@/actions/advice/edit-advice';
 import { toast } from 'sonner';
 import { adviceSchema, AdviceFormData } from '@/schemas/advice-schema';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { TopicPicker } from './topic-picker';
 
 interface EditAdviceDialogProps {
   adviceId: string;
   initialContent: string;
+  initialTags?: string[];
   isOpen: boolean;
   onOpenChange: (_open: boolean) => void;
 }
@@ -22,6 +24,7 @@ interface EditAdviceDialogProps {
 export const EditAdviceDialog = ({
   adviceId,
   initialContent,
+  initialTags = [],
   isOpen,
   onOpenChange,
 }: EditAdviceDialogProps) => {
@@ -30,18 +33,19 @@ export const EditAdviceDialog = ({
     resolver: zodResolver(adviceSchema),
     defaultValues: {
       content: initialContent,
+      tags: initialTags,
     },
   });
 
-  const onSubmitEditAdvice = async ({ content }: AdviceFormData) => {
+  const onSubmitEditAdvice = async ({ content, tags }: AdviceFormData) => {
     setIsSubmitting(true);
     // toast.promise devuelve el id del toast: se espera la action para que el botón quede en
     // "editando" mientras corre
-    const promise = editAdvice({ id: adviceId, content });
+    const promise = editAdvice({ id: adviceId, content, tags });
     toast.promise(promise, {
       loading: 'Editando consejo...',
       success: () => {
-        form.reset({ content });
+        form.reset({ content, tags });
         onOpenChange(false);
         return 'Tu consejo fue editado exitosamente.';
       },
@@ -71,8 +75,19 @@ export const EditAdviceDialog = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea aria-label="Consejo" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <TopicPicker value={field.value} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}

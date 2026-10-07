@@ -13,7 +13,15 @@ import { DeleteAdviceDialog } from './delete-advice-dialog';
 import { EditAdviceDialog } from './edit-advice-dialog';
 
 // Edit / delete menu for a published consejo, shown to its author and to admins.
-export function AdviceOptions({ adviceId, content }: { adviceId: string; content: string }) {
+export function AdviceOptions({
+  adviceId,
+  content,
+  tags = [],
+}: {
+  adviceId: string;
+  content: string;
+  tags?: string[];
+}) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -48,6 +56,7 @@ export function AdviceOptions({ adviceId, content }: { adviceId: string; content
       <EditAdviceDialog
         adviceId={adviceId}
         initialContent={content}
+        initialTags={tags}
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
       />

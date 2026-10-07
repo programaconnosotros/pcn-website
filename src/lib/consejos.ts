@@ -48,7 +48,7 @@ export const fromAdvice = (advice: AdviceWithAuthor): Consejo => ({
   author: { id: advice.author.id, name: advice.author.name, image: advice.author.image },
   likes: advice.likes.map(({ userId }) => ({ userId })),
   commentCount: advice._count?.comments ?? 0,
-  tags: [],
+  tags: advice.tags ?? [],
   source: null,
 });
 
@@ -116,13 +116,26 @@ const normalizeText = (text: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')} `;
 
-export const consejoTopics = (consejo: Pick<Consejo, 'content' | 'tags'>): string[] => {
-  if (consejo.tags.length > 0) return consejo.tags;
-  const text = normalizeText(consejo.content);
+/** The topics whose keywords start a word in the text. */
+export const inferTopics = (content: string): string[] => {
+  const text = normalizeText(content);
   return Object.entries(CONSEJO_TOPICS)
     .filter(([, keywords]) => keywords.some((keyword) => text.includes(` ${keyword}`)))
     .map(([topic]) => topic);
 };
+
+/**
+ * Extracted consejos come tagged. Published ones get the categories their author picked plus the
+ * ones inferred from the text, so a consejo nobody categorized still shows up under its topics.
+ */
+export const consejoTopics = (consejo: Pick<Consejo, 'content' | 'tags'> & { source?: unknown }) =>
+  consejo.source ? consejo.tags : [...new Set([...consejo.tags, ...inferTopics(consejo.content)])];
+
+export const MAX_CONSEJO_TOPICS = 3;
+
+/** `Bases de Datos!` → `bases-de-datos`: how a category typed by hand is stored. */
+export const toTopicSlug = (label: string) =>
+  normalizeText(label).trim().replace(/\s+/g, '-').slice(0, 24).replace(/-+$/, '');
 
 export type ConsejoOrigin = 'todos' | 'manual' | 'auto';
 export type ConsejoSort = 'recientes' | 'antiguos' | 'likes' | 'comentados';

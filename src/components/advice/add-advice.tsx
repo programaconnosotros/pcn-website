@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { createAdvice } from '@actions/advice/create-advice';
 import { adviceSchema, AdviceFormData } from '@/schemas/advice-schema';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { TopicPicker } from './topic-picker';
 
 export const AddAdvice = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -27,14 +28,15 @@ export const AddAdvice = () => {
     resolver: zodResolver(adviceSchema),
     defaultValues: {
       content: '',
+      tags: [],
     },
   });
 
-  async function onSubmit({ content }: AdviceFormData) {
+  async function onSubmit({ content, tags }: AdviceFormData) {
     setIsSubmitting(true);
     // toast.promise devuelve el id del toast, no la promesa: se espera la action en sí, así el
     // diálogo queda abierto (con lo escrito) si falla
-    const promise = createAdvice(content);
+    const promise = createAdvice(content, tags);
     toast.promise(promise, {
       loading: 'Publicando consejo...',
       success: () => {
@@ -75,9 +77,24 @@ export const AddAdvice = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea placeholder="Escribí acá tu consejo..." {...field} />
+                    <Textarea
+                      aria-label="Consejo"
+                      placeholder="Escribí acá tu consejo..."
+                      {...field}
+                    />
                   </FormControl>
 
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <TopicPicker value={field.value} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}

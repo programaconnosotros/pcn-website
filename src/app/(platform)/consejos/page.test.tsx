@@ -18,6 +18,9 @@ import ConsejoModalPage from './@modal/(.)[id]/page';
 import AdviceDetailPage, { generateMetadata } from './[id]/page';
 import DetailLoading from './[id]/loading';
 import ConsejoImage from './[id]/opengraph-image';
+import { useConsejoTopics } from '@/components/advice/topic-picker';
+
+const TopicsProbe = () => <p data-testid="topics">{useConsejoTopics().join(',')}</p>;
 
 jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
@@ -116,13 +119,22 @@ describe('/consejos', () => {
     jest.mocked(Date.now).mockRestore();
   });
 
-  it('wraps the list and the modal slot in the consejos navigation', () => {
+  it('wraps the list and the modal slot in the consejos navigation', async () => {
+    jest.mocked(listAdvice).mockResolvedValue([{ tags: ['rust', 'carrera'] }] as never);
     render(
-      <ConsejosLayout modal={<p>modal</p>}>
-        <p>lista</p>
-      </ConsejosLayout>,
+      await ConsejosLayout({
+        modal: <p>modal</p>,
+        children: (
+          <>
+            <p>lista</p>
+            <TopicsProbe />
+          </>
+        ),
+      }),
     );
-    expect(screen.getByTestId('nav')).toHaveTextContent('listamodal');
+    expect(screen.getByTestId('nav')).toHaveTextContent(/^lista.*modal$/);
+    // Built-in topics first, then the ones members created
+    expect(screen.getByTestId('topics').textContent).toMatch(/^carrera,.*,seguridad,rust$/);
   });
 
   it('renders a skeleton while loading', () => {

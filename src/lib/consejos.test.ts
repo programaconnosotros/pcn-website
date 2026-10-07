@@ -10,6 +10,7 @@ import {
   DEFAULT_CONSEJO_FILTERS,
   authorKey,
   consejoTopics,
+  toTopicSlug,
   filterConsejos,
   fromAdvice,
   fromExtracted,
@@ -31,7 +32,17 @@ const published = (overrides: Partial<Consejo>): Consejo => ({
 
 describe('consejoTopics', () => {
   it('uses the tags of extracted consejos', () => {
-    expect(consejoTopics({ content: 'Aprendé inglés', tags: ['carrera'] })).toEqual(['carrera']);
+    expect(
+      consejoTopics({ content: 'Aprendé inglés', tags: ['carrera'], source: { title: 'x' } }),
+    ).toEqual(['carrera']);
+  });
+
+  it('adds the inferred topics to the categories an author picked', () => {
+    expect(consejoTopics({ content: 'Practicá inglés', tags: ['mi-tema', 'ingles'] })).toEqual([
+      'mi-tema',
+      'ingles',
+      'aprendizaje',
+    ]);
   });
 
   it('infers topics from word starts, without accents', () => {
@@ -40,6 +51,15 @@ describe('consejoTopics', () => {
     );
     // "ia" only as a word, not inside "experiencia".
     expect(consejoTopics({ content: 'La experiencia suma', tags: [] })).not.toContain('ia');
+  });
+});
+
+describe('toTopicSlug', () => {
+  it('turns a typed category into a short slug', () => {
+    expect(toTopicSlug('  Bases de Datos! ')).toBe('bases-de-datos');
+    expect(toTopicSlug('Diseño UX')).toBe('diseno-ux');
+    expect(toTopicSlug('una categoría larguísima de verdad')).toBe('una-categoria-larguisima');
+    expect(toTopicSlug('¿?')).toBe('');
   });
 });
 
@@ -136,6 +156,7 @@ describe('fromAdvice', () => {
       id: 'a1',
       content: 'Medí antes de optimizar.',
       authorId: 'user-1',
+      tags: ['rendimiento'],
       createdAt,
       updatedAt: createdAt,
       author: { id: 'user-1', name: 'Alguien', image: null },
@@ -147,6 +168,7 @@ describe('fromAdvice', () => {
       createdAt: createdAt.toISOString(),
       likes: [{ userId: 'user-2' }],
       commentCount: 3,
+      tags: ['rendimiento'],
       source: null,
     });
   });

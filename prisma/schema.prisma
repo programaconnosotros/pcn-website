@@ -120,8 +120,10 @@ model Session {
 }
 
 model Advice {
-  id      String @id @default(cuid())
+  id      String   @id @default(cuid())
   content String
+  /// Categories the author picked (slugs); /consejos also infers some from the text.
+  tags    String[] @default([])
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String

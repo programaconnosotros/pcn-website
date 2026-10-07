@@ -260,6 +260,11 @@ export const dbModels: DbModel[] = [
         type: 'String',
       },
       {
+        name: 'tags',
+        type: 'String',
+        list: true,
+      },
+      {
         name: 'authorId',
         type: 'String',
         fk: true,
