@@ -50,7 +50,7 @@ describe('RootLayout', () => {
       'application/rss+xml': [{ url: '/feed.xml', title: 'programaConNosotros' }],
     });
     expect(metadata.openGraph).toMatchObject({ locale: 'es_AR', siteName: 'programaConNosotros' });
-    expect(viewport).toEqual({ viewportFit: 'cover', themeColor: '#000000' });
+    expect(viewport).toEqual({ viewportFit: 'cover', themeColor: '#000000', colorScheme: 'dark' });
   });
 
   it('passes the CSP nonce to the inline head script and the theme provider', async () => {

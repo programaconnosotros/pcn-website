@@ -63,6 +63,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: '#000000',
+  // Tells the browser the page is dark before any CSS arrives: default canvas, scrollbars and
+  // form controls render dark instead of flashing white.
+  colorScheme: 'dark',
 };
 
 const RootLayout = async ({
@@ -78,6 +81,9 @@ const RootLayout = async ({
     <html
       lang="es"
       className={`${GeistSans.variable} ${GeistMono.variable}`}
+      // Inline, so the page is black from the very first paint, while the stylesheet is still
+      // loading (it used to stay white for a while on slow connections).
+      style={{ backgroundColor: '#000', colorScheme: 'dark' }}
       suppressHydrationWarning
     >
       <head>
