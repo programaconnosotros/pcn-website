@@ -7,7 +7,7 @@ import { tabTitle } from '@/lib/tab-title';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
 const DESCRIPTION =
-  'Simulá entrevistas técnicas de frontend con React.js, iOS, Android y React Native, backend con Node.js, Python, Java y .NET, AI engineering, agentic engineering, quality engineering, seguridad informática, DevOps con AWS, Azure, Google Cloud, Vercel, Docker, Kubernetes y Terraform, diseño UX/UI con Figma, product engineering y project management para junior, semi-senior y senior, practicando con active recall.';
+  'Simulá entrevistas técnicas de frontend con React.js, iOS, Android y React Native, backend con Node.js, Python, Java y .NET, AI engineering, agentic engineering, quality engineering, seguridad informática, DevOps con AWS, Azure, Google Cloud, Vercel, Docker, Kubernetes y Terraform, diseño UX/UI con Figma, product engineering, project management, soft skills y liderazgo, tech lead, software architect y engineering manager para junior, semi-senior y senior, practicando con active recall.';
 
 export const metadata: Metadata = {
   title: tabTitle.ls('entrevistas'),
