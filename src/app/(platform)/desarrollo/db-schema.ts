@@ -281,6 +281,28 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'HiddenConsejo',
+    domain: 'consejos',
+    fields: [
+      {
+        name: 'extractedId',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'hiddenById',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
     name: 'Comment',
     domain: 'consejos',
     fields: [
@@ -1962,6 +1984,14 @@ export const dbRelations: DbRelation[] = [
     optional: false,
     many: true,
     onDelete: null,
+  },
+  {
+    from: 'HiddenConsejo',
+    to: 'User',
+    label: 'hiddenBy',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
   {
     from: 'Comment',
