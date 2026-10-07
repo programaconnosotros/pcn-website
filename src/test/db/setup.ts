@@ -31,6 +31,10 @@ jest.mock('@/lib/rate-limit', () => ({
   getRateLimitWait: jest.fn().mockResolvedValue(0),
 }));
 
+// Live updates go to open pages, and there are none here: without this every write would leave a
+// timer that publishes after the test file is done.
+jest.mock('@/lib/realtime-signals', () => ({ signalWrite: jest.fn() }));
+
 jest.mock('@/lib/email', () => ({
   ...jest.requireActual('@/lib/email'),
   sendEmail: jest.fn().mockResolvedValue(undefined),
