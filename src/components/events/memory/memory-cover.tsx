@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { coverFramingStyle, type CoverFraming } from '@/lib/cover-framing';
 
 // How long each photo stays before fading into the next.
 const SLIDE_MS = 7000;
@@ -10,7 +11,14 @@ const SLIDE_MS = 7000;
  * The hero's backdrop: one photo, or several that cross-fade in turn (unless the viewer prefers
  * reduced motion, then it stays on the first).
  */
-export function MemoryCover({ photos }: { photos: string[] }) {
+export function MemoryCover({
+  photos,
+  framing,
+}: {
+  photos: string[];
+  /** How the chosen cover is framed; random covers stay centered. */
+  framing?: CoverFraming;
+}) {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -38,6 +46,7 @@ export function MemoryCover({ photos }: { photos: string[] }) {
             'absolute inset-0 -z-10 h-full w-full object-cover transition-opacity duration-1000 ease-in-out',
             index === current ? 'opacity-100' : 'opacity-0',
           )}
+          style={framing ? coverFramingStyle(framing) : undefined}
         />
       ))}
     </>

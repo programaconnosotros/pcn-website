@@ -191,6 +191,11 @@ model Event {
   // Foto de portada del memorial que eligió un admin. Sin elegir, la portada alterna fotos
   // horizontales del evento al azar.
   coverPhotoId            String?   @unique
+  // Encuadre de la portada elegida: punto focal en % (0–100) y zoom en % (100 = sin zoom). Lo
+  // ajusta quien puede editar el evento.
+  coverFocusX             Int       @default(50)
+  coverFocusY             Int       @default(50)
+  coverZoom               Int       @default(100)
   deletedAt               DateTime? // Eliminación lógica
   // Usuario que creó el evento. Null en eventos cargados antes de que se guardara.
   createdById             String?

@@ -443,6 +443,18 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'coverFocusX',
+        type: 'Int',
+      },
+      {
+        name: 'coverFocusY',
+        type: 'Int',
+      },
+      {
+        name: 'coverZoom',
+        type: 'Int',
+      },
+      {
         name: 'deletedAt',
         type: 'DateTime',
         optional: true,

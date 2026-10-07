@@ -16,6 +16,7 @@ import { getEventCounts } from '@/lib/event-index';
 import { MemoryConversations } from './memory-conversations';
 import { MemoryCoverPicker } from './memory-cover-picker';
 import { MemoryHero } from './memory-hero';
+import { MemoryCoverFraming } from './memory-cover-framing';
 import { MemoryMosaic } from './memory-mosaic';
 import { MemoryTalks } from './memory-talks';
 
@@ -110,18 +111,32 @@ export async function PastEventMemory({
           covers={covers.map((photo) => photo.fullUrl)}
           flyer={event.flyerImages[0]}
           stats={stats}
+          framing={
+            cover.chosenId
+              ? { x: event.coverFocusX, y: event.coverFocusY, zoom: event.coverZoom }
+              : undefined
+          }
           coverPicker={
-            isAdmin && (
-              <MemoryCoverPicker
-                eventId={event.id}
-                chosenId={cover.chosenId}
-                photos={cover.photos.map(({ id, thumbUrl, width, height }) => ({
-                  id,
-                  thumbUrl,
-                  width,
-                  height,
-                }))}
-              />
+            canEdit && (
+              <div className="absolute right-3 top-3 z-10 flex gap-1.5">
+                {cover.chosenId && covers[0] && (
+                  <MemoryCoverFraming
+                    eventId={event.id}
+                    photo={covers[0].fullUrl}
+                    framing={{ x: event.coverFocusX, y: event.coverFocusY, zoom: event.coverZoom }}
+                  />
+                )}
+                <MemoryCoverPicker
+                  eventId={event.id}
+                  chosenId={cover.chosenId}
+                  photos={cover.photos.map(({ id, thumbUrl, width, height }) => ({
+                    id,
+                    thumbUrl,
+                    width,
+                    height,
+                  }))}
+                />
+              </div>
             )
           }
         />

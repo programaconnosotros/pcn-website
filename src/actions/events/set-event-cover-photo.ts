@@ -1,16 +1,17 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@/lib/admin';
+import { requireEventManager } from '@/lib/event-access';
 import { visibleGalleryItem } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
 
 /**
  * Elige la foto de portada del memorial de un evento (una foto del propio evento) o, con null,
- * vuelve a la portada aleatoria. Solo admins.
+ * vuelve a la portada aleatoria. Quien puede editar el evento: admins y sus organizadores. Una
+ * portada nueva arranca sin encuadre.
  */
 export async function setEventCoverPhoto(eventId: string, photoId: string | null) {
-  await requireAdmin();
+  await requireEventManager(eventId);
 
   const event = await prisma.event.findFirst({
     where: { id: eventId, deletedAt: null },
@@ -26,7 +27,13 @@ export async function setEventCoverPhoto(eventId: string, photoId: string | null
     if (!photo) throw new Error('La foto no es de este evento');
   }
 
-  await prisma.event.update({ where: { id: eventId }, data: { coverPhotoId: photoId } });
+  await prisma.event.update({
+    where: { id: eventId },
+    data: {
+      coverPhotoId: photoId,
+      ...(photoId !== event.coverPhotoId && { coverFocusX: 50, coverFocusY: 50, coverZoom: 100 }),
+    },
+  });
 
   revalidatePath(`/eventos/${eventId}`);
   new Set([photoId, event.coverPhotoId]).forEach((id) => id && revalidatePath(`/galeria/${id}`));

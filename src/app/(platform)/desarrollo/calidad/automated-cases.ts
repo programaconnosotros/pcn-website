@@ -1407,18 +1407,33 @@ export const automatedSuites: AutomatedSuite[] = [
     ],
   },
   {
+    file: 'src/actions/events/set-event-cover-framing.test.ts',
+    area: 'eventos',
+    layer: 'server-action',
+    priority: 'media',
+    tests: [
+      ['TC-EVT-A167', 'setEventCoverFraming › lets an organizer frame the cover'],
+      ['TC-EVT-A168', 'setEventCoverFraming › rejects people who cannot edit the event'],
+      ['TC-EVT-A169', 'setEventCoverFraming › rejects framing out of range'],
+    ],
+  },
+  {
     file: 'src/actions/events/set-event-cover-photo.test.ts',
     area: 'eventos',
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-EVT-A167', 'setEventCoverPhoto › only lets admins choose the cover'],
-      ['TC-EVT-A168', 'setEventCoverPhoto › rejects a photo that is not from the event'],
       [
-        'TC-EVT-A169',
+        'TC-EVT-A170',
+        'setEventCoverPhoto › only lets admins and the event organizers choose the cover',
+      ],
+      ['TC-EVT-A171', 'setEventCoverPhoto › rejects a photo that is not from the event'],
+      [
+        'TC-EVT-A172',
         'setEventCoverPhoto › sets the cover and refreshes the event and both photos',
       ],
-      ['TC-EVT-A170', 'setEventCoverPhoto › goes back to the random cover with null'],
+      ['TC-EVT-A173', 'setEventCoverPhoto › goes back to the random cover with null'],
+      ['TC-EVT-A174', 'setEventCoverPhoto › keeps the framing when the same cover is chosen again'],
     ],
   },
   {
@@ -1427,29 +1442,29 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'server-action',
     priority: 'media',
     tests: [
-      ['TC-EVT-A171', 'updateEvent › throws when there is no sessionId cookie'],
-      ['TC-EVT-A172', 'updateEvent › throws when the session is not found in the database'],
-      ['TC-EVT-A173', 'updateEvent › rejects regular users who do not administer the event'],
-      ['TC-EVT-A174', 'updateEvent › lets any user assigned as event admin edit it'],
-      ['TC-EVT-A175', 'updateEvent › throws when the event is not found'],
+      ['TC-EVT-A175', 'updateEvent › throws when there is no sessionId cookie'],
+      ['TC-EVT-A176', 'updateEvent › throws when the session is not found in the database'],
+      ['TC-EVT-A177', 'updateEvent › rejects regular users who do not administer the event'],
+      ['TC-EVT-A178', 'updateEvent › lets any user assigned as event admin edit it'],
+      ['TC-EVT-A179', 'updateEvent › throws when the event is not found'],
       [
-        'TC-EVT-A176',
+        'TC-EVT-A180',
         'updateEvent › updates the event, revalidates paths, and redirects on success',
       ],
       [
-        'TC-EVT-A177',
+        'TC-EVT-A181',
         'updateEvent › rejects ambassadors on events they did not create nor administer',
       ],
       [
-        'TC-EVT-A178',
+        'TC-EVT-A182',
         'updateEvent › lets event organizers edit the event without touching its organizers',
       ],
       [
-        'TC-EVT-A179',
+        'TC-EVT-A183',
         'updateEvent dates and sponsors › rejects an end date that is not after the start date',
       ],
       [
-        'TC-EVT-A180',
+        'TC-EVT-A184',
         'updateEvent dates and sponsors › replaces the sponsors, skipping blank names and nulling empty websites',
       ],
     ],
@@ -2885,10 +2900,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A181',
+        'TC-EVT-A185',
         'opengraph-image › declares a 1200×630 PNG with the section name as alt text',
       ],
-      ['TC-EVT-A182', 'opengraph-image › renders the section terminal card'],
+      ['TC-EVT-A186', 'opengraph-image › renders the section terminal card'],
     ],
   },
   {
@@ -2897,15 +2912,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A183', 'AnunciosPage › has a terminal tab title and a readable share card'],
-      ['TC-EVT-A184', 'AnunciosPage › shows anonymous visitors only the published announcements'],
-      ['TC-EVT-A185', 'AnunciosPage › shows members only the published announcements'],
-      ['TC-EVT-A186', 'AnunciosPage › treats an expired session as anonymous'],
+      ['TC-EVT-A187', 'AnunciosPage › has a terminal tab title and a readable share card'],
+      ['TC-EVT-A188', 'AnunciosPage › shows anonymous visitors only the published announcements'],
+      ['TC-EVT-A189', 'AnunciosPage › shows members only the published announcements'],
+      ['TC-EVT-A190', 'AnunciosPage › treats an expired session as anonymous'],
       [
-        'TC-EVT-A187',
+        'TC-EVT-A191',
         'AnunciosPage › gives admins every announcement, drafts included, and the events to link',
       ],
-      ['TC-EVT-A188', 'anuncios loading › shows a grid of placeholder rows'],
+      ['TC-EVT-A192', 'anuncios loading › shows a grid of placeholder rows'],
     ],
   },
   {
@@ -3630,11 +3645,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A189',
+        'TC-EVT-A193',
         'GET /eventos/[id]/calendario.ics › returns 404 for an event that does not exist',
       ],
       [
-        'TC-EVT-A190',
+        'TC-EVT-A194',
         'GET /eventos/[id]/calendario.ics › downloads the event as an uncached calendar file',
       ],
     ],
@@ -3645,10 +3660,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A191', 'event TalksPage › sends people who do not manage the event back to it'],
-      ['TC-EVT-A192', 'event TalksPage › sends managers to the events list when the event is gone'],
-      ['TC-EVT-A193', "event TalksPage › lists the event's talks for its managers"],
-      ['TC-EVT-A194', 'event TalksPage › has a tab title'],
+      ['TC-EVT-A195', 'event TalksPage › sends people who do not manage the event back to it'],
+      ['TC-EVT-A196', 'event TalksPage › sends managers to the events list when the event is gone'],
+      ['TC-EVT-A197', "event TalksPage › lists the event's talks for its managers"],
+      ['TC-EVT-A198', 'event TalksPage › has a tab title'],
     ],
   },
   {
@@ -3657,15 +3672,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A195', 'EditEventPage › sends anonymous visitors back to the event'],
-      ['TC-EVT-A196', 'EditEventPage › sends members who cannot edit it back to the event'],
-      ['TC-EVT-A197', 'EditEventPage › sends people to the events list when the event is gone'],
-      ['TC-EVT-A198', 'EditEventPage › fills the form with the event and lets an admin delete it'],
+      ['TC-EVT-A199', 'EditEventPage › sends anonymous visitors back to the event'],
+      ['TC-EVT-A200', 'EditEventPage › sends members who cannot edit it back to the event'],
+      ['TC-EVT-A201', 'EditEventPage › sends people to the events list when the event is gone'],
+      ['TC-EVT-A202', 'EditEventPage › fills the form with the event and lets an admin delete it'],
       [
-        'TC-EVT-A199',
+        'TC-EVT-A203',
         'EditEventPage › lets an organizer edit but not delete, with empty fields as blanks',
       ],
-      ['TC-EVT-A200', 'EditEventPage › has a tab title and a loading placeholder'],
+      ['TC-EVT-A204', 'EditEventPage › has a tab title and a loading placeholder'],
     ],
   },
   {
@@ -3675,15 +3690,15 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A201',
+        'TC-EVT-A205',
         'EventRegistrationPage › sends people to the external registration when the event has one',
       ],
-      ['TC-EVT-A202', 'EventRegistrationPage › opens the event asking to register automatically'],
+      ['TC-EVT-A206', 'EventRegistrationPage › opens the event asking to register automatically'],
       [
-        'TC-EVT-A203',
+        'TC-EVT-A207',
         'EventRegistrationPage › opens the event otherwise, even when it does not exist',
       ],
-      ['TC-EVT-A204', 'EventRegistrationPage › loads with placeholders only'],
+      ['TC-EVT-A208', 'EventRegistrationPage › loads with placeholders only'],
     ],
   },
   {
@@ -3693,22 +3708,22 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A205',
+        'TC-EVT-A209',
         'EventRegistrationsPage › sends people who do not manage the event back to it',
       ],
       [
-        'TC-EVT-A206',
+        'TC-EVT-A210',
         'EventRegistrationsPage › sends managers to the events list when the event is gone',
       ],
       [
-        'TC-EVT-A207',
+        'TC-EVT-A211',
         'EventRegistrationsPage › summarizes active registrations, students, professionals and the waitlist',
       ],
       [
-        'TC-EVT-A208',
+        'TC-EVT-A212',
         'EventRegistrationsPage › hides the waitlist when nobody is waiting and says the event has no capacity',
       ],
-      ['TC-EVT-A209', 'EventRegistrationsPage › has a tab title and a loading placeholder'],
+      ['TC-EVT-A213', 'EventRegistrationsPage › has a tab title and a loading placeholder'],
     ],
   },
   {
@@ -3717,14 +3732,14 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'route-handler',
     priority: 'media',
     tests: [
-      ['TC-EVT-A210', 'GET /eventos/[id]/og-image › returns 404 for an event that does not exist'],
+      ['TC-EVT-A214', 'GET /eventos/[id]/og-image › returns 404 for an event that does not exist'],
       [
-        'TC-EVT-A211',
+        'TC-EVT-A215',
         'GET /eventos/[id]/og-image › renders the card with the date in Argentina time and the place',
       ],
-      ['TC-EVT-A212', 'GET /eventos/[id]/og-image › says online for an online event'],
+      ['TC-EVT-A216', 'GET /eventos/[id]/og-image › says online for an online event'],
       [
-        'TC-EVT-A213',
+        'TC-EVT-A217',
         'GET /eventos/[id]/og-image › falls back to the city, and to no place at all',
       ],
     ],
@@ -3735,17 +3750,17 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A214', 'OrganizersPage › sends people to the events list when the event is gone'],
+      ['TC-EVT-A218', 'OrganizersPage › sends people to the events list when the event is gone'],
       [
-        'TC-EVT-A215',
+        'TC-EVT-A219',
         'OrganizersPage › sends anonymous visitors and members who do not manage it back to the event',
       ],
       [
-        'TC-EVT-A216',
+        'TC-EVT-A220',
         'OrganizersPage › shows an organizer the team without letting them change it',
       ],
-      ['TC-EVT-A217', 'OrganizersPage › lets the ambassador who created the event manage the team'],
-      ['TC-EVT-A218', 'OrganizersPage › has a tab title'],
+      ['TC-EVT-A221', 'OrganizersPage › lets the ambassador who created the event manage the team'],
+      ['TC-EVT-A222', 'OrganizersPage › has a tab title'],
     ],
   },
   {
@@ -3754,50 +3769,50 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A219', 'generateMetadata › says the event does not exist when it is missing'],
+      ['TC-EVT-A223', 'generateMetadata › says the event does not exist when it is missing'],
       [
-        'TC-EVT-A220',
+        'TC-EVT-A224',
         'generateMetadata › strips HTML, truncates the description and uses the optimized first flyer',
       ],
       [
-        'TC-EVT-A221',
+        'TC-EVT-A225',
         'generateMetadata › falls back to a signed gallery photo, then to the generated card',
       ],
-      ['TC-EVT-A222', 'EventDetailPage › tells the visitor when the event does not exist'],
-      ['TC-EVT-A223', 'EventDetailPage › shows an event that already ended as its memory'],
+      ['TC-EVT-A226', 'EventDetailPage › tells the visitor when the event does not exist'],
+      ['TC-EVT-A227', 'EventDetailPage › shows an event that already ended as its memory'],
       [
-        'TC-EVT-A224',
+        'TC-EVT-A228',
         'EventDetailPage › shows an anonymous visitor the info, sponsors, map and how to propose a talk',
       ],
       [
-        'TC-EVT-A225',
+        'TC-EVT-A229',
         'EventDetailPage › tells a registered member they are in and reports a full capacity',
       ],
       [
-        'TC-EVT-A226',
+        'TC-EVT-A230',
         'EventDetailPage › tells a member waiting for a spot their place in the waitlist',
       ],
       [
-        'TC-EVT-A227',
+        'TC-EVT-A231',
         'EventDetailPage › gives admins the management links, photo upload and a registrations summary',
       ],
       [
-        'TC-EVT-A228',
+        'TC-EVT-A232',
         'EventDetailPage › lets an organizer manage the event without uploading photos',
       ],
       [
-        'TC-EVT-A229',
+        'TC-EVT-A233',
         'EventDetailPage › skips registration lookups for an event with external registration',
       ],
       [
-        'TC-EVT-A230',
+        'TC-EVT-A234',
         'EventDetailPage › shows an online event with its stream and both start and end',
       ],
       [
-        'TC-EVT-A231',
+        'TC-EVT-A235',
         'EventDetailPage › leaves out the place and description when the event has none',
       ],
-      ['TC-EVT-A232', 'EventDetailPage loading › renders only placeholders'],
+      ['TC-EVT-A236', 'EventDetailPage loading › renders only placeholders'],
     ],
   },
   {
@@ -3806,21 +3821,21 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A233', 'ProponerCharlaPage › asks anonymous visitors to sign in first'],
-      ['TC-EVT-A234', 'ProponerCharlaPage › asks to sign in again when the session expired'],
+      ['TC-EVT-A237', 'ProponerCharlaPage › asks anonymous visitors to sign in first'],
+      ['TC-EVT-A238', 'ProponerCharlaPage › asks to sign in again when the session expired'],
       [
-        'TC-EVT-A235',
+        'TC-EVT-A239',
         'ProponerCharlaPage › sends members back to the event when it does not take proposals',
       ],
       [
-        'TC-EVT-A236',
+        'TC-EVT-A240',
         'ProponerCharlaPage › prefills the first speaker with a professional profile',
       ],
       [
-        'TC-EVT-A237',
+        'TC-EVT-A241',
         'ProponerCharlaPage › prefills a student profile with blanks for what is missing',
       ],
-      ['TC-EVT-A238', 'ProponerCharlaPage › has a tab title'],
+      ['TC-EVT-A242', 'ProponerCharlaPage › has a tab title'],
     ],
   },
   {
@@ -3829,17 +3844,17 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A239', 'TalkProposalsPage › sends people who do not manage the event back to it'],
+      ['TC-EVT-A243', 'TalkProposalsPage › sends people who do not manage the event back to it'],
       [
-        'TC-EVT-A240',
+        'TC-EVT-A244',
         'TalkProposalsPage › sends managers to the events list when the event is gone',
       ],
-      ['TC-EVT-A241', 'TalkProposalsPage › says when nobody has proposed a talk yet'],
+      ['TC-EVT-A245', 'TalkProposalsPage › says when nobody has proposed a talk yet'],
       [
-        'TC-EVT-A242',
+        'TC-EVT-A246',
         "TalkProposalsPage › lists each proposal with its speakers' profiles, status and actions",
       ],
-      ['TC-EVT-A243', 'TalkProposalsPage › has a tab title'],
+      ['TC-EVT-A247', 'TalkProposalsPage › has a tab title'],
     ],
   },
   {
@@ -3848,15 +3863,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A244', 'NewEventPage › sends anonymous visitors back to the events list'],
+      ['TC-EVT-A248', 'NewEventPage › sends anonymous visitors back to the events list'],
       [
-        'TC-EVT-A245',
+        'TC-EVT-A249',
         'NewEventPage › sends members who cannot create events back to the events list',
       ],
-      ['TC-EVT-A246', 'NewEventPage › shows the form to an admin'],
-      ['TC-EVT-A247', 'NewEventPage › shows the form to an ambassador'],
-      ['TC-EVT-A248', 'NewEventPage › has a tab title'],
-      ['TC-EVT-A249', 'NewEventPage › loads with placeholders only'],
+      ['TC-EVT-A250', 'NewEventPage › shows the form to an admin'],
+      ['TC-EVT-A251', 'NewEventPage › shows the form to an ambassador'],
+      ['TC-EVT-A252', 'NewEventPage › has a tab title'],
+      ['TC-EVT-A253', 'NewEventPage › loads with placeholders only'],
     ],
   },
   {
@@ -3866,10 +3881,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A250',
+        'TC-EVT-A254',
         'opengraph-image › declares a 1200×630 PNG with the section name as alt text',
       ],
-      ['TC-EVT-A251', 'opengraph-image › renders the section terminal card'],
+      ['TC-EVT-A255', 'opengraph-image › renders the section terminal card'],
     ],
   },
   {
@@ -3879,14 +3894,14 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A252',
+        'TC-EVT-A256',
         'EventsPage › invites anonymous visitors to organize something instead of creating events',
       ],
-      ['TC-EVT-A253', 'EventsPage › shows the same invitation to members who cannot create events'],
-      ['TC-EVT-A254', 'EventsPage › lets admins create an event'],
-      ['TC-EVT-A255', 'EventsPage › lets ambassadors create an event'],
-      ['TC-EVT-A256', 'EventsPage › describes the section for search engines and social cards'],
-      ['TC-EVT-A257', 'EventsPage loading › renders only placeholders'],
+      ['TC-EVT-A257', 'EventsPage › shows the same invitation to members who cannot create events'],
+      ['TC-EVT-A258', 'EventsPage › lets admins create an event'],
+      ['TC-EVT-A259', 'EventsPage › lets ambassadors create an event'],
+      ['TC-EVT-A260', 'EventsPage › describes the section for search engines and social cards'],
+      ['TC-EVT-A261', 'EventsPage loading › renders only placeholders'],
     ],
   },
   {
@@ -5609,12 +5624,12 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A258',
+        'TC-EVT-A262',
         'AnnouncementCard › shows category, pin, draft and author to visitors without actions',
       ],
-      ['TC-EVT-A259', 'AnnouncementCard › shows unknown categories as they are'],
-      ['TC-EVT-A260', 'AnnouncementCard › lets admins edit the announcement'],
-      ['TC-EVT-A261', 'AnnouncementCard › lets admins delete the announcement'],
+      ['TC-EVT-A263', 'AnnouncementCard › shows unknown categories as they are'],
+      ['TC-EVT-A264', 'AnnouncementCard › lets admins edit the announcement'],
+      ['TC-EVT-A265', 'AnnouncementCard › lets admins delete the announcement'],
     ],
   },
   {
@@ -5623,14 +5638,14 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A262', 'AnnouncementForm › validates the required fields'],
+      ['TC-EVT-A266', 'AnnouncementForm › validates the required fields'],
       [
-        'TC-EVT-A263',
+        'TC-EVT-A267',
         'AnnouncementForm › submits an event announcement linked to the chosen event, pinned and as a draft',
       ],
-      ['TC-EVT-A264', 'AnnouncementForm › drops the event when the category is no longer "evento"'],
-      ['TC-EVT-A265', 'AnnouncementForm › prefills the values when editing, and cancels'],
-      ['TC-EVT-A266', 'AnnouncementForm › locks the buttons while saving'],
+      ['TC-EVT-A268', 'AnnouncementForm › drops the event when the category is no longer "evento"'],
+      ['TC-EVT-A269', 'AnnouncementForm › prefills the values when editing, and cancels'],
+      ['TC-EVT-A270', 'AnnouncementForm › locks the buttons while saving'],
     ],
   },
   {
@@ -5640,13 +5655,13 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A267',
+        'TC-EVT-A271',
         'AnnouncementsWrapper › lists announcements with the RSS link, without admin controls for members',
       ],
-      ['TC-EVT-A268', 'AnnouncementsWrapper › shows the empty state'],
-      ['TC-EVT-A269', 'AnnouncementsWrapper › lets admins create an announcement'],
+      ['TC-EVT-A272', 'AnnouncementsWrapper › shows the empty state'],
+      ['TC-EVT-A273', 'AnnouncementsWrapper › lets admins create an announcement'],
       [
-        'TC-EVT-A270',
+        'TC-EVT-A274',
         'AnnouncementsWrapper › keeps the dialog open when creating fails, and can be cancelled',
       ],
     ],
@@ -5657,9 +5672,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A271', 'DeleteAnnouncementDialog › closes after deleting'],
-      ['TC-EVT-A272', 'DeleteAnnouncementDialog › toasts the error or a fallback'],
-      ['TC-EVT-A273', 'DeleteAnnouncementDialog › can be cancelled'],
+      ['TC-EVT-A275', 'DeleteAnnouncementDialog › closes after deleting'],
+      ['TC-EVT-A276', 'DeleteAnnouncementDialog › toasts the error or a fallback'],
+      ['TC-EVT-A277', 'DeleteAnnouncementDialog › can be cancelled'],
     ],
   },
   {
@@ -5668,8 +5683,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A274', 'EventAnnouncements › renders nothing without announcements'],
-      ['TC-EVT-A275', 'EventAnnouncements › lists the event announcements with pins and authors'],
+      ['TC-EVT-A278', 'EventAnnouncements › renders nothing without announcements'],
+      ['TC-EVT-A279', 'EventAnnouncements › lists the event announcements with pins and authors'],
     ],
   },
   {
@@ -6145,10 +6160,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A276',
+        'TC-EVT-A280',
         'CancelRegistrationButton › cancels the registration, calls onCancel and refreshes',
       ],
-      ['TC-EVT-A277', 'CancelRegistrationButton › uses waitlist copy and maps errors to a message'],
+      ['TC-EVT-A281', 'CancelRegistrationButton › uses waitlist copy and maps errors to a message'],
     ],
   },
   {
@@ -6157,12 +6172,12 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A278', 'DeleteEventButton › asks for confirmation and can be cancelled'],
+      ['TC-EVT-A282', 'DeleteEventButton › asks for confirmation and can be cancelled'],
       [
-        'TC-EVT-A279',
+        'TC-EVT-A283',
         'DeleteEventButton › deletes the event and shows an error toast when it fails',
       ],
-      ['TC-EVT-A280', 'DeleteEventButton › uses a generic message for non-Error failures'],
+      ['TC-EVT-A284', 'DeleteEventButton › uses a generic message for non-Error failures'],
     ],
   },
   {
@@ -6172,7 +6187,7 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A281',
+        'TC-EVT-A285',
         'DeleteEventDialog › closes the dialog, toasts success and rethrows the redirect after deleting',
       ],
     ],
@@ -6184,11 +6199,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A282',
+        'TC-EVT-A286',
         'DeleteRegistrationButton › confirms, deletes the registration, closes and refreshes',
       ],
       [
-        'TC-EVT-A283',
+        'TC-EVT-A287',
         'DeleteRegistrationButton › maps the error and does not refresh when deletion fails',
       ],
     ],
@@ -6200,12 +6215,12 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A284',
+        'TC-EVT-A288',
         'EditEventForm › formats the ISO dates as datetime-local values for the form',
       ],
-      ['TC-EVT-A285', 'EditEventForm › leaves empty dates empty'],
-      ['TC-EVT-A286', 'EditEventForm › updates the event and toasts success on redirect'],
-      ['TC-EVT-A287', 'EditEventForm › toasts the error when the update fails'],
+      ['TC-EVT-A289', 'EditEventForm › leaves empty dates empty'],
+      ['TC-EVT-A290', 'EditEventForm › updates the event and toasts success on redirect'],
+      ['TC-EVT-A291', 'EditEventForm › toasts the error when the update fails'],
     ],
   },
   {
@@ -6215,14 +6230,14 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A288',
+        'TC-EVT-A292',
         'EventCard › links to the event and shows place, description and the placeholder flyer',
       ],
       [
-        'TC-EVT-A289',
+        'TC-EVT-A293',
         'EventCard › marks the event full when registrations reach the capacity, and shows online events',
       ],
-      ['TC-EVT-A290', 'EventCard › omits the location when an in-person event has none'],
+      ['TC-EVT-A294', 'EventCard › omits the location when an in-person event has none'],
     ],
   },
   {
@@ -6232,27 +6247,27 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A291',
+        'TC-EVT-A295',
         'EventDetailClient › shows remaining places and registers, then shows the success dialog',
       ],
-      ['TC-EVT-A292', 'EventDetailClient › joins the waitlist when full and can leave it'],
-      ['TC-EVT-A293', 'EventDetailClient › uses singular copy for a single person waiting'],
-      ['TC-EVT-A294', 'EventDetailClient › lets a registered member cancel and register again'],
+      ['TC-EVT-A296', 'EventDetailClient › joins the waitlist when full and can leave it'],
+      ['TC-EVT-A297', 'EventDetailClient › uses singular copy for a single person waiting'],
+      ['TC-EVT-A298', 'EventDetailClient › lets a registered member cancel and register again'],
       [
-        'TC-EVT-A295',
+        'TC-EVT-A299',
         'EventDetailClient › only shows the external registration link when the event uses one',
       ],
       [
-        'TC-EVT-A296',
+        'TC-EVT-A300',
         'EventDetailClient › opens the success dialog when arriving with ?registered=true',
       ],
-      ['TC-EVT-A297', 'EventDetailClient › auto-registers once after logging in'],
-      ['TC-EVT-A298', 'EventDetailClient › toasts when the auto-registration fails'],
+      ['TC-EVT-A301', 'EventDetailClient › auto-registers once after logging in'],
+      ['TC-EVT-A302', 'EventDetailClient › toasts when the auto-registration fails'],
       [
-        'TC-EVT-A299',
+        'TC-EVT-A303',
         'EventDetailClient › just cleans the URL when an anonymous visitor arrives with autoRegister',
       ],
-      ['TC-EVT-A300', 'EventDetailClient › shows the waitlist position given by the server'],
+      ['TC-EVT-A304', 'EventDetailClient › shows the waitlist position given by the server'],
     ],
   },
   {
@@ -6262,10 +6277,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A301',
+        'TC-EVT-A305',
         'EventExhibit › shows the catalog number, place and what the event left behind',
       ],
-      ['TC-EVT-A302', 'EventExhibit › uses singular counts, the city as fallback and online'],
+      ['TC-EVT-A306', 'EventExhibit › uses singular counts, the city as fallback and online'],
     ],
   },
   {
@@ -6274,9 +6289,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A303', 'EventFlyerCarousel › shows a placeholder without images'],
-      ['TC-EVT-A304', 'EventFlyerCarousel › shows a single flyer without controls'],
-      ['TC-EVT-A305', 'EventFlyerCarousel › navigates between flyers and tracks the selected dot'],
+      ['TC-EVT-A307', 'EventFlyerCarousel › shows a placeholder without images'],
+      ['TC-EVT-A308', 'EventFlyerCarousel › shows a single flyer without controls'],
+      ['TC-EVT-A309', 'EventFlyerCarousel › navigates between flyers and tracks the selected dot'],
     ],
   },
   {
@@ -6286,10 +6301,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A306',
+        'TC-EVT-A310',
         'EventFlyer › shows the schedule with end time and opens the flyer in a dialog',
       ],
-      ['TC-EVT-A307', 'EventFlyer › skips the flyer and end time when missing'],
+      ['TC-EVT-A311', 'EventFlyer › skips the flyer and end time when missing'],
     ],
   },
   {
@@ -6299,19 +6314,19 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A308',
+        'TC-EVT-A312',
         'EventForm › shows validation messages and does not submit an empty in-person event',
       ],
       [
-        'TC-EVT-A309',
+        'TC-EVT-A313',
         'EventForm › submits an in-person event with dates converted to UTC ISO and sponsors',
       ],
       [
-        'TC-EVT-A310',
+        'TC-EVT-A314',
         'EventForm › switches to online fields and submits without a physical location',
       ],
-      ['TC-EVT-A311', 'EventForm › rejects invalid capacity, shortcut, maps url and sponsor name'],
-      ['TC-EVT-A312', 'EventForm › removes a sponsor row and prefills default values'],
+      ['TC-EVT-A315', 'EventForm › rejects invalid capacity, shortcut, maps url and sponsor name'],
+      ['TC-EVT-A316', 'EventForm › removes a sponsor row and prefills default values'],
     ],
   },
   {
@@ -6321,24 +6336,24 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A313',
+        'TC-EVT-A317',
         'EventOrganizersManager › shows the empty state to visitors without management controls',
       ],
       [
-        'TC-EVT-A314',
+        'TC-EVT-A318',
         'EventOrganizersManager › lists organizers linking to their profiles, read-only for non managers',
       ],
       [
-        'TC-EVT-A315',
+        'TC-EVT-A319',
         'EventOrganizersManager › adds an organizer, excluding the current ones from the search',
       ],
-      ['TC-EVT-A316', 'EventOrganizersManager › removes an organizer'],
+      ['TC-EVT-A320', 'EventOrganizersManager › removes an organizer'],
       [
-        'TC-EVT-A317',
+        'TC-EVT-A321',
         'EventOrganizersManager › keeps the list and toasts when adding or removing fails',
       ],
       [
-        'TC-EVT-A318',
+        'TC-EVT-A322',
         'EventOrganizersManager › uses a generic message when adding fails without an Error',
       ],
     ],
@@ -6350,11 +6365,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A319',
+        'TC-EVT-A323',
         'EventPhotos › links every thumbnail to the gallery within the event, plus upload for admins',
       ],
-      ['TC-EVT-A320', 'EventPhotos › shows the empty state without links for visitors'],
-      ['TC-EVT-A321', 'EventPhotos › says "ver todo" for a single item'],
+      ['TC-EVT-A324', 'EventPhotos › shows the empty state without links for visitors'],
+      ['TC-EVT-A325', 'EventPhotos › says "ver todo" for a single item'],
     ],
   },
   {
@@ -6364,11 +6379,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A322',
+        'TC-EVT-A326',
         'EventPoster › shows the flyer on its blurred backdrop and the event details',
       ],
-      ['TC-EVT-A323', 'EventPoster › uses the logo without a flyer, and online/full flags'],
-      ['TC-EVT-A324', 'EventPoster › hides the location when there is none'],
+      ['TC-EVT-A327', 'EventPoster › uses the logo without a flyer, and online/full flags'],
+      ['TC-EVT-A328', 'EventPoster › hides the location when there is none'],
     ],
   },
   {
@@ -6377,12 +6392,12 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A325', 'EventRow › shows the flyer, location and links to the event'],
+      ['TC-EVT-A329', 'EventRow › shows the flyer, location and links to the event'],
       [
-        'TC-EVT-A326',
+        'TC-EVT-A330',
         'EventRow › falls back to the logo and shows online events as full when marked',
       ],
-      ['TC-EVT-A327', 'EventRow › hides the location line when there is none'],
+      ['TC-EVT-A331', 'EventRow › hides the location line when there is none'],
     ],
   },
   {
@@ -6391,10 +6406,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A328', 'EventSection › renders the heading with its aside and content'],
-      ['TC-EVT-A329', 'EventSection › renders without an aside'],
-      ['TC-EVT-A330', 'EventDetails › shows the description'],
-      ['TC-EVT-A331', 'EventOptionLabel › shows the name with a muted date'],
+      ['TC-EVT-A332', 'EventSection › renders the heading with its aside and content'],
+      ['TC-EVT-A333', 'EventSection › renders without an aside'],
+      ['TC-EVT-A334', 'EventDetails › shows the description'],
+      ['TC-EVT-A335', 'EventOptionLabel › shows the name with a muted date'],
     ],
   },
   {
@@ -6404,10 +6419,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A332',
+        'TC-EVT-A336',
         'EventSponsors › shows each sponsor logo linked to its site, or its name without a logo',
       ],
-      ['TC-EVT-A333', 'EventSponsors › turns dark partner logos white, like the partners page'],
+      ['TC-EVT-A337', 'EventSponsors › turns dark partner logos white, like the partners page'],
     ],
   },
   {
@@ -6416,14 +6431,14 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A334', 'EventStatusBadge › shows open registrations for an upcoming event'],
-      ['TC-EVT-A335', 'EventStatusBadge › shows full capacity for an upcoming full event'],
+      ['TC-EVT-A338', 'EventStatusBadge › shows open registrations for an upcoming event'],
+      ['TC-EVT-A339', 'EventStatusBadge › shows full capacity for an upcoming full event'],
       [
-        'TC-EVT-A336',
+        'TC-EVT-A340',
         'EventStatusBadge › shows "En curso" until the end of the day when there is no end date',
       ],
       [
-        'TC-EVT-A337',
+        'TC-EVT-A341',
         'EventStatusBadge › renders nothing once the event ended, re-checking every minute',
       ],
     ],
@@ -6434,16 +6449,16 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A338', 'EventsList › shows an empty state without events'],
+      ['TC-EVT-A342', 'EventsList › shows an empty state without events'],
       [
-        'TC-EVT-A339',
+        'TC-EVT-A343',
         'EventsList › splits upcoming (soonest first) from past events grouped by year, with catalog numbers',
       ],
       [
-        'TC-EVT-A340',
+        'TC-EVT-A344',
         'EventsList › says there are no upcoming events and hides the museum when nothing ended',
       ],
-      ['TC-EVT-A341', 'EventsList › hides the museum when every event is upcoming'],
+      ['TC-EVT-A345', 'EventsList › hides the museum when every event is upcoming'],
     ],
   },
   {
@@ -6453,13 +6468,23 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A342',
+        'TC-EVT-A346',
         'MemoryConversations › opens a conversation in the reader with the profile links',
       ],
       [
-        'TC-EVT-A343',
+        'TC-EVT-A347',
         'MemoryConversations › narrows the list to a participant and clears the filter',
       ],
+    ],
+  },
+  {
+    file: 'src/components/events/memory/memory-cover-framing.test.tsx',
+    area: 'eventos',
+    layer: 'component',
+    priority: 'media',
+    tests: [
+      ['TC-EVT-A348', 'MemoryCoverFraming › previews the zoom and saves the framing'],
+      ['TC-EVT-A349', 'MemoryCoverFraming › centers the photo again'],
     ],
   },
   {
@@ -6469,12 +6494,12 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A344',
+        'TC-EVT-A350',
         'MemoryCoverPicker › lists landscape photos first, marking the chosen one, and picks a new cover',
       ],
-      ['TC-EVT-A345', 'MemoryCoverPicker › goes back to a random cover'],
+      ['TC-EVT-A351', 'MemoryCoverPicker › goes back to a random cover'],
       [
-        'TC-EVT-A346',
+        'TC-EVT-A352',
         'MemoryCoverPicker › keeps the dialog open and toasts when it fails, and says when there are no photos',
       ],
     ],
@@ -6486,18 +6511,18 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A347',
+        'TC-EVT-A353',
         'MemoryHero › shows the photos as backdrop with place, stats and the cover picker',
       ],
-      ['TC-EVT-A348', 'MemoryHero › opens the flyer full screen'],
-      ['TC-EVT-A349', 'MemoryHero › hangs the flyer when there are no photos'],
-      ['TC-EVT-A350', 'MemoryHero › renders just the title without photos or flyer'],
+      ['TC-EVT-A354', 'MemoryHero › opens the flyer full screen'],
+      ['TC-EVT-A355', 'MemoryHero › hangs the flyer when there are no photos'],
+      ['TC-EVT-A356', 'MemoryHero › renders just the title without photos or flyer'],
       [
-        'TC-EVT-A351',
+        'TC-EVT-A357',
         'MemoryCover (through MemoryHero) › cross-fades between several photos every 7 seconds',
       ],
       [
-        'TC-EVT-A352',
+        'TC-EVT-A358',
         'MemoryCover (through MemoryHero) › stays on the first photo for reduced motion',
       ],
     ],
@@ -6509,10 +6534,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A353',
+        'TC-EVT-A359',
         'MemoryMosaic › shapes tiles after their photos and links each to the gallery',
       ],
-      ['TC-EVT-A354', 'MemoryMosaic › links to the rest when there are more items than shown'],
+      ['TC-EVT-A360', 'MemoryMosaic › links to the rest when there are more items than shown'],
     ],
   },
   {
@@ -6522,7 +6547,7 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A355',
+        'TC-EVT-A361',
         'MemoryTalks › lists the talks without repeating the event, and plays them in place',
       ],
     ],
@@ -6534,19 +6559,19 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A356',
+        'TC-EVT-A362',
         'PastEventMemory › remembers the event with stats, album, talks, conversations and details',
       ],
-      ['TC-EVT-A357', 'PastEventMemory › gives managers and admins their tools'],
+      ['TC-EVT-A363', 'PastEventMemory › gives managers and admins their tools'],
       [
-        'TC-EVT-A358',
+        'TC-EVT-A364',
         'PastEventMemory › shows an empty album to admins of an online external event without photos',
       ],
       [
-        'TC-EVT-A359',
+        'TC-EVT-A365',
         'PastEventMemory › hides the photo section from visitors without photos and falls back to any photo as cover',
       ],
-      ['TC-EVT-A360', 'PastEventMemory › shows the single item link copy'],
+      ['TC-EVT-A366', 'PastEventMemory › shows the single item link copy'],
     ],
   },
   {
@@ -6555,9 +6580,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A361', 'NewEventForm › creates the event and celebrates when the action redirects'],
-      ['TC-EVT-A362', 'NewEventForm › shows the action error message'],
-      ['TC-EVT-A363', 'NewEventForm › falls back to a generic message for non-Error rejections'],
+      ['TC-EVT-A367', 'NewEventForm › creates the event and celebrates when the action redirects'],
+      ['TC-EVT-A368', 'NewEventForm › shows the action error message'],
+      ['TC-EVT-A369', 'NewEventForm › falls back to a generic message for non-Error rejections'],
     ],
   },
   {
@@ -6566,13 +6591,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A364', 'RegisterEventButton › sends anonymous visitors to log in with autoRegister'],
-      ['TC-EVT-A365', 'RegisterEventButton › opens the external url instead of registering'],
-      ['TC-EVT-A366', 'RegisterEventButton › registers, toasts and refreshes'],
-      ['TC-EVT-A367', 'RegisterEventButton › joins the waitlist when there is no capacity'],
-      ['TC-EVT-A368', 'RegisterEventButton › hands the result to onSuccess instead of toasting'],
-      ['TC-EVT-A369', 'RegisterEventButton › shows an error toast when the action rejects'],
-      ['TC-EVT-A370', 'RegisterEventButton › is disabled while loading'],
+      ['TC-EVT-A370', 'RegisterEventButton › sends anonymous visitors to log in with autoRegister'],
+      ['TC-EVT-A371', 'RegisterEventButton › opens the external url instead of registering'],
+      ['TC-EVT-A372', 'RegisterEventButton › registers, toasts and refreshes'],
+      ['TC-EVT-A373', 'RegisterEventButton › joins the waitlist when there is no capacity'],
+      ['TC-EVT-A374', 'RegisterEventButton › hands the result to onSuccess instead of toasting'],
+      ['TC-EVT-A375', 'RegisterEventButton › shows an error toast when the action rejects'],
+      ['TC-EVT-A376', 'RegisterEventButton › is disabled while loading'],
     ],
   },
   {
@@ -6581,8 +6606,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A371', 'RegistrationSuccessDialog › confirms the registration and closes'],
-      ['TC-EVT-A372', 'RegistrationSuccessDialog › shows the waitlist position'],
+      ['TC-EVT-A377', 'RegistrationSuccessDialog › confirms the registration and closes'],
+      ['TC-EVT-A378', 'RegistrationSuccessDialog › shows the waitlist position'],
     ],
   },
   {
@@ -6592,11 +6617,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A373',
+        'TC-EVT-A379',
         'RegistrationsDataTable › shows each registration with its info, status and delete action only when active',
       ],
-      ['TC-EVT-A374', 'RegistrationsDataTable › sorts by name and filters with the search bar'],
-      ['TC-EVT-A375', 'RegistrationsDataTable › paginates every 100 rows'],
+      ['TC-EVT-A380', 'RegistrationsDataTable › sorts by name and filters with the search bar'],
+      ['TC-EVT-A381', 'RegistrationsDataTable › paginates every 100 rows'],
     ],
   },
   {
@@ -6605,8 +6630,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A376', 'WaitlistPromotionEmail › confirms the spot and links to the event'],
-      ['TC-EVT-A377', 'WaitlistPromotionEmail › greets without a name'],
+      ['TC-EVT-A382', 'WaitlistPromotionEmail › confirms the spot and links to the event'],
+      ['TC-EVT-A383', 'WaitlistPromotionEmail › greets without a name'],
     ],
   },
   {
@@ -9389,28 +9414,28 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'alta',
     tests: [
-      ['TC-EVT-A378', 'canManageEventById › lets site admins manage any event, even without one'],
-      ['TC-EVT-A379', 'canManageEventById › lets event organizers manage their event'],
-      ['TC-EVT-A380', 'canManageEventById › rejects everyone else'],
-      ['TC-EVT-A381', 'canManageSomeEvent › counts users who administer at least one event'],
+      ['TC-EVT-A384', 'canManageEventById › lets site admins manage any event, even without one'],
+      ['TC-EVT-A385', 'canManageEventById › lets event organizers manage their event'],
+      ['TC-EVT-A386', 'canManageEventById › rejects everyone else'],
+      ['TC-EVT-A387', 'canManageSomeEvent › counts users who administer at least one event'],
       [
-        'TC-EVT-A382',
+        'TC-EVT-A388',
         'canManageSomeEvent shortcuts › lets admins and ambassadors through without counting, and rejects visitors',
       ],
       [
-        'TC-EVT-A383',
+        'TC-EVT-A389',
         'canManageEventById with a missing event › rejects when the event does not exist',
       ],
       [
-        'TC-EVT-A384',
+        'TC-EVT-A390',
         'getEventManager / requireEventManager › returns the logged-in user when they manage the event',
       ],
       [
-        'TC-EVT-A385',
+        'TC-EVT-A391',
         'getEventManager / requireEventManager › returns null for visitors and for users who do not manage the event',
       ],
       [
-        'TC-EVT-A386',
+        'TC-EVT-A392',
         'getEventManager / requireEventManager › throws from Server Actions when the caller does not manage the event',
       ],
     ],
@@ -9422,16 +9447,16 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A387',
+        'TC-EVT-A393',
         'listEventIndex › lists events that were not deleted, soonest first, keeping Dates',
       ],
-      ['TC-EVT-A388', 'getEventNames › maps the requested ids that exist to their names'],
-      ['TC-EVT-A389', 'getEventNames › is empty for no ids'],
+      ['TC-EVT-A394', 'getEventNames › maps the requested ids that exist to their names'],
+      ['TC-EVT-A395', 'getEventNames › is empty for no ids'],
       [
-        'TC-EVT-A390',
+        'TC-EVT-A396',
         'getEventCounts › counts active and total registrations, the waitlist and the catalog number',
       ],
-      ['TC-EVT-A391', 'getEventCounts › has no catalog number for a missing or deleted event'],
+      ['TC-EVT-A397', 'getEventCounts › has no catalog number for a missing or deleted event'],
     ],
   },
   {
@@ -9440,11 +9465,11 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-EVT-A392', 'formatEventOptionDate › formats the day, short month and year in Spanish'],
-      ['TC-EVT-A393', "formatEventOptionDate › uses Argentina's day, not UTC's"],
-      ['TC-EVT-A394', 'formatEventOptionDate › accepts serialized dates'],
+      ['TC-EVT-A398', 'formatEventOptionDate › formats the day, short month and year in Spanish'],
+      ['TC-EVT-A399', "formatEventOptionDate › uses Argentina's day, not UTC's"],
+      ['TC-EVT-A400', 'formatEventOptionDate › accepts serialized dates'],
       [
-        'TC-EVT-A395',
+        'TC-EVT-A401',
         'eventOptionLabel › puts the date next to the name so same-named events can be told apart',
       ],
     ],
@@ -9455,18 +9480,18 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'alta',
     tests: [
-      ['TC-EVT-A396', 'event permissions › lets admins and ambassadors create events'],
+      ['TC-EVT-A402', 'event permissions › lets admins and ambassadors create events'],
       [
-        'TC-EVT-A397',
+        'TC-EVT-A403',
         'event permissions › lets ambassadors edit the events they created or administer',
       ],
-      ['TC-EVT-A398', 'event permissions › lets any user set as event admin edit it'],
-      ['TC-EVT-A399', 'event permissions › stops counting creators who are no longer ambassadors'],
+      ['TC-EVT-A404', 'event permissions › lets any user set as event admin edit it'],
+      ['TC-EVT-A405', 'event permissions › stops counting creators who are no longer ambassadors'],
       [
-        'TC-EVT-A400',
+        'TC-EVT-A406',
         'event permissions › only lets the ambassador who created an event delete it',
       ],
-      ['TC-EVT-A401', 'event permissions › keeps deleted events for admins only'],
+      ['TC-EVT-A407', 'event permissions › keeps deleted events for admins only'],
     ],
   },
   {
@@ -9476,15 +9501,15 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A402',
+        'TC-EVT-A408',
         'findNextEventByShortcut › looks up the nearest upcoming or ongoing event with the slug, case-insensitively',
       ],
       [
-        'TC-EVT-A403',
+        'TC-EVT-A409',
         'findNextEventByShortcut › returns null when no upcoming event uses the slug',
       ],
-      ['TC-EVT-A404', 'slugToLabel › capitalizes the first letter'],
-      ['TC-EVT-A405', 'slugToLabel › handles an empty slug'],
+      ['TC-EVT-A410', 'slugToLabel › capitalizes the first letter'],
+      ['TC-EVT-A411', 'slugToLabel › handles an empty slug'],
     ],
   },
   {
@@ -9493,9 +9518,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-EVT-A406', 'hasEventEnded › lasts until the end of its day without an explicit end'],
-      ['TC-EVT-A407', 'hasEventEnded › ends at the explicit end when there is one'],
-      ['TC-EVT-A408', 'hasEventEnded › defaults to the current time'],
+      ['TC-EVT-A412', 'hasEventEnded › lasts until the end of its day without an explicit end'],
+      ['TC-EVT-A413', 'hasEventEnded › ends at the explicit end when there is one'],
+      ['TC-EVT-A414', 'hasEventEnded › defaults to the current time'],
     ],
   },
   {
@@ -9504,40 +9529,40 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'alta',
     tests: [
-      ['TC-EVT-A409', 'lockEvent › returns null when the event does not exist or was deleted'],
-      ['TC-EVT-A410', 'lockEvent › returns the event once its row is locked'],
+      ['TC-EVT-A415', 'lockEvent › returns null when the event does not exist or was deleted'],
+      ['TC-EVT-A416', 'lockEvent › returns the event once its row is locked'],
       [
-        'TC-EVT-A411',
+        'TC-EVT-A417',
         'promoteFromWaitlist › promotes people in order until the event is full again',
       ],
-      ['TC-EVT-A412', 'promoteFromWaitlist › stops when nobody is waiting'],
+      ['TC-EVT-A418', 'promoteFromWaitlist › stops when nobody is waiting'],
       [
-        'TC-EVT-A413',
+        'TC-EVT-A419',
         'promoteFromWaitlist › reactivates a cancelled registration instead of creating a new one',
       ],
       [
-        'TC-EVT-A414',
+        'TC-EVT-A420',
         'promoteFromWaitlist › skips someone who already has a spot and moves on to the next person',
       ],
       [
-        'TC-EVT-A415',
+        'TC-EVT-A421',
         'promoteFromWaitlist › promotes everyone waiting when the event no longer has a capacity',
       ],
       [
-        'TC-EVT-A416',
+        'TC-EVT-A422',
         'promoteFromWaitlist › promotes nobody when the event is marked as full by hand',
       ],
       [
-        'TC-EVT-A417',
+        'TC-EVT-A423',
         'promoteFromWaitlist › promotes nobody when the event uses an external registration',
       ],
-      ['TC-EVT-A418', 'promoteFromWaitlist › promotes nobody when the event already ended'],
-      ['TC-EVT-A419', 'getWaitlistPosition › returns null when the user is not waiting'],
-      ['TC-EVT-A420', 'getWaitlistPosition › counts the people ahead in the line'],
-      ['TC-EVT-A421', 'notifyPromotions › emails the promoted person and notifies the admins'],
-      ['TC-EVT-A422', 'notifyPromotions › does not throw when the email fails'],
-      ['TC-EVT-A423', 'fillFromWaitlist › locks the event, promotes and notifies'],
-      ['TC-EVT-A424', 'fillFromWaitlist › does nothing when the event is gone'],
+      ['TC-EVT-A424', 'promoteFromWaitlist › promotes nobody when the event already ended'],
+      ['TC-EVT-A425', 'getWaitlistPosition › returns null when the user is not waiting'],
+      ['TC-EVT-A426', 'getWaitlistPosition › counts the people ahead in the line'],
+      ['TC-EVT-A427', 'notifyPromotions › emails the promoted person and notifies the admins'],
+      ['TC-EVT-A428', 'notifyPromotions › does not throw when the email fails'],
+      ['TC-EVT-A429', 'fillFromWaitlist › locks the event, promotes and notifies'],
+      ['TC-EVT-A430', 'fillFromWaitlist › does nothing when the event is gone'],
     ],
   },
   {
@@ -9712,11 +9737,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A425',
+        'TC-EVT-A431',
         'createGoogleCalendarUrl › opens a prefilled Google Calendar draft for an event without an end time',
       ],
       [
-        'TC-EVT-A426',
+        'TC-EVT-A432',
         'createGoogleCalendarUrl › uses the event end time and physical location when provided',
       ],
     ],
@@ -9728,37 +9753,37 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A427',
+        'TC-EVT-A433',
         'isGoogleMapsUrl › accepts https://www.google.com/maps?q=-26.844408,-65.22264',
       ],
       [
-        'TC-EVT-A428',
+        'TC-EVT-A434',
         'isGoogleMapsUrl › accepts https://www.google.com/maps/place/UTN-FRT/@-26.84,-65.22,17z',
       ],
-      ['TC-EVT-A429', 'isGoogleMapsUrl › accepts https://google.com.ar/maps/search/UTN'],
-      ['TC-EVT-A430', 'isGoogleMapsUrl › accepts https://maps.google.com/?q=UTN'],
-      ['TC-EVT-A431', 'isGoogleMapsUrl › accepts https://maps.google.com.ar/maps?q=UTN'],
-      ['TC-EVT-A432', 'isGoogleMapsUrl › accepts https://maps.app.goo.gl/AbCdEf123'],
-      ['TC-EVT-A433', 'isGoogleMapsUrl › accepts https://goo.gl/maps/AbCdEf123'],
-      ['TC-EVT-A434', 'isGoogleMapsUrl › accepts   https://www.google.com/maps  '],
-      ['TC-EVT-A435', 'isGoogleMapsUrl › rejects '],
-      ['TC-EVT-A436', 'isGoogleMapsUrl › rejects no es una url'],
-      ['TC-EVT-A437', 'isGoogleMapsUrl › rejects https://www.google.com/search?q=utn'],
-      ['TC-EVT-A438', 'isGoogleMapsUrl › rejects https://goo.gl/AbCdEf'],
-      ['TC-EVT-A439', 'isGoogleMapsUrl › rejects https://evil.example/maps?q=1,2'],
-      ['TC-EVT-A440', 'isGoogleMapsUrl › rejects https://maps.google.com.evil.example/'],
-      ['TC-EVT-A441', 'isGoogleMapsUrl › rejects javascript:alert(1)'],
-      ['TC-EVT-A442', 'isGoogleMapsUrl › rejects ftp://maps.google.com/'],
-      ['TC-EVT-A443', 'googleMapsQuery › reads the q parameter'],
-      ['TC-EVT-A444', 'googleMapsQuery › reads the query parameter of a search link'],
-      ['TC-EVT-A445', 'googleMapsQuery › prefers the pin of a shared place over the viewport'],
-      ['TC-EVT-A446', 'googleMapsQuery › falls back to the place name'],
-      ['TC-EVT-A447', 'googleMapsQuery › falls back to the viewport centre'],
-      ['TC-EVT-A448', 'googleMapsQuery › returns null for short links and non-Maps URLs'],
-      ['TC-EVT-A449', 'googleMapsEmbedUrl › embeds what the link points to'],
-      ['TC-EVT-A450', 'googleMapsEmbedUrl › falls back to the address for short links'],
-      ['TC-EVT-A451', 'googleMapsEmbedUrl › returns null with nothing to show'],
-      ['TC-EVT-A452', 'googleMapsSearchUrl › builds a search link'],
+      ['TC-EVT-A435', 'isGoogleMapsUrl › accepts https://google.com.ar/maps/search/UTN'],
+      ['TC-EVT-A436', 'isGoogleMapsUrl › accepts https://maps.google.com/?q=UTN'],
+      ['TC-EVT-A437', 'isGoogleMapsUrl › accepts https://maps.google.com.ar/maps?q=UTN'],
+      ['TC-EVT-A438', 'isGoogleMapsUrl › accepts https://maps.app.goo.gl/AbCdEf123'],
+      ['TC-EVT-A439', 'isGoogleMapsUrl › accepts https://goo.gl/maps/AbCdEf123'],
+      ['TC-EVT-A440', 'isGoogleMapsUrl › accepts   https://www.google.com/maps  '],
+      ['TC-EVT-A441', 'isGoogleMapsUrl › rejects '],
+      ['TC-EVT-A442', 'isGoogleMapsUrl › rejects no es una url'],
+      ['TC-EVT-A443', 'isGoogleMapsUrl › rejects https://www.google.com/search?q=utn'],
+      ['TC-EVT-A444', 'isGoogleMapsUrl › rejects https://goo.gl/AbCdEf'],
+      ['TC-EVT-A445', 'isGoogleMapsUrl › rejects https://evil.example/maps?q=1,2'],
+      ['TC-EVT-A446', 'isGoogleMapsUrl › rejects https://maps.google.com.evil.example/'],
+      ['TC-EVT-A447', 'isGoogleMapsUrl › rejects javascript:alert(1)'],
+      ['TC-EVT-A448', 'isGoogleMapsUrl › rejects ftp://maps.google.com/'],
+      ['TC-EVT-A449', 'googleMapsQuery › reads the q parameter'],
+      ['TC-EVT-A450', 'googleMapsQuery › reads the query parameter of a search link'],
+      ['TC-EVT-A451', 'googleMapsQuery › prefers the pin of a shared place over the viewport'],
+      ['TC-EVT-A452', 'googleMapsQuery › falls back to the place name'],
+      ['TC-EVT-A453', 'googleMapsQuery › falls back to the viewport centre'],
+      ['TC-EVT-A454', 'googleMapsQuery › returns null for short links and non-Maps URLs'],
+      ['TC-EVT-A455', 'googleMapsEmbedUrl › embeds what the link points to'],
+      ['TC-EVT-A456', 'googleMapsEmbedUrl › falls back to the address for short links'],
+      ['TC-EVT-A457', 'googleMapsEmbedUrl › returns null with nothing to show'],
+      ['TC-EVT-A458', 'googleMapsSearchUrl › builds a search link'],
     ],
   },
   {
@@ -9784,16 +9809,16 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'baja',
     tests: [
       [
-        'TC-EVT-A453',
+        'TC-EVT-A459',
         'createIcsFile › builds a VEVENT with UTC times and a one-hour default duration',
       ],
-      ['TC-EVT-A454', 'createIcsFile › escapes special characters and newlines in text fields'],
+      ['TC-EVT-A460', 'createIcsFile › escapes special characters and newlines in text fields'],
       [
-        'TC-EVT-A455',
+        'TC-EVT-A461',
         'createIcsFile › uses the end date and the physical address for in-person events',
       ],
-      ['TC-EVT-A456', 'createIcsFile › folds lines longer than 75 octets'],
-      ['TC-EVT-A457', 'createIcsFile escaping per RFC 5545 › escapes semicolons in text fields'],
+      ['TC-EVT-A462', 'createIcsFile › folds lines longer than 75 octets'],
+      ['TC-EVT-A463', 'createIcsFile escaping per RFC 5545 › escapes semicolons in text fields'],
     ],
   },
   {
@@ -10633,38 +10658,38 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-EVT-A458',
+        'TC-EVT-A464',
         'eventSchema shortcut › accepts the already-parsed client output when no shortcut was entered',
       ],
-      ['TC-EVT-A459', 'eventSchema shortcut › normalizes a provided shortcut'],
-      ['TC-EVT-A460', 'eventSchema › accepts an in-person event and fills the defaults'],
-      ['TC-EVT-A461', 'eventSchema › requires city, place and address for an in-person event'],
-      ['TC-EVT-A462', 'eventSchema › does not require a place for an online event'],
-      ['TC-EVT-A463', 'eventSchema › rejects a short name, a short description and a missing date'],
-      ['TC-EVT-A464', 'eventSchema › accepts flyers that are site paths or URLs only'],
-      ['TC-EVT-A465', 'eventSchema › accepts sponsor logos from the site or https only'],
-      ['TC-EVT-A466', 'eventSchema › validates sponsors and drops an empty website'],
+      ['TC-EVT-A465', 'eventSchema shortcut › normalizes a provided shortcut'],
+      ['TC-EVT-A466', 'eventSchema › accepts an in-person event and fills the defaults'],
+      ['TC-EVT-A467', 'eventSchema › requires city, place and address for an in-person event'],
+      ['TC-EVT-A468', 'eventSchema › does not require a place for an online event'],
+      ['TC-EVT-A469', 'eventSchema › rejects a short name, a short description and a missing date'],
+      ['TC-EVT-A470', 'eventSchema › accepts flyers that are site paths or URLs only'],
+      ['TC-EVT-A471', 'eventSchema › accepts sponsor logos from the site or https only'],
+      ['TC-EVT-A472', 'eventSchema › validates sponsors and drops an empty website'],
       [
-        'TC-EVT-A467',
+        'TC-EVT-A473',
         'eventSchema › validates the registration and streaming URLs, treating empty as none',
       ],
-      ['TC-EVT-A468', 'eventSchema › accepts Google Maps links only'],
-      ['TC-EVT-A469', 'eventSchema › parses the capacity from a string or a number'],
-      ['TC-EVT-A470', 'eventSchema › rejects the capacity "0"'],
-      ['TC-EVT-A471', 'eventSchema › rejects the capacity "-3"'],
-      ['TC-EVT-A472', 'eventSchema › rejects the capacity "abc"'],
-      ['TC-EVT-A473', 'eventSchema › rejects the capacity 0'],
-      ['TC-EVT-A474', 'eventSchema › rejects a shortcut with spaces or symbols'],
-      ['TC-EVT-A475', 'eventSchema › keeps the end date and treats null flags as false'],
+      ['TC-EVT-A474', 'eventSchema › accepts Google Maps links only'],
+      ['TC-EVT-A475', 'eventSchema › parses the capacity from a string or a number'],
+      ['TC-EVT-A476', 'eventSchema › rejects the capacity "0"'],
+      ['TC-EVT-A477', 'eventSchema › rejects the capacity "-3"'],
+      ['TC-EVT-A478', 'eventSchema › rejects the capacity "abc"'],
+      ['TC-EVT-A479', 'eventSchema › rejects the capacity 0'],
+      ['TC-EVT-A480', 'eventSchema › rejects a shortcut with spaces or symbols'],
+      ['TC-EVT-A481', 'eventSchema › keeps the end date and treats null flags as false'],
       [
-        'TC-EVT-A476',
+        'TC-EVT-A482',
         'eventSchema dates › rejects an end date before the start, on the endDate field',
       ],
       [
-        'TC-EVT-A477',
+        'TC-EVT-A483',
         'eventSchema dates › rejects an end date equal to the start, on the endDate field',
       ],
-      ['TC-EVT-A478', 'eventSchema dates › accepts an end date after the start, or none'],
+      ['TC-EVT-A484', 'eventSchema dates › accepts an end date after the start, or none'],
     ],
   },
   {
@@ -11438,45 +11463,45 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-EVT-A479', 'as an admin › TC-EVT-009 Crear un evento presencial'],
-      ['TC-EVT-A480', 'as an admin › TC-EVT-010 Validaciones del formulario de evento'],
-      ['TC-EVT-A481', 'as an admin › the capacity must be greater than zero'],
+      ['TC-EVT-A485', 'as an admin › TC-EVT-009 Crear un evento presencial'],
+      ['TC-EVT-A486', 'as an admin › TC-EVT-010 Validaciones del formulario de evento'],
+      ['TC-EVT-A487', 'as an admin › the capacity must be greater than zero'],
       [
-        'TC-EVT-A482',
+        'TC-EVT-A488',
         'as an admin › an end date before the start date is rejected with a clear message',
       ],
-      ['TC-EVT-A483', 'as an admin › creating an online event hides the address fields'],
-      ['TC-EVT-A484', 'as an admin › TC-EVT-014 Sumar y quitar organizadores'],
-      ['TC-EVT-A485', 'as an admin › TC-EVT-016 Eliminar un evento'],
-      ['TC-EVT-A486', 'as an admin › TC-EVT-018 Anuncios de un evento'],
+      ['TC-EVT-A489', 'as an admin › creating an online event hides the address fields'],
+      ['TC-EVT-A490', 'as an admin › TC-EVT-014 Sumar y quitar organizadores'],
+      ['TC-EVT-A491', 'as an admin › TC-EVT-016 Eliminar un evento'],
+      ['TC-EVT-A492', 'as an admin › TC-EVT-018 Anuncios de un evento'],
       [
-        'TC-EVT-A487',
+        'TC-EVT-A493',
         'as an organizer of an event someone else created › TC-EVT-005 Subir el cupo promueve a la lista de espera',
       ],
       [
-        'TC-EVT-A488',
+        'TC-EVT-A494',
         'as an organizer of an event someone else created › TC-EVT-012 Un organizador puede editar pero no borrar',
       ],
       [
-        'TC-EVT-A489',
+        'TC-EVT-A495',
         'as an organizer of an event someone else created › an organizer sees the team but cannot add or remove organizers',
       ],
       [
-        'TC-EVT-A490',
+        'TC-EVT-A496',
         'as an organizer of an event someone else created › TC-EVT-015 Gestionar inscripciones como organizador',
       ],
       [
-        'TC-EVT-A491',
+        'TC-EVT-A497',
         'as a regular member › TC-EVT-011 Solo admins y embajadores pueden crear eventos',
       ],
-      ['TC-EVT-A492', 'as a regular member › TC-EVT-013 Rutas de gestión protegidas'],
-      ['TC-EVT-A493', 'as a regular member › a member cannot open the organizers page'],
+      ['TC-EVT-A498', 'as a regular member › TC-EVT-013 Rutas de gestión protegidas'],
+      ['TC-EVT-A499', 'as a regular member › a member cannot open the organizers page'],
       [
-        'TC-EVT-A494',
+        'TC-EVT-A500',
         'as an ambassador › an ambassador creates events and deletes only the ones they created',
       ],
-      ['TC-EVT-A495', 'anonymous visitors › management routes send anonymous visitors away'],
-      ['TC-EVT-A496', 'anonymous visitors › TC-EVT-017 Descargar el evento en el calendario'],
+      ['TC-EVT-A501', 'anonymous visitors › management routes send anonymous visitors away'],
+      ['TC-EVT-A502', 'anonymous visitors › TC-EVT-017 Descargar el evento en el calendario'],
     ],
   },
   {
@@ -11485,42 +11510,42 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-EVT-A497', 'TC-EVT-001 Inscribirse a un evento con cupo'],
-      ['TC-EVT-A498', 'TC-EVT-002 Inscripción automática después del login'],
-      ['TC-EVT-A499', 'TC-EVT-003 Evento lleno: sumarse a la lista de espera'],
+      ['TC-EVT-A503', 'TC-EVT-001 Inscribirse a un evento con cupo'],
+      ['TC-EVT-A504', 'TC-EVT-002 Inscripción automática después del login'],
+      ['TC-EVT-A505', 'TC-EVT-003 Evento lleno: sumarse a la lista de espera'],
       [
-        'TC-EVT-A500',
+        'TC-EVT-A506',
         'TC-EVT-004 Al cancelar una inscripción sube el primero de la lista de espera',
       ],
-      ['TC-EVT-A501', 'TC-EVT-006 Doble clic en inscribirme no duplica la inscripción'],
-      ['TC-EVT-A502', 'TC-EVT-007 Evento con inscripción externa'],
-      ['TC-EVT-A503', 'TC-EVT-008 Evento terminado se muestra como recuerdo'],
+      ['TC-EVT-A507', 'TC-EVT-006 Doble clic en inscribirme no duplica la inscripción'],
+      ['TC-EVT-A508', 'TC-EVT-007 Evento con inscripción externa'],
+      ['TC-EVT-A509', 'TC-EVT-008 Evento terminado se muestra como recuerdo'],
       [
-        'TC-EVT-A504',
+        'TC-EVT-A510',
         'registration: alternative paths › anonymous visitors see the register button but no cancel option',
       ],
       [
-        'TC-EVT-A505',
+        'TC-EVT-A511',
         'registration: alternative paths › an event without capacity does not show the remaining spots',
       ],
       [
-        'TC-EVT-A506',
+        'TC-EVT-A512',
         'registration: alternative paths › cancelling and registering again reactivates the same registration',
       ],
       [
-        'TC-EVT-A507',
+        'TC-EVT-A513',
         'registration: alternative paths › leaving the waitlist frees the place in line',
       ],
       [
-        'TC-EVT-A508',
+        'TC-EVT-A514',
         'registration: alternative paths › an event marked as full sends new people to the waitlist even with free spots',
       ],
       [
-        'TC-EVT-A509',
+        'TC-EVT-A515',
         'registration: alternative paths › a past event with an external registration still shows as a memory',
       ],
       [
-        'TC-EVT-A510',
+        'TC-EVT-A516',
         'registration: alternative paths › a missing event shows the not-found message',
       ],
     ],
@@ -11531,8 +11556,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-EVT-A511', 'an anonymous visitor taps inscribirme and is sent to log in'],
-      ['TC-EVT-A512', 'a member registers and cancels from the phone'],
+      ['TC-EVT-A517', 'an anonymous visitor taps inscribirme and is sent to log in'],
+      ['TC-EVT-A518', 'a member registers and cancels from the phone'],
     ],
   },
   {

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { LocalShortDate } from '@/components/ui/local-date-time';
 import { MemoryCover } from './memory-cover';
 import { MemoryFlyer } from './memory-flyer';
+import type { CoverFraming } from '@/lib/cover-framing';
 
 type Stat = { value: number; label: string };
 
@@ -19,6 +20,7 @@ export function MemoryHero({
   flyer,
   stats,
   coverPicker,
+  framing,
 }: {
   name: string;
   date: Date;
@@ -28,15 +30,17 @@ export function MemoryHero({
   covers: string[];
   flyer: string | undefined;
   stats: Stat[];
-  /** The admin's control to choose the cover. */
+  /** Controls to choose and frame the cover, for whoever can edit the event. */
   coverPicker?: ReactNode;
+  /** How the chosen cover is framed. */
+  framing?: CoverFraming;
 }) {
   const cover = covers.length > 0;
 
   return (
     <header className="relative isolate flex min-h-[18rem] overflow-hidden bg-black sm:min-h-[22rem] md:aspect-[21/9] md:min-h-0">
       {cover ? (
-        <MemoryCover photos={covers} />
+        <MemoryCover photos={covers} framing={framing} />
       ) : (
         flyer && (
           // eslint-disable-next-line @next/next/no-img-element

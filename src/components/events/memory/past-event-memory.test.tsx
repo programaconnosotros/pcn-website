@@ -9,6 +9,7 @@ import { PastEventMemory } from './past-event-memory';
 
 jest.mock('@/actions/talks/fetch-public-talks', () => ({ fetchPublicTalks: jest.fn() }));
 jest.mock('@/actions/events/set-event-cover-photo', () => ({ setEventCoverPhoto: jest.fn() }));
+jest.mock('@/actions/events/set-event-cover-framing', () => ({ setEventCoverFraming: jest.fn() }));
 jest.mock('@/lib/gallery', () => ({ getEventCover: jest.fn(), getEventMemories: jest.fn() }));
 jest.mock('@/lib/event-index', () => ({ getEventCounts: jest.fn() }));
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));

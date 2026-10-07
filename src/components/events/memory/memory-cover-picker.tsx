@@ -23,7 +23,7 @@ const tileClassName =
   'group relative aspect-[3/2] overflow-hidden rounded-[3px] bg-black ring-1 ring-inset ring-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen disabled:opacity-60';
 
 /**
- * For admins, on a past event's hero: pick which of the event's photos opens its page, or go
+ * For whoever can edit the event, on a past event's hero: pick which of the event's photos opens its page, or go
  * back to cycling through random landscape ones. Landscape photos come first, since they are
  * the ones that fill the header well.
  */
@@ -58,7 +58,7 @@ export function MemoryCoverPicker({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-sm transition-colors hover:border-pcnGreen hover:text-pcnGreen"
+        className="flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-sm transition-colors hover:border-pcnGreen hover:text-pcnGreen"
       >
         <ImageIcon className="size-3.5" />
         portada: {chosenId ? 'elegida' : 'aleatoria'}
