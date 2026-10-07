@@ -88,7 +88,7 @@ export function RegisterEventButton({
       )}
       {!externalUrl && buttonIsLoading
         ? 'inscribiendo...'
-        : label ?? (capacityAvailable ? 'inscribirme();' : 'unirmeAListaDeEspera();')}
+        : (label ?? (capacityAvailable ? 'inscribirme();' : 'unirmeAListaDeEspera();'))}
     </Button>
   );
 }

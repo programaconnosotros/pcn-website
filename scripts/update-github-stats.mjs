@@ -117,7 +117,7 @@ const linesOfCode = frequency
   ? frequency.reduce((sum, [, added, deleted]) => sum + added + deleted, 0)
   : activity
     ? [...activityByAuthor.values()].reduce((sum, a) => sum + a.added - a.deleted, 0)
-    : previous?.linesOfCode ?? null;
+    : (previous?.linesOfCode ?? null);
 
 const topContributors = humans
   .map((contributor) => {
@@ -129,11 +129,11 @@ const topContributors = humans
       htmlUrl: contributor.html_url,
       commits: contributor.contributions,
       mergedPrs: mergedByAuthor.get(contributor.login) ?? 0,
-      linesAdded: activity ? stats?.added ?? 0 : before?.linesAdded ?? null,
-      linesDeleted: activity ? stats?.deleted ?? 0 : before?.linesDeleted ?? null,
+      linesAdded: activity ? (stats?.added ?? 0) : (before?.linesAdded ?? null),
+      linesDeleted: activity ? (stats?.deleted ?? 0) : (before?.linesDeleted ?? null),
       firstContributionWeek: activity
-        ? stats?.firstWeek ?? null
-        : before?.firstContributionWeek ?? null,
+        ? (stats?.firstWeek ?? null)
+        : (before?.firstContributionWeek ?? null),
     };
   })
   .sort((a, b) => b.mergedPrs - a.mergedPrs || b.commits - a.commits);
@@ -152,7 +152,7 @@ const snapshot = {
   createdAt: repo.created_at,
   pushedAt: repo.pushed_at,
   weeklyCommits: participation?.all ?? previous?.weeklyCommits ?? [],
-  languages: languageBytes > 0 ? languageShares : previous?.languages ?? [],
+  languages: languageBytes > 0 ? languageShares : (previous?.languages ?? []),
   linesOfCode,
   topContributors,
 };

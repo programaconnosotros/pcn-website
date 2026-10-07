@@ -62,7 +62,7 @@ export const CommentSection = ({ adviseId, comments, session }: CommentSectionPr
         content: data.content,
         adviseId,
         // Los hilos tienen dos niveles: responder una respuesta la suma al mismo hilo
-        parentCommentId: replyingTo ? threadOf.get(replyingTo) ?? replyingTo : null,
+        parentCommentId: replyingTo ? (threadOf.get(replyingTo) ?? replyingTo) : null,
       });
 
       reset();

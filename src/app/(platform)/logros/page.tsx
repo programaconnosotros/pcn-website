@@ -266,7 +266,7 @@ export default async function LogrosPage() {
   const metrics = new Map(data.metrics);
 
   const viewerId = session?.user?.id;
-  const viewerMetrics = viewerId ? metrics.get(viewerId) ?? EMPTY_METRICS : null;
+  const viewerMetrics = viewerId ? (metrics.get(viewerId) ?? EMPTY_METRICS) : null;
   const holdersOf = (achievement: Achievement) =>
     users
       .filter((user) => {

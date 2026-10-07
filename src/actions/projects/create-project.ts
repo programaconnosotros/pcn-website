@@ -31,7 +31,7 @@ export const createProject = async (data: ProjectFormData) => {
       techStack: projectData.techStack,
       isOpenSource: projectData.isOpenSource,
       // Solo un proyecto open-source guarda el link al repo.
-      repoUrl: projectData.isOpenSource ? projectData.repoUrl ?? null : null,
+      repoUrl: projectData.isOpenSource ? (projectData.repoUrl ?? null) : null,
       startYear: projectData.startYear,
       endYear: projectData.endYear,
       authorRole: projectData.authorRole,

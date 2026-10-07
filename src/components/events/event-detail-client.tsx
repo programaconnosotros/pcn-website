@@ -59,7 +59,7 @@ export function EventDetailClient({
   const isRegistered = initialIsRegistered || justRegisteredLocally;
   const waitlistPosition = leftWaitlistLocally
     ? null
-    : localWaitlistPosition ?? initialWaitlistPosition;
+    : (localWaitlistPosition ?? initialWaitlistPosition);
   const isWaitlisted = !isRegistered && waitlistPosition !== null;
 
   // Mostrar dialog si viene con registered=true

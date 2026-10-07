@@ -115,7 +115,7 @@ export function CollaboratorsField({
             >
               <Avatar
                 name={member.memberName}
-                image={member.userId ? images[member.userId] ?? null : null}
+                image={member.userId ? (images[member.userId] ?? null) : null}
                 size={22}
               />
               <span className="min-w-0 flex-1 truncate text-sm">

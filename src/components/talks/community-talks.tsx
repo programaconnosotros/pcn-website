@@ -59,7 +59,7 @@ const talkLocation = (talk: TalkWithEvent) =>
     ? talk.event.isOnline
       ? 'online'
       : [talk.event.placeName, talk.event.city].filter(Boolean).join(', ')
-    : talk.manualEventLocation ?? '';
+    : (talk.manualEventLocation ?? '');
 
 const hasSlides = (talk: TalkWithEvent) => talk.slideImages.length > 0 || !!talk.slidesUrl;
 

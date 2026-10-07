@@ -9,13 +9,7 @@ import { cached } from '@/lib/cache';
 import { getEventNames } from '@/lib/event-index';
 
 export type FeedKind =
-  | 'evento'
-  | 'charla'
-  | 'fotos'
-  | 'setup'
-  | 'proyecto'
-  | 'conversacion'
-  | 'changelog';
+  'evento' | 'charla' | 'fotos' | 'setup' | 'proyecto' | 'conversacion' | 'changelog';
 
 export interface FeedItem {
   id: string;

@@ -211,7 +211,8 @@
      surface, the divider carries a data pulse and running programs show a live meter. */
   .os-dock-frame {
     padding: 1px;
-    background: conic-gradient(
+    background:
+      conic-gradient(
         from var(--dock-beam),
         transparent 0 25%,
         rgba(4, 244, 190, 0.18) 40%,
@@ -376,7 +377,8 @@
      across, then snaps open vertically), a scan beam sweeps down it once and its contents
      fade in last. Closing collapses it back to a line that shrinks to a dot. */
   .dialog-overlay {
-    background: repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.025) 0 1px, transparent 1px 3px),
+    background:
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.025) 0 1px, transparent 1px 3px),
       radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.94) 100%);
   }
   /* The phone tab bar (z-60) sits above dialogs (z-50) so it stays usable over the menu sheet,
@@ -395,7 +397,8 @@
     background-color: rgba(0, 0, 0, 0.92);
     /* Four lit corner brackets and scanlines. Backgrounds stay fixed to the panel's box, so
        they don't scroll away with long content the way positioned elements would. */
-    background-image: linear-gradient(var(--dialog-corner), var(--dialog-corner)),
+    background-image:
+      linear-gradient(var(--dialog-corner), var(--dialog-corner)),
       linear-gradient(var(--dialog-corner), var(--dialog-corner)),
       linear-gradient(var(--dialog-corner), var(--dialog-corner)),
       linear-gradient(var(--dialog-corner), var(--dialog-corner)),
@@ -424,8 +427,8 @@
       bottom right,
       bottom right,
       0 0;
-    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
-      no-repeat, repeat;
+    background-repeat:
+      no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
   }
   .dialog-surface::after {
     content: '';
@@ -685,7 +688,8 @@
 
   /* Subtle square grid that fades out towards the edges. Used as a hero backdrop. */
   .bg-grid-fade {
-    background-image: linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),
+    background-image:
+      linear-gradient(to right, rgba(4, 244, 190, 0.06) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(4, 244, 190, 0.06) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 100%);
@@ -1187,7 +1191,8 @@ html:not(.pcn-cursor-hidden) .pcn-cursor-label[data-hover='true']:not(:empty) {
     caret-color: #04f4be;
     caret-shape: block;
     background-color: rgba(0, 0, 0, 0.6);
-    background-image: linear-gradient(
+    background-image:
+      linear-gradient(
         90deg,
         transparent,
         var(--field-beam-color),

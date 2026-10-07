@@ -25,40 +25,38 @@ export async function GET(_request: Request, { params }: { params: Promise<{ siz
   const unit = Math.min(width, height) / 100;
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000000',
+        fontFamily: 'Geist Mono',
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`data:image/png;base64,${icon.toString('base64')}`}
+        alt=""
+        width={unit * 26}
+        height={unit * 26}
+      />
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#000000',
-          fontFamily: 'Geist Mono',
+          marginTop: unit * 6,
+          fontSize: unit * 4.2,
+          color: 'rgba(255,255,255,0.55)',
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`data:image/png;base64,${icon.toString('base64')}`}
-          alt=""
-          width={unit * 26}
-          height={unit * 26}
-        />
-        <div
-          style={{
-            display: 'flex',
-            marginTop: unit * 6,
-            fontSize: unit * 4.2,
-            color: 'rgba(255,255,255,0.55)',
-          }}
-        >
-          <span style={{ color: GREEN }}>~/pcn $&nbsp;</span>
-          <span>iniciando</span>
-          <span style={{ color: GREEN }}>_</span>
-        </div>
+        <span style={{ color: GREEN }}>~/pcn $&nbsp;</span>
+        <span>iniciando</span>
+        <span style={{ color: GREEN }}>_</span>
       </div>
-    ),
+    </div>,
     { width, height, fonts: [{ name: 'Geist Mono', data: font, weight: 400, style: 'normal' }] },
   );
 }

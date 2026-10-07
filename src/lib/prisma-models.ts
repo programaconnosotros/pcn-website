@@ -55,7 +55,7 @@ const dependents = (() => {
     const queue = [model.name];
     while (queue.length) {
       for (const next of direct.get(queue.pop()!) ?? []) {
-        if (!seen.has(next)) seen.add(next), queue.push(next);
+        if (!seen.has(next)) (seen.add(next), queue.push(next));
       }
     }
     closure.set(model.name, seen);

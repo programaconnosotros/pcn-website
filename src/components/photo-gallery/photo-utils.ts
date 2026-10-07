@@ -22,7 +22,7 @@ export const formatPhotoDate = (date: Date) =>
  */
 export const photoFileName = (photo: Pick<PhotoLike, 'id' | 'src' | 'takenAt'>) =>
   photo.src.startsWith('/')
-    ? photo.src.split('/').pop() ?? `${photo.id}.webp`
+    ? (photo.src.split('/').pop() ?? `${photo.id}.webp`)
     : `pcn-${formatPhotoDate(photo.takenAt)}-${photo.id.slice(-6)}.${photo.src.split('.').pop()}`;
 
 /** What the photo shows: its description, or the event it's from. */

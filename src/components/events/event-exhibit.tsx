@@ -16,7 +16,7 @@ export const EventExhibit: React.FC<{ event: EventWithCount; catalogNumber: numb
   event,
   catalogNumber,
 }) => {
-  const location = event.isOnline ? 'online' : event.placeName ?? event.city;
+  const location = event.isOnline ? 'online' : (event.placeName ?? event.city);
   const memories = [
     event._count.registrations > 0 && plural(event._count.registrations, 'inscripto', 'inscriptos'),
     event._count.talks > 0 && plural(event._count.talks, 'charla', 'charlas'),

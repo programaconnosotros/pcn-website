@@ -97,131 +97,127 @@ export async function renderTerminalCard({
   const titleSize = cleanTitle.length > 60 ? 50 : cleanTitle.length > 32 ? 60 : 72;
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        position: 'relative',
+        backgroundColor: '#000',
+        backgroundImage: `radial-gradient(circle at 80% 0%, rgba(4,244,190,0.18), transparent 55%), linear-gradient(rgba(4,244,190,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(4,244,190,0.05) 1px, transparent 1px)`,
+        backgroundSize: '100% 100%, 40px 40px, 40px 40px',
+        fontFamily: 'Geist Mono',
+        color: '#e5e5e5',
+      }}
+    >
+      <Corner top left />
+      <Corner top left={false} />
+      <Corner top={false} left />
+      <Corner top={false} left={false} />
+
       <div
         style={{
-          width: '100%',
-          height: '100%',
           display: 'flex',
-          position: 'relative',
-          backgroundColor: '#000',
-          backgroundImage: `radial-gradient(circle at 80% 0%, rgba(4,244,190,0.18), transparent 55%), linear-gradient(rgba(4,244,190,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(4,244,190,0.05) 1px, transparent 1px)`,
-          backgroundSize: '100% 100%, 40px 40px, 40px 40px',
-          fontFamily: 'Geist Mono',
-          color: '#e5e5e5',
+          flexDirection: 'column',
+          flex: 1,
+          margin: 48,
+          border: '1px solid rgba(4,244,190,0.35)',
+          backgroundColor: 'rgba(0,0,0,0.6)',
         }}
       >
-        <Corner top left />
-        <Corner top left={false} />
-        <Corner top={false} left />
-        <Corner top={false} left={false} />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '18px 28px',
+            borderBottom: '1px dashed rgba(4,244,190,0.3)',
+            fontSize: 22,
+          }}
+        >
+          <div style={{ display: 'flex', color: GREEN, fontWeight: 700 }}>{'<> PCN_OS'}</div>
+          <div style={{ display: 'flex', color: 'rgba(4,244,190,0.7)' }}>
+            {truncate(`~/${path}`, 48)}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 40, padding: '0 40px' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              alignSelf: 'flex-start',
+              padding: '32px 0 0',
+              gap: 20,
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: 24, color: 'rgba(229,229,229,0.6)' }}>
+              <span style={{ color: 'rgba(4,244,190,0.7)', marginRight: 14 }}>$</span>
+              {command}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: titleSize,
+                fontWeight: 700,
+                lineHeight: 1.15,
+                color: '#fff',
+                textShadow: '0 0 24px rgba(4,244,190,0.45)',
+              }}
+            >
+              {cleanTitle}
+            </div>
+            {description && (
+              <div
+                style={{
+                  display: 'flex',
+                  fontSize: 26,
+                  lineHeight: 1.45,
+                  color: 'rgba(229,229,229,0.72)',
+                }}
+              >
+                {truncate(collapseWhitespace(description), avatar ? 100 : 150)}
+              </div>
+            )}
+          </div>
+          {avatar && <Avatar {...avatar} />}
+        </div>
 
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            margin: 48,
-            border: '1px solid rgba(4,244,190,0.35)',
-            backgroundColor: 'rgba(0,0,0,0.6)',
+            alignItems: 'center',
+            gap: 14,
+            padding: '20px 28px',
+            borderTop: '1px dashed rgba(4,244,190,0.3)',
+            fontSize: 22,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '18px 28px',
-              borderBottom: '1px dashed rgba(4,244,190,0.3)',
-              fontSize: 22,
-            }}
-          >
-            <div style={{ display: 'flex', color: GREEN, fontWeight: 700 }}>{'<> PCN_OS'}</div>
-            <div style={{ display: 'flex', color: 'rgba(4,244,190,0.7)' }}>
-              {truncate(`~/${path}`, 48)}
-            </div>
-          </div>
-
-          <div
-            style={{ display: 'flex', flex: 1, alignItems: 'center', gap: 40, padding: '0 40px' }}
-          >
+          {meta.slice(0, 3).map((item) => (
             <div
+              key={item}
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                alignSelf: 'flex-start',
-                padding: '32px 0 0',
-                gap: 20,
+                flexShrink: 0,
+                padding: '4px 12px',
+                border: '1px solid rgba(4,244,190,0.5)',
+                color: GREEN,
+                whiteSpace: 'nowrap',
               }}
             >
-              <div style={{ display: 'flex', fontSize: 24, color: 'rgba(229,229,229,0.6)' }}>
-                <span style={{ color: 'rgba(4,244,190,0.7)', marginRight: 14 }}>$</span>
-                {command}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  fontSize: titleSize,
-                  fontWeight: 700,
-                  lineHeight: 1.15,
-                  color: '#fff',
-                  textShadow: '0 0 24px rgba(4,244,190,0.45)',
-                }}
-              >
-                {cleanTitle}
-              </div>
-              {description && (
-                <div
-                  style={{
-                    display: 'flex',
-                    fontSize: 26,
-                    lineHeight: 1.45,
-                    color: 'rgba(229,229,229,0.72)',
-                  }}
-                >
-                  {truncate(collapseWhitespace(description), avatar ? 100 : 150)}
-                </div>
-              )}
+              {truncate(item, 22)}
             </div>
-            {avatar && <Avatar {...avatar} />}
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '20px 28px',
-              borderTop: '1px dashed rgba(4,244,190,0.3)',
-              fontSize: 22,
-            }}
-          >
-            {meta.slice(0, 3).map((item) => (
-              <div
-                key={item}
-                style={{
-                  display: 'flex',
-                  flexShrink: 0,
-                  padding: '4px 12px',
-                  border: '1px solid rgba(4,244,190,0.5)',
-                  color: GREEN,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {truncate(item, 22)}
-              </div>
-            ))}
-            {/* Three chips fill the footer; the brand is already in the title bar. */}
-            {meta.length < 3 && (
-              <div style={{ display: 'flex', marginLeft: 'auto', color: 'rgba(229,229,229,0.55)' }}>
-                programaconnosotros.com
-              </div>
-            )}
-          </div>
+          ))}
+          {/* Three chips fill the footer; the brand is already in the title bar. */}
+          {meta.length < 3 && (
+            <div style={{ display: 'flex', marginLeft: 'auto', color: 'rgba(229,229,229,0.55)' }}>
+              programaconnosotros.com
+            </div>
+          )}
         </div>
       </div>
-    ),
+    </div>,
     {
       ...OG_SIZE,
       fonts: [
