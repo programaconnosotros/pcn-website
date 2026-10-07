@@ -47,7 +47,7 @@ const isOriginalKey = (key: string) =>
 
 const parseDetails = (input: GalleryDetailsInput) => {
   const parsed = galleryDetailsSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   return parsed.data;
 };
 

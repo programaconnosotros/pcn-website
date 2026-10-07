@@ -32,7 +32,9 @@ const ARGENTINA_PROVINCES = [
  * bcrypt tiene en cuenta: más allá, el resto se ignoraría sin avisar.
  */
 export const newPasswordSchema = z
-  .string({ required_error: 'Campo obligatorio' })
+  .string({
+    error: (issue) => (issue.input === undefined ? 'Campo obligatorio' : undefined),
+  })
   .min(8, 'La contraseña debe tener al menos 8 caracteres')
   .max(72, 'La contraseña no puede tener más de 72 caracteres');
 

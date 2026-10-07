@@ -33,7 +33,7 @@ export async function createForumComment(postId: string, input: ForumCommentForm
   await enforceRateLimit('comment');
   const id = idSchema.parse(postId);
   const parsed = forumCommentSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   const { content, parentCommentId } = parsed.data;
 
   const post = await prisma.forumPost.findUnique({ where: { id }, select: { isLocked: true } });

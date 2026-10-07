@@ -39,7 +39,7 @@ async function requireUser() {
 
 const parseDetails = (input: SetupFormData) => {
   const parsed = setupSchema.safeParse(input);
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   const { date, os, browser, editor, terminal, otherSoftware, ...rest } = parsed.data;
   return {
     ...rest,

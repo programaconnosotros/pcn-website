@@ -62,7 +62,8 @@ export const setupSchema = z.object({
     }),
 });
 
-export type SetupFormData = z.infer<typeof setupSchema>;
+/** Lo que manda el form: los campos de software pueden faltar. */
+export type SetupFormData = z.input<typeof setupSchema>;
 
 /** Formatos de foto que se aceptan; sharp los pasa todos a webp. */
 export const SETUP_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];

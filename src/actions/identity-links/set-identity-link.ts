@@ -57,7 +57,7 @@ export const setIdentityLink = async (input: z.input<typeof linkSchema>) => {
 
   const parsed = linkSchema.safeParse(input);
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
+    throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
   }
   const { source, externalName, userId } = parsed.data;
 

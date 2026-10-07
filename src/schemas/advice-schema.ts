@@ -18,3 +18,5 @@ export const adviceSchema = z.object({
 });
 
 export type AdviceFormData = z.infer<typeof adviceSchema>;
+/** Los valores del form antes de validar: los campos con `.default()` pueden faltar. */
+export type AdviceFormInput = z.input<typeof adviceSchema>;
