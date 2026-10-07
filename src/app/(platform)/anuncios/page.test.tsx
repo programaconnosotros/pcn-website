@@ -5,7 +5,6 @@ import {
 } from '@/actions/announcements/get-announcements';
 import { getEventsForSelect } from '@/actions/announcements/get-events-for-select';
 import { AnnouncementsWrapper } from '@/components/announcements/announcements-wrapper';
-import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { findSession } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
 import Loading from './loading';
@@ -22,10 +21,6 @@ jest.mock('@/actions/announcements/get-events-for-select', () => ({
 }));
 jest.mock('@/components/announcements/announcements-wrapper', () => ({
   AnnouncementsWrapper: jest.fn(() => null),
-}));
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  RuledGridSkeleton: jest.fn(() => null),
 }));
 
 const published = [{ id: 'a1', title: 'Publicado' }];
@@ -87,8 +82,9 @@ describe('AnunciosPage', () => {
 });
 
 describe('anuncios loading', () => {
-  it('shows a grid of placeholder rows', () => {
-    render(<Loading />);
-    expect(jest.mocked(RuledGridSkeleton).mock.calls[0][0]).toEqual({ count: 9 });
+  it('renders only placeholders', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container).toHaveTextContent('');
   });
 });

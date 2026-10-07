@@ -1,13 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { ProseSkeleton } from '@/components/skeletons/page-skeletons';
 import { renderInPlatform } from '@/test/platform';
 import Loading from './loading';
 import CodeWarfare, { metadata } from './page';
-
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  ProseSkeleton: jest.fn(() => null),
-}));
 
 describe('CodeWarfare page', () => {
   it('announces the competitions as coming soon', () => {
@@ -27,8 +21,9 @@ describe('CodeWarfare page', () => {
 });
 
 describe('code-warfare loading', () => {
-  it('shows placeholder paragraphs', () => {
-    render(<Loading />);
-    expect(jest.mocked(ProseSkeleton).mock.calls[0][0]).toEqual({ paragraphs: 3 });
+  it('renders only placeholders', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container).toHaveTextContent('');
   });
 });

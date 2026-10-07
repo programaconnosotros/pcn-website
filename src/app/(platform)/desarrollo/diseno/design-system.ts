@@ -387,11 +387,6 @@ export const designDebt: Rule[] = [
       'src/components/empty-state.tsx todavía usa círculos grises de la era de las cards en /herramientas y /software-recomendado. El patrón actual es la línea punteada con $ (EmptyLine).',
   },
   {
-    term: 'Skeletons de cards',
-    detail:
-      'Algunos skeletons de page-skeletons.tsx (CardListSkeleton, DashboardSkeleton) dibujan cards redondeadas; los nuevos usan RuledGridSkeleton.',
-  },
-  {
     term: 'Variantes de premio',
     detail:
       'gold, silver y bronze del Button son de una landing de sponsors que ya no existe y ninguna pantalla las usa: candidatas a borrarse.',

@@ -241,8 +241,8 @@ export default async function AdvicePage(props: { params: Promise<{ id: string }
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
         <div className="mt-4">
-          <PageTitleSkeleton />
-          <ProseSkeleton paragraphs={8} />
+          <PageTitleSkeleton titleClassName="w-44" />
+          <TextLineSkeleton lineClassName="h-5" className="h-3.5 w-52" />
         </div>
       </div>
     </>

@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { changelog } from '@/data/changelog';
-import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { getAdminUser } from '@/lib/admin';
 import { getIdentityMap } from '@/lib/identity-links';
 import { ChangelogClient } from './changelog-client';
@@ -11,10 +10,6 @@ import ChangelogPage from './page';
 jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
 jest.mock('./changelog-client', () => ({ ChangelogClient: jest.fn(() => null) }));
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  RuledGridSkeleton: jest.fn(() => null),
-}));
 
 const clientProps = () => jest.mocked(ChangelogClient).mock.calls[0][0];
 const adminOnly = changelog.filter((entry) => entry.audience === 'admins');
@@ -72,11 +67,9 @@ describe('changelog layout', () => {
 });
 
 describe('changelog loading', () => {
-  it('shows a grid of placeholder rows', () => {
-    render(<Loading />);
-    expect(jest.mocked(RuledGridSkeleton).mock.calls[0][0]).toEqual({
-      count: 8,
-      className: 'grid-cols-1',
-    });
+  it('renders only placeholders', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container).toHaveTextContent('');
   });
 });

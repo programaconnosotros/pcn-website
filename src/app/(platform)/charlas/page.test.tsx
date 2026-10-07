@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
-import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { CharlasAdminWrapper } from '@/components/talks/charlas-admin-wrapper';
 import { findSession } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
@@ -12,10 +11,6 @@ jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/actions/talks/fetch-public-talks', () => ({ fetchPublicTalks: jest.fn() }));
 jest.mock('@/components/talks/charlas-admin-wrapper', () => ({
   CharlasAdminWrapper: jest.fn(() => null),
-}));
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  RuledGridSkeleton: jest.fn(() => null),
 }));
 
 const talks = [{ id: 't1', title: 'Testing en serio' }];
@@ -69,8 +64,9 @@ describe('Talks page', () => {
 });
 
 describe('charlas loading', () => {
-  it('shows a grid of placeholder rows', () => {
-    render(<Loading />);
-    expect(jest.mocked(RuledGridSkeleton).mock.calls[0][0]).toEqual({ count: 8 });
+  it('renders only placeholders', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container).toHaveTextContent('');
   });
 });

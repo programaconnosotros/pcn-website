@@ -1,243 +1,82 @@
+import type { ReactNode } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 
-export function TitleRowSkeleton({ withAction = false }: { withAction?: boolean }) {
-  return (
-    <div className="mb-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <Skeleton className="h-10 w-10 rounded-lg" />
-        <Skeleton className="h-8 w-48" />
-      </div>
-      {withAction && <Skeleton className="h-9 w-32 rounded-md" />}
-    </div>
-  );
-}
+// Building blocks for loading.tsx files that mirror their page's real layout, so the swap from
+// skeleton to content doesn't move anything.
 
-export function CardRowItem() {
-  return (
-    <div className="space-y-3 rounded-lg border p-4">
-      <Skeleton className="h-6 w-3/4" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-2/3" />
-      <div className="flex gap-2">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-8 w-24" />
-      </div>
-    </div>
-  );
-}
-
-export function CardListSkeleton({
-  count = 5,
-  variant = 'row',
-  withImage = false,
+/**
+ * One line of text: a box as tall as the text's line height (`lineClassName`, `h-4` for
+ * `text-xs`, `h-5` for `text-sm`) holding a shorter bar (`className`, `h-3` unless overridden), so
+ * stacked lines keep the real text's rhythm.
+ */
+export function TextLineSkeleton({
+  className,
+  lineClassName = 'h-4',
 }: {
-  count?: number;
-  variant?: 'row' | 'grid';
-  withImage?: boolean;
+  className?: string;
+  lineClassName?: string;
 }) {
-  if (variant === 'grid') {
-    return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="space-y-3 rounded-lg border p-4">
-            {withImage && <Skeleton className="h-40 w-full rounded-md" />}
-            <Skeleton className="h-5 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-1/2" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      {Array.from({ length: count }).map((_, i) => (
-        <CardRowItem key={i} />
-      ))}
+    <div className={cn('flex items-center', lineClassName)}>
+      <Skeleton className={cn('h-3', className)} />
     </div>
   );
 }
 
-export function DetailTwoColumnSkeleton() {
+/**
+ * Mirrors PageTitle: the sidebar toggle (from `md` up) and the text-xl (`h-7`) `~/path` title on
+ * the left; the meta line and the page's own controls (`action`) on the right, wrapping below it
+ * on narrow screens.
+ */
+export function PageTitleSkeleton({
+  titleClassName = 'w-40',
+  meta = true,
+  action,
+  className,
+}: {
+  titleClassName?: string;
+  /** `true` for the usual meta line, a width class for a custom one, `false` when there's none. */
+  meta?: boolean | string;
+  action?: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="my-5 flex flex-col gap-5 xl:flex-row">
-      <div className="flex flex-1 flex-col gap-5">
-        <div className="rounded-lg border p-4">
-          <Skeleton className="h-64 w-full rounded-md" />
-        </div>
-        <div className="space-y-3 rounded-lg border p-4">
-          <Skeleton className="h-5 w-32" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-        <div className="space-y-3 rounded-lg border p-4">
-          <Skeleton className="h-5 w-24" />
-          <div className="grid grid-cols-3 gap-2">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-md" />
-            ))}
-          </div>
-        </div>
+    <div
+      className={cn('mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1', className)}
+    >
+      <div className="flex min-w-0 items-center gap-2">
+        <Skeleton className="-ml-1 h-7 w-8 shrink-0 max-md:hidden" />
+        <TextLineSkeleton
+          lineClassName="h-7 min-w-0"
+          className={cn('h-5 max-w-full', titleClassName)}
+        />
       </div>
-      <div className="flex w-full flex-col gap-5 xl:w-80">
-        <div className="rounded-lg border p-4">
-          <Skeleton className="h-10 w-full rounded-md" />
+      {(meta || action) && (
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+          {meta && <TextLineSkeleton className={cn('max-w-full', meta === true ? 'w-48' : meta)} />}
+          {action}
         </div>
-        <div className="space-y-3 rounded-lg border p-4">
-          <Skeleton className="h-5 w-24" />
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Skeleton className="h-4 w-4" />
-              <div className="space-y-1">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-3 w-28" />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="space-y-3 rounded-lg border p-4">
-          <Skeleton className="h-5 w-20" />
-          {Array.from({ length: 2 }).map((_, i) => (
-            <Skeleton key={i} className="h-6 w-full" />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
 
-export function FormSkeleton({ rows = 6 }: { rows?: number }) {
-  return (
-    <div className="space-y-6">
-      {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="space-y-2">
-          <Skeleton className="h-4 w-28" />
-          <Skeleton className="h-10 w-full rounded-md" />
-        </div>
-      ))}
-      <Skeleton className="h-10 w-32 rounded-md" />
-    </div>
-  );
+/** A small mono section label (`// radios`, `## logros`) over a block, with its `mb-2`. */
+export function SectionLabelSkeleton({ className }: { className?: string }) {
+  return <TextLineSkeleton lineClassName="mb-2 h-4" className={cn('h-2.5 w-32', className)} />;
 }
 
-export function TableSkeleton({ rows = 8, cols = 4 }: { rows?: number; cols?: number }) {
+/** Mirrors the `$ grep -i` SearchBar: bordered, `h-8`, up to `max-w-md` unless told otherwise. */
+export function SearchBarSkeleton({ className }: { className?: string }) {
   return (
-    <div className="overflow-hidden rounded-lg border">
-      <div className="flex gap-4 border-b bg-muted/50 px-4 py-3">
-        {Array.from({ length: cols }).map((_, i) => (
-          <Skeleton key={i} className="h-4 flex-1" />
-        ))}
-      </div>
-      <div className="divide-y">
-        {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="flex gap-4 px-4 py-3">
-            {Array.from({ length: cols }).map((_, j) => (
-              <Skeleton key={j} className="h-4 flex-1" />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export function ProseSkeleton({ paragraphs = 6 }: { paragraphs?: number }) {
-  return (
-    <div className="space-y-6">
-      <Skeleton className="h-8 w-64" />
-      {Array.from({ length: paragraphs }).map((_, i) => (
-        <div key={i} className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-4/5" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function ProfileSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col items-center gap-4 sm:flex-row">
-        <Skeleton className="h-24 w-24 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-60" />
-          <Skeleton className="h-4 w-32" />
-        </div>
-      </div>
-      <div className="space-y-3 rounded-lg border p-4">
-        <Skeleton className="h-5 w-24" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/4" />
-      </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="space-y-2 rounded-lg border p-4">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-full" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export function AccordionSkeleton({ rows = 6 }: { rows?: number }) {
-  return (
-    <div className="space-y-2">
-      {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="flex items-center justify-between rounded-lg border px-4 py-3">
-          <Skeleton className="h-4 w-2/3" />
-          <Skeleton className="h-4 w-4" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function GalleryGridSkeleton({ tiles = 12 }: { tiles?: number }) {
-  return (
-    <>
-      <Skeleton className="mb-4 h-9 w-full max-w-md rounded-sm" />
-      <RuledGrid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {Array.from({ length: tiles }).map((_, i) => (
-          <div key={i} className={cn(ruledCellClassName, 'p-1')}>
-            <Skeleton className="aspect-square w-full rounded-none" />
-          </div>
-        ))}
-      </RuledGrid>
-    </>
-  );
-}
-
-export function DashboardSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="space-y-2 rounded-lg border p-4">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-8 w-16" />
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="space-y-2 rounded-lg border p-4">
-          <Skeleton className="h-5 w-32" />
-          <Skeleton className="h-48 w-full rounded-md" />
-        </div>
-        <div className="space-y-2 rounded-lg border p-4">
-          <Skeleton className="h-5 w-28" />
-          <Skeleton className="h-48 w-full rounded-md" />
-        </div>
-      </div>
+    <div
+      className={cn(
+        'flex h-8 w-full max-w-md items-center rounded-sm border border-pcnGreen-200 px-2.5',
+        className,
+      )}
+    >
+      <Skeleton className="h-3 w-16" />
     </div>
   );
 }
@@ -265,11 +104,20 @@ export function RuledGridSkeleton({
   );
 }
 
-export function PageTitleSkeleton() {
+// Mirrors CourseRow: the logo tile, then title, a short description and the source/author line.
+export function CourseRowSkeleton() {
   return (
-    <div className="mb-4 flex items-center justify-between">
-      <Skeleton className="h-6 w-32" />
-      <Skeleton className="h-3 w-40" />
+    <div className="flex gap-4 border-b border-r border-pcnGreen-200 p-4 sm:gap-3 sm:p-3">
+      <Skeleton className="size-12 shrink-0 sm:size-10" />
+      <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-1.5">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-4/5" />
+        <div className="flex gap-3 pt-1">
+          <Skeleton className="h-2.5 w-20" />
+          <Skeleton className="h-2.5 w-24" />
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { getAdminUser } from '@/lib/admin';
 import { getArticleWriters } from '@/lib/article-writers';
 import LecturaLayout, { metadata } from './layout';
@@ -10,10 +9,6 @@ import { ReadingPage } from './reading-page';
 jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/lib/article-writers', () => ({ getArticleWriters: jest.fn() }));
 jest.mock('./reading-page', () => ({ ReadingPage: jest.fn(() => null) }));
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  RuledGridSkeleton: jest.fn(() => null),
-}));
 
 const articleWriters = { 'articulo-1': [{ id: 'u1', name: 'Ana', image: null }] };
 
@@ -57,8 +52,9 @@ describe('lectura layout', () => {
 });
 
 describe('lectura loading', () => {
-  it('shows a grid of placeholder rows', () => {
-    render(<Loading />);
-    expect(jest.mocked(RuledGridSkeleton).mock.calls[0][0]).toEqual({ count: 8 });
+  it('shows only placeholders', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container.textContent).toBe('');
   });
 });

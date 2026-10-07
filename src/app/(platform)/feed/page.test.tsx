@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { RuledGridSkeleton } from '@/components/skeletons/page-skeletons';
 import { fetchFeed, toFeedDay } from '@/lib/feed';
 import { FeedClient } from './feed-client';
 import FeedLayout, { metadata } from './layout';
@@ -9,10 +8,6 @@ import FeedPage from './page';
 jest.mock('@/lib/feed', () => ({ fetchFeed: jest.fn(), toFeedDay: jest.fn() }));
 jest.mock('./feed-aside', () => ({ FeedAside: () => null }));
 jest.mock('./feed-client', () => ({ FeedClient: jest.fn(() => null) }));
-jest.mock('@/components/skeletons/page-skeletons', () => ({
-  PageTitleSkeleton: () => null,
-  RuledGridSkeleton: jest.fn(() => null),
-}));
 
 describe('FeedPage', () => {
   afterEach(() => jest.useRealTimers());
@@ -54,11 +49,10 @@ describe('feed layout', () => {
 });
 
 describe('feed loading', () => {
-  it('shows a single column of placeholder rows', () => {
-    render(<Loading />);
-    expect(jest.mocked(RuledGridSkeleton).mock.calls[0][0]).toEqual({
-      count: 10,
-      className: 'grid-cols-1',
-    });
+  it('shows only placeholders, with a single column of rows', () => {
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(container.querySelector('.grid-cols-1')).toBeInTheDocument();
+    expect(container.textContent).toBe('');
   });
 });
