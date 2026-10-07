@@ -140,7 +140,7 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "engines": {
     "node": ">=24"
