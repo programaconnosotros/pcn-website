@@ -32,6 +32,7 @@ import { vercelQuestions } from './vercel';
 import { softSkillsQuestions } from './soft-skills';
 import { techLeadQuestions } from './tech-lead';
 import { softwareArchitectQuestions } from './software-architect';
+import { engineeringManagerQuestions } from './engineering-manager';
 import {
   TRACK_TOOLS,
   type InterviewQuestion,
@@ -60,6 +61,7 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   'ux-ui': uxUiQuestions,
   'product-engineering': productEngineeringQuestions,
   'project-manager': projectManagerQuestions,
+  'engineering-manager': engineeringManagerQuestions,
   'software-architect': softwareArchitectQuestions,
   'tech-lead': techLeadQuestions,
   'soft-skills': softSkillsQuestions,

@@ -27,6 +27,7 @@ import {
   HeartHandshake,
   Compass,
   Blocks,
+  UsersRound,
   type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -43,6 +44,7 @@ const AREA_ICONS: Record<InterviewArea, LucideIcon> = {
   'ux-ui': PenTool,
   'product-engineering': Target,
   'project-manager': SquareKanban,
+  'engineering-manager': UsersRound,
   'software-architect': Blocks,
   'tech-lead': Compass,
   'soft-skills': HeartHandshake,

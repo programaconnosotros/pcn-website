@@ -19,6 +19,7 @@ import { uxUiGuide } from './ux-ui';
 import { softSkillsGuide } from './soft-skills';
 import { techLeadGuide } from './tech-lead';
 import { softwareArchitectGuide } from './software-architect';
+import { engineeringManagerGuide } from './engineering-manager';
 import { endpointCourses, type RecommendedCourse } from '@/data/recommended-courses';
 import type { InterviewGuide } from './types';
 
@@ -41,6 +42,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   'ux-ui': uxUiGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,
+  'engineering-manager': engineeringManagerGuide,
   'software-architect': softwareArchitectGuide,
   'tech-lead': techLeadGuide,
   'soft-skills': softSkillsGuide,

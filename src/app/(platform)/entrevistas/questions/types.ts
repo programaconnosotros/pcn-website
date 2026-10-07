@@ -11,7 +11,8 @@ export type InterviewArea =
   | 'project-manager'
   | 'soft-skills'
   | 'tech-lead'
-  | 'software-architect';
+  | 'software-architect'
+  | 'engineering-manager';
 export type InterviewTrack =
   | 'react'
   | 'ios'
@@ -31,7 +32,8 @@ export type InterviewTrack =
   | 'project-manager'
   | 'soft-skills'
   | 'tech-lead'
-  | 'software-architect';
+  | 'software-architect'
+  | 'engineering-manager';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
 /** Tools a track can add on top of its general questions, one question bank each. */
 export type TrackTool =
@@ -79,6 +81,11 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
     id: 'software-architect',
     label: 'Software architect',
     stack: 'diseño de sistemas, trade-offs y ADRs',
+  },
+  {
+    id: 'engineering-manager',
+    label: 'Engineering manager',
+    stack: 'personas, equipos y organización',
   },
 ];
 
@@ -206,6 +213,12 @@ export const TRACKS: {
     area: 'software-architect',
     label: 'Software architect',
     stack: 'diseño de sistemas, trade-offs y ADRs',
+  },
+  {
+    id: 'engineering-manager',
+    area: 'engineering-manager',
+    label: 'Engineering manager',
+    stack: 'personas, equipos y organización',
   },
 ];
 
