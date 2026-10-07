@@ -117,5 +117,5 @@ export const AMBASSADOR_BADGE: DisplayBadge = {
   name: 'PCN Ambassador',
   description: 'Organiza actividades e iniciativas y hace que las cosas pasen en la comunidad.',
   icon: 'award',
-  tone: 'green',
+  tone: 'gold',
 };
