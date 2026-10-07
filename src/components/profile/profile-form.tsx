@@ -35,7 +35,7 @@ import { PositionsField } from './positions-field';
 import { cn } from '@/lib/utils';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
 import { FormSection } from '@/components/ui/form-section';
-import { MAX_USER_SPECIALTIES, specialtyGroups } from '@/components/especialidades/specialties';
+import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 // Lista de países
@@ -608,7 +608,7 @@ export const ProfileForm = ({
             id="especialidades"
             index={6}
             title="especialidades"
-            description={`en qué sos especialista (hasta ${MAX_USER_SPECIALTIES}): te listamos en /especialidades para que te contacten`}
+            description="en qué sos especialista: te listamos en /especialidades para que te contacten"
             {...progress('especialidades')}
           >
             <div className="flex flex-col gap-3">
@@ -620,13 +620,11 @@ export const ProfileForm = ({
                   <div className="flex flex-wrap gap-1.5">
                     {group.specialties.map((specialty) => {
                       const selected = values.specialties.includes(specialty.id);
-                      const full = !selected && values.specialties.length >= MAX_USER_SPECIALTIES;
                       return (
                         <button
                           key={specialty.id}
                           type="button"
                           aria-pressed={selected}
-                          disabled={full}
                           onClick={() =>
                             form.setValue(
                               'specialties',
@@ -637,7 +635,7 @@ export const ProfileForm = ({
                             )
                           }
                           className={cn(
-                            'flex h-7 items-center gap-1.5 rounded-sm border px-2 font-mono text-[11px] transition-colors disabled:cursor-not-allowed disabled:opacity-40',
+                            'flex h-7 items-center gap-1.5 rounded-sm border px-2 font-mono text-[11px] transition-colors',
                             selected
                               ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen'
                               : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-500 hover:text-foreground',

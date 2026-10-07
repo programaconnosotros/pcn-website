@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { UserProgrammingLanguage } from '@/types/programming-language';
-import { MAX_USER_SPECIALTIES, isSpecialtyId } from '@/components/especialidades/specialties';
+import { isSpecialtyId } from '@/components/especialidades/specialties';
 
 // Helper para validar URLs opcionales (permite string vacío o URL válida)
 const optionalUrl = z
@@ -67,13 +67,12 @@ export const profileSchema = z.object({
     .max(5, { message: 'Podés cargar hasta 5 puestos' }),
   career: optionalText(150),
   studyPlace: optionalText(150),
-  // Ids de /especialidades en las que la persona se considera especialista.
+  // Ids de /especialidades en las que la persona se considera especialista: las que quiera, sin
+  // repetir.
   specialties: z
     .array(z.string().refine(isSpecialtyId, { message: 'Especialidad inválida' }))
-    .max(MAX_USER_SPECIALTIES, {
-      message: `Podés marcar hasta ${MAX_USER_SPECIALTIES} especialidades`,
-    })
-    .default([]),
+    .default([])
+    .transform((ids) => [...new Set(ids)]),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),

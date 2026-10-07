@@ -1,3 +1,4 @@
+import { specialties } from '@/components/especialidades/specialties';
 import { profileSchema } from './profile-schema';
 
 const profile = {
@@ -13,6 +14,17 @@ const messages = (input: unknown) =>
 describe('profileSchema', () => {
   it('accepts a minimal profile', () => {
     expect(profileSchema.safeParse(profile).success).toBe(true);
+  });
+
+  it('takes every specialty at once, without repeats, and rejects unknown ones', () => {
+    const all = specialties.map((specialty) => specialty.id);
+    expect(profileSchema.parse({ ...profile, specialties: [...all, all[0]] }).specialties).toEqual(
+      all,
+    );
+    expect(profileSchema.parse(profile).specialties).toEqual([]);
+    expect(messages({ ...profile, specialties: ['cobol-wizard'] })).toEqual([
+      'Especialidad inválida',
+    ]);
   });
 
   it('turns empty or missing social links into null', () => {

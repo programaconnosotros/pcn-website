@@ -81,7 +81,7 @@ describe('updateProfile', () => {
     expect(expiredModel('UserPosition')).toBe(true);
   });
 
-  it('saves the specialties and rejects unknown or too many', async () => {
+  it('saves any number of specialties, without repeats, and rejects unknown ones', async () => {
     const user = await quickUser();
     await actAs(user.id);
     await updateProfile(profile());
@@ -93,9 +93,15 @@ describe('updateProfile', () => {
     await expect(updateProfile(profile({ specialties: ['cobol-wizard'] }))).rejects.toThrow(
       'Especialidad inválida',
     );
-    await expect(
-      updateProfile(profile({ specialties: ['backend', 'devops', 'qa', 'tech-lead'] })),
-    ).rejects.toThrow('hasta 3 especialidades');
+
+    const many = ['backend', 'devops', 'qa', 'tech-lead', 'backend'];
+    await updateProfile(profile({ specialties: many }));
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).specialties).toEqual([
+      'backend',
+      'devops',
+      'qa',
+      'tech-lead',
+    ]);
   });
 
   it('clears positions and languages, and the mirrored job, when none are sent', async () => {
