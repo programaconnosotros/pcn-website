@@ -217,14 +217,13 @@ export function AppSidebar(props: AppSidebarProps) {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-pcnGreen-200 px-3 pb-3 pt-2">
-        {/* One ruled block: the controls share their borders instead of floating apart. */}
-        <div className="overflow-hidden rounded-sm border border-pcnGreen-200 bg-black/40">
-          <InstallAppButton className={FOOTER_ROW} />
-          <OsClassicReturn className={FOOTER_ROW} />
-          <NavSecondary items={secondaryItems} className="p-0" flush />
-          <NavUser user={user} flush />
-        </div>
+      {/* One ruled block flush with the sidebar's edges: the rows share their hairlines with each
+          other and with the sidebar itself instead of sitting in a box of their own. */}
+      <SidebarFooter className="gap-0 border-t border-pcnGreen-200 bg-black/40 p-0">
+        <InstallAppButton className={FOOTER_ROW} />
+        <OsClassicReturn className={FOOTER_ROW} />
+        <NavSecondary items={secondaryItems} className="p-0" flush />
+        <NavUser user={user} flush />
       </SidebarFooter>
     </Sidebar>
   );
