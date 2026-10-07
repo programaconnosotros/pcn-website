@@ -197,7 +197,8 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
         </p>
       ) : (
         <div className="mb-14">
-          <RuledGrid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {/* Big enough to see the photos: one per row on phones, up to three on large screens. */}
+          <RuledGrid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {filteredItems.map((item, index) => {
               const isSelected = selectedIds.has(item.id);
               return (

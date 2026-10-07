@@ -213,7 +213,7 @@ export const PhotoGrid = ({
   photos: ProfilePhoto[];
   className?: string;
 }) => (
-  <RuledGrid className={cn('grid-cols-3 sm:grid-cols-4 xl:grid-cols-6', className)}>
+  <RuledGrid className={cn('grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4', className)}>
     {photos.map((photo) => (
       <Link
         key={photo.id}

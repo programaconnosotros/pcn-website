@@ -252,7 +252,10 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
             href={photos.length > previewPhotos.length ? tabHref('fotos') : undefined}
           />
           {/* Same 3 columns at every width (tailwind-merge drops the default breakpoints). */}
-          <PhotoGrid photos={previewPhotos} className="grid-cols-3 sm:grid-cols-3 xl:grid-cols-3" />
+          <PhotoGrid
+            photos={previewPhotos}
+            className="grid-cols-3 lg:grid-cols-3 2xl:grid-cols-3"
+          />
         </section>
       )}
 
