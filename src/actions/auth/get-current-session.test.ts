@@ -53,7 +53,11 @@ describe('getCurrentSession', () => {
 
     expect(result).toEqual(stubSession);
     expect(prismaMock.session.findUnique).toHaveBeenCalledWith({
-      where: { id: hashSessionToken('session-1'), expires: { gt: expect.any(Date) } },
+      where: {
+        id: hashSessionToken('session-1'),
+        expires: { gt: expect.any(Date) },
+        user: { suspendedAt: null },
+      },
       include: { user: true },
     });
   });
