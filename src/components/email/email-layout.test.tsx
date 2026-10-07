@@ -30,6 +30,18 @@ describe('EmailLayout', () => {
     expect(screen.getByRole('link', { name: 'programaConNosotros' })).toHaveAttribute('href');
   });
 
+  it('draws the window controls like PCN OS, not macOS dots', () => {
+    const { container } = render(
+      <EmailLayout path="eventos" title="Hola">
+        <EmailText>x</EmailText>
+      </EmailLayout>,
+    );
+    expect(container.textContent).not.toContain('●');
+    for (const glyph of ['×', '□', '−']) {
+      expect(screen.getByText(glyph)).toHaveStyle({ display: 'inline-block', width: '12px' });
+    }
+  });
+
   it('omits the preview block when there is no preview', () => {
     const { container } = render(
       <EmailLayout path="x" title="t">

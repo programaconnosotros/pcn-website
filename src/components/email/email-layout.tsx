@@ -22,6 +22,24 @@ export const emailSans =
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
+// Close, maximize and minimize, in the order PCN OS draws them.
+const WINDOW_BUTTONS = ['×', '□', '−'];
+
+const windowButtonStyle = {
+  display: 'inline-block',
+  width: '12px',
+  height: '12px',
+  marginRight: '4px',
+  border: `1px solid ${emailColors.greenDim}`,
+  backgroundColor: '#062b23',
+  color: emailColors.green,
+  fontFamily: emailMono,
+  fontSize: '9px',
+  fontWeight: 700,
+  lineHeight: '12px',
+  textAlign: 'center' as const,
+};
+
 // Clients that support it (Apple Mail, iOS) get the phosphor glow; the rest ignore it.
 const glow = `0 0 12px ${emailColors.green}66`;
 
@@ -310,14 +328,13 @@ export const EmailLayout = ({
             <table role="presentation" width="100%" cellPadding={0} cellSpacing={0}>
               <tbody>
                 <tr>
-                  <td
-                    width="52"
-                    aria-hidden="true"
-                    style={{ fontSize: '11px', letterSpacing: '3px', whiteSpace: 'nowrap' }}
-                  >
-                    <span style={{ color: emailColors.red }}>●</span>
-                    <span style={{ color: emailColors.amber }}>●</span>
-                    <span style={{ color: emailColors.green }}>●</span>
+                  <td width="56" aria-hidden="true" style={{ whiteSpace: 'nowrap' }}>
+                    {/* PCN OS window controls: square LEDs with their glyph, not macOS dots. */}
+                    {WINDOW_BUTTONS.map((glyph) => (
+                      <span key={glyph} style={windowButtonStyle}>
+                        {glyph}
+                      </span>
+                    ))}
                   </td>
                   <td style={{ textAlign: 'center', color: emailColors.muted }}>
                     <a href={SITE_URL} style={{ color: emailColors.green, textDecoration: 'none' }}>
