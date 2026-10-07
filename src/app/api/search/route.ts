@@ -14,7 +14,7 @@ const DB_CANDIDATES = 20;
 const loadSearchCorpus = cached(
   'search-corpus',
   async () => {
-    const [events, talks, advice, projects, users, setups, photos, testimonials] =
+    const [events, talks, advice, projects, users, setups, photos, testimonials, forumPosts] =
       await Promise.all([
         prisma.event.findMany({
           where: { deletedAt: null },
@@ -72,8 +72,18 @@ const loadSearchCorpus = cached(
           orderBy: { createdAt: 'desc' },
           select: { id: true, body: true, user: { select: { name: true } } },
         }),
+        prisma.forumPost.findMany({
+          orderBy: { activeAt: 'desc' },
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            author: { select: { name: true } },
+            category: { select: { slug: true } },
+          },
+        }),
       ]);
-    return { events, talks, advice, projects, users, setups, photos, testimonials };
+    return { events, talks, advice, projects, users, setups, photos, testimonials, forumPosts };
   },
   {
     models: [
@@ -87,6 +97,7 @@ const loadSearchCorpus = cached(
       'GalleryItem',
       'GalleryItemTag',
       'Testimonial',
+      'ForumPost',
     ],
   },
 );
@@ -132,6 +143,9 @@ const loadDatabaseEntries = async (query: string) => {
     .filter((photo) =>
       contains(photo.description, photo.event?.name, ...photo.tags.map((tag) => tag.user.name)),
     )
+    .slice(0, DB_CANDIDATES);
+  const forumPosts = corpus.forumPosts
+    .filter((post) => contains(post.title, post.content, post.author.name))
     .slice(0, DB_CANDIDATES);
   const testimonials = corpus.testimonials
     .filter((testimonial) => contains(testimonial.body, testimonial.user.name))
@@ -215,6 +229,17 @@ const loadDatabaseEntries = async (query: string) => {
         },
         photo.description ?? undefined,
         ...photo.tags.map((tag) => tag.user.name),
+      ),
+    ),
+    ...forumPosts.map((post) =>
+      toEntry(
+        {
+          type: 'foro',
+          title: post.title,
+          subtitle: `#${post.category.slug} · ${post.author.name}`,
+          href: `/foro/tema/${post.id}`,
+        },
+        post.content,
       ),
     ),
     ...testimonials.map((testimonial) =>

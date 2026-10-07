@@ -23,6 +23,7 @@ import {
   Library,
   LifeBuoy,
   MessageCircle,
+  MessagesSquare,
   MessageSquareHeart,
   MicVocal,
   Podcast,
@@ -70,6 +71,7 @@ const homeItems: NavItem[] = [{ title: 'Inicio', url: '/', icon: Home }, feedIte
 const actividadesItems: NavItem[] = [
   { title: 'Eventos', url: '/eventos', icon: CalendarDays },
   { title: 'Conversaciones', url: '/conversaciones', icon: MessageCircle },
+  { title: 'Foro', url: '/foro', icon: MessagesSquare },
   { title: 'Charlas', url: '/charlas', icon: MicVocal },
   { title: 'Podcast', url: '/podcast', icon: Podcast },
   { title: 'Desarrollo', url: '/desarrollo', icon: Code2 },

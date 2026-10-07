@@ -104,6 +104,22 @@ const mockCorpus = () => {
   prismaMock.testimonial.findMany.mockResolvedValue([
     { id: 't1', body: 'Aprendí React en PCN', user: { name: 'Eli' } },
   ] as any);
+  prismaMock.forumPost.findMany.mockResolvedValue([
+    {
+      id: 'f1',
+      title: '¿Server components en React?',
+      content: 'Dudas',
+      author: { name: 'Fede' },
+      category: { slug: 'ayuda' },
+    },
+    {
+      id: 'f2',
+      title: 'Otro tema',
+      content: 'nada que ver',
+      author: { name: 'Gabi' },
+      category: { slug: 'general' },
+    },
+  ] as any);
 };
 
 describe('GET /api/search', () => {
@@ -137,6 +153,7 @@ describe('GET /api/search', () => {
       'evento',
       'consejo',
       'consejo',
+      'foro',
       'charla',
       'charla',
       'curso',
@@ -173,6 +190,8 @@ describe('GET /api/search', () => {
     expect(byHref['/setups/s1']).toMatchObject({ title: 'Escritorio', subtitle: 'Caro' });
     expect(byHref['/galeria/g1'].subtitle).toMatch(/^Meetup · /);
     expect(byHref['/testimonios/t1']).toMatchObject({ subtitle: 'Eli' });
+    expect(byHref['/foro/tema/f1']).toMatchObject({ subtitle: '#ayuda · Fede' });
+    expect(byHref['/foro/tema/f2']).toBeUndefined();
   });
 
   it('finds photos by the people tagged in them', async () => {

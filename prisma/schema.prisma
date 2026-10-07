@@ -89,8 +89,11 @@ model User {
   eventBroadcasts      EventBroadcast[]
   setupLikes           SetupLike[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  forumPosts     ForumPost[]
+  forumComments  ForumComment[]
+  forumPostLikes ForumPostLike[]
 }
 
 // Puestos laborales actuales: una persona puede trabajar en más de un lugar a la vez.
@@ -874,4 +877,82 @@ model ArticleAuthor {
 
   @@unique([articleId, userId])
   @@index([userId])
+}
+
+// ─── Foro ─────────────────────────────────────────────────────────────────────
+// Ported from the forum v1 PR (#197): categories, threads in markdown, threaded replies and likes.
+
+model ForumCategory {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  description String
+  /// Order on /foro.
+  position    Int    @default(0)
+
+  posts ForumPost[]
+
+  createdAt DateTime @default(now())
+}
+
+model ForumPost {
+  id       String  @id @default(cuid())
+  title    String
+  /// Markdown.
+  content  String
+  isPinned Boolean @default(false)
+  /// Locked threads take no new replies.
+  isLocked Boolean @default(false)
+
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  category   ForumCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  comments ForumComment[]
+  likes    ForumPostLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  /// Last reply or edit, for sorting threads by activity.
+  activeAt  DateTime @default(now())
+
+  @@index([categoryId, activeAt])
+  @@index([activeAt])
+  @@index([authorId])
+}
+
+model ForumComment {
+  id      String @id @default(cuid())
+  content String
+
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+  post     ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+
+  parentComment   ForumComment?  @relation("ForumCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  replies         ForumComment[] @relation("ForumCommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, createdAt])
+  @@index([authorId])
+  @@index([parentCommentId])
+}
+
+model ForumPostLike {
+  id     String @id @default(cuid())
+  userId String
+  postId String
+
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
 }

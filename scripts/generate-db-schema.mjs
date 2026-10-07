@@ -20,6 +20,7 @@ const DOMAINS = {
     'SetupLike',
   ],
   consejos: ['Advice', 'Comment', 'Like', 'HiddenConsejo'],
+  foro: ['ForumCategory', 'ForumPost', 'ForumComment', 'ForumPostLike'],
   eventos: [
     'Event',
     'EventOrganizer',

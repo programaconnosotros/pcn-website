@@ -29,7 +29,15 @@ export type DbRelation = {
 };
 
 export type DbDomain =
-  'comunidad' | 'consejos' | 'eventos' | 'charlas' | 'galeria' | 'proyectos' | 'auth' | 'sistema';
+  | 'comunidad'
+  | 'consejos'
+  | 'foro'
+  | 'eventos'
+  | 'charlas'
+  | 'galeria'
+  | 'proyectos'
+  | 'auth'
+  | 'sistema';
 
 export const DB_SCHEMA_UPDATED_AT = '2026-10-07';
 
@@ -1958,6 +1966,155 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [['articleId', 'userId']],
   },
+  {
+    name: 'ForumCategory',
+    domain: 'foro',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'slug',
+        type: 'String',
+        unique: true,
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+      {
+        name: 'description',
+        type: 'String',
+      },
+      {
+        name: 'position',
+        type: 'Int',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
+    name: 'ForumPost',
+    domain: 'foro',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'title',
+        type: 'String',
+      },
+      {
+        name: 'content',
+        type: 'String',
+      },
+      {
+        name: 'isPinned',
+        type: 'Boolean',
+      },
+      {
+        name: 'isLocked',
+        type: 'Boolean',
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'categoryId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'activeAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
+    name: 'ForumComment',
+    domain: 'foro',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'content',
+        type: 'String',
+      },
+      {
+        name: 'authorId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'postId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'parentCommentId',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
+    name: 'ForumPostLike',
+    domain: 'foro',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'postId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['userId', 'postId']],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -2416,5 +2573,61 @@ export const dbRelations: DbRelation[] = [
     optional: true,
     many: true,
     onDelete: 'SetNull',
+  },
+  {
+    from: 'ForumPost',
+    to: 'User',
+    label: 'author',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumPost',
+    to: 'ForumCategory',
+    label: 'category',
+    optional: false,
+    many: true,
+    onDelete: null,
+  },
+  {
+    from: 'ForumComment',
+    to: 'User',
+    label: 'author',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumComment',
+    to: 'ForumPost',
+    label: 'post',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumComment',
+    to: 'ForumComment',
+    label: 'parentComment',
+    optional: true,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumPostLike',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ForumPostLike',
+    to: 'ForumPost',
+    label: 'post',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
   },
 ];

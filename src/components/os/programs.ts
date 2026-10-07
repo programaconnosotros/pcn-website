@@ -24,6 +24,7 @@ import {
   Megaphone,
   MonitorSmartphone,
   MessageCircle,
+  MessagesSquare,
   MicVocal,
   Music,
   Podcast,
@@ -85,6 +86,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-rose-400 to-red-600',
     group: 'Actividades',
     pinned: true,
+  },
+  {
+    id: 'foro',
+    name: 'Foro',
+    url: '/foro',
+    icon: MessagesSquare,
+    color: 'from-teal-400 to-emerald-600',
+    group: 'Actividades',
   },
   {
     id: 'conversaciones',

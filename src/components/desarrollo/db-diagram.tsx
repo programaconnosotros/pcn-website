@@ -12,6 +12,7 @@ const VIEW_LABELS: Record<View, string> = {
   todo: 'todo',
   comunidad: 'comunidad',
   consejos: 'consejos',
+  foro: 'foro',
   eventos: 'eventos',
   charlas: 'charlas',
   galeria: 'galería',

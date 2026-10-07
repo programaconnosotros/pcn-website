@@ -10,17 +10,20 @@ import { toast } from 'sonner';
 
 type LikeRef = { userId: string };
 
-// Optimistic like toggle for a published consejo, drawn as a compact mono counter.
+// Optimistic like toggle for a consejo (or, through `toggle`, anything else that takes likes,
+// like a forum thread), drawn as a compact mono counter.
 export function LikeButton({
   adviceId,
   likes,
   session,
   className,
+  toggle = toggleLike,
 }: {
   adviceId: string;
   likes: LikeRef[];
   session: SessionWithUser | null;
   className?: string;
+  toggle?: (_id: string) => Promise<unknown>;
 }) {
   const [isLiking, setIsLiking] = useState(false);
   const [optimisticLikes, toggleOptimisticLike] = useOptimistic(
@@ -48,7 +51,7 @@ export function LikeButton({
     startTransition(async () => {
       toggleOptimisticLike(userId);
       try {
-        await toggleLike(adviceId);
+        await toggle(adviceId);
       } catch (error) {
         console.error('Error toggling like:', error);
         toast.error(actionErrorMessage(error, 'No se pudo guardar el me gusta'));

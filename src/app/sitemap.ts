@@ -42,6 +42,7 @@ const STATIC_ROUTES = [
   '/logros',
   '/galeria',
   '/setups',
+  '/foro',
   '/partners',
   '/changelog',
   '/metricas',

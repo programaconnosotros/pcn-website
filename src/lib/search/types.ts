@@ -8,6 +8,7 @@ export type SearchResultType =
   | 'conversacion'
   | 'especialidad'
   | 'consejo'
+  | 'foro'
   | 'proyecto'
   | 'perfil'
   | 'historia'
@@ -39,6 +40,7 @@ export const SEARCH_GROUPS: { type: SearchResultType; label: string }[] = [
   { type: 'evento', label: 'eventos' },
   { type: 'conversacion', label: 'conversaciones' },
   { type: 'consejo', label: 'consejos' },
+  { type: 'foro', label: 'foro' },
   { type: 'historia', label: 'historia' },
   { type: 'charla', label: 'charlas' },
   { type: 'curso', label: 'cursos' },
