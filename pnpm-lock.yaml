@@ -29,10 +29,12 @@ overrides:
   esbuild@<0.28.1: ~0.28.1
   '@babel/core@<7.29.6': ^7.29.6
   nanoid@<3.3.18: ^3.3.18
-  postcss-selector-parser@<6.1.3: ^6.1.3
+  postcss-selector-parser@<7.1.6: ^7.1.6
   browserslist@<4.28.7: ^4.28.7
   baseline-browser-mapping@<2.11.0: ^2.11.0
   sharp@<0.35.4: ^0.35.4
+  source-map-js@<1.2.2: ^1.2.2
+  katex@<0.18.2: ^0.18.2
 
 importers:
 
@@ -227,9 +229,6 @@ importers:
       zod:
         specifier: ^3.23.8
         version: 3.23.8
-      zod-prisma-types:
-        specifier: ^3.3.11
-        version: 3.3.11(@prisma/client@7.10.0(prisma@7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4))(typescript@5.5.4))(prisma@7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4))(zod@3.23.8)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.7
@@ -3173,9 +3172,6 @@ packages:
   cobe@0.6.3:
     resolution: {integrity: sha512-WHr7X4o1ym94GZ96h7b1pNemZJacbOzd02dZtnVwuC4oWBaLg96PBmp2rIS1SAhUDhhC/QyS9WEqkpZIs/ZBTg==}
 
-  code-block-writer@13.0.3:
-    resolution: {integrity: sha512-Oofo0pq3IKnsFtuHqSF7TqBfr71aeyZDVJ0HpmqB7FBM2qEigL0iPONSCZSO9pE9dZTAxANe5XHG9Uy0YMv8cg==}
-
   collect-v8-coverage@1.0.3:
     resolution: {integrity: sha512-1L5aqIkwPfiodaMgQunkF1zRhNqifHBmtbbbxcr6yVxxBnliw4TDOW6NxpO8DJLgJ16OT+Y4ztZqP6p/FtXnAw==}
 
@@ -3189,6 +3185,10 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
+
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
@@ -3196,10 +3196,6 @@ packages:
   commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
-
-  commander@8.3.0:
-    resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
-    engines: {node: '>= 12'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -4583,8 +4579,8 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
-  katex@0.16.47:
-    resolution: {integrity: sha512-Eeo8Ys1doU1z+x8AZsPpQu+p/QcZBI5PeOo7QGQdy2x2m0MU/hYagBbGOmXwr5KVbEfVuWv9LpnQWeehogurjg==}
+  katex@0.18.10:
+    resolution: {integrity: sha512-/B6p9eY9DX7aHBfpkHdpirDTZ5QH9xTwL9y837PWuzuv41O5jFdqNQwVQEQsimY0/iVNkwBY4+4hMfhQ7d4Dbw==}
     hasBin: true
 
   keyv@4.5.4:
@@ -5132,8 +5128,8 @@ packages:
     peerDependencies:
       postcss: ^8.5.23
 
-  postcss-selector-parser@6.1.4:
-    resolution: {integrity: sha512-bIoJLOmjCO1S9XdY/DcnR5hJxvrDir1PbGChrzXG3vw0/FOliy/fA3dmdhQ441kah4gKv+TwckGzex6wNS5cnQ==}
+  postcss-selector-parser@7.1.6:
+    resolution: {integrity: sha512-7qASPzhKF2l2KLboRZux8CCTRMdGiV08vWmyKzPz22qZ7ZjQBOeY7rNzNoCLSUiftJ7HUq0GERHmxw/t0dCdMw==}
     engines: {node: '>=4'}
 
   postcss-value-parser@4.2.0:
@@ -5575,8 +5571,8 @@ packages:
       '@types/react':
         optional: true
 
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+  source-map-js@1.2.2:
+    resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
 
   space-separated-tokens@2.0.2:
@@ -6105,14 +6101,6 @@ packages:
 
   zeptomatch@2.1.0:
     resolution: {integrity: sha512-KiGErG2J0G82LSpniV0CtIzjlJ10E04j02VOudJsPyPwNZgGnRKQy7I1R7GMyg/QswnE4l7ohSGrQbQbjXPPDA==}
-
-  zod-prisma-types@3.3.11:
-    resolution: {integrity: sha512-fP00cL+MLPhG3GDNep3cro5iXWTaFUcOqWoGfNGFFmaIxHjKoViXGKpZGwFg8RdXZdng1i1/EIh/Pv5kGQeKNA==}
-    hasBin: true
-    peerDependencies:
-      '@prisma/client': ^4.x.x || ^5.x.x || ^6.x.x || ^7.x.x
-      prisma: ^4.x.x || ^5.x.x || ^6.x.x || ^7.x.x
-      zod: ^3.25.0 || ^4.0.0
 
   zod-validation-error@4.0.2:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
@@ -8155,7 +8143,7 @@ snapshots:
 
   '@tailwindcss/typography@0.5.20(tailwindcss@3.4.9(ts-node@10.9.2(@types/node@24.13.2)(typescript@5.5.4)))':
     dependencies:
-      postcss-selector-parser: 6.1.4
+      postcss-selector-parser: 7.1.6
       tailwindcss: 3.4.9(ts-node@10.9.2(@types/node@24.13.2)(typescript@5.5.4))
 
   '@tanstack/query-core@5.104.1': {}
@@ -9252,8 +9240,6 @@ snapshots:
     dependencies:
       phenomenon: 1.6.0
 
-  code-block-writer@13.0.3: {}
-
   collect-v8-coverage@1.0.3: {}
 
   color-convert@2.0.1:
@@ -9264,11 +9250,11 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
+  commander@15.0.0: {}
+
   commander@4.1.1: {}
 
   commander@7.2.0: {}
-
-  commander@8.3.0: {}
 
   concat-map@0.0.1: {}
 
@@ -9297,7 +9283,7 @@ snapshots:
   css-tree@3.2.1:
     dependencies:
       mdn-data: 2.27.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   css.escape@1.5.1: {}
 
@@ -11066,9 +11052,9 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
-  katex@0.16.47:
+  katex@0.18.10:
     dependencies:
-      commander: 8.3.0
+      commander: 15.0.0
 
   keyv@4.5.4:
     dependencies:
@@ -11200,7 +11186,7 @@ snapshots:
       dompurify: 3.4.16
       elkjs: 0.9.3
       es-toolkit: 1.52.0
-      katex: 0.16.47
+      katex: 0.18.10
       khroma: 2.1.0
       marked: 16.4.2
       roughjs: 4.6.6
@@ -11586,9 +11572,9 @@ snapshots:
   postcss-nested@6.2.0(postcss@8.5.28):
     dependencies:
       postcss: 8.5.28
-      postcss-selector-parser: 6.1.4
+      postcss-selector-parser: 7.1.6
 
-  postcss-selector-parser@6.1.4:
+  postcss-selector-parser@7.1.6:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
@@ -11599,7 +11585,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.19
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   postgres-array@2.0.0: {}
 
@@ -12027,7 +12013,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  source-map-js@1.2.1: {}
+  source-map-js@1.2.2: {}
 
   space-separated-tokens@2.0.2: {}
 
@@ -12211,7 +12197,7 @@ snapshots:
       postcss-js: 4.0.1(postcss@8.5.28)
       postcss-load-config: 4.0.2(postcss@8.5.28)(ts-node@10.9.2(@types/node@24.13.2)(typescript@5.5.4))
       postcss-nested: 6.2.0(postcss@8.5.28)
-      postcss-selector-parser: 6.1.4
+      postcss-selector-parser: 7.1.6
       resolve: 1.22.8
       sucrase: 3.35.0
     transitivePeerDependencies:
@@ -12627,17 +12613,6 @@ snapshots:
     dependencies:
       grammex: 3.1.13
       graphmatch: 1.1.1
-
-  zod-prisma-types@3.3.11(@prisma/client@7.10.0(prisma@7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4))(typescript@5.5.4))(prisma@7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4))(zod@3.23.8):
-    dependencies:
-      '@prisma/client': 7.10.0(prisma@7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4))(typescript@5.5.4)
-      '@prisma/client-runtime-utils': 7.10.0
-      '@prisma/dmmf': 7.10.0
-      '@prisma/generator-helper': 7.10.0
-      code-block-writer: 13.0.3
-      lodash: 4.18.1
-      prisma: 7.10.0(@types/node@24.13.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@5.5.4)
-      zod: 3.23.8
 
   zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:

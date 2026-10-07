@@ -117,6 +117,12 @@ el proxy corre en páginas y no en archivos estáticos ni en la API).
 - Dependabot (`.github/dependabot.yml`) abre PRs los lunes para paquetes vulnerables o
   desactualizados. **No corre tests en CI**: cada PR se prueba localmente antes de mergear.
 - Antes de agregar una dependencia, revisar `pnpm audit` y que esté mantenida.
+- Alertas abiertas sin versión corregida publicada, que no tienen override posible:
+  - `braces` 3.0.3 (DoS con patrones muy anidados): la traen `chokidar` y `micromatch` de
+    Tailwind 3, solo al compilar el CSS, con los globs fijos de `tailwind.config`. Nunca recibe
+    input de usuarios. Se va al migrar a Tailwind 4.
+  - `sprintf-js` 1.0.3 (DoS con precisión sin límite): la trae `argparse` 1 vía `js-yaml` 3 de la
+    cobertura de Jest. Solo corre en los tests locales.
 
 ## A04 Criptografía
 
