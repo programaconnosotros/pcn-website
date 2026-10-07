@@ -96,10 +96,11 @@ export const adrs: Adr[] = [
     context:
       'PCN OS muestra el sitio como un escritorio con ventanas. Cada ventana es un iframe que carga la URL real, y cada iframe es una copia entera de la app (React, Next.js, providers), lo más caro del escritorio. Se evaluó reemplazarlos por componentes renderizados directamente en el árbol del escritorio para gastar menos memoria y CPU.',
     decision:
-      'Seguimos con iframes. Renderizar páginas como componentes no es viable sin reescribir el sitio: el costo se ataca con el modo liviano (máximo 3 ventanas vivas, el resto en pausa), y el modo clásico.',
+      'Seguimos con iframes. Renderizar páginas como componentes no es viable sin reescribir el sitio: el costo se ataca con el modo liviano (máximo 3 ventanas vivas, el resto en pausa), el modo clásico y ventanas minimizadas que dejan de pintarse.',
     consequences: [
       'Cada ventana sigue siendo idéntica a la página en mobile o en el layout clásico, con su propio scroll, diálogos y layout responsive al ancho de la ventana.',
       'El consumo crece con cada ventana abierta: el modo liviano y la medición automática de frames siguen siendo necesarios.',
+      'Las ventanas minimizadas quedan con `visibility: hidden` cuando termina la animación: el navegador deja de pintarlas y componerlas.',
     ],
     alternatives: [
       'Componentes en el mismo documento: Next.js renderiza un solo árbol de rutas por documento. Las páginas son Server Components que leen datos por ruta, y no hay forma soportada de renderizar N rutas arbitrarias a la vez (las parallel routes tienen slots fijos). Habría que pasar cada página a un componente cliente con su propio fetch.',

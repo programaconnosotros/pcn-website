@@ -279,7 +279,11 @@ describe('OsWindow', () => {
 
   it('renders minimized and lite windows without blocking the desktop', () => {
     setup({ win: { ...baseWin, minimized: true, title: null }, lite: true, focused: false });
-    expect(dialog()).toHaveClass('pointer-events-none', 'shadow-none');
+    // Hidden once minimized, so the browser stops painting it (and it leaves the a11y tree).
+    const minimized = screen.getByRole('dialog', { hidden: true });
+    expect(minimized).toHaveClass('pointer-events-none', 'shadow-none');
+    expect(minimized).toHaveStyle({ visibility: 'hidden' });
+    expect(screen.queryByRole('dialog', { name: 'Eventos' })).not.toBeInTheDocument();
     expect(screen.getByText('~/eventos')).toHaveTextContent(/^~\/eventos$/);
   });
 });

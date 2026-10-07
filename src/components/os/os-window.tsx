@@ -354,12 +354,28 @@ export function OsWindow({
       aria-label={program.name}
       data-focused={focused}
       initial={lite ? false : { opacity: 0, scale: 0.94, y: 16 }}
+      // Once minimized, `visibility: hidden` stops the browser painting the window and its page
+      // (opacity 0 alone keeps compositing it). Restoring shows it before fading back in.
       animate={
         lite
-          ? { opacity: win.minimized ? 0 : 1, transition: { duration: 0 } }
+          ? win.minimized
+            ? { opacity: 0, transition: { duration: 0 }, transitionEnd: { visibility: 'hidden' } }
+            : { opacity: 1, visibility: 'visible', transition: { duration: 0 } }
           : win.minimized
-            ? { opacity: 0, scale: 0.4, y: 480, transition: { duration: 0.25, ease: 'easeIn' } }
-            : { opacity: 1, scale: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } }
+            ? {
+                opacity: 0,
+                scale: 0.4,
+                y: 480,
+                transition: { duration: 0.25, ease: 'easeIn' },
+                transitionEnd: { visibility: 'hidden' },
+              }
+            : {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                visibility: 'visible',
+                transition: { duration: 0.22, ease: 'easeOut' },
+              }
       }
       exit={
         lite
