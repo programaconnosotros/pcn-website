@@ -34,12 +34,15 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    /** Extra classes for the backdrop, e.g. a z-index above PCN OS windows. */
+    overlayClassName?: string;
+  }
+>(({ className, overlayClassName, children, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
   const restoreFocus = useRestoreFocus({ onOpenAutoFocus, onCloseAutoFocus });
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className={overlayClassName} />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(dialogContentClassName, className)}

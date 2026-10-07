@@ -25,6 +25,7 @@ import type { MusicPlayer } from '@/components/music/use-music-player';
 import { openGlobalSearch, useSearchShortcutLabel } from '@/components/search/global-search';
 import { setDisplayMode, useDisplayMode, type OsDisplayMode } from './os-display-mode';
 import { OsMusicControl } from './os-music-control';
+import { NotificationCenter } from '@/components/notifications/notification-center';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
 export interface OsUser {
@@ -184,6 +185,12 @@ export function OsMenuBar({
           <Search className="size-3.5" />
           <span className="text-pcnGreen-600">{shortcutLabel}</span>
         </button>
+        <NotificationCenter
+          onNavigate={onOpenPath}
+          triggerClassName={cn(menuTriggerClassName, 'py-1')}
+          // Above the windows, the dock and the menu bar, like the search.
+          layerClassName="z-[6500]"
+        />
         <OsMusicControl
           player={musicPlayer}
           menuTriggerClassName={menuTriggerClassName}
