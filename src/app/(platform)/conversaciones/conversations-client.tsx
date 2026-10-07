@@ -209,14 +209,22 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                 path="conversaciones"
                 meta={`${conversations.length} charlas destacadas del grupo de WhatsApp y los eventos`}
                 action={
-                  isAdmin && (
+                  <>
                     <Link
-                      href="/vinculos"
+                      href="/conversaciones/opiniones"
                       className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
                     >
-                      vincular perfiles →
+                      opiniones del grupo →
                     </Link>
-                  )
+                    {isAdmin && (
+                      <Link
+                        href="/vinculos"
+                        className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
+                      >
+                        vincular perfiles →
+                      </Link>
+                    )}
+                  </>
                 }
               />
 
