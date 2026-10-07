@@ -121,6 +121,15 @@ export function PwaProvider({ children }: { children: React.ReactNode }) {
       navigator.serviceWorker.register('/sw.js').catch((error) => {
         console.error('[PWA] No se pudo registrar el service worker:', error);
       });
+    } else if ('serviceWorker' in navigator) {
+      // A worker left over from a production build served on the same localhost port keeps
+      // answering /_next/static with its cached chunks, so edits never show up. Drop it.
+      void navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) =>
+          Promise.all(registrations.map((registration) => registration.unregister())),
+        )
+        .catch(() => {});
     }
 
     return () => {

@@ -208,15 +208,22 @@ describe('PwaProvider', () => {
     expect(toast.success).toHaveBeenCalledWith('Conexión restablecida');
   });
 
-  it('does not register the service worker in development', () => {
+  it('does not register the service worker in development and drops a leftover one', async () => {
     const register = jest.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'serviceWorker', { value: { register }, configurable: true });
+    const unregister = jest.fn().mockResolvedValue(true);
+    const getRegistrations = jest.fn().mockResolvedValue([{ unregister }]);
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: { register, getRegistrations },
+      configurable: true,
+    });
     render(
       <PwaProvider>
         <Consumer />
       </PwaProvider>,
     );
+    await act(async () => {});
     expect(register).not.toHaveBeenCalled();
+    expect(unregister).toHaveBeenCalled();
   });
 
   it('registers the service worker with ?sw and logs a failure', async () => {
