@@ -39,6 +39,11 @@ describe('landing sections', () => {
     expect(teamSize).toBeGreaterThanOrEqual(githubStats.topContributors.length);
   });
 
+  it('Team links each member to their PCN profile when their GitHub login is linked', () => {
+    render(<Team profiles={{ 'Agustin-Sanc': { id: 'u1', name: 'Agustín', image: null } }} />);
+    expect(screen.getByRole('link', { name: 'Agus' })).toHaveAttribute('href', '/perfil/u1');
+  });
+
   it('Team lists every member with links to their profiles', () => {
     render(<Team />);
     const items = within(screen.getByRole('list')).getAllByRole('listitem');

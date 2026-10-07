@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
+import type { LinkedUser } from '@/lib/identity-links';
 import githubStats from '@/data/github-stats.json';
 
 type Person = {
@@ -158,72 +160,97 @@ const iconLinkClassName =
 
 export const teamSize = people.length;
 
-// Terminal-style roster: every cell shares hairlines with its neighbours and
-// the avatar stays tinted until hover, like a process coming back to life.
-export const Team = () => (
-  <ul
-    role="list"
-    className="grid grid-cols-1 border-l border-t border-pcnGreen-200 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
-  >
-    {people.map((person, index) => (
-      <li
-        key={person.name}
-        className="group flex items-center gap-3 border-b border-r border-pcnGreen-200 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
-      >
-        <span className="w-5 shrink-0 font-mono text-[10px] text-pcnGreen-500/70">
-          {String(index + 1).padStart(2, '0')}
-        </span>
+/** A person's PCN profile, through the GitHub login an admin linked in /vinculos. */
+const profileOf = (person: Person, profiles: Record<string, LinkedUser>) => {
+  const login = handleOf(person).toLowerCase();
+  return Object.entries(profiles).find(([name]) => name.toLowerCase() === login)?.[1] ?? null;
+};
 
-        <div className="relative h-9 w-9 shrink-0 overflow-hidden border border-pcnGreen-200">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={person.name}
-            src={person.imageUrl}
-            loading="lazy"
-            className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
-          />
-          <div className="absolute inset-0 bg-pcnGreen/40 mix-blend-color transition-opacity duration-300 group-hover:opacity-0" />
-        </div>
+// Terminal-style roster: every cell shares hairlines with its neighbours and the avatar stays
+// tinted until hover, like a process coming back to life. Columns follow the space the roster
+// has (a container query), not the screen: in a narrow PCN OS window it's a plain list, where
+// names and roles fit instead of being cut to three letters.
+export const Team = ({ profiles = {} }: { profiles?: Record<string, LinkedUser> }) => (
+  <div className="@container">
+    <ul
+      role="list"
+      className="grid grid-cols-1 border-l border-t border-pcnGreen-200 @2xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-4"
+    >
+      {people.map((person, index) => {
+        const profile = profileOf(person, profiles);
+        return (
+          <li
+            key={person.name}
+            className="group flex items-center gap-3 border-b border-r border-pcnGreen-200 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
+          >
+            <span className="w-5 shrink-0 font-mono text-[10px] text-pcnGreen-500/70">
+              {String(index + 1).padStart(2, '0')}
+            </span>
 
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-mono text-sm">
-            {person.name}
-            {person.name !== handleOf(person) && (
-              <span className="ml-1.5 text-xs text-pcnGreen-500">@{handleOf(person)}</span>
-            )}
-            <span className="ml-0.5 hidden animate-blink text-pcnGreen group-hover:inline">_</span>
-          </p>
-          <p className="truncate text-xs text-muted-foreground">
-            {person.role}
-            {person.company && <span className="text-pcnGreen/80"> · {person.company}</span>}
-          </p>
-        </div>
+            <div className="relative h-9 w-9 shrink-0 overflow-hidden border border-pcnGreen-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt={person.name}
+                src={person.imageUrl}
+                loading="lazy"
+                className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+              />
+              <div className="absolute inset-0 bg-pcnGreen/40 mix-blend-color transition-opacity duration-300 group-hover:opacity-0" />
+            </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          {person.githubUrl && (
-            <a
-              href={person.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`GitHub de ${person.name}`}
-              className={iconLinkClassName}
-            >
-              <Github className="h-3.5 w-3.5" />
-            </a>
-          )}
-          {person.linkedinUrl && (
-            <a
-              href={person.linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`LinkedIn de ${person.name}`}
-              className={iconLinkClassName}
-            >
-              <Linkedin className="h-3.5 w-3.5" />
-            </a>
-          )}
-        </div>
-      </li>
-    ))}
-  </ul>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-mono text-sm">
+                {profile ? (
+                  <Link
+                    href={`/perfil/${profile.id}`}
+                    className="transition-colors hover:text-pcnGreen"
+                    title={`Perfil de ${profile.name} en PCN`}
+                  >
+                    {person.name}
+                  </Link>
+                ) : (
+                  person.name
+                )}
+                {person.name !== handleOf(person) && (
+                  <span className="ml-1.5 text-xs text-pcnGreen-500">@{handleOf(person)}</span>
+                )}
+                <span className="ml-0.5 hidden animate-blink text-pcnGreen group-hover:inline">
+                  _
+                </span>
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                {person.role}
+                {person.company && <span className="text-pcnGreen/80"> · {person.company}</span>}
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2">
+              {person.githubUrl && (
+                <a
+                  href={person.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`GitHub de ${person.name}`}
+                  className={iconLinkClassName}
+                >
+                  <Github className="h-3.5 w-3.5" />
+                </a>
+              )}
+              {person.linkedinUrl && (
+                <a
+                  href={person.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`LinkedIn de ${person.name}`}
+                  className={iconLinkClassName}
+                >
+                  <Linkedin className="h-3.5 w-3.5" />
+                </a>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
 );

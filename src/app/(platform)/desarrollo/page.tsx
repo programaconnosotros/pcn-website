@@ -20,6 +20,7 @@ import {
 import { Suspense, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Team, teamSize } from '@/components/landing/team';
+import { getIdentityMap } from '@/lib/identity-links';
 import {
   CollaborationStats,
   CollaborationStatsSkeleton,
@@ -297,6 +298,9 @@ const tocSections: TocSection[] = [
   section('por-que-contribuir', 'Por qué contribuir'),
 ];
 
+/** The team with each member linked to their PCN profile (GitHub login linked in /vinculos). */
+const LinkedTeam = async () => <Team profiles={await getIdentityMap('github')} />;
+
 const DesarrolloPage = () => (
   <>
     <div className="flex flex-1 flex-col p-4 pt-0">
@@ -530,7 +534,9 @@ const DesarrolloPage = () => (
             </Section>
 
             <Section id="team" title={`Team de desarrollo (${teamSize})`}>
-              <Team />
+              <Suspense fallback={<Team />}>
+                <LinkedTeam />
+              </Suspense>
             </Section>
 
             <Section id="por-que-contribuir" title="Por qué contribuir">

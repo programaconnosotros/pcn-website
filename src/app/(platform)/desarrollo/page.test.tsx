@@ -39,6 +39,7 @@ jest.mock('@/components/desarrollo/collaboration-stats', () => ({
   CollaborationStats: () => <div data-testid="collaboration-stats" />,
   CollaborationStatsSkeleton: () => null,
 }));
+jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn(async () => ({})) }));
 jest.mock('@/components/landing/team', () => ({
   Team: () => <div data-testid="team" />,
   teamSize: 7,

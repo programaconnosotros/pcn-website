@@ -185,6 +185,9 @@ const config = {
   plugins: [
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
+    // `@container` + `@md:` variants: components that live in columns of any width (a PCN OS
+    // window, a sidebar) adapt to their own width, not the screen's.
+    require('@tailwindcss/container-queries'),
     addVariablesForColors,
     addPcnOsVariants,
   ],
