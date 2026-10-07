@@ -1,33 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  GlobalShortcutsDialog,
+  openShortcutsDialog,
+} from '@/components/shortcuts/shortcuts-dialog';
 
 /** Distance (px) a single `j`/`k` scrolls. */
 const LINE_STEP = 80;
 
 /** How long (ms) the first key of a two-key sequence (`gg`, `yy`) waits for the second. */
 const SEQUENCE_TIMEOUT_MS = 600;
-
-const Kbd = ({ children }: { children: React.ReactNode }) => (
-  <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">{children}</kbd>
-);
-
-const SHORTCUTS: { keys: string[]; description: string }[] = [
-  { keys: ['j', 'k'], description: 'Bajar / subir' },
-  { keys: ['h', 'l'], description: 'Atrás / adelante, como ← →' },
-  { keys: ['d', 'u'], description: 'Media página abajo / arriba' },
-  { keys: ['f', 'b'], description: 'Página completa abajo / arriba' },
-  { keys: ['gg'], description: 'Ir al principio' },
-  { keys: ['G'], description: 'Ir al final' },
-  { keys: [']', '['], description: 'Sección siguiente / anterior (índice)' },
-  { keys: ['H', 'L'], description: 'Atrás / adelante en el historial' },
-  { keys: ['yy'], description: 'Copiar el link de la página' },
-  { keys: ['/'], description: 'Buscar en la página' },
-  { keys: ['⌘K'], description: 'Búsqueda global' },
-  { keys: ['?'], description: 'Mostrar esta ayuda' },
-];
 
 /** Keys typed into fields, or handled by menus, listboxes and dialogs, are never shortcuts. */
 const shouldIgnore = (event: KeyboardEvent) => {
@@ -66,11 +50,9 @@ const pressArrow = (key: 'ArrowLeft' | 'ArrowRight', event: KeyboardEvent) => {
 /**
  * Site-wide vim-style keyboard navigation: `j`/`k` scroll, `h`/`l` act as ← / →, `d`/`u` and `f`/`b` scroll by half
  * or whole pages, `gg`/`G` jump to the top/bottom, `H`/`L` walk the history, `yy` copies the
- * URL and `?` lists every shortcut. Inside a PCN OS window it drives that window's page.
+ * URL and `?` opens the shortcuts dialog. Inside a PCN OS window it drives that window's page.
  */
 export function VimNavigation() {
-  const [helpOpen, setHelpOpen] = useState(false);
-
   useEffect(() => {
     let pending: string | null = null;
     let pendingTimeout: number | undefined;
@@ -123,7 +105,7 @@ export function VimNavigation() {
       } else if (key === 'L') {
         window.history.forward();
       } else if (key === '?') {
-        setHelpOpen(true);
+        openShortcutsDialog();
       } else {
         return;
       }
@@ -137,25 +119,6 @@ export function VimNavigation() {
     };
   }, []);
 
-  return (
-    <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-      <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>atajos de teclado</DialogTitle>
-        </DialogHeader>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-xs">
-          {SHORTCUTS.map(({ keys, description }) => (
-            <div key={description} className="contents">
-              <dt className="flex gap-1">
-                {keys.map((key) => (
-                  <Kbd key={key}>{key}</Kbd>
-                ))}
-              </dt>
-              <dd className="text-pcnGreen-700">{description}</dd>
-            </div>
-          ))}
-        </dl>
-      </DialogContent>
-    </Dialog>
-  );
+  // On the PCN OS desktop the dialog goes above the windows, like the search.
+  return <GlobalShortcutsDialog layerClassName="os:z-[6500]" />;
 }

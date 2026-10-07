@@ -1,6 +1,7 @@
 'use client';
 
-import { ChevronsUpDown, IdCard, LogIn, LogOut, UserPen, UserPlus } from 'lucide-react';
+import { ChevronsUpDown, IdCard, Keyboard, LogIn, LogOut, UserPen, UserPlus } from 'lucide-react';
+import { openShortcutsDialog } from '@/components/shortcuts/shortcuts-dialog';
 
 import { signOut } from '@/actions/auth/sign-out';
 import { notifyOsSessionChange } from '@/components/os/os-env';
@@ -163,6 +164,14 @@ export function NavUser({ user }: { user: SessionUser | null }) {
                 >
                   <UserPen size={16} />
                   Editar perfil
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex cursor-pointer flex-row gap-2"
+                  onClick={() => openShortcutsDialog()}
+                >
+                  <Keyboard size={16} />
+                  Atajos de teclado
+                  <span className="ml-auto font-mono text-[10px] text-pcnGreen-600">?</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 

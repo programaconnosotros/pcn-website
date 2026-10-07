@@ -26,6 +26,7 @@ import { openGlobalSearch, useSearchShortcutLabel } from '@/components/search/gl
 import { setDisplayMode, useDisplayMode, type OsDisplayMode } from './os-display-mode';
 import { OsMusicControl } from './os-music-control';
 import { NotificationCenter } from '@/components/notifications/notification-center';
+import { openShortcutsDialog } from '@/components/shortcuts/shortcuts-dialog';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
 export interface OsUser {
@@ -130,6 +131,10 @@ export function OsMenuBar({
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={onOpenLauncher}>Todos los programas</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => openGlobalSearch()}>Buscar…</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => openShortcutsDialog()}>
+            Atajos de teclado
+            <span className="ml-auto pl-4 text-[10px] text-pcnGreen-600">?</span>
+          </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Modo de PCN OS</DropdownMenuSubTrigger>
             <DropdownMenuSubContent className={menuContentClassName}>
