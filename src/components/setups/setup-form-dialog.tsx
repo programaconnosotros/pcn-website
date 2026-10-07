@@ -34,6 +34,7 @@ import { cn } from '@/lib/utils';
 import {
   SETUP_IMAGE_TYPES,
   SETUP_MAX_BYTES,
+  SETUP_SOFTWARE,
   setupSchema,
   todayInputValue,
   type SetupFormData,
@@ -47,7 +48,20 @@ const defaultsFor = (setup?: EditableSetup): SetupFormData => ({
   title: setup?.title ?? '',
   description: setup?.description ?? '',
   date: setup?.date ?? todayInputValue(),
+  os: setup?.os ?? '',
+  browser: setup?.browser ?? '',
+  editor: setup?.editor ?? '',
+  terminal: setup?.terminal ?? '',
+  otherSoftware: setup?.otherSoftware ?? '',
 });
+
+// Suggestions as you type: the tools /herramientas recommends, plus the usual operating systems.
+const SOFTWARE_SUGGESTIONS = {
+  os: ['macOS', 'Windows 11', 'Windows 10', 'Ubuntu', 'Fedora', 'Arch Linux', 'Debian', 'Pop!_OS'],
+  browser: ['Chrome', 'Firefox', 'Arc', 'Brave', 'Safari', 'Edge', 'Zen', 'Vivaldi'],
+  editor: ['VS Code', 'Cursor', 'Neovim', 'IntelliJ IDEA', 'WebStorm', 'Zed', 'Vim', 'Windsurf'],
+  terminal: ['Ghostty', 'iTerm2', 'Warp', 'Alacritty', 'Kitty', 'WezTerm', 'Windows Terminal'],
+};
 
 interface SetupFormDialogProps {
   /** The setup being edited; without it the dialog publishes a new one. */
@@ -285,6 +299,62 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                 </FormItem>
               )}
             />
+
+            <fieldset className="space-y-3">
+              <legend className="font-mono text-xs text-muted-foreground">
+                <span className="text-pcnGreen-500">$ </span>software (opcional)
+              </legend>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {SETUP_SOFTWARE.map(({ key, label, placeholder }) => (
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    name={key}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-mono text-[11px] text-muted-foreground">
+                          {label}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            list={`setup-${key}-options`}
+                            placeholder={placeholder}
+                            autoComplete="off"
+                            {...field}
+                            value={field.value ?? ''}
+                          />
+                        </FormControl>
+                        <datalist id={`setup-${key}-options`}>
+                          {SOFTWARE_SUGGESTIONS[key].map((option) => (
+                            <option key={option} value={option} />
+                          ))}
+                        </datalist>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+              <FormField
+                control={form.control}
+                name="otherSoftware"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-mono text-[11px] text-muted-foreground">
+                      otras herramientas
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Raycast, Obsidian, Docker, Figma…"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </fieldset>
 
             <div className={dialogFormActionBarClassName}>
               <Button

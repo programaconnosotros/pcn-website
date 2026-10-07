@@ -1,5 +1,6 @@
 'use client';
 
+import type { SetupFormData } from '@/schemas/setup-schema';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Pencil, Trash2 } from 'lucide-react';
@@ -20,7 +21,7 @@ import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { SetupFormDialog } from './setup-form-dialog';
 
 interface SetupOwnerActionsProps {
-  setup: { id: string; title: string; description: string; date: string; imageUrl: string };
+  setup: SetupFormData & { id: string; imageUrl: string };
   /** Only the author edits; admins can also delete, to moderate. */
   canEdit: boolean;
 }

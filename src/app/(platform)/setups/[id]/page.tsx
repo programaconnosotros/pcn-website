@@ -11,7 +11,8 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { optimizedOgImage } from '@/lib/og-image';
 import { fetchSetup } from '@/lib/setups';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
-import { calendarDate, dateInputValue } from '@/schemas/setup-schema';
+import { SETUP_SOFTWARE, calendarDate, dateInputValue } from '@/schemas/setup-schema';
+import { Fragment } from 'react';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -119,6 +120,25 @@ export default async function SetupPage(props: Props) {
             </p>
           </Section>
 
+          {(SETUP_SOFTWARE.some(({ key }) => setup[key]) || setup.otherSoftware) && (
+            <Section title="software">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
+                {SETUP_SOFTWARE.filter(({ key }) => setup[key]).map(({ key, label }) => (
+                  <Fragment key={key}>
+                    <dt className="text-muted-foreground">{label}</dt>
+                    <dd className="text-foreground/90">{setup[key]}</dd>
+                  </Fragment>
+                ))}
+                {setup.otherSoftware && (
+                  <>
+                    <dt className="text-muted-foreground">otras</dt>
+                    <dd className="text-foreground/90">{setup.otherSoftware}</dd>
+                  </>
+                )}
+              </dl>
+            </Section>
+          )}
+
           {canDelete && (
             <div className="p-3">
               <SetupOwnerActions
@@ -127,6 +147,11 @@ export default async function SetupPage(props: Props) {
                   title: setup.title,
                   description: setup.description,
                   date: dateInputValue(setup.date),
+                  os: setup.os ?? undefined,
+                  browser: setup.browser ?? undefined,
+                  editor: setup.editor ?? undefined,
+                  terminal: setup.terminal ?? undefined,
+                  otherSoftware: setup.otherSoftware ?? undefined,
                   imageUrl: setup.thumbUrl,
                 }}
                 canEdit={isAuthor}

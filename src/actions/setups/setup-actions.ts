@@ -40,9 +40,18 @@ async function requireUser() {
 const parseDetails = (input: SetupFormData) => {
   const parsed = setupSchema.safeParse(input);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
-  const { date, ...rest } = parsed.data;
-  // Columna `@db.Date`: medianoche UTC del día elegido.
-  return { ...rest, date: new Date(`${date}T00:00:00Z`) };
+  const { date, os, browser, editor, terminal, otherSoftware, ...rest } = parsed.data;
+  return {
+    ...rest,
+    // Columna `@db.Date`: medianoche UTC del día elegido.
+    date: new Date(`${date}T00:00:00Z`),
+    // Vacíos se guardan como null, así editar puede borrar lo que había.
+    os: os ?? null,
+    browser: browser ?? null,
+    editor: editor ?? null,
+    terminal: terminal ?? null,
+    otherSoftware: otherSoftware ?? null,
+  };
 };
 
 const revalidateSetup = (setupId: string, authorId: string) => {

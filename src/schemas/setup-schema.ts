@@ -20,6 +20,22 @@ export const dateInputValue = (date: Date) => date.toISOString().slice(0, 10);
 export const calendarDate = (date: Date) =>
   new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 
+const softwareField = (max: number) =>
+  z
+    .string()
+    .trim()
+    .max(max, { message: `Máximo ${max} caracteres` })
+    .optional()
+    .transform((value) => value || undefined);
+
+/** The software fields of a setup, in the order the form and the page list them. */
+export const SETUP_SOFTWARE = [
+  { key: 'os', label: 'sistema operativo', placeholder: 'macOS, Ubuntu, Windows 11…' },
+  { key: 'browser', label: 'browser', placeholder: 'Arc, Firefox, Chrome…' },
+  { key: 'editor', label: 'herramienta principal', placeholder: 'VS Code, Cursor, Neovim…' },
+  { key: 'terminal', label: 'terminal', placeholder: 'Ghostty, iTerm2, Warp…' },
+] as const;
+
 export const setupSchema = z.object({
   title: z
     .string()
@@ -31,6 +47,11 @@ export const setupSchema = z.object({
     .trim()
     .min(10, { message: 'Contá un poco más: al menos 10 caracteres' })
     .max(1500, { message: 'La descripción puede tener 1500 caracteres como máximo' }),
+  os: softwareField(60),
+  browser: softwareField(60),
+  editor: softwareField(60),
+  terminal: softwareField(60),
+  otherSoftware: softwareField(300),
   /** Día del setup, `YYYY-MM-DD`. Puede ser de antes (una foto vieja) pero no del futuro. */
   date: z
     .string()

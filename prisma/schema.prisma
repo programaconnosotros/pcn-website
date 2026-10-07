@@ -305,18 +305,25 @@ model GalleryItemTag {
 // persona: el original va directo a S3 y se guarda optimizado en webp, grande y en miniatura,
 // servido por CloudFront sin firmar (es contenido público).
 model Setup {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  imageUrl    String
-  thumbUrl    String
-  width       Int
-  height      Int
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  imageUrl      String
+  thumbUrl      String
+  width         Int
+  height        Int
   // Objetos de S3 de la foto, para borrarlos junto con el setup o al reemplazar la foto.
-  storageKeys String[] @default([])
-  authorId    String
+  storageKeys   String[] @default([])
+  authorId      String
   // El día que corresponde al setup (lo elige quien lo publica; por defecto, el día que lo sube).
-  date        DateTime @default(now()) @db.Date
+  date          DateTime @default(now()) @db.Date
+  // El software con el que trabaja, todo opcional y en texto libre.
+  os            String?
+  browser       String?
+  editor        String?
+  terminal      String?
+  // Otras herramientas que quiera contar (separadas por comas).
+  otherSoftware String?
 
   author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes  SetupLike[]

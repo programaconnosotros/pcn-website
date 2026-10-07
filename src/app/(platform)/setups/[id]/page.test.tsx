@@ -28,6 +28,11 @@ const buildSetup = (overrides: Partial<SetupWithAuthor> = {}) =>
     width: 1600,
     height: 900,
     date: new Date('2026-02-03T00:00:00Z'),
+    os: null,
+    browser: null,
+    editor: null,
+    terminal: null,
+    otherSoftware: null,
     createdAt: new Date('2026-02-04T12:00:00Z'),
     author: { id: 'author-1', name: 'Ana López', image: null },
     likes: [{ userId: 'fan-1' }, { userId: 'fan-2' }],
@@ -97,6 +102,19 @@ describe('/setups/[id]', () => {
     expect(screen.getByText(/Monitor ultrawide/)).toBeInTheDocument();
     expect(screen.queryByText('acciones del dueño')).not.toBeInTheDocument();
     expect(likeProps()).toMatchObject({ setupId: 's1', likes: 2, liked: false, isLoggedIn: false });
+  });
+
+  it('lists the software it was set up with, only what was filled in', async () => {
+    jest
+      .mocked(fetchSetup)
+      .mockResolvedValue(buildSetup({ os: 'macOS', editor: 'Neovim', otherSoftware: 'Raycast' }));
+    jest.mocked(getCurrentSession).mockResolvedValue(null);
+    await renderPage(SetupPage(params()));
+
+    expect(screen.getByText('sistema operativo').nextSibling).toHaveTextContent('macOS');
+    expect(screen.getByText('herramienta principal').nextSibling).toHaveTextContent('Neovim');
+    expect(screen.getByText('otras').nextSibling).toHaveTextContent('Raycast');
+    expect(screen.queryByText('browser')).not.toBeInTheDocument();
   });
 
   it('knows when the member already liked it', async () => {

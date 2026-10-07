@@ -115,6 +115,11 @@ describe('setup uploads', () => {
         title: 'Mi escritorio',
         description: 'Dos monitores y un teclado split.',
         date: storedDate,
+        os: null,
+        browser: null,
+        editor: null,
+        terminal: null,
+        otherSoftware: null,
         imageUrl: `https://cdn.example.com/${fullKey}`,
         thumbUrl: `https://cdn.example.com/${thumbKey}`,
         width: 2560,
@@ -134,6 +139,32 @@ describe('setup uploads', () => {
     await expect(createSetup(originalKey, details)).rejects.toThrow('No pudimos leer la foto');
     expect(deleteObjectsOrLog).toHaveBeenCalledWith([originalKey]);
     expect(prismaMock.setup.create).not.toHaveBeenCalled();
+  });
+});
+
+describe('setup software', () => {
+  it('saves what was filled in and clears what was left empty', async () => {
+    loginAs(author);
+    prismaMock.setup.findUnique.mockResolvedValue(storedSetup as any);
+
+    await updateSetup('setup-1', {
+      ...details,
+      os: ' macOS ',
+      editor: 'Neovim',
+      browser: '',
+      otherSoftware: 'Raycast, Obsidian',
+    });
+
+    expect(prismaMock.setup.update).toHaveBeenCalledWith({
+      where: { id: 'setup-1' },
+      data: expect.objectContaining({
+        os: 'macOS',
+        editor: 'Neovim',
+        browser: null,
+        terminal: null,
+        otherSoftware: 'Raycast, Obsidian',
+      }),
+    });
   });
 });
 
@@ -160,6 +191,11 @@ describe('setup editing', () => {
         title: 'Mi escritorio',
         description: 'Dos monitores y un teclado split.',
         date: storedDate,
+        os: null,
+        browser: null,
+        editor: null,
+        terminal: null,
+        otherSoftware: null,
       },
     });
     expect(deleteObjectsOrLog).not.toHaveBeenCalled();
