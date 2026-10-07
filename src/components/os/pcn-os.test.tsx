@@ -8,6 +8,10 @@ import { OS_MESSAGE_SOURCE } from './os-env';
 import { SESSION_KEY } from './os-session';
 import { PcnOs } from './pcn-os';
 
+// The bell polls its own endpoint; its behaviour is covered in notification-center.test.tsx.
+jest.mock('@/components/notifications/notification-center', () => ({
+  NotificationCenter: () => null,
+}));
 jest.mock('@/actions/auth/sign-out', () => ({ signOut: jest.fn() }));
 
 const mockSearchNavigate: { current: ((_path: string) => void) | null } = { current: null };

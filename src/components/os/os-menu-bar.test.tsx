@@ -9,6 +9,10 @@ import { OsMenuBar, type OsUser } from './os-menu-bar';
 import { OsMusicControl } from './os-music-control';
 import { OS_PROGRAMS, type OsProgram } from './programs';
 
+// The bell polls its own endpoint; its behaviour is covered in notification-center.test.tsx.
+jest.mock('@/components/notifications/notification-center', () => ({
+  NotificationCenter: () => null,
+}));
 jest.mock('@/actions/auth/sign-out', () => ({ signOut: jest.fn(() => Promise.resolve()) }));
 jest.mock('sonner', () => ({ toast: { promise: jest.fn() } }));
 
