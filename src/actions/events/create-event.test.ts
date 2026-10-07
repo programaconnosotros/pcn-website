@@ -173,7 +173,7 @@ describe('createEvent dates and sponsors', () => {
         ...validEventData,
         endDate: '2026-08-15T20:00:00.000Z',
         sponsors: [
-          { name: 'Acme', website: 'https://acme.dev' },
+          { name: 'Acme', website: 'https://acme.dev', logo: '/acme.webp' },
           { name: 'Sin web', website: '' },
           { name: '   ' },
         ],
@@ -183,8 +183,8 @@ describe('createEvent dates and sponsors', () => {
     const { data } = prismaMock.event.create.mock.calls[0][0] as any;
     expect(data.endDate).toEqual(new Date('2026-08-15T20:00:00.000Z'));
     expect(data.sponsors.create).toEqual([
-      { name: 'Acme', website: 'https://acme.dev' },
-      { name: 'Sin web', website: null },
+      { name: 'Acme', website: 'https://acme.dev', logo: '/acme.webp' },
+      { name: 'Sin web', website: null, logo: null },
     ]);
     expect(data.googleMapsUrl).toBeNull();
     expect(data.capacity).toBeNull();

@@ -26,6 +26,7 @@ import {
   Video,
   Link2,
   MapIcon,
+  ImageIcon,
 } from 'lucide-react';
 import { MultiFileUpload } from '@/components/ui/multi-file-upload';
 import Link from 'next/link';
@@ -33,6 +34,14 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
 import { FormSection } from '@/components/ui/form-section';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { partners } from '@/data/partners';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -72,6 +81,7 @@ export function EventForm({
 
   const isOnline = !!form.watch('isOnline');
 
+  const sponsors = form.watch('sponsors') ?? [];
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'sponsors',
@@ -530,12 +540,39 @@ export function EventForm({
               <div className="space-y-6">
                 {/* Sponsors */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-end">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {/* Partners already listed on the site fill in name, link and logo. */}
+                    <Select
+                      value=""
+                      onValueChange={(name) => {
+                        const partner = partners.find((p) => p.name === name);
+                        if (partner)
+                          append({ name: partner.name, website: partner.url, logo: partner.logo });
+                      }}
+                    >
+                      <SelectTrigger
+                        className="h-8 w-56"
+                        aria-label="Agregar un partner como sponsor"
+                      >
+                        <SelectValue placeholder="+ partner del sitio" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {partners
+                          .filter(
+                            (partner) => !sponsors.some((sponsor) => sponsor.name === partner.name),
+                          )
+                          .map((partner) => (
+                            <SelectItem key={partner.name} value={partner.name}>
+                              {partner.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => append({ name: '', website: '' })}
+                      onClick={() => append({ name: '', website: '', logo: '' })}
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       agregarSponsor();
@@ -543,12 +580,24 @@ export function EventForm({
                   </div>
 
                   {fields.map((field, index) => (
-                    <div key={field.id} className="flex gap-2">
+                    <div key={field.id} className="flex flex-wrap items-start gap-2 sm:flex-nowrap">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-pcnGreen-200 bg-black/40">
+                        {sponsors[index]?.logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={sponsors[index]?.logo ?? undefined}
+                            alt=""
+                            className="size-7 object-contain"
+                          />
+                        ) : (
+                          <ImageIcon className="size-4 text-muted-foreground" aria-hidden />
+                        )}
+                      </div>
                       <FormField
                         control={form.control}
                         name={`sponsors.${index}.name`}
                         render={({ field }) => (
-                          <FormItem className="flex-1">
+                          <FormItem className="min-w-40 flex-1">
                             <FormControl>
                               <Input placeholder="Nombre del sponsor" {...field} />
                             </FormControl>
@@ -560,11 +609,28 @@ export function EventForm({
                         control={form.control}
                         name={`sponsors.${index}.website`}
                         render={({ field }) => (
-                          <FormItem className="flex-1">
+                          <FormItem className="min-w-40 flex-1">
                             <FormControl>
                               <Input
                                 type="url"
                                 placeholder="https://ejemplo.com"
+                                {...field}
+                                value={field.value || ''}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`sponsors.${index}.logo`}
+                        render={({ field }) => (
+                          <FormItem className="min-w-40 flex-1">
+                            <FormControl>
+                              <Input
+                                placeholder="logo: https://… (opcional)"
+                                aria-label="URL del logo"
                                 {...field}
                                 value={field.value || ''}
                               />
@@ -579,6 +645,7 @@ export function EventForm({
                         size="icon"
                         onClick={() => remove(index)}
                         className="shrink-0"
+                        aria-label="Quitar sponsor"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

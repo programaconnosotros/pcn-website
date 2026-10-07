@@ -49,6 +49,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
       event.sponsors?.map((sponsor) => ({
         name: sponsor.name,
         website: sponsor.website || '',
+        logo: sponsor.logo,
       })) || [],
   };
 

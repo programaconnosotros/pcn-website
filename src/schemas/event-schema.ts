@@ -60,6 +60,16 @@ export const eventSchema = z
               message: 'Debe ser una URL válida',
             })
             .transform((val) => (val === '' ? undefined : val)),
+          // Ruta de /public (un partner del sitio) o URL https; nunca otro esquema.
+          logo: z
+            .string()
+            .max(2048)
+            .optional()
+            .nullable()
+            .refine((val) => !val || /^(\/[\w./-]+|https:\/\/\S+)$/.test(val), {
+              message: 'El logo debe ser una ruta del sitio o una URL https',
+            })
+            .transform((val) => (val ? val : undefined)),
         }),
       )
       .optional()

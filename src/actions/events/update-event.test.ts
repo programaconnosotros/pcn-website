@@ -205,7 +205,7 @@ describe('updateEvent dates and sponsors', () => {
         endDate: '2026-08-15T20:00:00.000Z',
         capacity: 40,
         sponsors: [
-          { name: 'Acme', website: 'https://acme.dev' },
+          { name: 'Acme', website: 'https://acme.dev', logo: '/acme.webp' },
           { name: 'Sin web' },
           { name: ' ' },
         ],
@@ -216,8 +216,8 @@ describe('updateEvent dates and sponsors', () => {
     expect(data.endDate).toEqual(new Date('2026-08-15T20:00:00.000Z'));
     expect(data.capacity).toBe(40);
     expect(data.sponsors.create).toEqual([
-      { name: 'Acme', website: 'https://acme.dev' },
-      { name: 'Sin web', website: null },
+      { name: 'Acme', website: 'https://acme.dev', logo: '/acme.webp' },
+      { name: 'Sin web', website: null, logo: null },
     ]);
     expect(prismaMock.sponsor.deleteMany).toHaveBeenCalledWith({ where: { eventId: 'event-1' } });
   });

@@ -77,6 +77,15 @@ describe('eventSchema', () => {
     ]);
   });
 
+  it('accepts sponsor logos from the site or https only', () => {
+    const logo = (value: string) =>
+      eventSchema.safeParse({ ...inPerson, sponsors: [{ name: 'ACME', logo: value }] }).success;
+    expect(logo('/dizenz-logo.webp')).toBe(true);
+    expect(logo('https://cdn.acme.dev/logo.png')).toBe(true);
+    expect(logo('javascript:alert(1)')).toBe(false);
+    expect(logo('http://acme.dev/logo.png')).toBe(false);
+  });
+
   it('validates sponsors and drops an empty website', () => {
     expect(
       eventSchema.parse({ ...inPerson, sponsors: [{ name: 'ACME', website: '' }] }).sponsors,

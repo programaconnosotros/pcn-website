@@ -1,7 +1,7 @@
 import { cache, Suspense } from 'react';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { CalendarPlus, Download, Edit, Users, Globe, Video, Mic, MapPin } from 'lucide-react';
+import { CalendarPlus, Download, Edit, Users, Video, Mic, MapPin } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
 import { EventPhotos } from '@/components/events/event-photos';
@@ -12,6 +12,7 @@ import { EventAnnouncements } from '@/components/announcements/event-announcemen
 import { getEventAnnouncements } from '@/actions/announcements/get-event-announcements';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { EventSponsors } from '@/components/events/event-sponsors';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
@@ -386,6 +387,13 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               </Section>
             )}
 
+            {/* Sponsors: right after what the event is about, with their logos. */}
+            {event.sponsors && event.sponsors.length > 0 && (
+              <Section title="sponsors">
+                <EventSponsors sponsors={event.sponsors} />
+              </Section>
+            )}
+
             {/* Organizadores, con link a su perfil */}
             {(event.organizers.length > 0 || canEdit) && (
               <Section title="organizadores">
@@ -450,30 +458,6 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
               <div className="p-3">
                 <EventAnnouncements announcements={eventAnnouncements} />
               </div>
-            )}
-
-            {/* Sponsors */}
-            {event.sponsors && event.sponsors.length > 0 && (
-              <Section title="sponsors">
-                <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
-                  {event.sponsors.map((sponsor) =>
-                    sponsor.website ? (
-                      <a
-                        key={sponsor.id}
-                        href={sponsor.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-pcnGreen hover:underline"
-                      >
-                        <Globe className="h-3 w-3" />
-                        {sponsor.name}
-                      </a>
-                    ) : (
-                      <span key={sponsor.id}>{sponsor.name}</span>
-                    ),
-                  )}
-                </div>
-              </Section>
             )}
 
             {/* Mapa */}

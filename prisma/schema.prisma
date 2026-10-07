@@ -424,6 +424,8 @@ model Sponsor {
   eventId   String
   name      String
   website   String? // URL del sitio web del sponsor
+  // Logo: una ruta de /public (los partners del sitio) o una URL https.
+  logo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

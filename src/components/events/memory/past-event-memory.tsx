@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { Edit, Globe, ImagePlus, Images, Mic, UserCog, Users } from 'lucide-react';
+import { Edit, ImagePlus, Images, Mic, UserCog, Users } from 'lucide-react';
 import type { fetchEvent } from '@/actions/events/fetch-event';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
 import { EventSection } from '@/components/events/event-section';
 import { FlyerFrame } from '@/components/events/flyer-frame';
+import { EventSponsors } from '@/components/events/event-sponsors';
 import { PersonLink } from '@/components/people/person-link';
 import { Button } from '@/components/ui/button';
 import { LocalDate, LocalTime } from '@/components/ui/local-date-time';
@@ -272,24 +273,7 @@ export async function PastEventMemory({
 
             {event.sponsors.length > 0 && (
               <EventSection title="con el apoyo de">
-                <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
-                  {event.sponsors.map((sponsor) =>
-                    sponsor.website ? (
-                      <a
-                        key={sponsor.id}
-                        href={sponsor.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-pcnGreen hover:underline"
-                      >
-                        <Globe className="h-3 w-3" />
-                        {sponsor.name}
-                      </a>
-                    ) : (
-                      <span key={sponsor.id}>{sponsor.name}</span>
-                    ),
-                  )}
-                </div>
+                <EventSponsors sponsors={event.sponsors} compact />
               </EventSection>
             )}
 

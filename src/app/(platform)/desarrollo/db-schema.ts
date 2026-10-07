@@ -919,6 +919,11 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'logo',
+        type: 'String',
+        optional: true,
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },

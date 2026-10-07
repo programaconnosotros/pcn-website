@@ -1,0 +1,1 @@
+ALTER TABLE "Sponsor" ADD COLUMN "logo" TEXT;

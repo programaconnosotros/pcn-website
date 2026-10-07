@@ -72,6 +72,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
               .map((sponsor) => ({
                 name: sponsor.name,
                 website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+                logo: sponsor.logo ?? null,
               })) || [],
         },
       },

@@ -58,6 +58,7 @@ export const createEvent = async (data: EventFormData) => {
             .map((sponsor) => ({
               name: sponsor.name,
               website: sponsor.website && sponsor.website.trim() !== '' ? sponsor.website : null,
+              logo: sponsor.logo ?? null,
             })) || [],
       },
     },
