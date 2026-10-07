@@ -28,3 +28,25 @@ export const endpointCourses: RecommendedCourse[] = [
 
 /** Endpoint's training catalog, for everything beyond the courses above. */
 export const ENDPOINT_TRAININGS_URL = 'https://endpointsecurity.com.ar/capacitaciones';
+
+/** Learning platforms the community recommends beyond single courses, shown on /cursos. */
+export interface LearningPlatform {
+  name: string;
+  /** What you get, short and factual. */
+  description: string;
+  highlights: string[];
+  url: string;
+  /** How you pay for it. */
+  pricing: string;
+}
+
+export const learningPlatforms: LearningPlatform[] = [
+  {
+    name: "O'Reilly Learning",
+    description:
+      "La biblioteca técnica más completa: casi todos los libros de O'Reilly y de unas 200 editoriales más (con títulos en early release), miles de horas de video, cursos en vivo con expertos y laboratorios para practicar.",
+    highlights: ['libros y early releases', 'cursos en vivo', 'labs interactivos', 'videos'],
+    url: 'https://www.oreilly.com/online-learning/',
+    pricing: 'suscripción · prueba gratis',
+  },
+];

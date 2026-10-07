@@ -1,5 +1,6 @@
 import { CoursesBrowser } from '@/components/courses/courses-browser';
 import { PageTitle } from '@/components/ui/page-title';
+import { LearningPlatforms } from '@/components/courses/learning-platforms';
 import { communityCourses, externalCourses } from './courses';
 import type { Metadata } from 'next';
 import { tabTitle } from '@/lib/tab-title';
@@ -35,6 +36,7 @@ const Courses = () => (
         header={<PageTitle path="cursos" meta="gratis · curados por la comunidad" />}
         courses={allCourses}
       />
+      <LearningPlatforms />
     </div>
   </div>
 );
