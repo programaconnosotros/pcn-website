@@ -249,6 +249,7 @@ describe('getProfileCounts', () => {
     prismaMock.articleAuthor.findMany.mockResolvedValue([]);
     prismaMock.event.findMany.mockResolvedValue([{ id: 'e1' }] as any);
     prismaMock.galleryItem.findMany.mockResolvedValue([]);
+    prismaMock.setup.findMany.mockResolvedValue([{ id: 's1' }] as any);
   };
 
   it('counts every tab, without contributions when there are none', async () => {
@@ -260,6 +261,7 @@ describe('getProfileCounts', () => {
       articulos: 0,
       eventos: 1,
       fotos: 0,
+      setups: 1,
       conversaciones: 0,
     });
   });

@@ -30,13 +30,16 @@ import {
   getProfileIdentities,
   getProfilePhotos,
   getProfileProjects,
+  getProfileSetups,
   getProfileTalks,
 } from './profile-data';
+import { SetupTile } from '@/components/setups/setup-tile';
 
 // How many items of each section the overview shows before "ver todo".
 const PREVIEW = 2;
 const ARTICLES_PREVIEW = 3;
 const CONVERSATIONS_PREVIEW = 4;
+const SETUPS_PREVIEW = 3;
 // The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
 // row half empty when the person has more photos than fit.
 const PHOTOS_PREVIEW_COLUMNS = 3;
@@ -51,6 +54,20 @@ const photosPreviewCount = (total: number) =>
 type Session = ComponentProps<typeof AdviseCard>['session'];
 
 type ProfileTalk = Awaited<ReturnType<typeof getProfileTalks>>[number];
+type ProfileSetup = Awaited<ReturnType<typeof getProfileSetups>>[number];
+
+const SetupGrid = ({ setups, session }: { setups: ProfileSetup[]; session: Session }) => (
+  <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+    {setups.map((setup) => (
+      <SetupTile
+        key={setup.id}
+        setup={setup}
+        viewerId={session?.user?.id ?? null}
+        showAuthor={false}
+      />
+    ))}
+  </RuledGrid>
+);
 
 const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
   <RuledGrid className="grid-cols-1">
@@ -130,7 +147,7 @@ type TabProps = {
 };
 
 async function OverviewTab({ userId, firstName, session, person }: TabProps) {
-  const [projects, advises, talks, articles, events, photos, conversations, github] =
+  const [projects, advises, talks, articles, events, photos, setups, conversations, github] =
     await Promise.all([
       getProfileProjects(userId),
       getProfileAdvises(userId),
@@ -138,6 +155,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
       getProfileArticles(userId),
       getProfileEvents(userId),
       getProfilePhotos(userId),
+      getProfileSetups(userId),
       getProfileConversations(userId),
       getProfileContributions(userId),
     ]);
@@ -151,6 +169,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
       articles.length +
       events.length +
       photos.length +
+      setups.length +
       conversations.length +
       contributions.length >
     0;
@@ -234,6 +253,17 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           />
           {/* Same 3 columns at every width (tailwind-merge drops the default breakpoints). */}
           <PhotoGrid photos={previewPhotos} className="grid-cols-3 sm:grid-cols-3 xl:grid-cols-3" />
+        </section>
+      )}
+
+      {setups.length > 0 && (
+        <section>
+          <SectionHeading
+            label="setups"
+            count={setups.length}
+            href={setups.length > SETUPS_PREVIEW ? tabHref('setups') : undefined}
+          />
+          <SetupGrid setups={setups.slice(0, SETUPS_PREVIEW)} session={session} />
         </section>
       )}
 
@@ -326,6 +356,21 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
           {firstName} todavía no aparece en ninguna foto ni video de la{' '}
           <Link href="/galeria" className="text-pcnGreen hover:underline">
             galería
+          </Link>
+          .
+        </EmptyLine>
+      );
+      break;
+    }
+    case 'setups': {
+      const setups = await getProfileSetups(userId);
+      content = setups.length ? (
+        <SetupGrid setups={setups} session={session} />
+      ) : (
+        <EmptyLine>
+          {firstName} todavía no compartió su{' '}
+          <Link href="/setups" className="text-pcnGreen hover:underline">
+            setup
           </Link>
           .
         </EmptyLine>

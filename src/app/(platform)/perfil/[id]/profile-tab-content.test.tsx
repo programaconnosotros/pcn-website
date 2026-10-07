@@ -24,7 +24,11 @@ jest.mock('./profile-data', () => ({
   getProfileIdentities: jest.fn(),
   getProfilePhotos: jest.fn(),
   getProfileProjects: jest.fn(),
+  getProfileSetups: jest.fn(),
   getProfileTalks: jest.fn(),
+}));
+jest.mock('@/components/setups/setup-tile', () => ({
+  SetupTile: ({ setup }: { setup: { title: string } }) => <div>setup: {setup.title}</div>,
 }));
 jest.mock('@/components/advises/advise-card', () => ({
   AdviseCard: jest.fn(({ consejo }: { consejo: { id: string } }) => <p>consejo {consejo.id}</p>),
@@ -89,6 +93,12 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   m.getProfileEvents.mockResolvedValue(list(sizes.events ?? 0, 'e') as never);
   m.getProfilePhotos.mockResolvedValue(list(sizes.photos ?? 0, 'f') as never);
   m.getProfileConversations.mockResolvedValue(list(sizes.conversations ?? 0, 'w') as never);
+  m.getProfileSetups.mockResolvedValue(
+    Array.from({ length: sizes.setups ?? 0 }, (_, i) => ({
+      id: `s${i + 1}`,
+      title: `Setup ${i + 1}`,
+    })) as never,
+  );
   m.getProfileContributions.mockResolvedValue(contributions(sizes.contributions ?? 0) as never);
   m.getProfileIdentities.mockResolvedValue({ whatsapp: [], github: [] } as never);
 };
@@ -287,6 +297,28 @@ describe('ProfileTabContent: one section', () => {
     expect(screen.getByText(/no aparece en ninguna foto ni video/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'galería' })).toHaveAttribute('href', '/galeria');
     expect(PhotoGrid).toHaveBeenCalledTimes(1);
+  });
+
+  it('setups previews three in the overview and lists them all in their tab', async () => {
+    mockData({ setups: 5 });
+    const { unmount } = await renderTab('resumen');
+    expect(screen.getAllByText(/^setup: /)).toHaveLength(3);
+    expect(within(section('setups')).getByText('(5)')).toBeInTheDocument();
+    expect(within(section('setups')).getByRole('link', { name: /ver todo/ })).toHaveAttribute(
+      'href',
+      '/perfil/u1?tab=setups',
+    );
+    unmount();
+
+    mockData({ setups: 5 });
+    const tab = await renderTab('setups');
+    expect(screen.getAllByText(/^setup: /)).toHaveLength(5);
+    tab.unmount();
+
+    mockData();
+    await renderTab('setups');
+    expect(screen.getByText(/todavía no compartió su/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'setup' })).toHaveAttribute('href', '/setups');
   });
 
   it('conversaciones distinguishes an unlinked profile from one without highlights', async () => {

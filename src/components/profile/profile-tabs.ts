@@ -6,6 +6,7 @@ export const PROFILE_TABS = [
   { id: 'articulos', label: 'artículos' },
   { id: 'eventos', label: 'eventos' },
   { id: 'fotos', label: 'galería' },
+  { id: 'setups', label: 'setups' },
   { id: 'conversaciones', label: 'conversaciones' },
   { id: 'contribuciones', label: 'contribuciones' },
 ] as const;
