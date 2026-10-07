@@ -106,13 +106,21 @@ export function ProfileTabLink({
 }
 
 // The HUD tab strip from `ui/tabs`, but as a row of links so each tab has its own URL.
-// The bar scrolls sideways on narrow screens; the 1px padding keeps its corner ticks unclipped.
+// On phones the bar scrolls sideways to the screen's edge (the 1px padding keeps its corner ticks
+// unclipped). From lg up it wraps into rows that fill the column, so no tab is cut off: the tabs
+// draw the right and bottom lines, the bar only the left and top ones, so rows share hairlines.
 export function ProfileTabs() {
   const tabs = useProfileTabs();
   if (!tabs) return null;
   return (
-    <div className="-mx-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:px-px">
-      <nav aria-label="Secciones del perfil" className={cn(tabsListClassName, 'h-8')}>
+    <div className="-mx-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:overflow-visible lg:px-0">
+      <nav
+        aria-label="Secciones del perfil"
+        className={cn(
+          tabsListClassName,
+          'h-8 lg:flex lg:h-auto lg:flex-wrap lg:border-b-0 lg:border-r-0',
+        )}
+      >
         {PROFILE_TABS.map((tab) => {
           const isActive = tab.id === tabs.activeTab;
           const count = tabs.counts[tab.id];
@@ -122,7 +130,10 @@ export function ProfileTabs() {
               href={profileTabHref(tabs.userId, tab.id)}
               aria-current={isActive ? 'page' : undefined}
               data-state={isActive ? 'active' : 'inactive'}
-              className={tabsTriggerClassName}
+              className={cn(
+                tabsTriggerClassName,
+                'lg:h-8 lg:flex-auto lg:border-b lg:last:border-r',
+              )}
             >
               <TabBrackets>
                 {tab.label}
