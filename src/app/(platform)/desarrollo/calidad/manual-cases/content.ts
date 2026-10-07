@@ -232,6 +232,55 @@ export const adviceCases = defineManualCases('consejos', [
   },
 ]);
 
+export const forumCases = defineManualCases('foro', [
+  {
+    title: 'Abrir un tema con markdown',
+    priority: 'alta',
+    pre: ['Usuario logueado'],
+    steps: [
+      'En /foro tocar nuevoTema();',
+      'Elegir una categoría, escribir un título y un contenido con **negrita**, una lista y un bloque ```',
+      'Ver la pestaña vista-previa y publicar',
+    ],
+    expected:
+      'La vista previa muestra el formato; al publicar abre /foro/tema/[id] con el mismo formato y el tema queda primero en /foro y en su categoría.',
+  },
+  {
+    title: 'Contenido peligroso se muestra como texto',
+    priority: 'alta',
+    pre: ['Usuario logueado'],
+    steps: ['Publicar un tema con <script>alert(1)</script> y [x](javascript:alert(1))'],
+    expected: 'No se ejecuta nada: ambos se ven como texto y no hay ningún link.',
+  },
+  {
+    title: 'Responder y anidar respuestas',
+    priority: 'media',
+    pre: ['Usuario logueado', 'Un tema abierto'],
+    steps: ['Enviar una respuesta', 'Tocar responder en ella y contestar'],
+    expected:
+      'Las respuestas aparecen anidadas, el contador sube y el tema pasa arriba de la lista por actividad.',
+  },
+  {
+    title: 'Editar, borrar y moderar',
+    priority: 'alta',
+    pre: ['Usuarios A (autor), B (común) y un admin'],
+    steps: [
+      'Con B abrir el tema de A',
+      'Con A editarlo y eliminarlo tras confirmar',
+      'Con el admin fijar y cerrar otro tema, y tratar de responderlo',
+    ],
+    expected:
+      'B no ve editar ni eliminar. El tema fijado queda primero; el cerrado muestra "Este tema está cerrado" y no deja responder.',
+  },
+  {
+    title: 'Visitantes sin sesión',
+    priority: 'media',
+    steps: ['Sin sesión, abrir /foro, un tema y tocar nuevoTema();'],
+    expected:
+      'Se puede leer todo; nuevoTema(); y "Iniciá sesión para responder" llevan al login y vuelven al foro.',
+  },
+]);
+
 export const testimonialCases = defineManualCases('testimonios', [
   {
     title: 'Dejar un testimonio',

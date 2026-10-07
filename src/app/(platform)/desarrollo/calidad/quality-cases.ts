@@ -4,6 +4,7 @@ import { automatedSuites, type AutomatedSuite } from './automated-cases';
 import { authCases, eventCases, talkCases } from './manual-cases/auth-events';
 import {
   adviceCases,
+  forumCases,
   galleryCases,
   notificationCases,
   profileCases,
@@ -29,6 +30,7 @@ export const manualCases: TestCase[] = [
   ...galleryCases,
   ...profileCases,
   ...adviceCases,
+  ...forumCases,
   ...testimonialCases,
   ...projectCases,
   ...readingCases,

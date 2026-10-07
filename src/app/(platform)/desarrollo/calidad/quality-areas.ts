@@ -9,6 +9,7 @@ export const qualityAreas = [
   { id: 'galeria', code: 'GAL', label: 'Galería', route: '/galeria' },
   { id: 'perfil', code: 'PER', label: 'Perfil y logros', route: '/perfil' },
   { id: 'consejos', code: 'CON', label: 'Consejos', route: '/consejos' },
+  { id: 'foro', code: 'FOR', label: 'Foro', route: '/foro' },
   { id: 'testimonios', code: 'TES', label: 'Testimonios', route: '/testimonios' },
   { id: 'proyectos', code: 'PRO', label: 'Proyectos', route: '/proyectos' },
   { id: 'lectura', code: 'LEC', label: 'Lectura y marcas', route: '/lectura' },
