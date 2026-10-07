@@ -179,6 +179,44 @@
     }
   }
 
+  /* Classic layout's sidebar toggle: a short RGB-split glitch when pressed. */
+  .sidebar-toggle-glitch {
+    animation: sidebar-toggle-glitch 280ms steps(2, end);
+  }
+  @keyframes sidebar-toggle-glitch {
+    0% {
+      transform: translateX(0);
+      text-shadow: none;
+    }
+    25% {
+      transform: translateX(-2px) skewX(-8deg);
+      text-shadow:
+        2px 0 #ff2bd6,
+        -2px 0 #04f4be;
+      clip-path: inset(10% 0 45% 0);
+    }
+    50% {
+      transform: translateX(2px);
+      text-shadow:
+        -2px 0 #ff2bd6,
+        2px 0 #04f4be;
+      clip-path: inset(50% 0 5% 0);
+    }
+    75% {
+      transform: translateX(-1px);
+      clip-path: inset(0 0 0 0);
+    }
+    100% {
+      transform: translateX(0);
+      text-shadow: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar-toggle-glitch {
+      animation: none;
+    }
+  }
+
   /* Global search: an indeterminate scan line under the prompt while results load. */
   .search-scan::after {
     content: '';

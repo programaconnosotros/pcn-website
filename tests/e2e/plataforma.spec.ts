@@ -208,7 +208,7 @@ test.describe('icon-only controls', () => {
 
     // El sidebar se abre y cierra con un botón con nombre
     await page.goto('/eventos');
-    await expect(page.getByRole('button', { name: 'Toggle Sidebar' }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: /barra lateral/ }).first()).toBeVisible();
 
     // Las voces destacadas también anuncian si filtran
     await page.goto('/conversaciones');

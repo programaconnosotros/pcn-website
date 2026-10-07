@@ -67,8 +67,8 @@ import { Label } from './label';
 import { TabBrackets, tabsListClassName } from './tab-styles';
 import { menuContentClassName } from './menu-surface';
 
-jest.mock('./sidebar', () => ({
-  SidebarTrigger: () => <button type="button">menú</button>,
+jest.mock('./sidebar-toggle', () => ({
+  SidebarToggle: () => <button type="button">menú</button>,
 }));
 jest.mock('next-themes', () => ({ useTheme: jest.fn(() => ({})) }));
 jest.mock('sonner', () => ({

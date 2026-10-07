@@ -1,4 +1,4 @@
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarToggle } from '@/components/ui/sidebar-toggle';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Fragment, type ReactNode } from 'react';
@@ -36,7 +36,7 @@ export const PageTitle = ({ path, meta, action, className }: PageTitleProps) => 
       )}
     >
       <div className="flex min-w-0 items-center gap-2">
-        <SidebarTrigger className="-ml-1 size-7 shrink-0 text-muted-foreground hover:text-pcnGreen max-md:hidden" />
+        <SidebarToggle className="-ml-1 max-md:hidden" />
         <nav aria-label="breadcrumb" className="min-w-0">
           <h1 className="flex min-w-0 items-center text-xl font-semibold tracking-tight">
             <Link href="/" className={crumbLinkClassName}>

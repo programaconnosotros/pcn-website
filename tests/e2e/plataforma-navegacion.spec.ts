@@ -148,7 +148,7 @@ test.describe('client-side navigation', () => {
     await expect(page.locator('html[data-app-ready]')).toBeAttached();
     await page.evaluate(() => ((window as unknown as { __marker: boolean }).__marker = true));
     // El sidebar arranca colapsado (solo íconos): se abre para ver los nombres
-    await page.getByRole('button', { name: 'Toggle Sidebar' }).first().click();
+    await page.getByRole('button', { name: 'Mostrar barra lateral' }).first().click();
     for (const [name, path] of [
       ['Eventos', '/eventos'],
       ['Cursos', '/cursos'],
