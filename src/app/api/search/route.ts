@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getStaticIndex, rankEntries, toEntry } from '@/lib/search/search-index';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
+import { visibleGalleryItem } from '@/lib/gallery';
 
 const MAX_QUERY_LENGTH = 100;
 const DB_CANDIDATES = 20;
@@ -12,35 +13,85 @@ const DB_CANDIDATES = 20;
 const loadSearchCorpus = cached(
   'search-corpus',
   async () => {
-    const [events, talks, advises, projects] = await Promise.all([
-      prisma.event.findMany({
-        where: { deletedAt: null },
-        orderBy: { date: 'desc' },
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          date: true,
-          placeName: true,
-          city: true,
-          isOnline: true,
-        },
-      }),
-      prisma.talk.findMany({
-        select: { title: true, description: true, speakers: { select: { speakerName: true } } },
-      }),
-      prisma.advise.findMany({
-        orderBy: { createdAt: 'desc' },
-        select: { id: true, content: true, author: { select: { name: true } } },
-      }),
-      prisma.project.findMany({
-        select: { title: true, description: true, techStack: true, url: true },
-      }),
-    ]);
-    return { events, talks, advises, projects };
+    const [events, talks, advises, projects, users, setups, photos, testimonials] =
+      await Promise.all([
+        prisma.event.findMany({
+          where: { deletedAt: null },
+          orderBy: { date: 'desc' },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            date: true,
+            placeName: true,
+            city: true,
+            isOnline: true,
+          },
+        }),
+        prisma.talk.findMany({
+          select: { title: true, description: true, speakers: { select: { speakerName: true } } },
+        }),
+        prisma.advise.findMany({
+          orderBy: { createdAt: 'desc' },
+          select: { id: true, content: true, author: { select: { name: true } } },
+        }),
+        prisma.project.findMany({
+          select: { title: true, description: true, techStack: true, url: true },
+        }),
+        // Only what a public profile shows: never emails or phones.
+        prisma.user.findMany({
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            name: true,
+            jobTitle: true,
+            enterprise: true,
+            slogan: true,
+            career: true,
+            studyPlace: true,
+          },
+        }),
+        prisma.setup.findMany({
+          orderBy: { date: 'desc' },
+          select: { id: true, title: true, description: true, author: { select: { name: true } } },
+        }),
+        // Untitled photos would only add noise: just the ones with a description.
+        prisma.galleryItem.findMany({
+          where: { ...visibleGalleryItem, description: { not: null } },
+          orderBy: { takenAt: 'desc' },
+          select: {
+            id: true,
+            description: true,
+            takenAt: true,
+            event: { select: { name: true } },
+            tags: { select: { user: { select: { name: true } } } },
+          },
+        }),
+        prisma.testimonial.findMany({
+          orderBy: { createdAt: 'desc' },
+          select: { id: true, body: true, user: { select: { name: true } } },
+        }),
+      ]);
+    return { events, talks, advises, projects, users, setups, photos, testimonials };
   },
-  { models: ['Event', 'Talk', 'TalkSpeaker', 'Advise', 'User', 'Project'] },
+  {
+    models: [
+      'Event',
+      'Talk',
+      'TalkSpeaker',
+      'Advise',
+      'User',
+      'Project',
+      'Setup',
+      'GalleryItem',
+      'GalleryItemTag',
+      'Testimonial',
+    ],
+  },
 );
+
+const clip = (text: string, max = 90) =>
+  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 
 const loadDatabaseEntries = async (query: string) => {
   const needle = query.toLocaleLowerCase('es');
@@ -60,6 +111,29 @@ const loadDatabaseEntries = async (query: string) => {
     .slice(0, DB_CANDIDATES);
   const projects = corpus.projects
     .filter((project) => contains(project.title, project.description))
+    .slice(0, DB_CANDIDATES);
+  const users = corpus.users
+    .filter((user) =>
+      contains(
+        user.name,
+        user.jobTitle,
+        user.enterprise,
+        user.slogan,
+        user.career,
+        user.studyPlace,
+      ),
+    )
+    .slice(0, DB_CANDIDATES);
+  const setups = corpus.setups
+    .filter((setup) => contains(setup.title, setup.description, setup.author.name))
+    .slice(0, DB_CANDIDATES);
+  const photos = corpus.photos
+    .filter((photo) =>
+      contains(photo.description, photo.event?.name, ...photo.tags.map((tag) => tag.user.name)),
+    )
+    .slice(0, DB_CANDIDATES);
+  const testimonials = corpus.testimonials
+    .filter((testimonial) => contains(testimonial.body, testimonial.user.name))
     .slice(0, DB_CANDIDATES);
 
   const dateFormatter = new Intl.DateTimeFormat('es-AR', {
@@ -94,11 +168,63 @@ const loadDatabaseEntries = async (query: string) => {
       toEntry(
         {
           type: 'consejo',
-          title: advise.content.length > 90 ? `${advise.content.slice(0, 89)}…` : advise.content,
+          title: clip(advise.content),
           subtitle: advise.author.name,
           href: `/consejos/${advise.id}`,
         },
         advise.content,
+      ),
+    ),
+    ...users.map((user) =>
+      toEntry(
+        {
+          type: 'perfil',
+          title: user.name,
+          subtitle:
+            [user.jobTitle, user.enterprise].filter(Boolean).join(' en ') ||
+            user.slogan ||
+            undefined,
+          href: `/perfil/${user.id}`,
+        },
+        user.slogan,
+        user.career,
+        user.studyPlace,
+      ),
+    ),
+    ...setups.map((setup) =>
+      toEntry(
+        {
+          type: 'setup',
+          title: setup.title,
+          subtitle: setup.author.name,
+          href: `/setups/${setup.id}`,
+        },
+        setup.description,
+      ),
+    ),
+    ...photos.map((photo) =>
+      toEntry(
+        {
+          type: 'foto',
+          title: clip(photo.description ?? ''),
+          subtitle: [photo.event?.name, dateFormatter.format(photo.takenAt)]
+            .filter(Boolean)
+            .join(' · '),
+          href: `/galeria/${photo.id}`,
+        },
+        photo.description ?? undefined,
+        ...photo.tags.map((tag) => tag.user.name),
+      ),
+    ),
+    ...testimonials.map((testimonial) =>
+      toEntry(
+        {
+          type: 'testimonio',
+          title: clip(testimonial.body),
+          subtitle: testimonial.user.name,
+          href: `/testimonios/${testimonial.id}`,
+        },
+        testimonial.body,
       ),
     ),
     ...projects.map((project) =>

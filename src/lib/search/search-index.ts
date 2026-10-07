@@ -6,6 +6,11 @@ import { visiblePrograms } from '@/components/os/programs';
 import { conversations } from '@/data/whatsapp-conversations';
 import { conversationHref } from '@/components/conversations/conversation-utils';
 import { extractedConsejos } from '@/data/consejos-extraidos';
+import { historiaSections } from '@/components/historia/sections';
+import { softwareRecommendations } from '@/app/(platform)/herramientas/software';
+import { faqs } from '@/data/faqs';
+import { partners } from '@/data/partners';
+import { changelog } from '@/data/changelog';
 import type { SearchResult } from './types';
 
 /**
@@ -28,7 +33,10 @@ export interface IndexedEntry extends SearchResult {
   text: string;
 }
 
-export const toEntry = (result: SearchResult, ...extra: (string | undefined)[]): IndexedEntry => ({
+export const toEntry = (
+  result: SearchResult,
+  ...extra: (string | null | undefined)[]
+): IndexedEntry => ({
   ...result,
   titleText: normalizeSearchText(result.title),
   text: normalizeSearchText([result.title, result.subtitle, ...extra].filter(Boolean).join(' ')),
@@ -112,8 +120,61 @@ const buildStaticIndex = (): IndexedEntry[] => [
   ),
 ];
 
+const SOFTWARE_KIND = { app: 'app', library: 'librería', language: 'lenguaje' } as const;
+
+const buildContentIndex = (): IndexedEntry[] => [
+  ...historiaSections.map((section) =>
+    toEntry({
+      type: 'historia',
+      title: section.title,
+      subtitle: section.meta ? `historia de PCN · ${section.meta}` : 'historia de PCN',
+      href: `/historia#${section.id}`,
+    }),
+  ),
+  ...softwareRecommendations.map((software) =>
+    toEntry(
+      {
+        type: 'herramienta',
+        title: software.name,
+        subtitle: `${SOFTWARE_KIND[software.type]} · ${software.category}`,
+        href: withQuery('/herramientas', software.name),
+      },
+      software.description,
+      software.tags.join(' '),
+    ),
+  ),
+  ...faqs.map((faq) =>
+    toEntry({ type: 'faq', title: faq.question, href: '/preguntas-frecuentes' }, faq.answer),
+  ),
+  ...partners.map((partner) =>
+    toEntry(
+      {
+        type: 'partner',
+        title: partner.name,
+        subtitle: partner.description,
+        href: '/partners',
+      },
+      partner.location,
+    ),
+  ),
+  ...changelog
+    .filter((entry) => entry.audience !== 'admins')
+    .map((entry) =>
+      toEntry(
+        {
+          type: 'changelog',
+          title: entry.title,
+          subtitle: `${entry.date} · ${entry.area}`,
+          href: entry.href ?? '/changelog',
+        },
+        entry.description,
+      ),
+    ),
+];
+
 let staticIndex: IndexedEntry[] | null = null;
-export const getStaticIndex = () => (staticIndex ??= buildStaticIndex());
+export const getStaticIndex = () =>
+  (staticIndex ??= [...buildStaticIndex(), ...buildContentIndex()]);
 
 /**
  * Every query word must start a word somewhere in the entry (`git` matches `GitHub`, not

@@ -69,6 +69,41 @@ const mockCorpus = () => {
     },
     { title: 'Landing React', description: 'Sitio', techStack: [], url: 'https://landing.dev' },
   ] as any);
+  prismaMock.user.findMany.mockResolvedValue([
+    {
+      id: 'u1',
+      name: 'Ana React',
+      jobTitle: 'Frontend',
+      enterprise: 'Acme',
+      slogan: null,
+      career: null,
+      studyPlace: null,
+    },
+    {
+      id: 'u2',
+      name: 'Beto',
+      jobTitle: null,
+      enterprise: null,
+      slogan: 'Fan de React',
+      career: null,
+      studyPlace: null,
+    },
+  ] as any);
+  prismaMock.setup.findMany.mockResolvedValue([
+    { id: 's1', title: 'Escritorio', description: 'Codeo React acá', author: { name: 'Caro' } },
+  ] as any);
+  prismaMock.galleryItem.findMany.mockResolvedValue([
+    {
+      id: 'g1',
+      description: 'Charla de React',
+      takenAt: new Date('2025-05-10T22:00:00Z'),
+      event: { name: 'Meetup' },
+      tags: [{ user: { name: 'Dani' } }],
+    },
+  ] as any);
+  prismaMock.testimonial.findMany.mockResolvedValue([
+    { id: 't1', body: 'Aprendí React en PCN', user: { name: 'Eli' } },
+  ] as any);
 };
 
 describe('GET /api/search', () => {
@@ -96,13 +131,18 @@ describe('GET /api/search', () => {
     expect(body.query).toBe('react');
     expect(body.results.map((result) => result.type)).toEqual([
       'seccion',
+      'perfil',
+      'perfil',
       'evento',
       'evento',
+      'consejo',
+      'consejo',
+      'charla',
+      'charla',
       'curso',
-      'charla',
-      'charla',
-      'consejo',
-      'consejo',
+      'setup',
+      'foto',
+      'testimonio',
       'proyecto',
       'proyecto',
     ]);
@@ -128,12 +168,25 @@ describe('GET /api/search', () => {
     expect(byHref['https://landing.dev'].subtitle).toBeUndefined();
     const talks = body.results.filter((result) => result.type === 'charla');
     expect(talks.map((talk) => talk.subtitle)).toEqual([undefined, 'Ana, Beto']);
+    expect(byHref['/perfil/u1'].subtitle).toBe('Frontend en Acme');
+    expect(byHref['/perfil/u2'].subtitle).toBe('Fan de React');
+    expect(byHref['/setups/s1']).toMatchObject({ title: 'Escritorio', subtitle: 'Caro' });
+    expect(byHref['/galeria/g1'].subtitle).toMatch(/^Meetup · /);
+    expect(byHref['/testimonios/t1']).toMatchObject({ subtitle: 'Eli' });
+  });
+
+  it('finds photos by the people tagged in them', async () => {
+    mockCorpus();
+    const { body } = await search('dani');
+    expect(body.results.filter((r) => r.type === 'foto').map((r) => r.href)).toEqual([
+      '/galeria/g1',
+    ]);
   });
 
   it('finds talks by speaker and drops records that do not match', async () => {
     mockCorpus();
     const { body } = await search('beto');
-    expect(body.results.map((result) => result.title)).toEqual(['Testing en React']);
+    expect(body.results.map((result) => result.title)).toEqual(['Beto', 'Testing en React']);
   });
 
   it('caps the query at 100 characters', async () => {

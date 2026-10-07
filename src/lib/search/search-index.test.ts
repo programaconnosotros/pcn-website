@@ -79,6 +79,21 @@ describe('getStaticIndex', () => {
     expect(consejos.every((entry) => entry.title.length <= 90)).toBe(true);
   });
 
+  it('indexes the history, tools, FAQ, partners and the public changelog', () => {
+    const index = getStaticIndex();
+    const types = new Set(index.map((entry) => entry.type));
+    for (const type of ['historia', 'herramienta', 'faq', 'partner', 'changelog'])
+      expect(types).toContain(type);
+
+    expect(index.find((entry) => entry.type === 'historia')?.href).toMatch(/^\/historia#/);
+    expect(
+      index.find((entry) => entry.type === 'herramienta' && entry.title === 'Docker'),
+    ).toMatchObject({
+      type: 'herramienta',
+      href: '/herramientas?q=Docker',
+    });
+  });
+
   it('links articles to the /lectura search', () => {
     const article = getStaticIndex().find((entry) => entry.type === 'lectura');
     expect(article?.href).toMatch(/^\/lectura\?q=/);
