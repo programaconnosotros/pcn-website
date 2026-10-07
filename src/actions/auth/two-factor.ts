@@ -22,6 +22,7 @@ import {
   otpauthUri,
   verifyTotp,
 } from '@/lib/totp';
+import { decryptTwoFactorSecret, encryptTwoFactorSecret } from '@/lib/two-factor-crypto';
 
 const codeSchema = z.string().trim().min(1, 'Ingresá el código').max(20);
 
@@ -87,7 +88,10 @@ export async function startTwoFactorSetup() {
   const user = await requireUser();
   if (user.twoFactorEnabledAt) throw new Error('La verificación en dos pasos ya está activada');
   const secret = generateTotpSecret();
-  await prisma.user.update({ where: { id: user.id }, data: { twoFactorSecret: secret } });
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { twoFactorSecret: encryptTwoFactorSecret(secret, user.id) },
+  });
   const uri = otpauthUri(secret, user.email);
   const qr = await QRCode.toString(uri, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
   return { secret, qr: `data:image/svg+xml;utf8,${encodeURIComponent(qr)}` };
@@ -98,8 +102,9 @@ export async function confirmTwoFactorSetup(code: string) {
   const user = await requireUser();
   await enforceRateLimit('verifyCode');
   if (user.twoFactorEnabledAt) throw new Error('La verificación en dos pasos ya está activada');
-  if (!user.twoFactorSecret) throw new Error('Empezá la configuración de nuevo');
-  const step = verifyTotp(user.twoFactorSecret, codeSchema.parse(code));
+  const secret = user.twoFactorSecret && decryptTwoFactorSecret(user.twoFactorSecret, user.id);
+  if (!secret) throw new Error('Empezá la configuración de nuevo');
+  const step = verifyTotp(secret, codeSchema.parse(code));
   if (step === null) throw new Error('El código no es válido. Revisá la hora del teléfono.');
 
   const { codes, hashes } = newRecoveryCodes();

@@ -1,9 +1,11 @@
 import { checkSecondFactor, consumeSecondFactor } from './two-factor';
 import { generateTotpSecret, hashRecoveryCode, timeStep, totpAt } from './totp';
+import { encryptTwoFactorSecret } from './two-factor-crypto';
 
 const secret = generateTotpSecret();
 const user = (overrides = {}) => ({
-  twoFactorSecret: secret,
+  id: 'user-1',
+  twoFactorSecret: encryptTwoFactorSecret(secret, 'user-1'),
   twoFactorRecoveryCodes: [hashRecoveryCode('abcd-efgh'), hashRecoveryCode('ijkl-mnop')],
   twoFactorLastStep: null as number | null,
   ...overrides,
@@ -35,6 +37,12 @@ describe('checkSecondFactor', () => {
       twoFactorRecoveryCodes: [hashRecoveryCode('ijkl-mnop')],
     });
     expect(checkSecondFactor(user(), 'zzzz-zzzz')).toEqual({ ok: false });
+  });
+
+  it("refuses app codes when the stored secret doesn't open for this user", () => {
+    const code = totpAt(secret, timeStep());
+    expect(checkSecondFactor(user({ id: 'user-2' }), code)).toEqual({ ok: false });
+    expect(checkSecondFactor(user({ twoFactorSecret: secret }), code)).toEqual({ ok: false });
   });
 
   it('fails without a secret or a code', () => {

@@ -41,6 +41,8 @@ export const e2eServerEnv = () => ({
   DIRECT_URL: e2eDatabaseUrl(),
   NEXT_DIST_DIR: '.next-e2e',
   EMAIL_TRANSPORT: 'json',
+  // `next start` refuses to boot without it; the e2e database is throwaway, so a fixed key is fine.
+  TWO_FACTOR_ENCRYPTION_KEY: 'ZTJlLXR3by1mYWN0b3Ita2V5LW5vdC1hLXNlY3JldCE=',
   NEXT_PUBLIC_SITE_URL: E2E_BASE_URL,
   PORT: String(E2E_PORT),
 });

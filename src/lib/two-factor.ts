@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { hashSessionToken } from '@/lib/session';
 import { hashRecoveryCode, verifyTotp } from '@/lib/totp';
+import { decryptTwoFactorSecret } from '@/lib/two-factor-crypto';
 
 // Server helpers for the optional second factor: the pending sign-in between the password and
 // the code, and checking a code (from the app, or a recovery code).
@@ -51,6 +52,8 @@ export const clearTwoFactorChallenge = async (id?: string) => {
 };
 
 type SecondFactorUser = {
+  id: string;
+  /** Encrypted, as `encryptTwoFactorSecret` stores it. */
   twoFactorSecret: string | null;
   twoFactorRecoveryCodes: string[];
   twoFactorLastStep: number | null;
@@ -69,7 +72,9 @@ export const checkSecondFactor = (user: SecondFactorUser, code: string): SecondF
   const trimmed = code.trim();
   if (!user.twoFactorSecret || !trimmed) return { ok: false };
   if (/^[\d\s]+$/.test(trimmed)) {
-    const step = verifyTotp(user.twoFactorSecret, trimmed);
+    const secret = decryptTwoFactorSecret(user.twoFactorSecret, user.id);
+    if (!secret) return { ok: false };
+    const step = verifyTotp(secret, trimmed);
     if (step === null || step <= (user.twoFactorLastStep ?? -1)) return { ok: false };
     return { ok: true, kind: 'totp', step };
   }

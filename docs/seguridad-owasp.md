@@ -206,6 +206,13 @@ elige de una allowlist de fragmentos fijos con `Prisma.sql`, nunca desde el inpu
   una cookie httpOnly (`TwoFactorChallenge`, guardado como hash como las sesiones); 5 códigos
   incorrectos lo cierran. Un código de la app no se puede reusar (`twoFactorLastStep`). El secreto
   y los códigos están en el `omit` global de Prisma, como la contraseña.
+- El secreto TOTP no se puede hashear (hace falta para calcular el código), así que se guarda
+  cifrado con AES-256-GCM (`src/lib/two-factor-crypto.ts`) con `TWO_FACTOR_ENCRYPTION_KEY`, que
+  vive en los secrets del deploy y no en la base: una base o un backup filtrados solos no alcanzan.
+  El id del usuario va como dato asociado, así que copiar el valor a otra fila no sirve. En
+  producción el servidor no arranca sin la clave (`src/instrumentation.ts`); en local se usa una
+  fija de desarrollo. Cambiar la clave desactiva la app de autenticación de todos: habría que
+  re-cifrar los secretos con la nueva.
 
 ## A08 Integridad de software y datos
 
@@ -242,15 +249,14 @@ elige de una allowlist de fragmentos fijos con `Prisma.sql`, nunca desde el inpu
 
 ## Riesgos aceptados
 
-| Riesgo                                                                       | Por qué lo aceptamos                                                                                         |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| El registro dice "ese email ya existe"                                       | Es la experiencia esperada al registrarse; el rate limit de registro frena la enumeración masiva.            |
-| Rate limits en memoria                                                       | El sitio corre en un solo proceso (Kamal, un servidor). Se reinician con cada deploy.                        |
-| `braces` vulnerable en el watcher de Tailwind 3                              | No hay versión parcheada y solo corre al compilar, nunca en producción.                                      |
-| `style-src`, `img-src`, `frame-src` y `connect-src` abiertos en la CSP       | El sitio embebe contenido externo y sube a S3; lo que ejecuta código (scripts) sí está restringido.          |
-| Organizadores de eventos ven email y teléfono de usuarios al cargar oradores | Lo necesitan para contactarlos; tope de 20 resultados por búsqueda.                                          |
-| El secreto TOTP se guarda sin cifrar en la base                              | Cifrarlo pide una clave nueva en los secrets del deploy; está en el `omit` global y nunca sale del servidor. |
-| Los tests automatizados no corren en CI                                      | Decisión del equipo por tiempo: corren en el `pre-push` (`pnpm test`) y a mano (`pnpm test:db`).             |
+| Riesgo                                                                       | Por qué lo aceptamos                                                                                |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| El registro dice "ese email ya existe"                                       | Es la experiencia esperada al registrarse; el rate limit de registro frena la enumeración masiva.   |
+| Rate limits en memoria                                                       | El sitio corre en un solo proceso (Kamal, un servidor). Se reinician con cada deploy.               |
+| `braces` vulnerable en el watcher de Tailwind 3                              | No hay versión parcheada y solo corre al compilar, nunca en producción.                             |
+| `style-src`, `img-src`, `frame-src` y `connect-src` abiertos en la CSP       | El sitio embebe contenido externo y sube a S3; lo que ejecuta código (scripts) sí está restringido. |
+| Organizadores de eventos ven email y teléfono de usuarios al cargar oradores | Lo necesitan para contactarlos; tope de 20 resultados por búsqueda.                                 |
+| Los tests automatizados no corren en CI                                      | Decisión del equipo por tiempo: corren en el `pre-push` (`pnpm test`) y a mano (`pnpm test:db`).    |
 
 ## Cómo correr los chequeos
 

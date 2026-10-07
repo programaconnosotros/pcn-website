@@ -33,6 +33,16 @@ it('keeps the secret and recovery codes out of ordinary user reads', async () =>
   expect(read.twoFactorEnabledAt).toBeInstanceOf(Date);
 });
 
+it('stores the secret encrypted, never as the app reads it', async () => {
+  const { user, secret } = await enable();
+  const { twoFactorSecret } = await prisma.user.findUniqueOrThrow({
+    where: { id: user.id },
+    select: { twoFactorSecret: true },
+  });
+  expect(twoFactorSecret).toMatch(/^v1:/);
+  expect(twoFactorSecret).not.toContain(secret);
+});
+
 it('asks for the code after the password and signs in with it, once', async () => {
   const { user, secret, step } = await enable();
   await actAs();
