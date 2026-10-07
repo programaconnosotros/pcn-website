@@ -127,7 +127,7 @@ export async function PastEventMemory({
           }
           coverPicker={
             canEdit && (
-              <div className="absolute right-3 top-3 z-10 flex gap-1.5">
+              <div className="absolute top-3 right-3 z-10 flex gap-1.5">
                 {cover.chosenId && covers[0] && (
                   <MemoryCoverFraming
                     eventId={event.id}
@@ -218,7 +218,7 @@ export async function PastEventMemory({
           <div className="flex flex-col divide-y divide-pcnGreen-200">
             {event.description && (
               <EventSection title="de qué se trató">
-                <p className="max-w-prose whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                <p className="max-w-prose text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
                   {event.description}
                 </p>
               </EventSection>

@@ -17,7 +17,7 @@ export const PositionsField = () => {
       {fields.length > 0 ? (
         <div
           aria-hidden
-          className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-pcnGreen-700 sm:flex"
+          className="hidden items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-pcnGreen-700 uppercase sm:flex"
         >
           <span className="w-5 text-right text-pcnGreen-500">#</span>
           <span className="grid flex-1 grid-cols-[1fr_auto_1fr] gap-2">
@@ -37,8 +37,8 @@ export const PositionsField = () => {
         {fields.map((field, index) => {
           const errors = formState.errors.positions?.[index];
           return (
-            <li key={field.id} className="group flex items-start gap-2">
-              <span className="mt-2.5 w-5 shrink-0 text-right font-mono text-[11px] tabular-nums text-pcnGreen-500">
+            <li key={field.id} className="flex group items-start gap-2">
+              <span className="mt-2.5 w-5 shrink-0 text-right font-mono text-[11px] text-pcnGreen-500 tabular-nums">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div className="min-w-0 flex-1">

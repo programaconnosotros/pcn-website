@@ -40,7 +40,7 @@ export const RelatedArticles = ({
             onClick={() => setReading(article)}
             className={cn(
               ruledCellClassName,
-              'group flex gap-3 p-3 text-left hover:shadow-[inset_2px_0_0_#04f4be] focus-visible:shadow-[inset_2px_0_0_#04f4be] focus-visible:outline-none',
+              'flex group gap-3 p-3 text-left hover:shadow-[inset_2px_0_0_#04f4be] focus-visible:shadow-[inset_2px_0_0_#04f4be] focus-visible:outline-hidden',
             )}
           >
             <Avatar className="size-9 shrink-0 rounded-sm">
@@ -51,7 +51,7 @@ export const RelatedArticles = ({
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex items-start gap-2">
-                <h3 className="min-w-0 flex-1 font-mono text-sm font-semibold leading-snug transition-colors group-hover:text-pcnGreen">
+                <h3 className="min-w-0 flex-1 font-mono text-sm leading-snug font-semibold transition-colors group-hover:text-pcnGreen">
                   {article.title}
                 </h3>
                 <ChevronRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-pcnGreen" />

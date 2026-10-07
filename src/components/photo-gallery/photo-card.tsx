@@ -31,16 +31,16 @@ export function PhotoCard({ photo, index, total, href, onShare, priority }: Phot
   useParallax(frameRef);
 
   return (
-    <div ref={frameRef} className="group relative aspect-square w-full overflow-hidden bg-black">
+    <div ref={frameRef} className="relative aspect-square w-full group overflow-hidden bg-black">
       <Link
         href={href}
-        className="absolute inset-0 focus-visible:outline-none"
+        className="absolute inset-0 focus-visible:outline-hidden"
         aria-label={`Ver ${photo.kind === 'VIDEO' ? 'video' : 'foto'}: ${photoCaption(photo)}`}
       >
         <span
           aria-hidden
           style={parallaxStyle}
-          className="absolute inset-x-0 -top-[5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
+          className="absolute inset-x-0 top-[-5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -58,12 +58,12 @@ export function PhotoCard({ photo, index, total, href, onShare, priority }: Phot
         />
         <span
           aria-hidden
-          className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm"
+          className="absolute top-1.5 left-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] text-pcnGreen-600 tabular-nums backdrop-blur-xs"
         >
           #{padIndex(total - index, total)}
         </span>
         {photo.kind === 'VIDEO' && (
-          <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen backdrop-blur-sm transition-opacity group-hover:opacity-0">
+          <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-sm bg-black/70 px-1 font-mono text-[10px] text-pcnGreen tabular-nums backdrop-blur-xs transition-opacity group-hover:opacity-0">
             <Play className="size-2.5 fill-current" />
             {photo.durationSeconds !== null ? formatDuration(photo.durationSeconds) : 'video'}
             <span className="sr-only"> (video)</span>
@@ -71,10 +71,10 @@ export function PhotoCard({ photo, index, total, href, onShare, priority }: Phot
         )}
         <span
           aria-hidden
-          className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black via-black/70 to-transparent px-2 pb-1.5 pt-8 text-left font-mono text-[10px] leading-tight transition-transform duration-300 ease-out group-focus-within:translate-y-0 group-hover:translate-y-0"
+          className="absolute inset-x-0 bottom-0 translate-y-full bg-linear-to-t from-black via-black/70 to-transparent px-2 pt-8 pb-1.5 text-left font-mono text-[10px] leading-tight transition-transform duration-300 ease-out group-focus-within:translate-y-0 group-hover:translate-y-0"
         >
           <span className="block truncate text-pcnGreen">{photoCaption(photo)}</span>
-          <span className="block truncate tabular-nums text-white/50">
+          <span className="block truncate text-white/50 tabular-nums">
             {formatPhotoDate(photo.takenAt)}
             {photo.tags.length > 0 &&
               ` · ${photo.tags.length} ${photo.tags.length === 1 ? 'persona' : 'personas'}`}
@@ -82,12 +82,12 @@ export function PhotoCard({ photo, index, total, href, onShare, priority }: Phot
         </span>
       </Link>
 
-      <span aria-hidden className={`${cornerClassName} left-1 top-1 border-l-2 border-t-2`} />
-      <span aria-hidden className={`${cornerClassName} right-1 top-1 border-r-2 border-t-2`} />
+      <span aria-hidden className={`${cornerClassName} top-1 left-1 border-t-2 border-l-2`} />
+      <span aria-hidden className={`${cornerClassName} top-1 right-1 border-t-2 border-r-2`} />
       <span aria-hidden className={`${cornerClassName} bottom-1 left-1 border-b-2 border-l-2`} />
-      <span aria-hidden className={`${cornerClassName} bottom-1 right-1 border-b-2 border-r-2`} />
+      <span aria-hidden className={`${cornerClassName} right-1 bottom-1 border-r-2 border-b-2`} />
 
-      <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
+      <div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 transition-opacity duration-200 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:hidden">
         <DownloadKey photoId={photo.id} />
         {onShare && (
           <button type="button" className={keyCapClassName} onClick={onShare} title="Compartir">

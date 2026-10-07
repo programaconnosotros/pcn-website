@@ -34,20 +34,20 @@ const BrandPanel = () => (
         </p>
       </div>
 
-      <h2 className="font-mono text-4xl font-semibold leading-[1.1] tracking-[-0.04em] xl:text-5xl">
+      <h2 className="font-mono text-4xl leading-[1.1] font-semibold tracking-[-0.04em] xl:text-5xl xl:leading-none">
         Programá
         <br />
-        <span className="cursor-blink text-glow text-pcnGreen">con nosotros.</span>
+        <span className="cursor-blink text-pcnGreen text-glow">con nosotros.</span>
       </h2>
 
       <div className="space-y-3">
         <Prompt command="cat stats" />
-        <dl className="grid max-w-md grid-cols-3 border-l border-t border-pcnGreen-200">
+        <dl className="grid max-w-md grid-cols-3 border-t border-l border-pcnGreen-200">
           {stats.map((stat) => (
-            <div key={stat.label} className="border-b border-r border-pcnGreen-200 px-3 py-2">
+            <div key={stat.label} className="border-r border-b border-pcnGreen-200 px-3 py-2">
               <dt className="sr-only">{stat.label}</dt>
               <dd className="font-mono text-xl font-semibold text-pcnGreen">{stat.value}</dd>
-              <dd className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <dd className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
                 {stat.label}
               </dd>
             </div>
@@ -97,7 +97,7 @@ export const AuthShell = ({ command, title, description, wide, children }: AuthS
 
       <div className={cn('mx-auto my-auto w-full py-10', wide ? 'max-w-[560px]' : 'max-w-[400px]')}>
         <p className="font-mono text-[11px] text-pcnGreen-600">~/pcn/auth $ {command}</p>
-        <h1 className="text-glow mt-1 font-mono text-2xl font-semibold tracking-tight text-pcnGreen">
+        <h1 className="mt-1 font-mono text-2xl font-semibold tracking-tight text-pcnGreen text-glow">
           {title}
         </h1>
         {description && (
@@ -118,7 +118,7 @@ export const AuthLinks = ({ links }: { links: AuthLink[] }) => (
       <Link
         key={link.href}
         href={link.href}
-        className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-pcnGreen"
+        className="flex group items-center gap-2 text-muted-foreground transition-colors hover:text-pcnGreen"
       >
         <span className="text-pcnGreen-500">›</span>
         {link.label}

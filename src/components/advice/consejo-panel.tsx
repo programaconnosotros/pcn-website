@@ -57,13 +57,13 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
 
   return (
     <>
-      <header className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pl-3 pr-2 font-mono text-xs">
+      <header className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pr-2 pl-3 font-mono text-xs">
         <p className="min-w-0 flex-1 truncate">
           <span className="text-pcnGreen-500">~/consejos/</span>
           <span className="text-pcnGreen">{consejoHash(consejo.id)}</span>
         </p>
         {nav && nav.total > 0 && (
-          <span className="shrink-0 tabular-nums text-muted-foreground max-sm:hidden">
+          <span className="shrink-0 text-muted-foreground tabular-nums max-sm:hidden">
             [
             <span className="text-pcnGreen">
               {String(nav.index + 1).padStart(String(nav.total).length, '0')}
@@ -119,13 +119,13 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
           key={consejo.id}
           className="flex flex-col gap-4 p-5 duration-300 animate-in fade-in slide-in-from-bottom-1 sm:p-6"
         >
-          <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] tabular-nums text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground tabular-nums">
             <time dateTime={date}>
               <Prompt>date </Prompt>
               {formatLongDate(date)}
             </time>
             {consejo.source && (
-              <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
+              <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] leading-4 tracking-wider text-pcnGreen uppercase shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
                 auto-extraído
               </span>
             )}
@@ -150,7 +150,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
               >
                 <span
                   aria-hidden
-                  className="shrink-0 select-none pt-0.5 font-mono text-[11px] tabular-nums text-pcnGreen-500 group-hover/line:text-pcnGreen"
+                  className="shrink-0 pt-0.5 font-mono text-[11px] text-pcnGreen-500 tabular-nums select-none group-hover/line:text-pcnGreen"
                 >
                   {String(i + 1).padStart(lineNumberWidth, '0')}
                 </span>
@@ -197,7 +197,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
             )}
           </div>
 
-          <div className="-mx-5 border-t border-dashed border-pcnGreen-200 sm:-mx-6 [&>div]:border-b-0 [&>div]:border-r-0">
+          <div className="-mx-5 border-t border-dashed border-pcnGreen-200 sm:-mx-6 [&>div]:border-r-0 [&>div]:border-b-0">
             <CommentSection adviceId={consejo.id} comments={comments} session={session} />
           </div>
         </div>

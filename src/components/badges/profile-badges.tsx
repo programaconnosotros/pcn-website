@@ -68,10 +68,10 @@ export function ProfileBadges({
             <li key={badge.id} className="relative">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="group/badge flex cursor-default flex-col items-center gap-2 text-center outline-none">
+                  <div className="group/badge flex cursor-default flex-col items-center gap-2 text-center outline-hidden">
                     <BadgeMedal icon={badge.icon} tone={badge.tone} />
                     <span
-                      className="font-mono text-[10px] font-semibold uppercase leading-tight tracking-wider"
+                      className="font-mono text-[10px] leading-tight font-semibold tracking-wider uppercase"
                       style={{ color: BADGE_TONES[badge.tone].light }}
                     >
                       {badge.name}
@@ -83,7 +83,7 @@ export function ProfileBadges({
                     )}
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-[220px] text-pretty leading-relaxed">
+                <TooltipContent className="max-w-[220px] leading-relaxed text-pretty">
                   <p className="font-semibold">{badge.name}</p>
                   <p className="text-muted-foreground">{badge.description}</p>
                 </TooltipContent>
@@ -94,7 +94,7 @@ export function ProfileBadges({
                   disabled={isPending}
                   aria-label={`Quitar el badge ${badge.name}`}
                   onClick={() => revoke(badge)}
-                  className="absolute right-1 top-0 rounded-sm p-0.5 text-muted-foreground opacity-60 hover:bg-muted hover:text-red-400 hover:opacity-100"
+                  className="absolute top-0 right-1 rounded-sm p-0.5 text-muted-foreground opacity-60 hover:bg-muted hover:text-red-400 hover:opacity-100"
                 >
                   <X className="size-3" />
                 </button>

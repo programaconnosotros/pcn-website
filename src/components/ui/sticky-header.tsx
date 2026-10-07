@@ -155,16 +155,16 @@ export const StickyHeader = ({ children, className, pinnedOnDesktop }: StickyHea
         onFocus={() => state === 'hidden' && setHeaderState('shown')}
         style={isPinned ? ({ '--rest-top': `${restTop}px` } as CSSProperties) : undefined}
         className={cn(
-          'relative z-40 -mx-4 px-4 [display:flow-root]',
+          'relative z-40 -mx-4 flow-root px-4',
           // Pinned 0.75rem down, with the backdrop reaching up to the edge, so a title with no top
           // margin still gets breathing room without changing the header's height in the flow.
           state !== 'rest' &&
-            'sticky top-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:-z-10 before:bg-background/90 before:backdrop-blur',
+            'sticky top-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:-z-10 before:bg-background/90 before:backdrop-blur-sm',
           state === 'shown' && 'before:shadow-[0_1px_0] before:shadow-pcnGreen-200',
           state !== 'rest' && animate && 'transition-transform duration-200 ease-out',
           state === 'hidden' && '-translate-y-[calc(100%+0.75rem)]',
           isPinned &&
-            'sticky top-[var(--rest-top)] before:absolute before:inset-x-0 before:bottom-0 before:top-[calc(-1*var(--rest-top))] before:-z-10 before:bg-background/90 before:shadow-[0_1px_0] before:shadow-pcnGreen-200 before:backdrop-blur',
+            'sticky top-(--rest-top) before:absolute before:inset-x-0 before:-top-(--rest-top) before:bottom-0 before:-z-10 before:bg-background/90 before:shadow-[0_1px_0] before:shadow-pcnGreen-200 before:backdrop-blur-sm',
           className,
         )}
       >

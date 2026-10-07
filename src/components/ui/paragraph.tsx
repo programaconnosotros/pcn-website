@@ -4,4 +4,4 @@ export const Paragraph = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <p className={`mb-6 leading-7 [&:not(:first-child)]:mt-6 ${className}`}>{children}</p>;
+}) => <p className={`mb-6 leading-7 not-first:mt-6 ${className}`}>{children}</p>;

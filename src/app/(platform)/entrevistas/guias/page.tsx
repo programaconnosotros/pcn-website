@@ -86,7 +86,7 @@ const GuiasPage = () => {
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         {/* Pinned while scrolling the long list of guides, with the tabs at hand. */}
         <StickyHeader pinnedOnDesktop>
           <PageTitle

@@ -36,7 +36,7 @@ export const EventStatusBadge: React.FC<{
 
   if (status === 'in-progress') {
     return (
-      <Badge className="shrink-0 whitespace-nowrap border-transparent bg-red-500 text-white hover:bg-red-500">
+      <Badge className="shrink-0 border-transparent bg-red-500 whitespace-nowrap text-white hover:bg-red-500">
         <span className="relative mr-1.5 flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
@@ -50,7 +50,7 @@ export const EventStatusBadge: React.FC<{
     return (
       <Badge
         variant="outline"
-        className="shrink-0 whitespace-nowrap border-muted-foreground/40 text-muted-foreground"
+        className="shrink-0 border-muted-foreground/40 whitespace-nowrap text-muted-foreground"
       >
         Cupo completo
       </Badge>
@@ -60,7 +60,7 @@ export const EventStatusBadge: React.FC<{
   return (
     <Badge
       variant="outline"
-      className="shrink-0 animate-pulse whitespace-nowrap border-pcnPurple/40 text-pcnPurple dark:border-pcnGreen/40 dark:text-pcnGreen"
+      className="shrink-0 animate-pulse border-pcnPurple/40 whitespace-nowrap text-pcnPurple dark:border-pcnGreen/40 dark:text-pcnGreen"
     >
       Inscripciones abiertas
     </Badge>

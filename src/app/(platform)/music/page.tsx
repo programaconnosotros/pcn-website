@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 const MusicSection = ({ label, sets }: { label: string; sets: MusicSet[] }) => (
   <section className="mb-8">
-    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-pcnGreen">
+    <h2 className="mb-2 font-mono text-[11px] tracking-[0.22em] text-pcnGreen uppercase">
       <span className="text-pcnGreen-500">{'// '}</span>
       {label}
     </h2>

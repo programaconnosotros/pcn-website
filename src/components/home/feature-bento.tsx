@@ -94,7 +94,7 @@ const features: Feature[] = [
 ];
 
 const FeatureCard = ({ feature }: { feature: Feature }) => (
-  <Link href={feature.href} className={cn(ruledCellClassName, 'group flex gap-3 p-4')}>
+  <Link href={feature.href} className={cn(ruledCellClassName, 'flex group gap-3 p-4')}>
     <feature.icon className="mt-0.5 size-4 shrink-0 text-pcnGreen" strokeWidth={1.75} />
     <div className="min-w-0 flex-1">
       <h3 className="flex items-center justify-between gap-2 font-mono text-sm font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
@@ -119,7 +119,7 @@ const WhatsAppCell = () => (
     )}
   >
     <div className="min-w-0">
-      <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen">
+      <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.18em] text-pcnGreen uppercase">
         <MessageCircle className="size-3.5" strokeWidth={2} />
         El corazón de la comunidad
       </p>
@@ -165,7 +165,7 @@ const ComingSoonCell = () => (
       'flex flex-col gap-2 p-4 text-muted-foreground hover:bg-transparent sm:col-span-2 md:col-span-3 md:flex-row md:items-center md:gap-6',
     )}
   >
-    <span className="font-mono text-[11px] uppercase tracking-[0.18em]">{'// próximamente'}</span>
+    <span className="font-mono text-[11px] tracking-[0.18em] uppercase">{'// próximamente'}</span>
     {comingSoon.map((item) => (
       <p key={item.title} className="flex items-center gap-2 text-xs">
         <item.icon className="size-3.5" strokeWidth={1.75} />

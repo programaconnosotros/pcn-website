@@ -34,14 +34,14 @@ export const LatestConversationsSection = () => (
         <Link
           key={shortHash(conversation)}
           href={conversationHref(conversation)}
-          className={cn(ruledCellClassName, 'group flex flex-col gap-1.5 p-4')}
+          className={cn(ruledCellClassName, 'flex group flex-col gap-1.5 p-4')}
         >
-          <span className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-muted-foreground">
+          <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground tabular-nums">
             <span className="text-pcnGreen-600">{shortHash(conversation)}</span>
             <time dateTime={conversation.date}>{conversation.date}</time>
-            <ArrowUpRight className="ml-auto size-3.5 text-muted-foreground/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+            <ArrowUpRight className="ml-auto size-3.5 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
           </span>
-          <h3 className="font-mono text-sm font-semibold leading-snug tracking-tight text-foreground group-hover:text-pcnGreen">
+          <h3 className="font-mono text-sm leading-snug font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
             {conversation.title}
           </h3>
           <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">

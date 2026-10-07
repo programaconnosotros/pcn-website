@@ -19,13 +19,13 @@ export const GitHubContributions = async ({ gitHubUrl }: { gitHubUrl: string | n
       target="_blank"
       rel="noopener noreferrer"
       title={`${login} en GitHub`}
-      className="group flex items-center justify-between gap-3 px-4 py-2.5 font-mono text-xs transition-colors hover:bg-pcnGreen/[0.04]"
+      className="flex group items-center justify-between gap-3 px-4 py-2.5 font-mono text-xs transition-colors hover:bg-pcnGreen/[0.04]"
     >
       <span className="flex items-center gap-2 text-muted-foreground">
         <Github className="size-3.5 shrink-0 text-pcnGreen-600 group-hover:text-pcnGreen" />
         contribuciones en github
       </span>
-      <span className="font-semibold tabular-nums text-pcnGreen">{numberFormat.format(total)}</span>
+      <span className="font-semibold text-pcnGreen tabular-nums">{numberFormat.format(total)}</span>
     </a>
   );
 };

@@ -173,7 +173,7 @@ const Section = ({ id, title, children }: { id: string; title: string; children:
     id={id}
     className="scroll-mt-32 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
   >
-    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur lg:sticky lg:top-[var(--sticky-header-offset,0px)] lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
+    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur-sm lg:sticky lg:top-(--sticky-header-offset,0px) lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
       <span className="text-pcnGreen-500">## </span>
       {title}
     </h2>

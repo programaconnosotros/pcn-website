@@ -108,7 +108,7 @@ export function PcnLoader({ label, className }: { label?: string; className?: st
           <span className="cursor-blink text-pcnGreen">
             $ {label ? `open ${label}` : 'boot pcn'}
           </span>
-          <span className="tabular-nums text-pcnGreen-500">0x{address}</span>
+          <span className="text-pcnGreen-500 tabular-nums">0x{address}</span>
         </div>
         <div className="relative h-px overflow-hidden bg-pcnGreen-200">
           <span
@@ -118,7 +118,7 @@ export function PcnLoader({ label, className }: { label?: string; className?: st
         </div>
         <div className="flex justify-between text-pcnGreen-600">
           <span>{step}…</span>
-          <span className="tabular-nums text-pcnGreen">{String(progress).padStart(2, '0')}%</span>
+          <span className="text-pcnGreen tabular-nums">{String(progress).padStart(2, '0')}%</span>
         </div>
       </div>
     </div>

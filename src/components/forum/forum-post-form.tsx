@@ -148,12 +148,12 @@ export function ForumPostForm({
                     placeholder={
                       'Contá el contexto, qué probaste y qué esperás.\n\nAdmite markdown: **negrita**, _cursiva_, `código`, listas, > citas y bloques ```'
                     }
-                    className="min-h-[16rem] font-mono text-xs"
+                    className="min-h-64 font-mono text-xs"
                     {...field}
                   />
                 </FormControl>
               ) : (
-                <div className="min-h-[16rem] border border-pcnGreen-200 p-3">
+                <div className="min-h-64 border border-pcnGreen-200 p-3">
                   {content.trim() ? (
                     <Markdown content={content} />
                   ) : (

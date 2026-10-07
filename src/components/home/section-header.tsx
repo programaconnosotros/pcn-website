@@ -17,7 +17,7 @@ export const Eyebrow = ({ children, className }: { children: ReactNode; classNam
   <p
     className={cn(
       GeistMono.className,
-      'text-[11px] font-medium uppercase tracking-[0.22em] text-pcnGreen',
+      'text-[11px] font-medium tracking-[0.22em] text-pcnGreen uppercase',
       className,
     )}
   >
@@ -45,11 +45,11 @@ export const SectionHeader = ({
   >
     <div className="max-w-2xl">
       {eyebrow && <Eyebrow className="mb-2">{eyebrow}</Eyebrow>}
-      <h2 className="text-balance font-mono text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+      <h2 className="font-mono text-2xl font-semibold tracking-tight text-balance text-foreground md:text-3xl">
         {title}
       </h2>
       {description && (
-        <p className="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
+        <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground md:text-base md:leading-6">
           {description}
         </p>
       )}
@@ -58,10 +58,10 @@ export const SectionHeader = ({
     {action && (
       <Link
         href={action.href}
-        className="group inline-flex shrink-0 items-center gap-1.5 font-mono text-sm font-medium text-pcnGreen-700 transition-colors hover:text-pcnGreen"
+        className="inline-flex shrink-0 group items-center gap-1.5 font-mono text-sm font-medium text-pcnGreen-700 transition-colors hover:text-pcnGreen"
       >
         {action.label}
-        <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </Link>
     )}
   </div>

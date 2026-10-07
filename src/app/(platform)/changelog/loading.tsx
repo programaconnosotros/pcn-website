@@ -30,7 +30,7 @@ export default function Loading() {
                 {Array.from({ length: entries }).map((_, i) => (
                   <div
                     key={i}
-                    className="flex flex-col gap-1.5 border-b border-r border-pcnGreen-200 p-3"
+                    className="flex flex-col gap-1.5 border-r border-b border-pcnGreen-200 p-3"
                   >
                     <div className="flex h-[18px] items-center gap-2">
                       <Skeleton className="h-[18px] w-16" />

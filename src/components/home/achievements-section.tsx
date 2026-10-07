@@ -31,7 +31,7 @@ export const AchievementsSection = () => (
         >
           <BadgeMedal icon={achievement.icon} tone={achievement.tone} />
           <span
-            className="text-[11px] font-semibold uppercase tracking-wider"
+            className="text-[11px] font-semibold tracking-wider uppercase"
             style={{ color: BADGE_TONES[achievement.tone].light }}
           >
             {achievement.name}

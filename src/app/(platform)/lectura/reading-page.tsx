@@ -1024,18 +1024,18 @@ const BookRow = ({ book }: { book: Book }) => {
       {/* Cover shown as a physical book: a lit spine, page edge and a tilt towards the reader
           on hover. Covers come in different proportions, so the book hugs the whole image
           inside a fixed slot that keeps every row's text aligned. */}
-      <div className="flex h-32 w-[6.5rem] shrink-0 items-start justify-center [perspective:600px] sm:h-36 sm:w-[7.5rem]">
-        <div className="relative w-fit rounded-[2px] shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out [transform-origin:left_center] group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:[transform:rotateY(-14deg)]">
+      <div className="flex h-32 w-26 shrink-0 items-start justify-center perspective-[600px] sm:h-36 sm:w-30">
+        <div className="relative w-fit origin-[left_center] rounded-[2px] shadow-[4px_6px_18px_-6px_rgba(0,0,0,0.9)] ring-1 ring-pcnGreen-200 transition-[transform,box-shadow] duration-300 ease-out group-hover:shadow-[10px_10px_28px_-8px_rgba(4,244,190,0.45)] group-hover:ring-pcnGreen-500 motion-safe:group-hover:transform-[rotateY(-14deg)]">
           <Image
             src={book.cover}
             alt={`Portada de ${book.title}`}
             width={240}
             height={360}
-            className="block h-auto max-h-32 w-auto max-w-[6.5rem] rounded-[2px] bg-muted sm:max-h-36 sm:max-w-[7.5rem]"
+            className="block h-auto max-h-32 w-auto max-w-26 rounded-[2px] bg-muted sm:max-h-36 sm:max-w-30"
             sizes="120px"
           />
-          <span className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/60 via-white/10 to-transparent" />
-          <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/0 to-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <span className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-linear-to-r from-black/60 via-white/10 to-transparent" />
+          <span className="pointer-events-none absolute inset-0 bg-linear-to-tr from-transparent via-white/0 to-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
       </div>
 
@@ -1171,7 +1171,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
                         {savedCount > 0 && (
                           <span
                             title={`${savedCount} en tu lista para leer`}
-                            className="ml-1 bg-pcnGreen px-1 text-[10px] tabular-nums text-black"
+                            className="ml-1 bg-pcnGreen px-1 text-[10px] text-black tabular-nums"
                           >
                             {savedCount}
                           </span>
@@ -1256,7 +1256,7 @@ export const ReadingPage = ({ articleWriters, isAdmin }: ReadingPageProps) => {
               href="https://aguslogs.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(ruledCellClassName, 'group flex items-center gap-3 p-3')}
+              className={cn(ruledCellClassName, 'flex group items-center gap-3 p-3')}
             >
               <Image
                 src="/aguslogs-logo.png"

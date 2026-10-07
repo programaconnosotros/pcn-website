@@ -53,10 +53,10 @@ const stats = [
 function Stat({ label, value, lit }: { label: string; value: number; lit?: boolean }) {
   return (
     <div className={cn(ruledCellClassName, 'flex flex-col gap-0.5 px-3 py-2 font-mono')}>
-      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
+      <span className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">{label}</span>
       <span
         className={cn(
-          'text-2xl font-semibold tabular-nums leading-none',
+          'text-2xl leading-none font-semibold tabular-nums',
           lit ? 'text-pcnGreen [text-shadow:0_0_14px_rgba(4,244,190,0.6)]' : 'text-foreground',
         )}
       >
@@ -192,7 +192,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
           >
             <span className="text-pcnGreen-600">@</span>
             {name}
-            <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
+            <span className="ml-1.5 text-muted-foreground/70 tabular-nums">{count}</span>
           </button>
         ))}
       </div>
@@ -246,7 +246,7 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                 }
                 aside={
                   <p
-                    className="font-mono text-xs tabular-nums text-muted-foreground"
+                    className="font-mono text-xs text-muted-foreground tabular-nums"
                     aria-live="polite"
                   >
                     <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>
@@ -292,13 +292,13 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
                   const groupCount = items.filter(isGroupThread).length;
                   return (
                     <section key={key} id={`m-${key}`} className="scroll-mt-4">
-                      <h2 className="mb-2 flex items-center gap-2 whitespace-nowrap font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground sm:tracking-[0.2em]">
+                      <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest whitespace-nowrap text-muted-foreground uppercase sm:tracking-[0.2em]">
                         <span className="text-pcnGreen">{'>'}</span>
                         <span className="text-foreground">{key}</span>
                         <span>{monthName(key)}</span>
                         <span
                           aria-hidden
-                          className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                          className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
                         />
                         <span className="tabular-nums">
                           [{items.length}]

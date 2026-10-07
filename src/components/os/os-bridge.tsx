@@ -26,7 +26,7 @@ const MENU_WIDTH = 232;
 const MENU_HEIGHT = 124;
 
 const itemClassName =
-  'flex w-full items-center gap-2 px-3 py-1.5 text-left text-[12px] text-foreground/85 outline-none transition-colors hover:bg-pcnGreen/15 hover:text-pcnGreen focus-visible:bg-pcnGreen/15 focus-visible:text-pcnGreen';
+  'flex w-full items-center gap-2 px-3 py-1.5 text-left text-[12px] text-foreground/85 outline-hidden transition-colors hover:bg-pcnGreen/15 hover:text-pcnGreen focus-visible:bg-pcnGreen/15 focus-visible:text-pcnGreen';
 
 /** The right-click menu for links inside a window, in the desktop's terminal style. */
 function LinkContextMenu({ menu, onClose }: { menu: LinkMenu; onClose: () => void }) {
@@ -65,7 +65,7 @@ function LinkContextMenu({ menu, onClose }: { menu: LinkMenu; onClose: () => voi
       ref={ref}
       role="menu"
       aria-label="Opciones del enlace"
-      className="fixed z-[2147483647] overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/95 py-1 font-mono shadow-[0_12px_40px_-12px_rgba(4,244,190,0.45)] backdrop-blur"
+      className="fixed z-2147483647 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/95 py-1 font-mono shadow-[0_12px_40px_-12px_rgba(4,244,190,0.45)] backdrop-blur-sm"
       style={{
         width: MENU_WIDTH,
         left: Math.max(4, Math.min(menu.x, window.innerWidth - MENU_WIDTH - 4)),
@@ -73,7 +73,7 @@ function LinkContextMenu({ menu, onClose }: { menu: LinkMenu; onClose: () => voi
       }}
       onContextMenu={(event) => event.preventDefault()}
     >
-      <p className="truncate border-b border-pcnGreen-200 px-3 pb-1.5 pt-0.5 text-[10px] text-pcnGreen-600">
+      <p className="truncate border-b border-pcnGreen-200 px-3 pt-0.5 pb-1.5 text-[10px] text-pcnGreen-600">
         ~{menu.path}
       </p>
       <button

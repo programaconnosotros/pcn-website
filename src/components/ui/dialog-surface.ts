@@ -15,7 +15,7 @@ export const dialogOverlayClassName = 'dialog-overlay fixed inset-0 z-50 backdro
 export const dialogContentClassName = cn(
   'dialog-surface fixed left-1/2 top-1/2 z-50 grid max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto -translate-x-1/2 -translate-y-1/2 gap-4 rounded-sm border border-pcnGreen-400 p-6 font-mono backdrop-blur-xl',
   'shadow-[inset_0_1px_0_rgba(4,244,190,0.45),0_24px_60px_-16px_rgba(0,0,0,0.95),0_0_48px_-12px_rgba(4,244,190,0.55)]',
-  'focus-visible:outline-none',
+  'focus-visible:outline-hidden',
 );
 
 // Header: title reads as a prompt, with a dashed rule separating it from the body.
@@ -38,6 +38,6 @@ export const dialogDescriptionClassName = 'font-mono text-xs leading-relaxed tex
 export const dialogCloseClassName = cn(
   'group absolute right-3 top-3 flex size-7 items-center justify-center rounded-sm border border-pcnGreen-200 bg-black/70 text-pcnGreen-600 transition-all',
   'hover:border-pcnGreen hover:text-pcnGreen hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.7)]',
-  'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+  'focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen',
   'disabled:pointer-events-none',
 );

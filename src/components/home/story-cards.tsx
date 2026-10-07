@@ -116,7 +116,7 @@ export const StoryCards = ({ photos }: { photos: { historia: string[]; galeria: 
         href={card.href}
         className={cn(
           ruledCellClassName,
-          'group relative flex min-h-[220px] flex-col justify-end overflow-hidden md:min-h-[260px]',
+          'relative flex min-h-[220px] group flex-col justify-end overflow-hidden md:min-h-[260px]',
         )}
       >
         {/* The two cards change one second apart, so they never flip at the same time. */}
@@ -125,7 +125,7 @@ export const StoryCards = ({ photos }: { photos: { historia: string[]; galeria: 
           fallback={card.fallback}
           delay={cardIndex * (PHOTO_MS / 2)}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+        <div className="absolute inset-0 bg-linear-to-t from-black via-black/55 to-black/10" />
         <div className="absolute inset-0 bg-pcnGreen/0 transition-colors duration-500 group-hover:bg-pcnGreen/[0.04]" />
 
         <div className="relative p-4 md:p-5">
@@ -136,7 +136,7 @@ export const StoryCards = ({ photos }: { photos: { historia: string[]; galeria: 
           <p className="mt-1 max-w-md text-sm leading-relaxed text-white/70">{card.description}</p>
           <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs font-medium text-pcnGreen">
             {card.cta.toLowerCase()}
-            <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </span>
         </div>
       </Link>

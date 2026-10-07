@@ -12,7 +12,7 @@ const DAYS = [
 
 function FeedRowSkeleton({ thumbs }: { thumbs: boolean }) {
   return (
-    <div className="flex flex-col gap-2 border-b border-r border-pcnGreen-200 p-3">
+    <div className="flex flex-col gap-2 border-r border-b border-pcnGreen-200 p-3">
       <div className="flex items-center gap-2">
         <Skeleton className="h-4 w-14 rounded-none" />
         <Skeleton className="h-3 w-28" />
@@ -56,13 +56,13 @@ export default function Loading() {
         </div>
 
         <div className="flex items-start gap-6">
-          <div className="min-w-0 max-w-3xl flex-1">
+          <div className="max-w-3xl min-w-0 flex-1">
             <div className="mb-14 space-y-6">
               {DAYS.map((rows, i) => (
                 <section key={i}>
                   <div className="mb-2 flex h-4 items-center gap-2">
                     <Skeleton className="h-3 w-20" />
-                    <span className="h-px flex-1 bg-gradient-to-r from-pcnGreen-200 to-transparent" />
+                    <span className="h-px flex-1 bg-linear-to-r from-pcnGreen-200 to-transparent" />
                     <Skeleton className="h-3 w-6" />
                   </div>
                   <RuledGrid className="grid-cols-1">

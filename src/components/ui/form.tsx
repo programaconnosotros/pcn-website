@@ -92,7 +92,7 @@ const FormLabel = React.forwardRef<
       ref={ref}
       className={cn(
         error &&
-          "text-destructive before:text-destructive before:content-['!'] group-focus-within/field:text-destructive group-focus-within/field:before:text-destructive",
+          "text-destructive group-focus-within/field:text-destructive before:text-destructive before:content-['!'] group-focus-within/field:before:text-destructive",
         className,
       )}
       htmlFor={formItemId}
@@ -157,7 +157,7 @@ const FormMessage = React.forwardRef<
       id={formMessageId}
       role={error ? 'alert' : undefined}
       className={cn(
-        'field-message flex items-start gap-2 font-mono text-xs leading-relaxed text-destructive',
+        'flex field-message items-start gap-2 font-mono text-xs leading-relaxed text-destructive',
         className,
       )}
       {...props}
@@ -165,7 +165,7 @@ const FormMessage = React.forwardRef<
       {error && (
         <span
           aria-hidden
-          className="shrink-0 rounded-sm bg-destructive px-1 text-[10px] font-bold leading-4 text-black"
+          className="shrink-0 rounded-sm bg-destructive px-1 text-[10px] leading-4 font-bold text-black"
         >
           ERR
         </span>

@@ -32,7 +32,7 @@ function SortableHeader<T>({ label, column }: { label: string; column: Column<T>
       type="button"
       onClick={() => column.toggleSorting(sorted === 'asc')}
       className={cn(
-        'inline-flex items-center gap-1 uppercase tracking-wider transition-colors hover:text-pcnGreen',
+        'inline-flex items-center gap-1 tracking-wider uppercase transition-colors hover:text-pcnGreen',
         sorted && 'text-pcnGreen',
       )}
     >
@@ -203,7 +203,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
       return v ? (
         <a
           href={`tel:${v}`}
-          className="whitespace-nowrap font-mono text-[11px] hover:text-pcnGreen"
+          className="font-mono text-[11px] whitespace-nowrap hover:text-pcnGreen"
         >
           {v}
         </a>
@@ -281,7 +281,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     header: 'Slogan',
     cell: ({ getValue }) => {
       const v = getValue<string | null>();
-      return v ? <Line text={v} className="italic text-muted-foreground" /> : <EmptyCell />;
+      return v ? <Line text={v} className="text-muted-foreground italic" /> : <EmptyCell />;
     },
   },
   {
@@ -353,7 +353,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
       const date = getValue<Date>();
       return (
         <span
-          className="whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground"
+          className="font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums"
           suppressHydrationWarning
         >
           {timeAgo(date)} <span className="text-muted-foreground/50">·</span>{' '}
@@ -366,7 +366,7 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
     accessorKey: 'updatedAt',
     header: ({ column }) => <SortableHeader label="Actualizado" column={column} />,
     cell: ({ getValue }) => (
-      <span className="whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground">
+      <span className="font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums">
         <LocalDate date={getValue<Date>()} />
       </span>
     ),

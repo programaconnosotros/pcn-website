@@ -7,7 +7,7 @@ export const DiscordCard = () => (
   <div className="flex h-fit flex-col rounded-md border p-6">
     <Heading3>No te pierdas de nada</Heading3>
 
-    <p className="mb-4 mt-2 text-sm text-muted-foreground">
+    <p className="mt-2 mb-4 text-sm text-muted-foreground">
       En Discord tenemos más de 600 miembros con los que podés interactuar por chat, por llamadas de
       voz y video, compartir pantalla, chusmear sesiones de pair-programming y mucho más. Sumate y
       lleva tu carrera al siguiente nivel!

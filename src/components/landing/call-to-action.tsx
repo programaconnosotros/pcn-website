@@ -14,7 +14,7 @@ export const CallToAction = () => (
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <a
             href="https://discord.gg/JUGCAmuBnf"
-            className="cursor-pointer rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="cursor-pointer rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid"
           >
             Click acá para unirte al Discord de PCN
           </a>
@@ -23,7 +23,7 @@ export const CallToAction = () => (
         <svg
           viewBox="0 0 1024 1024"
           aria-hidden="true"
-          className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)]"
+          className="absolute top-1/2 left-1/2 -z-10 h-256 w-5xl -translate-x-1/2 mask-[radial-gradient(closest-side,white,transparent)]"
         >
           <circle
             r={512}

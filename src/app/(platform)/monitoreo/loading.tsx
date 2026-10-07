@@ -54,7 +54,7 @@ export default function Loading() {
           {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
-              className="flex h-9 items-center gap-4 border-b border-dashed border-foreground/[0.08] px-3 last:border-b-0"
+              className="flex h-9 items-center gap-4 border-b border-dashed border-foreground/8 px-3 last:border-b-0"
             >
               <Skeleton className="h-3 w-3 shrink-0" />
               <Skeleton className="h-3 w-20 shrink-0" />

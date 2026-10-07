@@ -12,7 +12,7 @@ export function ExtractedTestimonials({ testimonials }: { testimonials: Testimon
     <section aria-labelledby="extracted-testimonials" className="mb-14">
       <h2
         id="extracted-testimonials"
-        className="mb-1 font-mono text-xs uppercase tracking-wider text-muted-foreground"
+        className="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase"
       >
         {'// '}de las conversaciones · {testimonials.length}
       </h2>

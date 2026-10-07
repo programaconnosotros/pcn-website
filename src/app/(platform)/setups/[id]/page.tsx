@@ -18,7 +18,7 @@ type Props = { params: Promise<{ id: string }> };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="p-3">
-    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <h2 className="mb-2 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
       <span className="text-pcnGreen-500">{'// '}</span>
       {title}
     </h2>
@@ -85,7 +85,7 @@ export default async function SetupPage(props: Props) {
             alt={setup.title}
             width={setup.width}
             height={setup.height}
-            className="photo-glitch-in max-h-[calc(100dvh-10rem)] w-auto max-w-full object-contain p-2 sm:p-4"
+            className="max-h-[calc(100dvh-10rem)] w-auto max-w-full photo-glitch-in object-contain p-2 sm:p-4"
           />
         </div>
 
@@ -115,7 +115,7 @@ export default async function SetupPage(props: Props) {
           </Section>
 
           <Section title="descripción">
-            <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
               {setup.description}
             </p>
           </Section>

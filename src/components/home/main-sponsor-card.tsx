@@ -10,7 +10,7 @@ export const MainSponsorCard = () => (
       href="https://asz.software"
       target="_blank"
       rel="noopener noreferrer"
-      className="block !border-0 outline-none"
+      className="block border-0! outline-hidden"
       style={{ border: 'none' }}
     >
       <ASZSoftwareLogo />
@@ -20,7 +20,7 @@ export const MainSponsorCard = () => (
       href="https://choosebowery.com/"
       target="_blank"
       rel="noopener noreferrer"
-      className="block !border-0 outline-none"
+      className="block border-0! outline-hidden"
       style={{ border: 'none' }}
     >
       <BoweryLogo />

@@ -71,7 +71,7 @@ export function MultiFileUpload({
           }}
           onDragEnd={handleDragEnd}
           className={cn(
-            'group relative cursor-grab rounded-lg transition-opacity active:cursor-grabbing',
+            'relative group cursor-grab rounded-lg transition-opacity active:cursor-grabbing',
             dragIndex === i && 'opacity-40',
             overIndex === i && dragIndex !== i && 'ring-2 ring-primary ring-offset-2',
           )}
@@ -83,7 +83,7 @@ export function MultiFileUpload({
             disabled={disabled}
           />
           {value.length > 1 && !disabled && (
-            <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-md bg-background/90 p-0.5 shadow">
+            <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-md bg-background/90 p-0.5 shadow-sm">
               <Button
                 type="button"
                 variant="ghost"

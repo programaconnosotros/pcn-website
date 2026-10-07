@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function Loading() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-4 mt-4">
+      <div className="mt-4 mb-4">
         <PageTitleSkeleton titleClassName="w-32" />
         <div className="mb-4 flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
           <Skeleton className="h-8 w-48 shrink-0" />
@@ -34,11 +34,11 @@ export default function Loading() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 border-l border-t border-pcnGreen-200 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 border-t border-l border-pcnGreen-200 sm:grid-cols-3 lg:grid-cols-5">
             {Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2"
+                className="flex flex-col gap-0.5 border-r border-b border-pcnGreen-200 px-3 py-2"
               >
                 <TextLineSkeleton className="h-2.5 w-2/3" />
                 <Skeleton className="h-2 w-1/2" />

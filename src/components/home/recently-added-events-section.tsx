@@ -37,7 +37,7 @@ function FeaturedEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolea
       href={`/eventos/${event.id}`}
       className={cn(
         ruledCellClassName,
-        'group relative flex flex-col gap-4 overflow-hidden p-4 sm:flex-row sm:gap-5',
+        'relative flex group flex-col gap-4 overflow-hidden p-4 sm:flex-row sm:gap-5',
       )}
     >
       {upcoming && (
@@ -49,11 +49,11 @@ function FeaturedEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolea
       <FlyerFrame
         src={event.flyerImages[0]}
         alt={`Flyer de ${event.name}`}
-        className="aspect-[4/5] w-full shrink-0 rounded-sm border border-pcnGreen-200 shadow-[0_0_30px_-10px_rgba(4,244,190,0.5)] sm:w-56 lg:w-64"
+        className="aspect-4/5 w-full shrink-0 rounded-sm border border-pcnGreen-200 shadow-[0_0_30px_-10px_rgba(4,244,190,0.5)] sm:w-56 lg:w-64"
       />
 
       <div className="flex min-w-0 flex-1 flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em]">
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.18em] uppercase">
           {upcoming ? (
             <span className="flex items-center gap-1.5 text-pcnGreen">
               <span className="relative flex size-2">
@@ -70,7 +70,7 @@ function FeaturedEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolea
           </span>
         </div>
 
-        <h3 className="text-balance font-mono text-2xl font-semibold leading-tight tracking-tight transition-colors group-hover:text-pcnGreen md:text-3xl">
+        <h3 className="font-mono text-2xl leading-tight font-semibold tracking-tight text-balance transition-colors group-hover:text-pcnGreen md:text-3xl md:leading-9">
           {event.name}
         </h3>
 
@@ -118,13 +118,13 @@ function SideEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolean })
   return (
     <Link
       href={`/eventos/${event.id}`}
-      className={cn(ruledCellClassName, 'group flex min-h-0 gap-3 p-3')}
+      className={cn(ruledCellClassName, 'flex min-h-0 group gap-3 p-3')}
     >
       <FlyerFrame
         src={event.flyerImages[0]}
         alt={`Flyer de ${event.name}`}
         className={cn(
-          'aspect-[4/5] w-24 shrink-0 self-start rounded-sm border border-pcnGreen-200 sm:w-28',
+          'aspect-4/5 w-24 shrink-0 self-start rounded-sm border border-pcnGreen-200 sm:w-28',
           !upcoming &&
             'opacity-60 grayscale transition-[filter,opacity] group-hover:opacity-100 group-hover:grayscale-0',
         )}
@@ -132,7 +132,7 @@ function SideEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolean })
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <p
           className={cn(
-            'font-mono text-[10px] uppercase tracking-[0.18em]',
+            'font-mono text-[10px] tracking-[0.18em] uppercase',
             upcoming ? 'text-pcnGreen' : 'text-muted-foreground/70',
           )}
         >
@@ -140,7 +140,7 @@ function SideEvent({ event, upcoming }: { event: HomeEvent; upcoming: boolean })
         </p>
         <h3
           className={cn(
-            'line-clamp-2 font-mono text-sm font-semibold leading-snug transition-colors group-hover:text-pcnGreen',
+            'line-clamp-2 font-mono text-sm leading-snug font-semibold transition-colors group-hover:text-pcnGreen',
             !upcoming && 'text-muted-foreground',
           )}
         >

@@ -138,7 +138,7 @@ function TypedCommand({ text }: { text: string }) {
     }, 22);
     return () => window.clearInterval(timer);
   }, [text]);
-  return <span className="text-glow text-pcnGreen">{text.slice(0, typed)}</span>;
+  return <span className="text-pcnGreen text-glow">{text.slice(0, typed)}</span>;
 }
 
 /**
@@ -177,19 +177,19 @@ function DockTooltip({
     <span
       ref={tooltipRef}
       aria-hidden
-      className="pointer-events-none fixed z-[2147483646] -translate-x-1/2 -translate-y-full whitespace-nowrap"
+      className="pointer-events-none fixed z-2147483646 -translate-x-1/2 -translate-y-full whitespace-nowrap"
     >
       <motion.span
         initial={{ opacity: 0, y: 6, scaleX: 0.6 }}
         animate={{ opacity: 1, y: 0, scaleX: 1 }}
         transition={{ duration: 0.18, ease: [0.2, 0.9, 0.2, 1] }}
-        className="text-glow relative block border border-pcnGreen-600 bg-black/95 px-2 py-1 font-mono text-[11px] leading-none text-pcnGreen shadow-[0_0_20px_-4px_#04f4be]"
+        className="relative block border border-pcnGreen-600 bg-black/95 px-2 py-1 font-mono text-[11px] leading-none text-pcnGreen shadow-[0_0_20px_-4px_#04f4be] text-glow"
       >
         <span className="text-pcnGreen-500">[</span> {scrambled}{' '}
         <span className="text-pcnGreen-500">]</span>
         <span className="ml-2 text-[9px] text-pcnGreen-500">pid:{pid}</span>
         {/* Pointer down to the icon. */}
-        <span className="absolute left-1/2 top-full block size-1.5 -translate-x-1/2 -translate-y-[3px] rotate-45 border-b border-r border-pcnGreen-600 bg-black" />
+        <span className="absolute top-full left-1/2 block size-1.5 -translate-x-1/2 translate-y-[-3px] rotate-45 border-r border-b border-pcnGreen-600 bg-black" />
       </motion.span>
     </span>,
     document.body,
@@ -220,7 +220,7 @@ function LaunchBurst({ seed }: { seed: number }) {
       {bits.map(({ x, y, bit }, i) => (
         <motion.span
           key={i}
-          className="text-glow absolute left-1/2 top-1/2 -ml-1 -mt-2 font-mono text-[10px] font-bold text-pcnGreen"
+          className="absolute top-1/2 left-1/2 -mt-2 -ml-1 font-mono text-[10px] font-bold text-pcnGreen text-glow"
           initial={{ x: 0, y: 0, opacity: 1, scale: 1.2 }}
           animate={{ x, y, opacity: 0, scale: 0.6 }}
           transition={{ duration: 0.7, ease: [0.1, 0.8, 0.3, 1], delay: i * 0.012 }}
@@ -253,7 +253,7 @@ function ActivityMeter({ running, focused }: { running: boolean; focused: boolea
       {[0, 1, 2].map((bar) => (
         <span
           key={bar}
-          className="os-dock-meter h-full w-[2px] origin-bottom bg-pcnGreen-800"
+          className="h-full w-[2px] origin-bottom os-dock-meter bg-pcnGreen-800"
           style={{ animationDelay: `${bar * -0.27}s` }}
         />
       ))}
@@ -356,7 +356,7 @@ const DockItem = ({
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { filter: 'none' } }}
       transition={{ delay: 0.25 + index * 0.035, type: 'spring', stiffness: 260, damping: 20 }}
       style={{ width, height: baseIcon + footerHeight }}
-      className="group relative z-30 flex shrink-0 flex-col items-center justify-end gap-0.5 rounded-md outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+      className="relative z-30 flex shrink-0 group flex-col items-center justify-end gap-0.5 rounded-md outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen"
     >
       {/* Anchored above the meter so the icon grows upwards out of the dock when magnified. */}
       <span className="absolute inset-x-0 flex justify-center" style={{ bottom: footerHeight - 2 }}>
@@ -370,7 +370,7 @@ const DockItem = ({
           <ProgramIcon
             program={program}
             running={running}
-            className="size-full [&>svg]:size-[62%] [&>svg]:transition-transform [&>svg]:duration-300 group-hover:[&>svg]:scale-110"
+            className="size-full [&>svg]:size-[62%] [&>svg]:transition-transform [&>svg]:duration-300 [&>svg]:group-hover:scale-110"
           />
           {launches > 0 && <LaunchBurst key={launches} seed={launches} />}
         </motion.span>
@@ -378,8 +378,8 @@ const DockItem = ({
       {showLabel && (
         <span
           className={cn(
-            'w-full truncate text-center font-mono text-[10px] lowercase leading-3',
-            focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-600',
+            'w-full truncate text-center font-mono text-[10px] leading-3 lowercase',
+            focused ? 'text-pcnGreen text-glow' : 'text-pcnGreen-600',
           )}
         >
           {program.name}
@@ -393,19 +393,19 @@ const DockItem = ({
 const Divider = () => (
   <span
     aria-hidden
-    className="relative mx-[5px] mb-3 h-7 w-px shrink-0 self-end overflow-hidden bg-gradient-to-t from-transparent via-pcnGreen-400 to-transparent"
+    className="relative mx-[5px] mb-3 h-7 w-px shrink-0 self-end overflow-hidden bg-linear-to-t from-transparent via-pcnGreen-400 to-transparent"
   >
-    <span className="os-dock-divider absolute inset-x-0 h-2 bg-pcnGreen-500" />
+    <span className="absolute inset-x-0 os-dock-divider h-2 bg-pcnGreen-500" />
   </span>
 );
 
 /** Corner brackets drawn just outside the dock frame, like a HUD target. */
 const HudCorners = () => (
-  <span aria-hidden className="pointer-events-none absolute -inset-[5px]">
-    <span className="absolute left-0 top-0 size-2.5 border-l border-t border-pcnGreen-700" />
-    <span className="absolute right-0 top-0 size-2.5 border-r border-t border-pcnGreen-700" />
+  <span aria-hidden className="pointer-events-none absolute inset-[-5px]">
+    <span className="absolute top-0 left-0 size-2.5 border-t border-l border-pcnGreen-700" />
+    <span className="absolute top-0 right-0 size-2.5 border-t border-r border-pcnGreen-700" />
     <span className="absolute bottom-0 left-0 size-2.5 border-b border-l border-pcnGreen-700" />
-    <span className="absolute bottom-0 right-0 size-2.5 border-b border-r border-pcnGreen-700" />
+    <span className="absolute right-0 bottom-0 size-2.5 border-r border-b border-pcnGreen-700" />
   </span>
 );
 
@@ -497,7 +497,7 @@ export function OsDock({
       initial={reduceMotion ? false : { y: 140, opacity: 0, scaleX: 0.4 }}
       animate={{ y: 0, opacity: 1, scaleX: 1 }}
       transition={{ type: 'spring', stiffness: 140, damping: 18, mass: 0.9 }}
-      className="fixed bottom-2 left-1/2 z-[5000] max-w-[calc(100vw-16px)]"
+      className="fixed bottom-2 left-1/2 z-5000 max-w-[calc(100vw-16px)]"
       style={{ x: '-50%' }}
     >
       <HudCorners />
@@ -505,16 +505,16 @@ export function OsDock({
       {/* Live prompt: types out the command for the hovered program. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute left-3 top-0 z-20 flex -translate-y-1/2 items-center gap-1 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
+        className="pointer-events-none absolute top-0 left-3 z-20 flex -translate-y-1/2 items-center gap-1 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
       >
         ~/pcn ${command && <TypedCommand key={command} text={command} />}
-        <span className="os-dock-caret inline-block h-2 w-1.5 bg-pcnGreen" />
+        <span className="inline-block h-2 w-1.5 os-dock-caret bg-pcnGreen" />
       </span>
 
       {/* Process counter. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute right-3 top-0 z-20 flex -translate-y-1/2 items-center gap-1.5 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
+        className="pointer-events-none absolute top-0 right-3 z-20 flex -translate-y-1/2 items-center gap-1.5 bg-black px-1.5 font-mono text-[9px] tracking-widest text-pcnGreen-600"
       >
         <span
           className={cn(
@@ -531,13 +531,13 @@ export function OsDock({
         {/* Frame: a faint border with a light beam running around it. */}
         <span
           aria-hidden
-          className="os-dock-frame pointer-events-none absolute inset-0 z-10 rounded-md"
+          className="pointer-events-none absolute inset-0 z-10 os-dock-frame rounded-md"
         />
 
         <div
           onMouseMove={lite ? undefined : onMouseMove}
           onMouseLeave={lite ? undefined : onMouseLeave}
-          className="relative flex items-end gap-0.5 rounded-md px-1 pb-0.5 pt-1.5"
+          className="relative flex items-end gap-0.5 rounded-md px-1 pt-1.5 pb-0.5"
         >
           {/* Glass and surface effects, clipped to the dock. The blur lives on this layer rather than
               the items' parent so a hovered tile rising out of the dock can blur the desktop too. */}
@@ -550,8 +550,8 @@ export function OsDock({
               style={{ backgroundImage: spotlight, opacity: spotOpacity }}
             />
             <span className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_2px,rgba(4,244,190,0.035)_2px,rgba(4,244,190,0.035)_3px)]" />
-            <span className="absolute inset-0 bg-[linear-gradient(rgba(4,244,190,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(4,244,190,0.05)_1px,transparent_1px)] bg-[size:12px_12px] [mask-image:linear-gradient(to_top,black,transparent_80%)]" />
-            <span className="os-dock-sweep absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-pcnGreen-50 to-transparent" />
+            <span className="absolute inset-0 bg-[linear-gradient(rgba(4,244,190,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(4,244,190,0.05)_1px,transparent_1px)] mask-[linear-gradient(to_top,black,transparent_80%)] bg-size-[12px_12px]" />
+            <span className="absolute inset-y-0 left-0 os-dock-sweep w-1/3 bg-linear-to-r from-transparent via-pcnGreen-50 to-transparent" />
           </span>
 
           {pinned.map((program, index) => (

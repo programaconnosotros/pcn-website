@@ -34,10 +34,10 @@ export function ProgramIcon({
         aria-hidden
         className="pointer-events-none absolute -inset-1 opacity-0 transition-opacity group-hover:opacity-100"
       >
-        <span className="absolute left-0 top-0 size-2 border-l border-t border-pcnGreen" />
-        <span className="absolute right-0 top-0 size-2 border-r border-t border-pcnGreen" />
+        <span className="absolute top-0 left-0 size-2 border-t border-l border-pcnGreen" />
+        <span className="absolute top-0 right-0 size-2 border-t border-r border-pcnGreen" />
         <span className="absolute bottom-0 left-0 size-2 border-b border-l border-pcnGreen" />
-        <span className="absolute bottom-0 right-0 size-2 border-b border-r border-pcnGreen" />
+        <span className="absolute right-0 bottom-0 size-2 border-r border-b border-pcnGreen" />
       </span>
       <Icon
         className="relative size-1/2 text-pcnGreen-800 drop-shadow-[0_0_4px_#04f4be] transition-colors group-hover:text-pcnGreen"

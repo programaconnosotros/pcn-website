@@ -21,7 +21,7 @@ import { ParticipantChip } from './participant-chip';
 const keyCapClassName = cn(
   'flex size-7 shrink-0 items-center justify-center rounded-sm border border-pcnGreen-200 bg-black/70 text-pcnGreen-600 transition-all',
   'hover:border-pcnGreen hover:text-pcnGreen hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.7)]',
-  'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+  'focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen',
   'disabled:pointer-events-none disabled:opacity-40',
 );
 
@@ -140,12 +140,12 @@ export function ConversationDialog({
         aria-describedby={undefined}
         onKeyDown={handleKeyDown}
       >
-        <header className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pl-3 pr-2 text-xs">
+        <header className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pr-2 pl-3 text-xs">
           <p className="min-w-0 flex-1 truncate">
             <span className="text-pcnGreen-500">~/conversaciones/</span>
             <span className="text-pcnGreen">{shortHash(conversation)}</span>
           </p>
-          <span className="shrink-0 tabular-nums text-muted-foreground">
+          <span className="shrink-0 text-muted-foreground tabular-nums">
             [
             <span className="text-pcnGreen">
               {String(index + 1).padStart(String(total).length, '0')}
@@ -186,20 +186,20 @@ export function ConversationDialog({
             key={index}
             className="flex flex-col gap-4 p-5 duration-300 animate-in fade-in slide-in-from-bottom-1 sm:p-6"
           >
-            <div className="flex flex-wrap items-center gap-2 text-[11px] tabular-nums text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground tabular-nums">
               <time dateTime={conversation.date}>
                 <span className="text-pcnGreen-600">$ date </span>
                 {formatLongDate(conversation.date)}
               </time>
               <ConversationEventLink conversation={conversation} />
               {isGroup && (
-                <span className="border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
+                <span className="border border-pcnGreen-600 px-1 text-[10px] leading-4 tracking-wider text-pcnGreen uppercase shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
                   muchos participantes
                 </span>
               )}
             </div>
 
-            <DialogTitle className="text-lg leading-snug sm:text-xl">
+            <DialogTitle className="text-lg leading-snug sm:text-xl sm:leading-7">
               <Highlight text={conversation.title} query={query} />
             </DialogTitle>
 
@@ -211,7 +211,7 @@ export function ConversationDialog({
                 >
                   <span
                     aria-hidden
-                    className="shrink-0 select-none pt-px font-mono text-[11px] tabular-nums text-pcnGreen-500 group-hover/line:text-pcnGreen"
+                    className="shrink-0 pt-px font-mono text-[11px] text-pcnGreen-500 tabular-nums select-none group-hover/line:text-pcnGreen"
                   >
                     {String(i + 1).padStart(lineNumberWidth, '0')}
                   </span>

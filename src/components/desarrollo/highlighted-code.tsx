@@ -30,7 +30,7 @@ export const HighlightedCode = async ({ code, lang }: { code: string; lang: stri
 
   return (
     <div
-      className="overflow-x-auto p-3 font-mono text-[11px] leading-5 [tab-size:2] sm:text-xs sm:leading-5 [&_code]:font-mono [&_pre]:!bg-transparent"
+      className="overflow-x-auto p-3 font-mono text-[11px] leading-5 tab-2 sm:text-xs sm:leading-5 [&_code]:font-mono [&_pre]:bg-transparent!"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

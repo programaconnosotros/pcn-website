@@ -52,7 +52,7 @@ export function WebReaderDialog({ page, open, onOpenChange }: WebReaderDialogPro
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[88dvh] w-[94vw] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
-        <header className="flex shrink-0 items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
+        <header className="flex shrink-0 items-center gap-3 border-b border-pcnGreen-200 py-2 pr-12 pl-3 font-mono">
           {page.icon}
           <div className="min-w-0 flex-1">
             <DialogTitle className="truncate text-sm font-semibold">{page.title}</DialogTitle>

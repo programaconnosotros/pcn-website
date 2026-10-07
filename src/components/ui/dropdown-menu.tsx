@@ -43,7 +43,7 @@ DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayNam
 
 // Tall menus scroll within the room left in the viewport instead of running off its edge.
 const menuFitClassName =
-  'max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto overflow-x-hidden';
+  'max-h-(--radix-dropdown-menu-content-available-height) overflow-y-auto overflow-x-hidden';
 
 const DropdownMenuSubContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,

@@ -5,7 +5,7 @@ export const PlatformFeaturesLarge = () => (
     <div className="absolute inset-0 -z-10 overflow-hidden">
       <svg
         aria-hidden="true"
-        className="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-gray-200 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]"
+        className="absolute top-0 left-[max(50%,25rem)] h-256 w-[128rem] -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-200"
       >
         <defs>
           <pattern
@@ -40,7 +40,7 @@ export const PlatformFeaturesLarge = () => (
       <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
         <div className="lg:pr-4">
           <div className="lg:max-w-lg">
-            <p className="text-base font-semibold leading-7 text-indigo-600">
+            <p className="text-base leading-7 font-semibold text-indigo-600">
               La distancia no es un problema
             </p>
 
@@ -55,12 +55,12 @@ export const PlatformFeaturesLarge = () => (
         </div>
       </div>
 
-      <div className="-ml-12 -mt-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
+      <div className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt=""
           src="/discord-demo.webp"
-          className="w-[48rem] max-w-none rounded-lg bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
+          className="w-3xl max-w-none rounded-lg bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-228"
         />
       </div>
 

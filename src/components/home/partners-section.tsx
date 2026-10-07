@@ -27,7 +27,7 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
     href={partner.url}
     target="_blank"
     rel="noopener noreferrer"
-    className={cn(ruledCellClassName, 'group flex flex-col items-center gap-2 p-4 text-center')}
+    className={cn(ruledCellClassName, 'flex group flex-col items-center gap-2 p-4 text-center')}
   >
     <div
       className={cn('flex h-16 w-full items-center justify-center', partnerLogoGroupHoverClassName)}
@@ -48,7 +48,7 @@ const PartnerCell = ({ partner }: { partner: Partner }) => (
         className={cn(
           'font-mono text-sm font-semibold',
           partner.brandColor
-            ? 'transition-colors group-hover:text-[var(--partner-brand)]'
+            ? 'transition-colors group-hover:text-(--partner-brand)'
             : 'group-hover:text-pcnGreen',
         )}
         style={
@@ -80,7 +80,7 @@ export const PartnersSection = ({ showHeading = true }: PartnersSectionProps) =>
 
       {GROUPS.map(({ kind, label }, index) => (
         <section key={kind} className={cn(index > 0 && 'mt-8')}>
-          <h2 className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-pcnGreen">
+          <h2 className="mb-2 font-mono text-[11px] tracking-[0.22em] text-pcnGreen uppercase">
             <span className="text-pcnGreen-500">{'// '}</span>
             {label}
           </h2>

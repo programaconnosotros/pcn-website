@@ -170,7 +170,7 @@ function SpeakerFields({
               </FormControl>
               <FormLabel
                 htmlFor={`isProfessional-${index}`}
-                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+                className="cursor-pointer tracking-normal text-foreground normal-case before:content-none"
               >
                 Soy profesional
               </FormLabel>
@@ -228,7 +228,7 @@ function SpeakerFields({
               </FormControl>
               <FormLabel
                 htmlFor={`isStudent-${index}`}
-                className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+                className="cursor-pointer tracking-normal text-foreground normal-case before:content-none"
               >
                 Soy estudiante
               </FormLabel>

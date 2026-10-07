@@ -46,7 +46,7 @@ export const prettyJson = (value: string) => {
 
 /** Relative time, with the full date on hover. */
 export const TimeCell = ({ date }: { date: Date }) => (
-  <TableCell className="whitespace-nowrap tabular-nums text-muted-foreground">
+  <TableCell className="whitespace-nowrap text-muted-foreground tabular-nums">
     {/* Relative time drifts between the server render and hydration; the minute bucket is fine. */}
     <time dateTime={date.toISOString()} title={formatDate(date)} suppressHydrationWarning>
       {formatRelativeTime(date)}
@@ -75,7 +75,7 @@ export const ExpandButton = ({
       event.stopPropagation();
       onToggle();
     }}
-    className="rounded-sm p-0.5 text-muted-foreground transition-colors hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+    className="rounded-sm p-0.5 text-muted-foreground transition-colors hover:text-pcnGreen focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
   >
     <ChevronRight
       className={cn('size-3.5 transition-transform', expanded && 'rotate-90 text-pcnGreen')}
@@ -89,11 +89,11 @@ export const ExpandButton = ({
 /** A labeled `<pre>` block inside an expanded row. */
 export const DetailBlock = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="min-w-0">
-    <p className="mb-1 font-mono text-[10px] uppercase tracking-wider text-pcnGreen-600">
-      <span className="text-pcnGreen-500/60">{'// '}</span>
+    <p className="mb-1 font-mono text-[10px] tracking-wider text-pcnGreen-600 uppercase">
+      <span className="text-pcnGreen/60">{'// '}</span>
       {label}
     </p>
-    <pre className="max-h-72 overflow-auto whitespace-pre border border-pcnGreen-200/60 bg-black/50 p-2 font-mono text-[11px] leading-relaxed text-foreground/80 [scrollbar-width:thin]">
+    <pre className="max-h-72 scrollbar-thin overflow-auto border border-pcnGreen/60 bg-black/50 p-2 font-mono text-[11px] leading-relaxed whitespace-pre text-foreground/80">
       {children}
     </pre>
   </div>
@@ -115,7 +115,7 @@ export function FlagGroup<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className="flex max-w-full overflow-x-auto border border-pcnGreen-200 [scrollbar-width:none]"
+      className="flex max-w-full scrollbar-none overflow-x-auto border border-pcnGreen-200"
     >
       {options.map((option) => (
         <button
@@ -132,7 +132,7 @@ export function FlagGroup<T extends string>({
         >
           --{option.value}
           {option.count !== undefined && (
-            <span className="ml-1 tabular-nums text-muted-foreground/70">({option.count})</span>
+            <span className="ml-1 text-muted-foreground/70 tabular-nums">({option.count})</span>
           )}
         </button>
       ))}
@@ -207,7 +207,7 @@ export const AsciiBar = ({
 }) => {
   const filled = Math.round((value / Math.max(total, 1)) * width);
   return (
-    <span aria-hidden className="tracking-[-0.05em]">
+    <span aria-hidden className="tracking-tighter">
       <span className="text-pcnGreen">{'█'.repeat(filled)}</span>
       <span className="text-pcnGreen-200">{'░'.repeat(width - filled)}</span>
     </span>
@@ -225,12 +225,12 @@ export const SectionBar = ({
   children?: ReactNode;
 }) => (
   <header className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-pcnGreen-200 bg-pcnGreen/[0.03] px-3 py-2 font-mono text-xs">
-    <h2 className="font-semibold uppercase tracking-widest text-pcnGreen">{title}</h2>
+    <h2 className="font-semibold tracking-widest text-pcnGreen uppercase">{title}</h2>
     <span className="min-w-0 truncate text-muted-foreground">
       <span className="text-pcnGreen-600">$ </span>
       {command}
     </span>
-    <span className="ml-auto flex items-center gap-2 tabular-nums text-muted-foreground">
+    <span className="ml-auto flex items-center gap-2 text-muted-foreground tabular-nums">
       {children}
     </span>
   </header>

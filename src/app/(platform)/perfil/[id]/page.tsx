@@ -341,7 +341,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       rel="noopener noreferrer"
                       aria-label={ariaLabel}
                       title={label}
-                      className="group flex min-w-0 flex-1 items-center justify-center py-2.5 transition-colors hover:bg-pcnGreen/[0.04] hover:shadow-[inset_0_-2px_0_#04f4be]"
+                      className="flex min-w-0 flex-1 group items-center justify-center py-2.5 transition-colors hover:bg-pcnGreen/[0.04] hover:shadow-[inset_0_-2px_0_#04f4be]"
                     >
                       <Icon className="size-4 shrink-0 text-pcnGreen-600 transition-[filter] group-hover:text-pcnGreen group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.8)]" />
                     </a>
@@ -357,8 +357,8 @@ export default async function ProfilePage(props: ProfilePageProps) {
               )}
 
               {user.slogan && (
-                <p className="p-4 text-sm italic leading-relaxed text-muted-foreground">
-                  <span className="not-italic text-pcnGreen-500">&gt; </span>
+                <p className="p-4 text-sm leading-relaxed text-muted-foreground italic">
+                  <span className="text-pcnGreen-500 not-italic">&gt; </span>
                   {user.slogan}
                 </p>
               )}
@@ -382,7 +382,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                         className="border-l-2 border-pcnGreen-200 pl-3"
                       >
                         {position.jobTitle && (
-                          <p className="text-sm font-medium leading-snug">{position.jobTitle}</p>
+                          <p className="text-sm leading-snug font-medium">{position.jobTitle}</p>
                         )}
                         {position.enterprise && (
                           <p className="font-mono text-xs text-muted-foreground">
@@ -403,7 +403,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   </h2>
                   <div className="border-l-2 border-pcnGreen-200 pl-3">
                     {user.career && (
-                      <p className="text-sm font-medium leading-snug">{user.career}</p>
+                      <p className="text-sm leading-snug font-medium">{user.career}</p>
                     )}
                     {user.studyPlace && (
                       <p className="font-mono text-xs text-muted-foreground">
@@ -420,7 +420,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   {profileFacts.map((fact) => (
                     <div key={`${fact.label}-${fact.value}`} className="contents">
                       <dt className="font-mono text-pcnGreen-500">{fact.label}</dt>
-                      <dd className="min-w-0 break-words">
+                      <dd className="min-w-0 wrap-break-word">
                         {fact.href ? (
                           <a href={fact.href} className="text-pcnGreen hover:underline">
                             {fact.value}

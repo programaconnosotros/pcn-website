@@ -270,10 +270,10 @@ export function HackerCursor() {
       <div className="pcn-cursor-layer pcn-cursor-blend">
         <div ref={ringRef} className="pcn-cursor-ring" data-hover="false" data-pressed="false">
           <span className="pcn-cursor-frame">
-            <span className="pcn-cursor-corner left-0 top-0 border-l-2 border-t-2" />
-            <span className="pcn-cursor-corner right-0 top-0 border-r-2 border-t-2" />
+            <span className="pcn-cursor-corner top-0 left-0 border-t-2 border-l-2" />
+            <span className="pcn-cursor-corner top-0 right-0 border-t-2 border-r-2" />
             <span className="pcn-cursor-corner bottom-0 left-0 border-b-2 border-l-2" />
-            <span className="pcn-cursor-corner bottom-0 right-0 border-b-2 border-r-2" />
+            <span className="pcn-cursor-corner right-0 bottom-0 border-r-2 border-b-2" />
           </span>
         </div>
         <div ref={dotRef} className="pcn-cursor-dot" />

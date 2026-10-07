@@ -9,7 +9,7 @@ import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 
 const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
-  <div className={cn(ruledCellClassName, 'group relative flex flex-col gap-2 p-3')}>
+  <div className={cn(ruledCellClassName, 'relative flex group flex-col gap-2 p-3')}>
     <span className="relative block aspect-video overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -30,7 +30,7 @@ const MusicCell = ({ set, onPlay }: { set: MusicSet; onPlay: () => void }) => (
     <button
       type="button"
       onClick={onPlay}
-      className="truncate text-left font-mono text-xs font-semibold after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen"
+      className="truncate text-left font-mono text-xs font-semibold group-hover:text-pcnGreen after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset"
     >
       {set.title}
     </button>

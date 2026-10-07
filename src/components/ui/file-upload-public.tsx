@@ -101,7 +101,7 @@ export function FileUploadPublic({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('flex flex-col items-start gap-2', className)}>
       <Input
         ref={inputRef}
         type="file"
@@ -127,7 +127,7 @@ export function FileUploadPublic({
               type="button"
               variant="destructive"
               size="icon"
-              className="absolute -right-1 -top-1 z-10 h-6 w-6"
+              className="absolute -top-1 -right-1 z-10 h-6 w-6"
               onClick={handleRemove}
               disabled={disabled}
             >

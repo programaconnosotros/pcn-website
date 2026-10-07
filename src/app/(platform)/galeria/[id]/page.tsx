@@ -32,7 +32,7 @@ type Props = {
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="p-3">
-    <h2 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <h2 className="mb-2 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
       <span className="text-pcnGreen-500">{'// '}</span>
       {title}
     </h2>
@@ -247,7 +247,7 @@ export default async function GalleryItemPage(props: Props) {
                       backgroundPosition: 'center',
                     }}
                     className={cn(
-                      'photo-glitch-in relative block max-h-[calc(100dvh-12rem)] select-none object-contain',
+                      'relative block max-h-[calc(100dvh-12rem)] photo-glitch-in object-contain select-none',
                       landscape ? 'h-auto w-full' : 'w-auto max-w-full',
                     )}
                     draggable={false}
@@ -314,7 +314,7 @@ export default async function GalleryItemPage(props: Props) {
 
             {photo.description && (
               <Section title="descripción">
-                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
                   {photo.description}
                 </p>
               </Section>

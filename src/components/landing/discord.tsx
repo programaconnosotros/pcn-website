@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@components/ui/button';
 
 export const Discord = () => (
-  <section className="w-full py-12 dark:bg-black md:py-24 lg:py-32">
+  <section className="w-full py-12 md:py-24 lg:py-32 dark:bg-black">
     <div className="container px-4 md:px-6">
       <div className="flex flex-col items-center space-y-4 text-center">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Sumate en Discord!</h2>
@@ -10,12 +10,12 @@ export const Discord = () => (
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="Discord" height="310" src="/discord-demo.webp" />
 
-        <p className="mx-auto max-w-[800px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+        <p className="mx-auto max-w-[800px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
           Tenemos canales de texto y voz para que puedas interactuar con los miembros de la
           comunidad, y un foro súper copado donde podes encontrar o compartir información valiosa!
         </p>
 
-        <p className="mx-auto max-w-[800px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+        <p className="mx-auto max-w-[800px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
           Ya seas un desarrollador súper experimentado, o una persona que recién está empezando a
           explorar el universo de la programación, todos son bienvenidos en nuestra comunidad.
           Animate!

@@ -46,7 +46,7 @@ export function DeleteUserButton({ userId, userName }: { userId: string; userNam
         type="button"
         onClick={() => setOpen(true)}
         title={`Eliminar la cuenta de ${userName}`}
-        className="inline-flex items-center gap-1 border border-transparent px-1.5 py-0.5 font-mono text-[10px] lowercase text-muted-foreground transition-colors hover:border-red-500/60 hover:text-red-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500"
+        className="inline-flex items-center gap-1 border border-transparent px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground lowercase transition-colors hover:border-red-500/60 hover:text-red-400 focus-visible:ring-1 focus-visible:ring-red-500 focus-visible:outline-hidden"
       >
         <Trash2 className="size-3" aria-hidden />
         eliminar

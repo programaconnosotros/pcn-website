@@ -322,7 +322,7 @@ export const ProfileForm = ({
             />
 
             <div className="min-w-0 space-y-1.5 font-mono">
-              <p className="text-glow truncate text-base font-semibold">
+              <p className="truncate text-base font-semibold text-glow">
                 {values.name || 'sin nombre'}
               </p>
               {filledPositions.length > 0 ? (
@@ -340,8 +340,8 @@ export const ProfileForm = ({
                 </p>
               )}
               {values.slogan && (
-                <p className="line-clamp-2 text-[11px] italic text-muted-foreground">
-                  <span className="not-italic text-pcnGreen-500">&gt; </span>
+                <p className="line-clamp-2 text-[11px] text-muted-foreground italic">
+                  <span className="text-pcnGreen-500 not-italic">&gt; </span>
                   {values.slogan}
                 </p>
               )}
@@ -358,13 +358,13 @@ export const ProfileForm = ({
           <div className="space-y-1 p-4 font-mono text-[11px]">
             <div className="flex items-center justify-between text-muted-foreground">
               <span>perfil.completo</span>
-              <span className={cn('tabular-nums', percent === 100 && 'text-glow text-pcnGreen')}>
+              <span className={cn('tabular-nums', percent === 100 && 'text-pcnGreen text-glow')}>
                 {percent}%
               </span>
             </div>
-            <p aria-hidden className="whitespace-pre tracking-tighter">
+            <p aria-hidden className="tracking-tighter whitespace-pre">
               <span className="text-pcnGreen-500">[</span>
-              <span className="text-glow text-pcnGreen">{'█'.repeat(filledBar)}</span>
+              <span className="text-pcnGreen text-glow">{'█'.repeat(filledBar)}</span>
               <span className="text-pcnGreen-200">{'░'.repeat(BAR_WIDTH - filledBar)}</span>
               <span className="text-pcnGreen-500">]</span>
             </p>
@@ -377,7 +377,7 @@ export const ProfileForm = ({
                 href={`#${s.id}`}
                 className="flex items-center gap-2 px-4 py-1 text-muted-foreground transition-colors hover:bg-pcnGreen/[0.04] hover:text-pcnGreen"
               >
-                <span className="text-pcnGreen-500/70">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-pcnGreen/70">{String(i + 1).padStart(2, '0')}</span>
                 <span className="flex-1">{s.title}</span>
                 <span
                   className={cn(
@@ -560,7 +560,7 @@ export const ProfileForm = ({
                   <div className="flex">
                     <label
                       htmlFor={link.name}
-                      className="group-focus-within/field:text-glow flex w-24 shrink-0 items-center rounded-l-sm border border-r-0 border-input bg-pcnGreen/[0.04] px-2 font-mono text-[11px] text-pcnGreen-700 transition-colors group-focus-within/field:text-pcnGreen"
+                      className="flex w-24 shrink-0 items-center rounded-l-sm border border-r-0 border-input bg-pcnGreen/[0.04] px-2 font-mono text-[11px] text-pcnGreen-700 transition-colors group-focus-within/field:text-pcnGreen group-focus-within/field:text-glow"
                     >
                       {link.prefix}
                     </label>
@@ -615,7 +615,7 @@ export const ProfileForm = ({
             <div className="flex flex-col gap-3">
               {specialtyGroups.map((group) => (
                 <div key={group.id}>
-                  <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="mb-1.5 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
                     {group.title}
                   </p>
                   <div className="flex flex-wrap gap-1.5">

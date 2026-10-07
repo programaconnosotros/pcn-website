@@ -20,9 +20,9 @@ export const HomeSectionSkeleton = ({
       <Skeleton className="h-8 w-72 max-w-full" />
       <Skeleton className="h-4 w-96 max-w-full" />
     </div>
-    <div className={cn('grid border-l border-t border-pcnGreen-200', gridClassName)}>
+    <div className={cn('grid border-t border-l border-pcnGreen-200', gridClassName)}>
       {Array.from({ length: cells }).map((_, i) => (
-        <div key={i} className="border-b border-r border-pcnGreen-200 p-1">
+        <div key={i} className="border-r border-b border-pcnGreen-200 p-1">
           <Skeleton className={cn('w-full rounded-none', cellClassName)} />
         </div>
       ))}

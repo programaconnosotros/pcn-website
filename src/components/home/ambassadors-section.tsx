@@ -83,7 +83,7 @@ export const AmbassadorsSection = async () => {
                 <li key={ambassador.id}>
                   <Link
                     href={`/perfil/${ambassador.id}`}
-                    className="group flex items-center gap-2.5"
+                    className="flex group items-center gap-2.5"
                   >
                     <Avatar className="size-8 rounded-sm ring-1 ring-pcnGreen-200 group-hover:ring-pcnGreen-600">
                       <AvatarImage src={ambassador.image ?? undefined} alt="" />

@@ -236,7 +236,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
     <>
       {/* Mobile: sticky prompt bar with prev/next and a dropdown listing every section. It drops
           below the page's StickyHeader while that one is shown. */}
-      <div className="sticky top-[var(--sticky-header-offset,0px)] z-30 -mx-4 border-b border-pcnGreen-200 bg-background/95 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] font-mono backdrop-blur transition-[top] duration-200 ease-out lg:hidden">
+      <div className="sticky top-(--sticky-header-offset,0px) z-30 -mx-4 border-b border-pcnGreen-200 bg-background/95 px-4 pt-[calc(0.5rem+env(safe-area-inset-top))] pb-2 font-mono backdrop-blur-sm transition-[top] duration-200 ease-out lg:hidden">
         <div className="flex items-center gap-1.5">
           <button
             type="button"
@@ -251,13 +251,13 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="flex h-8 min-w-0 flex-1 items-center gap-2 border border-pcnGreen-200 px-2.5 text-left text-xs transition-colors hover:bg-pcnGreen/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+                className="flex h-8 min-w-0 flex-1 items-center gap-2 border border-pcnGreen-200 px-2.5 text-left text-xs transition-colors hover:bg-pcnGreen/10 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
               >
-                <span className="shrink-0 tabular-nums text-muted-foreground">[{counter}]</span>
+                <span className="shrink-0 text-muted-foreground tabular-nums">[{counter}]</span>
                 <span className="shrink-0 text-pcnGreen">▸</span>
                 <span className="min-w-0 flex-1 truncate">{activeSection?.title}</span>
                 {activeSection?.meta && (
-                  <span className="shrink-0 tabular-nums text-pcnGreen-600">
+                  <span className="shrink-0 text-pcnGreen-600 tabular-nums">
                     {activeSection.meta}
                   </span>
                 )}
@@ -266,7 +266,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="max-h-[60vh] w-[var(--radix-dropdown-menu-trigger-width)] overflow-y-auto"
+              className="max-h-[60vh] w-(--radix-dropdown-menu-trigger-width) overflow-y-auto"
             >
               {groupedSections.map((group, groupIndex) => (
                 <div key={group.group ?? groupIndex}>
@@ -286,12 +286,12 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                         section.index === activeIndex && 'text-pcnGreen',
                       )}
                     >
-                      <span className="w-5 shrink-0 tabular-nums text-muted-foreground/60">
+                      <span className="w-5 shrink-0 text-muted-foreground/60 tabular-nums">
                         {pad(section.index + 1, digits)}
                       </span>
                       <span className="flex-1">{section.title}</span>
                       {section.meta && (
-                        <span className="tabular-nums text-muted-foreground">{section.meta}</span>
+                        <span className="text-muted-foreground tabular-nums">{section.meta}</span>
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -314,20 +314,20 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
 
       {/* Desktop: sticky `tree` pane whose branches light up as you read. It stays below a page
           header pinned to the top (`--sticky-header-offset`). */}
-      <aside className="sticky top-[var(--toc-top)] hidden h-[calc(100vh-var(--toc-top)-1rem)] w-72 shrink-0 flex-col border border-pcnGreen-200 font-mono [--toc-top:max(6rem,calc(var(--sticky-header-offset,0px)+1rem))] lg:flex">
+      <aside className="sticky top-(--toc-top) hidden h-[calc(100vh-var(--toc-top)-1rem)] w-72 shrink-0 flex-col border border-pcnGreen-200 font-mono [--toc-top:max(6rem,calc(var(--sticky-header-offset,0px)+1rem))] lg:flex">
         <div className="flex items-center justify-between gap-2 border-b border-pcnGreen-200 px-3 py-2 text-xs">
           <p className="min-w-0 truncate">
             <span className="text-pcnGreen-500">$ </span>
             tree {path ? `~/${path}` : label.toLowerCase()}
           </p>
-          <span className="shrink-0 tabular-nums text-muted-foreground">{counter}</span>
+          <span className="shrink-0 text-muted-foreground tabular-nums">{counter}</span>
         </div>
         <div className="border-b border-pcnGreen-200 px-3 py-2">{segments(true)}</div>
 
         <nav
           ref={navRef}
           aria-label={label}
-          className="relative min-h-0 flex-1 overflow-y-auto px-2 py-3 [scrollbar-width:thin]"
+          className="relative min-h-0 flex-1 scrollbar-thin overflow-y-auto px-2 py-3"
         >
           {/* One continuous rail runs the whole index: groups hang from it like any other row,
               so it never breaks between the end of a group and what follows. */}
@@ -339,27 +339,27 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                   {group.group && (
                     <p
                       className={cn(
-                        'relative flex items-center gap-1.5 pb-1 pl-6 pr-1 pt-2 text-xs font-semibold',
+                        'relative flex items-center gap-1.5 pt-2 pr-1 pb-1 pl-6 text-xs font-semibold',
                         groupStarted ? 'text-pcnGreen' : 'text-muted-foreground',
                       )}
                     >
                       <span
                         aria-hidden
                         className={cn(
-                          'absolute bottom-0 left-2.5 top-0 w-px',
+                          'absolute top-0 bottom-0 left-2.5 w-px',
                           groupStarted ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
                         )}
                       />
                       <span
                         aria-hidden
                         className={cn(
-                          'absolute left-2.5 top-1/2 h-px w-3',
+                          'absolute top-1/2 left-2.5 h-px w-3',
                           groupStarted ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
                         )}
                       />
                       <span aria-hidden>{groupStarted ? '▾' : '▸'}</span>
                       <span className="min-w-0 flex-1 truncate">{group.group}/</span>
-                      <span className="shrink-0 font-normal tabular-nums text-muted-foreground/60">
+                      <span className="shrink-0 font-normal text-muted-foreground/60 tabular-nums">
                         {group.sections.length}
                       </span>
                     </p>
@@ -377,7 +377,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                           <span
                             aria-hidden
                             className={cn(
-                              'absolute left-2.5 top-0 h-[14px] w-px',
+                              'absolute top-0 left-2.5 h-[14px] w-px',
                               reached ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
                             )}
                           />
@@ -385,7 +385,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                             <span
                               aria-hidden
                               className={cn(
-                                'absolute bottom-0 left-2.5 top-[14px] w-px',
+                                'absolute top-[14px] bottom-0 left-2.5 w-px',
                                 isRead ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
                               )}
                             />
@@ -409,7 +409,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                               handleSelect(section.id);
                             }}
                             className={cn(
-                              'group relative flex items-start gap-2 py-1 pl-1.5 pr-2 text-xs leading-5 transition-colors',
+                              'relative flex group items-start gap-2 py-1 pr-2 pl-1.5 text-xs leading-5 transition-colors',
                               isActive && 'text-pcnGreen',
                               isRead && 'text-muted-foreground/60 hover:text-foreground',
                               !isActive && !isRead && 'text-muted-foreground hover:text-foreground',
@@ -419,11 +419,11 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                               <motion.span
                                 layoutId="toc-active-row"
                                 aria-hidden
-                                className="absolute inset-0 border-l-2 border-pcnGreen bg-gradient-to-r from-pcnGreen/15 via-pcnGreen/[0.05] to-transparent"
+                                className="absolute inset-0 border-l-2 border-pcnGreen bg-linear-to-r from-pcnGreen/15 via-pcnGreen/[0.05] to-transparent"
                                 transition={{ type: 'spring', stiffness: 500, damping: 40 }}
                               />
                             )}
-                            <span className="relative shrink-0 text-[10px] tabular-nums leading-5 text-muted-foreground/50">
+                            <span className="relative shrink-0 text-[10px] leading-5 text-muted-foreground/50 tabular-nums">
                               {pad(section.index + 1, digits)}
                             </span>
                             <span className="relative min-w-0 flex-1">
@@ -438,7 +438,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                             {section.meta && (
                               <span
                                 className={cn(
-                                  'relative shrink-0 text-[10px] tabular-nums leading-5',
+                                  'relative shrink-0 text-[10px] leading-5 tabular-nums',
                                   isActive ? 'text-pcnGreen' : 'text-muted-foreground/60',
                                 )}
                               >
@@ -482,7 +482,7 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
               ]
             </button>
           </span>
-          <span className="w-10 shrink-0 pr-2 text-right tabular-nums text-pcnGreen">
+          <span className="w-10 shrink-0 pr-2 text-right text-pcnGreen tabular-nums">
             {scrollPercent}%
           </span>
         </div>

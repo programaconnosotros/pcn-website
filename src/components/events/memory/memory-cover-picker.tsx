@@ -20,7 +20,7 @@ type Photo = { id: string; thumbUrl: string; width: number | null; height: numbe
 const isLandscape = ({ width, height }: Photo) => !!width && !!height && width / height >= 1.3;
 
 const tileClassName =
-  'group relative aspect-[3/2] overflow-hidden rounded-[3px] bg-black ring-1 ring-inset ring-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen disabled:opacity-60';
+  'group relative aspect-3/2 overflow-hidden rounded-[3px] bg-black ring-1 ring-inset ring-white/10 transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-pcnGreen disabled:opacity-60';
 
 /**
  * For whoever can edit the event, on a past event's hero: pick which of the event's photos opens its page, or go
@@ -58,7 +58,7 @@ export function MemoryCoverPicker({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-sm transition-colors hover:border-pcnGreen hover:text-pcnGreen"
+        className="flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-xs transition-colors hover:border-pcnGreen hover:text-pcnGreen"
       >
         <ImageIcon className="size-3.5" />
         portada: {chosenId ? 'elegida' : 'aleatoria'}
@@ -111,7 +111,7 @@ export function MemoryCoverPicker({
                     )}
                   />
                   {selected && (
-                    <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-pcnGreen text-black">
+                    <span className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-pcnGreen text-black">
                       <Check className="size-3.5" />
                     </span>
                   )}

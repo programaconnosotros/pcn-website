@@ -33,7 +33,7 @@ export function DailyBars({
         className="flex h-24 items-end gap-[2px] border-b border-pcnGreen-300"
       >
         {days.map(({ day, count }, index) => (
-          <div key={day.toISOString()} className="group relative flex h-full flex-1 items-end">
+          <div key={day.toISOString()} className="relative flex h-full flex-1 group items-end">
             <div
               className={
                 count > 0
@@ -42,13 +42,13 @@ export function DailyBars({
               }
               style={{ height: count > 0 ? `${Math.max(4, (count / max) * 100)}%` : '1px' }}
             />
-            <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 whitespace-nowrap border border-pcnGreen-300 bg-background px-1.5 py-0.5 font-mono text-[11px] group-hover:block">
+            <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 border border-pcnGreen-300 bg-background px-1.5 py-0.5 font-mono text-[11px] whitespace-nowrap group-hover:block">
               <span className="text-pcnGreen">{count}</span> {unit} · {dayFormat.format(day)}
             </span>
           </div>
         ))}
       </div>
-      <figcaption className="mt-1 flex justify-between font-mono text-[10px] tabular-nums text-muted-foreground">
+      <figcaption className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground tabular-nums">
         <span>{days[0] ? dayFormat.format(days[0].day) : ''}</span>
         <span>
           total <span className="text-foreground">{total}</span> · pico{' '}

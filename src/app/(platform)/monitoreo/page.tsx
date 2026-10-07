@@ -45,7 +45,7 @@ const StatGroup = ({
   className?: string;
 }) => (
   <section className="mb-4">
-    <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen">
+    <p className="mb-2 font-mono text-[11px] tracking-[0.18em] text-pcnGreen uppercase">
       <span className="text-pcnGreen-500">{'// '}</span>
       {label}
     </p>
@@ -53,14 +53,14 @@ const StatGroup = ({
       {stats.map((stat) => (
         <div key={stat.label} className={cn(ruledCellClassName, 'p-3')}>
           <div className="flex items-center justify-between gap-2">
-            <p className="truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            <p className="truncate font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
               {stat.label}
             </p>
             <stat.icon
               className={cn('h-3.5 w-3.5 shrink-0', stat.iconClassName ?? 'text-pcnGreen-500')}
             />
           </div>
-          <p className="mt-1 font-mono text-2xl font-semibold tabular-nums text-pcnGreen">
+          <p className="mt-1 font-mono text-2xl font-semibold text-pcnGreen tabular-nums">
             {stat.value.toLocaleString()}
           </p>
           <p className="text-[11px] text-muted-foreground/70">{stat.hint}</p>

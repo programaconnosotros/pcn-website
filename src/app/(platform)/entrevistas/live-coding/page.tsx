@@ -61,7 +61,7 @@ const OptionLink = ({
       selected && 'bg-pcnGreen/10 text-pcnGreen hover:bg-pcnGreen/10',
     )}
   >
-    <span className={cn('shrink-0', selected ? 'text-pcnGreen' : 'text-pcnGreen-500/50')}>
+    <span className={cn('shrink-0', selected ? 'text-pcnGreen' : 'text-pcnGreen/50')}>
       {selected ? '[x]' : '[ ]'}
     </span>
     <span className="font-semibold">{label}</span>
@@ -79,7 +79,7 @@ const LiveCodingPage = async (props: Props) => {
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <PageTitle
           path="entrevistas/live-coding"
           meta="enunciados + leetcode"

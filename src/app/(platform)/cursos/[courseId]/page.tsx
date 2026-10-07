@@ -63,10 +63,10 @@ const courseText = (course: { name: string; description: string }) =>
   `${course.name} ${course.description}`;
 
 const SectionHeading = ({ command, label }: { command: string; label: string }) => (
-  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pcnGreen-500">
-    <span className="text-pcnGreen-500/60">#</span>
+  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-pcnGreen-500 uppercase">
+    <span className="text-pcnGreen/60">#</span>
     {label}
-    <span className="normal-case tracking-normal text-muted-foreground/60">{command}</span>
+    <span className="tracking-normal text-muted-foreground/60 normal-case">{command}</span>
     <span className="h-px flex-1 bg-pcnGreen-200" />
   </h2>
 );
@@ -200,7 +200,7 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
             </RuledGrid>
           </section>
 
-          <section className="mb-14 mt-8">
+          <section className="mt-8 mb-14">
             <SectionHeading label="para leer" command="cat ~/lectura/articulos" />
             <RelatedArticles articles={relatedArticles} />
           </section>

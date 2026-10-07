@@ -165,7 +165,7 @@ export function PullToRefresh() {
       aria-hidden={!isPending}
       role="status"
       className={cn(
-        'pointer-events-none fixed inset-x-0 top-0 z-[70] flex justify-center embedded:hidden md:hidden',
+        'pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center md:hidden embedded:hidden',
         !dragging && 'transition-transform duration-300 ease-out',
       )}
       style={{

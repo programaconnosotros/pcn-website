@@ -23,8 +23,8 @@ const SectionHeading = ({
   note?: string;
 }) => (
   <div className="mb-3">
-    <h2 className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pcnGreen-500">
-      <span className="text-pcnGreen-500/60">#</span>
+    <h2 className="flex items-center gap-2 font-mono text-xs tracking-widest text-pcnGreen-500 uppercase">
+      <span className="text-pcnGreen/60">#</span>
       {label}
       <span className="text-muted-foreground/60">({count})</span>
       <span className="h-px flex-1 bg-pcnGreen-200" />

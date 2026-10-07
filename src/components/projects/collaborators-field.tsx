@@ -34,7 +34,7 @@ function Avatar({ name, image, size }: { name: string; image: string | null; siz
   }
   return (
     <div
-      className="flex items-center justify-center rounded-full bg-muted text-[10px] font-medium uppercase text-muted-foreground"
+      className="flex items-center justify-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground uppercase"
       style={{ width: size, height: size }}
     >
       {name.charAt(0)}
@@ -149,7 +149,7 @@ export function CollaboratorsField({
       )}
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Buscar compañeros por nombre..."
           value={query}
@@ -165,7 +165,7 @@ export function CollaboratorsField({
           }}
         />
         {isLoading && (
-          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+          <Loader2 className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
         )}
       </div>
 

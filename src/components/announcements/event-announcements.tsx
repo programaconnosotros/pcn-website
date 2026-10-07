@@ -20,7 +20,7 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
 
   return (
     <section className="divide-y divide-pcnGreen-200 border border-pcnGreen-200">
-      <h3 className="flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <h3 className="flex items-center gap-2 px-3 py-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
         <Megaphone className="h-3.5 w-3.5 text-pcnGreen" />
         anuncios del evento
         <span className="text-muted-foreground/60">[{announcements.length}]</span>
@@ -48,7 +48,7 @@ export function EventAnnouncements({ announcements }: EventAnnouncementsProps) {
               })}
             </span>
           </div>
-          <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+          <p className="text-xs leading-relaxed whitespace-pre-wrap text-muted-foreground">
             {announcement.content}
           </p>
           <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground/70">

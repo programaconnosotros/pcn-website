@@ -34,7 +34,7 @@ const GuideCell = ({ guide, read }: { guide: GuideListItem; read: number }) => {
   return (
     <Link
       href={`/entrevistas/guias/${guide.track}`}
-      className={cn(ruledCellClassName, 'group flex flex-col gap-2 p-3')}
+      className={cn(ruledCellClassName, 'flex group flex-col gap-2 p-3')}
     >
       <span className="flex items-baseline gap-2 font-mono text-sm">
         <span className="font-semibold group-hover:text-pcnGreen">{guide.label}</span>
@@ -104,7 +104,7 @@ export function InterviewGuidesList({
                   href={group.cta.href}
                   className={cn(
                     ruledCellClassName,
-                    'group flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono max-md:hidden',
+                    'flex group flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono max-md:hidden',
                   )}
                 >
                   <span className="text-[11px] text-muted-foreground">
@@ -127,11 +127,11 @@ export function InterviewGuidesList({
             <GuideProgressBar read={totalRead} total={totalSections} className="mb-3" />
             <div className="mb-3 grid grid-cols-2 gap-2 text-center">
               <div className="border border-pcnGreen-200 px-1 py-2">
-                <p className="text-lg font-semibold tabular-nums text-pcnGreen">{totalRead}</p>
+                <p className="text-lg font-semibold text-pcnGreen tabular-nums">{totalRead}</p>
                 <p className="text-[10px] text-muted-foreground">secciones leídas</p>
               </div>
               <div className="border border-pcnGreen-200 px-1 py-2">
-                <p className="text-lg font-semibold tabular-nums text-pcnGreen">
+                <p className="text-lg font-semibold text-pcnGreen tabular-nums">
                   {completed}/{guides.length}
                 </p>
                 <p className="text-[10px] text-muted-foreground">guías completas</p>
@@ -172,7 +172,7 @@ export function InterviewGuidesList({
             </p>
             <Link
               href="/entrevistas"
-              className="flex w-full items-center justify-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
+              className="flex w-full items-center justify-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 text-xs text-pcnGreen lowercase transition-colors hover:bg-pcnGreen/25"
             >
               <Terminal className="size-3.5" />
               simular entrevista

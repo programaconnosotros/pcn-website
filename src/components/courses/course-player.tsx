@@ -16,7 +16,7 @@ export const CoursePlayer = ({ videoUrls, children }: CoursePlayerProps) => {
 
   return (
     <div className="grid border border-pcnGreen-200 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)]">
-      <div className="border-b border-pcnGreen-200 p-4 lg:border-b-0 lg:border-r">
+      <div className="border-b border-pcnGreen-200 p-4 lg:border-r lg:border-b-0">
         <div className="aspect-video w-full bg-black">
           <iframe
             key={videoUrls[current]}
@@ -51,7 +51,7 @@ export const CoursePlayer = ({ videoUrls, children }: CoursePlayerProps) => {
                       className={cn(
                         'flex w-full items-center gap-2 border-l-2 px-2 py-1.5 text-left font-mono text-xs transition-colors',
                         isActive
-                          ? 'border-pcnGreen-500 bg-pcnGreen-500/10 text-foreground'
+                          ? 'border-pcnGreen-500 bg-pcnGreen/10 text-foreground'
                           : 'border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground',
                       )}
                     >

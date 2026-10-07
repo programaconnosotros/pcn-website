@@ -73,8 +73,8 @@ const initials = (name: string) =>
 
 // Cover for talks without a portrait or video: the title's initials over a dotted grid.
 const Placeholder = ({ title }: { title: string }) => (
-  <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle,rgba(4,244,190,0.18)_1px,transparent_1px)] bg-[length:12px_12px]">
-    <span className="text-glow font-mono text-4xl font-bold tracking-tighter text-pcnGreen/80">
+  <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle,rgba(4,244,190,0.18)_1px,transparent_1px)] bg-size-[12px_12px]">
+    <span className="font-mono text-4xl font-bold tracking-tighter text-pcnGreen/80 text-glow">
       {initials(title)}
       <span className="animate-blink">_</span>
     </span>
@@ -122,11 +122,11 @@ export const TalkCell = ({
   // Videos that aren't on YouTube can't be embedded, so they open in a new tab instead.
   const primaryAction = videoId ? onPlay : talk.slideImages.length > 0 ? onSlides : null;
   const frameRef = useRef<HTMLSpanElement>(null);
-  const cut = fullText ? 'break-words' : 'truncate';
+  const cut = fullText ? 'wrap-break-word' : 'truncate';
   useParallax(frameRef);
 
   return (
-    <article className={cn(ruledCellClassName, 'group relative flex flex-col gap-2.5 p-3')}>
+    <article className={cn(ruledCellClassName, 'relative flex group flex-col gap-2.5 p-3')}>
       {/* Same window as the gallery photos: a dimmed, scanlined cover that powers up on hover, with
           lit corner brackets and an oversized layer drifting with the scroll and the pointer. */}
       <span
@@ -136,7 +136,7 @@ export const TalkCell = ({
         <span
           aria-hidden
           style={parallaxStyle}
-          className="absolute inset-x-0 -top-[5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
+          className="absolute inset-x-0 top-[-5%] block h-[110%] transition-transform duration-150 ease-out will-change-transform"
         >
           {talk.portraitUrl ? (
             // Portraits are square flyers with their own text, so they're shown whole.
@@ -168,7 +168,7 @@ export const TalkCell = ({
         />
 
         {index !== undefined && (
-          <span className="absolute left-1.5 top-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] tabular-nums text-pcnGreen-600 backdrop-blur-sm">
+          <span className="absolute top-1.5 left-1.5 rounded-sm bg-black/70 px-1 font-mono text-[10px] text-pcnGreen-600 tabular-nums backdrop-blur-xs">
             #{String(index).padStart(3, '0')}
           </span>
         )}
@@ -181,15 +181,15 @@ export const TalkCell = ({
           </span>
         )}
 
-        <span aria-hidden className={cn(cornerClassName, 'left-1 top-1 border-l-2 border-t-2')} />
-        <span aria-hidden className={cn(cornerClassName, 'right-1 top-1 border-r-2 border-t-2')} />
+        <span aria-hidden className={cn(cornerClassName, 'top-1 left-1 border-t-2 border-l-2')} />
+        <span aria-hidden className={cn(cornerClassName, 'top-1 right-1 border-t-2 border-r-2')} />
         <span
           aria-hidden
           className={cn(cornerClassName, 'bottom-1 left-1 border-b-2 border-l-2')}
         />
         <span
           aria-hidden
-          className={cn(cornerClassName, 'bottom-1 right-1 border-b-2 border-r-2')}
+          className={cn(cornerClassName, 'right-1 bottom-1 border-r-2 border-b-2')}
         />
       </span>
 
@@ -200,7 +200,7 @@ export const TalkCell = ({
             type="button"
             onClick={primaryAction}
             className={cn(
-              'flex-1 text-left font-mono text-sm font-semibold leading-snug after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen',
+              'flex-1 text-left font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset',
               !fullText && 'line-clamp-2',
             )}
           >
@@ -209,7 +209,7 @@ export const TalkCell = ({
         ) : (
           <h3
             className={cn(
-              'flex-1 font-mono text-sm font-semibold leading-snug',
+              'flex-1 font-mono text-sm leading-snug font-semibold',
               !fullText && 'line-clamp-2',
             )}
           >
@@ -219,7 +219,7 @@ export const TalkCell = ({
         {isAdmin && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative z-10 -mr-1 -mt-1 h-6 w-6">
+              <Button variant="ghost" size="icon" className="relative z-10 -mt-1 -mr-1 h-6 w-6">
                 <MoreVertical className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
@@ -299,7 +299,7 @@ export const TalkCell = ({
               fullText ? 'flex-col' : 'items-center truncate',
             )}
           >
-            {date && <span className="tabular-nums text-pcnGreen-600">{formatDate(date)}</span>}
+            {date && <span className="text-pcnGreen-600 tabular-nums">{formatDate(date)}</span>}
             {date && location && !fullText && <span>·</span>}
             {location &&
               (fullText ? (
@@ -380,8 +380,8 @@ export const TalkMediaDialogs = ({
     <>
       <Dialog open={!!playing} onOpenChange={(open) => !open && onClosePlaying()}>
         {playing && playingId && (
-          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
-            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
+          <DialogContent className="flex w-[min(94vw,calc((100dvh-7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
+            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pr-12 pl-3 font-mono">
               <div className="min-w-0 flex-1">
                 <DialogTitle className="truncate text-sm font-semibold">
                   {playing.title}
@@ -533,12 +533,12 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
               id={`charlas-${year}`}
               className="flex items-center gap-3 border-x border-t border-pcnGreen-200 bg-background px-3 py-1.5 font-mono text-xs"
             >
-              <span className="text-glow font-semibold text-pcnGreen">## {year}</span>
+              <span className="font-semibold text-pcnGreen text-glow">## {year}</span>
               <span
                 aria-hidden
                 className="h-px flex-1 bg-[repeating-linear-gradient(90deg,hsl(var(--border))_0_4px,transparent_4px_8px)] opacity-60"
               />
-              <span className="tabular-nums text-muted-foreground">
+              <span className="text-muted-foreground tabular-nums">
                 {items.length} {items.length === 1 ? 'charla' : 'charlas'}
               </span>
             </h2>

@@ -2,14 +2,14 @@ import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const BoweryLogo = () => (
   <div
-    className="flex w-full flex-col items-center !border-0 bg-black py-10"
+    className="flex w-full flex-col items-center border-0! bg-black py-10"
     style={{ border: 'none' }}
   >
-    <div className="mb-4 mt-4 flex flex-row items-center">
+    <div className="mt-4 mb-4 flex flex-row items-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/bowery-logo-light.svg" alt="Bowery" className="h-12" />
 
-      <h1 className="ml-4 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">
+      <h1 className="ml-4 bg-linear-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">
         Bowery
       </h1>
     </div>

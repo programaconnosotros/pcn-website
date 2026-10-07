@@ -35,15 +35,15 @@ export function NewsTicker() {
     <>
       <div
         aria-hidden
-        className="hidden h-6 shrink-0 embedded:hidden md:block [:has([data-ticker-flush])_&]:hidden"
+        className="hidden h-6 shrink-0 md:block embedded:hidden [:has([data-ticker-flush])_&]:hidden"
       />
       <aside
         aria-label="Últimas novedades"
-        className="sticky bottom-0 z-30 -mx-6 mt-auto hidden h-8 items-stretch border-t border-pcnGreen-200 bg-background/95 font-mono text-xs backdrop-blur embedded:hidden md:flex"
+        className="sticky bottom-0 z-30 -mx-6 mt-auto hidden h-8 items-stretch border-t border-pcnGreen-200 bg-background/95 font-mono text-xs backdrop-blur-sm md:flex embedded:hidden"
       >
         <Link
           href="/feed"
-          className="flex shrink-0 items-center gap-1.5 bg-pcnGreen px-3 font-bold uppercase tracking-wider text-black hover:bg-pcnGreen/90"
+          className="flex shrink-0 items-center gap-1.5 bg-pcnGreen px-3 font-bold tracking-wider text-black uppercase hover:bg-pcnGreen/90"
         >
           <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-red-600" />
           PCN News

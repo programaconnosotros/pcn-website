@@ -21,10 +21,10 @@ export function SetupTile({ setup, viewerId, showAuthor = true }: SetupTileProps
   const href = `/setups/${setup.id}`;
 
   return (
-    <article className={cn(ruledCellClassName, 'group flex flex-col')}>
+    <article className={cn(ruledCellClassName, 'flex group flex-col')}>
       <Link
         href={href}
-        className="relative block aspect-[4/3] overflow-hidden bg-black"
+        className="relative block aspect-4/3 overflow-hidden bg-black"
         aria-label={`Ver setup: ${setup.title}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -68,7 +68,7 @@ export function SetupTile({ setup, viewerId, showAuthor = true }: SetupTileProps
             dateTime={dateInputValue(setup.date)}
             className="shrink-0 font-mono text-[11px] text-muted-foreground"
           >
-            {showAuthor && <span className="text-pcnGreen-500/60">· </span>}
+            {showAuthor && <span className="text-pcnGreen/60">· </span>}
             {format(calendarDate(setup.date), 'd MMM yyyy', { locale: es })}
           </time>
           <SetupLikeButton

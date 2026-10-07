@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto [scrollbar-width:thin]">
+    <div className="relative w-full scrollbar-thin overflow-auto">
       <table
         ref={ref}
         className={cn('w-full caption-bottom border-collapse text-xs', className)}
@@ -25,7 +25,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      'sticky top-0 z-10 bg-black/90 backdrop-blur [&_tr:hover]:bg-transparent [&_tr]:border-b [&_tr]:border-pcnGreen-300 [&_tr]:shadow-none',
+      'sticky top-0 z-10 bg-black/90 backdrop-blur-sm [&_tr]:border-b [&_tr]:border-pcnGreen-300 [&_tr]:shadow-none [&_tr:hover]:bg-transparent',
       className,
     )}
     {...props}
@@ -55,7 +55,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t border-pcnGreen-300 bg-pcnGreen/[0.04] font-mono font-medium [&>tr]:last:border-b-0',
+      'border-t border-pcnGreen-300 bg-pcnGreen/[0.04] font-mono font-medium last:[&>tr]:border-b-0',
       className,
     )}
     {...props}
@@ -68,7 +68,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-dashed border-foreground/[0.08] transition-colors hover:bg-pcnGreen/[0.06] hover:shadow-[inset_2px_0_0_#04f4be] data-[state=selected]:bg-pcnGreen/10 data-[state=selected]:shadow-[inset_2px_0_0_#04f4be]',
+        'border-b border-dashed border-foreground/8 transition-colors hover:bg-pcnGreen/[0.06] hover:shadow-[inset_2px_0_0_#04f4be] data-[state=selected]:bg-pcnGreen/10 data-[state=selected]:shadow-[inset_2px_0_0_#04f4be]',
         className,
       )}
       {...props}
@@ -84,7 +84,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-8 whitespace-nowrap px-3 text-left align-middle font-mono text-[10px] font-medium uppercase tracking-wider text-pcnGreen-600 [&:has([role=checkbox])]:pr-0',
+      'h-8 px-3 text-left align-middle font-mono text-[10px] font-medium tracking-wider whitespace-nowrap text-pcnGreen-600 uppercase has-[[role=checkbox]]:pr-0',
       className,
     )}
     {...props}
@@ -98,7 +98,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn('h-9 px-3 py-1 align-middle [&:has([role=checkbox])]:pr-0', className)}
+    className={cn('h-9 px-3 py-1 align-middle has-[[role=checkbox]]:pr-0', className)}
     {...props}
   />
 ));
@@ -128,13 +128,13 @@ const TableTag = ({
 }) => (
   <span
     className={cn(
-      'inline-flex items-center whitespace-nowrap border px-1 font-mono text-[10px] uppercase leading-4 tracking-wider',
+      'inline-flex items-center border px-1 font-mono text-[10px] leading-4 tracking-wider whitespace-nowrap uppercase',
       tone === 'green' &&
         'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen shadow-[0_0_8px_-3px_#04f4be]',
       tone === 'muted' && 'border-pcnGreen-200 text-muted-foreground',
       tone === 'warn' && 'border-amber-500/50 bg-amber-500/10 text-amber-400',
       tone === 'danger' && 'border-red-500/50 bg-red-500/10 text-red-400',
-      tone === 'purple' && 'border-[#8b7cf0]/50 bg-[#5038BD]/20 text-[#a99cf5]',
+      tone === 'purple' && 'border-[#8b7cf0]/50 bg-pcnPurple/20 text-[#a99cf5]',
       className,
     )}
   >

@@ -32,7 +32,7 @@ export function HistoriaEvents({ flyers, events }: HistoriaEventsProps) {
         <div key={event.id} className="border border-pcnGreen-200 font-mono">
           <Link
             href={`/eventos/${event.id}`}
-            className="group flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-pcnGreen/[0.05]"
+            className="flex group items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-pcnGreen/[0.05]"
           >
             <CalendarDays className="size-3.5 shrink-0 text-pcnGreen-500" />
             <span className="min-w-0 truncate font-semibold text-foreground group-hover:text-pcnGreen">

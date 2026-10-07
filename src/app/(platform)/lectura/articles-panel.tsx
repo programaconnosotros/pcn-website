@@ -76,7 +76,7 @@ const CategoryHistogram = ({
   ];
 
   return (
-    <div className="grid grid-cols-2 border-l border-t border-pcnGreen-200 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-2 border-t border-l border-pcnGreen-200 sm:grid-cols-3 lg:grid-cols-5">
       {entries.map(([name, count]) => {
         const active = category === name;
         const { filled, empty } = bar(count, articles.length);
@@ -87,7 +87,7 @@ const CategoryHistogram = ({
             aria-pressed={active}
             onClick={() => onCategoryChange(name)}
             className={cn(
-              'group relative flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2 text-left font-mono transition-colors',
+              'relative flex group flex-col gap-0.5 border-r border-b border-pcnGreen-200 px-3 py-2 text-left font-mono transition-colors',
               active ? 'bg-pcnGreen/[0.08]' : 'hover:bg-pcnGreen/[0.04]',
             )}
           >
@@ -99,15 +99,15 @@ const CategoryHistogram = ({
                 className={cn(
                   'truncate lowercase',
                   active
-                    ? 'text-glow text-pcnGreen'
+                    ? 'text-pcnGreen text-glow'
                     : 'text-muted-foreground group-hover:text-pcnGreen',
                 )}
               >
                 #{name === ALL_ARTICLE_CATEGORIES ? 'todas' : name}
               </span>
-              <span className="tabular-nums text-pcnGreen-600">{count}</span>
+              <span className="text-pcnGreen-600 tabular-nums">{count}</span>
             </span>
-            <span aria-hidden className="text-[9px] leading-none tracking-[-0.05em]">
+            <span aria-hidden className="text-[9px] leading-none tracking-tighter">
               <span className={active ? 'text-pcnGreen' : 'text-pcnGreen-500'}>{filled}</span>
               <span className="text-pcnGreen-200">{empty}</span>
             </span>
@@ -178,21 +178,21 @@ export const ArticleRow = ({
     <article
       className={cn(
         ruledCellClassName,
-        'group relative flex gap-3 p-3',
+        'relative flex group gap-3 p-3',
         !isEditingWriters && 'overflow-hidden',
       )}
     >
       {/* Hover: a lit edge on the left and a scan line sweeping down the row. */}
       <span className="pointer-events-none absolute inset-y-0 left-0 w-px origin-top scale-y-0 bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.9)] transition-transform duration-300 group-hover:scale-y-100" />
-      <span className="article-scan pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-transparent via-pcnGreen/[0.08] to-transparent opacity-0 group-hover:opacity-100" />
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-10 article-scan bg-linear-to-b from-transparent via-pcnGreen/[0.08] to-transparent opacity-0 group-hover:opacity-100" />
 
       <div className="relative flex shrink-0 flex-col items-center gap-1.5">
         {read && (
-          <span className="absolute -right-1 -top-1 z-10 flex size-4 items-center justify-center bg-pcnGreen text-black shadow-[0_0_8px_rgba(4,244,190,0.8)]">
+          <span className="absolute -top-1 -right-1 z-10 flex size-4 items-center justify-center bg-pcnGreen text-black shadow-[0_0_8px_rgba(4,244,190,0.8)]">
             <Check className="size-3" strokeWidth={3} />
           </span>
         )}
-        <Avatar className="size-10 rounded-sm ring-1 ring-pcnGreen-200 transition-[filter,box-shadow] duration-300 [filter:grayscale(0.7)] group-hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.6)] group-hover:ring-pcnGreen-500 group-hover:[filter:none]">
+        <Avatar className="size-10 rounded-sm ring-1 ring-pcnGreen-200 filter-[grayscale(0.7)] transition-[filter,box-shadow] duration-300 group-hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.6)] group-hover:ring-pcnGreen-500 group-hover:filter-none">
           {/* A writer who's a member shows their profile photo instead of the article's. */}
           <AvatarImage
             src={writers.find((writer) => writer.image)?.image ?? article.avatar}
@@ -202,7 +202,7 @@ export const ArticleRow = ({
             {initials(article.author)}
           </AvatarFallback>
         </Avatar>
-        <span className="font-mono text-[10px] tabular-nums text-pcnGreen-500">
+        <span className="font-mono text-[10px] text-pcnGreen-500 tabular-nums">
           {hexIndex(index)}
         </span>
       </div>
@@ -213,7 +213,7 @@ export const ArticleRow = ({
           read && 'opacity-60 group-hover:opacity-100',
         )}
       >
-        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+        <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] uppercase">
           <span className="border border-pcnGreen-300 px-1 text-pcnGreen-700">
             {article.category}
           </span>
@@ -222,17 +222,17 @@ export const ArticleRow = ({
               new
             </span>
           )}
-          <time dateTime={article.date} className="ml-auto tabular-nums text-muted-foreground">
+          <time dateTime={article.date} className="ml-auto text-muted-foreground tabular-nums">
             {formatDate(article.date)}
           </time>
         </div>
 
         {/* The title's button stretches over the whole row so any click opens the reader. */}
-        <h2 className="font-mono text-sm font-semibold leading-snug">
+        <h2 className="font-mono text-sm leading-snug font-semibold">
           <button
             type="button"
             onClick={onOpen}
-            className="group-hover:text-glow text-left transition-colors after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen"
+            className="text-left transition-colors group-hover:text-pcnGreen group-hover:text-glow after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset"
           >
             {article.title}
           </button>
@@ -346,14 +346,14 @@ export function ArticlesPanel({
           </span>
           <span className="flex gap-4 text-muted-foreground">
             <span>
-              <span className="text-glow tabular-nums text-pcnGreen">{visibleArticles.length}</span>
+              <span className="text-pcnGreen tabular-nums text-glow">{visibleArticles.length}</span>
               /{articles.length} artículos
             </span>
             <span>
-              <span className="tabular-nums text-pcnGreen">{sources}</span> fuentes
+              <span className="text-pcnGreen tabular-nums">{sources}</span> fuentes
             </span>
             <span>
-              <span className="tabular-nums text-pcnGreen">{authors}</span> autores
+              <span className="text-pcnGreen tabular-nums">{authors}</span> autores
             </span>
           </span>
         </div>
@@ -361,15 +361,15 @@ export function ArticlesPanel({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-pcnGreen-200 px-3 py-2 text-[11px]">
           <span className="flex items-center gap-2 text-muted-foreground">
             progreso
-            <span aria-hidden className="tracking-[-0.05em]">
-              <span className="text-glow text-pcnGreen">
+            <span aria-hidden className="tracking-tighter">
+              <span className="text-pcnGreen text-glow">
                 {readCount > 0 ? progress.filled : ''}
               </span>
               <span className="text-pcnGreen-200">
                 {readCount > 0 ? progress.empty : '░'.repeat(16)}
               </span>
             </span>
-            <span className="tabular-nums text-pcnGreen">
+            <span className="text-pcnGreen tabular-nums">
               {readCount}/{articles.length}
             </span>
             {!marks.isAuthenticated && !marks.isLoading && (

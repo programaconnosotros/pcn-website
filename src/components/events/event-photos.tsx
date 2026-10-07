@@ -28,7 +28,7 @@ export function EventPhotos({ eventId, photos, total, canUpload }: EventPhotosPr
             <Link
               key={photo.id}
               href={`/galeria/${photo.id}?evento=${eventId}`}
-              className="group relative aspect-square overflow-hidden rounded-sm bg-black"
+              className="relative aspect-square group overflow-hidden rounded-sm bg-black"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

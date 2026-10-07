@@ -16,9 +16,9 @@ export function OsWallpaper({
       onPointerDown={onPointerDown}
     >
       {/* A 900px blur is one of the costliest layers on a weak GPU: PCN OS liviano drops it. */}
-      <div className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pcnGreen/[0.07] blur-[180px] lite:hidden" />
-      <div className="bg-grid-fade absolute inset-0" />
-      <div className="absolute inset-0 flex select-none flex-col items-center justify-center gap-5 pb-24">
+      <div className="absolute top-1/2 left-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pcnGreen/[0.07] blur-[180px] lite:hidden" />
+      <div className="absolute inset-0 bg-grid-fade" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 pb-24 select-none">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.webp" alt="" className="size-24 drop-shadow-[0_0_24px_#04f4be]" />
         <p

@@ -20,7 +20,7 @@ export function ExtractedNotice({
         className,
       )}
     >
-      <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen">
+      <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] leading-4 tracking-wider text-pcnGreen uppercase">
         auto-extraído
       </span>
       <span>

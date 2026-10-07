@@ -113,12 +113,12 @@ export function ProfileTabs() {
   const tabs = useProfileTabs();
   if (!tabs) return null;
   return (
-    <div className="-mx-4 overflow-x-auto px-4 py-px [scrollbar-width:none] lg:mx-0 lg:overflow-visible lg:px-0">
+    <div className="-mx-4 scrollbar-none overflow-x-auto px-4 py-px lg:mx-0 lg:overflow-visible lg:px-0">
       <nav
         aria-label="Secciones del perfil"
         className={cn(
           tabsListClassName,
-          'h-8 lg:flex lg:h-auto lg:flex-wrap lg:border-b-0 lg:border-r-0',
+          'h-8 lg:flex lg:h-auto lg:flex-wrap lg:border-r-0 lg:border-b-0',
         )}
       >
         {PROFILE_TABS.map((tab) => {

@@ -35,7 +35,7 @@ export function MarkToggle({
         onToggle();
       }}
       className={cn(
-        'relative z-10 inline-flex shrink-0 items-center gap-1 border px-1.5 py-0.5 font-mono text-[10px] lowercase tracking-wide transition-[color,background-color,border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+        'relative z-10 inline-flex shrink-0 items-center gap-1 border px-1.5 py-0.5 font-mono text-[10px] tracking-wide lowercase transition-[color,background-color,border-color,box-shadow] duration-200 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden',
         active
           ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]'
           : 'border-pcnGreen-200 bg-black/40 text-muted-foreground hover:border-pcnGreen-500 hover:text-pcnGreen',

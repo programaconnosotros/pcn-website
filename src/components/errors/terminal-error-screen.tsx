@@ -32,7 +32,7 @@ export const TerminalErrorScreen = ({
     <section className="w-full max-w-xl border border-pcnGreen-300 bg-black/60 shadow-[0_0_48px_-16px_rgba(4,244,190,0.45)]">
       <header className="flex items-center justify-between border-b border-dashed border-pcnGreen-200 px-3 py-2 text-xs">
         <span className="text-pcnGreen-500">pcn@programaconnosotros: ~</span>
-        <span className="tabular-nums text-red-400">[exit {code}]</span>
+        <span className="text-red-400 tabular-nums">[exit {code}]</span>
       </header>
 
       <div className="flex flex-col gap-4 p-4 text-sm sm:p-6">
@@ -48,7 +48,7 @@ export const TerminalErrorScreen = ({
           ))}
         </div>
 
-        <p className="text-glow text-6xl font-bold tabular-nums text-pcnGreen sm:text-7xl">
+        <p className="text-6xl font-bold text-pcnGreen tabular-nums text-glow sm:text-7xl">
           {code}
         </p>
 
@@ -60,9 +60,9 @@ export const TerminalErrorScreen = ({
             <li key={s.href}>
               <Link
                 href={s.href}
-                className="group flex gap-3 transition-colors hover:bg-pcnGreen/[0.06]"
+                className="flex group gap-3 transition-colors hover:bg-pcnGreen/[0.06]"
               >
-                <span className="group-hover:text-glow text-pcnGreen">
+                <span className="text-pcnGreen group-hover:text-glow">
                   <span className="text-pcnGreen-600">$ </span>
                   {s.command}
                 </span>

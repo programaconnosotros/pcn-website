@@ -138,14 +138,14 @@ export const InterviewsSection = () => (
             key={id}
             className={cn(
               ruledCellClassName,
-              'group relative flex flex-col gap-3 p-3 font-mono sm:p-4',
+              'relative flex group flex-col gap-3 p-3 font-mono sm:p-4',
             )}
           >
             <div className="flex items-start justify-between">
               <span className="flex size-9 items-center justify-center border border-pcnGreen-200 bg-pcnGreen/[0.06] text-pcnGreen-600 transition-all group-hover:border-pcnGreen group-hover:text-pcnGreen group-hover:shadow-[0_0_14px_rgba(4,244,190,0.35)]">
                 <Icon className="size-4.5 transition-[filter] group-hover:drop-shadow-[0_0_4px_rgba(4,244,190,0.9)]" />
               </span>
-              <span className="text-[10px] tabular-nums text-muted-foreground/50">
+              <span className="text-[10px] text-muted-foreground/50 tabular-nums">
                 {String(index + 1).padStart(2, '0')}
               </span>
             </div>
@@ -154,10 +154,10 @@ export const InterviewsSection = () => (
               {/* The whole cell is clickable through this link; chips sit above it. */}
               <Link
                 href={`/entrevistas?tipo=${id}`}
-                className="text-sm font-semibold after:absolute after:inset-0 group-hover:text-pcnGreen"
+                className="text-sm font-semibold group-hover:text-pcnGreen after:absolute after:inset-0"
               >
                 {label}{' '}
-                <ArrowUpRight className="inline size-3.5 align-[-2px] text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+                <ArrowUpRight className="inline size-3.5 align-[-2px] text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
               </Link>
               {chips.length === 0 && (
                 <span className="text-[11px] text-muted-foreground">{stack}</span>
@@ -199,7 +199,7 @@ export const InterviewsSection = () => (
         href="/entrevistas"
         className={cn(
           ruledCellClassName,
-          'group col-span-2 flex flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4',
+          'col-span-2 flex group flex-col justify-between gap-3 bg-pcnGreen/[0.04] p-3 font-mono sm:p-4',
           // Fill the last row of the three-column grid, whatever the number of areas.
           ['lg:col-span-3', 'lg:col-span-2', 'lg:col-span-1'][AREAS.length % 3],
         )}
@@ -209,7 +209,7 @@ export const InterviewsSection = () => (
         </span>
         <span className="flex items-center gap-1.5 text-sm font-semibold text-pcnGreen [text-shadow:0_0_10px_rgba(4,244,190,0.5)]">
           empezar();
-          <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </span>
         <span className="text-[11px] text-muted-foreground/70">
           <span className="animate-pulse text-pcnGreen">▍</span> listo para practicar
@@ -220,7 +220,7 @@ export const InterviewsSection = () => (
     {/* Study first, then practice: the guides get their own band under the simulator. */}
     <Link
       href="/entrevistas/guias"
-      className="group flex flex-col gap-3 border border-t-0 border-pcnGreen-200 bg-pcnGreen/[0.03] p-3 font-mono transition-colors hover:bg-pcnGreen/[0.07] sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+      className="flex group flex-col gap-3 border border-t-0 border-pcnGreen-200 bg-pcnGreen/[0.03] p-3 font-mono transition-colors hover:bg-pcnGreen/[0.07] sm:flex-row sm:items-center sm:gap-4 sm:p-4"
     >
       <span className="flex size-9 shrink-0 items-center justify-center border border-pcnGreen-200 bg-pcnGreen/[0.06] text-pcnGreen-600 transition-all group-hover:border-pcnGreen group-hover:text-pcnGreen group-hover:shadow-[0_0_14px_rgba(4,244,190,0.35)]">
         <BookOpen className="size-4.5" />
@@ -237,7 +237,7 @@ export const InterviewsSection = () => (
       </span>
       <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-pcnGreen [text-shadow:0_0_10px_rgba(4,244,190,0.5)]">
         leerGuias();
-        <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </span>
     </Link>
   </section>

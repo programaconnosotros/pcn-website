@@ -631,11 +631,11 @@ const Story = ({ events }: { events: HistoriaEvent[] }) => (
                   <ol className="divide-y overflow-hidden rounded-lg border bg-card">
                     {lightningTalksNextGen.map((talk, index) => (
                       <li key={talk.title} className="flex gap-4 px-4 py-3">
-                        <span className="mt-0.5 w-6 shrink-0 text-right text-xs font-semibold tabular-nums text-pcnPurple dark:text-pcnGreen">
+                        <span className="mt-0.5 w-6 shrink-0 text-right text-xs font-semibold text-pcnPurple tabular-nums dark:text-pcnGreen">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold leading-snug text-foreground">
+                          <p className="text-sm leading-snug font-semibold text-foreground">
                             {talk.title}
                           </p>
                           <p className="mt-0.5 text-sm leading-snug">

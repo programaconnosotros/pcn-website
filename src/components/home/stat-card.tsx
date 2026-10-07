@@ -20,7 +20,7 @@ export const StatCard = ({ href, title, Icon, value }: StatCardProps) => (
       <CardContent>
         <NumberTicker
           value={value}
-          className="whitespace-pre-wrap font-mono text-2xl font-medium tracking-tighter text-pcnGreen"
+          className="font-mono text-2xl font-medium tracking-tighter whitespace-pre-wrap text-pcnGreen"
         />
       </CardContent>
     </Card>

@@ -23,7 +23,7 @@ const semanticTokens: Token[] = [
   { name: 'destructive', use: 'errores y borrar' },
 ];
 
-// The accent scale from tailwind.config.ts: the same #04f4be at growing opacity.
+// The accent scale from the @theme block in globals.css: the same #04f4be at growing opacity.
 const greenScale: Token[] = [
   { name: '50', use: 'fondos muy sutiles' },
   { name: '100', use: 'fondo de badge, skeleton' },

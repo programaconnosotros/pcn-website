@@ -159,7 +159,7 @@ export function FileUpload({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('flex flex-col items-start gap-2', className)}>
       <Input
         ref={inputRef}
         type="file"
@@ -202,7 +202,7 @@ export function FileUpload({
               size="icon"
               className={cn(
                 'absolute z-10 h-6 w-6',
-                variant === 'profile' ? '-right-1 -top-1' : '-right-2 -top-2',
+                variant === 'profile' ? '-top-1 -right-1' : '-top-2 -right-2',
               )}
               onClick={handleRemove}
               disabled={disabled}

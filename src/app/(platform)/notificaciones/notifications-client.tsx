@@ -211,7 +211,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 font-mono text-[11px] normal-case tracking-normal"
+              className="h-6 px-2 font-mono text-[11px] tracking-normal normal-case"
               onClick={handleMarkAllAsRead}
               disabled={markingAllAsRead}
             >

@@ -496,12 +496,12 @@ export type RateLimitName = keyof typeof RATE_LIMITS;`,
           {
             term: 'design tokens',
             detail:
-              'Colores, fuentes y espaciados se definen en `tailwind.config.ts` y se usan como clases (`text-pcnGreen`, `border-pcnGreen-200`).',
+              'Colores, fuentes y espaciados se definen en el bloque `@theme` de `src/app/globals.css` y se usan como clases (`text-pcnGreen`, `border-pcnGreen-200`).',
           },
           {
             term: 'variants custom',
             detail:
-              'Con un plugin podés crear tus propios prefijos condicionales con `addVariant`.',
+              'Con `@custom-variant` en el CSS podés crear tus propios prefijos condicionales.',
           },
           {
             term: 'valores arbitrarios',
@@ -520,22 +520,25 @@ export type RateLimitName = keyof typeof RATE_LIMITS;`,
         ],
         examples: [
           {
-            file: 'tailwind.config.ts',
-            lang: 'ts',
-            code: `// PCN OS variants:
-// - \`os:\` applies on large screens when the page is the desktop host (not inside a window).
-// - \`embedded:\` applies when the page is rendered inside a PCN OS window (an iframe).
-// - \`lite:\` applies in PCN OS liviano (see src/components/os/os-display-mode.ts).
-// The \`data-embedded\` and \`data-os-mode\` attributes are set before paint by the scripts in the
-// root layout; \`data-os-mode="classic"\` turns the desktop off, so \`os:\` excludes it.
-function addPcnOsVariants({ addVariant }: any) {
-  addVariant(
-    'os',
-    "@media (min-width: 1024px) { html:not([data-embedded]):not([data-os-mode='classic']) & }",
-  );
-  addVariant('embedded', 'html[data-embedded] &');
-  addVariant('lite', "html[data-os-mode='lite'] &");
-}`,
+            file: 'src/app/globals.css',
+            lang: 'css',
+            code: `/*
+  PCN OS variants:
+  - \`os:\` applies on large screens when the page is the desktop host (not inside a window).
+  - \`embedded:\` applies when the page is rendered inside a PCN OS window (an iframe).
+  - \`lite:\` applies in PCN OS liviano (see src/components/os/os-display-mode.ts).
+  The \`data-embedded\` and \`data-os-mode\` attributes are set before paint by the scripts in the
+  root layout; \`data-os-mode="classic"\` turns the desktop off, so \`os:\` excludes it.
+*/
+@custom-variant os {
+  @media (width >= 1024px) {
+    html:not([data-embedded]):not([data-os-mode='classic']) & {
+      @slot;
+    }
+  }
+}
+@custom-variant embedded (html[data-embedded] &);
+@custom-variant lite (html[data-os-mode='lite'] &);`,
           },
           {
             file: 'src/components/ui/mobile-nav.tsx',

@@ -191,7 +191,7 @@ export function LogsClient({ logs, pagination, logLevel, counts }: LogsClientPro
                 </TableRow>
                 {expanded && (
                   // Plain <tr>: the detail sub-row shouldn't get zebra/hover chrome of its own.
-                  <tr id={detailsId} className="border-b border-pcnGreen-200/60 !bg-black/40">
+                  <tr id={detailsId} className="border-b border-pcnGreen/60 bg-black/40!">
                     <td colSpan={COLUMNS} className="px-3 py-2">
                       <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
                         <span>
@@ -221,7 +221,7 @@ export function LogsClient({ logs, pagination, logLevel, counts }: LogsClientPro
                           <DetailBlock label="metadata">{prettyJson(log.metadata)}</DetailBlock>
                         ) : (
                           <p className="text-[11px] text-muted-foreground/60">
-                            <span className="text-pcnGreen-500/60">{'// '}</span>sin metadata
+                            <span className="text-pcnGreen/60">{'// '}</span>sin metadata
                           </p>
                         )}
                       </div>

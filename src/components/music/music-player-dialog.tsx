@@ -14,7 +14,7 @@ import type { MusicSet } from './music-sets';
 
 // 16:9 and capped, so the video never takes over large screens.
 const playerSizeClassName =
-  'flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-3xl flex-col gap-0 overflow-hidden bg-black p-0';
+  'flex w-[min(94vw,calc((100dvh-7.5rem)*16/9))] max-w-3xl flex-col gap-0 overflow-hidden bg-black p-0';
 
 const embedUrl = (set: MusicSet) =>
   `https://www.youtube-nocookie.com/embed/${set.id}?autoplay=1&rel=0&enablejsapi=1`;
@@ -106,7 +106,7 @@ export function BackgroundMusicPlayer({
         aria-hidden
         data-state={state}
         onClick={onClose}
-        className={cn(dialogOverlayClassName, 'z-[6000]', hiddenClassName)}
+        className={cn(dialogOverlayClassName, 'z-6000', hiddenClassName)}
       />
       <div
         ref={panelRef}
@@ -117,7 +117,7 @@ export function BackgroundMusicPlayer({
         aria-describedby={descriptionId}
         tabIndex={-1}
         data-state={state}
-        className={cn(dialogContentClassName, playerSizeClassName, 'z-[6000]', hiddenClassName)}
+        className={cn(dialogContentClassName, playerSizeClassName, 'z-6000', hiddenClassName)}
       >
         <header className={headerClassName}>
           <div className="min-w-0 flex-1">

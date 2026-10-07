@@ -34,16 +34,16 @@ export const LatestChangesSection = () => {
         {latestChanges.map((entry) => {
           const content = (
             <>
-              <span className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-muted-foreground">
+              <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground tabular-nums">
                 <span className="border border-pcnGreen-200 px-1 leading-4 text-pcnGreen-700">
                   {entry.area}
                 </span>
                 <time dateTime={entry.date}>{entry.date}</time>
                 {entry.href && (
-                  <ArrowUpRight className="ml-auto size-3.5 text-muted-foreground/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+                  <ArrowUpRight className="ml-auto size-3.5 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
                 )}
               </span>
-              <h3 className="font-mono text-sm font-semibold leading-snug tracking-tight text-foreground group-hover:text-pcnGreen">
+              <h3 className="font-mono text-sm leading-snug font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
                 {entry.title}
               </h3>
               <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">

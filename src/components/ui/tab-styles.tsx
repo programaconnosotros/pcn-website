@@ -11,7 +11,7 @@ export const tabsListClassName = cn(
 );
 
 export const tabsTriggerClassName = cn(
-  'group relative inline-flex items-center justify-center gap-1 whitespace-nowrap border-r border-pcnGreen-200 px-2.5 text-[10px] font-medium uppercase tracking-[0.14em] transition-colors last:border-r-0 hover:bg-pcnGreen/[0.06] hover:text-pcnGreen-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-pcnGreen disabled:pointer-events-none disabled:opacity-50',
+  'group relative inline-flex items-center justify-center gap-1 whitespace-nowrap border-r border-pcnGreen-200 px-2.5 text-[10px] font-medium uppercase tracking-[0.14em] transition-colors last:border-r-0 hover:bg-pcnGreen/[0.06] hover:text-pcnGreen-800 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-pcnGreen disabled:pointer-events-none disabled:opacity-50',
   'data-[state=active]:bg-[linear-gradient(0deg,rgba(4,244,190,0.16),rgba(4,244,190,0.02)_70%)] data-[state=active]:text-pcnGreen data-[state=active]:[text-shadow:0_0_8px_rgba(4,244,190,0.6)]',
   // Glowing underline that sweeps in from the left when the tab becomes active.
   'before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-pcnGreen before:shadow-[0_0_10px_rgba(4,244,190,0.8)] before:transition-transform before:duration-300 data-[state=active]:before:scale-x-100',

@@ -102,13 +102,13 @@ export function CollapsibleFilters({
           <SheetContent
             side="bottom"
             // Above the phone's tab bar, which would otherwise cover the sheet's bottom.
-            className="z-[70] flex max-h-[85dvh] flex-col gap-0 rounded-t-md border-pcnGreen-300 bg-black p-0 pb-[env(safe-area-inset-bottom)]"
+            className="z-70 flex max-h-[85dvh] flex-col gap-0 rounded-t-md border-pcnGreen-300 bg-black p-0 pb-[env(safe-area-inset-bottom)]"
           >
             <div className="flex shrink-0 items-center gap-2 border-b border-pcnGreen-200 px-4 py-3 pr-12">
               <SlidersHorizontal className="size-4 text-pcnGreen" />
               <SheetTitle className="font-mono text-sm">{sheet.title}</SheetTitle>
               {activeCount > 0 && (
-                <span className="font-mono text-xs tabular-nums text-pcnGreen">
+                <span className="font-mono text-xs text-pcnGreen tabular-nums">
                   [{activeCount}]
                 </span>
               )}

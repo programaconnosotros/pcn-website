@@ -35,7 +35,7 @@ function Specialists({ specialists }: { specialists: Specialist[] }) {
                     ? `${person.name}: se marcó como especialista`
                     : `${person.name}: por su puesto actual`
                 }
-                className="group/person flex h-7 items-center gap-1.5 rounded-sm border border-pcnGreen-200 pl-0.5 pr-2 font-mono text-[11px] text-foreground/80 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
+                className="group/person flex h-7 items-center gap-1.5 rounded-sm border border-pcnGreen-200 pr-2 pl-0.5 font-mono text-[11px] text-foreground/80 transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen"
               >
                 <Avatar className="size-5 rounded-sm">
                   <AvatarImage src={person.image ?? undefined} alt="" />
@@ -103,7 +103,7 @@ export function SpecialtyCard({
           const twoColumns = section.items.every((item) => typeof item === 'string');
           return (
             <div key={section.heading}>
-              <h4 className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <h4 className="font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                 {section.heading}
               </h4>
               <ul className={cn('mt-2 grid gap-x-6 gap-y-1', twoColumns && 'sm:grid-cols-2')}>

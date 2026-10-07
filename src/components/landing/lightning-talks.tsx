@@ -133,7 +133,7 @@ export const LightningTalks = () => (
   <div className="bg-white py-14 sm:py-24">
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-        <p className="text-base font-semibold leading-7 text-indigo-600">
+        <p className="text-base leading-7 font-semibold text-indigo-600">
           Nuestra actividad favorita
         </p>
 

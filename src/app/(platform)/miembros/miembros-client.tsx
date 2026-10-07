@@ -72,7 +72,7 @@ function MemberRow({
   return (
     <Link
       href={`/perfil/${member.id}`}
-      className={cn(ruledCellClassName, 'group relative flex min-w-0 gap-3 p-3')}
+      className={cn(ruledCellClassName, 'relative flex min-w-0 group gap-3 p-3')}
     >
       {accent && (
         <span
@@ -94,7 +94,7 @@ function MemberRow({
         </span>
         {role && <p className="truncate text-xs text-muted-foreground">{role}</p>}
         {member.slogan && (
-          <p className="line-clamp-1 text-xs italic text-muted-foreground/80">
+          <p className="line-clamp-1 text-xs text-muted-foreground/80 italic">
             &quot;{member.slogan}&quot;
           </p>
         )}
@@ -113,12 +113,12 @@ function MemberRow({
       {(member.isCofounder || member.isAmbassador) && (
         <div className="flex shrink-0 flex-col items-end gap-1 self-start">
           {member.isCofounder && (
-            <span className="border border-amber-400/60 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-amber-400">
+            <span className="border border-amber-400/60 px-1 font-mono text-[10px] leading-4 tracking-wider text-amber-400 uppercase">
               co-founder
             </span>
           )}
           {member.isAmbassador && (
-            <span className="border border-pcnGreen-200 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-pcnGreen-700">
+            <span className="border border-pcnGreen-200 px-1 font-mono text-[10px] leading-4 tracking-wider text-pcnGreen-700 uppercase">
               ambassador
             </span>
           )}
@@ -210,7 +210,7 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
             }
             aside={
               <p
-                className="font-mono text-xs tabular-nums text-muted-foreground"
+                className="font-mono text-xs text-muted-foreground tabular-nums"
                 aria-live="polite"
               >
                 <span className={cn(query ? 'text-pcnGreen' : 'text-foreground')}>
@@ -249,16 +249,16 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
           <div className="mb-14 space-y-6">
             {sections.map((section) => (
               <section key={section.id} id={section.id} className="scroll-mt-24">
-                <h2 className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <h2 className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
                   <span className="text-pcnGreen">{'>'}</span>
                   <span className="text-foreground">{section.title}</span>
                   <span
                     aria-hidden
-                    className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                    className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
                   />
                   <span className="tabular-nums">[{section.members.length}]</span>
                 </h2>
-                <p className="mb-2 mt-1 text-xs text-muted-foreground">{section.description}</p>
+                <p className="mt-1 mb-2 text-xs text-muted-foreground">{section.description}</p>
                 <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
                   {section.members.map((member) => (
                     <MemberRow

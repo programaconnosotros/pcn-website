@@ -33,7 +33,7 @@ const Card = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <div className={cn(ruledCellClassName, 'group relative flex flex-col p-4', className)}>
+  <div className={cn(ruledCellClassName, 'relative flex group flex-col p-4', className)}>
     <div className="flex items-start justify-between">
       <span className="flex size-5 items-center justify-center text-pcnGreen [&_svg]:size-4">
         {icon}
@@ -97,7 +97,7 @@ export const JoinSection = () => (
               <li
                 key={name}
                 title={name}
-                className="flex size-7 items-center justify-center rounded-sm ring-1 ring-inset ring-pcnGreen-300 transition-shadow hover:ring-pcnGreen [&_svg]:size-4"
+                className="flex size-7 items-center justify-center rounded-sm ring-1 ring-pcnGreen-300 transition-shadow ring-inset hover:ring-pcnGreen [&_svg]:size-4"
               >
                 <Logo className="size-4" aria-label={name} />
               </li>

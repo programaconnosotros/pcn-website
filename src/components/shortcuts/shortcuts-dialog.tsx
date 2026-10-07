@@ -71,7 +71,7 @@ export function ShortcutsDialog({ open, onOpenChange, layerClassName }: Shortcut
             aria-label="Filtrar atajos"
             autoComplete="off"
             spellCheck={false}
-            className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-none placeholder:text-foreground/25"
+            className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-hidden placeholder:text-foreground/25"
           />
         </label>
 
@@ -85,12 +85,12 @@ export function ShortcutsDialog({ open, onOpenChange, layerClassName }: Shortcut
             <section key={group.id} aria-labelledby={`shortcuts-${group.id}`}>
               <h3
                 id={`shortcuts-${group.id}`}
-                className="mb-1.5 flex items-baseline gap-2 text-[10px] uppercase tracking-[0.2em] text-pcnGreen-600"
+                className="mb-1.5 flex items-baseline gap-2 text-[10px] tracking-[0.2em] text-pcnGreen-600 uppercase"
               >
                 <span className="text-pcnGreen-300">{'//'}</span>
                 {group.title}
                 {group.scope && (
-                  <span className="normal-case tracking-normal text-muted-foreground">
+                  <span className="tracking-normal text-muted-foreground normal-case">
                     · {group.scope}
                   </span>
                 )}

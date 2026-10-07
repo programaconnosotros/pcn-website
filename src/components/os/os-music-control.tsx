@@ -39,7 +39,7 @@ const SetItems = ({
   player: MusicPlayer;
 }) => (
   <>
-    <DropdownMenuLabel className="text-[10px] font-normal uppercase tracking-[0.18em] text-pcnGreen-600">
+    <DropdownMenuLabel className="text-[10px] font-normal tracking-[0.18em] text-pcnGreen-600 uppercase">
       {`// ${label}`}
     </DropdownMenuLabel>
     {sets.map((set) => {

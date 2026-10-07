@@ -21,12 +21,12 @@ export const EventPoster: React.FC<{ event: EventWithCount }> = ({ event }) => {
   return (
     <Link
       href={`/eventos/${event.id}`}
-      className={cn(ruledCellClassName, 'group flex flex-col gap-4 p-4')}
+      className={cn(ruledCellClassName, 'flex group flex-col gap-4 p-4')}
     >
       <FlyerFrame
         src={event.flyerImages[0]}
         alt={`Flyer de ${event.name}`}
-        className="aspect-[4/5] w-full rounded-sm border border-pcnGreen-200"
+        className="aspect-4/5 w-full rounded-sm border border-pcnGreen-200"
       />
 
       <div className="flex flex-1 flex-col gap-1.5">
@@ -39,7 +39,7 @@ export const EventPoster: React.FC<{ event: EventWithCount }> = ({ event }) => {
           </span>
         </div>
 
-        <h3 className="flex items-start gap-2 font-mono text-lg font-semibold leading-snug group-hover:text-pcnGreen">
+        <h3 className="flex items-start gap-2 font-mono text-lg leading-snug font-semibold group-hover:text-pcnGreen">
           <span className="min-w-0 flex-1">{event.name}</span>
           <ArrowRight className="mt-1.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
         </h3>

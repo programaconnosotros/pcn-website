@@ -3,14 +3,14 @@ import { TextGenerateEffect } from '../ui/text-generate-effect';
 const ASZSoftwareLogo = () => (
   //   <div className="relative z-10 flex w-full flex-col items-center">
   <div
-    className="flex w-full flex-col items-center !border-0 bg-black py-10"
+    className="flex w-full flex-col items-center border-0! bg-black py-10"
     style={{ border: 'none' }}
   >
-    <div className="mb-4 mt-4 flex flex-row items-center">
+    <div className="mt-4 mb-4 flex flex-row items-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/asz-software-logo-2.webp" alt="ASZ Studio" className="-ml-8 h-12" />
 
-      <h1 className="bg-gradient-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">
+      <h1 className="bg-linear-to-b from-white to-gray-500 bg-clip-text text-4xl font-bold text-transparent">
         ASZ Software
       </h1>
     </div>

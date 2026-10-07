@@ -123,7 +123,7 @@ export function NavUser({
                   <span className="flex items-center gap-1.5 truncate font-semibold">
                     <span className="truncate">{user.name}</span>
                     {user.role === 'ADMIN' && (
-                      <span className="shrink-0 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 px-1.5 py-px font-mono text-[9px] font-semibold uppercase tracking-wider text-pcnGreen">
+                      <span className="shrink-0 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 px-1.5 py-px font-mono text-[9px] font-semibold tracking-wider text-pcnGreen uppercase">
                         Admin
                       </span>
                     )}
@@ -140,7 +140,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           {!iconOnly && (
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
+              className="w-(--radix-dropdown-menu-trigger-width) min-w-56"
               side={isMobile ? 'bottom' : 'right'}
               align="end"
               sideOffset={8}

@@ -261,7 +261,7 @@ export default function ResetPasswordPage() {
           <form onSubmit={codeForm.handleSubmit(onCodeSubmit)} className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Enviamos un código de 6 dígitos a{' '}
-              <span className="break-all font-mono text-foreground">{email}</span>
+              <span className="font-mono break-all text-foreground">{email}</span>
             </p>
 
             <FormField

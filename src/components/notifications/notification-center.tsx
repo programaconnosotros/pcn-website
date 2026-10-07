@@ -36,14 +36,14 @@ const Badge = ({ count }: { count: number }) =>
   count > 0 ? (
     <span
       aria-hidden
-      className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-sm bg-pcnGreen px-0.5 text-[9px] font-bold leading-none text-black shadow-[0_0_8px_rgba(4,244,190,0.8)]"
+      className="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-sm bg-pcnGreen px-0.5 text-[9px] leading-none font-bold text-black shadow-[0_0_8px_rgba(4,244,190,0.8)]"
     >
       {count > 9 ? '9+' : count}
     </span>
   ) : null;
 
 const rowClassName =
-  'group flex w-full items-start gap-3 border-b border-pcnGreen-200 px-3 py-2.5 text-left transition-colors last:border-b-0 hover:bg-pcnGreen/[0.07] focus-visible:bg-pcnGreen/[0.07] focus-visible:outline-none';
+  'group flex w-full items-start gap-3 border-b border-pcnGreen-200 px-3 py-2.5 text-left transition-colors last:border-b-0 hover:bg-pcnGreen/[0.07] focus-visible:bg-pcnGreen/[0.07] focus-visible:outline-hidden';
 
 /** Loading rows shaped like the real ones, so the list doesn't jump when it arrives. */
 const SkeletonRows = () => (
@@ -138,7 +138,7 @@ export function NotificationCenter({
           overlayClassName={layerClassName}
           className={cn('max-w-md gap-0 p-0', layerClassName)}
         >
-          <DialogHeader className="px-5 pb-3 pt-5">
+          <DialogHeader className="px-5 pt-5 pb-3">
             <DialogTitle>notificaciones</DialogTitle>
             <DialogDescription className="text-xs">
               Lo último que pasó en la comunidad
@@ -163,7 +163,7 @@ export function NotificationCenter({
               >
                 {item.label}
                 {item.count > 0 && (
-                  <span className="rounded-sm bg-pcnGreen/15 px-1 text-[10px] tabular-nums text-pcnGreen">
+                  <span className="rounded-sm bg-pcnGreen/15 px-1 text-[10px] text-pcnGreen tabular-nums">
                     {item.count}
                   </span>
                 )}

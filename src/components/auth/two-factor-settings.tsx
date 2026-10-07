@@ -155,7 +155,7 @@ export function TwoFactorSettings({
               <li>Escaneá el QR con Google Authenticator, 1Password, Authy o la que uses.</li>
               <li>
                 ¿No podés escanearlo? Cargá esta clave a mano:{' '}
-                <code className="break-all bg-pcnGreen/10 px-1 font-mono text-xs text-pcnGreen">
+                <code className="bg-pcnGreen/10 px-1 font-mono text-xs break-all text-pcnGreen">
                   {step.secret}
                 </code>
               </li>

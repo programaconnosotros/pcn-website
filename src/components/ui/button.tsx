@@ -11,9 +11,9 @@ const primaryCta = cn(
   'relative isolate overflow-hidden border border-pcnGreen bg-pcnGreen font-semibold tracking-tight text-black',
   'animate-cta-pulse motion-reduce:animate-none hover:animate-none',
   'hover:-translate-y-px hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(4,244,190,0.6),0_0_36px_-4px_rgba(4,244,190,0.95),inset_0_1px_0_rgba(255,255,255,0.6)] active:translate-y-0',
-  'before:absolute before:inset-y-0 before:left-0 before:-z-10 before:w-1/3 before:bg-gradient-to-r before:from-transparent before:via-white/70 before:to-transparent before:animate-cta-shine motion-reduce:before:hidden',
+  'before:absolute before:inset-y-0 before:left-0 before:-z-10 before:w-1/3 before:bg-linear-to-r before:from-transparent before:via-white/70 before:to-transparent before:animate-cta-shine motion-reduce:before:hidden',
   'after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.07)_0_1px,transparent_1px_3px)]',
-  '[&_svg]:transition-transform hover:[&_svg]:translate-x-0.5',
+  '[&_svg]:transition-transform [&_svg]:hover:translate-x-0.5',
   'disabled:animate-none disabled:bg-pcnGreen/50 disabled:shadow-none disabled:before:hidden',
 );
 
@@ -21,16 +21,16 @@ const primaryCta = cn(
 // hover while a green fill wipes in from the left.
 const secondaryCta = cn(
   'relative border border-pcnGreen-400 bg-black/50 tracking-tight text-pcnGreen-900',
-  'bg-[linear-gradient(90deg,rgba(4,244,190,0.16),rgba(4,244,190,0.06))] bg-[length:0%_100%] bg-left bg-no-repeat transition-[background-size,border-color,box-shadow,color,transform] duration-300',
-  'hover:border-pcnGreen hover:bg-[length:100%_100%] hover:text-pcnGreen hover:text-glow hover:shadow-[0_0_20px_-4px_rgba(4,244,190,0.65),inset_0_0_12px_-6px_rgba(4,244,190,0.8)]',
+  'bg-[linear-gradient(90deg,rgba(4,244,190,0.16),rgba(4,244,190,0.06))] bg-size-[0%_100%] bg-left bg-no-repeat transition-[background-size,border-color,box-shadow,color,transform] duration-300',
+  'hover:border-pcnGreen hover:bg-size-[100%_100%] hover:text-pcnGreen hover:text-glow hover:shadow-[0_0_20px_-4px_rgba(4,244,190,0.65),inset_0_0_12px_-6px_rgba(4,244,190,0.8)]',
   'before:pointer-events-none before:absolute before:-left-px before:-top-px before:size-2 before:border-l-2 before:border-t-2 before:border-pcnGreen before:transition-all before:duration-300 hover:before:size-3',
   'after:pointer-events-none after:absolute after:-bottom-px after:-right-px after:size-2 after:border-b-2 after:border-r-2 after:border-pcnGreen after:transition-all after:duration-300 hover:after:size-3',
-  '[&_svg]:text-current [&_svg]:transition-transform hover:[&_svg]:translate-x-0.5',
+  '[&_svg]:text-current [&_svg]:transition-transform [&_svg]:hover:translate-x-0.5',
 );
 
 // Buttons with a fill and a border label their action as a function call, e.g. `crearEvento();`.
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-sm font-mono text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-sm font-mono text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {

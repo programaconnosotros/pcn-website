@@ -567,7 +567,7 @@ const specs: Record<DocumentedComponentId, Spec> = {
     states: ['open'],
     render: () => (
       <div className={cn(menuContentClassName, 'z-0 w-52')}>
-        <p className="px-2 py-1.5 text-[11px] uppercase tracking-widest text-pcnGreen-600">
+        <p className="px-2 py-1.5 text-[11px] tracking-widest text-pcnGreen-600 uppercase">
           ordenar por
         </p>
         <div className={menuSeparatorClassName} />
@@ -745,7 +745,7 @@ const StateCell = ({
 );
 
 const StateLabel = ({ state }: { state: StateId }) => (
-  <span className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-600">
+  <span className="font-mono text-[10px] tracking-widest text-pcnGreen-600 uppercase">
     {STATES[state].label}
   </span>
 );
@@ -791,7 +791,7 @@ const StateMatrix = ({ spec, visible }: { spec: Spec; visible: StateId[] }) => {
     return (
       <div className="overflow-x-auto">
         <div
-          className="grid min-w-max border-l border-t border-pcnGreen-200"
+          className="grid min-w-max border-t border-l border-pcnGreen-200"
           style={{
             gridTemplateColumns: `6rem repeat(${visible.length}, minmax(9.5rem, 1fr))`,
           }}

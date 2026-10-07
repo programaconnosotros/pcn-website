@@ -162,7 +162,7 @@ export function HeroInstallButton({ className }: { className?: string }) {
         type="button"
         onClick={() => (isInstallable ? installApp() : setShowGuide(true))}
         className={cn(
-          'group inline-flex items-center gap-2.5 text-left font-mono text-xs text-muted-foreground transition-colors animate-in fade-in hover:text-pcnGreen',
+          'inline-flex group items-center gap-2.5 text-left font-mono text-xs text-muted-foreground transition-colors animate-in fade-in hover:text-pcnGreen',
           className,
         )}
       >
@@ -185,7 +185,7 @@ export function HeroInstallButton({ className }: { className?: string }) {
             <ol className="space-y-2.5 text-[13px] leading-relaxed text-muted-foreground">
               {guide.steps.map((step, index) => (
                 <li key={index} className="flex gap-3">
-                  <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
+                  <span aria-hidden className="shrink-0 text-pcnGreen-600 select-none">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <span className="text-pretty">{step}</span>

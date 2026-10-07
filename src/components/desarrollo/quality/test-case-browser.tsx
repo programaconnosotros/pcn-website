@@ -90,7 +90,7 @@ function Flag({
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className={cn(ruledCellClassName, 'px-3 py-2')}>
-      <p className="font-mono text-xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+      <p className="font-mono text-xl font-semibold text-pcnGreen tabular-nums">{value}</p>
       <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
     </div>
   );
@@ -121,7 +121,7 @@ function CaseRow({
             open && 'rotate-90',
           )}
         />
-        <span className="w-[6.5rem] shrink-0 font-mono text-[11px] leading-5 text-pcnGreen">
+        <span className="w-26 shrink-0 font-mono text-[11px] leading-5 text-pcnGreen">
           {testCase.id}
         </span>
         <span className="min-w-0 flex-1 text-sm leading-5">{testCase.title}</span>
@@ -156,7 +156,7 @@ function CaseRow({
       {open && (
         <div
           id={panelId}
-          className="space-y-3 border-t border-dashed border-pcnGreen-200 px-3 py-3 text-xs leading-relaxed sm:pl-[8.75rem]"
+          className="space-y-3 border-t border-dashed border-pcnGreen-200 px-3 py-3 text-xs leading-relaxed sm:pl-35"
         >
           <p className="flex flex-wrap gap-1.5 font-mono text-[10px] sm:hidden">
             <span className="text-muted-foreground">{areaLabel(testCase.area)}</span>
@@ -222,7 +222,7 @@ function CaseRow({
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   {testCase.automation ? (
-                    <code className="break-all font-mono text-foreground">$ {step}</code>
+                    <code className="font-mono break-all text-foreground">$ {step}</code>
                   ) : (
                     step
                   )}
@@ -316,7 +316,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
                   <span className={cn(active ? 'text-pcnGreen' : 'text-foreground')}>
                     <span className="text-pcnGreen-600">{a.code}</span> {a.label}
                   </span>
-                  <span className="tabular-nums text-muted-foreground">{a.total}</span>
+                  <span className="text-muted-foreground tabular-nums">{a.total}</span>
                 </span>
                 <span
                   aria-hidden
@@ -326,7 +326,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
                   <span className="bg-pcnGreen" style={{ width: `${ratio}%` }} />
                   <span className="bg-sky-400/70" style={{ width: `${100 - ratio}%` }} />
                 </span>
-                <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
+                <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
                   {a.automated} auto · {a.manual} manual ·{' '}
                   <span className={cn(a.automated === 0 ? 'text-amber-400' : 'text-pcnGreen')}>
                     {ratio}% automatizado
@@ -349,7 +349,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
         <Select value={area} onValueChange={(value) => setArea(value as QualityAreaId)}>
           <SelectTrigger
             aria-label="Filtrar por área"
-            className="h-8 w-auto min-w-[10rem] font-mono text-xs"
+            className="h-8 w-auto min-w-40 font-mono text-xs"
           >
             <SelectValue />
           </SelectTrigger>
@@ -364,7 +364,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
         </Select>
         <div
           aria-label="Filtrar por tipo y prioridad"
-          className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
+          className="-mx-4 flex scrollbar-none gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0"
         >
           {(['manual', 'automatizado'] as const).map((value) => (
             <Flag
@@ -386,7 +386,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
           ))}
         </div>
         <p
-          className="ml-auto font-mono text-xs tabular-nums text-muted-foreground"
+          className="ml-auto font-mono text-xs text-muted-foreground tabular-nums"
           aria-live="polite"
         >
           <span className={cn(filtering ? 'text-pcnGreen' : 'text-foreground')}>
@@ -401,7 +401,7 @@ export function TestCaseBrowser({ updatedAt }: { updatedAt: string }) {
           <span className="text-pcnGreen-500">$ </span>0 casos con esos filtros
         </p>
       ) : (
-        <ul className="border-l border-t border-pcnGreen-200">
+        <ul className="border-t border-l border-pcnGreen-200">
           {filtered.slice(0, visible).map((c) => (
             <CaseRow
               key={c.id}

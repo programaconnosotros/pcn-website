@@ -229,7 +229,7 @@ describe('Sidebar', () => {
     );
     const sidebar = screen.getByTestId('sidebar');
     expect(sidebar).not.toHaveAttribute('data-state');
-    expect(sidebar).toHaveClass('w-[--sidebar-width]');
+    expect(sidebar).toHaveClass('w-(--sidebar-width)');
   });
 
   it('uses a sheet on mobile, opened by the trigger', async () => {
