@@ -135,3 +135,48 @@ it('rejects a wrong first code and refuses to set it up twice', async () => {
   await confirmTwoFactorSetup(totpAt(secret, timeStep()));
   await expect(startTwoFactorSetup()).rejects.toThrow('ya está activada');
 });
+
+it('signs in only once when the same code arrives twice at the same time', async () => {
+  const { user, secret, step } = await enable();
+  await actAs();
+  await signIn({ email: user.email, password });
+
+  const code = totpAt(secret, step + 1);
+  const results = await Promise.all([verifyTwoFactorSignIn(code), verifyTwoFactorSignIn(code)]);
+  expect(results.filter((result) => result.success)).toHaveLength(1);
+  expect(await prisma.session.count({ where: { userId: user.id } })).toBe(2); // actAs's + one
+});
+
+it('checks no more than the allowed codes when they arrive all at once', async () => {
+  const { user, secret, step } = await enable();
+  await actAs();
+  await signIn({ email: user.email, password });
+
+  // Eight wrong codes and the right one, all in flight together: at most five are looked at
+  const wrong = Array.from({ length: 8 }, (_, i) => String(100000 + i));
+  const results = await Promise.all(
+    [...wrong, totpAt(secret, step + 1)].map((code) => verifyTwoFactorSignIn(code)),
+  );
+  expect(
+    results.filter((result) => result.success === false && result.error === 'INVALID_CODE').length,
+  ).toBeLessThanOrEqual(5);
+});
+
+it('limits code guesses per account, not only per IP', async () => {
+  const { user } = await enable();
+  for (let i = 0; i < 2; i++) {
+    await actAs();
+    await signIn({ email: user.email, password });
+    for (let j = 0; j < 5; j++) await verifyTwoFactorSignIn('000000');
+  }
+  await actAs();
+  await signIn({ email: user.email, password });
+  await expect(verifyTwoFactorSignIn('000000')).rejects.toThrow('RATE_LIMIT');
+});
+
+it('spends the code that turns it off, even against a request racing with it', async () => {
+  const { secret, step } = await enable();
+  const code = totpAt(secret, step + 1);
+  const results = await Promise.allSettled([regenerateRecoveryCodes(code), disableTwoFactor(code)]);
+  expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
+});

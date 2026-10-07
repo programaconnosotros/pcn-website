@@ -4,13 +4,13 @@ import QRCode from 'qrcode';
 import { z } from 'zod';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import prisma from '@/lib/prisma';
-import { enforceRateLimit } from '@/lib/rate-limit';
+import { RATE_LIMITS, RateLimitError, consumeRateLimit, enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
 import {
   MAX_CHALLENGE_ATTEMPTS,
   checkSecondFactor,
+  claimSecondFactor,
   clearTwoFactorChallenge,
-  consumeSecondFactor,
   findTwoFactorChallenge,
   secondFactorSelect,
   type SecondFactorCheck,
@@ -51,6 +51,21 @@ export async function verifyTwoFactorSignIn(
   const challenge = await findTwoFactorChallenge();
   if (!challenge) return { success: false, error: 'EXPIRED' };
 
+  // The IP limit above doesn't stop guesses spread over many IPs: count them per account too.
+  const wait = consumeRateLimit(`verifyCode:user:${challenge.userId}`, RATE_LIMITS.verifyCode);
+  if (wait > 0) throw new RateLimitError('verifyCode', wait);
+
+  // Take one of the challenge's attempts before looking at the code, so parallel requests can't
+  // all be checked before the count catches up. None left: back to the password.
+  const { count: reserved } = await prisma.twoFactorChallenge.updateMany({
+    where: { id: challenge.id, attempts: { lt: MAX_CHALLENGE_ATTEMPTS } },
+    data: { attempts: { increment: 1 } },
+  });
+  if (reserved === 0) {
+    await clearTwoFactorChallenge(challenge.id);
+    return { success: false, error: 'EXPIRED' };
+  }
+
   const user = await prisma.user.findUnique({
     where: { id: challenge.userId },
     select: secondFactorSelect,
@@ -58,20 +73,15 @@ export async function verifyTwoFactorSignIn(
   const check: SecondFactorCheck = user
     ? checkSecondFactor(user, codeSchema.catch('').parse(code))
     : { ok: false };
-  if (!user || !check.ok) {
-    const { attempts } = await prisma.twoFactorChallenge.update({
-      where: { id: challenge.id },
-      data: { attempts: { increment: 1 } },
-    });
-    // Too many wrong codes: back to the password.
-    if (attempts >= MAX_CHALLENGE_ATTEMPTS) {
+  if (!user || !check.ok || !(await claimSecondFactor(user, check))) {
+    // That was the last attempt: back to the password.
+    if (challenge.attempts + 1 >= MAX_CHALLENGE_ATTEMPTS) {
       await clearTwoFactorChallenge(challenge.id);
       return { success: false, error: 'EXPIRED' };
     }
     return { success: false, error: 'INVALID_CODE' };
   }
 
-  await prisma.user.update({ where: { id: user.id }, data: consumeSecondFactor(check) });
   await clearTwoFactorChallenge(challenge.id);
   await createSession(user.id);
   return {
@@ -124,17 +134,16 @@ export async function disableTwoFactor(code: string) {
   const user = await requireUser();
   await enforceRateLimit('verifyCode');
   if (!user.twoFactorEnabledAt) return;
-  if (!checkSecondFactor(user, codeSchema.parse(code)).ok)
-    throw new Error('El código no es válido');
-  await prisma.user.update({
-    where: { id: user.id },
-    data: {
+  const check = checkSecondFactor(user, codeSchema.parse(code));
+  const turnedOff =
+    check.ok &&
+    (await claimSecondFactor(user, check, {
       twoFactorSecret: null,
       twoFactorEnabledAt: null,
       twoFactorRecoveryCodes: [],
       twoFactorLastStep: null,
-    },
-  });
+    }));
+  if (!turnedOff) throw new Error('El código no es válido');
   await prisma.twoFactorChallenge.deleteMany({ where: { userId: user.id } });
 }
 
@@ -146,9 +155,7 @@ export async function regenerateRecoveryCodes(code: string) {
   const check = checkSecondFactor(user, codeSchema.parse(code));
   if (!check.ok || check.kind !== 'totp') throw new Error('Usá un código de la app');
   const { codes, hashes } = newRecoveryCodes();
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { ...consumeSecondFactor(check), twoFactorRecoveryCodes: hashes },
-  });
+  if (!(await claimSecondFactor(user, check, { twoFactorRecoveryCodes: hashes })))
+    throw new Error('Usá un código de la app');
   return { recoveryCodes: codes };
 }

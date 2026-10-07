@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
+import type { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/prisma';
 import { hashSessionToken } from '@/lib/session';
 import { hashRecoveryCode, verifyTotp } from '@/lib/totp';
@@ -92,6 +93,27 @@ export const consumeSecondFactor = (check: Extract<SecondFactorCheck, { ok: true
   check.kind === 'totp'
     ? { twoFactorLastStep: check.step }
     : { twoFactorRecoveryCodes: check.remaining };
+
+/**
+ * Spends the code `checkSecondFactor` accepted, along with any other `data` to save. Only one
+ * request can spend it: the write applies only if the step or the recovery codes are still what
+ * `user` read, so two requests racing with the same code (or with two recovery codes) can't both
+ * pass. Returns whether this request was the one that spent it.
+ */
+export const claimSecondFactor = async (
+  user: SecondFactorUser,
+  check: Extract<SecondFactorCheck, { ok: true }>,
+  data: Prisma.UserUpdateManyMutationInput = {},
+) => {
+  const { count } = await prisma.user.updateMany({
+    where:
+      check.kind === 'totp'
+        ? { id: user.id, twoFactorLastStep: user.twoFactorLastStep }
+        : { id: user.id, twoFactorRecoveryCodes: { equals: user.twoFactorRecoveryCodes } },
+    data: { ...consumeSecondFactor(check), ...data },
+  });
+  return count === 1;
+};
 
 export const secondFactorSelect = {
   id: true,
