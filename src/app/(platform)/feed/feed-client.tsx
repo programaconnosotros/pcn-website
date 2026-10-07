@@ -26,6 +26,11 @@ const KINDS: Record<FeedKind, { label: string; tag: string; className: string }>
     tag: 'changelog',
     className: 'border-pcnGreen-200 text-pcnGreen-700',
   },
+  desarrollo: {
+    label: 'desarrollo',
+    tag: 'nuevo dev',
+    className: 'border-violet-400/50 text-violet-300',
+  },
 };
 
 type Filter = 'todo' | FeedKind;

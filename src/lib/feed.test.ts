@@ -19,6 +19,11 @@ jest.mock('@/data/changelog', () => ({
   },
 }));
 jest.mock('@/lib/event-index', () => ({ getEventNames: jest.fn() }));
+jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn(async () => ({})) }));
+const mockContributors: unknown[] = [];
+jest.mock('@/lib/github-stats', () => ({
+  getCollaborationStats: async () => ({ topContributors: mockContributors }),
+}));
 jest.mock('@/lib/gallery-signing', () => ({
   signGallerySrc: (src: string) => ({ url: `signed:${src}` }),
 }));
@@ -34,6 +39,7 @@ const emptySources = () => {
 };
 
 beforeEach(() => {
+  mockContributors.length = 0;
   mockConversations.length = 0;
   mockChangelog.length = 0;
   jest.mocked(getEventNames).mockResolvedValue({});
@@ -49,6 +55,41 @@ describe('toFeedDay', () => {
 });
 
 describe('fetchFeed', () => {
+  it("announces each developer's first merged PR, linked to their profile when linked", async () => {
+    const { getIdentityMap } = jest.requireMock('@/lib/identity-links');
+    getIdentityMap.mockResolvedValueOnce({ ada: { id: 'u1', name: 'Ada Lovelace', image: null } });
+    mockContributors.push(
+      {
+        login: 'ada',
+        commits: 9,
+        mergedPrs: 2,
+        firstContributionWeek: '2025-01-05T00:00:00Z',
+        pulls: [
+          { number: 9, title: 'feat: b', mergedAt: '2025-03-01T15:00:00Z' },
+          { number: 3, title: 'fix(ui): botón roto', mergedAt: '2025-02-01T15:00:00Z' },
+        ],
+      },
+      { login: 'old', commits: 4, mergedPrs: 0, firstContributionWeek: '2024-06-16T00:00:00Z' },
+    );
+
+    const items = await fetchFeed();
+    expect(items).toEqual([
+      expect.objectContaining({
+        id: 'desarrollo-ada',
+        kind: 'desarrollo',
+        day: '2025-02-01',
+        title: 'Ada Lovelace hizo su primera contribución al sitio',
+        description: 'Su primera PR: “Botón roto”. Ya suma 2 PRs mergeadas.',
+        href: '/perfil/u1?tab=contribuciones',
+      }),
+      expect.objectContaining({
+        id: 'desarrollo-old',
+        title: 'old hizo su primera contribución al sitio',
+        href: '/desarrollo#team',
+      }),
+    ]);
+  });
+
   it('is empty when nothing happened', async () => {
     expect(await fetchFeed()).toEqual([]);
   });

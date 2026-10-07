@@ -7,9 +7,19 @@ import { signGallerySrc } from '@/lib/gallery-signing';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getEventNames } from '@/lib/event-index';
+import { getCollaborationStats } from '@/lib/github-stats';
+import { getIdentityMap } from '@/lib/identity-links';
+import { pullSummary } from '@/lib/pull-kinds';
 
 export type FeedKind =
-  'evento' | 'charla' | 'fotos' | 'setup' | 'proyecto' | 'conversacion' | 'changelog';
+  | 'evento'
+  | 'charla'
+  | 'fotos'
+  | 'setup'
+  | 'proyecto'
+  | 'conversacion'
+  | 'changelog'
+  | 'desarrollo';
 
 export interface FeedItem {
   id: string;
@@ -222,6 +232,38 @@ const changelogItems = (): FeedItem[] =>
       href: entry.href ?? '/changelog',
     }));
 
+/**
+ * When each person joined the website's development: the day their first PR was merged (or, in
+ * older snapshots without PRs, the week of their first commit), linked to their PCN profile when
+ * their GitHub login is linked.
+ */
+const firstContributionItems = async (): Promise<FeedItem[]> => {
+  const [stats, profiles] = await Promise.all([getCollaborationStats(), getIdentityMap('github')]);
+  return stats.topContributors.flatMap((contributor) => {
+    const first = [...(contributor.pulls ?? [])].sort((a, b) =>
+      a.mergedAt.localeCompare(b.mergedAt),
+    )[0];
+    const when = first?.mergedAt ?? contributor.firstContributionWeek;
+    if (!when) return [];
+    const profile = profiles[contributor.login];
+    const name = profile?.name ?? contributor.login;
+    return [
+      {
+        id: `desarrollo-${contributor.login}`,
+        kind: 'desarrollo' as const,
+        day: toFeedDay(new Date(when)),
+        sortKey: new Date(when).toISOString(),
+        title: `${name} hizo su primera contribución al sitio`,
+        description: first
+          ? `Su primera PR: “${pullSummary(first.title)}”. Ya suma ${contributor.mergedPrs} ${contributor.mergedPrs === 1 ? 'PR mergeada' : 'PRs mergeadas'}.`
+          : `Ya suma ${contributor.commits} commits en el repo.`,
+        meta: `@${contributor.login}`,
+        href: profile ? `/perfil/${profile.id}?tab=contribuciones` : '/desarrollo#team',
+      },
+    ];
+  });
+};
+
 const buildFeed = cached(
   'feed',
   async (): Promise<FeedItem[]> => {
@@ -233,6 +275,7 @@ const buildFeed = cached(
       projectItems(),
       conversationItems(),
       changelogItems(),
+      firstContributionItems(),
     ]);
     return sources
       .flat()
@@ -240,7 +283,16 @@ const buildFeed = cached(
       .slice(0, MAX_ITEMS);
   },
   {
-    models: ['Event', 'Talk', 'TalkSpeaker', 'User', 'GalleryItem', 'Setup', 'Project'],
+    models: [
+      'Event',
+      'Talk',
+      'TalkSpeaker',
+      'User',
+      'GalleryItem',
+      'Setup',
+      'Project',
+      'IdentityLink',
+    ],
   },
 );
 
