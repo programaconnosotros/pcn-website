@@ -20,7 +20,7 @@ describe('fetchSetups', () => {
     await fetchSetups();
     expect(prismaMock.setup.findMany).toHaveBeenCalledWith({
       select: setupSelect,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
     });
   });
 
@@ -28,7 +28,7 @@ describe('fetchSetups', () => {
     await fetchSetups('populares');
     expect(prismaMock.setup.findMany).toHaveBeenCalledWith({
       select: setupSelect,
-      orderBy: [{ likes: { _count: 'desc' } }, { createdAt: 'desc' }],
+      orderBy: [{ likes: { _count: 'desc' } }, { date: 'desc' }, { createdAt: 'desc' }],
     });
   });
 });

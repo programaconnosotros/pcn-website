@@ -32,8 +32,9 @@ const listSetups = cached(
       select: setupSelect,
       orderBy:
         sort === 'populares'
-          ? [{ likes: { _count: 'desc' } }, { createdAt: 'desc' }]
-          : { createdAt: 'desc' },
+          ? [{ likes: { _count: 'desc' } }, { date: 'desc' }, { createdAt: 'desc' }]
+          : // By the setup's own date, newest first; same-day ones by when they were posted.
+            [{ date: 'desc' }, { createdAt: 'desc' }],
     }),
   { models: SETUP_MODELS },
 );
