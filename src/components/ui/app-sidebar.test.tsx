@@ -84,7 +84,7 @@ describe('AppSidebar', () => {
     mockIsMobile = true;
     const { unmount } = renderSidebar({ user: member });
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
-      'Actividades:6',
+      'Actividades:7',
       'Recursos:8',
       'Comunidad:10',
     ]);
