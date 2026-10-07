@@ -63,10 +63,10 @@ const asciiBar = (value: number, max: number) => {
 };
 
 const Stat = ({ label, value, hint }: { label: string; value: string; hint?: string }) => (
-  <RuledCell className="px-3 py-2.5">
-    <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
+  <RuledCell className="min-w-0 px-3 py-2.5">
+    <p className="break-words font-mono text-[11px] leading-tight text-muted-foreground">{label}</p>
     <p className="font-mono text-xl font-semibold tabular-nums text-pcnGreen">{value}</p>
-    {hint && <p className="truncate font-mono text-[11px] text-muted-foreground/70">{hint}</p>}
+    {hint && <p className="font-mono text-[11px] leading-tight text-muted-foreground/70">{hint}</p>}
   </RuledCell>
 );
 
@@ -183,9 +183,11 @@ export const CollaborationStats = async () => {
   const contributors = stats.topContributors;
   const maxMerged = Math.max(...contributors.map((contributor) => contributor.mergedPrs));
 
+  // Everything follows the width the stats get (a container query), not the screen: next to the
+  // index or in a PCN OS window that's much less than the viewport, and the list used to overflow.
   return (
-    <div className="space-y-5">
-      <RuledGrid className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+    <div className="space-y-5 @container">
+      <RuledGrid className="grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-6">
         <Stat label="commits" value={numberFormat.format(stats.commits)} />
         <Stat
           label="PRs mergeadas"
@@ -222,7 +224,7 @@ export const CollaborationStats = async () => {
             return (
               <li
                 key={contributor.login}
-                className="group flex items-center gap-2 font-mono text-xs"
+                className="group flex min-w-0 items-center gap-2 font-mono text-xs"
               >
                 <span className="w-5 shrink-0 text-right tabular-nums text-muted-foreground/70">
                   {index + 1}
@@ -239,22 +241,22 @@ export const CollaborationStats = async () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`${contributor.login} en GitHub`}
-                  className="w-32 shrink-0 truncate transition-colors hover:text-pcnGreen"
+                  className="w-32 min-w-0 shrink truncate transition-colors hover:text-pcnGreen"
                 >
                   {contributor.login}
                 </Link>
-                <span aria-hidden className="hidden shrink-0 tracking-tighter sm:inline">
+                <span aria-hidden className="hidden shrink-0 tracking-tighter @2xl:inline">
                   <span className="text-pcnGreen-600 group-hover:text-pcnGreen">{bar.filled}</span>
                   <span className="text-pcnGreen-200">{bar.empty}</span>
                 </span>
-                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground sm:ml-2 sm:w-40">
+                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground @2xl:ml-2 @2xl:w-40">
                   <span className="text-foreground">{contributor.mergedPrs}</span> PRs ·{' '}
                   {numberFormat.format(contributor.commits)} commits
                 </span>
                 {contributor.linesAdded !== null && contributor.linesDeleted !== null && (
                   <span
                     title={`${numberFormat.format(contributor.linesAdded)} líneas agregadas, ${numberFormat.format(contributor.linesDeleted)} eliminadas`}
-                    className="hidden w-28 shrink-0 tabular-nums lg:inline"
+                    className="hidden w-28 shrink-0 tabular-nums @3xl:inline"
                   >
                     <span className="text-pcnGreen-600">+{compact(contributor.linesAdded)}</span>{' '}
                     <span className="text-red-400/80">−{compact(contributor.linesDeleted)}</span>
@@ -263,7 +265,7 @@ export const CollaborationStats = async () => {
                 {contributor.firstContributionWeek && (
                   <span
                     title={`Primer commit: semana del ${longDateFormat.format(new Date(contributor.firstContributionWeek))}`}
-                    className="hidden w-28 shrink-0 text-muted-foreground xl:inline"
+                    className="hidden w-28 shrink-0 text-muted-foreground @4xl:inline"
                   >
                     desde {monthFormat.format(new Date(contributor.firstContributionWeek))}
                   </span>
@@ -272,7 +274,7 @@ export const CollaborationStats = async () => {
                   <Link
                     href={`/perfil/${profile.id}`}
                     title={`Ver el perfil de ${profile.name} en PCN`}
-                    className="hidden shrink-0 truncate text-pcnGreen-700 transition-colors hover:text-pcnGreen md:inline md:max-w-40"
+                    className="hidden min-w-0 shrink truncate text-pcnGreen-700 transition-colors hover:text-pcnGreen @lg:inline @lg:max-w-40"
                   >
                     ~/{profile.name.split(' ')[0].toLowerCase()} →
                   </Link>
@@ -300,8 +302,8 @@ export const CollaborationStats = async () => {
 };
 
 export const CollaborationStatsSkeleton = () => (
-  <div className="space-y-5">
-    <RuledGrid className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+  <div className="space-y-5 @container">
+    <RuledGrid className="grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-6">
       {Array.from({ length: 6 }, (_, index) => (
         <RuledCell key={index} className="h-[74px] animate-pulse bg-pcnGreen-50" />
       ))}
