@@ -106,9 +106,11 @@ describe('PastEventMemory', () => {
 
     const hero = screen.getByRole('banner');
     expect(hero).toHaveTextContent('Nº 009 · así fue');
+    // Who appears in the photos has its own section below, not a number in the hero.
     expect(within(hero).getByRole('list')).toHaveTextContent(
-      '1inscripto2charlas1conversación2fotos1video26en las fotos',
+      '1inscripto2charlas1conversación2fotos1video',
     );
+    expect(within(hero).getByRole('list')).not.toHaveTextContent('en las fotos');
     // The chosen cover opens the page and is not repeated in the album
     expect(screen.queryByRole('link', { name: /Foto 1 de 2$/ })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: /^(Foto|Video) \d de 2/ })).toHaveLength(2);

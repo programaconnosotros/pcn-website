@@ -82,7 +82,6 @@ export async function PastEventMemory({
     },
     { value: memories.photoCount, label: plural(memories.photoCount, 'foto', 'fotos') },
     { value: memories.videoCount, label: plural(memories.videoCount, 'video', 'videos') },
-    { value: memories.people.length, label: 'en las fotos' },
   ].filter((stat) => stat.value > 0);
 
   return (
