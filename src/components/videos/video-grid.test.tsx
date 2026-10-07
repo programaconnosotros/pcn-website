@@ -138,4 +138,17 @@ describe('VideoGrid', () => {
     expect(externalTalks.length + otherVideos.length).toBe(allVideos.length);
     expect(externalTalks.every((video) => video.isTalk)).toBe(true);
   });
+
+  it('links the speakers who are platform users to their profiles', () => {
+    renderInPlatform(
+      <VideoGrid
+        videos={[{ ...videos[0], speaker: 'Ana López (Acme) y Beto' }]}
+        toolbar={false}
+        speakerProfiles={{ 'Ana López': { id: 'u1', name: 'Ana López' } }}
+      />,
+    );
+    expect(screen.getByRole('link', { name: 'Ana López' })).toHaveAttribute('href', '/perfil/u1');
+    expect(screen.queryByRole('link', { name: 'Beto' })).not.toBeInTheDocument();
+    expect(screen.getByText(/Beto · JSConf/)).toBeInTheDocument();
+  });
 });

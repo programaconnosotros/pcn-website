@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { createContext, Fragment, useContext, useState } from 'react';
+import Link from 'next/link';
 import { ArrowUpRight, Eye, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -15,7 +16,7 @@ import {
 import { useContentMarks } from '@/hooks/use-content-marks';
 import { normalizeSearchText } from '@/lib/search/search-index';
 import { cn } from '@/lib/utils';
-import type { Video } from './videos';
+import { videoSpeakers, type Video } from './videos';
 
 const formatDuration = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
@@ -34,6 +35,40 @@ const formatDate = (iso: string) =>
 
 const byline = (video: Video) =>
   video.speaker ? `${video.speaker} · ${video.channel}` : video.channel;
+
+/** Video speakers who are platform users (linked in /vinculos), by the name the video credits. */
+export type SpeakerProfiles = Record<string, { id: string; name: string }>;
+
+const SpeakerProfilesContext = createContext<SpeakerProfiles>({});
+
+/** The byline, with the speakers who are platform users linked to their profiles. */
+const Byline = ({ video }: { video: Video }) => {
+  const profiles = useContext(SpeakerProfilesContext);
+  const speakers = videoSpeakers(video);
+  if (!speakers.some((name) => profiles[name])) return <>{byline(video)}</>;
+  return (
+    <>
+      {speakers.map((name, index) => (
+        <Fragment key={name}>
+          {index > 0 && ', '}
+          {profiles[name] ? (
+            <Link
+              href={`/perfil/${profiles[name].id}`}
+              onClick={(event) => event.stopPropagation()}
+              className="relative z-10 text-pcnGreen-700 underline-offset-2 hover:text-pcnGreen hover:underline"
+            >
+              {name}
+            </Link>
+          ) : (
+            name
+          )}
+        </Fragment>
+      ))}
+      {' · '}
+      {video.channel}
+    </>
+  );
+};
 
 const WATCH_FILTERS = [
   { value: 'todos', label: 'todos' },
@@ -111,7 +146,7 @@ const VideoCell = ({
     <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/70">
       <span className="min-w-0 flex-1 truncate">
         <span className="text-pcnGreen-500">@ </span>
-        {byline(video)}
+        <Byline video={video} />
       </span>
       <MarkToggle
         active={watched}
@@ -130,8 +165,11 @@ export function VideoGrid({
   toolbar = true,
   searchable = false,
   fillRows = false,
+  speakerProfiles = {},
 }: {
   videos: Video[];
+  /** Speakers who are platform users, linked to their profiles in the bylines. */
+  speakerProfiles?: SpeakerProfiles;
   /** For short previews: leave out what would sit alone in a half-empty last row. */
   fillRows?: boolean;
   /** Shows the watch progress and the watched/unwatched filter above the grid. */
@@ -160,7 +198,7 @@ export function VideoGrid({
   const filled = Math.round((watchedCount / Math.max(videos.length, 1)) * barWidth);
 
   return (
-    <>
+    <SpeakerProfilesContext.Provider value={speakerProfiles}>
       {/* Watch progress, the language filter and the watched/unwatched filter. */}
       {toolbar && (
         <CollapsibleFilters
@@ -256,7 +294,7 @@ export function VideoGrid({
                 </DialogTitle>
                 <DialogDescription className="truncate text-[11px] text-pcnGreen-600">
                   <span className="text-pcnGreen-500">@ </span>
-                  {byline(playing)} · {formatDate(playing.date)}
+                  <Byline video={playing} /> · {formatDate(playing.date)}
                 </DialogDescription>
               </div>
               <MarkToggle
@@ -289,6 +327,6 @@ export function VideoGrid({
           </DialogContent>
         )}
       </Dialog>
-    </>
+    </SpeakerProfilesContext.Provider>
   );
 }

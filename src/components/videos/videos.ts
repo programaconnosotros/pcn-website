@@ -1,4 +1,5 @@
 import type { Language } from '@/components/ui/language-filter';
+import { splitPeople } from '@/lib/people-names';
 
 export interface Video {
   /** YouTube video id. */
@@ -668,3 +669,6 @@ export const externalTalks = videos.filter((video) => video.isTalk);
 
 /** Videos that are not conference talks, so they never repeat what `externalTalks` lists. */
 export const otherVideos = videos.filter((video) => !video.isTalk);
+
+/** The people credited in a video's `speaker`, one name each. */
+export const videoSpeakers = (video: Pick<Video, 'speaker'>) => splitPeople(video.speaker);

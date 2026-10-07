@@ -33,12 +33,14 @@ describe('getUserIdentities', () => {
       { source: 'whatsapp', externalName: 'Ana 2' },
       { source: 'articulos', externalName: 'Ana Pérez' },
       { source: 'historia', externalName: 'Ana' },
+      { source: 'videos', externalName: 'Ana P.' },
     ] as any);
 
     await expect(getUserIdentities('u1')).resolves.toEqual({
       whatsapp: ['Ana WA', 'Ana 2'],
       github: ['ana-dev'],
       articulos: ['Ana Pérez'],
+      videos: ['Ana P.'],
     });
     expect(prismaMock.identityLink.findMany).toHaveBeenCalledWith({
       where: { userId: 'u1' },
@@ -52,6 +54,7 @@ describe('getUserIdentities', () => {
       whatsapp: [],
       github: [],
       articulos: [],
+      videos: [],
     });
   });
 });

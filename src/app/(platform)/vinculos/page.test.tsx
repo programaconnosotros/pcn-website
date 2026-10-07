@@ -36,6 +36,11 @@ jest.mock('@/app/(platform)/lectura/articles', () => ({
   ],
 }));
 jest.mock('@/components/historia/people', () => ({ HISTORIA_PEOPLE: ['Zoe', 'Abel'] }));
+jest.mock('@/components/videos/videos', () => ({
+  videos: [{ speaker: 'Ana (Acme) y Leo' }, { speaker: 'Ana' }, { speaker: undefined }],
+  videoSpeakers: (video: { speaker?: string }) =>
+    video.speaker ? video.speaker.replace(/ \(.*?\)/, '').split(' y ') : [],
+}));
 
 const ana = { id: 'u-ana', name: 'Ana', image: null };
 const links: Record<string, Record<string, typeof ana>> = {
@@ -43,6 +48,7 @@ const links: Record<string, Record<string, typeof ana>> = {
   github: { 'ana-dev': ana, 'old-login': { id: 'u-old', name: 'Old', image: null } },
   articulos: { Zoe: { id: 'u-zoe', name: 'Zoe', image: null } },
   historia: {},
+  videos: { Leo: { id: 'u-leo', name: 'Leo', image: null } },
 };
 
 const contributor = (login: string, mergedPrs: number) => ({
@@ -135,13 +141,26 @@ describe('/vinculos', () => {
 
     expect(tableProps('historia').rows.map((row) => row.externalName)).toEqual(['Zoe', 'Abel']);
     expect(
-      screen.getByText('1/4 de whatsapp · 2/3 de github · 1/3 de artículos · 0/2 de historia'),
+      screen.getByText(
+        '1/4 de whatsapp · 2/3 de github · 1/3 de artículos · 0/2 de historia · 1/2 de videos',
+      ),
     ).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'whatsapp',
       'github',
       'artículos',
       'historia',
+      'videos',
+    ]);
+  });
+
+  it('counts the videos of each credited speaker', async () => {
+    await renderPage(VinculosPage());
+    expect(
+      tableProps('videos').rows.map((row) => [row.externalName, row.detail, row.user?.id ?? null]),
+    ).toEqual([
+      ['Ana', '2 videos', null],
+      ['Leo', '1 video', 'u-leo'],
     ]);
   });
 });

@@ -11,6 +11,7 @@ import { getCollaborationStats } from '@/lib/github-stats';
 import { getUserIdentities } from '@/lib/identity-links';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
 import { setupSelect } from '@/lib/setups';
+import { videoSpeakers, videos as allVideos } from '@/components/videos/videos';
 
 // One loader per profile section, so a tab only waits for its own data while the overview and
 // the tab counts reuse whatever the other loaders fetched. The ones that read the database are
@@ -111,6 +112,14 @@ export const getProfileEvents = cached(
   { models: ['Event', 'EventOrganizer'] },
 );
 
+// Videos from /videos where the user is credited, through the speaker names linked to them in
+// /vinculos, newest first.
+export const getProfileVideos = cache(async (userId: string) => {
+  const names = new Set((await getProfileIdentities(userId)).videos);
+  if (names.size === 0) return [];
+  return allVideos.filter((video) => videoSpeakers(video).some((name) => names.has(name)));
+});
+
 // Setups the user shared, by their own date like /setups lists them.
 export const getProfileSetups = cached(
   'profile-setups',
@@ -190,23 +199,35 @@ export const getProfileContributions = cache(async (userId: string) => {
 
 export const getProfileCounts = cache(
   async (userId: string): Promise<Partial<Record<ProfileTab, number>>> => {
-    const [projects, advises, talks, articles, events, photos, setups, conversations, github] =
-      await Promise.all([
-        getProfileProjects(userId),
-        getProfileAdvises(userId),
-        getProfileTalks(userId),
-        getProfileArticles(userId),
-        getProfileEvents(userId),
-        getProfilePhotos(userId),
-        getProfileSetups(userId),
-        getProfileConversations(userId),
-        getProfileContributions(userId),
-      ]);
+    const [
+      projects,
+      advises,
+      talks,
+      articles,
+      videos,
+      events,
+      photos,
+      setups,
+      conversations,
+      github,
+    ] = await Promise.all([
+      getProfileProjects(userId),
+      getProfileAdvises(userId),
+      getProfileTalks(userId),
+      getProfileArticles(userId),
+      getProfileVideos(userId),
+      getProfileEvents(userId),
+      getProfilePhotos(userId),
+      getProfileSetups(userId),
+      getProfileConversations(userId),
+      getProfileContributions(userId),
+    ]);
     return {
       proyectos: projects.length,
       consejos: advises.length,
       charlas: talks.length,
       articulos: articles.length,
+      videos: videos.length,
       eventos: events.length,
       fotos: photos.length,
       setups: setups.length,

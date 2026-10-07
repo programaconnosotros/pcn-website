@@ -5,6 +5,7 @@ import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
 import { conversations } from '@/data/whatsapp-conversations';
 import { members } from '@/data/whatsapp-conversations/members';
 import { HISTORIA_PEOPLE } from '@/components/historia/people';
+import { videoSpeakers, videos } from '@/components/videos/videos';
 import { requireAdminPage } from '@/lib/admin';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
@@ -19,13 +20,15 @@ export const metadata: Metadata = {
 export default async function VinculosPage() {
   await requireAdminPage();
 
-  const [whatsappLinks, githubLinks, authorLinks, historiaLinks, stats] = await Promise.all([
-    getIdentityMap('whatsapp'),
-    getIdentityMap('github'),
-    getIdentityMap('articulos'),
-    getIdentityMap('historia'),
-    getCollaborationStats(),
-  ]);
+  const [whatsappLinks, githubLinks, authorLinks, historiaLinks, videoLinks, stats] =
+    await Promise.all([
+      getIdentityMap('whatsapp'),
+      getIdentityMap('github'),
+      getIdentityMap('articulos'),
+      getIdentityMap('historia'),
+      getIdentityMap('videos'),
+      getCollaborationStats(),
+    ]);
 
   const conversationCounts = new Map<string, number>();
   for (const conversation of conversations) {
@@ -79,6 +82,19 @@ export default async function VinculosPage() {
     user: historiaLinks[name] ?? null,
   }));
 
+  const videoCounts = new Map<string, number>();
+  for (const name of videos.flatMap(videoSpeakers)) {
+    videoCounts.set(name, (videoCounts.get(name) ?? 0) + 1);
+  }
+  const videoRows: IdentityRow[] = [...videoCounts]
+    .map(([name, count]) => ({
+      externalName: name,
+      detail: `${count} ${count === 1 ? 'video' : 'videos'}`,
+      weight: count,
+      user: videoLinks[name] ?? null,
+    }))
+    .sort((a, b) => b.weight - a.weight || a.externalName.localeCompare(b.externalName));
+
   const linked = (rows: IdentityRow[]) => rows.filter((row) => row.user).length;
 
   return (
@@ -87,7 +103,7 @@ export default async function VinculosPage() {
         <StickyHeader>
           <PageTitle
             path="vinculos"
-            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github · ${linked(authorRows)}/${authorRows.length} de artículos · ${linked(historiaRows)}/${historiaRows.length} de historia`}
+            meta={`${linked(whatsappRows)}/${whatsappRows.length} de whatsapp · ${linked(githubRows)}/${githubRows.length} de github · ${linked(authorRows)}/${authorRows.length} de artículos · ${linked(historiaRows)}/${historiaRows.length} de historia · ${linked(videoRows)}/${videoRows.length} de videos`}
           />
         </StickyHeader>
 
@@ -97,7 +113,8 @@ export default async function VinculosPage() {
           perfil y su nombre en /conversaciones lleva al perfil; un login de GitHub vinculado
           muestra sus contribuciones al sitio en el perfil y en /desarrollo; un autor de /lectura
           vinculado suma todos sus artículos al perfil y figura como escritor en cada uno; una
-          persona mencionada en /historia vinculada lleva a su perfil desde la historia.
+          persona mencionada en /historia vinculada lleva a su perfil desde la historia; quien
+          aparece en un video de /videos vinculado suma sus videos al perfil y su nombre lleva a él.
         </p>
 
         <div className="mb-14 grid gap-6 2xl:grid-cols-2">
@@ -127,6 +144,12 @@ export default async function VinculosPage() {
             title="historia"
             command="grep HistoriaPerson historia/page.tsx"
             rows={historiaRows}
+          />
+          <IdentityLinksTable
+            source="videos"
+            title="videos"
+            command="grep speaker videos/videos.ts"
+            rows={videoRows}
           />
         </div>
       </div>

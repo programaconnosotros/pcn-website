@@ -4,6 +4,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { videos } from '@/components/videos/videos';
 import { tabTitle } from '@/lib/tab-title';
+import { getIdentityMap } from '@/lib/identity-links';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -27,15 +28,19 @@ export const metadata: Metadata = {
   },
 };
 
-const VideosPage = () => (
-  <div className="flex flex-1 flex-col p-4 pt-0">
-    <div className="mb-14 mt-4">
-      <StickyHeader>
-        <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
-      </StickyHeader>
-      <VideoGrid videos={videos} searchable />
+const VideosPage = async () => {
+  // Speakers who are platform users, linked in /vinculos.
+  const speakerProfiles = await getIdentityMap('videos');
+  return (
+    <div className="flex flex-1 flex-col p-4 pt-0">
+      <div className="mb-14 mt-4">
+        <StickyHeader>
+          <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
+        </StickyHeader>
+        <VideoGrid videos={videos} searchable speakerProfiles={speakerProfiles} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default VideosPage;

@@ -6,6 +6,7 @@ import Loading from './loading';
 import Image, { alt } from './opengraph-image';
 import VideosPage, { metadata } from './page';
 
+jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn(async () => ({})) }));
 jest.mock('@/components/videos/video-grid', () => ({
   VideoGrid: jest.fn(() => <p>grilla</p>),
 }));
@@ -25,7 +26,11 @@ describe('/videos', () => {
     expect(
       screen.getByText(`${videos.length} videos recomendados por la comunidad`),
     ).toBeInTheDocument();
-    expect(jest.mocked(VideoGrid).mock.calls[0][0]).toEqual({ videos, searchable: true });
+    expect(jest.mocked(VideoGrid).mock.calls[0][0]).toEqual({
+      videos,
+      searchable: true,
+      speakerProfiles: {},
+    });
   });
 
   it('uses the videos section card for link previews', async () => {

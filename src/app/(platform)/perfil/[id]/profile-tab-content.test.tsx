@@ -26,6 +26,10 @@ jest.mock('./profile-data', () => ({
   getProfileProjects: jest.fn(),
   getProfileSetups: jest.fn(),
   getProfileTalks: jest.fn(),
+  getProfileVideos: jest.fn(),
+}));
+jest.mock('@/components/videos/video-grid', () => ({
+  VideoGrid: ({ videos }: { videos: unknown[] }) => <p>{videos.length} videos</p>,
 }));
 jest.mock('@/components/setups/setup-tile', () => ({
   SetupTile: ({ setup }: { setup: { title: string } }) => <div>setup: {setup.title}</div>,
@@ -93,6 +97,7 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   m.getProfileEvents.mockResolvedValue(list(sizes.events ?? 0, 'e') as never);
   m.getProfilePhotos.mockResolvedValue(list(sizes.photos ?? 0, 'f') as never);
   m.getProfileConversations.mockResolvedValue(list(sizes.conversations ?? 0, 'w') as never);
+  m.getProfileVideos.mockResolvedValue(list(sizes.videos ?? 0, 'v') as never);
   m.getProfileSetups.mockResolvedValue(
     Array.from({ length: sizes.setups ?? 0 }, (_, i) => ({
       id: `s${i + 1}`,
@@ -319,6 +324,17 @@ describe('ProfileTabContent: one section', () => {
     await renderTab('setups');
     expect(screen.getByText(/todavía no compartió su/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'setup' })).toHaveAttribute('href', '/setups');
+  });
+
+  it('videos lists the videos the member is credited in, or points to /videos', async () => {
+    mockData({ videos: 3 });
+    const { unmount } = await renderTab('videos');
+    expect(screen.getByText('3 videos')).toBeInTheDocument();
+    unmount();
+
+    mockData();
+    await renderTab('videos');
+    expect(screen.getByText(/no aparece en ningún video/)).toBeInTheDocument();
   });
 
   it('conversaciones distinguishes an unlinked profile from one without highlights', async () => {

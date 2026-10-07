@@ -32,7 +32,9 @@ import {
   getProfileProjects,
   getProfileSetups,
   getProfileTalks,
+  getProfileVideos,
 } from './profile-data';
+import { VideoGrid } from '@/components/videos/video-grid';
 import { SetupTile } from '@/components/setups/setup-tile';
 
 // How many items of each section the overview shows before "ver todo".
@@ -338,6 +340,21 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
         <ProfileArticles articles={articles} writer={person} />
       ) : (
         <EmptyLine>{firstName} todavía no publicó ningún artículo.</EmptyLine>
+      );
+      break;
+    }
+    case 'videos': {
+      const videos = await getProfileVideos(userId);
+      content = videos.length ? (
+        <VideoGrid videos={videos} toolbar={false} />
+      ) : (
+        <EmptyLine>
+          {firstName} todavía no aparece en ningún video de{' '}
+          <Link href="/videos" className="text-pcnGreen hover:underline">
+            /videos
+          </Link>
+          .
+        </EmptyLine>
       );
       break;
     }
