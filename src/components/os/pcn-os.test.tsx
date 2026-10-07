@@ -8,6 +8,10 @@ import { OS_MESSAGE_SOURCE } from './os-env';
 import { SESSION_KEY } from './os-session';
 import { PcnOs } from './pcn-os';
 
+// Whole-desktop flows with many user-event clicks and exit animations: on a loaded machine (the
+// full pre-push run) they outlast the 5s default.
+jest.setTimeout(20_000);
+
 // The bell polls its own endpoint; its behaviour is covered in notification-center.test.tsx.
 jest.mock('@/components/notifications/notification-center', () => ({
   NotificationCenter: () => null,
@@ -165,15 +169,23 @@ describe('PcnOs', () => {
     await userEvent.click(within(dock()).getByRole('button', { name: 'Programas' }));
     const launcher = screen.getByRole('dialog', { name: 'Todos los programas' });
     await userEvent.click(within(launcher).getByRole('button', { name: 'Feed' }));
-    await waitFor(() =>
-      expect(screen.queryByRole('dialog', { name: 'Todos los programas' })).not.toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Todos los programas' }),
+        ).not.toBeInTheDocument(),
+      { timeout: 5000 },
     );
     expect(focusedWindow()).toHaveAttribute('aria-label', 'Feed');
 
     await userEvent.click(within(dock()).getByRole('button', { name: 'Programas' }));
     await userEvent.click(screen.getByRole('button', { name: 'Salir' }));
-    await waitFor(() =>
-      expect(screen.queryByRole('dialog', { name: 'Todos los programas' })).not.toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Todos los programas' }),
+        ).not.toBeInTheDocument(),
+      { timeout: 5000 },
     );
   });
 
@@ -198,7 +210,7 @@ describe('PcnOs', () => {
     expect(focusedWindow()).toBeUndefined();
 
     await userEvent.click(within(win).getByRole('button', { name: 'Cerrar' }));
-    await waitFor(() => expect(windows()).toHaveLength(0));
+    await waitFor(() => expect(windows()).toHaveLength(0), { timeout: 5000 });
     expect(screen.getByText(/abrí un programa desde el dock/)).toBeInTheDocument();
   });
 
