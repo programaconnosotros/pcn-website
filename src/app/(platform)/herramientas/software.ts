@@ -46,6 +46,17 @@ export const softwareRecommendations: SoftwareRecommendation[] = [
     isPopular: true,
   },
   {
+    name: 'Affinity',
+    description:
+      'Suite de diseño profesional de Canva en una sola app: vectores e ilustración, edición de fotos y maquetación. Abre archivos de Adobe (PSD, AI, IDML) conservando capas. Gratis en Mac y Windows; las funciones de IA son parte de los planes pagos de Canva.',
+    logo: '/software-logos/affinity.webp',
+    tags: ['Diseño', 'Ilustración', 'Edición de fotos', 'Maquetación'],
+    category: 'Diseño',
+    website: 'https://www.affinity.studio/',
+    pricing: 'free',
+    type: 'app',
+  },
+  {
     name: 'Docker',
     description:
       'Plataforma de contenedores que permite empaquetar aplicaciones con todas sus dependencias. Personal use gratuito; Docker Business para equipos empresariales es de pago.',
