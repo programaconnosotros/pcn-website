@@ -3,6 +3,8 @@
 import { cn } from '@/lib/utils';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 
 interface CollapsibleFiltersProps {
   /** Always visible, before the search (e.g. tabs); gets its own row on phones. */
@@ -20,6 +22,17 @@ interface CollapsibleFiltersProps {
   className?: string;
   /** Extra classes for the filters row, e.g. `md:order-first md:basis-full` to keep it on top. */
   panelClassName?: string;
+  /**
+   * On phones, open the filters in a bottom sheet instead of folding them open in the header, with
+   * `extras` (stats, charts, long chip lists) that the page then hides on phones. Keeps the list
+   * right under the search instead of a screen of controls away.
+   */
+  sheet?: {
+    title: string;
+    extras?: ReactNode;
+    /** Shown on the sheet's close button, e.g. `ver 12 conversaciones`. */
+    doneLabel?: string;
+  };
 }
 
 // Search plus filters for a page header. From `md` up it's a single wrapping row with every
@@ -35,9 +48,13 @@ export function CollapsibleFilters({
   aside,
   className,
   panelClassName,
+  sheet,
 }: CollapsibleFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
+  const isMobile = useIsMobile();
+  // The filters live in exactly one place: the sheet on phones, the header row otherwise.
+  const inSheet = Boolean(sheet && isMobile);
 
   return (
     <div className={cn('flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center', className)}>
@@ -48,7 +65,8 @@ export function CollapsibleFilters({
           type="button"
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
-          aria-controls={panelId}
+          aria-controls={inSheet ? undefined : panelId}
+          aria-haspopup={sheet ? 'dialog' : undefined}
           className={cn(
             'flex h-8 shrink-0 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-xs transition-colors md:hidden',
             isOpen || activeCount > 0
@@ -69,13 +87,56 @@ export function CollapsibleFilters({
         aria-label={label}
         className={cn(
           'flex flex-wrap items-center gap-2',
-          !isOpen && 'max-md:hidden',
+          (!isOpen || sheet) && 'max-md:hidden',
           panelClassName,
         )}
       >
-        {children}
+        {!inSheet && children}
       </div>
-      {aside && <div className={cn('md:ml-auto', !isOpen && 'max-md:hidden')}>{aside}</div>}
+      {aside && (
+        <div className={cn('md:ml-auto', (!isOpen || sheet) && 'max-md:hidden')}>{aside}</div>
+      )}
+
+      {sheet && (
+        <Sheet open={inSheet && isOpen} onOpenChange={setIsOpen}>
+          <SheetContent
+            side="bottom"
+            // Above the phone's tab bar, which would otherwise cover the sheet's bottom.
+            className="z-[70] flex max-h-[85dvh] flex-col gap-0 rounded-t-md border-pcnGreen-300 bg-black p-0 pb-[env(safe-area-inset-bottom)]"
+          >
+            <div className="flex shrink-0 items-center gap-2 border-b border-pcnGreen-200 px-4 py-3 pr-12">
+              <SlidersHorizontal className="size-4 text-pcnGreen" />
+              <SheetTitle className="font-mono text-sm">{sheet.title}</SheetTitle>
+              {activeCount > 0 && (
+                <span className="font-mono text-xs tabular-nums text-pcnGreen">
+                  [{activeCount}]
+                </span>
+              )}
+              <SheetDescription className="sr-only">
+                Filtros y estadísticas de la lista
+              </SheetDescription>
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-4 py-4">
+              {inSheet && (
+                <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
+                  {children}
+                </div>
+              )}
+              {aside && <div className="font-mono text-xs">{aside}</div>}
+              {sheet.extras}
+            </div>
+            <div className="shrink-0 border-t border-pcnGreen-200 p-3">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="h-10 w-full rounded-sm bg-pcnGreen font-mono text-sm font-semibold text-black"
+              >
+                {sheet.doneLabel ?? 'ver resultados'}
+              </button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
     </div>
   );
 }

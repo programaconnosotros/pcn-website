@@ -161,6 +161,44 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
 
   const isFiltering = Boolean(searchTerm.trim() || groupOnly || participant);
 
+  // Stats, monthly activity and the most frequent voices (which filter by person).
+  const overview = (
+    <>
+      <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
+          {stats.map((stat) => (
+            <Stat key={stat.label} {...stat} />
+          ))}
+        </RuledGrid>
+        <ActivityGraph months={activity} />
+      </div>
+
+      <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">
+        <span className="mr-1 text-muted-foreground">
+          <span className="text-pcnGreen-600">{'// '}</span>voces frecuentes:
+        </span>
+        {participantCounts.slice(0, TOP_VOICES).map(([name, count]) => (
+          <button
+            key={name}
+            type="button"
+            onClick={() => toggleParticipant(name)}
+            aria-pressed={participant === name}
+            className={cn(
+              'border px-1.5 leading-5 transition-colors',
+              participant === name
+                ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
+                : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+            )}
+          >
+            <span className="text-pcnGreen-600">@</span>
+            {name}
+            <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+
   return (
     <ProfileLinksContext.Provider value={profiles}>
       <ConversationEventsContext.Provider value={events}>
@@ -184,6 +222,11 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
 
               <CollapsibleFilters
                 className="mb-4"
+                sheet={{
+                  title: 'filtros y estadísticas',
+                  extras: overview,
+                  doneLabel: `ver ${filtered.length} ${filtered.length === 1 ? 'conversación' : 'conversaciones'}`,
+                }}
                 activeCount={Number(groupOnly) + Number(!!participant)}
                 search={
                   <SearchBar
@@ -222,38 +265,8 @@ export function ConversationsClient({ profiles, events, isAdmin }: Conversations
               </CollapsibleFilters>
             </StickyHeader>
 
-            <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-              <RuledGrid className="grid-cols-2 self-start sm:grid-cols-4 xl:grid-cols-2">
-                {stats.map((stat) => (
-                  <Stat key={stat.label} {...stat} />
-                ))}
-              </RuledGrid>
-              <ActivityGraph months={activity} />
-            </div>
-
-            <div className="mb-5 flex flex-wrap items-center gap-1 font-mono text-[11px]">
-              <span className="mr-1 text-muted-foreground">
-                <span className="text-pcnGreen-600">{'// '}</span>voces frecuentes:
-              </span>
-              {participantCounts.slice(0, TOP_VOICES).map(([name, count]) => (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => toggleParticipant(name)}
-                  aria-pressed={participant === name}
-                  className={cn(
-                    'border px-1.5 leading-5 transition-colors',
-                    participant === name
-                      ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen'
-                      : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
-                  )}
-                >
-                  <span className="text-pcnGreen-600">@</span>
-                  {name}
-                  <span className="ml-1.5 tabular-nums text-muted-foreground/70">{count}</span>
-                </button>
-              ))}
-            </div>
+            {/* On phones these live in the filters sheet, so the list starts right under the search. */}
+            <div className="max-md:hidden">{overview}</div>
 
             {filtered.length === 0 ? (
               <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
