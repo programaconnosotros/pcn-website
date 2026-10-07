@@ -5,7 +5,7 @@ import { extractedConsejos } from '@/data/consejos-extraidos';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getUserIdentities } from '@/lib/identity-links';
 import {
-  getProfileAdvises,
+  getProfileAdvice,
   getProfileArticles,
   getProfileContributions,
   getProfileConversations,
@@ -35,12 +35,12 @@ beforeEach(() => {
   mockIdentities.mockResolvedValue(noIdentities);
 });
 
-describe('getProfileAdvises', () => {
+describe('getProfileAdvice', () => {
   it('merges published consejos with the extracted ones under linked WhatsApp names, newest first', async () => {
     const extracted = extractedConsejos[0];
     mockIdentities.mockResolvedValue({ ...noIdentities, whatsapp: [extracted.member] });
     prismaMock.user.findUnique.mockResolvedValue(user as any);
-    prismaMock.advise.findMany.mockResolvedValue([
+    prismaMock.advice.findMany.mockResolvedValue([
       {
         id: 'adv-old',
         content: 'Viejo',
@@ -59,14 +59,14 @@ describe('getProfileAdvises', () => {
       },
     ] as any);
 
-    const advises = await getProfileAdvises('u1');
+    const advice = await getProfileAdvice('u1');
 
-    expect(advises[0].id).toBe('adv-new');
-    expect(advises.at(-1)!.id).toBe('adv-old');
-    const fromChat = advises.filter((advise) => advise.source !== null);
-    expect(fromChat.map((advise) => advise.id)).toContain(extracted.id);
-    expect(fromChat.every((advise) => advise.author.id === 'u1')).toBe(true);
-    expect(prismaMock.advise.findMany).toHaveBeenCalledWith(
+    expect(advice[0].id).toBe('adv-new');
+    expect(advice.at(-1)!.id).toBe('adv-old');
+    const fromChat = advice.filter((advice) => advice.source !== null);
+    expect(fromChat.map((advice) => advice.id)).toContain(extracted.id);
+    expect(fromChat.every((advice) => advice.author.id === 'u1')).toBe(true);
+    expect(prismaMock.advice.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { authorId: 'u1' } }),
     );
   });
@@ -74,9 +74,9 @@ describe('getProfileAdvises', () => {
   it('skips extracted consejos when the user no longer exists', async () => {
     mockIdentities.mockResolvedValue({ ...noIdentities, whatsapp: [extractedConsejos[0].member] });
     prismaMock.user.findUnique.mockResolvedValue(null);
-    prismaMock.advise.findMany.mockResolvedValue([]);
+    prismaMock.advice.findMany.mockResolvedValue([]);
 
-    await expect(getProfileAdvises('gone')).resolves.toEqual([]);
+    await expect(getProfileAdvice('gone')).resolves.toEqual([]);
   });
 });
 
@@ -243,7 +243,7 @@ describe('getProfileContributions', () => {
 describe('getProfileCounts', () => {
   const mockEmptyProfile = () => {
     prismaMock.project.findMany.mockResolvedValue([]);
-    prismaMock.advise.findMany.mockResolvedValue([]);
+    prismaMock.advice.findMany.mockResolvedValue([]);
     prismaMock.user.findUnique.mockResolvedValue(user as any);
     prismaMock.talk.findMany.mockResolvedValue([{ id: 't1' }, { id: 't2' }] as any);
     prismaMock.articleAuthor.findMany.mockResolvedValue([]);

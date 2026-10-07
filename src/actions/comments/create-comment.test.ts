@@ -15,7 +15,7 @@ const mockComment = {
   id: 'comment-1',
   content: 'Un comentario válido',
   authorId: 'user-1',
-  adviseId: 'advise-1',
+  adviceId: 'advice-1',
   parentCommentId: null,
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
@@ -29,7 +29,7 @@ const mockComment = {
 
 const validInput = {
   content: 'Un comentario válido',
-  adviseId: 'advise-1',
+  adviceId: 'advice-1',
   parentCommentId: null,
 };
 
@@ -38,7 +38,7 @@ describe('createComment', () => {
     mockCookies({ sessionId: 'session-1' });
 
     await expect(
-      createComment({ content: '', adviseId: 'advise-1', parentCommentId: null }),
+      createComment({ content: '', adviceId: 'advice-1', parentCommentId: null }),
     ).rejects.toThrow('El comentario no puede estar vacío');
 
     expect(prismaMock.comment.create).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('createComment', () => {
     const longContent = 'a'.repeat(501);
 
     await expect(
-      createComment({ content: longContent, adviseId: 'advise-1', parentCommentId: null }),
+      createComment({ content: longContent, adviceId: 'advice-1', parentCommentId: null }),
     ).rejects.toThrow('El comentario no puede tener más de 500 caracteres');
 
     expect(prismaMock.comment.create).not.toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('createComment', () => {
       data: {
         content: validInput.content,
         authorId: 'user-1',
-        adviseId: 'advise-1',
+        adviceId: 'advice-1',
         parentCommentId: null,
       },
       include: {
@@ -93,13 +93,13 @@ describe('createComment', () => {
         },
       },
     });
-    expect(revalidatePath).toHaveBeenCalledWith('/consejos/advise-1');
+    expect(revalidatePath).toHaveBeenCalledWith('/consejos/advice-1');
   });
 
   it('creates a reply when parentCommentId is provided', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
-    prismaMock.comment.findUnique.mockResolvedValue({ adviseId: validInput.adviseId } as any);
+    prismaMock.comment.findUnique.mockResolvedValue({ adviceId: validInput.adviceId } as any);
     prismaMock.comment.create.mockResolvedValue({
       ...mockComment,
       parentCommentId: 'comment-parent',
@@ -119,7 +119,7 @@ describe('createComment', () => {
   });
 
   it.each([
-    ['belongs to another advise', { adviseId: 'otro-consejo' }],
+    ['belongs to another advice', { adviceId: 'otro-consejo' }],
     ['does not exist', null],
   ])('rejects a reply whose parent comment %s', async (_case, parent) => {
     mockCookies({ sessionId: 'session-1' });

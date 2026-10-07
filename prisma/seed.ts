@@ -47,7 +47,7 @@ async function clearSeedData() {
   await prisma.comment.deleteMany();
   await prisma.userLanguage.deleteMany();
   await prisma.like.deleteMany();
-  await prisma.advise.deleteMany();
+  await prisma.advice.deleteMany();
   await prisma.pageVisit.deleteMany();
   await prisma.errorLog.deleteMany();
   await prisma.appLog.deleteMany();
@@ -135,9 +135,9 @@ async function main() {
     'Rodéate de personas que te inspiren y te reten a ser mejor cada día.',
   ];
 
-  const advises = await Promise.all(
+  const advice = await Promise.all(
     Array.from({ length: 300 }).map((_, i) =>
-      prisma.advise.create({
+      prisma.advice.create({
         data: {
           content: adviceExamples[i % adviceExamples.length],
           authorId: users[i % users.length].id,
@@ -147,23 +147,23 @@ async function main() {
   );
 
   await Promise.all(
-    advises.map(async (advise) => {
+    advice.map(async (advice) => {
       for (const user of users) {
-        if (user.id === advise.authorId) continue;
+        if (user.id === advice.authorId) continue;
 
         const likeProbability = Math.random();
 
         if (user.email === 'user@example.com' && likeProbability < 0.6) {
           await prisma.like.create({
-            data: { userId: user.id, adviseId: advise.id },
+            data: { userId: user.id, adviceId: advice.id },
           });
         } else if (user.email === 'maria.garcia@example.com' && likeProbability < 0.4) {
           await prisma.like.create({
-            data: { userId: user.id, adviseId: advise.id },
+            data: { userId: user.id, adviceId: advice.id },
           });
         } else if (likeProbability < 0.2) {
           await prisma.like.create({
-            data: { userId: user.id, adviseId: advise.id },
+            data: { userId: user.id, adviceId: advice.id },
           });
         }
       }
@@ -389,8 +389,8 @@ async function main() {
   ];
 
   const errorPaths = [
-    '/advises',
-    '/advises/[id]',
+    '/advice',
+    '/advice/[id]',
     '/events',
     '/events/[id]',
     '/job-offers',
@@ -398,7 +398,7 @@ async function main() {
     '/dashboard',
     '/charlas',
     '/testimonios',
-    '/api/advises',
+    '/api/advice',
     '/api/events',
     '/api/users',
   ];
@@ -454,7 +454,7 @@ async function main() {
   const logLevels = ['info', 'warn', 'error', 'debug'];
   const logMessages = [
     'User logged in successfully',
-    'Page loaded: /advises',
+    'Page loaded: /advice',
     'API request completed',
     'Form validation passed',
     'Image uploaded successfully',
@@ -765,14 +765,14 @@ async function main() {
     '100% real.',
   ];
 
-  const topAdvises = advises.slice(0, 10);
+  const topAdvice = advice.slice(0, 10);
   const createdComments = await Promise.all(
-    topAdvises.map((advise, i) =>
+    topAdvice.map((advice, i) =>
       prisma.comment.create({
         data: {
           content: commentTexts[i],
           authorId: users[i % regularUsers.length].id,
-          adviseId: advise.id,
+          adviceId: advice.id,
         },
       }),
     ),
@@ -781,8 +781,8 @@ async function main() {
   await prisma.comment.create({
     data: {
       content: '¡Gracias! Me alegra que te sirva.',
-      authorId: topAdvises[0].authorId,
-      adviseId: topAdvises[0].id,
+      authorId: topAdvice[0].authorId,
+      adviceId: topAdvice[0].id,
       parentCommentId: createdComments[0].id,
     },
   });
@@ -925,7 +925,7 @@ async function main() {
     });
   }
 
-  const visitPaths = ['/charlas', '/eventos', '/testimonios', '/advises', '/job-offers'];
+  const visitPaths = ['/charlas', '/eventos', '/testimonios', '/advice', '/job-offers'];
   await prisma.pageVisit.createMany({
     data: Array.from({ length: 30 }).map(() => {
       const user =
@@ -942,7 +942,7 @@ async function main() {
 
   console.log('Seed data created successfully!');
   console.log(`Created ${events.length} events`);
-  console.log(`Created ${advises.length} advises`);
+  console.log(`Created ${advice.length} advice`);
   console.log(`Created ${errors.length} error logs`);
   console.log(`Created ${logs.length} application logs`);
 }

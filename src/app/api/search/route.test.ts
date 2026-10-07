@@ -56,7 +56,7 @@ const mockCorpus = () => {
     },
     { title: 'React sin oradores', description: 'x', speakers: [] },
   ] as any);
-  prismaMock.advise.findMany.mockResolvedValue([
+  prismaMock.advice.findMany.mockResolvedValue([
     { id: 'a1', content: `Aprendé React ${'x'.repeat(100)}`, author: { name: 'Caro' } },
     { id: 'a2', content: 'Usá React con TypeScript', author: { name: 'Dani' } },
   ] as any);

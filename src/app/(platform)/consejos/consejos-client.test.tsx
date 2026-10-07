@@ -1,12 +1,12 @@
 import { screen, within } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
-import { useConsejosNav, ConsejosNavProvider } from '@/components/advises/consejos-nav';
+import { useConsejosNav, ConsejosNavProvider } from '@/components/advice/consejos-nav';
 import { buildConsejo, extractedSource, renderInPlatform } from '@/test/platform';
 import { ConsejosClient } from './consejos-client';
 
-jest.mock('@/actions/advises/like-advise', () => ({ toggleLike: jest.fn() }));
-jest.mock('@actions/advises/delete-advise', () => ({ deleteAdvise: jest.fn() }));
-jest.mock('@/actions/advises/edit-advise', () => ({ editAdvise: jest.fn() }));
+jest.mock('@/actions/advice/like-advice', () => ({ toggleLike: jest.fn() }));
+jest.mock('@actions/advice/delete-advice', () => ({ deleteAdvice: jest.fn() }));
+jest.mock('@/actions/advice/edit-advice', () => ({ editAdvice: jest.fn() }));
 jest.mock('sonner', () => require('@/test/platform').mockSonner());
 
 const consejos = [

@@ -24,7 +24,7 @@ export type UserSummary = {
     talks: number;
     eventsAttended: number;
     eventsOrganized: number;
-    advises: number;
+    advice: number;
     projects: number;
     photos: number;
     commits: number;
@@ -73,9 +73,9 @@ const buildUserSummary = cached(
     });
     if (!user) return null;
 
-    const [metrics, advises, photos] = await Promise.all([
+    const [metrics, advice, photos] = await Promise.all([
       getUserAchievementMetrics(userId),
-      prisma.advise.count({ where: { authorId: userId } }),
+      prisma.advice.count({ where: { authorId: userId } }),
       prisma.galleryItem.count({ where: { ...visibleGalleryItem, tags: { some: { userId } } } }),
     ]);
 
@@ -101,7 +101,7 @@ const buildUserSummary = cached(
         talks: metrics.talksGiven,
         eventsAttended: metrics.eventsAttended,
         eventsOrganized: metrics.eventsOrganized,
-        advises,
+        advice,
         projects: metrics.projectsShared,
         photos,
         commits: metrics.commits,
@@ -115,7 +115,7 @@ const buildUserSummary = cached(
       'User',
       'UserPosition',
       'UserLanguage',
-      'Advise',
+      'Advice',
       'GalleryItem',
       'GalleryItemTag',
       'TalkSpeaker',

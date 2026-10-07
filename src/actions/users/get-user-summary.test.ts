@@ -28,7 +28,7 @@ describe('getUserSummary', () => {
     jest
       .mocked(getUserAchievementMetrics)
       .mockResolvedValue({ ...EMPTY_METRICS, talksGiven: 2, commits: 40, contributorRank: 3 });
-    prismaMock.advise.count.mockResolvedValue(5);
+    prismaMock.advice.count.mockResolvedValue(5);
     prismaMock.galleryItem.count.mockResolvedValue(12);
   });
 
@@ -55,7 +55,7 @@ describe('getUserSummary', () => {
       memberSince: '2024-03-01T00:00:00.000Z',
       isAmbassador: true,
       languages: ['typescript', 'go'],
-      stats: { talks: 2, advises: 5, photos: 12, commits: 40, contributorRank: 3 },
+      stats: { talks: 2, advice: 5, photos: 12, commits: 40, contributorRank: 3 },
     });
     expect(summary?.achievements.total).toBeGreaterThan(0);
     // Nothing private leaks into the card.

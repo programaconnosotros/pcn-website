@@ -360,7 +360,7 @@ function SummaryBody({ summary }: { summary: UserSummary }) {
     { label: 'charlas', value: stats.talks },
     { label: 'eventos', value: stats.eventsAttended },
     { label: 'organizó', value: stats.eventsOrganized },
-    { label: 'consejos', value: stats.advises },
+    { label: 'consejos', value: stats.advice },
     { label: 'proyectos', value: stats.projects },
     { label: 'fotos', value: stats.photos },
   ];

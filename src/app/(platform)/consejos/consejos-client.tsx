@@ -1,8 +1,8 @@
 'use client';
 
-import { AdviseCard } from '@/components/advises/advise-card';
-import { consejoHash, consejoHref } from '@/components/advises/consejo-utils';
-import { useConsejosNav } from '@/components/advises/consejos-nav';
+import { AdviceCard } from '@/components/advice/advice-card';
+import { consejoHash, consejoHref } from '@/components/advice/consejo-utils';
+import { useConsejosNav } from '@/components/advice/consejos-nav';
 import { PageTitle } from '@/components/ui/page-title';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -182,7 +182,7 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
         ) : (
           <RuledGrid className="mb-14 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
             {visible.map((consejo) => (
-              <AdviseCard
+              <AdviceCard
                 key={consejo.id}
                 consejo={consejo}
                 session={session}

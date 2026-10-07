@@ -8,7 +8,7 @@ import { searchCommunityMembers } from '@/actions/users/search-community-members
 import { getUserForSpeaker, searchUsersForSpeaker } from '@/actions/users/search-users-for-speaker';
 import { getUserSummary } from '@/actions/users/get-user-summary';
 import { actAs } from '@/test/db/fixtures';
-import { expiredModel, makeAdvise, quickUser, uid } from '@/test/db/actions-fixtures';
+import { expiredModel, makeAdvice, quickUser, uid } from '@/test/db/actions-fixtures';
 
 // Administración de usuarios, directorio y búsquedas contra Postgres real.
 
@@ -288,8 +288,8 @@ describe('getUserSummary', () => {
         languages: { create: [{ language: 'Go', color: '#0af', logo: 'go.svg' }] },
       },
     });
-    await makeAdvise(user.id);
-    await makeAdvise(user.id);
+    await makeAdvice(user.id);
+    await makeAdvice(user.id);
 
     const summary = await getUserSummary(user.id);
 
@@ -302,7 +302,7 @@ describe('getUserSummary', () => {
       isCofounder: true,
       isAmbassador: false,
       languages: ['Go'],
-      stats: expect.objectContaining({ advises: 2, talks: 0, projects: 0 }),
+      stats: expect.objectContaining({ advice: 2, talks: 0, projects: 0 }),
     });
     expect(summary?.memberSince).toBe(user.createdAt.toISOString());
     expect(summary).not.toHaveProperty('email');

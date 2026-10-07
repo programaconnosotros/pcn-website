@@ -201,9 +201,9 @@ cuentan:
 | `Event(deletedAt, date)`                                             | Próximos eventos, listados y número de catálogo.      |
 | `Notification(userId, read)`                                         | Contador de no leídas del admin (reemplaza `userId`). |
 | `Session(userId)`                                                    | Limpieza de sesiones vencidas al iniciar sesión.      |
-| `Advise(authorId)`, `Advise(createdAt)`                              | Consejos de un perfil y orden del listado.            |
-| `Comment(adviseId)`, `Comment(authorId)`, `Comment(parentCommentId)` | Conteo de comentarios y respuestas.                   |
-| `Like(adviseId)`                                                     | Likes de cada consejo.                                |
+| `Advice(authorId)`, `Advice(createdAt)`                              | Consejos de un perfil y orden del listado.            |
+| `Comment(adviceId)`, `Comment(authorId)`, `Comment(parentCommentId)` | Conteo de comentarios y respuestas.                   |
+| `Like(adviceId)`                                                     | Likes de cada consejo.                                |
 | `GalleryItem(uploadedById)`, `GalleryItem(createdAt)`                | Subidas por usuario y últimas fotos.                  |
 
 Con el cache, estas queries corren una vez por cambio en lugar de una vez por visita, pero siguen

@@ -4,7 +4,7 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '../../../src/generated/prisma/client';
 import { pgAdapter } from '../../../src/lib/database-url';
-import { ADVISE, ANNOUNCEMENTS, EVENTS, PASSWORD, PROJECT, TESTIMONIAL, USERS } from './data';
+import { ADVICE, ANNOUNCEMENTS, EVENTS, PASSWORD, PROJECT, TESTIMONIAL, USERS } from './data';
 
 const prisma = new PrismaClient({ adapter: pgAdapter(process.env.DATABASE_URL) });
 const DAY = 86_400_000;
@@ -85,8 +85,8 @@ const main = async () => {
     },
   });
 
-  await prisma.advise.create({
-    data: { id: ADVISE.id, content: ADVISE.content, authorId: users.member.id },
+  await prisma.advice.create({
+    data: { id: ADVICE.id, content: ADVICE.content, authorId: users.member.id },
   });
 
   await prisma.project.create({

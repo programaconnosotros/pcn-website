@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { PrismaClient } from '../../src/generated/prisma/client';
-import { ADVISE, PROJECT, USERS } from './support/data';
+import { ADVICE, PROJECT, USERS } from './support/data';
 import { expect as baseExpect, test } from './support/fixtures';
 import {
   createUser,
@@ -251,7 +251,7 @@ test.describe('public profile as another member', () => {
     const tabs = page.getByRole('navigation', { name: 'Secciones del perfil' });
     const checks: [label: RegExp, tab: string, content: string | null][] = [
       [/^proyectos/, 'proyectos', PROJECT.title],
-      [/^consejos/, 'consejos', ADVISE.content],
+      [/^consejos/, 'consejos', ADVICE.content],
       [/^charlas/, 'charlas', 'Charla E2E sobre Playwright'],
       [/^eventos/, 'eventos', 'Miembro todavía no organizó ningún evento.'],
       // La galería depende de en qué fotos lo etiqueten otros specs
@@ -276,7 +276,7 @@ test.describe('public profile as another member', () => {
       'aria-current',
       'page',
     );
-    await expect(page.getByRole('main').getByText(ADVISE.content)).toBeVisible();
+    await expect(page.getByRole('main').getByText(ADVICE.content)).toBeVisible();
 
     await page.goto('/perfil/no-existe');
     await expect(page).toHaveTitle(/^404/);

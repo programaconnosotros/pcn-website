@@ -1,4 +1,4 @@
-import { adviseSchema } from './advise-schema';
+import { adviceSchema } from './advice-schema';
 import { announcementSchema } from './announcement-schema';
 import { SETUP_IMAGE_TYPES, SETUP_MAX_BYTES, setupSchema } from './setup-schema';
 import { testimonialSchema } from './testimonial-schema';
@@ -6,17 +6,17 @@ import { testimonialSchema } from './testimonial-schema';
 const firstMessage = (result: { error?: { issues: { message: string }[] } }) =>
   result.error?.issues[0].message;
 
-describe('adviseSchema', () => {
+describe('adviceSchema', () => {
   it.each([
     ['a'.repeat(9), 'Tenés que escribir al menos 10 caracteres'],
     ['a'.repeat(1001), 'Podés escribir 1000 caracteres como máximo'],
   ])('rejects content out of bounds', (content, message) => {
-    expect(firstMessage(adviseSchema.safeParse({ content }))).toBe(message);
+    expect(firstMessage(adviceSchema.safeParse({ content }))).toBe(message);
   });
 
   it('accepts content at the bounds', () => {
-    expect(adviseSchema.safeParse({ content: 'a'.repeat(10) }).success).toBe(true);
-    expect(adviseSchema.safeParse({ content: 'a'.repeat(1000) }).success).toBe(true);
+    expect(adviceSchema.safeParse({ content: 'a'.repeat(10) }).success).toBe(true);
+    expect(adviceSchema.safeParse({ content: 'a'.repeat(1000) }).success).toBe(true);
   });
 });
 

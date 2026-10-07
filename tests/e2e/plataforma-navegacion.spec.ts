@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ADVISE, EVENTS, TESTIMONIAL, USERS } from './support/data';
+import { ADVICE, EVENTS, TESTIMONIAL, USERS } from './support/data';
 import { expect, test } from './support/fixtures';
 import { collectPageErrors } from './support/platform-helpers';
 
@@ -55,7 +55,7 @@ const DYNAMIC_ROUTES = [
   `/eventos/${EVENTS.upcoming.id}`,
   `/eventos/${EVENTS.past.id}`,
   `/eventos/${EVENTS.past.id}/charlas`,
-  `/consejos/${ADVISE.id}`,
+  `/consejos/${ADVICE.id}`,
   `/testimonios/${TESTIMONIAL.id}`,
   '/cursos/claude-code',
   '/entrevistas/guias/node',

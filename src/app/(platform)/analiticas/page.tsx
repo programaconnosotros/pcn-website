@@ -45,9 +45,9 @@ const AnaliticasPage = async () => {
 
   const [
     totalUsers,
-    totalAdvises,
+    totalAdvice,
     newUsersLastMonth,
-    newAdvisesLastMonth,
+    newAdviceLastMonth,
     pastEvents,
     upcomingEvents,
     totalLikes,
@@ -60,13 +60,13 @@ const AnaliticasPage = async () => {
     activeUsers,
     nextEvent,
     topLanguages,
-    mostLikedAdvise,
-    avgLikesPerAdvise,
-    avgCommentsPerAdvise,
+    mostLikedAdvice,
+    avgLikesPerAdvice,
+    avgCommentsPerAdvice,
     usersList,
   ] = await Promise.all([
     prisma.user.count(),
-    prisma.advise.count(),
+    prisma.advice.count(),
     prisma.user.count({
       where: {
         createdAt: {
@@ -74,7 +74,7 @@ const AnaliticasPage = async () => {
         },
       },
     }),
-    prisma.advise.count({
+    prisma.advice.count({
       where: {
         createdAt: {
           gte: oneMonthAgo,
@@ -147,25 +147,25 @@ const AnaliticasPage = async () => {
       },
       take: 5,
     }),
-    prisma.advise
+    prisma.advice
       .findMany({
         include: {
           likes: true,
         },
       })
-      .then((advises) => {
-        if (advises.length === 0) return null;
-        const sorted = advises.sort((a, b) => b.likes.length - a.likes.length);
+      .then((advice) => {
+        if (advice.length === 0) return null;
+        const sorted = advice.sort((a, b) => b.likes.length - a.likes.length);
         return sorted[0];
       }),
     prisma.like.count().then((likes) => {
-      return prisma.advise.count().then((advises) => {
-        return advises > 0 ? Math.round((likes / advises) * 10) / 10 : 0;
+      return prisma.advice.count().then((advice) => {
+        return advice > 0 ? Math.round((likes / advice) * 10) / 10 : 0;
       });
     }),
     prisma.comment.count().then((comments) => {
-      return prisma.advise.count().then((advises) => {
-        return advises > 0 ? Math.round((comments / advises) * 10) / 10 : 0;
+      return prisma.advice.count().then((advice) => {
+        return advice > 0 ? Math.round((comments / advice) * 10) / 10 : 0;
       });
     }),
     prisma.user.findMany({
@@ -206,13 +206,13 @@ const AnaliticasPage = async () => {
     },
     {
       title: 'Total de Consejos',
-      value: totalAdvises,
+      value: totalAdvice,
       icon: SquareTerminal,
       description: 'Consejos compartidos',
     },
     {
       title: 'Consejos Nuevos',
-      value: newAdvisesLastMonth,
+      value: newAdviceLastMonth,
       icon: SquareTerminal,
       description: 'Último mes',
     },
@@ -242,13 +242,13 @@ const AnaliticasPage = async () => {
     },
     {
       title: 'Promedio Likes/Consejo',
-      value: avgLikesPerAdvise,
+      value: avgLikesPerAdvice,
       icon: TrendingUp,
       description: 'Engagement promedio',
     },
     {
       title: 'Promedio Comentarios/Consejo',
-      value: avgCommentsPerAdvise,
+      value: avgCommentsPerAdvice,
       icon: TrendingUp,
       description: 'Interacción promedio',
     },
@@ -284,7 +284,7 @@ const AnaliticasPage = async () => {
     },
   ];
 
-  const highlightCount = [mostLikedAdvise, nextEvent, topLanguages.length > 0].filter(
+  const highlightCount = [mostLikedAdvice, nextEvent, topLanguages.length > 0].filter(
     Boolean,
   ).length;
   const highlightCols = ['md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3'][highlightCount - 1];
@@ -295,7 +295,7 @@ const AnaliticasPage = async () => {
         <StickyHeader className="mt-4">
           <PageTitle
             path="analiticas"
-            meta={`${totalUsers} usuarios · ${totalAdvises} consejos · ${upcomingEvents} eventos próximos`}
+            meta={`${totalUsers} usuarios · ${totalAdvice} consejos · ${upcomingEvents} eventos próximos`}
           />
         </StickyHeader>
 
@@ -319,19 +319,19 @@ const AnaliticasPage = async () => {
           })}
         </RuledGrid>
 
-        {(mostLikedAdvise || nextEvent || topLanguages.length > 0) && (
+        {(mostLikedAdvice || nextEvent || topLanguages.length > 0) && (
           <>
             <SectionLabel>destacados</SectionLabel>
             <RuledGrid className={cn('grid-cols-1', highlightCols)}>
-              {mostLikedAdvise && (
+              {mostLikedAdvice && (
                 <div className={cn(ruledCellClassName, 'p-3')}>
                   <p className="flex items-center gap-1.5 font-mono text-xs font-semibold">
                     <Heart className="h-3.5 w-3.5 text-pcnGreen" />
                     consejo más popular
                   </p>
-                  <p className="mt-2 line-clamp-4 text-sm">{mostLikedAdvise.content}</p>
+                  <p className="mt-2 line-clamp-4 text-sm">{mostLikedAdvice.content}</p>
                   <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-                    {mostLikedAdvise.likes.length} likes
+                    {mostLikedAdvice.likes.length} likes
                   </p>
                 </div>
               )}

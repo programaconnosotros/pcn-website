@@ -3,26 +3,26 @@ import type { ReactNode } from 'react';
 import { mockCookies } from '@/test/cookies';
 import { buildConsejo, buildSession, renderInPlatform } from '@/test/platform';
 import { findSession } from '@/lib/session';
-import { getConsejoDetail, listAdvises } from '@/lib/consejos-server';
+import { getConsejoDetail, listAdvice } from '@/lib/consejos-server';
 import { getIdentityMap } from '@/lib/identity-links';
 import { renderTerminalCard } from '@/lib/og/terminal-card';
 import { ConsejosClient } from './consejos-client';
-import { ConsejoModal } from '@/components/advises/consejo-modal';
-import { ConsejoPanel } from '@/components/advises/consejo-panel';
+import { ConsejoModal } from '@/components/advice/consejo-modal';
+import { ConsejoPanel } from '@/components/advice/consejo-panel';
 import AdvicePage, { metadata } from './page';
 import ConsejosLayout from './layout';
 import Loading from './loading';
 import ConsejoModalDefault from './@modal/default';
 import ConsejoModalIdle from './@modal/page';
 import ConsejoModalPage from './@modal/(.)[id]/page';
-import AdvisePage, { generateMetadata } from './[id]/page';
+import AdviceDetailPage, { generateMetadata } from './[id]/page';
 import DetailLoading from './[id]/loading';
 import ConsejoImage from './[id]/opengraph-image';
 
 jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/lib/consejos-server', () => ({
-  listAdvises: jest.fn(),
+  listAdvice: jest.fn(),
   getConsejoDetail: jest.fn(),
 }));
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
@@ -47,23 +47,23 @@ jest.mock('./consejos-client', () => ({
     <div data-testid="consejos-client">{addButton}</div>
   )),
 }));
-jest.mock('@/components/advises/add-advise', () => ({
-  AddAdvise: () => <button type="button">nuevo consejo</button>,
+jest.mock('@/components/advice/add-advice', () => ({
+  AddAdvice: () => <button type="button">nuevo consejo</button>,
 }));
-jest.mock('@/components/advises/consejo-modal', () => ({
+jest.mock('@/components/advice/consejo-modal', () => ({
   ConsejoModal: jest.fn(() => <div data-testid="consejo-modal" />),
 }));
-jest.mock('@/components/advises/consejo-panel', () => ({
+jest.mock('@/components/advice/consejo-panel', () => ({
   ConsejoPanel: jest.fn(() => <div data-testid="consejo-panel" />),
 }));
-jest.mock('@/components/advises/consejos-nav', () => ({
+jest.mock('@/components/advice/consejos-nav', () => ({
   ConsejosNavProvider: ({ children }: { children: ReactNode }) => (
     <div data-testid="nav">{children}</div>
   ),
 }));
 
 const session = buildSession();
-const advise = {
+const advice = {
   id: 'a1',
   content: 'Escribí tests',
   createdAt: new Date('2025-03-10T00:00:00Z'),
@@ -75,7 +75,7 @@ const advise = {
 const clientProps = () => jest.mocked(ConsejosClient).mock.calls.at(-1)![0];
 
 beforeEach(() => {
-  jest.mocked(listAdvises).mockResolvedValue([advise] as never);
+  jest.mocked(listAdvice).mockResolvedValue([advice] as never);
   jest.mocked(getIdentityMap).mockResolvedValue({});
   jest.mocked(findSession).mockResolvedValue(session as never);
 });
@@ -200,7 +200,7 @@ describe('/consejos/[id]', () => {
   it('says the consejo does not exist', async () => {
     mockCookies();
     jest.mocked(getConsejoDetail).mockResolvedValue(null);
-    renderInPlatform(await AdvisePage(params('x')));
+    renderInPlatform(await AdviceDetailPage(params('x')));
     expect(screen.getByText(/no existe ese consejo/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /cd ~\/consejos/ })).toHaveAttribute(
       'href',
@@ -215,7 +215,7 @@ describe('/consejos/[id]', () => {
     const comments = [{ id: 'k1' }] as never;
     jest.mocked(getConsejoDetail).mockResolvedValue({ consejo, comments });
 
-    renderInPlatform(await AdvisePage(params()));
+    renderInPlatform(await AdviceDetailPage(params()));
 
     expect(screen.getByText('1 comentario')).toBeInTheDocument();
     expect(jest.mocked(ConsejoPanel).mock.calls[0][0]).toMatchObject({
@@ -232,7 +232,7 @@ describe('/consejos/[id]', () => {
       consejo: buildConsejo(),
       comments: [],
     });
-    const { unmount } = renderInPlatform(await AdvisePage(params()));
+    const { unmount } = renderInPlatform(await AdviceDetailPage(params()));
     expect(screen.getByText('0 comentarios')).toBeInTheDocument();
     unmount();
 
@@ -242,7 +242,7 @@ describe('/consejos/[id]', () => {
       }),
       comments: [],
     });
-    renderInPlatform(await AdvisePage(params()));
+    renderInPlatform(await AdviceDetailPage(params()));
     expect(screen.getByText('auto-extraído de una conversación')).toBeInTheDocument();
   });
 

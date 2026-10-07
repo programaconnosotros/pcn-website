@@ -247,7 +247,7 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
-    name: 'Advise',
+    name: 'Advice',
     domain: 'consejos',
     fields: [
       {
@@ -294,7 +294,7 @@ export const dbModels: DbModel[] = [
         fk: true,
       },
       {
-        name: 'adviseId',
+        name: 'adviceId',
         type: 'String',
         fk: true,
       },
@@ -752,7 +752,7 @@ export const dbModels: DbModel[] = [
         fk: true,
       },
       {
-        name: 'adviseId',
+        name: 'adviceId',
         type: 'String',
         fk: true,
       },
@@ -765,7 +765,7 @@ export const dbModels: DbModel[] = [
         type: 'DateTime',
       },
     ],
-    uniques: [['userId', 'adviseId']],
+    uniques: [['userId', 'adviceId']],
   },
   {
     name: 'JobOffers',
@@ -1936,7 +1936,7 @@ export const dbRelations: DbRelation[] = [
     onDelete: 'Cascade',
   },
   {
-    from: 'Advise',
+    from: 'Advice',
     to: 'User',
     label: 'author',
     optional: false,
@@ -1953,8 +1953,8 @@ export const dbRelations: DbRelation[] = [
   },
   {
     from: 'Comment',
-    to: 'Advise',
-    label: 'advise',
+    to: 'Advice',
+    label: 'advice',
     optional: false,
     many: true,
     onDelete: 'Cascade',
@@ -2081,8 +2081,8 @@ export const dbRelations: DbRelation[] = [
   },
   {
     from: 'Like',
-    to: 'Advise',
-    label: 'advise',
+    to: 'Advice',
+    label: 'advice',
     optional: false,
     many: true,
     onDelete: 'Cascade',

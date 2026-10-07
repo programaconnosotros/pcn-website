@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ADVISE, USERS } from './support/data';
+import { ADVICE, USERS } from './support/data';
 import {
   createUser,
   expireCachedReads,
@@ -15,7 +15,7 @@ const expect = baseExpect.configure({ timeout: 30_000 });
 
 // Consejos: publicar, validar, editar/borrar lo propio, likes y comentarios. Cada test que publica
 // usa un usuario propio (el rate limit de publicaciones es por usuario) y consejos con ids
-// `e2e-con-…`, así no toca el consejo sembrado (ADVISE) salvo para leerlo.
+// `e2e-con-…`, así no toca el consejo sembrado (ADVICE) salvo para leerlo.
 
 /** La tarjeta de un consejo en /consejos, por su texto. */
 const card = (page: Page, text: string) => page.getByRole('article').filter({ hasText: text });
@@ -66,7 +66,7 @@ test.describe('con un usuario propio', () => {
 
     // Primero en la lista (orden por defecto: recientes)
     await expect(page.getByRole('article').first()).toContainText(content);
-    const saved = await db.advise.findFirstOrThrow({ where: { authorId: user.id } });
+    const saved = await db.advice.findFirstOrThrow({ where: { authorId: user.id } });
     expect(saved.content).toBe(content);
   });
 
@@ -83,14 +83,14 @@ test.describe('con un usuario propio', () => {
     await expect(dialog.getByText('Podés escribir 1000 caracteres como máximo')).toBeVisible();
 
     // Nada llegó a la base
-    expect(await db.advise.count({ where: { authorId: user.id } })).toBe(0);
+    expect(await db.advice.count({ where: { authorId: user.id } })).toBe(0);
   });
 
   test('TC-CON-003 Editar y borrar solo lo propio', async ({ page, db }) => {
     const author = await createUser(db, 'e2e-con');
     const other = await createUser(db, 'e2e-con');
     const content = `Consejo de A para editar ${uniqueId('e2e-con')}`;
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: { id: uniqueId('e2e-con'), content, authorId: author.id },
     });
 
@@ -99,7 +99,7 @@ test.describe('con un usuario propio', () => {
     await page.goto('/consejos');
     await expect(card(page, content)).toBeVisible();
     await expect(card(page, content).getByRole('button', { name: 'Opciones' })).toHaveCount(0);
-    await page.goto(`/consejos/${advise.id}`);
+    await page.goto(`/consejos/${advice.id}`);
     await expect(page.getByRole('heading', { name: /consejo\.txt/ })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Opciones' })).toHaveCount(0);
 
@@ -116,7 +116,7 @@ test.describe('con un usuario propio', () => {
     await expect(page.getByText('Tu consejo fue editado exitosamente.')).toBeVisible();
     await expect(card(page, edited)).toBeVisible();
     await expect
-      .poll(async () => (await db.advise.findUnique({ where: { id: advise.id } }))?.content)
+      .poll(async () => (await db.advice.findUnique({ where: { id: advice.id } }))?.content)
       .toBe(edited);
 
     await card(page, edited).getByRole('button', { name: 'Opciones' }).click();
@@ -127,7 +127,7 @@ test.describe('con un usuario propio', () => {
     await confirm.getByRole('button', { name: 'Confirmar' }).click();
     await expect(page.getByText('Consejo eliminado correctamente')).toBeVisible();
     await expect(card(page, edited)).toHaveCount(0);
-    expect(await db.advise.findUnique({ where: { id: advise.id } })).toBeNull();
+    expect(await db.advice.findUnique({ where: { id: advice.id } })).toBeNull();
   });
 
   test('si publicar falla, el diálogo queda abierto con el texto', async ({ page, db }) => {
@@ -151,7 +151,7 @@ test.describe('con un usuario propio', () => {
   test('editar con un texto demasiado corto muestra el error y no guarda', async ({ page, db }) => {
     const author = await createUser(db, 'e2e-con');
     const content = `Consejo para validar la edición ${uniqueId('e2e-con')}`;
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: { id: uniqueId('e2e-con'), content, authorId: author.id },
     });
     await signIn(page, author);
@@ -163,13 +163,13 @@ test.describe('con un usuario propio', () => {
     await edit.getByRole('textbox').fill('corto');
     await edit.getByRole('button', { name: 'guardarCambios();' }).click();
     await expect(edit.getByText('Tenés que escribir al menos 10 caracteres')).toBeVisible();
-    expect((await db.advise.findUniqueOrThrow({ where: { id: advise.id } })).content).toBe(content);
+    expect((await db.advice.findUniqueOrThrow({ where: { id: advice.id } })).content).toBe(content);
   });
 
   test('cancelar el borrado deja el consejo', async ({ page, db }) => {
     const author = await createUser(db, 'e2e-con');
     const content = `Consejo que no se borra ${uniqueId('e2e-con')}`;
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: { id: uniqueId('e2e-con'), content, authorId: author.id },
     });
     await signIn(page, author);
@@ -181,7 +181,7 @@ test.describe('con un usuario propio', () => {
     await confirm.getByRole('button', { name: 'Cancelar' }).click();
     await expect(confirm).toBeHidden();
     await expect(card(page, content)).toBeVisible();
-    expect(await db.advise.findUnique({ where: { id: advise.id } })).not.toBeNull();
+    expect(await db.advice.findUnique({ where: { id: advice.id } })).not.toBeNull();
   });
 
   test('TC-CON-004 Like optimista', async ({ page, db }) => {
@@ -189,9 +189,9 @@ test.describe('con un usuario propio', () => {
     const author = await createUser(db, 'e2e-con');
     const liked = `Consejo para likear ${uniqueId('e2e-con')}`;
     const failing = `Consejo con la red cortada ${uniqueId('e2e-con')}`;
-    const [likedAdvise] = await Promise.all([
-      db.advise.create({ data: { id: uniqueId('e2e-con'), content: liked, authorId: author.id } }),
-      db.advise.create({
+    const [likedAdvice] = await Promise.all([
+      db.advice.create({ data: { id: uniqueId('e2e-con'), content: liked, authorId: author.id } }),
+      db.advice.create({
         data: { id: uniqueId('e2e-con'), content: failing, authorId: author.id },
       }),
     ]);
@@ -204,7 +204,7 @@ test.describe('con un usuario propio', () => {
     await expect(like).toHaveAttribute('aria-pressed', 'true');
     await expect(like).toContainText('1');
     await expect
-      .poll(() => db.like.count({ where: { adviseId: likedAdvise.id, userId: user.id } }))
+      .poll(() => db.like.count({ where: { adviceId: likedAdvice.id, userId: user.id } }))
       .toBe(1);
 
     // Persiste al recargar
@@ -230,7 +230,7 @@ test.describe('con un usuario propio', () => {
     const user = await createUser(db, 'e2e-con');
     const author = await createUser(db, 'e2e-con');
     const content = `Consejo con like previo ${uniqueId('e2e-con')}`;
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: {
         id: uniqueId('e2e-con'),
         content,
@@ -247,12 +247,12 @@ test.describe('con un usuario propio', () => {
     await like.click();
     await expect(like).toHaveAttribute('aria-pressed', 'false');
     await expect(like).toContainText('1');
-    await expect.poll(() => db.like.count({ where: { adviseId: advise.id } })).toBe(1);
+    await expect.poll(() => db.like.count({ where: { adviceId: advice.id } })).toBe(1);
   });
 
   test('TC-CON-005 Comentar y responder', async ({ page, db }) => {
     const user = await createUser(db, 'e2e-con');
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: {
         id: uniqueId('e2e-con'),
         content: `Consejo para comentar ${uniqueId('e2e-con')}`,
@@ -260,7 +260,7 @@ test.describe('con un usuario propio', () => {
       },
     });
     await signIn(page, user);
-    await page.goto(`/consejos/${advise.id}`);
+    await page.goto(`/consejos/${advice.id}`);
 
     const comment = `Comentario ${uniqueId('e2e-con')}`;
     // Next puede dejar oculta una copia de la página anterior: solo el campo visible
@@ -286,7 +286,7 @@ test.describe('con un usuario propio', () => {
 
   test('un comentario vacío no se envía', async ({ page, db }) => {
     const user = await createUser(db, 'e2e-con');
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: {
         id: uniqueId('e2e-con'),
         content: `Consejo sin comentarios ${uniqueId('e2e-con')}`,
@@ -294,11 +294,11 @@ test.describe('con un usuario propio', () => {
       },
     });
     await signIn(page, user);
-    await page.goto(`/consejos/${advise.id}`);
+    await page.goto(`/consejos/${advice.id}`);
 
     await page.getByRole('button', { name: 'enviarComentario();' }).click();
     await expect(page.getByText('El comentario no puede estar vacío')).toBeVisible();
-    expect(await db.comment.count({ where: { adviseId: advise.id } })).toBe(0);
+    expect(await db.comment.count({ where: { adviceId: advice.id } })).toBe(0);
   });
 
   test('responder a una respuesta queda visible en el consejo', async ({ page, db }) => {
@@ -306,7 +306,7 @@ test.describe('con un usuario propio', () => {
     const id = uniqueId('e2e-con');
     const parentContent = `Raíz ${uniqueId('e2e-con')}`;
     const replyContent = `Respuesta ${uniqueId('e2e-con')}`;
-    await db.advise.create({
+    await db.advice.create({
       data: {
         id,
         content: `Consejo con hilo ${uniqueId('e2e-con')}`,
@@ -316,9 +316,9 @@ test.describe('con un usuario propio', () => {
         },
       },
     });
-    const root = await db.comment.findFirstOrThrow({ where: { adviseId: id } });
+    const root = await db.comment.findFirstOrThrow({ where: { adviceId: id } });
     await db.comment.create({
-      data: { content: replyContent, authorId: user.id, adviseId: id, parentCommentId: root.id },
+      data: { content: replyContent, authorId: user.id, adviceId: id, parentCommentId: root.id },
     });
 
     await signIn(page, user);
@@ -343,10 +343,10 @@ test.describe('con un usuario propio', () => {
 
     for (let i = 1; i <= 10; i++) {
       const dialog = await publish(page, `Consejo número ${i} de la ráfaga ${user.id}`);
-      await expect.poll(() => db.advise.count({ where: { authorId: user.id } })).toBe(i);
+      await expect.poll(() => db.advice.count({ where: { authorId: user.id } })).toBe(i);
       await expect(dialog).toBeHidden();
     }
-    await expect.poll(() => db.advise.count({ where: { authorId: user.id } })).toBe(10);
+    await expect.poll(() => db.advice.count({ where: { authorId: user.id } })).toBe(10);
 
     await publish(page, `Consejo número 11 de la ráfaga ${user.id}`);
     await expect(
@@ -354,7 +354,7 @@ test.describe('con un usuario propio', () => {
         /Publicaste mucho contenido en poco tiempo\..*vas a poder publicar de nuevo en (1 hora|\d+ minutos?)\./,
       ),
     ).toBeVisible();
-    expect(await db.advise.count({ where: { authorId: user.id } })).toBe(10);
+    expect(await db.advice.count({ where: { authorId: user.id } })).toBe(10);
   });
 });
 
@@ -364,7 +364,7 @@ test.describe('como admin', () => {
   test('un admin puede editar el consejo de otra persona', async ({ page, db, browser }) => {
     const author = await createUser(db, 'e2e-con');
     const content = `Consejo que modera el admin ${uniqueId('e2e-con')}`;
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: { id: uniqueId('e2e-con'), content, authorId: author.id },
     });
     await expireCachedReads(browser, db);
@@ -376,7 +376,7 @@ test.describe('como admin', () => {
     await edit.getByRole('button', { name: 'guardarCambios();' }).click();
     await expect(page.getByText('Tu consejo fue editado exitosamente.')).toBeVisible();
     await expect
-      .poll(async () => (await db.advise.findUnique({ where: { id: advise.id } }))?.content)
+      .poll(async () => (await db.advice.findUnique({ where: { id: advice.id } }))?.content)
       .toBe(`${content} [moderado]`);
   });
 });
@@ -387,7 +387,7 @@ test.describe('como miembro', () => {
   test('el autor ve las opciones de su consejo sembrado', async ({ page }) => {
     await page.goto('/consejos');
     await expect(
-      card(page, ADVISE.content).getByRole('button', { name: 'Opciones' }),
+      card(page, ADVICE.content).getByRole('button', { name: 'Opciones' }),
     ).toBeVisible();
   });
 });
@@ -395,21 +395,21 @@ test.describe('como miembro', () => {
 test.describe('sin sesión', () => {
   test('no ve publicar ni opciones y el like pide iniciar sesión', async ({ page, db }) => {
     await page.goto('/consejos');
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
     await expect(page.getByRole('button', { name: 'publicarConsejo();' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Opciones' })).toHaveCount(0);
 
-    const likesBefore = await db.like.count({ where: { adviseId: ADVISE.id } });
-    const like = card(page, ADVISE.content).getByRole('button', { name: /Me gusta/ });
+    const likesBefore = await db.like.count({ where: { adviceId: ADVICE.id } });
+    const like = card(page, ADVICE.content).getByRole('button', { name: /Me gusta/ });
     await like.click();
     await expect(page.getByText('Iniciá sesión para dar me gusta')).toBeVisible();
     await expect(like).toHaveAttribute('aria-pressed', 'false');
-    expect(await db.like.count({ where: { adviseId: ADVISE.id } })).toBe(likesBefore);
+    expect(await db.like.count({ where: { adviceId: ADVICE.id } })).toBe(likesBefore);
   });
 
   test('el detalle pide iniciar sesión para comentar', async ({ page }) => {
-    await page.goto(`/consejos/${ADVISE.id}`);
-    await expect(page.getByText(ADVISE.content.split(':')[0])).toBeVisible();
+    await page.goto(`/consejos/${ADVICE.id}`);
+    await expect(page.getByText(ADVICE.content.split(':')[0])).toBeVisible();
     await expect(page.getByText(/Debes\s+iniciar sesión\s+para poder comentar\./)).toBeVisible();
     await expect(page.getByPlaceholder('Escribe tu comentario...')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Responder' })).toHaveCount(0);
@@ -426,8 +426,8 @@ test.describe('sin sesión', () => {
 
   test('abrir un consejo desde la lista lo muestra en un modal', async ({ page }) => {
     await page.goto('/consejos');
-    await card(page, ADVISE.content).getByRole('link', { name: ADVISE.content }).click();
-    await expect(page).toHaveURL(new RegExp(`/consejos/${ADVISE.id}$`));
+    await card(page, ADVICE.content).getByRole('link', { name: ADVICE.content }).click();
+    await expect(page).toHaveURL(new RegExp(`/consejos/${ADVICE.id}$`));
     const modal = page.getByRole('dialog');
     await expect(modal).toContainText(USERS.member.name);
     await modal.getByRole('button', { name: 'Cerrar' }).click();
@@ -438,11 +438,11 @@ test.describe('sin sesión', () => {
     await page.goto('/consejos');
     const search = page.getByRole('textbox', { name: 'Buscar consejos por texto o autor' });
     await search.fill('Escribí tests antes de refactorizar');
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
     await expect(page.getByRole('article')).toHaveCount(1);
 
     await search.fill(USERS.member.name);
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
 
     await search.fill('zzz-nada-coincide-e2e');
     await expect(page.getByRole('article')).toHaveCount(0);
@@ -450,7 +450,7 @@ test.describe('sin sesión', () => {
 
     await page.getByRole('button', { name: 'reset' }).click();
     await expect(search).toHaveValue('');
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
   });
 
   test('el filtro de origen separa los publicados de los auto-extraídos', async ({ page }) => {
@@ -462,18 +462,18 @@ test.describe('sin sesión', () => {
       'aria-checked',
       'true',
     );
-    await expect(card(page, ADVISE.content)).toHaveCount(0);
+    await expect(card(page, ADVICE.content)).toHaveCount(0);
     await expect(page.getByRole('article').first()).toContainText('auto');
 
     await origin.getByRole('radio', { name: 'manual' }).click();
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
   });
 
   test('el filtro de autor muestra solo sus consejos', async ({ page }) => {
     await page.goto('/consejos');
     await page.getByRole('combobox', { name: 'Autor' }).click();
     await page.getByRole('option', { name: new RegExp(`^@${USERS.member.name}`) }).click();
-    await expect(card(page, ADVISE.content)).toBeVisible();
+    await expect(card(page, ADVICE.content)).toBeVisible();
     const articles = page.getByRole('article');
     const count = await articles.count();
     for (let i = 0; i < count; i++) {

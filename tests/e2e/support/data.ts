@@ -32,8 +32,8 @@ export const EVENTS = {
   full: { id: 'e2e-event-full', name: 'Evento Lleno E2E' },
 } as const;
 
-export const ADVISE = {
-  id: 'e2e-advise',
+export const ADVICE = {
+  id: 'e2e-advice',
   content: 'Escribí tests antes de refactorizar: te van a avisar cuando algo se rompa.',
 };
 

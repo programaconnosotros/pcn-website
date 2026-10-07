@@ -12,18 +12,18 @@ const commentSchema = z.object({
     .string()
     .min(1, { message: 'El comentario no puede estar vacío' })
     .max(500, { message: 'El comentario no puede tener más de 500 caracteres' }),
-  adviseId: z.string(),
+  adviceId: z.string(),
   parentCommentId: z.string().nullable(),
 });
 
 export const createComment = async ({
   content,
-  adviseId,
+  adviceId,
   parentCommentId,
 }: z.infer<typeof commentSchema>) => {
   await enforceRateLimit('comment');
 
-  const validatedData = commentSchema.parse({ content, adviseId, parentCommentId });
+  const validatedData = commentSchema.parse({ content, adviceId, parentCommentId });
 
   const sessionId = (await cookies()).get('sessionId');
 
@@ -38,9 +38,9 @@ export const createComment = async ({
   if (validatedData.parentCommentId) {
     const parent = await prisma.comment.findUnique({
       where: { id: validatedData.parentCommentId },
-      select: { adviseId: true },
+      select: { adviceId: true },
     });
-    if (!parent || parent.adviseId !== validatedData.adviseId) {
+    if (!parent || parent.adviceId !== validatedData.adviceId) {
       throw new Error('El comentario al que respondés no es de este consejo');
     }
   }
@@ -49,7 +49,7 @@ export const createComment = async ({
     data: {
       content: validatedData.content,
       authorId: session.userId,
-      adviseId: validatedData.adviseId,
+      adviceId: validatedData.adviceId,
       parentCommentId: validatedData.parentCommentId,
     },
     include: {
@@ -63,7 +63,7 @@ export const createComment = async ({
     },
   });
 
-  revalidatePath(`/consejos/${adviseId}`);
+  revalidatePath(`/consejos/${adviceId}`);
 
   return comment;
 };

@@ -1,8 +1,8 @@
-import type { Advise, Like, User } from '@/generated/prisma/client';
+import type { Advice, Like, User } from '@/generated/prisma/client';
 import type { ExtractedConsejo } from '@/data/consejos-extraidos';
 import type { LinkedUser } from '@/lib/identity-links';
 
-// One shape for every consejo on /consejos: the ones members publish (Advise rows) and the ones
+// One shape for every consejo on /consejos: the ones members publish (Advice rows) and the ones
 // extracted automatically from /conversaciones (src/data/consejos-extraidos). Plain data, so
 // server pages can hand it to client components.
 
@@ -35,19 +35,19 @@ export type Consejo = {
   source: ConsejoSource | null;
 };
 
-export type AdviseWithAuthor = Advise & {
+export type AdviceWithAuthor = Advice & {
   author: Pick<User, 'id' | 'name' | 'image'>;
   likes: Pick<Like, 'userId'>[];
   _count?: { comments: number };
 };
 
-export const fromAdvise = (advise: AdviseWithAuthor): Consejo => ({
-  id: advise.id,
-  content: advise.content,
-  createdAt: new Date(advise.createdAt).toISOString(),
-  author: { id: advise.author.id, name: advise.author.name, image: advise.author.image },
-  likes: advise.likes.map(({ userId }) => ({ userId })),
-  commentCount: advise._count?.comments ?? 0,
+export const fromAdvice = (advice: AdviceWithAuthor): Consejo => ({
+  id: advice.id,
+  content: advice.content,
+  createdAt: new Date(advice.createdAt).toISOString(),
+  author: { id: advice.author.id, name: advice.author.name, image: advice.author.image },
+  likes: advice.likes.map(({ userId }) => ({ userId })),
+  commentCount: advice._count?.comments ?? 0,
   tags: [],
   source: null,
 });

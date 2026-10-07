@@ -27,7 +27,7 @@ const activityOf = (n: number) => ({
   videos: n,
   likes: n,
   comments: n,
-  advises: n,
+  advice: n,
   projects: n,
   proposals: n,
 });

@@ -17,7 +17,7 @@ jest.mock('@/lib/prisma', () => {
     __esModule: true,
     default: {
       user: model(),
-      advise: model(),
+      advice: model(),
       event: model(),
       like: model(),
       comment: model(),
@@ -40,7 +40,7 @@ const seed = ({ empty = false } = {}) => {
   db.user.count.mockImplementation((args: CountArgs) =>
     Promise.resolve(!args?.where ? 100 : 'sessions' in args.where ? 20 : 5),
   );
-  db.advise.count.mockImplementation(counts(empty ? 0 : 10, 2));
+  db.advice.count.mockImplementation(counts(empty ? 0 : 10, 2));
   db.like.count.mockImplementation(counts(25, 3));
   db.comment.count.mockImplementation(counts(8, 1));
   db.event.count.mockImplementation((args: { where: { date: { lt?: Date } } }) =>
@@ -60,7 +60,7 @@ const seed = ({ empty = false } = {}) => {
           { language: 'Go', _count: { language: 4 } },
         ],
   );
-  db.advise.findMany.mockResolvedValue(
+  db.advice.findMany.mockResolvedValue(
     empty
       ? []
       : [

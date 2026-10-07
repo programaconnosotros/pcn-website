@@ -116,10 +116,10 @@ beforeAll(async () => {
       cancelledAt: at('2020-03-04T22:00:00Z'),
     },
   });
-  await prisma.advise.create({
+  await prisma.advice.create({
     data: { content: 'Un consejo', authorId: member.id, createdAt: at('2020-03-03T12:00:00Z') },
   });
-  await prisma.advise.create({
+  await prisma.advice.create({
     data: {
       content: 'Otro, del período anterior',
       authorId: member.id,
@@ -208,11 +208,11 @@ it('builds the signup funnel for the accounts created in the range', () => {
 it('counts engagement in the range, leaving cancelled registrations out', () => {
   expect(metrics.activity).toMatchObject({
     registrations: 1,
-    advises: 1,
+    advice: 1,
     comments: 0,
     proposals: 0,
   });
-  expect(metrics.previousActivity).toMatchObject({ registrations: 0, advises: 1 });
+  expect(metrics.previousActivity).toMatchObject({ registrations: 0, advice: 1 });
 });
 
 it('switches to weekly buckets for long ranges', async () => {

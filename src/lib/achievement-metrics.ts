@@ -49,7 +49,7 @@ const computeAchievementMetrics = async (
     readArticles,
     registrations,
     projects,
-    advises,
+    advice,
     allSpeakers,
   ] = await Promise.all([
     prisma.talkSpeaker.groupBy({
@@ -91,7 +91,7 @@ const computeAchievementMetrics = async (
         : undefined,
       select: { authorId: true, members: { select: { userId: true } } },
     }),
-    prisma.advise.groupBy({
+    prisma.advice.groupBy({
       by: ['authorId'],
       where: userIds ? { authorId: { in: userIds } } : undefined,
       _count: { _all: true },
@@ -128,7 +128,7 @@ const computeAchievementMetrics = async (
   for (const { userId, _count } of readArticles) of(userId).articlesRead = _count._all;
   for (const { userId, _count } of registrations) of(userId).eventsAttended = _count._all;
 
-  for (const { authorId, _count } of advises) of(authorId).consejos = _count._all;
+  for (const { authorId, _count } of advice) of(authorId).consejos = _count._all;
 
   for (const { authorId, members } of projects) {
     // Someone listed both as author and as member still shared the project once.
@@ -185,7 +185,7 @@ const cachedAchievementMetrics = cached(
       'EventRegistration',
       'Project',
       'ProjectMember',
-      'Advise',
+      'Advice',
     ],
     revalidate: 3600,
   },

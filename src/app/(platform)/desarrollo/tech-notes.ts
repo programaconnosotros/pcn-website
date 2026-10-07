@@ -117,16 +117,16 @@ export const alt = 'Consejo de la comunidad programaConNosotros';
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const advise = await prisma.advise.findUnique({
+  const advice = await prisma.advice.findUnique({
     where: { id },
     select: { content: true, author: { select: { name: true } } },
   });
 
   return renderTerminalCard({
     path: 'consejos',
-    command: advise ? \`fortune --from "\${advise.author.name}"\` : 'fortune',
-    title: advise ? \`“\${advise.content}”\` : 'Consejos de la comunidad',
-    meta: advise ? [\`@\${advise.author.name}\`] : [],
+    command: advice ? \`fortune --from "\${advice.author.name}"\` : 'fortune',
+    title: advice ? \`“\${advice.content}”\` : 'Consejos de la comunidad',
+    meta: advice ? [\`@\${advice.author.name}\`] : [],
   });
 }`,
           },
@@ -174,7 +174,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const advise = await prisma.advise.findUnique({
+  const advice = await prisma.advice.findUnique({
     where: { id: params.id },
     select: {
       content: true,
@@ -188,7 +188,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   // …
 }
 
-export default async function AdvisePage(props: { params: Promise<{ id: string }> }) {
+export default async function AdvicePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const sessionId = (await cookies()).get('sessionId');
   // …
@@ -1216,7 +1216,7 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;`,
             file: 'src/app/api/search/route.ts',
             lang: 'ts',
             code: `const contains = { contains: query, mode: 'insensitive' as const };
-const [events, talks, advises, projects] = await Promise.all([
+const [events, talks, advice, projects] = await Promise.all([
   prisma.event.findMany({
     where: { deletedAt: null, OR: [{ name: contains }, { description: contains }] },
     orderBy: { date: 'desc' },

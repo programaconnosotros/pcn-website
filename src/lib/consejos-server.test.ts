@@ -1,11 +1,11 @@
 import { prismaMock } from '@/test/prisma';
 import { extractedConsejos } from '@/data/consejos-extraidos';
 import { getIdentityMap } from '@/lib/identity-links';
-import { getConsejoDetail, listAdvises } from './consejos-server';
+import { getConsejoDetail, listAdvice } from './consejos-server';
 
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
 
-const advise = {
+const advice = {
   id: 'adv-1',
   content: 'Practicá todos los días',
   createdAt: new Date('2025-03-01T10:00:00Z'),
@@ -15,12 +15,12 @@ const advise = {
   comments: [{ id: 'c1', content: 'Gracias', author: { id: 'u2' }, replies: [] }],
 };
 
-describe('listAdvises', () => {
+describe('listAdvice', () => {
   it('lists every consejo, newest first, with likes and comment counts', async () => {
-    prismaMock.advise.findMany.mockResolvedValue([advise] as any);
-    const result = await listAdvises();
-    expect(result[0].createdAt).toEqual(advise.createdAt);
-    expect(prismaMock.advise.findMany).toHaveBeenCalledWith(
+    prismaMock.advice.findMany.mockResolvedValue([advice] as any);
+    const result = await listAdvice();
+    expect(result[0].createdAt).toEqual(advice.createdAt);
+    expect(prismaMock.advice.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ orderBy: { createdAt: 'desc' } }),
     );
   });
@@ -28,7 +28,7 @@ describe('listAdvises', () => {
 
 describe('getConsejoDetail', () => {
   it('returns a published consejo with its comments', async () => {
-    prismaMock.advise.findUnique.mockResolvedValue(advise as any);
+    prismaMock.advice.findUnique.mockResolvedValue(advice as any);
 
     const detail = await getConsejoDetail('adv-1');
 
@@ -40,17 +40,17 @@ describe('getConsejoDetail', () => {
       commentCount: 1,
       source: null,
     });
-    expect(detail?.comments).toEqual(advise.comments);
+    expect(detail?.comments).toEqual(advice.comments);
     expect(getIdentityMap).not.toHaveBeenCalled();
   });
 
   it('returns null for an unknown id', async () => {
-    prismaMock.advise.findUnique.mockResolvedValue(null);
+    prismaMock.advice.findUnique.mockResolvedValue(null);
     await expect(getConsejoDetail('missing')).resolves.toBeNull();
   });
 
   it('returns null for an auto- id that matches no extracted consejo', async () => {
-    prismaMock.advise.findUnique.mockResolvedValue(null);
+    prismaMock.advice.findUnique.mockResolvedValue(null);
     await expect(getConsejoDetail('auto-does-not-exist')).resolves.toBeNull();
   });
 
@@ -66,6 +66,6 @@ describe('getConsejoDetail', () => {
       consejo: expect.objectContaining({ id: extracted.id, author: linked, likes: null }),
       comments: [],
     });
-    expect(prismaMock.advise.findUnique).not.toHaveBeenCalled();
+    expect(prismaMock.advice.findUnique).not.toHaveBeenCalled();
   });
 });

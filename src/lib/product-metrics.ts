@@ -199,7 +199,7 @@ const signupFunnel = async (period: Period): Promise<FunnelStep[]> => {
         emailVerified: true,
         OR: [
           { eventRegistrations: { some: {} } },
-          { advises: { some: {} } },
+          { advice: { some: {} } },
           { comments: { some: {} } },
           { likes: { some: {} } },
           { authoredProjects: { some: {} } },
@@ -236,10 +236,10 @@ const signupFunnel = async (period: Period): Promise<FunnelStep[]> => {
 
 const engagement = async (period: Period) => {
   const createdAt = { gte: period.from, lt: period.to };
-  const [registrations, advises, comments, likes, projects, proposals, articlesRead, videos] =
+  const [registrations, advice, comments, likes, projects, proposals, articlesRead, videos] =
     await Promise.all([
       prisma.eventRegistration.count({ where: { createdAt, cancelledAt: null } }),
-      prisma.advise.count({ where: { createdAt } }),
+      prisma.advice.count({ where: { createdAt } }),
       prisma.comment.count({ where: { createdAt } }),
       prisma.like.count({ where: { createdAt } }),
       prisma.project.count({ where: { createdAt } }),
@@ -247,7 +247,7 @@ const engagement = async (period: Period) => {
       prisma.contentMark.count({ where: { createdAt, contentType: 'article', mark: 'read' } }),
       prisma.contentMark.count({ where: { createdAt, contentType: 'video', mark: 'watched' } }),
     ]);
-  return { registrations, advises, comments, likes, projects, proposals, articlesRead, videos };
+  return { registrations, advice, comments, likes, projects, proposals, articlesRead, videos };
 };
 
 export type Engagement = Awaited<ReturnType<typeof engagement>>;

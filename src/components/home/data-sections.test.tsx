@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { articles } from '@/app/(platform)/lectura/articles';
-import { AdvisesCard } from './advises-card';
+import { AdviceCountCard } from './advice-count-card';
 import { AmbassadorsSection } from './ambassadors-section';
 import { LatestArticlesSection } from './latest-articles';
 import { LatestPhotosSection } from './latest-photos-section';
@@ -10,7 +10,7 @@ import { TalksCard } from './talks-card';
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   default: {
-    advise: { count: jest.fn() },
+    advice: { count: jest.fn() },
     talk: { count: jest.fn() },
     user: { findMany: jest.fn() },
   },
@@ -69,12 +69,12 @@ const { listLatestGalleryItems } = jest.requireMock('@/lib/gallery');
 const { fetchPublicTalks } = jest.requireMock('@/actions/talks/fetch-public-talks');
 
 describe('home sections with data', () => {
-  it('AdvisesCard and TalksCard link to their pages', async () => {
-    mockPrisma.advise.count.mockResolvedValue(12);
+  it('AdviceCountCard and TalksCard link to their pages', async () => {
+    mockPrisma.advice.count.mockResolvedValue(12);
     mockPrisma.talk.count.mockResolvedValue(30);
     render(
       <>
-        {await AdvisesCard()}
+        {await AdviceCountCard()}
         {await TalksCard()}
       </>,
     );

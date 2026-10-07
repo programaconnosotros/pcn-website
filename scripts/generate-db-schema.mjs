@@ -19,7 +19,7 @@ const DOMAINS = {
     'Setup',
     'SetupLike',
   ],
-  consejos: ['Advise', 'Comment', 'Like'],
+  consejos: ['Advice', 'Comment', 'Like'],
   eventos: [
     'Event',
     'EventOrganizer',

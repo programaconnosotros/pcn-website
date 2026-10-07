@@ -2,17 +2,17 @@ import { findExtractedConsejo } from '@/data/consejos-extraidos';
 import { getIdentityMap } from '@/lib/identity-links';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { fromAdvise, fromExtracted } from '@/lib/consejos';
+import { fromAdvice, fromExtracted } from '@/lib/consejos';
 
 const authorSelect = { select: { id: true, name: true, image: true } } as const;
 
-const ADVISE_MODELS = ['Advise', 'User', 'Like', 'Comment'] as const;
+const ADVICE_MODELS = ['Advice', 'User', 'Like', 'Comment'] as const;
 
 /** Every published consejo, newest first, with its likes and comment count. Cached. */
-export const listAdvises = cached(
-  'advises',
+export const listAdvice = cached(
+  'advice',
   () =>
-    prisma.advise.findMany({
+    prisma.advice.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
         author: authorSelect,
@@ -20,13 +20,13 @@ export const listAdvises = cached(
         _count: { select: { comments: true } },
       },
     }),
-  { models: ADVISE_MODELS },
+  { models: ADVICE_MODELS },
 );
 
-const findAdvise = cached(
-  'advise',
+const findAdvice = cached(
+  'advice',
   (id: string) =>
-    prisma.advise.findUnique({
+    prisma.advice.findUnique({
       where: { id },
       include: {
         author: authorSelect,
@@ -39,7 +39,7 @@ const findAdvise = cached(
         },
       },
     }),
-  { models: ADVISE_MODELS },
+  { models: ADVICE_MODELS },
 );
 
 /**
@@ -53,9 +53,9 @@ export const getConsejoDetail = async (id: string) => {
     return { consejo: fromExtracted(extracted, profiles), comments: [] };
   }
 
-  const advise = await findAdvise(id);
-  if (!advise) return null;
-  return { consejo: fromAdvise(advise), comments: advise.comments };
+  const advice = await findAdvice(id);
+  if (!advice) return null;
+  return { consejo: fromAdvice(advice), comments: advice.comments };
 };
 
 export type ConsejoDetail = NonNullable<Awaited<ReturnType<typeof getConsejoDetail>>>;

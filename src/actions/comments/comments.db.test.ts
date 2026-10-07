@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { createComment } from '@/actions/comments/create-comment';
 import { actAs } from '@/test/db/fixtures';
-import { expiredModel, makeAdvise, quickUser } from '@/test/db/actions-fixtures';
+import { expiredModel, makeAdvice, quickUser } from '@/test/db/actions-fixtures';
 
 // Comentarios y respuestas de los consejos contra Postgres real.
 
@@ -9,12 +9,12 @@ describe('createComment', () => {
   it('stores a top-level comment for the session user and returns it with its public author', async () => {
     const author = await quickUser();
     const commenter = await quickUser();
-    const advise = await makeAdvise(author.id);
+    const advice = await makeAdvice(author.id);
     await actAs(commenter.id);
 
     const comment = await createComment({
       content: 'Muy buen consejo',
-      adviseId: advise.id,
+      adviceId: advice.id,
       parentCommentId: null,
     });
 
@@ -23,7 +23,7 @@ describe('createComment', () => {
     expect(stored).toMatchObject({
       content: 'Muy buen consejo',
       authorId: commenter.id,
-      adviseId: advise.id,
+      adviceId: advice.id,
       parentCommentId: null,
     });
     expect(expiredModel('Comment')).toBe(true);
@@ -31,49 +31,49 @@ describe('createComment', () => {
 
   it('stores a reply linked to its parent comment', async () => {
     const author = await quickUser();
-    const advise = await makeAdvise(author.id);
+    const advice = await makeAdvice(author.id);
     const parent = await prisma.comment.create({
-      data: { content: 'Pregunta', authorId: author.id, adviseId: advise.id },
+      data: { content: 'Pregunta', authorId: author.id, adviceId: advice.id },
     });
     const replier = await quickUser();
     await actAs(replier.id);
 
     const reply = await createComment({
       content: 'Respuesta',
-      adviseId: advise.id,
+      adviceId: advice.id,
       parentCommentId: parent.id,
     });
 
     const replies = await prisma.comment.findMany({ where: { parentCommentId: parent.id } });
     expect(replies.map((row) => row.id)).toEqual([reply.id]);
-    expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(2);
+    expect(await prisma.comment.count({ where: { adviceId: advice.id } })).toBe(2);
   });
 
   it('removes the replies in cascade when the parent comment is deleted', async () => {
     const author = await quickUser();
-    const advise = await makeAdvise(author.id);
+    const advice = await makeAdvice(author.id);
     await actAs(author.id);
     const parent = await createComment({
       content: 'Padre',
-      adviseId: advise.id,
+      adviceId: advice.id,
       parentCommentId: null,
     });
-    await createComment({ content: 'Hija', adviseId: advise.id, parentCommentId: parent.id });
+    await createComment({ content: 'Hija', adviceId: advice.id, parentCommentId: parent.id });
 
     await prisma.comment.delete({ where: { id: parent.id } });
 
-    expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(0);
+    expect(await prisma.comment.count({ where: { adviceId: advice.id } })).toBe(0);
   });
 
   it('rejects anonymous visitors without writing anything', async () => {
     const author = await quickUser();
-    const advise = await makeAdvise(author.id);
+    const advice = await makeAdvice(author.id);
     await actAs();
 
     await expect(
-      createComment({ content: 'Anónimo', adviseId: advise.id, parentCommentId: null }),
+      createComment({ content: 'Anónimo', adviceId: advice.id, parentCommentId: null }),
     ).rejects.toThrow('No autenticado');
-    expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(0);
+    expect(await prisma.comment.count({ where: { adviceId: advice.id } })).toBe(0);
   });
 
   it.each([
@@ -81,48 +81,48 @@ describe('createComment', () => {
     ['longer than 500 characters', 'x'.repeat(501)],
   ])('rejects a comment that is %s', async (_case, content) => {
     const author = await quickUser();
-    const advise = await makeAdvise(author.id);
+    const advice = await makeAdvice(author.id);
     await actAs(author.id);
 
     await expect(
-      createComment({ content, adviseId: advise.id, parentCommentId: null }),
+      createComment({ content, adviceId: advice.id, parentCommentId: null }),
     ).rejects.toThrow();
-    expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(0);
+    expect(await prisma.comment.count({ where: { adviceId: advice.id } })).toBe(0);
   });
 
-  it('fails on an advise that does not exist (foreign key)', async () => {
+  it('fails on an advice that does not exist (foreign key)', async () => {
     const user = await quickUser();
     await actAs(user.id);
 
     await expect(
-      createComment({ content: 'Hola', adviseId: 'no-existe', parentCommentId: null }),
+      createComment({ content: 'Hola', adviceId: 'no-existe', parentCommentId: null }),
     ).rejects.toThrow();
     expect(await prisma.comment.count({ where: { authorId: user.id } })).toBe(0);
   });
 
   it('fails when replying to a comment that does not exist', async () => {
     const user = await quickUser();
-    const advise = await makeAdvise(user.id);
+    const advice = await makeAdvice(user.id);
     await actAs(user.id);
 
     await expect(
-      createComment({ content: 'Hola', adviseId: advise.id, parentCommentId: 'no-existe' }),
+      createComment({ content: 'Hola', adviceId: advice.id, parentCommentId: 'no-existe' }),
     ).rejects.toThrow();
-    expect(await prisma.comment.count({ where: { adviseId: advise.id } })).toBe(0);
+    expect(await prisma.comment.count({ where: { adviceId: advice.id } })).toBe(0);
   });
 
-  it('rejects a reply whose parent comment belongs to another advise', async () => {
+  it('rejects a reply whose parent comment belongs to another advice', async () => {
     const author = await quickUser();
-    const adviseA = await makeAdvise(author.id);
-    const adviseB = await makeAdvise(author.id);
+    const adviceA = await makeAdvice(author.id);
+    const adviceB = await makeAdvice(author.id);
     const parentOnA = await prisma.comment.create({
-      data: { content: 'En A', authorId: author.id, adviseId: adviseA.id },
+      data: { content: 'En A', authorId: author.id, adviceId: adviceA.id },
     });
     await actAs(author.id);
 
     await expect(
-      createComment({ content: 'Respuesta', adviseId: adviseB.id, parentCommentId: parentOnA.id }),
+      createComment({ content: 'Respuesta', adviceId: adviceB.id, parentCommentId: parentOnA.id }),
     ).rejects.toThrow();
-    expect(await prisma.comment.count({ where: { adviseId: adviseB.id } })).toBe(0);
+    expect(await prisma.comment.count({ where: { adviceId: adviceB.id } })).toBe(0);
   });
 });

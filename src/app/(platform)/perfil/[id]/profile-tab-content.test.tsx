@@ -1,6 +1,6 @@
 import { isValidElement, type ReactNode } from 'react';
 import { render, screen, within } from '@testing-library/react';
-import { AdviseCard } from '@/components/advises/advise-card';
+import { AdviceCard } from '@/components/advice/advice-card';
 import { ProfileArticles } from '@/components/profile/profile-articles';
 import {
   ContributionStats,
@@ -15,7 +15,7 @@ import * as data from './profile-data';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 
 jest.mock('./profile-data', () => ({
-  getProfileAdvises: jest.fn(),
+  getProfileAdvice: jest.fn(),
   getProfileArticles: jest.fn(),
   getProfileContributions: jest.fn(),
   getProfileConversations: jest.fn(),
@@ -35,8 +35,8 @@ jest.mock('@/components/videos/video-grid', () => ({
 jest.mock('@/components/setups/setup-tile', () => ({
   SetupTile: ({ setup }: { setup: { title: string } }) => <div>setup: {setup.title}</div>,
 }));
-jest.mock('@/components/advises/advise-card', () => ({
-  AdviseCard: jest.fn(({ consejo }: { consejo: { id: string } }) => <p>consejo {consejo.id}</p>),
+jest.mock('@/components/advice/advice-card', () => ({
+  AdviceCard: jest.fn(({ consejo }: { consejo: { id: string } }) => <p>consejo {consejo.id}</p>),
 }));
 jest.mock('@/components/profile/profile-articles', () => ({
   ProfileArticles: jest.fn(({ articles }: { articles: unknown[] }) => (
@@ -90,7 +90,7 @@ const contributions = (count: number, linesAdded: number | null = 1500) => ({
 
 const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   m.getProfileProjects.mockResolvedValue(list(sizes.projects ?? 0, 'p') as never);
-  m.getProfileAdvises.mockResolvedValue(list(sizes.advises ?? 0, 'a') as never);
+  m.getProfileAdvice.mockResolvedValue(list(sizes.advice ?? 0, 'a') as never);
   m.getProfileTalks.mockResolvedValue(
     Array.from({ length: sizes.talks ?? 0 }, (_, i) => talk({ id: `t${i + 1}` })) as never,
   );
@@ -176,7 +176,7 @@ describe('ProfileTabContent: resumen', () => {
   it('previews each section and links to the full tab only when there is more', async () => {
     mockData({
       projects: 3,
-      advises: 2,
+      advice: 2,
       talks: 1,
       articles: 4,
       events: 2,
@@ -193,7 +193,7 @@ describe('ProfileTabContent: resumen', () => {
     );
     expect(screen.getByText('2 proyectos')).toBeInTheDocument();
     expect(within(section('consejos')).queryByRole('link')).not.toBeInTheDocument();
-    expect(jest.mocked(AdviseCard).mock.calls.map(([props]) => props.showAuthor)).toEqual([
+    expect(jest.mocked(AdviceCard).mock.calls.map(([props]) => props.showAuthor)).toEqual([
       false,
       false,
     ]);
@@ -288,11 +288,11 @@ describe('ProfileTabContent: one section', () => {
   });
 
   it('consejos lists every consejo with the viewer session', async () => {
-    mockData({ advises: 3 });
+    mockData({ advice: 3 });
     await renderTab('consejos');
 
     expect(screen.getByText('consejo a3')).toBeInTheDocument();
-    expect(jest.mocked(AdviseCard).mock.calls[0][0].session).toBe(session);
+    expect(jest.mocked(AdviceCard).mock.calls[0][0].session).toBe(session);
     expect(ProjectRows).not.toHaveBeenCalled();
   });
 

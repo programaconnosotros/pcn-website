@@ -78,7 +78,7 @@ it('counts talks given, talks watched, articles read, advice and shared projects
       { userId: user.id, contentType: 'article', contentId: 'a3', mark: 'saved' },
     ],
   });
-  await prisma.advise.createMany({
+  await prisma.advice.createMany({
     data: [
       { content: 'uno', authorId: user.id },
       { content: 'dos', authorId: user.id },
@@ -117,7 +117,7 @@ it('ranks linked GitHub accounts like /desarrollo and leaves inactive users out'
 
 it('without user ids, covers everyone with activity', async () => {
   const user = await createUser();
-  await prisma.advise.create({ data: { content: 'consejo', authorId: user.id } });
+  await prisma.advice.create({ data: { content: 'consejo', authorId: user.id } });
 
   expect((await getAchievementMetrics()).get(user.id)?.consejos).toBe(1);
 });

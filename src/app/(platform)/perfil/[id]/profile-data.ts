@@ -6,7 +6,7 @@ import { signGalleryItem } from '@/lib/gallery-signing';
 import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
 import { extractedConsejos } from '@/data/consejos-extraidos';
-import { fromAdvise, fromExtracted, sortByNewest } from '@/lib/consejos';
+import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getUserIdentities } from '@/lib/identity-links';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
@@ -22,11 +22,11 @@ export const getProfileIdentities = cache((userId: string) => getUserIdentities(
 
 // Consejos the user published plus the ones extracted from conversations under any WhatsApp
 // name an admin linked to them, newest first, like /consejos lists them.
-export const getProfileAdvises = cached(
-  'profile-advises',
+export const getProfileAdvice = cached(
+  'profile-advice',
   async (userId: string) => {
-    const [advises, identities, user] = await Promise.all([
-      prisma.advise.findMany({
+    const [advice, identities, user] = await Promise.all([
+      prisma.advice.findMany({
         where: { authorId: userId },
         include: {
           author: { select: { id: true, name: true, image: true } },
@@ -45,13 +45,13 @@ export const getProfileAdvises = cached(
       ? Object.fromEntries(identities.whatsapp.map((name) => [name, user]))
       : {};
     return sortByNewest([
-      ...advises.map(fromAdvise),
+      ...advice.map(fromAdvice),
       ...extractedConsejos
         .filter((consejo) => consejo.member in profiles)
         .map((consejo) => fromExtracted(consejo, profiles)),
     ]);
   },
-  { models: ['Advise', 'User', 'Like', 'Comment', 'IdentityLink'] },
+  { models: ['Advice', 'User', 'Like', 'Comment', 'IdentityLink'] },
 );
 
 export const getProfileTalks = cached(
@@ -212,7 +212,7 @@ export const getProfileCounts = cache(
   async (userId: string): Promise<Partial<Record<ProfileTab, number>>> => {
     const [
       projects,
-      advises,
+      advice,
       talks,
       articles,
       videos,
@@ -224,7 +224,7 @@ export const getProfileCounts = cache(
       github,
     ] = await Promise.all([
       getProfileProjects(userId),
-      getProfileAdvises(userId),
+      getProfileAdvice(userId),
       getProfileTalks(userId),
       getProfileArticles(userId),
       getProfileVideos(userId),
@@ -237,7 +237,7 @@ export const getProfileCounts = cache(
     ]);
     return {
       proyectos: projects.length,
-      consejos: advises.length,
+      consejos: advice.length,
       charlas: talks.length,
       articulos: articles.length,
       videos: videos.length,

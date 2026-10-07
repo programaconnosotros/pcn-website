@@ -34,7 +34,7 @@ const AUTH_HELPERS = new Set([
  * Son lecturas de lo que ya es público o formularios de quien todavía no tiene sesión.
  */
 const PUBLIC_ACTIONS: Record<string, string> = {
-  'actions/advises/get-best-advises.ts#getBestAdvises': 'consejos publicados, en /consejos',
+  'actions/advice/get-best-advice.ts#getBestAdvice': 'consejos publicados, en /consejos',
   'actions/announcements/get-announcements.ts#fetchAnnouncements': 'solo anuncios publicados',
   'actions/announcements/get-event-announcements.ts#getEventAnnouncements':
     'anuncios publicados de un evento',

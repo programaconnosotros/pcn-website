@@ -1,4 +1,4 @@
-import { ConsejoModal } from '@/components/advises/consejo-modal';
+import { ConsejoModal } from '@/components/advice/consejo-modal';
 import { getConsejoDetail } from '@/lib/consejos-server';
 import { findSession } from '@/lib/session';
 import { cookies } from 'next/headers';

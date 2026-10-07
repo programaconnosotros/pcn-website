@@ -1,5 +1,5 @@
-import { ConsejoPanel } from '@/components/advises/consejo-panel';
-import { consejoHash } from '@/components/advises/consejo-utils';
+import { ConsejoPanel } from '@/components/advice/consejo-panel';
+import { consejoHash } from '@/components/advice/consejo-utils';
 import Link from 'next/link';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
@@ -48,7 +48,7 @@ export async function generateMetadata(props: {
   };
 }
 
-export default async function AdvisePage(props: { params: Promise<{ id: string }> }) {
+export default async function AdviceDetailPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const sessionId = (await cookies()).get('sessionId');
 

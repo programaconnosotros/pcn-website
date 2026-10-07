@@ -1,13 +1,13 @@
-import { AddAdvise } from '@/components/advises/add-advise';
+import { AddAdvice } from '@/components/advice/add-advice';
 import { cookies } from 'next/headers';
-import { listAdvises } from '@/lib/consejos-server';
+import { listAdvice } from '@/lib/consejos-server';
 import { ConsejosClient } from './consejos-client';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
 import { getIdentityMap } from '@/lib/identity-links';
 import { extractedConsejos } from '@/data/consejos-extraidos';
-import { fromAdvise, fromExtracted, sortByNewest } from '@/lib/consejos';
+import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -35,14 +35,14 @@ const AdvicePage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   // La sesión y los consejos no dependen entre sí: se piden a la vez.
-  const [session, advises, profiles] = await Promise.all([
+  const [session, advice, profiles] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
-    listAdvises(),
+    listAdvice(),
     getIdentityMap('whatsapp'),
   ]);
 
   const consejos = sortByNewest([
-    ...advises.map(fromAdvise),
+    ...advice.map(fromAdvice),
     ...extractedConsejos.map((consejo) => fromExtracted(consejo, profiles)),
   ]);
 
@@ -55,7 +55,7 @@ const AdvicePage = async () => {
       consejos={consejos}
       session={session}
       fortuneId={fortuneId}
-      addButton={session && <AddAdvise />}
+      addButton={session && <AddAdvice />}
     />
   );
 };

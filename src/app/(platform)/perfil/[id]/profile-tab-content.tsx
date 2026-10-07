@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 import type { Person } from '@/components/people/person-link';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { AdviseCard } from '@/components/advises/advise-card';
+import { AdviceCard } from '@/components/advice/advice-card';
 import type { Consejo } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
@@ -21,7 +21,7 @@ import {
   type ProfileTab,
 } from '@/components/profile/profile-sections';
 import {
-  getProfileAdvises,
+  getProfileAdvice,
   getProfileArticles,
   getProfileContributions,
   getProfileConversations,
@@ -54,7 +54,7 @@ const photosPreviewCount = (total: number) =>
     ? total
     : Math.min(PHOTOS_PREVIEW, total - (total % PHOTOS_PREVIEW_COLUMNS));
 
-type Session = ComponentProps<typeof AdviseCard>['session'];
+type Session = ComponentProps<typeof AdviceCard>['session'];
 
 type ProfileTalk = Awaited<ReturnType<typeof getProfileTalks>>[number];
 type ProfileSetup = Awaited<ReturnType<typeof getProfileSetups>>[number];
@@ -128,10 +128,10 @@ const TalkRows = ({ talks }: { talks: ProfileTalk[] }) => (
   </RuledGrid>
 );
 
-const AdviseRows = ({ advises, session }: { advises: Consejo[]; session: Session }) => (
+const AdviceRows = ({ advice, session }: { advice: Consejo[]; session: Session }) => (
   <RuledGrid className="grid-cols-1 md:grid-cols-2">
-    {advises.map((consejo) => (
-      <AdviseCard key={consejo.id} session={session} consejo={consejo} showAuthor={false} />
+    {advice.map((consejo) => (
+      <AdviceCard key={consejo.id} session={session} consejo={consejo} showAuthor={false} />
     ))}
   </RuledGrid>
 );
@@ -150,10 +150,10 @@ type TabProps = {
 };
 
 async function OverviewTab({ userId, firstName, session, person }: TabProps) {
-  const [projects, advises, talks, articles, events, photos, setups, conversations, github] =
+  const [projects, advice, talks, articles, events, photos, setups, conversations, github] =
     await Promise.all([
       getProfileProjects(userId),
-      getProfileAdvises(userId),
+      getProfileAdvice(userId),
       getProfileTalks(userId),
       getProfileArticles(userId),
       getProfileEvents(userId),
@@ -167,7 +167,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
   const previewPhotos = photos.slice(0, photosPreviewCount(photos.length));
   const hasActivity =
     projects.length +
-      advises.length +
+      advice.length +
       talks.length +
       articles.length +
       events.length +
@@ -182,7 +182,7 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
       {/* PCN contributions (PRs, commits, lines) are only in their own section below. */}
       <RuledGrid className="grid-cols-2 sm:grid-cols-5">
         <ProfileStat label="proyectos" value={projects.length} href={tabHref('proyectos')} />
-        <ProfileStat label="consejos" value={advises.length} href={tabHref('consejos')} />
+        <ProfileStat label="consejos" value={advice.length} href={tabHref('consejos')} />
         <ProfileStat label="charlas" value={talks.length} href={tabHref('charlas')} />
         <ProfileStat label="artículos" value={articles.length} href={tabHref('articulos')} />
         <ProfileStat
@@ -286,14 +286,14 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
         </section>
       )}
 
-      {advises.length > 0 && (
+      {advice.length > 0 && (
         <section>
           <SectionHeading
             label="consejos"
-            count={advises.length}
-            href={advises.length > PREVIEW ? tabHref('consejos') : undefined}
+            count={advice.length}
+            href={advice.length > PREVIEW ? tabHref('consejos') : undefined}
           />
-          <AdviseRows advises={advises.slice(0, PREVIEW)} session={session} />
+          <AdviceRows advice={advice.slice(0, PREVIEW)} session={session} />
         </section>
       )}
     </div>
@@ -318,9 +318,9 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
       break;
     }
     case 'consejos': {
-      const advises = await getProfileAdvises(userId);
-      content = advises.length ? (
-        <AdviseRows advises={advises} session={session} />
+      const advice = await getProfileAdvice(userId);
+      content = advice.length ? (
+        <AdviceRows advice={advice} session={session} />
       ) : (
         <EmptyLine>{firstName} todavía no compartió ningún consejo.</EmptyLine>
       );

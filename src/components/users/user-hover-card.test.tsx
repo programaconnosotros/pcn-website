@@ -21,7 +21,7 @@ const summary = (overrides: Partial<UserSummary> = {}): UserSummary => ({
     talks: 3,
     eventsAttended: 10,
     eventsOrganized: 0,
-    advises: 2,
+    advice: 2,
     projects: 1,
     photos: 4,
     commits: 120,

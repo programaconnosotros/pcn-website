@@ -11,7 +11,7 @@ import {
   authorKey,
   consejoTopics,
   filterConsejos,
-  fromAdvise,
+  fromAdvice,
   fromExtracted,
   sortByNewest,
   type Consejo,
@@ -129,10 +129,10 @@ describe('fromExtracted', () => {
   });
 });
 
-describe('fromAdvise', () => {
+describe('fromAdvice', () => {
   it('maps a published consejo', () => {
     const createdAt = new Date('2026-01-02T03:04:05.000Z');
-    const result = fromAdvise({
+    const result = fromAdvice({
       id: 'a1',
       content: 'Medí antes de optimizar.',
       authorId: 'user-1',

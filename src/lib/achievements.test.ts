@@ -94,7 +94,7 @@ describe('getAchievementMetrics', () => {
     (prismaMock.eventOrganizer.groupBy as jest.Mock).mockResolvedValue([]);
     (prismaMock.eventRegistration.groupBy as jest.Mock).mockResolvedValue([]);
     prismaMock.project.findMany.mockResolvedValue([]);
-    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([]);
+    (prismaMock.advice.groupBy as jest.Mock).mockResolvedValue([]);
   });
 
   it('counts talks per speaker', async () => {
@@ -258,14 +258,14 @@ describe('getAchievementMetrics', () => {
   });
 
   it('counts published consejos per author', async () => {
-    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([
+    (prismaMock.advice.groupBy as jest.Mock).mockResolvedValue([
       { authorId: 'user-1', _count: { _all: 7 } },
     ]);
 
     const metrics = await getAchievementMetrics(['user-1']);
 
     expect(metrics.get('user-1')?.consejos).toBe(7);
-    expect(prismaMock.advise.groupBy).toHaveBeenCalledWith(
+    expect(prismaMock.advice.groupBy).toHaveBeenCalledWith(
       expect.objectContaining({ where: { authorId: { in: ['user-1'] } } }),
     );
   });
@@ -273,7 +273,7 @@ describe('getAchievementMetrics', () => {
   it('adds the consejos extracted from conversations to their linked WhatsApp names', async () => {
     const { member } = extractedConsejos[0];
     const extracted = extractedConsejos.filter((consejo) => consejo.member === member).length;
-    (prismaMock.advise.groupBy as jest.Mock).mockResolvedValue([
+    (prismaMock.advice.groupBy as jest.Mock).mockResolvedValue([
       { authorId: 'user-1', _count: { _all: 2 } },
     ]);
     prismaMock.identityLink.findMany.mockImplementation((async ({ where }: any) =>

@@ -4,7 +4,7 @@ import raw from './consejos.json';
 
 // Consejos picked out of the /conversaciones summaries: advice a member gave in the WhatsApp
 // group, rewritten as a standalone consejo. Nobody published these by hand, so they live here
-// next to the conversation data instead of in the Advise table (which needs a platform author):
+// next to the conversation data instead of in the Advice table (which needs a platform author):
 // the member is a WhatsApp name, resolved to a platform user at render time through the identity
 // links an admin manages on /vinculos, exactly like /conversaciones does.
 

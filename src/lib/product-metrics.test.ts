@@ -98,7 +98,7 @@ beforeEach(() => {
     return Promise.resolve(gte < range.from ? 1 : 5);
   }) as never);
   prismaMock.eventRegistration.count.mockResolvedValue(11);
-  prismaMock.advise.count.mockResolvedValue(12);
+  prismaMock.advice.count.mockResolvedValue(12);
   prismaMock.comment.count.mockResolvedValue(13);
   prismaMock.like.count.mockResolvedValue(14);
   prismaMock.project.count.mockResolvedValue(15);
@@ -145,7 +145,7 @@ describe('getProductMetrics', () => {
     ]);
     expect(metrics.activity).toEqual({
       registrations: 11,
-      advises: 12,
+      advice: 12,
       comments: 13,
       likes: 14,
       projects: 15,

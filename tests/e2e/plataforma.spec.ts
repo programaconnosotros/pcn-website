@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { ADVISE, EVENTS, TESTIMONIAL, USERS } from './support/data';
+import { ADVICE, EVENTS, TESTIMONIAL, USERS } from './support/data';
 import { expect, test } from './support/fixtures';
 import { createPlatformUser, platformId, signInAs } from './support/platform-helpers';
 
@@ -344,7 +344,7 @@ test.describe('rate limits', () => {
     test.setTimeout(240_000);
     // Usuario y consejo propios: el límite es por usuario (20 comentarios cada 10 minutos)
     const user = await createPlatformUser(db, 'e2e-plt');
-    const advise = await db.advise.create({
+    const advice = await db.advice.create({
       data: {
         id: platformId('e2e-plt-consejo'),
         content: 'Consejo para probar el rate limit.',
@@ -352,7 +352,7 @@ test.describe('rate limits', () => {
       },
     });
     await signInAs(context, db, user.id);
-    await page.goto(`/consejos/${advise.id}`);
+    await page.goto(`/consejos/${advice.id}`);
 
     const box = page.getByPlaceholder('Escribe tu comentario...');
     const send = page.getByRole('button', { name: 'enviarComentario();' });
@@ -361,7 +361,7 @@ test.describe('rate limits', () => {
       await send.click();
       await expect(box).toHaveValue('');
     }
-    await expect.poll(() => db.comment.count({ where: { adviseId: advise.id } })).toBe(20);
+    await expect.poll(() => db.comment.count({ where: { adviceId: advice.id } })).toBe(20);
 
     await box.fill('comentario 21');
     await send.click();
@@ -371,7 +371,7 @@ test.describe('rate limits', () => {
       ),
     ).toBeVisible();
     await expect(page.getByText('Error al crear el comentario')).toHaveCount(0);
-    expect(await db.comment.count({ where: { adviseId: advise.id } })).toBe(20);
+    expect(await db.comment.count({ where: { adviceId: advice.id } })).toBe(20);
   });
 });
 
@@ -380,9 +380,9 @@ test.skip('TC-PLT-009 Emails en desarrollo', () => {
   // EMAIL_TRANSPORT=json, que no sale de la máquina ni pasa por MailHog.
 });
 
-test('the seeded advise and testimonial pages render', async ({ page }) => {
-  await page.goto(`/consejos/${ADVISE.id}`);
-  await expect(page.getByText(ADVISE.content).first()).toBeVisible();
+test('the seeded advice and testimonial pages render', async ({ page }) => {
+  await page.goto(`/consejos/${ADVICE.id}`);
+  await expect(page.getByText(ADVICE.content).first()).toBeVisible();
   await page.goto(`/testimonios/${TESTIMONIAL.id}`);
   await expect(page.getByText(TESTIMONIAL.body).first()).toBeVisible();
 });

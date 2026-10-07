@@ -52,27 +52,27 @@ const STATIC_ROUTES = [
 const listSitemapRecords = cached(
   'sitemap-records',
   async () => {
-    const [events, advises, testimonials, setups] = await Promise.all([
+    const [events, advice, testimonials, setups] = await Promise.all([
       prisma.event.findMany({
         where: { deletedAt: null },
         select: { id: true, updatedAt: true },
       }),
-      prisma.advise.findMany({ select: { id: true, updatedAt: true } }),
+      prisma.advice.findMany({ select: { id: true, updatedAt: true } }),
       prisma.testimonial.findMany({ select: { id: true, updatedAt: true } }),
       prisma.setup.findMany({ select: { id: true, updatedAt: true } }),
     ]);
-    return { events, advises, testimonials, setups };
+    return { events, advice, testimonials, setups };
   },
-  { models: ['Event', 'Advise', 'Testimonial', 'Setup'] },
+  { models: ['Event', 'Advice', 'Testimonial', 'Setup'] },
 );
 
 async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
   try {
-    const { events, advises, testimonials, setups } = await listSitemapRecords();
+    const { events, advice, testimonials, setups } = await listSitemapRecords();
 
     return [
       ...events.map((e) => ({ url: `${SITE_URL}/eventos/${e.id}`, lastModified: e.updatedAt })),
-      ...advises.map((a) => ({ url: `${SITE_URL}/consejos/${a.id}`, lastModified: a.updatedAt })),
+      ...advice.map((a) => ({ url: `${SITE_URL}/consejos/${a.id}`, lastModified: a.updatedAt })),
       ...extractedConsejos.map((c) => ({
         url: `${SITE_URL}/consejos/${c.id}`,
         lastModified: new Date(c.conversation.date),

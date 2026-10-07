@@ -254,7 +254,7 @@ const getLogrosData = cached(
       'EventRegistration',
       'Project',
       'ProjectMember',
-      'Advise',
+      'Advice',
     ],
     revalidate: 3600,
   },

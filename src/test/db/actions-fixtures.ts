@@ -33,8 +33,8 @@ export const quickUser = (
   });
 };
 
-export const makeAdvise = (authorId: string, content = `Un consejo útil ${uid()}`) =>
-  prisma.advise.create({ data: { authorId, content } });
+export const makeAdvice = (authorId: string, content = `Un consejo útil ${uid()}`) =>
+  prisma.advice.create({ data: { authorId, content } });
 
 /** El token que quedó en la cookie de sesión (después de `actAs` o de un `createSession`). */
 export const sessionCookie = async () => (await cookies()).get(SESSION_COOKIE)?.value;

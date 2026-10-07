@@ -9,7 +9,7 @@ const updatedAt = new Date('2025-05-01T00:00:00Z');
 
 const mockRecords = () => {
   prismaMock.event.findMany.mockResolvedValue([{ id: 'e1', updatedAt }] as any);
-  prismaMock.advise.findMany.mockResolvedValue([{ id: 'a1', updatedAt }] as any);
+  prismaMock.advice.findMany.mockResolvedValue([{ id: 'a1', updatedAt }] as any);
   prismaMock.testimonial.findMany.mockResolvedValue([{ id: 't1', updatedAt }] as any);
   prismaMock.setup.findMany.mockResolvedValue([{ id: 's1', updatedAt }] as any);
 };
@@ -55,7 +55,7 @@ describe('sitemap', () => {
 
   it('still serves the static part when the database is down', async () => {
     prismaMock.event.findMany.mockRejectedValue(new Error('db down'));
-    prismaMock.advise.findMany.mockResolvedValue([]);
+    prismaMock.advice.findMany.mockResolvedValue([]);
     prismaMock.testimonial.findMany.mockResolvedValue([]);
     prismaMock.setup.findMany.mockResolvedValue([]);
 

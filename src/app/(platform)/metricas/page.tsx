@@ -79,7 +79,7 @@ export default async function MetricasPage(props: Props) {
     { label: 'videos vistos', key: 'videos' },
     { label: 'likes', key: 'likes' },
     { label: 'comentarios', key: 'comments' },
-    { label: 'consejos', key: 'advises' },
+    { label: 'consejos', key: 'advice' },
     { label: 'proyectos', key: 'projects' },
     { label: 'propuestas de charla', key: 'proposals' },
   ] as const;

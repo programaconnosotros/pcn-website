@@ -1,4 +1,4 @@
-import { ConsejosNavProvider } from '@/components/advises/consejos-nav';
+import { ConsejosNavProvider } from '@/components/advice/consejos-nav';
 
 // `modal` is the parallel route that shows /consejos/<id> as a dialog over the list.
 export default function ConsejosLayout({

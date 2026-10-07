@@ -13,7 +13,7 @@ const DB_CANDIDATES = 20;
 const loadSearchCorpus = cached(
   'search-corpus',
   async () => {
-    const [events, talks, advises, projects, users, setups, photos, testimonials] =
+    const [events, talks, advice, projects, users, setups, photos, testimonials] =
       await Promise.all([
         prisma.event.findMany({
           where: { deletedAt: null },
@@ -31,7 +31,7 @@ const loadSearchCorpus = cached(
         prisma.talk.findMany({
           select: { title: true, description: true, speakers: { select: { speakerName: true } } },
         }),
-        prisma.advise.findMany({
+        prisma.advice.findMany({
           orderBy: { createdAt: 'desc' },
           select: { id: true, content: true, author: { select: { name: true } } },
         }),
@@ -72,14 +72,14 @@ const loadSearchCorpus = cached(
           select: { id: true, body: true, user: { select: { name: true } } },
         }),
       ]);
-    return { events, talks, advises, projects, users, setups, photos, testimonials };
+    return { events, talks, advice, projects, users, setups, photos, testimonials };
   },
   {
     models: [
       'Event',
       'Talk',
       'TalkSpeaker',
-      'Advise',
+      'Advice',
       'User',
       'Project',
       'Setup',
@@ -106,8 +106,8 @@ const loadDatabaseEntries = async (query: string) => {
       contains(talk.title, talk.description, ...talk.speakers.map((s) => s.speakerName)),
     )
     .slice(0, DB_CANDIDATES);
-  const advises = corpus.advises
-    .filter((advise) => contains(advise.content, advise.author.name))
+  const advice = corpus.advice
+    .filter((advice) => contains(advice.content, advice.author.name))
     .slice(0, DB_CANDIDATES);
   const projects = corpus.projects
     .filter((project) => contains(project.title, project.description))
@@ -164,15 +164,15 @@ const loadDatabaseEntries = async (query: string) => {
         href: '/charlas',
       });
     }),
-    ...advises.map((advise) =>
+    ...advice.map((advice) =>
       toEntry(
         {
           type: 'consejo',
-          title: clip(advise.content),
-          subtitle: advise.author.name,
-          href: `/consejos/${advise.id}`,
+          title: clip(advice.content),
+          subtitle: advice.author.name,
+          href: `/consejos/${advice.id}`,
         },
-        advise.content,
+        advice.content,
       ),
     ),
     ...users.map((user) =>

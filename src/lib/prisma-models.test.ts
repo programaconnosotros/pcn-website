@@ -13,8 +13,8 @@ describe('modelsIn', () => {
   });
 
   it('follows relation filters', () => {
-    const read = modelsIn('User', { where: { advises: { some: {} } } });
-    expect([...read].sort()).toEqual(['Advise', 'User']);
+    const read = modelsIn('User', { where: { advice: { some: {} } } });
+    expect([...read].sort()).toEqual(['Advice', 'User']);
   });
 
   it('finds the tables a nested write touches', () => {
@@ -25,15 +25,15 @@ describe('modelsIn', () => {
   });
 
   it('adds what a delete removes in cascade', () => {
-    const written = modelsIn('Advise', { where: { id: 'a1' } }, true);
-    expect(written.has('Advise')).toBe(true);
+    const written = modelsIn('Advice', { where: { id: 'a1' } }, true);
+    expect(written.has('Advice')).toBe(true);
     expect(written.has('Comment')).toBe(true);
     expect(written.has('Like')).toBe(true);
   });
 
   it('cascades transitively', () => {
     const written = modelsIn('User', { where: { id: 'u1' } }, true);
-    for (const model of ['User', 'Advise', 'Comment', 'Like', 'Session', 'ProjectMember'])
+    for (const model of ['User', 'Advice', 'Comment', 'Like', 'Session', 'ProjectMember'])
       expect(written.has(model as never)).toBe(true);
   });
 
