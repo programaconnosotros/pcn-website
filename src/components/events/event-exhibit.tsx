@@ -12,10 +12,11 @@ const plural = (count: number, singular: string, pluralForm: string) =>
 
 // A past event as a piece in the museum: the flyer hangs in full color on its mat, with a plaque
 // (catalog number, date, place and what the night left behind) underneath.
-export const EventExhibit: React.FC<{ event: EventWithCount; catalogNumber: number }> = ({
-  event,
-  catalogNumber,
-}) => {
+export const EventExhibit: React.FC<{
+  event: EventWithCount;
+  /** Its Nº among every event; left out where it isn't known, like a profile. */
+  catalogNumber?: number;
+}> = ({ event, catalogNumber }) => {
   const location = event.isOnline ? 'online' : (event.placeName ?? event.city);
   const memories = [
     event._count.registrations > 0 && plural(event._count.registrations, 'inscripto', 'inscriptos'),
@@ -38,9 +39,11 @@ export const EventExhibit: React.FC<{ event: EventWithCount; catalogNumber: numb
       </div>
 
       <div className="flex flex-col gap-1 border-l-2 border-pcnGreen-200 pl-2.5 transition-colors group-hover:border-pcnGreen sm:pl-3">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-500 sm:text-[11px]">
-          Nº {String(catalogNumber).padStart(3, '0')}
-        </p>
+        {catalogNumber !== undefined && (
+          <p className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-500 sm:text-[11px]">
+            Nº {String(catalogNumber).padStart(3, '0')}
+          </p>
+        )}
         <h3 className="line-clamp-2 font-mono text-sm font-semibold leading-snug group-hover:text-pcnGreen">
           {event.name}
         </h3>

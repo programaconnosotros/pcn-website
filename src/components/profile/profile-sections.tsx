@@ -9,6 +9,10 @@ import { RuledCell, RuledGrid, ruledCellClassName } from '@/components/ui/ruled-
 import { cn } from '@/lib/utils';
 import { ProfileTabLink } from './profile-tab-nav';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
+import type { fetchEvents } from '@/actions/events/fetch-events';
+import { EventExhibit } from '@/components/events/event-exhibit';
+import { EventPoster } from '@/components/events/event-poster';
+import { hasEventEnded } from '@/lib/event-status';
 
 export { PROFILE_TABS, isProfileTab, type ProfileTab } from './profile-tabs';
 
@@ -141,62 +145,60 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
   </RuledGrid>
 );
 
-export type ProfileEvent = {
-  id: string;
-  name: string;
-  date: Date;
-  isOnline: boolean;
-  placeName: string | null;
-  city: string | null;
-  flyerImages: string[];
-};
+export type ProfileEvent = Awaited<ReturnType<typeof fetchEvents>>[number];
 
-// Events the person organized, newest first, each linking to its page.
-export const OrganizedEventRows = ({ events }: { events: ProfileEvent[] }) => (
-  <RuledGrid className="grid-cols-1">
-    {events.map((event) => {
-      const where = event.isOnline
-        ? 'online'
-        : [event.placeName, event.city].filter(Boolean).join(', ');
-      return (
-        <Link
-          key={event.id}
-          href={`/eventos/${event.id}`}
-          className={cn(ruledCellClassName, 'group flex items-center gap-3 p-3')}
-        >
-          {event.flyerImages[0] && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={event.flyerImages[0]}
-              alt=""
-              loading="lazy"
-              className="h-12 w-12 shrink-0 object-cover"
-            />
-          )}
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h3 className="truncate font-mono text-sm font-semibold group-hover:text-pcnGreen">
-              {event.name}
-            </h3>
-            <p className="truncate font-mono text-[11px] text-muted-foreground/70">
-              {new Date(event.date).toLocaleDateString('es-AR', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-              {where && (
-                <>
-                  <span className="text-pcnGreen-500"> @ </span>
-                  {where}
-                </>
-              )}
-            </p>
-          </div>
-          <ChevronRight className="size-4 shrink-0 text-muted-foreground group-hover:text-pcnGreen" />
-        </Link>
-      );
-    })}
-  </RuledGrid>
+const EventGroup = ({
+  label,
+  count,
+  children,
+}: {
+  label?: string;
+  count: number;
+  children: React.ReactNode;
+}) => (
+  <div>
+    {label && (
+      <h3 className="mb-2 font-mono text-[11px] text-muted-foreground">
+        <span className="text-pcnGreen-500">{'// '}</span>
+        {label} <span className="text-muted-foreground/60">({count})</span>
+      </h3>
+    )}
+    {children}
+  </div>
 );
+
+// Events the person organized, shown like on /eventos: the ones still ahead as posters, soonest
+// first, and the past ones as framed flyers in the museum, newest first.
+export const OrganizedEvents = ({ events }: { events: ProfileEvent[] }) => {
+  const now = new Date();
+  const upcoming = events.filter((event) => !hasEventEnded(event, now)).reverse();
+  const past = events.filter((event) => hasEventEnded(event, now));
+  // Labels only when there's something to tell apart.
+  const labelled = upcoming.length > 0 && past.length > 0;
+
+  return (
+    <div className="flex flex-col gap-6">
+      {upcoming.length > 0 && (
+        <EventGroup label={labelled ? 'próximos' : undefined} count={upcoming.length}>
+          <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+            {upcoming.map((event) => (
+              <EventPoster key={event.id} event={event} />
+            ))}
+          </RuledGrid>
+        </EventGroup>
+      )}
+      {past.length > 0 && (
+        <EventGroup label={labelled ? 'realizados' : undefined} count={past.length}>
+          <RuledGrid className="grid-cols-2 md:grid-cols-3">
+            {past.map((event) => (
+              <EventExhibit key={event.id} event={event} />
+            ))}
+          </RuledGrid>
+        </EventGroup>
+      )}
+    </div>
+  );
+};
 
 export type ProfilePhoto = {
   id: string;

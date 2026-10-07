@@ -13,7 +13,7 @@ import {
   ContributionStats,
   ConversationRows,
   EmptyLine,
-  OrganizedEventRows,
+  OrganizedEvents,
   PhotoGrid,
   ProfileStat,
   ProjectRows,
@@ -45,6 +45,8 @@ const CONVERSATIONS_PREVIEW = 4;
 const SETUPS_PREVIEW = 3;
 // One full row of talk cells.
 const TALKS_PREVIEW = 3;
+// One full row of past events' flyers.
+const EVENTS_PREVIEW = 3;
 // The photos preview is a fixed 3-column grid: it shows up to two full rows and never leaves a
 // row half empty when the person has more photos than fit.
 const PHOTOS_PREVIEW_COLUMNS = 3;
@@ -186,9 +188,9 @@ async function OverviewTab({ userId, firstName, session, person }: TabProps) {
           <SectionHeading
             label="eventos organizados"
             count={events.length}
-            href={events.length > PREVIEW ? tabHref('eventos') : undefined}
+            href={events.length > EVENTS_PREVIEW ? tabHref('eventos') : undefined}
           />
-          <OrganizedEventRows events={events.slice(0, PREVIEW)} />
+          <OrganizedEvents events={events.slice(0, EVENTS_PREVIEW)} />
         </section>
       )}
 
@@ -352,7 +354,7 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
     case 'eventos': {
       const events = await getProfileEvents(userId);
       content = events.length ? (
-        <OrganizedEventRows events={events} />
+        <OrganizedEvents events={events} />
       ) : (
         <EmptyLine>{firstName} todavía no organizó ningún evento.</EmptyLine>
       );

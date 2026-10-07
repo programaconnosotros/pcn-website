@@ -5,7 +5,7 @@ import { ProfileArticles } from '@/components/profile/profile-articles';
 import {
   ContributionStats,
   ConversationRows,
-  OrganizedEventRows,
+  OrganizedEvents,
   PhotoGrid,
   ProjectRows,
 } from '@/components/profile/profile-sections';
@@ -58,7 +58,7 @@ jest.mock('@/components/profile/profile-sections', () => {
   return {
     ...actual,
     ProjectRows: rows('proyectos', 'projects'),
-    OrganizedEventRows: rows('eventos', 'events'),
+    OrganizedEvents: rows('eventos', 'events'),
     PhotoGrid: rows('fotos', 'photos'),
     ConversationRows: rows('conversaciones', 'conversations'),
     ContributionStats: rows('contribuidores', 'contributions'),
@@ -418,6 +418,6 @@ describe('ProfileTabContent: one section', () => {
     expect(
       screen.getByText('No pudimos traer las contribuciones de GitHub, probá más tarde.'),
     ).toBeInTheDocument();
-    expect(OrganizedEventRows).not.toHaveBeenCalled();
+    expect(OrganizedEvents).not.toHaveBeenCalled();
   });
 });

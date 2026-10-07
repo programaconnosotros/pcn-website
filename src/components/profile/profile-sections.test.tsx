@@ -3,7 +3,7 @@ import {
   ContributionStats,
   ConversationRows,
   EmptyLine,
-  OrganizedEventRows,
+  OrganizedEvents,
   PhotoGrid,
   ProfileStat,
   ProjectRows,
@@ -77,44 +77,74 @@ describe('profile sections', () => {
     expect(screen.getByRole('link', { name: /Bot/ })).toHaveTextContent('colaborador');
   });
 
-  it('lists organized events with flyer and place', () => {
+  it('shows upcoming organized events as posters and past ones as framed flyers', () => {
+    const event = (id: string, name: string, date: Date, overrides = {}) => ({
+      id,
+      name,
+      date,
+      endDate: null,
+      description: `Sobre ${name}`,
+      isOnline: false,
+      placeName: 'Bar',
+      city: 'Córdoba',
+      flyerImages: [`/${id}.png`],
+      markedAsFull: false,
+      capacity: null,
+      _count: { registrations: 12, galleryItems: 3, talks: 2 },
+      ...overrides,
+    });
     render(
-      <OrganizedEventRows
-        events={[
-          {
-            id: 'e1',
-            name: 'Meetup',
-            date: new Date(2030, 4, 10),
-            isOnline: false,
-            placeName: 'Bar',
-            city: 'Córdoba',
-            flyerImages: ['/f.png'],
-          },
-          {
-            id: 'e2',
-            name: 'Online',
-            date: new Date(2030, 5, 10),
-            isOnline: true,
-            placeName: null,
-            city: null,
-            flyerImages: [],
-          },
-          {
-            id: 'e3',
-            name: 'Sin lugar',
-            date: new Date(2030, 6, 10),
-            isOnline: false,
-            placeName: null,
-            city: null,
-            flyerImages: [],
-          },
-        ]}
+      <OrganizedEvents
+        events={
+          [
+            event('e1', 'Hackatón', new Date(2099, 6, 10), { isOnline: true }),
+            event('e2', 'Meetup', new Date(2099, 4, 10)),
+            event('e3', 'Primer meetup', new Date(2020, 4, 10)),
+          ] as never
+        }
       />,
     );
 
-    expect(screen.getByRole('link', { name: /Meetup/ })).toHaveTextContent('@ Bar, Córdoba');
-    expect(screen.getByRole('link', { name: /^Online/ })).toHaveTextContent('@ online');
-    expect(screen.getByRole('link', { name: /Sin lugar/ })).not.toHaveTextContent('@');
+    const upcoming = screen.getByRole('heading', { name: /próximos/ }).parentElement!;
+    // Soonest first.
+    expect(
+      within(upcoming)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href')),
+    ).toEqual(['/eventos/e2', '/eventos/e1']);
+    expect(within(upcoming).getByRole('img', { name: 'Flyer de Meetup' })).toBeInTheDocument();
+    expect(within(upcoming).getByText('online')).toBeInTheDocument();
+
+    const past = screen.getByRole('heading', { name: /realizados/ }).parentElement!;
+    const exhibit = within(past).getByRole('link', { name: /Primer meetup/ });
+    expect(exhibit).toHaveAttribute('href', '/eventos/e3');
+    expect(exhibit).toHaveTextContent('12 inscriptos · 2 charlas · 3 fotos');
+    expect(exhibit).not.toHaveTextContent('Nº');
+  });
+
+  it('leaves out the group labels when every event is on the same side', () => {
+    render(
+      <OrganizedEvents
+        events={
+          [
+            {
+              id: 'e1',
+              name: 'Primer meetup',
+              date: new Date(2020, 4, 10),
+              endDate: null,
+              isOnline: false,
+              placeName: null,
+              city: null,
+              flyerImages: [],
+              _count: { registrations: 0, galleryItems: 0, talks: 0 },
+            },
+          ] as never
+        }
+      />,
+    );
+
+    expect(screen.getByRole('link', { name: /Primer meetup/ })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /realizados/ })).not.toBeInTheDocument();
   });
 
   it('shows photos and videos the person is in', () => {

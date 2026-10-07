@@ -111,20 +111,21 @@ export const getProfileProjects = cached(
 export const getProfileEvents = cached(
   'profile-events',
   (userId: string) =>
+    // Same shape as /eventos, so the profile shows them with its posters and exhibits.
     prisma.event.findMany({
       where: { deletedAt: null, organizers: { some: { userId } } },
-      select: {
-        id: true,
-        name: true,
-        date: true,
-        isOnline: true,
-        placeName: true,
-        city: true,
-        flyerImages: true,
+      include: {
+        _count: {
+          select: {
+            registrations: { where: { cancelledAt: null } },
+            galleryItems: true,
+            talks: true,
+          },
+        },
       },
       orderBy: { date: 'desc' },
     }),
-  { models: ['Event', 'EventOrganizer'] },
+  { models: ['Event', 'EventOrganizer', 'EventRegistration', 'GalleryItem', 'Talk'] },
 );
 
 // Videos from /videos where the user is credited, through the speaker names linked to them in
