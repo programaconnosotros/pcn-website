@@ -4,7 +4,9 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { findSession } from '@/lib/session';
+import { consejoTarget } from '@/lib/consejo-target';
 
+/** Like or unlike a consejo, published or extracted from a conversation (an `auto-` id). */
 export const toggleLike = async (adviceId: string) => {
   try {
     const sessionId = (await cookies()).get('sessionId');
@@ -15,13 +17,9 @@ export const toggleLike = async (adviceId: string) => {
 
     if (!session) throw new Error('Session not found');
 
-    const existingLike = await prisma.like.findUnique({
-      where: {
-        userId_adviceId: {
-          userId: session.userId,
-          adviceId,
-        },
-      },
+    const target = consejoTarget(adviceId);
+    const existingLike = await prisma.like.findFirst({
+      where: { userId: session.userId, ...target },
     });
 
     if (existingLike) {
@@ -32,10 +30,7 @@ export const toggleLike = async (adviceId: string) => {
       });
     } else {
       await prisma.like.create({
-        data: {
-          userId: session.userId,
-          adviceId,
-        },
+        data: { userId: session.userId, ...target },
       });
     }
 

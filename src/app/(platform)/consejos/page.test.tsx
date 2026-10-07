@@ -27,6 +27,7 @@ jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/lib/consejos-server', () => ({
   listAdvice: jest.fn(),
   getConsejoDetail: jest.fn(),
+  listExtractedActivity: jest.fn(async () => ({})),
 }));
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
 jest.mock('@/data/consejos-extraidos', () => ({

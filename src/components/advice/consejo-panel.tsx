@@ -162,9 +162,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
               <Prompt>whoami</Prompt>
               <ConsejoAuthorChip author={consejo.author} />
               <span className="ml-auto flex shrink-0 items-center gap-1">
-                {consejo.likes && (
-                  <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
-                )}
+                <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
                 {canEditOrDelete && (
                   <AdviceOptions
                     adviceId={consejo.id}
@@ -196,11 +194,9 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
             )}
           </div>
 
-          {!consejo.source && (
-            <div className="-mx-5 border-t border-dashed border-pcnGreen-200 sm:-mx-6 [&>div]:border-b-0 [&>div]:border-r-0">
-              <CommentSection adviceId={consejo.id} comments={comments} session={session} />
-            </div>
-          )}
+          <div className="-mx-5 border-t border-dashed border-pcnGreen-200 sm:-mx-6 [&>div]:border-b-0 [&>div]:border-r-0">
+            <CommentSection adviceId={consejo.id} comments={comments} session={session} />
+          </div>
         </div>
       </div>
 

@@ -140,9 +140,7 @@ export const AdviceCard = ({
               {consejo.commentCount}
             </span>
           )}
-          {consejo.likes && (
-            <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
-          )}
+          <LikeButton adviceId={consejo.id} likes={consejo.likes} session={session} />
           {canEditOrDelete && (
             <AdviceOptions adviceId={consejo.id} content={consejo.content} tags={consejo.tags} />
           )}

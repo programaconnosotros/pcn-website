@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { revalidatePath } from 'next/cache';
+import { extractedConsejos } from '@/data/consejos-extraidos';
 import { toggleLike } from './like-advice';
 
 const baseSession = {
@@ -41,7 +42,7 @@ describe('toggleLike', () => {
   it('creates a like when none exists and returns success', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
-    prismaMock.like.findUnique.mockResolvedValue(null);
+    prismaMock.like.findFirst.mockResolvedValue(null);
     prismaMock.like.create.mockResolvedValue(existingLike as any);
 
     const result = await toggleLike('advice-1');
@@ -59,13 +60,37 @@ describe('toggleLike', () => {
   it('deletes the like when one already exists and returns success', async () => {
     mockCookies({ sessionId: 'session-1' });
     prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
-    prismaMock.like.findUnique.mockResolvedValue(existingLike as any);
+    prismaMock.like.findFirst.mockResolvedValue(existingLike as any);
     prismaMock.like.delete.mockResolvedValue(existingLike as any);
 
     const result = await toggleLike('advice-1');
 
     expect(result).toEqual({ success: true });
     expect(prismaMock.like.delete).toHaveBeenCalledWith({ where: { id: 'like-1' } });
+    expect(prismaMock.like.create).not.toHaveBeenCalled();
+  });
+
+  it('likes a consejo extracted from a conversation by its id', async () => {
+    const [extracted] = extractedConsejos;
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.like.findFirst.mockResolvedValue(null);
+
+    await toggleLike(extracted.id);
+
+    expect(prismaMock.like.findFirst).toHaveBeenCalledWith({
+      where: { userId: 'user-1', extractedId: extracted.id },
+    });
+    expect(prismaMock.like.create).toHaveBeenCalledWith({
+      data: { userId: 'user-1', extractedId: extracted.id },
+    });
+  });
+
+  it('refuses extracted ids that do not exist', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await expect(toggleLike('auto-inventado')).rejects.toThrow('Consejo no encontrado');
     expect(prismaMock.like.create).not.toHaveBeenCalled();
   });
 });

@@ -145,8 +145,11 @@ model Comment {
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
-  advice   Advice @relation(fields: [adviceId], references: [id], onDelete: Cascade)
-  adviceId String
+  // A comment is on a published consejo (adviceId) or on one extracted from the conversations
+  // (extractedId, an `auto-` id from src/data/consejos-extraidos); exactly one is set.
+  advice      Advice? @relation(fields: [adviceId], references: [id], onDelete: Cascade)
+  adviceId    String?
+  extractedId String?
 
   parentComment   Comment?  @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: Cascade)
   parentCommentId String?
@@ -156,6 +159,7 @@ model Comment {
   updatedAt DateTime @updatedAt
 
   @@index([adviceId])
+  @@index([extractedId])
   @@index([authorId])
   @@index([parentCommentId])
 }
@@ -355,18 +359,22 @@ model SetupLike {
 }
 
 model Like {
-  id       String @id @default(cuid())
-  userId   String
-  adviceId String
+  id          String  @id @default(cuid())
+  userId      String
+  // Like Comment: a published consejo (adviceId) or an extracted one (extractedId), exactly one.
+  adviceId    String?
+  extractedId String?
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  advice Advice @relation(fields: [adviceId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  advice Advice? @relation(fields: [adviceId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, adviceId])
+  @@unique([userId, extractedId])
   @@index([adviceId])
+  @@index([extractedId])
 }
 
 model JobOffers {

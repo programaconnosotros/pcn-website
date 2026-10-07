@@ -302,6 +302,12 @@ export const dbModels: DbModel[] = [
         name: 'adviceId',
         type: 'String',
         fk: true,
+        optional: true,
+      },
+      {
+        name: 'extractedId',
+        type: 'String',
+        optional: true,
       },
       {
         name: 'parentCommentId',
@@ -760,6 +766,12 @@ export const dbModels: DbModel[] = [
         name: 'adviceId',
         type: 'String',
         fk: true,
+        optional: true,
+      },
+      {
+        name: 'extractedId',
+        type: 'String',
+        optional: true,
       },
       {
         name: 'createdAt',
@@ -770,7 +782,10 @@ export const dbModels: DbModel[] = [
         type: 'DateTime',
       },
     ],
-    uniques: [['userId', 'adviceId']],
+    uniques: [
+      ['userId', 'adviceId'],
+      ['userId', 'extractedId'],
+    ],
   },
   {
     name: 'JobOffers',
@@ -1960,7 +1975,7 @@ export const dbRelations: DbRelation[] = [
     from: 'Comment',
     to: 'Advice',
     label: 'advice',
-    optional: false,
+    optional: true,
     many: true,
     onDelete: 'Cascade',
   },
@@ -2088,7 +2103,7 @@ export const dbRelations: DbRelation[] = [
     from: 'Like',
     to: 'Advice',
     label: 'advice',
-    optional: false,
+    optional: true,
     many: true,
     onDelete: 'Cascade',
   },

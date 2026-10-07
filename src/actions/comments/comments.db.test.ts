@@ -2,6 +2,9 @@ import prisma from '@/lib/prisma';
 import { createComment } from '@/actions/comments/create-comment';
 import { actAs } from '@/test/db/fixtures';
 import { expiredModel, makeAdvice, quickUser } from '@/test/db/actions-fixtures';
+import { toggleLike } from '@/actions/advice/like-advice';
+import { extractedConsejos } from '@/data/consejos-extraidos';
+import { listExtractedActivity } from '@/lib/consejos-server';
 
 // Comentarios y respuestas de los consejos contra Postgres real.
 
@@ -124,5 +127,56 @@ describe('createComment', () => {
       createComment({ content: 'Respuesta', adviceId: adviceB.id, parentCommentId: parentOnA.id }),
     ).rejects.toThrow();
     expect(await prisma.comment.count({ where: { adviceId: adviceB.id } })).toBe(0);
+  });
+});
+
+describe('consejos extracted from the conversations', () => {
+  const [extracted] = extractedConsejos;
+
+  it('take comments, replies and likes by their auto- id', async () => {
+    const user = await quickUser();
+    await actAs(user.id);
+
+    const comment = await createComment({
+      content: 'Me sirvió',
+      adviceId: extracted.id,
+      parentCommentId: null,
+    });
+    const reply = await createComment({
+      content: 'A mí también',
+      adviceId: extracted.id,
+      parentCommentId: comment.id,
+    });
+    await toggleLike(extracted.id);
+
+    expect(
+      await prisma.comment.findMany({
+        where: { id: { in: [comment.id, reply.id] } },
+        select: { adviceId: true, extractedId: true },
+      }),
+    ).toEqual([
+      { adviceId: null, extractedId: extracted.id },
+      { adviceId: null, extractedId: extracted.id },
+    ]);
+    const activity = await listExtractedActivity();
+    expect(activity[extracted.id].likes).toContainEqual({ userId: user.id });
+
+    await toggleLike(extracted.id);
+    expect(await prisma.like.count({ where: { userId: user.id, extractedId: extracted.id } })).toBe(
+      0,
+    );
+  });
+
+  it('point every like and comment at exactly one consejo', async () => {
+    const user = await quickUser();
+    const advice = await makeAdvice(user.id);
+    await expect(
+      prisma.like.create({
+        data: { userId: user.id, adviceId: advice.id, extractedId: extracted.id },
+      }),
+    ).rejects.toThrow();
+    await expect(
+      prisma.comment.create({ data: { content: 'Huérfano', authorId: user.id } }),
+    ).rejects.toThrow();
   });
 });

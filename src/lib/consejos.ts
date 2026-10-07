@@ -27,8 +27,8 @@ export type Consejo = {
   /** ISO date: when it was published, or the day of the conversation it came from. */
   createdAt: string;
   author: ConsejoAuthor;
-  /** Who liked it. Only published consejos can be liked; extracted ones are `null`. */
-  likes: Pick<Like, 'userId'>[] | null;
+  /** Who liked it. */
+  likes: Pick<Like, 'userId'>[];
   commentCount: number;
   tags: string[];
   /** Set when the consejo was extracted automatically from a conversation. */
@@ -52,9 +52,13 @@ export const fromAdvice = (advice: AdviceWithAuthor): Consejo => ({
   source: null,
 });
 
+/** Likes and comment count of an extracted consejo, which live in the database by its id. */
+export type ExtractedActivity = { likes: Pick<Like, 'userId'>[]; commentCount: number };
+
 export const fromExtracted = (
   consejo: ExtractedConsejo,
   profiles: Record<string, LinkedUser>,
+  activity: ExtractedActivity = { likes: [], commentCount: 0 },
 ): Consejo => {
   const linked = profiles[consejo.member];
   return {
@@ -65,8 +69,8 @@ export const fromExtracted = (
     author: linked
       ? { id: linked.id, name: linked.name, image: linked.image }
       : { id: null, name: consejo.member, image: null },
-    likes: null,
-    commentCount: 0,
+    likes: activity.likes,
+    commentCount: activity.commentCount,
     tags: consejo.tags,
     source: { ...consejo.conversation },
   };
@@ -174,7 +178,7 @@ export const filterConsejos = (consejos: Consejo[], filters: ConsejoFilters): Co
         ).includes(query)),
   );
 
-  const likes = (consejo: Consejo) => consejo.likes?.length ?? 0;
+  const likes = (consejo: Consejo) => consejo.likes.length;
   const byNewest = (a: Consejo, b: Consejo) => b.createdAt.localeCompare(a.createdAt);
   const comparators: Record<ConsejoSort, (_a: Consejo, _b: Consejo) => number> = {
     recientes: byNewest,

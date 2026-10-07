@@ -17,6 +17,7 @@ import {
 } from './profile-data';
 
 jest.mock('@/lib/identity-links', () => ({ getUserIdentities: jest.fn() }));
+jest.mock('@/lib/consejos-server', () => ({ listExtractedActivity: jest.fn(async () => ({})) }));
 jest.mock('@/lib/github-stats', () => ({ getCollaborationStats: jest.fn() }));
 jest.mock('@/lib/gallery-signing', () => ({
   signGalleryItem: (item: { src: string; thumbSrc: string }) => ({

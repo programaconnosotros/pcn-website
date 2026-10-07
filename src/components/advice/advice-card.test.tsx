@@ -54,7 +54,7 @@ describe('AdviceCard', () => {
       <AdviceCard
         consejo={buildConsejo({
           source: extractedSource,
-          likes: null,
+          likes: [],
           author: { id: null, name: 'Juan WA', image: null },
         })}
         session={buildSession({ role: 'ADMIN' })}
@@ -69,7 +69,7 @@ describe('AdviceCard', () => {
     expect(
       screen.getByTitle('Todavía no vinculado a un perfil de la plataforma'),
     ).toHaveTextContent('@Juan WA');
-    expect(screen.queryByRole('button', { name: /Me gusta/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Me gusta/ })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Opciones' })).not.toBeInTheDocument();
   });
 

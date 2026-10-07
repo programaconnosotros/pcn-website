@@ -2,7 +2,7 @@ import { findExtractedConsejo } from '@/data/consejos-extraidos';
 import { getIdentityMap } from '@/lib/identity-links';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { fromAdvice, fromExtracted } from '@/lib/consejos';
+import { fromAdvice, fromExtracted, type ExtractedActivity } from '@/lib/consejos';
 
 const authorSelect = { select: { id: true, name: true, image: true } } as const;
 
@@ -23,6 +23,46 @@ export const listAdvice = cached(
   { models: ADVICE_MODELS },
 );
 
+/**
+ * Likes and comment counts of the consejos extracted from the conversations, by `auto-` id.
+ * Cached; the list and the detail both read it.
+ */
+export const listExtractedActivity = cached(
+  'extracted-consejo-activity',
+  async () => {
+    const [likes, comments] = await Promise.all([
+      prisma.like.findMany({
+        where: { extractedId: { not: null } },
+        select: { userId: true, extractedId: true },
+      }),
+      prisma.comment.groupBy({
+        by: ['extractedId'],
+        where: { extractedId: { not: null } },
+        _count: { _all: true },
+      }),
+    ]);
+    const activity: Record<string, ExtractedActivity> = {};
+    const of = (id: string) => (activity[id] ??= { likes: [], commentCount: 0 });
+    for (const { userId, extractedId } of likes) of(extractedId!).likes.push({ userId });
+    for (const { extractedId, _count } of comments) of(extractedId!).commentCount = _count._all;
+    return activity;
+  },
+  { models: ['Like', 'Comment'] },
+);
+
+const commentsInclude = {
+  where: { parentCommentId: null },
+  orderBy: { createdAt: 'desc' },
+  include: { author: authorSelect, replies: { include: { author: authorSelect } } },
+} as const;
+
+const findExtractedComments = cached(
+  'extracted-consejo-comments',
+  (extractedId: string) =>
+    prisma.comment.findMany({ ...commentsInclude, where: { extractedId, parentCommentId: null } }),
+  { models: ['Comment', 'User'] },
+);
+
 const findAdvice = cached(
   'advice',
   (id: string) =>
@@ -32,11 +72,7 @@ const findAdvice = cached(
         author: authorSelect,
         likes: { select: { userId: true } },
         _count: { select: { comments: true } },
-        comments: {
-          where: { parentCommentId: null },
-          orderBy: { createdAt: 'desc' },
-          include: { author: authorSelect, replies: { include: { author: authorSelect } } },
-        },
+        comments: commentsInclude,
       },
     }),
   { models: ADVICE_MODELS },
@@ -49,8 +85,12 @@ const findAdvice = cached(
 export const getConsejoDetail = async (id: string) => {
   const extracted = findExtractedConsejo(id);
   if (extracted) {
-    const profiles = await getIdentityMap('whatsapp');
-    return { consejo: fromExtracted(extracted, profiles), comments: [] };
+    const [profiles, activity, comments] = await Promise.all([
+      getIdentityMap('whatsapp'),
+      listExtractedActivity(),
+      findExtractedComments(id),
+    ]);
+    return { consejo: fromExtracted(extracted, profiles, activity[id]), comments };
   }
 
   const advice = await findAdvice(id);

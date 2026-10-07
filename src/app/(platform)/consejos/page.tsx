@@ -1,6 +1,6 @@
 import { AddAdvice } from '@/components/advice/add-advice';
 import { cookies } from 'next/headers';
-import { listAdvice } from '@/lib/consejos-server';
+import { listAdvice, listExtractedActivity } from '@/lib/consejos-server';
 import { ConsejosClient } from './consejos-client';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
@@ -35,15 +35,16 @@ const AdvicePage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   // La sesión y los consejos no dependen entre sí: se piden a la vez.
-  const [session, advice, profiles] = await Promise.all([
+  const [session, advice, profiles, activity] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
     listAdvice(),
     getIdentityMap('whatsapp'),
+    listExtractedActivity(),
   ]);
 
   const consejos = sortByNewest([
     ...advice.map(fromAdvice),
-    ...extractedConsejos.map((consejo) => fromExtracted(consejo, profiles)),
+    ...extractedConsejos.map((consejo) => fromExtracted(consejo, profiles, activity[consejo.id])),
   ]);
 
   // Consejo of the day: changes daily, the same for everyone that day.

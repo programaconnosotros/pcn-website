@@ -29,7 +29,7 @@ const consejos = [
     content: 'Practicá entrevistas',
     createdAt: '2025-03-01T00:00:00.000Z',
     author: { id: null, name: 'Diego', image: null },
-    likes: null,
+    likes: [],
     tags: ['entrevistas'],
     source: extractedSource,
   }),

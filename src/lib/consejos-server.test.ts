@@ -1,7 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { extractedConsejos } from '@/data/consejos-extraidos';
 import { getIdentityMap } from '@/lib/identity-links';
-import { getConsejoDetail, listAdvice } from './consejos-server';
+import { getConsejoDetail, listAdvice, listExtractedActivity } from './consejos-server';
 
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
 
@@ -14,6 +14,32 @@ const advice = {
   _count: { comments: 1 },
   comments: [{ id: 'c1', content: 'Gracias', author: { id: 'u2' }, replies: [] }],
 };
+
+beforeEach(() => {
+  prismaMock.like.findMany.mockResolvedValue([]);
+  jest.mocked(prismaMock.comment.groupBy as jest.Mock).mockResolvedValue([] as never);
+  prismaMock.comment.findMany.mockResolvedValue([]);
+});
+
+describe('listExtractedActivity', () => {
+  it('groups the likes and comment counts of extracted consejos by id', async () => {
+    prismaMock.like.findMany.mockResolvedValue([
+      { userId: 'u1', extractedId: 'auto-a' },
+      { userId: 'u2', extractedId: 'auto-a' },
+      { userId: 'u1', extractedId: 'auto-b' },
+    ] as never);
+    jest.mocked(prismaMock.comment.groupBy as jest.Mock).mockResolvedValue([
+      { extractedId: 'auto-b', _count: { _all: 3 } },
+      { extractedId: 'auto-c', _count: { _all: 1 } },
+    ] as never);
+
+    expect(await listExtractedActivity()).toEqual({
+      'auto-a': { likes: [{ userId: 'u1' }, { userId: 'u2' }], commentCount: 0 },
+      'auto-b': { likes: [{ userId: 'u1' }], commentCount: 3 },
+      'auto-c': { likes: [], commentCount: 1 },
+    });
+  });
+});
 
 describe('listAdvice', () => {
   it('lists every consejo, newest first, with likes and comment counts', async () => {
@@ -58,14 +84,30 @@ describe('getConsejoDetail', () => {
     const extracted = extractedConsejos[0];
     const linked = { id: 'u7', name: 'Linked', image: 'l.png' };
     (getIdentityMap as jest.Mock).mockResolvedValue({ [extracted.member]: linked });
+    prismaMock.like.findMany.mockResolvedValue([
+      { userId: 'u2', extractedId: extracted.id },
+    ] as never);
+    jest
+      .mocked(prismaMock.comment.groupBy as jest.Mock)
+      .mockResolvedValue([{ extractedId: extracted.id, _count: { _all: 1 } }] as never);
+    const comments = [{ id: 'c9', content: 'Buenísimo', replies: [] }];
+    prismaMock.comment.findMany.mockResolvedValue(comments as never);
 
     const detail = await getConsejoDetail(extracted.id);
 
     expect(getIdentityMap).toHaveBeenCalledWith('whatsapp');
     expect(detail).toEqual({
-      consejo: expect.objectContaining({ id: extracted.id, author: linked, likes: null }),
-      comments: [],
+      consejo: expect.objectContaining({
+        id: extracted.id,
+        author: linked,
+        likes: [{ userId: 'u2' }],
+        commentCount: 1,
+      }),
+      comments,
     });
+    expect(prismaMock.comment.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { extractedId: extracted.id, parentCommentId: null } }),
+    );
     expect(prismaMock.advice.findUnique).not.toHaveBeenCalled();
   });
 });

@@ -60,10 +60,10 @@ describe('ConsejoPanel', () => {
     expect(screen.getByText('comentarios')).toBeInTheDocument();
   });
 
-  it('explains auto-extracted consejos and has no comments', () => {
+  it('explains auto-extracted consejos, which take likes and comments too', () => {
     render(
       <ConsejoPanel
-        consejo={buildConsejo({ source: extractedSource, likes: null })}
+        consejo={buildConsejo({ source: extractedSource, likes: [] })}
         comments={[]}
         session={buildSession({ role: 'ADMIN' })}
         variant="page"
@@ -76,7 +76,8 @@ describe('ConsejoPanel', () => {
       extractedSource.href,
     );
     expect(screen.getByText(/Bruno no lo publicó manualmente/)).toBeInTheDocument();
-    expect(screen.queryByText('comentarios')).not.toBeInTheDocument();
+    expect(screen.getByText('comentarios')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Me gusta/ })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Opciones' })).not.toBeInTheDocument();
   });
 });

@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { consejoTarget } from '@/lib/consejo-target';
 
 const commentSchema = z.object({
   content: z
@@ -33,14 +34,16 @@ export const createComment = async ({
 
   if (!session) throw new Error('Sesión no encontrada');
 
+  const target = consejoTarget(validatedData.adviceId);
+
   // Una respuesta va en el mismo consejo que su comentario padre: si no, quedaría colgada de un
   // hilo de otro consejo y no aparecería en ninguno.
   if (validatedData.parentCommentId) {
     const parent = await prisma.comment.findUnique({
       where: { id: validatedData.parentCommentId },
-      select: { adviceId: true },
+      select: { adviceId: true, extractedId: true },
     });
-    if (!parent || parent.adviceId !== validatedData.adviceId) {
+    if (!parent || (parent.adviceId ?? parent.extractedId) !== validatedData.adviceId) {
       throw new Error('El comentario al que respondés no es de este consejo');
     }
   }
@@ -49,7 +52,7 @@ export const createComment = async ({
     data: {
       content: validatedData.content,
       authorId: session.userId,
-      adviceId: validatedData.adviceId,
+      ...target,
       parentCommentId: validatedData.parentCommentId,
     },
     include: {

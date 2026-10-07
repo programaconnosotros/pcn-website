@@ -72,7 +72,7 @@ describe('filterConsejos', () => {
     createdAt: '2026-02-01',
     tags: ['herramientas'],
     source: { title: 'Merge vs rebase', date: '2026-02-01', hash: 'abc1234', href: '/x' },
-    likes: null,
+    likes: [],
   });
   const c = published({ id: 'c', commentCount: 4, createdAt: '2025-12-01' });
   const all = [a, b, c];
@@ -138,9 +138,15 @@ describe('fromExtracted', () => {
   it('keeps the WhatsApp name when nobody linked a profile', () => {
     const result = fromExtracted(consejo, {});
     expect(result.author).toEqual({ id: null, name: consejo.member, image: null });
-    expect(result.likes).toBeNull();
+    expect(result.likes).toEqual([]);
+    expect(result.commentCount).toBe(0);
     expect(result.source).toMatchObject({ href: consejo.conversation.href });
     expect(result.source?.href).toMatch(/^\/conversaciones\?c=[0-9a-f]{7}$/);
+  });
+
+  it('carries the likes and comments it got on the site', () => {
+    const activity = { likes: [{ userId: 'u1' }], commentCount: 2 };
+    expect(fromExtracted(consejo, {}, activity)).toMatchObject(activity);
   });
 
   it('attributes it to the linked platform user', () => {
