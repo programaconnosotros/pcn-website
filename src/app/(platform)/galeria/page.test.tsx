@@ -92,6 +92,8 @@ beforeEach(() => {
   signIn(null);
   jest.mocked(prisma.event.findMany).mockResolvedValue(events as never);
   jest.mocked(getGalleryNeighbours).mockResolvedValue({
+    previous: null,
+    next: null,
     previousId: null,
     nextId: null,
     index: 0,
@@ -259,12 +261,35 @@ describe('/galeria/[id]', () => {
     });
   });
 
+  it('lays wide photos across the page and keeps tall ones beside their details', async () => {
+    jest.mocked(getGalleryItem).mockResolvedValue(buildItem({ width: 1600, height: 900 }) as never);
+    const wide = renderInPlatform(await GalleryItemPage(props()));
+    expect(wide.container.querySelector('[data-layout]')).toHaveAttribute(
+      'data-layout',
+      'landscape',
+    );
+    wide.unmount();
+
+    jest.mocked(getGalleryItem).mockResolvedValue(buildItem({ width: 900, height: 1600 }) as never);
+    const tall = renderInPlatform(await GalleryItemPage(props()));
+    expect(tall.container.querySelector('[data-layout]')).toHaveAttribute(
+      'data-layout',
+      'portrait',
+    );
+    // The grid's thumbnail shows while the full photo loads.
+    expect(
+      screen.getByRole('img', { name: 'Foto de la comunidad' }).style.backgroundImage,
+    ).toContain('url(');
+  });
+
   it('keeps the filters in prev/next links and the counter', async () => {
     signIn(member as never);
     jest
       .mocked(getGalleryItem)
       .mockResolvedValue(buildItem({ event, description: 'Charla' }) as never);
     jest.mocked(getGalleryNeighbours).mockResolvedValue({
+      previous: { id: 'p0', kind: 'PHOTO', thumbUrl: '/p0-t.webp', fullUrl: '/p0.webp' },
+      next: { id: 'n1', kind: 'VIDEO', thumbUrl: '/n1-t.webp', fullUrl: '/n1.mp4' },
       previousId: 'p0',
       nextId: 'n1',
       index: 2,

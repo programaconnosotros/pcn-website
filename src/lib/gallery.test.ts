@@ -85,10 +85,16 @@ describe('getGalleryItem', () => {
 describe('getGalleryNeighbours', () => {
   beforeEach(() => findMany().mockResolvedValue([tile('a'), tile('b'), tile('c')] as never));
 
-  it('returns the previous and next ids', async () => {
+  it('returns the previous and next ids, with their signed files to preload', async () => {
     await expect(getGalleryNeighbours('b')).resolves.toEqual({
       previousId: 'a',
       nextId: 'c',
+      previous: expect.objectContaining({
+        id: 'a',
+        thumbUrl: '/thumb/a.webp',
+        fullUrl: '/full/a.webp',
+      }),
+      next: expect.objectContaining({ id: 'c', fullUrl: '/full/c.webp' }),
       index: 1,
       total: 3,
     });
@@ -109,6 +115,8 @@ describe('getGalleryNeighbours', () => {
     await expect(getGalleryNeighbours('z', { type: 'videos' })).resolves.toEqual({
       previousId: null,
       nextId: null,
+      previous: null,
+      next: null,
       index: -1,
       total: 3,
     });
@@ -120,6 +128,8 @@ describe('getGalleryNeighbours', () => {
     await expect(getGalleryNeighbours('a')).resolves.toEqual({
       previousId: null,
       nextId: null,
+      previous: null,
+      next: null,
       index: 0,
       total: 1,
     });

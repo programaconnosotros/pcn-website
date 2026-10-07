@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { preload } from 'react-dom';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
@@ -100,7 +101,18 @@ export default async function GalleryItemPage(props: Props) {
   const isAdmin = viewer?.role === 'ADMIN';
 
   // Prev/next stay within the filters the visitor was browsing the gallery with.
-  const { previousId, nextId, index, total } = await getGalleryNeighbours(id, filter);
+  const { previousId, nextId, previous, next, index, total } = await getGalleryNeighbours(
+    id,
+    filter,
+  );
+  // Fetch the neighbours' files at low priority, so stepping to them shows them right away.
+  for (const neighbour of [next, previous]) {
+    if (!neighbour || neighbour.id === id) continue;
+    preload(neighbour.kind === 'VIDEO' ? neighbour.thumbUrl : neighbour.fullUrl, {
+      as: 'image',
+      fetchPriority: 'low',
+    });
+  }
   const query = galleryQuery(filter);
   const hrefFor = (itemId: string | null) => itemId && `/galeria/${itemId}${query}`;
   const isVideo = photo.kind === 'VIDEO';
@@ -108,6 +120,8 @@ export default async function GalleryItemPage(props: Props) {
   const nextHref = hrefFor(nextId);
 
   const caption = photoCaption(photo);
+  // Wide photos get the page's full width with the details below; tall ones keep them beside.
+  const landscape = !!photo.width && !!photo.height && photo.width / photo.height >= 1.25;
 
   // Photos from an event were taken where the event happened.
   const event = photo.event;
@@ -175,8 +189,19 @@ export default async function GalleryItemPage(props: Props) {
         />
       </StickyHeader>
 
-      <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:divide-x lg:divide-y-0">
-        <div className="relative flex min-h-[50vh] items-center justify-center bg-black lg:min-h-[calc(100dvh-10rem)]">
+      <div
+        className={cn(
+          'mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200',
+          !landscape && 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:divide-x lg:divide-y-0',
+        )}
+        data-layout={landscape ? 'landscape' : 'portrait'}
+      >
+        <div
+          className={cn(
+            'relative flex items-center justify-center bg-black',
+            landscape ? 'min-h-[40vh]' : 'min-h-[50vh] lg:min-h-[calc(100dvh-10rem)]',
+          )}
+        >
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(4,244,190,0.06),transparent_70%)]"
@@ -202,13 +227,31 @@ export default async function GalleryItemPage(props: Props) {
               alt={caption}
               width={photo.width ?? undefined}
               height={photo.height ?? undefined}
-              className="photo-glitch-in relative max-h-[calc(100dvh-10rem)] w-auto max-w-full select-none object-contain p-2 sm:p-4"
+              fetchPriority="high"
+              // The thumbnail (already cached from the grid) shows until the full photo arrives.
+              style={{
+                backgroundImage: `url("${photo.thumbUrl}")`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundOrigin: 'content-box',
+              }}
+              className={cn(
+                'photo-glitch-in relative max-h-[calc(100dvh-10rem)] select-none object-contain p-2 sm:p-4',
+                landscape ? 'h-auto w-full' : 'w-auto max-w-full',
+              )}
               draggable={false}
             />
           )}
         </div>
 
-        <div className="flex flex-col divide-y divide-pcnGreen-200">
+        <div
+          className={cn(
+            'flex flex-col divide-y divide-pcnGreen-200',
+            // Below a wide photo, the details sit side by side instead of in a tall column.
+            landscape && 'md:grid md:grid-cols-3 md:divide-x md:divide-y-0',
+          )}
+        >
           <Section title="info">
             <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
               <dt className="text-muted-foreground">fecha</dt>
@@ -274,7 +317,12 @@ export default async function GalleryItemPage(props: Props) {
             />
           </Section>
 
-          <p className="hidden p-3 font-mono text-[10px] text-muted-foreground lg:block">
+          <p
+            className={cn(
+              'hidden p-3 font-mono text-[10px] text-muted-foreground lg:block',
+              landscape && 'lg:hidden',
+            )}
+          >
             <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">←</kbd>{' '}
             <kbd className="rounded-sm border border-pcnGreen-200 px-1 text-pcnGreen-600">→</kbd>{' '}
             navegar

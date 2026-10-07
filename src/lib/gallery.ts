@@ -145,17 +145,32 @@ export async function getGalleryItem(id: string) {
  * filters the visitor was browsing with.
  */
 export async function getGalleryNeighbours(id: string, filter: Partial<GalleryFilter> = {}) {
-  const ids = (await listGalleryTiles(filterKey(filter))).map((item) => item.id);
-
-  const index = ids.indexOf(id);
-  if (index === -1 || ids.length < 2) {
-    return { previousId: null, nextId: null, index, total: ids.length };
+  const tiles = await listGalleryTiles(filterKey(filter));
+  const index = tiles.findIndex((item) => item.id === id);
+  if (index === -1 || tiles.length < 2) {
+    return {
+      previousId: null,
+      nextId: null,
+      previous: null,
+      next: null,
+      index,
+      total: tiles.length,
+    };
   }
+  const previous = tiles[(index - 1 + tiles.length) % tiles.length];
+  const next = tiles[(index + 1) % tiles.length];
+  // What the photo page needs to preload the neighbours' files, signed for this request.
+  const preloadable = ({ id, kind, src, thumbSrc }: (typeof tiles)[number]) => {
+    const { thumbUrl, fullUrl } = signGalleryItem({ src, thumbSrc });
+    return { id, kind, thumbUrl, fullUrl };
+  };
   return {
-    previousId: ids[(index - 1 + ids.length) % ids.length],
-    nextId: ids[(index + 1) % ids.length],
+    previousId: previous.id,
+    nextId: next.id,
+    previous: preloadable(previous),
+    next: preloadable(next),
     index,
-    total: ids.length,
+    total: tiles.length,
   };
 }
 
