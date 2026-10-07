@@ -8,7 +8,8 @@ export type InterviewArea =
   | 'devops'
   | 'ux-ui'
   | 'product-engineering'
-  | 'project-manager';
+  | 'project-manager'
+  | 'soft-skills';
 export type InterviewTrack =
   | 'react'
   | 'ios'
@@ -25,7 +26,8 @@ export type InterviewTrack =
   | 'devops'
   | 'ux-ui'
   | 'product-engineering'
-  | 'project-manager';
+  | 'project-manager'
+  | 'soft-skills';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
 /** Tools a track can add on top of its general questions, one question bank each. */
 export type TrackTool =
@@ -63,6 +65,11 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
     stack: 'qué construir, cómo medirlo',
   },
   { id: 'project-manager', label: 'Project manager', stack: 'planificación, riesgos y equipos' },
+  {
+    id: 'soft-skills',
+    label: 'Soft skills y liderazgo',
+    stack: 'comunicación, conflictos y liderazgo',
+  },
 ];
 
 // Areas with more than one track (frontend, backend) ask for the technology after picking the area.
@@ -171,6 +178,12 @@ export const TRACKS: {
     area: 'project-manager',
     label: 'Project manager',
     stack: 'planificación, riesgos y equipos',
+  },
+  {
+    id: 'soft-skills',
+    area: 'soft-skills',
+    label: 'Soft skills y liderazgo',
+    stack: 'comunicación, conflictos y liderazgo',
   },
 ];
 

@@ -29,6 +29,7 @@ import { securityQuestions } from './security';
 import { terraformQuestions } from './terraform';
 import { uxUiQuestions } from './ux-ui';
 import { vercelQuestions } from './vercel';
+import { softSkillsQuestions } from './soft-skills';
 import {
   TRACK_TOOLS,
   type InterviewQuestion,
@@ -57,6 +58,7 @@ export const interviewQuestions: Record<InterviewTrack, Record<Seniority, Interv
   'ux-ui': uxUiQuestions,
   'product-engineering': productEngineeringQuestions,
   'project-manager': projectManagerQuestions,
+  'soft-skills': softSkillsQuestions,
 };
 
 // Quality engineering adds general automation questions plus one bank per selected tool.

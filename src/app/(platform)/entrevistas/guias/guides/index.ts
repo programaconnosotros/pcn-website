@@ -16,6 +16,7 @@ import { reactGuide } from './react';
 import { reactNativeGuide } from './react-native';
 import { securityGuide } from './security';
 import { uxUiGuide } from './ux-ui';
+import { softSkillsGuide } from './soft-skills';
 import { endpointCourses, type RecommendedCourse } from '@/data/recommended-courses';
 import type { InterviewGuide } from './types';
 
@@ -38,6 +39,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   'ux-ui': uxUiGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,
+  'soft-skills': softSkillsGuide,
 };
 
 /** Guides that apply to every track, with where to practice what they teach. */
