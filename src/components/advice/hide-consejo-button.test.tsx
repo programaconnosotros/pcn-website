@@ -18,7 +18,7 @@ jest.mock('@/actions/advice/hide-extracted-consejo', () => ({
 describe('HideConsejoButton', () => {
   it('hides after confirming, goes back to the list and offers to undo', async () => {
     const user = userEvent.setup();
-    render(<HideConsejoButton consejoId="auto-x" />);
+    render(<HideConsejoButton consejoId="auto-x" isOwn />);
 
     await user.click(screen.getByRole('button', { name: /ocultar/ }));
     await user.click(screen.getByRole('button', { name: 'Ocultar' }));
@@ -34,10 +34,19 @@ describe('HideConsejoButton', () => {
     expect(push).toHaveBeenLastCalledWith('/consejos/auto-x');
   });
 
+  it('tells an admin hiding someone else’s consejo to hide it, not that it isn’t theirs', async () => {
+    const user = userEvent.setup();
+    render(<HideConsejoButton consejoId="auto-x" isOwn={false} />);
+
+    expect(screen.queryByText(/no es mío/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'ocultar consejo' }));
+    expect(screen.queryByText(/se te atribuye a vos/)).not.toBeInTheDocument();
+  });
+
   it('reports a failure and stays', async () => {
     jest.mocked(hideExtractedConsejo).mockRejectedValueOnce(new Error('x'));
     const user = userEvent.setup();
-    render(<HideConsejoButton consejoId="auto-x" />);
+    render(<HideConsejoButton consejoId="auto-x" isOwn />);
 
     await user.click(screen.getByRole('button', { name: /ocultar/ }));
     await user.click(screen.getByRole('button', { name: 'Ocultar' }));

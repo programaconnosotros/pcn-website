@@ -21,8 +21,9 @@ import {
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 // For the member an extracted consejo is attributed to (and admins): take it off the site. The
-// toast offers to undo it right away.
-export function HideConsejoButton({ consejoId }: { consejoId: string }) {
+// toast offers to undo it right away. An admin hiding someone else's says so plainly instead of
+// "no es mío".
+export function HideConsejoButton({ consejoId, isOwn }: { consejoId: string; isOwn: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -57,15 +58,15 @@ export function HideConsejoButton({ consejoId }: { consejoId: string }) {
         className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-pcnGreen"
       >
         <EyeOff className="size-3" aria-hidden />
-        no es mío, ocultar
+        {isOwn ? 'no es mío, ocultar' : 'ocultar consejo'}
       </button>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Ocultar este consejo?</AlertDialogTitle>
           <AlertDialogDescription>
-            Se extrajo automáticamente de una conversación y se te atribuye a vos. Si no lo dijiste
-            así o preferís que no figure, deja de aparecer en /consejos, en tu perfil y en la
-            búsqueda.
+            {isOwn
+              ? 'Se extrajo automáticamente de una conversación y se te atribuye a vos. Si no lo dijiste así o preferís que no figure, deja de aparecer en /consejos, en tu perfil y en la búsqueda.'
+              : 'Se extrajo automáticamente de una conversación. Deja de aparecer en /consejos, en el perfil de la persona a la que se atribuye y en la búsqueda.'}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

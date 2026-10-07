@@ -192,7 +192,7 @@ export function ConsejoPanel({ consejo, comments, session, variant, nav }: Conse
                   automáticamente del resumen de una conversación del grupo de WhatsApp.{' '}
                   {consejo.author.name} no lo publicó manualmente.
                 </p>
-                {canHide && <HideConsejoButton consejoId={consejo.id} />}
+                {canHide && <HideConsejoButton consejoId={consejo.id} isOwn={isAuthor} />}
               </div>
             )}
           </div>
