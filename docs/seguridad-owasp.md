@@ -212,7 +212,7 @@ elige de una allowlist de fragmentos fijos con `Prisma.sql`, nunca desde el inpu
   El id del usuario va como dato asociado, así que copiar el valor a otra fila no sirve. En
   producción el servidor no arranca sin la clave (`src/instrumentation.ts`); en local se usa una
   fija de desarrollo. Cambiar la clave desactiva la app de autenticación de todos: habría que
-  re-cifrar los secretos con la nueva.
+  re-cifrar los secretos con la nueva. Detalle en `docs/verificacion-en-dos-pasos.md`.
 
 ## A08 Integridad de software y datos
 
