@@ -260,14 +260,17 @@ export async function getEventCover(eventId: string, coverPhotoId: string | null
 
 export type EventCover = Awaited<ReturnType<typeof getEventCover>>;
 
-/** The most recently uploaded photos and videos, newest upload first. */
+/**
+ * The most recent photos and videos by when they were taken, newest first: uploading an old
+ * album shouldn't push last week's event off the home.
+ */
 const findLatestGalleryItems = cached(
   'gallery-latest',
   (take: number) =>
     prisma.galleryItem.findMany({
       where: visibleGalleryItem,
       select: galleryTileSelect,
-      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
       take,
     }),
   { models: GALLERY_MODELS },

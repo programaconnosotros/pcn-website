@@ -18,7 +18,7 @@ export const LatestPhotosSection = async () => {
         eyebrow="Galería"
         title={
           <>
-            Últimas <span className="text-pcnGreen">fotos</span> subidas
+            Últimas <span className="text-pcnGreen">fotos</span>
           </>
         }
         description="Momentos de meetups, conferencias y encuentros de la comunidad."

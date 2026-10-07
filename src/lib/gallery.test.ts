@@ -212,13 +212,16 @@ describe('getEventCover', () => {
 });
 
 describe('listLatestGalleryItems', () => {
-  it('takes the newest uploads and signs them', async () => {
+  it('takes the most recently taken items, not the latest uploads, and signs them', async () => {
     findMany().mockResolvedValue([tile('a')] as never);
 
     await expect(listLatestGalleryItems(3)).resolves.toEqual([
       { ...tile('a'), thumbUrl: '/thumb/a.webp', fullUrl: '/full/a.webp' },
     ]);
-    expect(findMany().mock.calls[0][0]).toMatchObject({ take: 3 });
+    expect(findMany().mock.calls[0][0]).toMatchObject({
+      take: 3,
+      orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
+    });
   });
 });
 
