@@ -13,7 +13,8 @@ export const adviceSchema = z.object({
         .min(2)
         .max(24),
     )
-    .max(3, { message: 'Elegí 3 categorías como máximo' }),
+    .max(3, { message: 'Elegí 3 categorías como máximo' })
+    .default([]),
 });
 
 export type AdviceFormData = z.infer<typeof adviceSchema>;
