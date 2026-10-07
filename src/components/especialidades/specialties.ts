@@ -536,3 +536,9 @@ export const specialtyGroups: SpecialtyGroup[] = [
 ];
 
 export const specialties = specialtyGroups.flatMap((group) => group.specialties);
+
+/** How many specialties someone can mark on their profile. */
+export const MAX_USER_SPECIALTIES = 3;
+
+const specialtyIds = new Set(specialties.map((specialty) => specialty.id));
+export const isSpecialtyId = (id: string) => specialtyIds.has(id);

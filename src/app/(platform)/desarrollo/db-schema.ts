@@ -168,6 +168,11 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'specialties',
+        type: 'String',
+        list: true,
+      },
+      {
         name: 'createdAt',
         type: 'DateTime',
       },

@@ -50,6 +50,9 @@ model User {
   positions            UserPosition[]
   career               String?
   studyPlace           String? // Dónde estudia (universidad, autodidacta, etc.)
+  // Especialidades de /especialidades en las que la persona se considera especialista (ids del
+  // repo, src/components/especialidades/specialties.ts, sin clave foránea).
+  specialties          String[]              @default([])
   sessions             Session[]
   advises              Advise[]
   languages            UserLanguage[]

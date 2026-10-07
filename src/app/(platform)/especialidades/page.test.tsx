@@ -8,12 +8,17 @@ import SpecialtiesPage, { metadata } from './page';
 jest.mock('@/components/especialidades/table-of-contents', () => ({
   TableOfContents: () => <nav aria-label="índice" />,
 }));
+jest.mock('@/lib/specialists', () => ({
+  getSpecialists: jest.fn(async () => ({
+    backend: [{ id: 'u1', name: 'Ana', image: null, explicit: true }],
+  })),
+}));
 jest.mock('@/components/especialidades/specialty-card', () => ({
   SpecialtyCard: jest.fn(({ specialty }) => <article>{specialty.id}</article>),
 }));
 
 describe('SpecialtiesPage', () => {
-  beforeEach(() => renderInPlatform(<SpecialtiesPage />));
+  beforeEach(async () => renderInPlatform(await SpecialtiesPage()));
 
   it('counts the specialties and areas in the title', () => {
     expect(
@@ -29,6 +34,14 @@ describe('SpecialtiesPage', () => {
       expect(heading.closest('section')).toHaveAttribute('id', group.id);
     }
     expect(SpecialtyCard).toHaveBeenCalledTimes(specialties.length);
+  });
+
+  it('hands each card the community members working in it', () => {
+    const calls = jest.mocked(SpecialtyCard).mock.calls.map(([props]) => props);
+    expect(calls.find((props) => props.specialty.id === 'backend')?.specialists).toEqual([
+      { id: 'u1', name: 'Ana', image: null, explicit: true },
+    ]);
+    expect(calls.find((props) => props.specialty.id === 'qa')?.specialists).toEqual([]);
   });
 
   it('describes the page for social cards', () => {

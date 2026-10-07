@@ -98,4 +98,46 @@ describe('InfluencerCard', () => {
       'https://tiktok.com/x',
     );
   });
+
+  describe('specialists', () => {
+    const specialty = specialties.find((item) => item.id === 'backend')!;
+
+    it('links each member to their profile and says who marked it themselves', () => {
+      render(
+        <SpecialtyCard
+          specialty={specialty}
+          specialists={[
+            { id: 'u1', name: 'Ana López', image: null, explicit: true },
+            { id: 'u2', name: 'Beto Díaz', image: null, explicit: false },
+          ]}
+        />,
+      );
+      expect(screen.getByText('[2]')).toBeInTheDocument();
+      const ana = screen.getByRole('link', { name: /Ana/ });
+      expect(ana).toHaveAttribute('href', '/perfil/u1');
+      expect(ana).toHaveAttribute('title', 'Ana López: se marcó como especialista');
+      expect(screen.getByRole('link', { name: /Beto/ })).toHaveAttribute(
+        'title',
+        'Beto Díaz: por su puesto actual',
+      );
+    });
+
+    it('caps the list and invites people to add themselves when empty', () => {
+      const many = Array.from({ length: 11 }, (_, i) => ({
+        id: `u${i}`,
+        name: `Persona ${i}`,
+        image: null,
+        explicit: true,
+      }));
+      const { unmount } = render(<SpecialtyCard specialty={specialty} specialists={many} />);
+      expect(screen.getByText('+3 más')).toBeInTheDocument();
+      unmount();
+
+      render(<SpecialtyCard specialty={specialty} specialists={[]} />);
+      expect(screen.getByRole('link', { name: 'Marcalo en tu perfil' })).toHaveAttribute(
+        'href',
+        '/perfil#especialidades',
+      );
+    });
+  });
 });

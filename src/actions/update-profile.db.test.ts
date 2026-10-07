@@ -31,6 +31,7 @@ const profile = (overrides: Partial<ProfileFormData> = {}): ProfileFormData => (
   ],
   career: 'Sistemas',
   studyPlace: 'UTN',
+  specialties: ['backend', 'devops'],
   programmingLanguages: [
     { languageId: 'typescript', color: '#3178c6', logo: 'ts.svg' },
     { languageId: 'go', color: '#00add8', logo: 'go.svg' },
@@ -78,6 +79,23 @@ describe('updateProfile', () => {
     expect(stored.languages.map((language) => language.language)).toEqual(['go', 'typescript']);
     expect(expiredModel('User')).toBe(true);
     expect(expiredModel('UserPosition')).toBe(true);
+  });
+
+  it('saves the specialties and rejects unknown or too many', async () => {
+    const user = await quickUser();
+    await actAs(user.id);
+    await updateProfile(profile());
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).specialties).toEqual([
+      'backend',
+      'devops',
+    ]);
+
+    await expect(updateProfile(profile({ specialties: ['cobol-wizard'] }))).rejects.toThrow(
+      'Especialidad inválida',
+    );
+    await expect(
+      updateProfile(profile({ specialties: ['backend', 'devops', 'qa', 'tech-lead'] })),
+    ).rejects.toThrow('hasta 3 especialidades');
   });
 
   it('clears positions and languages, and the mirrored job, when none are sent', async () => {

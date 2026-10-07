@@ -1,14 +1,14 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { profileSchema, type ProfileFormData } from '@/schemas/profile-schema';
+import { profileSchema, type ProfileInput } from '@/schemas/profile-schema';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 
-export const updateProfile = async (data: ProfileFormData) => {
+export const updateProfile = async (data: ProfileInput) => {
   await enforceRateLimit('editContent');
 
   const sessionId = (await cookies()).get('sessionId')?.value;

@@ -22,6 +22,7 @@ const validProfileData: ProfileFormData = {
   positions: [],
   career: null,
   studyPlace: null,
+  specialties: [],
   programmingLanguages: [],
 };
 

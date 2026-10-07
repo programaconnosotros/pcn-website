@@ -34,6 +34,7 @@ import { PositionsField } from './positions-field';
 import { cn } from '@/lib/utils';
 import { formActionBarClassName } from '@/components/ui/form-action-bar';
 import { FormSection } from '@/components/ui/form-section';
+import { MAX_USER_SPECIALTIES, specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
 // Lista de países
@@ -143,6 +144,7 @@ export const ProfileForm = ({
       positions: initialPositions(user),
       career: user.career ?? '',
       studyPlace: user.studyPlace ?? '',
+      specialties: user.specialties ?? [],
       programmingLanguages: languages || [],
     },
   });
@@ -256,6 +258,12 @@ export const ProfileForm = ({
       checks: LINKS.map((link) => !!values[link.name]),
     },
     { id: 'stack', title: 'stack', checks: [userLanguages.length > 0] },
+    {
+      id: 'especialidades',
+      title: 'especialidades',
+      optional: true,
+      checks: [values.specialties.length > 0],
+    },
   ].map((section) => ({
     ...section,
     optional: !!section.optional,
@@ -592,6 +600,57 @@ export const ProfileForm = ({
                   />
                 );
               })}
+            </div>
+          </FormSection>
+
+          <FormSection
+            id="especialidades"
+            index={6}
+            title="especialidades"
+            description={`en qué sos especialista (hasta ${MAX_USER_SPECIALTIES}): te listamos en /especialidades para que te contacten`}
+            {...progress('especialidades')}
+          >
+            <div className="flex flex-col gap-3">
+              {specialtyGroups.map((group) => (
+                <div key={group.id}>
+                  <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {group.title}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.specialties.map((specialty) => {
+                      const selected = values.specialties.includes(specialty.id);
+                      const full = !selected && values.specialties.length >= MAX_USER_SPECIALTIES;
+                      return (
+                        <button
+                          key={specialty.id}
+                          type="button"
+                          aria-pressed={selected}
+                          disabled={full}
+                          onClick={() =>
+                            form.setValue(
+                              'specialties',
+                              selected
+                                ? values.specialties.filter((id) => id !== specialty.id)
+                                : [...values.specialties, specialty.id],
+                              { shouldDirty: true },
+                            )
+                          }
+                          className={cn(
+                            'flex h-7 items-center gap-1.5 rounded-sm border px-2 font-mono text-[11px] transition-colors disabled:cursor-not-allowed disabled:opacity-40',
+                            selected
+                              ? 'border-pcnGreen-600 bg-pcnGreen/10 text-pcnGreen'
+                              : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-500 hover:text-foreground',
+                          )}
+                        >
+                          <specialty.icon className="size-3.5" strokeWidth={1.75} />
+                          {specialty.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              <FormError error={form.formState.errors.specialties as never} />
             </div>
           </FormSection>
 
