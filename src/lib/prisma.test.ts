@@ -65,7 +65,7 @@ describe('prisma client', () => {
     expect(PrismaClient).toHaveBeenCalledWith({
       adapter: 'adapter',
       omit: {
-        user: { password: true },
+        user: { password: true, twoFactorSecret: true, twoFactorRecoveryCodes: true },
         talkSpeaker: { speakerPhone: true },
         talkProposalSpeaker: { speakerPhone: true },
       },

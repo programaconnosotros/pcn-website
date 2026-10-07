@@ -7,6 +7,7 @@ import { DUMMY_PASSWORD_HASH, hashPassword, needsRehash } from '@/lib/password';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { createSession } from '@/lib/session';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { createTwoFactorChallenge } from '@/lib/two-factor';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -22,6 +23,7 @@ export const signIn = async (
   | { success: true; redirectTo: string }
   | { success: false; error: 'INVALID_CREDENTIALS' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
+  | { success: false; error: 'TWO_FACTOR_REQUIRED' }
 > => {
   await enforceRateLimit('signIn');
 
@@ -60,9 +62,15 @@ export const signIn = async (
       return { success: false, error: 'EMAIL_NOT_VERIFIED', email };
     }
 
-    await createSession(user.id);
-
     const redirectTo = safeRedirectPath(validatedData.redirectTo);
+
+    // With two-factor on, the password only opens the second step (src/lib/two-factor.ts).
+    if (user.twoFactorEnabledAt) {
+      await createTwoFactorChallenge(user.id, redirectTo);
+      return { success: false, error: 'TWO_FACTOR_REQUIRED' };
+    }
+
+    await createSession(user.id);
 
     return { success: true, redirectTo };
   } catch {

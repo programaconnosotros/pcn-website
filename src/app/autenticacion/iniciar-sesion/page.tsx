@@ -1,6 +1,7 @@
 'use client';
 import { notifyOsSessionChange } from '@/components/os/os-env';
 import { signIn } from '@/actions/auth/sign-in';
+import { verifyTwoFactorSignIn } from '@/actions/auth/two-factor';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -34,6 +35,9 @@ function SignInContent() {
   const redirectTo = safeRedirectPath(searchParams.get('redirect'), '');
   const autoRegister = searchParams.get('autoRegister') === 'true';
   const [isLoading, setIsLoading] = useState(false);
+  // The password was right and the account has two-factor on: ask for the code.
+  const [needsCode, setNeedsCode] = useState(false);
+  const [code, setCode] = useState('');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,6 +81,12 @@ function SignInContent() {
         return;
       }
 
+      if (result.error === 'TWO_FACTOR_REQUIRED') {
+        setNeedsCode(true);
+        setIsLoading(false);
+        return;
+      }
+
       // Error de credenciales
       if (result.error === 'INVALID_CREDENTIALS') {
         toast.error('Credenciales incorrectas.');
@@ -94,6 +104,82 @@ function SignInContent() {
       setIsLoading(false);
     }
   };
+
+  const onSubmitCode = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      const result = await verifyTwoFactorSignIn(code);
+      if (result.success) {
+        if (result.usedRecoveryCode) {
+          toast.warning(
+            `Usaste un código de recuperación: te quedan ${result.recoveryCodesLeft}. Podés generar nuevos en tu perfil.`,
+          );
+        } else {
+          toast.success('Hola! 👋');
+        }
+        notifyOsSessionChange();
+        router.push(result.redirectTo);
+        return;
+      }
+      if (result.error === 'EXPIRED') {
+        toast.error('Se venció el intento. Ingresá tu contraseña de nuevo.');
+        setNeedsCode(false);
+        form.setValue('password', '');
+      } else {
+        toast.error('El código no es válido.');
+      }
+      setCode('');
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'No pudimos verificar el código.'));
+      setIsLoading(false);
+    }
+  };
+
+  if (needsCode) {
+    return (
+      <AuthShell
+        command="login --2fa"
+        title="Verificación en dos pasos"
+        description="Ingresá el código de 6 dígitos de tu app de autenticación, o uno de tus códigos de recuperación."
+      >
+        <form onSubmit={onSubmitCode} className="space-y-4">
+          <Input
+            aria-label="Código de verificación"
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            autoComplete="one-time-code"
+            autoFocus
+            placeholder="123456"
+            maxLength={20}
+            className="font-mono tracking-widest"
+          />
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={!code.trim()}
+            loading={isLoading}
+            loadingText="verificando..."
+          >
+            verificar();
+            <LogIn className="ml-2 h-4 w-4" />
+          </Button>
+          <button
+            type="button"
+            onClick={() => {
+              setNeedsCode(false);
+              setCode('');
+            }}
+            className="w-full font-mono text-xs text-muted-foreground hover:text-pcnGreen"
+          >
+            ← volver
+          </button>
+        </form>
+      </AuthShell>
+    );
+  }
 
   const signUpHref = redirectTo
     ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`

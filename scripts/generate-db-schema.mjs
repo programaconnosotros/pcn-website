@@ -34,7 +34,7 @@ const DOMAINS = {
   charlas: ['TalkProposal', 'TalkProposalSpeaker', 'Talk', 'TalkSpeaker'],
   galeria: ['GalleryItem', 'GalleryItemTag'],
   proyectos: ['Project', 'ProjectMember', 'ArticleAuthor'],
-  auth: ['Session', 'PasswordResetToken', 'EmailVerificationToken'],
+  auth: ['Session', 'PasswordResetToken', 'EmailVerificationToken', 'TwoFactorChallenge'],
   sistema: ['PageVisit', 'ErrorLog', 'AppLog', 'JobOffers'],
 };
 

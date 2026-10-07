@@ -89,11 +89,19 @@ model User {
   eventBroadcasts      EventBroadcast[]
   setupLikes           SetupLike[]
 
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  forumPosts     ForumPost[]
-  forumComments  ForumComment[]
-  forumPostLikes ForumPostLike[]
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  forumPosts             ForumPost[]
+  forumComments          ForumComment[]
+  forumPostLikes         ForumPostLike[]
+  /// Optional two-factor sign-in (TOTP). The secret is set while setting it up and kept once
+  /// confirmed; `twoFactorEnabledAt` says it's on. Recovery codes are stored as SHA-256 hashes.
+  twoFactorSecret        String?
+  twoFactorEnabledAt     DateTime?
+  twoFactorRecoveryCodes String[]             @default([])
+  /// Last TOTP time step used, so a code can't be replayed within its window.
+  twoFactorLastStep      Int?
+  twoFactorChallenges    TwoFactorChallenge[]
 }
 
 // Puestos laborales actuales: una persona puede trabajar en más de un lugar a la vez.
@@ -955,4 +963,18 @@ model ForumPostLike {
 
   @@unique([userId, postId])
   @@index([postId])
+}
+
+/// A sign-in that passed the password and waits for the second factor. The id is the SHA-256 of
+/// the token in the httpOnly cookie, like Session.
+model TwoFactorChallenge {
+  id         String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  redirectTo String
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
 }

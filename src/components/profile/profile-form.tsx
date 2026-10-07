@@ -1,4 +1,5 @@
 'use client';
+import type { SessionUser } from '@/lib/session';
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { ProfileFormData, profileSchema } from '@/schemas/profile-schema';
 import { updateProfile } from '@actions/update-profile';
-import { User, UserPosition } from '@/generated/prisma/browser';
+import { UserPosition } from '@/generated/prisma/browser';
 import {
   Form,
   FormControl,
@@ -110,7 +111,7 @@ const Field = ({
 );
 
 // Los puestos guardados; si todavía no hay ninguno, el cargo viejo o una fila vacía para arrancar.
-const initialPositions = (user: Omit<User, 'password'> & { positions: UserPosition[] }) => {
+const initialPositions = (user: SessionUser & { positions: UserPosition[] }) => {
   if (user.positions.length > 0) {
     return user.positions.map((p) => ({ jobTitle: p.jobTitle, enterprise: p.enterprise ?? '' }));
   }
@@ -121,7 +122,7 @@ export const ProfileForm = ({
   user,
   languages,
 }: {
-  user: Omit<User, 'password'> & { positions: UserPosition[] };
+  user: SessionUser & { positions: UserPosition[] };
   languages: UserProgrammingLanguage[];
 }) => {
   const form = useForm<ProfileFormData>({

@@ -47,6 +47,8 @@ const PUBLIC_ACTIONS: Record<string, string> = {
   'actions/auth/send-verification-code.ts#sendVerificationCode':
     'sin sesión; rate limit por IP y por email',
   'actions/auth/sign-in.ts#signIn': 'es el login',
+  'actions/auth/two-factor.ts#verifyTwoFactorSignIn':
+    'segundo paso del login: solo sirve con la cookie del intento que ya pasó la contraseña',
   'actions/auth/sign-out.ts#signOut': 'borra la sesión de la cookie, si hay',
   'actions/auth/sign-up.ts#signUp': 'es el registro',
   'actions/auth/verify-email-code.ts#verifyEmailCode': 'sin sesión; límite de intentos por código',

@@ -5,7 +5,7 @@ import type { Session, User } from '@/generated/prisma/client';
 import prisma from '@/lib/prisma';
 
 /** El usuario logueado tal como lo devuelve la sesión: todo menos el hash de la contraseña. */
-export type SessionUser = Omit<User, 'password'>;
+export type SessionUser = Omit<User, 'password' | 'twoFactorSecret' | 'twoFactorRecoveryCodes'>;
 export type SessionWithUser = Session & { user: SessionUser };
 
 export const SESSION_COOKIE = 'sessionId';

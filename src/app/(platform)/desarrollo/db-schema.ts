@@ -188,6 +188,26 @@ export const dbModels: DbModel[] = [
         name: 'updatedAt',
         type: 'DateTime',
       },
+      {
+        name: 'twoFactorSecret',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'twoFactorEnabledAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'twoFactorRecoveryCodes',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'twoFactorLastStep',
+        type: 'Int',
+        optional: true,
+      },
     ],
     uniques: [],
   },
@@ -2115,6 +2135,39 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [['userId', 'postId']],
   },
+  {
+    name: 'TwoFactorChallenge',
+    domain: 'auth',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'redirectTo',
+        type: 'String',
+      },
+      {
+        name: 'attempts',
+        type: 'Int',
+      },
+      {
+        name: 'expiresAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -2626,6 +2679,14 @@ export const dbRelations: DbRelation[] = [
     from: 'ForumPostLike',
     to: 'ForumPost',
     label: 'post',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'TwoFactorChallenge',
+    to: 'User',
+    label: 'user',
     optional: false,
     many: true,
     onDelete: 'Cascade',

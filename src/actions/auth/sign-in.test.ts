@@ -2,9 +2,11 @@ import bcrypt from 'bcryptjs';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { DUMMY_PASSWORD_HASH } from '@/lib/password';
+import { createTwoFactorChallenge } from '@/lib/two-factor';
 import { signIn } from './sign-in';
 
 jest.mock('bcryptjs');
+jest.mock('@/lib/two-factor', () => ({ createTwoFactorChallenge: jest.fn() }));
 
 const bcryptMock = bcrypt as jest.Mocked<typeof bcrypt>;
 
@@ -35,6 +37,21 @@ const baseUser = {
 const validInput = { email: 'test@example.com', password: 'pass1234' };
 
 describe('signIn', () => {
+  it('opens the second step instead of a session when two-factor is on', async () => {
+    mockCookies();
+    prismaMock.user.findUnique.mockResolvedValue({
+      ...baseUser,
+      twoFactorEnabledAt: new Date(),
+    } as never);
+    bcryptMock.compare.mockResolvedValue(true as never);
+
+    const result = await signIn({ ...validInput, redirectTo: '/eventos' });
+
+    expect(result).toEqual({ success: false, error: 'TWO_FACTOR_REQUIRED' });
+    expect(createTwoFactorChallenge).toHaveBeenCalledWith('user-1', '/eventos');
+    expect(prismaMock.session.create).not.toHaveBeenCalled();
+  });
+
   it('returns INVALID_CREDENTIALS when no user is found', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 

@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
+import { TwoFactorSettings } from '@/components/auth/two-factor-settings';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { cookies } from 'next/headers';
@@ -39,6 +40,12 @@ const Profile = async () => {
     redirect('/');
   }
 
+  // Only how many recovery codes are left; the codes themselves never leave the server.
+  const twoFactor = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { twoFactorRecoveryCodes: true },
+  });
+
   const userLanguages = user.languages
     ? user.languages.map((language) => ({
         languageId: language.language,
@@ -55,6 +62,13 @@ const Profile = async () => {
         </StickyHeader>
 
         <ProfileForm user={user} languages={userLanguages} />
+
+        <div className="mb-14 mt-8 border border-pcnGreen-200 p-4">
+          <TwoFactorSettings
+            enabledAt={user.twoFactorEnabledAt?.toISOString() ?? null}
+            recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}
+          />
+        </div>
       </div>
     </>
   );

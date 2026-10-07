@@ -5,12 +5,14 @@ import { signIn } from '@/actions/auth/sign-in';
 import { notifyOsSessionChange } from '@/components/os/os-env';
 import { rateLimitDigest } from '@/lib/rate-limit-messages';
 import { mockRouter, setLocation } from '@/test/dom';
+import { verifyTwoFactorSignIn } from '@/actions/auth/two-factor';
 import SignInPage from './page';
 
 jest.mock('@/actions/auth/sign-in', () => ({ signIn: jest.fn() }));
+jest.mock('@/actions/auth/two-factor', () => ({ verifyTwoFactorSignIn: jest.fn() }));
 jest.mock('@/components/os/os-env', () => ({ notifyOsSessionChange: jest.fn() }));
 jest.mock('sonner', () => ({
-  toast: { success: jest.fn(), error: jest.fn(), info: jest.fn() },
+  toast: { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn() },
 }));
 
 const signInMock = signIn as jest.MockedFunction<typeof signIn>;
@@ -173,5 +175,71 @@ describe('SignInPage', () => {
         'Ocurrió un error inesperado. Por favor, intentá nuevamente.',
       ),
     );
+  });
+
+  describe('two-factor step', () => {
+    const verifyMock = jest.mocked(verifyTwoFactorSignIn);
+    const toCodeStep = async () => {
+      signInMock.mockResolvedValue({ success: false, error: 'TWO_FACTOR_REQUIRED' } as never);
+      render(<SignInPage />);
+      await fillAndSubmit();
+      return screen.findByLabelText('Código de verificación');
+    };
+
+    it('asks for the code and signs in with it', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+      verifyMock.mockResolvedValue({
+        success: true,
+        redirectTo: '/eventos',
+        usedRecoveryCode: false,
+        recoveryCodesLeft: 10,
+      });
+
+      await user.type(input, '123456');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+
+      await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/eventos'));
+      expect(verifyMock).toHaveBeenCalledWith('123456');
+      expect(notifyOsSessionChange).toHaveBeenCalled();
+    });
+
+    it('warns how many recovery codes are left after using one', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+      verifyMock.mockResolvedValue({
+        success: true,
+        redirectTo: '/',
+        usedRecoveryCode: true,
+        recoveryCodesLeft: 3,
+      });
+      await user.type(input, 'abcd-efgh');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      await waitFor(() =>
+        expect(toast.warning).toHaveBeenCalledWith(expect.stringContaining('te quedan 3')),
+      );
+    });
+
+    it('reports a wrong code and goes back to the password when it expires', async () => {
+      const user = userEvent.setup();
+      const input = await toCodeStep();
+
+      verifyMock.mockResolvedValueOnce({ success: false, error: 'INVALID_CODE' });
+      await user.type(input, '000000');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      await waitFor(() => expect(toast.error).toHaveBeenCalledWith('El código no es válido.'));
+
+      verifyMock.mockResolvedValueOnce({ success: false, error: 'EXPIRED' });
+      await user.type(screen.getByLabelText('Código de verificación'), '111111');
+      await user.click(screen.getByRole('button', { name: /verificar/ }));
+      expect(await screen.findByLabelText('Contraseña')).toBeInTheDocument();
+    });
+
+    it('goes back to the password form', async () => {
+      const user = userEvent.setup();
+      await toCodeStep();
+      await user.click(screen.getByRole('button', { name: /volver/ }));
+      expect(screen.getByLabelText('Contraseña')).toBeInTheDocument();
+    });
   });
 });
