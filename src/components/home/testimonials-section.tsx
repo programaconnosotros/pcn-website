@@ -1,17 +1,11 @@
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { TestimonialItem } from '@/lib/extracted-testimonials';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from './section-header';
 
-export type FeaturedTestimonial = {
-  id: string;
-  body: string;
-  user: {
-    id: string;
-    name: string;
-    image: string | null;
-  };
-};
+export type FeaturedTestimonial = TestimonialItem;
 
 const initials = (name: string) =>
   name
@@ -55,6 +49,15 @@ export const TestimonialsSection = ({ testimonials }: { testimonials: FeaturedTe
                 <span className="text-pcnGreen-500">@ </span>
                 {testimonial.user.name}
               </p>
+              {testimonial.source && (
+                <Link
+                  href={testimonial.source.href}
+                  title={`Extraído de «${testimonial.source.title}»`}
+                  className="ml-auto shrink-0 border border-dashed border-pcnGreen-600 px-1 font-mono text-[10px] uppercase leading-4 text-pcnGreen hover:bg-pcnGreen/10"
+                >
+                  auto
+                </Link>
+              )}
             </figcaption>
           </figure>
         ))}

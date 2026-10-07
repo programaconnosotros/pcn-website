@@ -4,6 +4,8 @@ import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
+import { listExtractedTestimonials } from '@/lib/extracted-testimonials';
+import { ExtractedTestimonials } from '@/components/testimonials/extracted-testimonials';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -31,9 +33,10 @@ const TestimoniosPage = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   // La sesión y los testimonios no dependen entre sí: se piden a la vez.
-  const [session, testimonials] = await Promise.all([
+  const [session, testimonials, extracted] = await Promise.all([
     sessionId ? findSession(sessionId) : null,
     fetchTestimonials(),
+    listExtractedTestimonials(),
   ]);
   const currentUserId: string | undefined = session?.userId;
   const isAdmin = session?.user.role === 'ADMIN';
@@ -55,6 +58,7 @@ const TestimoniosPage = async () => {
             isAdmin={isAdmin}
             hasUserTestimonial={hasUserTestimonial}
           />
+          <ExtractedTestimonials testimonials={extracted} />
         </div>
       </div>
     </>

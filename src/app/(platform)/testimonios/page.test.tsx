@@ -9,6 +9,9 @@ import Image, { alt } from './opengraph-image';
 import TestimoniosPage, { metadata } from './page';
 import { TestimonialsClientWrapper } from './testimonials-client-wrapper';
 
+jest.mock('@/lib/extracted-testimonials', () => ({
+  listExtractedTestimonials: jest.fn(async () => []),
+}));
 jest.mock('next/headers', () => ({ cookies: jest.fn(), headers: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/actions/testimonials/fetch-testimonials', () => ({ fetchTestimonials: jest.fn() }));

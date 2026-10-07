@@ -11,6 +11,9 @@ import { mockCookies } from '@/test/cookies';
 import HomeSections from './home-sections';
 import Home, { metadata } from './page';
 
+jest.mock('@/lib/extracted-testimonials', () => ({
+  listExtractedTestimonials: jest.fn(async () => []),
+}));
 jest.mock('next/headers', () => ({ cookies: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/lib/gallery', () => ({ listStoryCardPhotos: jest.fn() }));

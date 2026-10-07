@@ -16,6 +16,7 @@ import { InterviewsSection } from '@/components/home/interviews-section';
 import { HomeSectionSkeleton } from '@/components/home/home-section-skeleton';
 import { StoryCards } from '@/components/home/story-cards';
 import { TestimonialsSection } from '@/components/home/testimonials-section';
+import { listExtractedTestimonials } from '@/lib/extracted-testimonials';
 import { WHATSAPP_GROUP_URL } from '@/data/whatsapp-group';
 import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
@@ -44,9 +45,18 @@ export const metadata: Metadata = {
   },
 };
 
-const FeaturedTestimonialsSection = async () => (
-  <TestimonialsSection testimonials={await fetchFeaturedTestimonials()} />
-);
+// The featured testimonials, topped up with the newest ones extracted from the conversations so
+// the row is always full.
+const HOME_TESTIMONIALS = 3;
+const FeaturedTestimonialsSection = async () => {
+  const [featured, extracted] = await Promise.all([
+    fetchFeaturedTestimonials(),
+    listExtractedTestimonials(),
+  ]);
+  return (
+    <TestimonialsSection testimonials={[...featured, ...extracted].slice(0, HOME_TESTIMONIALS)} />
+  );
+};
 
 const StoryCardsSection = async () => <StoryCards photos={await listStoryCardPhotos()} />;
 
