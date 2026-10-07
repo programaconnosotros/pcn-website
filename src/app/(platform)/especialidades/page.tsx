@@ -43,7 +43,8 @@ const SpecialtiesPage = () => (
           <TableOfContents />
 
           <div className="min-w-0 flex-1">
-            <div className="mx-auto max-w-3xl space-y-8">
+            {/* Room above the first area title, so it never sits flush under the page header. */}
+            <div className="mx-auto max-w-3xl space-y-8 pt-4 lg:pt-6">
               {specialtyGroups.map((group) => (
                 <section
                   key={group.id}
