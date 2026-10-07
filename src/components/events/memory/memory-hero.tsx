@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 import { LocalShortDate } from '@/components/ui/local-date-time';
 import { MemoryCover } from './memory-cover';
+import { MemoryFlyer } from './memory-flyer';
 
 type Stat = { value: number; label: string };
 
 /**
  * The opening of a past event's page: a wide photo of the night, or several taking turns (or,
- * without photos, its flyer over a blurred copy of itself) with the catalog number, name, date,
- * place and what it left.
+ * without photos, a blurred copy of the flyer) with the catalog number, name, date, place and
+ * what it left, and the flyer itself on the right, which opens full screen.
  */
 export function MemoryHero({
   name,
@@ -85,15 +86,8 @@ export function MemoryHero({
           )}
         </div>
 
-        {/* Without photos, the flyer itself hangs on the right like a framed print. */}
-        {!cover && flyer && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={flyer}
-            alt={`Flyer de ${name}`}
-            className="hidden max-h-64 w-auto shrink-0 rounded-sm shadow-2xl ring-1 ring-white/10 sm:block md:max-h-[85%]"
-          />
-        )}
+        {/* The flyer hangs on the right like a framed print, over the photo too. */}
+        {flyer && <MemoryFlyer src={flyer} eventName={name} />}
       </div>
     </header>
   );

@@ -1,4 +1,5 @@
-import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { act, render, screen, within } from '@testing-library/react';
 import { MemoryHero } from './memory-hero';
 
 const base = {
@@ -26,7 +27,24 @@ describe('MemoryHero', () => {
     expect(screen.getByRole('listitem')).toHaveTextContent('4charlas');
     expect(screen.getByRole('button', { name: 'elegir' })).toBeInTheDocument();
     expect(container.querySelector('img[src="/a.jpg"]')).toBeInTheDocument();
-    expect(screen.queryByRole('img', { name: 'Flyer de Meetup' })).not.toBeInTheDocument();
+    // The flyer hangs over the photo too.
+    expect(screen.getByRole('img', { name: 'Flyer de Meetup' })).toBeInTheDocument();
+  });
+
+  it('opens the flyer full screen', async () => {
+    render(<MemoryHero {...base} place={null} covers={['/a.jpg']} flyer="/f.png" stats={[]} />);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Ver el flyer de Meetup en pantalla completa' }),
+    );
+    const dialog = screen.getByRole('dialog', { name: 'Flyer de Meetup' });
+    expect(within(dialog).getByRole('img', { name: 'Flyer de Meetup' })).toHaveAttribute(
+      'src',
+      '/f.png',
+    );
+    expect(within(dialog).getByRole('link', { name: /descargar flyer/ })).toHaveAttribute(
+      'href',
+      '/f.png',
+    );
   });
 
   it('hangs the flyer when there are no photos', () => {

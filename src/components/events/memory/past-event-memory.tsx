@@ -3,7 +3,6 @@ import { Edit, ImagePlus, Images, Mic, UserCog, Users } from 'lucide-react';
 import type { fetchEvent } from '@/actions/events/fetch-event';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
 import { EventSection } from '@/components/events/event-section';
-import { FlyerFrame } from '@/components/events/flyer-frame';
 import { EventSponsors } from '@/components/events/event-sponsors';
 import { PersonLink } from '@/components/people/person-link';
 import { Button } from '@/components/ui/button';
@@ -273,17 +272,6 @@ export async function PastEventMemory({
             {event.sponsors.length > 0 && (
               <EventSection title="con el apoyo de">
                 <EventSponsors sponsors={event.sponsors} compact />
-              </EventSection>
-            )}
-
-            {/* The hero already shows the flyer when there's no photo to open with. */}
-            {covers.length > 0 && event.flyerImages[0] && (
-              <EventSection title="el flyer">
-                <FlyerFrame
-                  src={event.flyerImages[0]}
-                  alt={`Flyer de ${event.name}`}
-                  className="aspect-[4/5] w-full max-w-xs"
-                />
               </EventSection>
             )}
           </div>
