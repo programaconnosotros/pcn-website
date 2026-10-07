@@ -3,6 +3,9 @@ import { setUserRole } from '@/actions/users/set-user-role';
 import { setAmbassador } from '@/actions/users/set-ambassador';
 import { setCofounder } from '@/actions/users/set-cofounder';
 import { getUsers } from '@/actions/users/get-users';
+import { setSuspended } from '@/actions/users/set-suspended';
+import { deleteUser } from '@/actions/users/delete-user';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { fetchCommunityMembers } from '@/actions/users/fetch-community-members';
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
 import { getUserForSpeaker, searchUsersForSpeaker } from '@/actions/users/search-users-for-speaker';
@@ -325,5 +328,83 @@ describe('getUserSummary', () => {
     await expect(getUserSummary('no-existe')).resolves.toBeNull();
     await expect(getUserSummary('')).resolves.toBeNull();
     await expect(getUserSummary('x'.repeat(65))).resolves.toBeNull();
+  });
+});
+
+describe('setSuspended', () => {
+  it('logs a suspended account out everywhere and keeps new sessions from working', async () => {
+    const admin = await quickUser({ role: 'ADMIN' });
+    const user = await quickUser();
+    await actAs(admin.id);
+
+    await expect(setSuspended(user.id, true)).resolves.toEqual({ success: true });
+    expect(await prisma.session.count({ where: { userId: user.id } })).toBe(0);
+
+    await actAs(user.id);
+    expect(await getCurrentSession()).toBeNull();
+
+    await actAs(admin.id);
+    await setSuspended(user.id, false);
+    await actAs(user.id);
+    expect((await getCurrentSession())?.user.id).toBe(user.id);
+  });
+
+  it('refuses regular users and leaves admins alone', async () => {
+    const admin = await quickUser({ role: 'ADMIN' });
+    const otherAdmin = await quickUser({ role: 'ADMIN' });
+    const user = await quickUser();
+
+    await actAs(user.id);
+    await expect(setSuspended(admin.id, true)).rejects.toThrow('No autorizado');
+
+    await actAs(admin.id);
+    await expect(setSuspended(otherAdmin.id, true)).resolves.toMatchObject({ success: false });
+    const stored = await prisma.user.findUniqueOrThrow({ where: { id: otherAdmin.id } });
+    expect(stored.suspendedAt).toBeNull();
+  });
+});
+
+describe('deleteUser', () => {
+  it('deletes an account with its consejos, comments, likes and languages', async () => {
+    const admin = await quickUser({ role: 'ADMIN' });
+    const user = await quickUser();
+    const other = await quickUser();
+    const ownAdvice = await makeAdvice(user.id);
+    const otherAdvice = await makeAdvice(other.id);
+    // Someone else's reply on the user's consejo goes with it.
+    await prisma.comment.create({
+      data: { authorId: other.id, adviceId: ownAdvice.id, content: 'Buenísimo' },
+    });
+    await prisma.comment.create({
+      data: { authorId: user.id, adviceId: otherAdvice.id, content: 'Coincido' },
+    });
+    await prisma.like.create({ data: { userId: user.id, adviceId: otherAdvice.id } });
+    await prisma.userLanguage.create({
+      data: { userId: user.id, language: 'TypeScript', color: '#3178c6', logo: 'ts' },
+    });
+    await actAs(admin.id);
+
+    await expect(deleteUser(user.id)).resolves.toEqual({ success: true });
+
+    expect(await prisma.user.findUnique({ where: { id: user.id } })).toBeNull();
+    expect(await prisma.advice.findUnique({ where: { id: ownAdvice.id } })).toBeNull();
+    expect(await prisma.comment.count({ where: { adviceId: otherAdvice.id } })).toBe(0);
+    expect(await prisma.like.count({ where: { adviceId: otherAdvice.id } })).toBe(0);
+    expect(await prisma.advice.findUnique({ where: { id: otherAdvice.id } })).not.toBeNull();
+    expect(expiredModel('User')).toBe(true);
+  });
+
+  it('refuses regular users, yourself and other admins', async () => {
+    const admin = await quickUser({ role: 'ADMIN' });
+    const otherAdmin = await quickUser({ role: 'ADMIN' });
+    const user = await quickUser();
+
+    await actAs(user.id);
+    await expect(deleteUser(admin.id)).rejects.toThrow('No autorizado');
+
+    await actAs(admin.id);
+    await expect(deleteUser(admin.id)).resolves.toMatchObject({ success: false });
+    await expect(deleteUser(otherAdmin.id)).resolves.toMatchObject({ success: false });
+    expect(await prisma.user.count({ where: { id: { in: [admin.id, otherAdmin.id] } } })).toBe(2);
   });
 });

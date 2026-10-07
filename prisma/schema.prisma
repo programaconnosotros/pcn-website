@@ -33,6 +33,8 @@ model User {
   isAmbassador         Boolean               @default(false)
   // Co-founder de PCN. Lo marca un admin.
   isCofounder          Boolean               @default(false)
+  // Cuenta suspendida por un admin: no puede iniciar sesión y sus sesiones dejan de valer.
+  suspendedAt          DateTime?
   image                String?
   countryOfOrigin      String?
   province             String? // Provincia (opcional)

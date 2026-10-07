@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Award, Crown, ShieldCheck, type LucideIcon } from 'lucide-react';
+import { Award, Ban, Crown, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { setAmbassador } from '@/actions/users/set-ambassador';
 import { setCofounder } from '@/actions/users/set-cofounder';
+import { setSuspended } from '@/actions/users/set-suspended';
 import { setUserRole } from '@/actions/users/set-user-role';
 import { MarkToggle } from '@/components/ui/mark-toggle';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
@@ -15,6 +16,8 @@ type FlagConfig = {
   save: (_userId: string, _active: boolean) => Promise<unknown>;
   on: (_name: string) => string;
   off: (_name: string) => string;
+  /** The hover text, when "Dar/Quitar <label> a <name>" doesn't read right. */
+  title?: (_active: boolean, _name: string) => string;
 };
 
 // Admin-only flags that can be switched from the users table.
@@ -39,6 +42,14 @@ const FLAGS = {
     save: setCofounder,
     on: (name) => `${name} ahora figura como co-founder`,
     off: (name) => `${name} ya no figura como co-founder`,
+  },
+  suspended: {
+    icon: Ban,
+    label: 'suspendida',
+    save: setSuspended,
+    on: (name) => `Suspendiste la cuenta de ${name}`,
+    off: (name) => `Reactivaste la cuenta de ${name}`,
+    title: (active, name) => `${active ? 'Reactivar' : 'Suspender'} la cuenta de ${name}`,
   },
 } satisfies Record<string, FlagConfig>;
 
@@ -86,7 +97,10 @@ export function UserFlagToggle({
       onToggle={toggle}
       icon={config.icon}
       label={active ? config.label : 'no'}
-      title={`${active ? 'Quitar' : 'Dar'} ${config.label} a ${userName}`}
+      title={
+        config.title?.(active, userName) ??
+        `${active ? 'Quitar' : 'Dar'} ${config.label} a ${userName}`
+      }
       className={isPending ? 'opacity-60' : undefined}
     />
   );

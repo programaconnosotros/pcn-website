@@ -22,6 +22,7 @@ export const signIn = async (
 ): Promise<
   | { success: true; redirectTo: string }
   | { success: false; error: 'INVALID_CREDENTIALS' }
+  | { success: false; error: 'ACCOUNT_SUSPENDED' }
   | { success: false; error: 'EMAIL_NOT_VERIFIED'; email: string }
   | { success: false; error: 'TWO_FACTOR_REQUIRED' }
 > => {
@@ -56,6 +57,12 @@ export const signIn = async (
       } catch (error) {
         console.error('Failed to rehash password:', error instanceof Error ? error.message : error);
       }
+    }
+
+    // Solo se dice después de validar la contraseña, para no contarle a cualquiera qué emails
+    // están suspendidos.
+    if (user.suspendedAt) {
+      return { success: false, error: 'ACCOUNT_SUSPENDED' };
     }
 
     if (!user.emailVerified) {

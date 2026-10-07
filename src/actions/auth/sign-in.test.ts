@@ -95,6 +95,17 @@ describe('signIn', () => {
     expect(prismaMock.session.create).not.toHaveBeenCalled();
   });
 
+  it('returns ACCOUNT_SUSPENDED for a suspended account, only with the right password', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, suspendedAt: new Date() } as any);
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
+
+    expect(await signIn(validInput)).toEqual({ success: false, error: 'ACCOUNT_SUSPENDED' });
+    expect(prismaMock.session.create).not.toHaveBeenCalled();
+
+    (bcryptMock.compare as jest.Mock).mockResolvedValue(false);
+    expect(await signIn(validInput)).toEqual({ success: false, error: 'INVALID_CREDENTIALS' });
+  });
+
   it('creates a session, sets the cookie, and returns success', async () => {
     const { set } = mockCookies();
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);

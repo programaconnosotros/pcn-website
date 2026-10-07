@@ -25,7 +25,11 @@ describe('findSession', () => {
     await findSession('token-1');
 
     expect(prismaMock.session.findUnique).toHaveBeenCalledWith({
-      where: { id: hashSessionToken('token-1'), expires: { gt: expect.any(Date) } },
+      where: {
+        id: hashSessionToken('token-1'),
+        expires: { gt: expect.any(Date) },
+        user: { suspendedAt: null },
+      },
       include: { user: true },
     });
   });

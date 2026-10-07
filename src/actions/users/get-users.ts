@@ -11,6 +11,7 @@ export type UserWithoutPassword = {
   role: 'REGULAR' | 'ADMIN';
   isAmbassador: boolean;
   isCofounder: boolean;
+  suspendedAt: Date | null;
   image: string | null;
   countryOfOrigin: string | null;
   province: string | null;
@@ -44,6 +45,7 @@ export const getUsers = async (): Promise<UserWithoutPassword[]> => {
       role: true,
       isAmbassador: true,
       isCofounder: true,
+      suspendedAt: true,
       image: true,
       countryOfOrigin: true,
       province: true,

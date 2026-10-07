@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LocalDate } from '@/components/ui/local-date-time';
 import { TableTag } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { DeleteUserButton } from './delete-user-button';
 import { UserFlagToggle } from './user-flag-toggle';
 import { findProgrammingLanguage } from '@/types/programming-language';
 
@@ -177,6 +178,19 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
         userId={row.original.id}
         userName={row.original.name}
         active={row.original.isAmbassador}
+      />
+    ),
+  },
+  {
+    id: 'suspended',
+    accessorFn: (user) => user.suspendedAt !== null,
+    header: ({ column }) => <SortableHeader label="Suspendida" column={column} />,
+    cell: ({ row }) => (
+      <UserFlagToggle
+        flag="suspended"
+        userId={row.original.id}
+        userName={row.original.name}
+        active={row.original.suspendedAt !== null}
       />
     ),
   },
@@ -356,5 +370,11 @@ export const columns: ColumnDef<UserWithoutPassword>[] = [
       </span>
     ),
     enableHiding: true,
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => <DeleteUserButton userId={row.original.id} userName={row.original.name} />,
+    enableSorting: false,
   },
 ];

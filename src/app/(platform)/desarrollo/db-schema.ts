@@ -101,6 +101,11 @@ export const dbModels: DbModel[] = [
         type: 'Boolean',
       },
       {
+        name: 'suspendedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
         name: 'image',
         type: 'String',
         optional: true,

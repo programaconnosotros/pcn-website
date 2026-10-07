@@ -87,6 +87,12 @@ function SignInContent() {
         return;
       }
 
+      if (result.error === 'ACCOUNT_SUSPENDED') {
+        toast.error('Tu cuenta está suspendida. Escribinos si creés que es un error.');
+        setIsLoading(false);
+        return;
+      }
+
       // Error de credenciales
       if (result.error === 'INVALID_CREDENTIALS') {
         toast.error('Credenciales incorrectas.');
