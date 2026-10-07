@@ -3,7 +3,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
-import { ExternalLink, Github, Globe, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { ExternalLink, Globe } from 'lucide-react';
+import { Github, Instagram, Linkedin, Youtube } from '@/components/icons/brand-icons';
 import Link from 'next/link';
 import React from 'react';
 

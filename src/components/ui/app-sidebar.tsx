@@ -35,8 +35,8 @@ import {
   Trophy,
   Users,
   Wrench,
-  Youtube,
 } from 'lucide-react';
+import { Youtube } from '@/components/icons/brand-icons';
 import { useEffect } from 'react';
 import { GeistMono } from 'geist/font/mono';
 import Link from 'next/link';

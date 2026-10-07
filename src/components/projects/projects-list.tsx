@@ -10,7 +10,6 @@ import {
   ArrowUpRight,
   Check,
   Edit,
-  Github,
   GripVertical,
   LogOut,
   MoreVertical,
@@ -18,6 +17,7 @@ import {
   Terminal,
   Trash2,
 } from 'lucide-react';
+import { Github } from '@/components/icons/brand-icons';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

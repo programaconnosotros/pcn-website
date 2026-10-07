@@ -1,5 +1,5 @@
 import { getGitHubTotalContributions, githubLoginFromUrl } from '@/lib/github-contributions';
-import { Github } from 'lucide-react';
+import { Github } from '@/components/icons/brand-icons';
 
 const numberFormat = new Intl.NumberFormat('es-AR');
 

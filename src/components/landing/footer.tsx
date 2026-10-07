@@ -1,4 +1,4 @@
-import { Github } from 'lucide-react';
+import { Github } from '@/components/icons/brand-icons';
 import Link from 'next/link';
 export const Footer = () => (
   <footer className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
