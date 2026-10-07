@@ -67,6 +67,11 @@ env:
 #
 ssh:
   user: ubuntu
+
+# The image builds on the runner for several minutes while the SSH connection opened for
+# `docker login` sits idle and gets reset by the host; don't reuse connections idle that long.
+sshkit:
+  pool_idle_timeout: 60
 # Use a persistent storage volume.
 #
 # volumes:
