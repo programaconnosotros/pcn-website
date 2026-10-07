@@ -30,13 +30,14 @@ export function SidebarToggle({ className }: { className?: string }) {
       }}
       onAnimationEnd={() => setGlitching(false)}
       className={cn(
-        'group/toggle relative flex h-7 shrink-0 items-center gap-1.5 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/60 px-1.5 font-mono text-[11px] text-pcnGreen-600 outline-none transition-[border-color,box-shadow,color] duration-200',
+        'group/toggle relative flex h-7 shrink-0 items-center overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/60 px-1.5 font-mono text-[11px] text-pcnGreen-600 outline-none transition-[border-color,box-shadow,color] duration-200',
         'hover:border-pcnGreen hover:text-pcnGreen hover:shadow-[0_0_14px_-4px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:text-pcnGreen',
         glitching && 'sidebar-toggle-glitch',
         className,
       )}
     >
-      {/* A window with its side panel, drawn in the terminal's green. */}
+      {/* A window with its side panel, drawn in the terminal's green. The label's spacing is a
+          margin that only opens with it, so the closed button stays centered on the icon. */}
       <span
         aria-hidden
         className="relative flex h-3.5 w-[18px] shrink-0 overflow-hidden rounded-[2px] border border-current"
@@ -51,7 +52,7 @@ export function SidebarToggle({ className }: { className?: string }) {
       </span>
       <span
         aria-hidden
-        className="max-w-0 overflow-hidden whitespace-nowrap transition-[max-width] duration-300 ease-out group-hover/toggle:max-w-[16ch] group-focus-visible/toggle:max-w-[16ch]"
+        className="max-w-0 overflow-hidden whitespace-nowrap transition-[max-width,margin] duration-300 ease-out group-hover/toggle:ml-1.5 group-hover/toggle:max-w-[16ch] group-focus-visible/toggle:ml-1.5 group-focus-visible/toggle:max-w-[16ch]"
       >
         <span className="text-pcnGreen-500">$ </span>
         sidebar {open ? '--hide' : '--show'}
