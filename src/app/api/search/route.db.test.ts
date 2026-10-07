@@ -27,7 +27,7 @@ it('finds live events, talks by speaker, advice and projects', async () => {
       speakers: { create: [{ speakerName: `Orador ${word}`, speakerPhone: '5491100000000' }] },
     },
   });
-  const advise = await prisma.advise.create({
+  const advice = await prisma.advice.create({
     data: { content: `Consejo ${word}`, authorId: author.id },
   });
   await prisma.project.create({
@@ -45,8 +45,8 @@ it('finds live events, talks by speaker, advice and projects', async () => {
 
   expect(mine.map((r) => [r.type, r.href])).toEqual([
     ['evento', `/eventos/${event.id}`],
+    ['consejo', `/consejos/${advice.id}`],
     ['charla', '/charlas'],
-    ['consejo', `/consejos/${advise.id}`],
     ['proyecto', 'https://proyecto.test'],
   ]);
   expect(JSON.stringify(results)).not.toContain('Borrado');

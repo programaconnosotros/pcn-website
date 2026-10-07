@@ -223,6 +223,8 @@ describe('visibility', () => {
     expect(await getGalleryNeighbours(second.id, { eventId: event.id })).toEqual({
       previousId: first.id,
       nextId: third.id,
+      previous: expect.objectContaining({ id: first.id, kind: 'PHOTO' }),
+      next: expect.objectContaining({ id: third.id, kind: 'PHOTO' }),
       index: 1,
       total: 3,
     });

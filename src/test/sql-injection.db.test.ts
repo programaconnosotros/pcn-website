@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { signIn } from '@/actions/auth/sign-in';
 import { requestPasswordReset } from '@/actions/auth/request-password-reset';
-import { createAdvise } from '@/actions/advises/create-advise';
+import { createAdvice } from '@/actions/advice/create-advice';
 import { createComment } from '@/actions/comments/create-comment';
 import { updateProfile } from '@/actions/update-profile';
 import { createProject } from '@/actions/projects/create-project';
@@ -75,7 +75,8 @@ describe('a query built by concatenating input (the vulnerable baseline)', () =>
 
   it('runs the injected sleep', async () => {
     const start = Date.now();
-    await vulnerableLookup(`' OR pg_sleep(3) IS NOT NULL --`);
+    // As a subquery it sleeps once; `OR pg_sleep(3)` alone would sleep once per user row
+    await vulnerableLookup(`' OR (SELECT pg_sleep(3)) IS NOT NULL --`);
     expect(Date.now() - start).toBeGreaterThanOrEqual(SLOW_QUERY_MS);
   });
 
@@ -118,22 +119,22 @@ describe.each(PAYLOADS)('SQL injection with %p', (payload) => {
     expect(await prisma.passwordResetToken.count()).toBe(0);
   });
 
-  it('stores an advise and a comment exactly as typed', async () => {
+  it('stores an advice and a comment exactly as typed', async () => {
     await actAs(attacker.id);
     const content = `Consejo: ${payload}`;
 
-    await timed(() => createAdvise(content));
-    const advise = await prisma.advise.findFirstOrThrow({
+    await timed(() => createAdvice(content));
+    const advice = await prisma.advice.findFirstOrThrow({
       where: { authorId: attacker.id },
       orderBy: { createdAt: 'desc' },
     });
-    expect(advise.content).toBe(content);
+    expect(advice.content).toBe(content);
 
     await timed(() =>
-      createComment({ content: payload, adviseId: advise.id, parentCommentId: null }),
+      createComment({ content: payload, adviceId: advice.id, parentCommentId: null }),
     );
     const comment = await prisma.comment.findFirstOrThrow({
-      where: { adviseId: advise.id },
+      where: { adviceId: advice.id },
     });
     expect(comment.content).toBe(payload);
   });
