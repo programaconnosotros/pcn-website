@@ -18,6 +18,7 @@ const setup = {
   id: 's1',
   title: 'Mi escritorio',
   description: 'Dos monitores y un teclado',
+  date: '2025-12-01',
   imageUrl: '/a.webp',
 };
 

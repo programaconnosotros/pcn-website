@@ -20,7 +20,7 @@ import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { SetupFormDialog } from './setup-form-dialog';
 
 interface SetupOwnerActionsProps {
-  setup: { id: string; title: string; description: string; imageUrl: string };
+  setup: { id: string; title: string; description: string; date: string; imageUrl: string };
   /** Only the author edits; admins can also delete, to moderate. */
   canEdit: boolean;
 }

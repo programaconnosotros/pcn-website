@@ -5,12 +5,13 @@ import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { SetupLikeButton } from '@/components/setups/setup-like-button';
 import { SetupOwnerActions } from '@/components/setups/setup-owner-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LocalDate } from '@/components/ui/local-date-time';
+import { format } from 'date-fns';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { optimizedOgImage } from '@/lib/og-image';
 import { fetchSetup } from '@/lib/setups';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
+import { calendarDate, dateInputValue } from '@/schemas/setup-schema';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -104,7 +105,9 @@ export default async function SetupPage(props: Props) {
                   {setup.author.name}
                 </span>
                 <span className="block font-mono text-[11px] text-muted-foreground">
-                  <LocalDate date={setup.createdAt} />
+                  <time dateTime={dateInputValue(setup.date)}>
+                    {format(calendarDate(setup.date), 'dd/MM/yyyy')}
+                  </time>
                 </span>
               </span>
             </Link>
@@ -123,6 +126,7 @@ export default async function SetupPage(props: Props) {
                   id: setup.id,
                   title: setup.title,
                   description: setup.description,
+                  date: dateInputValue(setup.date),
                   imageUrl: setup.thumbUrl,
                 }}
                 canEdit={isAuthor}

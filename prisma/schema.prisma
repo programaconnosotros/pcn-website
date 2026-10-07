@@ -302,6 +302,8 @@ model Setup {
   // Objetos de S3 de la foto, para borrarlos junto con el setup o al reemplazar la foto.
   storageKeys String[] @default([])
   authorId    String
+  // El día que corresponde al setup (lo elige quien lo publica; por defecto, el día que lo sube).
+  date        DateTime @default(now()) @db.Date
 
   author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes  SetupLike[]
@@ -311,6 +313,7 @@ model Setup {
 
   @@index([authorId])
   @@index([createdAt])
+  @@index([date])
 }
 
 model SetupLike {

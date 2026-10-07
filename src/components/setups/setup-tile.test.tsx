@@ -11,7 +11,8 @@ const setup = {
   thumbUrl: '/thumb.webp',
   width: 1600,
   height: 1200,
-  createdAt: new Date(2030, 4, 10),
+  date: new Date('2030-05-10T00:00:00Z'),
+  createdAt: new Date(2031, 0, 1),
   author: { id: 'u1', name: 'Ada', image: null },
   likes: [{ userId: 'u1' }, { userId: 'u2' }],
 };

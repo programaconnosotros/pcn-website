@@ -43,7 +43,11 @@ beforeEach(() => {
 });
 
 const ownKey = (userId: string) => `setups/originals/${userId}/${randomUUID()}.jpg`;
-const details = { title: 'Mi escritorio', description: 'Monitor ultrawide y teclado mecánico' };
+const details = {
+  title: 'Mi escritorio',
+  description: 'Monitor ultrawide y teclado mecánico',
+  date: '2026-05-10',
+};
 
 const makeSetup = (authorId: string) =>
   prisma.setup.create({
@@ -120,7 +124,7 @@ describe('createSetup', () => {
     await actAs(user.id);
 
     await expect(
-      createSetup(ownKey(user.id), { title: 'ab', description: 'corta' }),
+      createSetup(ownKey(user.id), { title: 'ab', description: 'corta', date: '2026-05-10' }),
     ).rejects.toThrow();
     expect(mocked.getObjectBuffer).not.toHaveBeenCalled();
     expect(await prisma.setup.count({ where: { authorId: user.id } })).toBe(0);
@@ -155,7 +159,11 @@ describe('updateSetup', () => {
     await updateSetup(setup.id, details);
 
     const stored = await prisma.setup.findUniqueOrThrow({ where: { id: setup.id } });
-    expect(stored).toMatchObject({ ...details, imageUrl: setup.imageUrl });
+    expect(stored).toMatchObject({
+      ...details,
+      date: new Date(`${details.date}T00:00:00Z`),
+      imageUrl: setup.imageUrl,
+    });
     expect(stored.storageKeys).toEqual(setup.storageKeys);
     expect(mocked.deleteObjectsOrLog).not.toHaveBeenCalled();
   });

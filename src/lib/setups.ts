@@ -10,6 +10,7 @@ export const setupSelect = {
   thumbUrl: true,
   width: true,
   height: true,
+  date: true,
   createdAt: true,
   author: { select: { id: true, name: true, image: true } },
   likes: { select: { userId: true } },

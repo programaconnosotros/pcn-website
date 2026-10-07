@@ -40,7 +40,9 @@ async function requireUser() {
 const parseDetails = (input: SetupFormData) => {
   const parsed = setupSchema.safeParse(input);
   if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? 'Datos inválidos');
-  return parsed.data;
+  const { date, ...rest } = parsed.data;
+  // Columna `@db.Date`: medianoche UTC del día elegido.
+  return { ...rest, date: new Date(`${date}T00:00:00Z`) };
 };
 
 const revalidateSetup = (setupId: string, authorId: string) => {

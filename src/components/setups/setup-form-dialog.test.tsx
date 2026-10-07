@@ -5,6 +5,7 @@ import { createSetup, getSetupUploadForm, updateSetup } from '@/actions/setups/s
 import { postUploadForm } from '@/lib/upload-form';
 import { mockRouter } from '@/test/dom';
 import { SetupFormDialog } from './setup-form-dialog';
+import { todayInputValue } from '@/schemas/setup-schema';
 
 jest.mock('@/actions/setups/setup-actions', () => ({
   createSetup: jest.fn(),
@@ -37,6 +38,7 @@ const existing = {
   id: 's1',
   title: 'Mi escritorio',
   description: 'Dos monitores y un teclado',
+  date: '2025-12-01',
   imageUrl: '/actual.webp',
 };
 
@@ -69,9 +71,11 @@ describe('SetupFormDialog', () => {
     await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/setups/new'));
     expect(getSetupUploadForm).toHaveBeenCalledWith('image/jpeg');
     expect(postUploadForm).toHaveBeenCalledWith('https://s3', { k: 'v' }, expect.any(File));
+    // Sin tocar la fecha, el setup queda con la de hoy.
     expect(createSetup).toHaveBeenCalledWith('orig/1', {
       title: 'Mi escritorio',
       description: 'Dos monitores y un teclado',
+      date: todayInputValue(),
     });
     expect(toast.success).toHaveBeenCalledWith('¡Setup publicado! 🖥️');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
@@ -140,7 +144,7 @@ describe('SetupFormDialog', () => {
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith('Setup actualizado'));
     expect(updateSetup).toHaveBeenCalledWith(
       's1',
-      { title: 'Mi escritorio', description: 'Dos monitores y un teclado' },
+      { title: 'Mi escritorio', description: 'Dos monitores y un teclado', date: '2025-12-01' },
       null,
     );
     expect(getSetupUploadForm).not.toHaveBeenCalled();

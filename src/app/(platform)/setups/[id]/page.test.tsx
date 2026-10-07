@@ -27,7 +27,8 @@ const buildSetup = (overrides: Partial<SetupWithAuthor> = {}) =>
     thumbUrl: 'https://cdn.example.com/setup-thumb.jpg',
     width: 1600,
     height: 900,
-    createdAt: new Date('2026-02-03T12:00:00Z'),
+    date: new Date('2026-02-03T00:00:00Z'),
+    createdAt: new Date('2026-02-04T12:00:00Z'),
     author: { id: 'author-1', name: 'Ana López', image: null },
     likes: [{ userId: 'fan-1' }, { userId: 'fan-2' }],
     ...overrides,
@@ -92,7 +93,7 @@ describe('/setups/[id]', () => {
       'href',
       '/perfil/author-1',
     );
-    expect(screen.getByText('2026-02-03')).toBeInTheDocument();
+    expect(screen.getByText('03/02/2026')).toBeInTheDocument();
     expect(screen.getByText(/Monitor ultrawide/)).toBeInTheDocument();
     expect(screen.queryByText('acciones del dueño')).not.toBeInTheDocument();
     expect(likeProps()).toMatchObject({ setupId: 's1', likes: 2, liked: false, isLoggedIn: false });
@@ -120,6 +121,7 @@ describe('/setups/[id]', () => {
         id: 's1',
         title: 'Mi escritorio',
         description: 'Monitor ultrawide\ny teclado split',
+        date: '2026-02-03',
         imageUrl: 'https://cdn.example.com/setup-thumb.jpg',
       },
       canEdit: true,

@@ -35,12 +35,19 @@ import {
   SETUP_IMAGE_TYPES,
   SETUP_MAX_BYTES,
   setupSchema,
+  todayInputValue,
   type SetupFormData,
 } from '@/schemas/setup-schema';
 
 const MAX_MB = Math.round(SETUP_MAX_BYTES / 1024 / 1024);
 
 type EditableSetup = SetupFormData & { id: string; imageUrl: string };
+
+const defaultsFor = (setup?: EditableSetup): SetupFormData => ({
+  title: setup?.title ?? '',
+  description: setup?.description ?? '',
+  date: setup?.date ?? todayInputValue(),
+});
 
 interface SetupFormDialogProps {
   /** The setup being edited; without it the dialog publishes a new one. */
@@ -83,7 +90,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
 
   const form = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
-    defaultValues: { title: setup?.title ?? '', description: setup?.description ?? '' },
+    defaultValues: defaultsFor(setup),
   });
 
   // Free the local preview when it's replaced or the dialog goes away.
@@ -99,7 +106,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
   };
 
   const reset = () => {
-    form.reset({ title: setup?.title ?? '', description: setup?.description ?? '' });
+    form.reset(defaultsFor(setup));
     setFile(null);
     setPreview(null);
     setPhotoError(null);
@@ -231,19 +238,35 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
               {photoError && <p className="text-sm text-destructive">{photoError}</p>}
             </div>
 
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Título</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Mi escritorio de home office" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid gap-4 sm:grid-cols-[1fr_11rem]">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Título</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Mi escritorio de home office" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha</FormLabel>
+                    <FormControl>
+                      <Input type="date" max={todayInputValue()} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}

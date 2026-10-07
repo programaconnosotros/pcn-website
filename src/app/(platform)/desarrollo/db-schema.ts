@@ -31,7 +31,7 @@ export type DbRelation = {
 export type DbDomain =
   'comunidad' | 'consejos' | 'eventos' | 'charlas' | 'galeria' | 'proyectos' | 'auth' | 'sistema';
 
-export const DB_SCHEMA_UPDATED_AT = '2026-10-04';
+export const DB_SCHEMA_UPDATED_AT = '2026-10-07';
 
 export const dbEnums: { name: string; values: string[] }[] = [
   {
@@ -643,6 +643,10 @@ export const dbModels: DbModel[] = [
         name: 'authorId',
         type: 'String',
         fk: true,
+      },
+      {
+        name: 'date',
+        type: 'DateTime',
       },
       {
         name: 'createdAt',

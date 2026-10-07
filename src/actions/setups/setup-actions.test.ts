@@ -45,7 +45,12 @@ const loginAs = (user: { id: string }) => {
 };
 
 const originalKey = 'setups/originals/user-1/3f0c8a2e-5b1d-4c6a-9e2f-1a2b3c4d5e6f.jpg';
-const details = { title: '  Mi escritorio  ', description: 'Dos monitores y un teclado split.' };
+const details = {
+  title: '  Mi escritorio  ',
+  description: 'Dos monitores y un teclado split.',
+  date: '2026-05-10',
+};
+const storedDate = new Date('2026-05-10T00:00:00Z');
 const storedSetup = {
   authorId: 'user-1',
   storageKeys: ['setups/old/full.webp', 'setups/old/thumb.webp'],
@@ -89,9 +94,9 @@ describe('setup uploads', () => {
   it('validates the title and description', async () => {
     loginAs(author);
 
-    await expect(createSetup(originalKey, { title: 'x', description: '' })).rejects.toThrow(
-      'al menos 3 caracteres',
-    );
+    await expect(
+      createSetup(originalKey, { title: 'x', description: '', date: '2026-05-10' }),
+    ).rejects.toThrow('al menos 3 caracteres');
     expect(getObjectBuffer).not.toHaveBeenCalled();
   });
 
@@ -109,6 +114,7 @@ describe('setup uploads', () => {
       data: {
         title: 'Mi escritorio',
         description: 'Dos monitores y un teclado split.',
+        date: storedDate,
         imageUrl: `https://cdn.example.com/${fullKey}`,
         thumbUrl: `https://cdn.example.com/${thumbKey}`,
         width: 2560,
@@ -150,7 +156,11 @@ describe('setup editing', () => {
 
     expect(prismaMock.setup.update).toHaveBeenCalledWith({
       where: { id: 'setup-1' },
-      data: { title: 'Mi escritorio', description: 'Dos monitores y un teclado split.' },
+      data: {
+        title: 'Mi escritorio',
+        description: 'Dos monitores y un teclado split.',
+        date: storedDate,
+      },
     });
     expect(deleteObjectsOrLog).not.toHaveBeenCalled();
   });

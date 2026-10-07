@@ -6,6 +6,7 @@ import { ruledCellClassName } from '@/components/ui/ruled-grid';
 import type { SetupWithAuthor } from '@/lib/setups';
 import { cn } from '@/lib/utils';
 import { SetupLikeButton } from './setup-like-button';
+import { calendarDate, dateInputValue } from '@/schemas/setup-schema';
 
 interface SetupTileProps {
   setup: SetupWithAuthor;
@@ -64,11 +65,11 @@ export function SetupTile({ setup, viewerId, showAuthor = true }: SetupTileProps
             </Link>
           )}
           <time
-            dateTime={setup.createdAt.toISOString()}
+            dateTime={dateInputValue(setup.date)}
             className="shrink-0 font-mono text-[11px] text-muted-foreground"
           >
             {showAuthor && <span className="text-pcnGreen-500/60">· </span>}
-            {format(setup.createdAt, 'd MMM yyyy', { locale: es })}
+            {format(calendarDate(setup.date), 'd MMM yyyy', { locale: es })}
           </time>
           <SetupLikeButton
             setupId={setup.id}
