@@ -329,7 +329,9 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
           aria-label={label}
           className="relative min-h-0 flex-1 overflow-y-auto px-2 py-3 [scrollbar-width:thin]"
         >
-          <ol className="space-y-2">
+          {/* One continuous rail runs the whole index: groups hang from it like any other row,
+              so it never breaks between the end of a group and what follows. */}
+          <ol>
             {groupedSections.map((group, groupIndex) => {
               const groupStarted = group.sections[0].index <= activeIndex;
               return (
@@ -337,10 +339,24 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                   {group.group && (
                     <p
                       className={cn(
-                        'flex items-center gap-1.5 px-1 py-0.5 text-xs font-semibold',
+                        'relative flex items-center gap-1.5 pb-1 pl-6 pr-1 pt-2 text-xs font-semibold',
                         groupStarted ? 'text-pcnGreen' : 'text-muted-foreground',
                       )}
                     >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'absolute bottom-0 left-2.5 top-0 w-px',
+                          groupStarted ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
+                        )}
+                      />
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'absolute left-2.5 top-1/2 h-px w-3',
+                          groupStarted ? 'bg-pcnGreen' : 'bg-pcnGreen-300',
+                        )}
+                      />
                       <span aria-hidden>{groupStarted ? '▾' : '▸'}</span>
                       <span className="min-w-0 flex-1 truncate">{group.group}/</span>
                       <span className="shrink-0 font-normal tabular-nums text-muted-foreground/60">
@@ -349,10 +365,11 @@ export function TableOfContents({ sections, path, label = 'Contenido' }: TableOf
                     </p>
                   )}
                   <ol>
-                    {group.sections.map((section, position) => {
+                    {group.sections.map((section) => {
                       const isActive = section.index === activeIndex;
                       const isRead = section.index < activeIndex;
-                      const isLast = position === group.sections.length - 1;
+                      // Only the index's very last row ends the rail.
+                      const isLast = section.index === sections.length - 1;
                       const reached = section.index <= activeIndex;
                       return (
                         <li key={section.id} className="relative pl-6">
