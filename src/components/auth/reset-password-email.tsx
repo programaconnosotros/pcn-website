@@ -2,6 +2,7 @@ import {
   EmailCode,
   EmailHighlight,
   EmailLayout,
+  EmailMeta,
   EmailPanel,
   EmailText,
 } from '@/components/email/email-layout';
@@ -11,6 +12,11 @@ export const PasswordResetCodeEmail = ({ userName, code }: { userName: string; c
     path="restablecer-contrasena"
     title="Código de verificación"
     preview={`Tu código para restablecer la contraseña es ${code}`}
+    log={[
+      'solicitud de restablecimiento recibida',
+      'códigos anteriores invalidados',
+      'código nuevo generado',
+    ]}
   >
     <EmailText>¡Hola {userName || ''}!</EmailText>
     <EmailText>
@@ -18,8 +24,15 @@ export const PasswordResetCodeEmail = ({ userName, code }: { userName: string; c
       para verificar tu identidad:
     </EmailText>
 
-    <EmailPanel command="cat codigo.txt">
+    <EmailPanel command="pcn auth reset-password">
       <EmailCode code={code} />
+      <EmailMeta
+        rows={[
+          { label: 'estado', value: 'esperando código', tone: 'amber' },
+          { label: 'expira', value: 'en 15 minutos' },
+          { label: 'uso', value: 'único', tone: 'muted' },
+        ]}
+      />
     </EmailPanel>
 
     <EmailText>

@@ -1,6 +1,7 @@
 import {
   EmailButton,
   EmailLayout,
+  EmailMeta,
   EmailPanel,
   EmailText,
   emailColors,
@@ -25,6 +26,7 @@ export const WaitlistPromotionEmail = ({
     path="eventos/lista-de-espera"
     title="¡Conseguiste un lugar!"
     preview={`Tu inscripción a ${eventName} quedó confirmada`}
+    log={['se liberó un lugar', 'lista de espera procesada', 'inscripción confirmada']}
   >
     <EmailText>¡Hola {userName || ''}!</EmailText>
     <EmailText>
@@ -32,39 +34,37 @@ export const WaitlistPromotionEmail = ({
       confirmada.
     </EmailText>
 
-    <EmailPanel command="inscripcion --estado">
+    <EmailPanel command="pcn eventos inscripcion --estado">
       <p
         style={{
           fontFamily: emailMono,
-          fontSize: '12px',
+          fontSize: '11px',
+          letterSpacing: '0.08em',
           color: emailColors.green,
-          margin: '0 0 8px 0',
+          margin: '0 0 10px 0',
         }}
       >
-        [confirmada]
+        ● CONFIRMADA
       </p>
       <p
         style={{
           fontFamily: emailSans,
-          fontSize: '18px',
+          fontSize: '20px',
           fontWeight: 600,
           lineHeight: '1.3',
           color: emailColors.foreground,
-          margin: '0 0 6px 0',
+          margin: 0,
         }}
       >
         {eventName}
       </p>
-      <p
-        style={{
-          fontFamily: emailMono,
-          fontSize: '13px',
-          color: emailColors.muted,
-          margin: 0,
-        }}
-      >
-        {eventDate}
-      </p>
+      <EmailMeta
+        rows={[
+          { label: 'fecha', value: eventDate },
+          { label: 'origen', value: 'lista de espera', tone: 'muted' },
+          { label: 'estado', value: 'lugar asignado', tone: 'green' },
+        ]}
+      />
     </EmailPanel>
 
     <EmailText>

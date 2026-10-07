@@ -2,6 +2,7 @@ import {
   EmailCode,
   EmailHighlight,
   EmailLayout,
+  EmailMeta,
   EmailPanel,
   EmailText,
 } from '@/components/email/email-layout';
@@ -11,6 +12,7 @@ export const EmailVerificationEmail = ({ userName, code }: { userName: string; c
     path="verificar-email"
     title="¡Bienvenido a programaConNosotros!"
     preview={`Tu código de verificación es ${code}`}
+    log={['cuenta creada', 'código de verificación generado', 'email enviado']}
   >
     <EmailText>¡Hola {userName || ''}!</EmailText>
     <EmailText>
@@ -18,8 +20,15 @@ export const EmailVerificationEmail = ({ userName, code }: { userName: string; c
       siguiente código de verificación:
     </EmailText>
 
-    <EmailPanel command="cat codigo.txt">
+    <EmailPanel command="pcn auth verify --email">
       <EmailCode code={code} />
+      <EmailMeta
+        rows={[
+          { label: 'estado', value: 'pendiente', tone: 'amber' },
+          { label: 'expira', value: 'en 15 minutos' },
+          { label: 'uso', value: 'único', tone: 'muted' },
+        ]}
+      />
     </EmailPanel>
 
     <EmailText>

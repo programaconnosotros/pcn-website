@@ -4,6 +4,7 @@ import {
   EmailCode,
   EmailHighlight,
   EmailLayout,
+  EmailMeta,
   EmailPanel,
   EmailText,
   emailColors,
@@ -57,5 +58,25 @@ describe('EmailLayout', () => {
       'https://example.com/x',
     );
     expect(emailColors.green).toMatch(/^#/);
+  });
+
+  it('renders the boot log and the meta rows', () => {
+    render(
+      <>
+        <EmailLayout path="x" title="t" log={['código generado']}>
+          body
+        </EmailLayout>
+        <EmailMeta
+          rows={[
+            { label: 'expira', value: 'en 15 minutos' },
+            { label: 'estado', value: 'pendiente', tone: 'amber' },
+          ]}
+        />
+      </>,
+    );
+
+    expect(screen.getByText('código generado')).toBeInTheDocument();
+    expect(screen.getByText('expira')).toBeInTheDocument();
+    expect(screen.getByText('pendiente')).toHaveStyle({ color: emailColors.amber });
   });
 });
