@@ -53,6 +53,8 @@ export const HomeFooter = () => {
 
   return (
     <footer
+      // The wordmark sits right on the PCN News crawl, with no gap above it (news-ticker.tsx).
+      data-ticker-flush
       className={cn(
         GeistMono.className,
         // On phones the layout pads the page for the fixed tab bar; pull the footer

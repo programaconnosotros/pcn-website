@@ -29,10 +29,14 @@ export function NewsTicker() {
 
   // The page column is a min-h-svh flex column: `mt-auto` keeps the crawl on the bottom edge even
   // when the page is shorter than the screen (loading skeletons), and the spacer keeps the gap
-  // above it when it isn't.
+  // above it when it isn't, unless the page ends in something meant to sit right on the crawl
+  // (`data-ticker-flush`, like the home footer's wordmark).
   return (
     <>
-      <div aria-hidden className="hidden h-6 shrink-0 embedded:hidden md:block" />
+      <div
+        aria-hidden
+        className="hidden h-6 shrink-0 embedded:hidden md:block [:has([data-ticker-flush])_&]:hidden"
+      />
       <aside
         aria-label="Últimas novedades"
         className="sticky bottom-0 z-30 -mx-6 mt-auto hidden h-8 items-stretch border-t border-pcnGreen-200 bg-background/95 font-mono text-xs backdrop-blur embedded:hidden md:flex"
