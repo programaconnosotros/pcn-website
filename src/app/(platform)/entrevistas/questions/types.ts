@@ -9,7 +9,8 @@ export type InterviewArea =
   | 'ux-ui'
   | 'product-engineering'
   | 'project-manager'
-  | 'soft-skills';
+  | 'soft-skills'
+  | 'tech-lead';
 export type InterviewTrack =
   | 'react'
   | 'ios'
@@ -27,7 +28,8 @@ export type InterviewTrack =
   | 'ux-ui'
   | 'product-engineering'
   | 'project-manager'
-  | 'soft-skills';
+  | 'soft-skills'
+  | 'tech-lead';
 export type QaTool = 'cypress' | 'playwright' | 'k6';
 /** Tools a track can add on top of its general questions, one question bank each. */
 export type TrackTool =
@@ -70,6 +72,7 @@ export const AREAS: { id: InterviewArea; label: string; stack: string }[] = [
     label: 'Soft skills y liderazgo',
     stack: 'comunicación, conflictos y liderazgo',
   },
+  { id: 'tech-lead', label: 'Tech lead', stack: 'decisiones técnicas, equipo y entrega' },
 ];
 
 // Areas with more than one track (frontend, backend) ask for the technology after picking the area.
@@ -184,6 +187,12 @@ export const TRACKS: {
     area: 'soft-skills',
     label: 'Soft skills y liderazgo',
     stack: 'comunicación, conflictos y liderazgo',
+  },
+  {
+    id: 'tech-lead',
+    area: 'tech-lead',
+    label: 'Tech lead',
+    stack: 'decisiones técnicas, equipo y entrega',
   },
 ];
 

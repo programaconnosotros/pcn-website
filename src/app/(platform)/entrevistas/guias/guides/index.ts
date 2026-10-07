@@ -17,6 +17,7 @@ import { reactNativeGuide } from './react-native';
 import { securityGuide } from './security';
 import { uxUiGuide } from './ux-ui';
 import { softSkillsGuide } from './soft-skills';
+import { techLeadGuide } from './tech-lead';
 import { endpointCourses, type RecommendedCourse } from '@/data/recommended-courses';
 import type { InterviewGuide } from './types';
 
@@ -39,6 +40,7 @@ export const interviewGuides: Record<InterviewTrack, InterviewGuide> = {
   'ux-ui': uxUiGuide,
   'product-engineering': productEngineeringGuide,
   'project-manager': projectManagerGuide,
+  'tech-lead': techLeadGuide,
   'soft-skills': softSkillsGuide,
 };
 
