@@ -2,8 +2,9 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 
-export const OG_SIZE = { width: 1200, height: 630 };
-export const OG_CONTENT_TYPE = 'image/png';
+import { OG_SIZE } from './size';
+
+export { OG_CONTENT_TYPE, OG_SIZE } from './size';
 
 const GREEN = '#04f4be';
 const FONT_DIR = join(process.cwd(), 'node_modules/geist/dist/fonts/geist-mono');

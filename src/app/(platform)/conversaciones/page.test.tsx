@@ -5,7 +5,8 @@ import { getEventNames } from '@/lib/event-index';
 import { getIdentityMap } from '@/lib/identity-links';
 import { ConversationsClient } from './conversations-client';
 import ConversacionesLayout, { metadata } from './layout';
-import ConversationsPage from './page';
+import ConversationsPage, { generateMetadata } from './page';
+import { shortHash } from '@/components/conversations/conversation-utils';
 
 jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
@@ -39,6 +40,30 @@ describe('ConversationsPage', () => {
     render(await ConversationsPage());
 
     expect(clientProps()).toMatchObject({ isAdmin: true });
+  });
+});
+
+describe('generateMetadata', () => {
+  const metadataFor = (params: Record<string, string>) =>
+    generateMetadata({ searchParams: Promise.resolve(params) });
+
+  it('previews a shared conversation with its own title, summary and card', async () => {
+    const conversation = conversations[0];
+    const hash = shortHash(conversation);
+    const shared = await metadataFor({ c: hash });
+
+    expect(shared.title).toMatch(/^cat ~\/conversaciones\//);
+    expect(shared.description).toBe(conversation.summary.slice(0, shared.description!.length));
+    expect(shared.openGraph).toMatchObject({
+      title: expect.stringContaining(conversation.title),
+      url: expect.stringContaining(`/conversaciones?c=${hash}`),
+      images: [expect.objectContaining({ url: `/conversaciones/og?c=${hash}` })],
+    });
+  });
+
+  it('keeps the section metadata without a known conversation', async () => {
+    expect(await metadataFor({})).toEqual({});
+    expect(await metadataFor({ c: 'nope' })).toEqual({});
   });
 });
 
