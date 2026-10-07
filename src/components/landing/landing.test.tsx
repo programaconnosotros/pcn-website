@@ -1,3 +1,4 @@
+import githubStats from '@/data/github-stats.json';
 import { render, screen, within } from '@testing-library/react';
 import { Activities } from './activities';
 import { CallToAction } from './call-to-action';
@@ -25,6 +26,17 @@ describe('landing sections', () => {
     expect(screen.getAllByText('programaConNosotros').length).toBeGreaterThan(0);
     expect(screen.getByTestId('sparkles')).toBeInTheDocument();
     expect(screen.getAllByRole('link').length).toBeGreaterThan(0);
+  });
+
+  it('Team includes every contributor in the GitHub snapshot, even the ones not listed by hand', () => {
+    const { container } = render(<Team />);
+    const githubLinks = [...container.querySelectorAll('a[href^="https://github.com/"]')].map(
+      (link) => link.getAttribute('href')!.split('/').pop()!.toLowerCase(),
+    );
+    for (const { login } of githubStats.topContributors)
+      expect(githubLinks).toContain(login.toLowerCase());
+    expect(screen.getByText('shadownrx')).toBeInTheDocument();
+    expect(teamSize).toBeGreaterThanOrEqual(githubStats.topContributors.length);
   });
 
   it('Team lists every member with links to their profiles', () => {

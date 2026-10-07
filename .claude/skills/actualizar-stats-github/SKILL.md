@@ -15,6 +15,9 @@ from one committed snapshot, `src/data/github-stats.json`, read through
 - `/perfil/[id]` → the contributions of users linked to a GitHub login
   (`src/app/(platform)/perfil/[id]/profile-data.ts`).
 - `/vinculos` → the GitHub logins an admin can link to users.
+- `/desarrollo` → "Team de desarrollo" (`src/components/landing/team.tsx`): the people listed by
+  hand there (with their name and role) plus every other contributor in the snapshot, who shows
+  up automatically as "Contributor" with their GitHub avatar.
 
 Updating the stats means regenerating that file. Don't ask questions the steps answer.
 
@@ -40,7 +43,9 @@ Updating the stats means regenerating that file. Don't ask questions the steps a
    merged PRs, contributors and lines of code to the user.
 
 3. **Check new contributors.** If a login appears that wasn't in the previous snapshot, tell the
-   user: an admin can link it to a user at `/vinculos` so it shows on their profile. Don't link
+   user: it already shows in the team on `/desarrollo` as "Contributor"; an admin can link it to
+   a user at `/vinculos` so it shows on their profile (and the team links to it), and adding it
+   to `knownPeople` in `src/components/landing/team.tsx` gives it a name and a role. Don't link
    it yourself.
 
 4. **Commit only the snapshot**:

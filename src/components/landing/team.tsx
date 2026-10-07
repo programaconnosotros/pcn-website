@@ -1,4 +1,5 @@
 import { Github, Linkedin } from 'lucide-react';
+import githubStats from '@/data/github-stats.json';
 
 type Person = {
   name: string;
@@ -9,8 +10,9 @@ type Person = {
   githubUrl?: string;
 };
 
-// Ordered by lines changed in the website (excluding lockfiles and data dumps).
-const people: Person[] = [
+// The people we know by name, with their role: ordered by lines changed in the website (excluding
+// lockfiles and data dumps). Everyone else who contributed is added below from the GitHub snapshot.
+const knownPeople: Person[] = [
   {
     name: 'Agus',
     role: 'Tech Lead & Sr. Full-Stack Engineer',
@@ -132,6 +134,25 @@ const people: Person[] = [
 const handleOf = (person: Person) =>
   person.githubUrl?.split('/').pop() ?? person.name.toLowerCase();
 
+const knownLogins = new Set(knownPeople.map((person) => handleOf(person).toLowerCase()));
+
+/**
+ * Contributors in the GitHub snapshot (`pnpm github:stats`) who aren't listed above yet, so a
+ * first PR shows up in the team on the next stats refresh without anyone editing this file. Add
+ * them to `knownPeople` to give them a name and a role.
+ */
+const newContributors: Person[] = githubStats.topContributors
+  .filter((contributor) => !knownLogins.has(contributor.login.toLowerCase()))
+  .filter((contributor) => !/\[bot\]$/.test(contributor.login))
+  .map((contributor) => ({
+    name: contributor.login,
+    role: 'Contributor',
+    imageUrl: contributor.avatarUrl,
+    githubUrl: contributor.htmlUrl,
+  }));
+
+const people: Person[] = [...knownPeople, ...newContributors];
+
 const iconLinkClassName =
   'text-muted-foreground transition-colors hover:text-pcnGreen focus-visible:text-pcnGreen';
 
@@ -167,7 +188,9 @@ export const Team = () => (
         <div className="min-w-0 flex-1">
           <p className="truncate font-mono text-sm">
             {person.name}
-            <span className="ml-1.5 text-xs text-pcnGreen-500">@{handleOf(person)}</span>
+            {person.name !== handleOf(person) && (
+              <span className="ml-1.5 text-xs text-pcnGreen-500">@{handleOf(person)}</span>
+            )}
             <span className="ml-0.5 hidden animate-blink text-pcnGreen group-hover:inline">_</span>
           </p>
           <p className="truncate text-xs text-muted-foreground">
