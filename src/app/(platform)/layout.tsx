@@ -10,6 +10,8 @@ import { OsGate } from '@/components/os/os-gate';
 import { PcnOs } from '@/components/os/pcn-os';
 import { ClassicGlobalSearch } from '@/components/search/classic-global-search';
 import { PullToRefresh } from '@/components/pull-to-refresh';
+import { LiveNews } from '@/components/realtime/live-news';
+import { NewsTicker } from '@/components/realtime/news-ticker';
 import { findSession, type SessionUser } from '@/lib/session';
 
 const PlatformLayout = async ({
@@ -39,6 +41,7 @@ const PlatformLayout = async ({
         isAdmin={user?.role === 'ADMIN'}
       />
       <PageVisitTracker />
+      <LiveNews />
       <OsBridge />
       {/* Resto de pantallas (y páginas dentro de una ventana): sidebar + página. */}
       <div className="os:hidden">
@@ -52,6 +55,7 @@ const PlatformLayout = async ({
             <ConsoleInterceptor>
               <SidebarInset className="min-w-0 px-1 pb-[calc(5rem+env(safe-area-inset-bottom))] embedded:pb-0 md:px-6 md:pb-0">
                 {children}
+                <NewsTicker />
               </SidebarInset>
             </ConsoleInterceptor>
           </SidebarProvider>

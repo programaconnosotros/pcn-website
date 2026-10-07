@@ -7,6 +7,7 @@ import {
   unseenFeedItems,
   type NotificationCenterData,
 } from '@/lib/notification-center';
+import { useRealtime } from '@/components/realtime/use-realtime';
 
 /** How often the center checks for news while the tab is visible. */
 export const POLL_MS = 60_000;
@@ -51,6 +52,9 @@ export function useNotificationCenter() {
       setLoading(false);
     }
   }, []);
+
+  // Something new in the feed: fetch now instead of waiting for the next tick.
+  useRealtime(['feed'], () => void refresh());
 
   useEffect(() => {
     void refresh();
