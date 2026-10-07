@@ -287,6 +287,9 @@ model GalleryItemTag {
   itemId     String
   userId     String
   taggedById String?
+  // Dónde está la persona en la foto, como fracción del ancho y del alto (0–1). Opcional.
+  x          Float?
+  y          Float?
 
   item     GalleryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
   user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)

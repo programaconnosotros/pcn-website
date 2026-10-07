@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { UserCheck, X } from 'lucide-react';
+import { Crosshair, UserCheck, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { tagGalleryItemUser, untagGalleryItemUser } from '@/actions/gallery/gallery-tags';
 import { searchCommunityMembers } from '@/actions/users/search-community-members';
 import { UserCombobox } from '@/components/admin/user-combobox';
 import { PersonLink, type Person } from '@/components/people/person-link';
+import { cn } from '@/lib/utils';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { usePhotoTags } from './photo-tags';
 
 type Props = {
   photoId: string;
@@ -25,6 +27,8 @@ const without = (people: Person[], id: string) => people.filter((person) => pers
 export function PhotoPeople({ photoId, people: initialPeople, viewer, isAdmin }: Props) {
   const viewerId = viewer?.id ?? null;
   const [people, setPeople] = useState(initialPeople);
+  // Where each person is in the photo (when the page shows the photo with its markers).
+  const placement = usePhotoTags();
   // Whoever is being tagged or untagged right now, so the same person can't be toggled twice
   // while the first request is still on its way.
   const [pendingIds, setPendingIds] = useState<ReadonlySet<string>>(new Set());
@@ -52,6 +56,7 @@ export function PhotoPeople({ photoId, people: initialPeople, viewer, isAdmin }:
     try {
       const { person: saved } = await tagGalleryItemUser(photoId, person.id);
       setPeople((current) => current.map((p) => (p.id === saved.id ? saved : p)));
+      placement?.sync(saved, true);
       toast.success(success);
     } catch (error) {
       setPeople((current) => without(current, person.id));
@@ -68,6 +73,7 @@ export function PhotoPeople({ photoId, people: initialPeople, viewer, isAdmin }:
     setPeople((current) => without(current, person.id));
     try {
       await untagGalleryItemUser(photoId, person.id);
+      placement?.sync(person, false);
       toast.success(success);
     } catch (error) {
       // Back where it was, unless something else already put it back.
@@ -87,8 +93,35 @@ export function PhotoPeople({ photoId, people: initialPeople, viewer, isAdmin }:
       {people.length > 0 ? (
         <ul className="space-y-1.5">
           {people.map((person) => (
-            <li key={person.id} className="flex items-center gap-2">
+            <li
+              key={person.id}
+              className="flex items-center gap-2"
+              onMouseEnter={() => placement?.setHighlighted(person.id)}
+              onMouseLeave={() => placement?.setHighlighted(null)}
+            >
               <PersonLink person={person} className="flex-1" />
+              {placement && (isAdmin || person.id === viewerId) && (
+                <button
+                  type="button"
+                  onClick={() => placement.startPlacing(person)}
+                  disabled={pendingIds.has(person.id)}
+                  aria-label={`Marcar dónde está ${person.name} en la foto`}
+                  title={
+                    placement.tags[person.id]?.position
+                      ? 'Mover su marca en la foto'
+                      : 'Marcar dónde está en la foto'
+                  }
+                  className={cn(
+                    'rounded-sm p-1 hover:bg-muted disabled:opacity-50',
+                    placement.tags[person.id]?.position
+                      ? 'text-pcnGreen'
+                      : 'text-muted-foreground hover:text-foreground',
+                    placement.placing?.id === person.id && 'bg-pcnGreen/15 text-pcnGreen',
+                  )}
+                >
+                  <Crosshair className="size-3.5" />
+                </button>
+              )}
               {(isAdmin || person.id === viewerId) && (
                 <button
                   type="button"

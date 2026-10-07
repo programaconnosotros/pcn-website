@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { requireSessionUser } from '@/actions/projects/get-session-user';
 import { enforceRateLimit } from '@/lib/rate-limit';
@@ -49,6 +50,31 @@ export async function tagGalleryItemUser(itemId: string, userId: string) {
     update: {},
   });
   return { person: user };
+}
+
+const positionSchema = z
+  .object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) })
+  .nullable();
+
+/**
+ * Marca dónde está `userId` en la foto (x e y como fracción del ancho y el alto), o lo borra con
+ * null. La persona misma o un admin, y solo si ya está etiquetada. Sin revalidar, como el resto.
+ */
+export async function setGalleryTagPosition(
+  itemId: string,
+  userId: string,
+  position: { x: number; y: number } | null,
+) {
+  await requireTagger(userId);
+  const parsed = positionSchema.safeParse(position);
+  if (!parsed.success) throw new Error('Posición inválida');
+
+  const { count } = await prisma.galleryItemTag.updateMany({
+    where: { itemId, userId },
+    data: { x: parsed.data?.x ?? null, y: parsed.data?.y ?? null },
+  });
+  if (count === 0) throw new Error('Esa persona no está etiquetada en la foto');
+  return { position: parsed.data };
 }
 
 /** Quita la etiqueta de `userId` de la foto. Sin revalidar, por lo mismo que `tagGalleryItemUser`. */

@@ -125,6 +125,8 @@ const findGalleryItem = cached(
         tags: {
           select: {
             taggedById: true,
+            x: true,
+            y: true,
             user: { select: { id: true, name: true, image: true } },
           },
           orderBy: { createdAt: 'asc' },

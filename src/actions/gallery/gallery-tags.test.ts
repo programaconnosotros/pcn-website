@@ -4,6 +4,7 @@ import { mockCookies } from '@/test/cookies';
 import {
   bulkTagGalleryItemsUser,
   bulkUntagGalleryItemsUser,
+  setGalleryTagPosition,
   tagGalleryItemUser,
   untagGalleryItemUser,
 } from './gallery-tags';
@@ -96,6 +97,42 @@ describe('photo tags', () => {
     prismaMock.galleryItem.findUnique.mockResolvedValue(null);
 
     await expect(tagGalleryItemUser('ghost', 'user-2')).rejects.toThrow('Foto no encontrada');
+  });
+});
+
+describe('tag positions', () => {
+  it('lets members place themselves, and admins anyone', async () => {
+    prismaMock.galleryItemTag.updateMany.mockResolvedValue({ count: 1 });
+    loginAs(member);
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 0.2, y: 0.8 })).resolves.toEqual({
+      position: { x: 0.2, y: 0.8 },
+    });
+    expect(prismaMock.galleryItemTag.updateMany).toHaveBeenCalledWith({
+      where: { itemId: 'p1', userId: 'user-1' },
+      data: { x: 0.2, y: 0.8 },
+    });
+
+    await expect(setGalleryTagPosition('p1', 'user-2', { x: 0.2, y: 0.8 })).rejects.toThrow(
+      'No autorizado',
+    );
+
+    loginAs(admin);
+    await setGalleryTagPosition('p1', 'user-2', null);
+    expect(prismaMock.galleryItemTag.updateMany).toHaveBeenLastCalledWith({
+      where: { itemId: 'p1', userId: 'user-2' },
+      data: { x: null, y: null },
+    });
+  });
+
+  it('rejects positions off the photo and people who are not tagged', async () => {
+    loginAs(admin);
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 1.5, y: 0 })).rejects.toThrow(
+      'Posición inválida',
+    );
+    prismaMock.galleryItemTag.updateMany.mockResolvedValue({ count: 0 });
+    await expect(setGalleryTagPosition('p1', 'user-1', { x: 0.5, y: 0.5 })).rejects.toThrow(
+      'no está etiquetada',
+    );
   });
 });
 

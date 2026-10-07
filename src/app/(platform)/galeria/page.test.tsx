@@ -34,6 +34,7 @@ jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   default: { event: { findMany: jest.fn() } },
 }));
+jest.mock('@/actions/gallery/gallery-tags', () => ({ setGalleryTagPosition: jest.fn() }));
 jest.mock('@/components/photo-gallery/gallery', () => ({ Gallery: jest.fn(() => null) }));
 jest.mock('@/components/photo-gallery/photo-uploader', () => ({
   PhotoUploader: jest.fn(() => null),
