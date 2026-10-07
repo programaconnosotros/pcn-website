@@ -45,7 +45,7 @@ describe('HistoriaEvents', () => {
     flyerImages: [flyer],
     photos: Array.from({ length: photos }, (_, i) => ({
       id: `${id}-p${i}`,
-      thumbSrc: `/t${i}.jpg`,
+      thumbUrl: `/t${i}.jpg`,
       description: i === 0 ? 'Foto con descripción' : null,
     })),
     photoCount: photos,

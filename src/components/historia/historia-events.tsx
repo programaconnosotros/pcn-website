@@ -57,7 +57,7 @@ export function HistoriaEvents({ flyers, events }: HistoriaEventsProps) {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={photo.thumbSrc}
+                      src={photo.thumbUrl}
                       alt={photo.description ?? `Foto de ${event.name}`}
                       loading="lazy"
                       className="size-full object-cover"

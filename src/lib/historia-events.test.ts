@@ -22,7 +22,7 @@ describe('getHistoriaEvents', () => {
         name: 'Lightning Talks',
         date,
         flyerImages: ['f.jpg'],
-        photos: [{ id: 'p1', thumbSrc: 't.jpg', description: null }],
+        photos: [{ id: 'p1', thumbUrl: 't.jpg', description: null }],
         photoCount: 12,
       },
     ]);
@@ -31,6 +31,13 @@ describe('getHistoriaEvents', () => {
         where: { deletedAt: null, flyerImages: { hasSome: Object.values(HISTORIA_FLYERS) } },
       }),
     );
+  });
+
+  it('only reads visible gallery items', async () => {
+    prismaMock.event.findMany.mockResolvedValue([] as any);
+    await getHistoriaEvents();
+    const { select } = prismaMock.event.findMany.mock.calls[0][0] as any;
+    expect(select.galleryItems.where).toEqual({ legacyId: null, kind: 'PHOTO' });
   });
 
   it('returns no events instead of failing when the database errors', async () => {
