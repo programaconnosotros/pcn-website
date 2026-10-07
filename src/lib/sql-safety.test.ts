@@ -26,6 +26,15 @@ const FORBIDDEN_MODULES = new Set([
   'drizzle-orm',
 ]);
 
+/**
+ * The only files allowed a direct driver, with why. Their SQL must be fixed strings, with values
+ * as `$n` parameters.
+ */
+const DRIVER_EXCEPTIONS: Record<string, string> = {
+  'src/lib/realtime.ts':
+    'LISTEN/NOTIFY necesita una conexión propia que Prisma no da; solo `LISTEN` fijo y `pg_notify($1, $2)`',
+};
+
 const RAW_TAGS = new Set(['$queryRaw', '$executeRaw']);
 const UNSAFE_METHODS = new Set(['$queryRawUnsafe', '$executeRawUnsafe']);
 
@@ -91,7 +100,7 @@ const findUnsafeSql = (code: string, file = 'snippet.ts') => {
             ts.isStringLiteral(node.arguments[0])
           ? node.arguments[0].text
           : null;
-    if (moduleName && FORBIDDEN_MODULES.has(moduleName))
+    if (moduleName && FORBIDDEN_MODULES.has(moduleName) && !(file in DRIVER_EXCEPTIONS))
       report(node, `importa "${moduleName}" en vez de usar Prisma`);
 
     ts.forEachChild(node, visit);
@@ -116,6 +125,42 @@ describe('SQL injection: static check', () => {
   it('only talks to the database through parameterized queries', () => {
     const findings = results.flatMap(({ findings }) => findings);
     expect(findings.map(({ file, line, problem }) => `${file}:${line} ${problem}`)).toEqual([]);
+  });
+
+  it('lets the driver exceptions run only fixed SQL', () => {
+    for (const file of Object.keys(DRIVER_EXCEPTIONS)) {
+      const source = ts.createSourceFile(
+        file,
+        readFileSync(join(process.cwd(), file), 'utf8'),
+        ts.ScriptTarget.Latest,
+        true,
+      );
+      const queries: ts.Expression[] = [];
+      const visit = (node: ts.Node) => {
+        if (
+          ts.isCallExpression(node) &&
+          ts.isPropertyAccessExpression(node.expression) &&
+          node.expression.name.text === 'query'
+        )
+          queries.push(node.arguments[0]);
+        ts.forEachChild(node, visit);
+      };
+      visit(source);
+      expect(queries.length).toBeGreaterThan(0);
+      for (const sql of queries) {
+        // A string literal, or a template whose only substitution is a module constant
+        const fixed =
+          ts.isStringLiteral(sql) ||
+          ts.isNoSubstitutionTemplateLiteral(sql) ||
+          (ts.isTemplateExpression(sql) &&
+            sql.templateSpans.every(({ expression }) => /^[A-Z_]+$/.test(expression.getText())));
+        expect({ file, sql: sql.getText(), fixed }).toEqual({
+          file,
+          sql: sql.getText(),
+          fixed: true,
+        });
+      }
+    }
   });
 
   describe('the detector', () => {

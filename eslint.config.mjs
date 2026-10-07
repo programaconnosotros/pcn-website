@@ -55,6 +55,12 @@ const config = [
     },
   },
   {
+    // LISTEN/NOTIFY needs its own connection, which Prisma doesn't give; see DRIVER_EXCEPTIONS in
+    // src/lib/sql-safety.test.ts.
+    files: ['src/lib/realtime.ts', 'src/lib/realtime.test.ts'],
+    rules: { 'no-restricted-imports': 'off' },
+  },
+  {
     // Los fixtures de Playwright reciben una función `use` que no es un hook de React
     files: ['tests/e2e/**'],
     rules: { 'react-hooks/rules-of-hooks': 'off' },

@@ -1,4 +1,5 @@
 import { cache, Suspense } from 'react';
+import { RealtimeRefresh } from '@/components/realtime/realtime-refresh';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { CalendarPlus, Download, Edit, Users, Video, Mic, MapPin } from 'lucide-react';
@@ -183,6 +184,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
 
   return (
     <>
+      {/* Places left update live as people sign up or cancel. */}
+      {!isExternalEvent && <RealtimeRefresh topics={[`event:${event.id}`]} />}
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 pt-0">
         <StickyHeader className="mt-4">
           <PageTitle

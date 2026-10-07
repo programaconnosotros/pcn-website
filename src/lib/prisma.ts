@@ -1,7 +1,8 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { checkCachedRead, expireModels } from '@/lib/cache';
 import { pgAdapter } from '@/lib/database-url';
-import { isDelete, modelsIn } from '@/lib/prisma-models';
+import { isDelete, modelsIn, type ModelName } from '@/lib/prisma-models';
+import { signalWrite } from '@/lib/realtime-signals';
 
 const WRITES = new Set([
   'create',
@@ -41,6 +42,8 @@ const prismaClientSingleton = () => {
           }
           const result = await query(args);
           expireModels(modelsIn(model, args, isDelete(operation)));
+          // Open pages hear about what changed (src/lib/realtime-signals.ts).
+          signalWrite(model as ModelName, operation, result);
           return result;
         },
       },
