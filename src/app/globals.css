@@ -179,6 +179,128 @@
     }
   }
 
+  /* Classic sidebar links (components/ui/nav-main.tsx): hovering one jacks into it. A scanlined
+     panel with a lit left rail wipes in from the left, a light beam sweeps across once, the
+     label switches to mono through a short RGB-split glitch and keeps glowing with a blinking
+     caret, and the icon powers up with a jolt. The active link keeps its own look. */
+  .nav-hack {
+    isolation: isolate;
+  }
+  .nav-hack::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      linear-gradient(90deg, rgba(4, 244, 190, 0.22), rgba(4, 244, 190, 0.05) 50%, transparent 90%),
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.07) 0 1px, transparent 1px 3px);
+    box-shadow:
+      inset 2px 0 0 #04f4be,
+      inset 0 0 0 1px rgba(4, 244, 190, 0.16),
+      -4px 0 14px -4px rgba(4, 244, 190, 0.9);
+    clip-path: inset(0 100% 0 0);
+    transition:
+      opacity 0.15s ease-out,
+      clip-path 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .nav-hack::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: -35%;
+    width: 35%;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(4, 244, 190, 0.5), transparent);
+    mix-blend-mode: screen;
+  }
+  .nav-hack:not([data-active='true']):hover {
+    color: #04f4be;
+    text-shadow: 0 0 8px rgba(4, 244, 190, 0.55);
+  }
+  .nav-hack:not([data-active='true']):hover::before {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+  .nav-hack:not([data-active='true']):hover::after {
+    animation: nav-beam 0.55s ease-out;
+  }
+  .nav-hack:not([data-active='true']):hover > svg {
+    color: #04f4be;
+    filter: drop-shadow(0 0 6px rgba(4, 244, 190, 0.9));
+    animation: nav-icon-jolt 0.36s steps(3, end);
+  }
+  .nav-hack:not([data-active='true']):hover > span:first-of-type {
+    animation: nav-glitch 0.36s steps(3, end);
+  }
+  .nav-hack:not([data-active='true']):hover > span:first-of-type::after {
+    content: '_';
+    margin-left: 2px;
+    color: #04f4be;
+    animation: cursor-blink 1s steps(1) infinite;
+  }
+  @keyframes nav-beam {
+    from {
+      left: -35%;
+      opacity: 1;
+    }
+    to {
+      left: 110%;
+      opacity: 0;
+    }
+  }
+  @keyframes nav-glitch {
+    0% {
+      transform: translateX(3px);
+      clip-path: inset(15% 0 45% 0);
+      text-shadow:
+        -2px 0 rgba(255, 0, 90, 0.85),
+        2px 0 rgba(0, 255, 255, 0.85);
+    }
+    33% {
+      transform: translateX(-2px);
+      clip-path: inset(55% 0 5% 0);
+      text-shadow:
+        2px 0 rgba(255, 0, 90, 0.85),
+        -2px 0 rgba(0, 255, 255, 0.85);
+    }
+    66% {
+      transform: translateX(1px);
+      clip-path: inset(0);
+      text-shadow:
+        -1px 0 rgba(255, 0, 90, 0.6),
+        1px 0 rgba(0, 255, 255, 0.6);
+    }
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes nav-icon-jolt {
+    0% {
+      transform: translate(-2px, 1px) scale(1.15);
+      filter: drop-shadow(-2px 0 rgba(255, 0, 90, 0.9)) drop-shadow(2px 0 rgba(0, 255, 255, 0.9));
+    }
+    50% {
+      transform: translate(1px, -1px) scale(1.1);
+    }
+    100% {
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-hack::before {
+      transition: none;
+    }
+    .nav-hack:hover::after,
+    .nav-hack:hover > svg,
+    .nav-hack:hover > span:first-of-type,
+    .nav-hack:hover > span:first-of-type::after {
+      animation: none !important;
+    }
+  }
+
   /* Classic layout's sidebar toggle: a short RGB-split glitch when pressed. */
   .sidebar-toggle-glitch {
     animation: sidebar-toggle-glitch 280ms steps(2, end);

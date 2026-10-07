@@ -63,8 +63,9 @@ export const SidebarSectionLabel = ({ children }: { children: React.ReactNode })
   </SidebarGroupLabel>
 );
 
+// `nav-hack` (globals.css) is the hover effect; the background it paints replaces the accent fill.
 const menuButtonClassName =
-  'relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors hover:[&>svg]:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
+  'nav-hack relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-transparent hover:font-mono [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors hover:[&>svg]:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
 
 export function NavMain({ items, label }: { items: NavItem[]; label?: string }) {
   const pathname = usePathname();
@@ -137,7 +138,7 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                                 asChild
                                 isActive={isSubItemActive}
                                 className={cn(
-                                  'h-8 rounded-sm px-2 text-[13px] text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+                                  'nav-hack relative h-8 rounded-sm px-2 text-[13px] text-sidebar-foreground/60 hover:bg-transparent hover:font-mono',
                                   isSubItemActive &&
                                     'bg-transparent font-medium text-pcnGreen hover:bg-transparent hover:text-pcnGreen',
                                 )}
