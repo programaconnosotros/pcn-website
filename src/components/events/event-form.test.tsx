@@ -2,6 +2,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { EventForm } from './event-form';
 
+jest.mock('@/actions/users/search-users-for-speaker', () => ({
+  searchUsersForSpeaker: jest.fn().mockResolvedValue([]),
+}));
 jest.mock('@/components/ui/multi-file-upload', () => ({
   MultiFileUpload: ({ value, onChange }: { value: string[]; onChange: (_v: string[]) => void }) => (
     <button type="button" onClick={() => onChange([...value, '/flyer.png'])}>

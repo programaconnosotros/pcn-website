@@ -4,6 +4,7 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { CalendarPlus, Download, Edit, Users, Video, Mic, MapPin } from 'lucide-react';
 import { fetchEvent } from '@/actions/events/fetch-event';
 import { EventFlyerCarousel } from '@/components/events/event-flyer-carousel';
+import { FlyerCredits } from '@/components/events/flyer-credits';
 import { EventPhotos } from '@/components/events/event-photos';
 import { EventDetailClient } from '@/components/events/event-detail-client';
 import { EventStatusBadge } from '@/components/events/event-status-badge';
@@ -212,6 +213,13 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 variant="detail"
               />
             </div>
+            {event.flyerDesigners.length > 0 && (
+              <FlyerCredits
+                flyers={event.flyerImages}
+                credits={event.flyerDesigners}
+                className="px-3 py-2"
+              />
+            )}
 
             {(event.galleryItems.length > 0 || isAdmin) && (
               <Section title="fotos y videos">

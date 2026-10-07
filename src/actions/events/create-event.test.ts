@@ -167,6 +167,30 @@ describe('createEvent dates and sponsors', () => {
     expect(prismaMock.event.create).not.toHaveBeenCalled();
   });
 
+  it('credits flyer designers, keeping only real users and flyers the event has', async () => {
+    prismaMock.user.findMany.mockResolvedValue([{ id: 'u1' }] as any);
+    await expect(
+      createEvent({
+        ...validEventData,
+        flyerImages: ['/a.png'],
+        flyerDesigners: [
+          { flyerSrc: '/a.png', userId: 'u1', name: 'Ana' },
+          { flyerSrc: '/a.png', userId: 'ghost', name: 'Fantasma' },
+          { flyerSrc: '/a.png', name: 'Beto' },
+          { flyerSrc: '/a.png', name: 'beto' },
+          { flyerSrc: '/borrado.png', name: 'Caro' },
+        ],
+      }),
+    ).rejects.toThrow('NEXT_REDIRECT');
+
+    const { data } = prismaMock.event.create.mock.calls[0][0] as any;
+    expect(data.flyerDesigners.create).toEqual([
+      { flyerSrc: '/a.png', userId: 'u1', name: 'Ana' },
+      { flyerSrc: '/a.png', userId: null, name: 'Fantasma' },
+      { flyerSrc: '/a.png', userId: null, name: 'Beto' },
+    ]);
+  });
+
   it('stores a later end date, skips blank sponsors and nulls empty sponsor websites', async () => {
     await expect(
       createEvent({

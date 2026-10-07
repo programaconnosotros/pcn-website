@@ -39,6 +39,22 @@ export const eventSchema = z
       )
       .optional()
       .default([]),
+    // Quién diseñó cada flyer: cero, uno o varios por flyer; alguien con cuenta o solo un nombre.
+    flyerDesigners: z
+      .array(
+        z.object({
+          flyerSrc: z.string().min(1).max(2048),
+          userId: z.string().max(40).optional().nullable(),
+          name: z
+            .string()
+            .trim()
+            .min(1, { message: 'Poné el nombre de quien diseñó el flyer' })
+            .max(80, { message: 'Máximo 80 caracteres' }),
+        }),
+      )
+      .max(40)
+      .optional()
+      .default([]),
     googleMapsUrl: z
       .string()
       .optional()

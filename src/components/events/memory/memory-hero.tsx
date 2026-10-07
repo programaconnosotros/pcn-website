@@ -21,6 +21,7 @@ export function MemoryHero({
   stats,
   coverPicker,
   framing,
+  flyerCredits,
 }: {
   name: string;
   date: Date;
@@ -34,6 +35,8 @@ export function MemoryHero({
   coverPicker?: ReactNode;
   /** How the chosen cover is framed. */
   framing?: CoverFraming;
+  /** Who designed the flyer shown, credited under it. */
+  flyerCredits?: ReactNode;
 }) {
   const cover = covers.length > 0;
 
@@ -91,7 +94,12 @@ export function MemoryHero({
         </div>
 
         {/* The flyer hangs on the right like a framed print, over the photo too. */}
-        {flyer && <MemoryFlyer src={flyer} eventName={name} />}
+        {flyer && (
+          <div className="hidden max-w-[42%] shrink-0 flex-col items-end gap-1.5 sm:flex">
+            <MemoryFlyer src={flyer} eventName={name} />
+            {flyerCredits}
+          </div>
+        )}
       </div>
     </header>
   );

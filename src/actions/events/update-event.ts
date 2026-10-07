@@ -10,6 +10,32 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 import { fillFromWaitlist } from '@/lib/event-waitlist';
 
+/**
+ * Designers of the flyers the event keeps, deduplicated per flyer, with only user ids that
+ * exist (a stale id is kept as a plain name).
+ */
+const flyerDesignerRows = async (
+  designers: { flyerSrc: string; userId?: string | null; name: string }[],
+  flyers: string[],
+) => {
+  const kept = designers.filter((designer) => flyers.includes(designer.flyerSrc));
+  const ids = [...new Set(kept.flatMap((designer) => (designer.userId ? [designer.userId] : [])))];
+  const existing = new Set(
+    ids.length
+      ? (await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true } })).map(
+          (user) => user.id,
+        )
+      : [],
+  );
+  const seen = new Set<string>();
+  return kept.flatMap(({ flyerSrc, userId, name }) => {
+    const key = `${flyerSrc}|${userId ?? name.toLowerCase()}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ flyerSrc, name, userId: userId && existing.has(userId) ? userId : null }];
+  });
+};
+
 export const updateEvent = async (id: string, data: EventFormData) => {
   await enforceRateLimit('editContent');
 
@@ -50,13 +76,15 @@ export const updateEvent = async (id: string, data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, ...eventData } = validatedData;
+  const { sponsors, flyerDesigners, ...eventData } = validatedData;
+  const designers = await flyerDesignerRows(flyerDesigners, eventData.flyerImages);
 
   // Reemplazar sponsors existentes por los nuevos
   await prisma.$transaction([
     prisma.sponsor.deleteMany({
       where: { eventId: id },
     }),
+    prisma.eventFlyerDesigner.deleteMany({ where: { eventId: id } }),
     prisma.event.update({
       where: { id },
       data: {
@@ -65,6 +93,7 @@ export const updateEvent = async (id: string, data: EventFormData) => {
         endDate: endDate,
         googleMapsUrl: validatedData.googleMapsUrl ?? null,
         capacity: validatedData.capacity ?? null,
+        flyerDesigners: { create: designers },
         sponsors: {
           create:
             sponsors

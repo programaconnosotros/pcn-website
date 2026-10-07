@@ -26,11 +26,22 @@ const findEvent = cached(
         },
         _count: { select: { galleryItems: { where: visibleGalleryItem } } },
         sponsors: true,
+        flyerDesigners: {
+          select: {
+            id: true,
+            flyerSrc: true,
+            name: true,
+            user: { select: { id: true, name: true, image: true } },
+          },
+          orderBy: { createdAt: 'asc' },
+        },
         organizers: {
           select: { userId: true, user: { select: { id: true, name: true, image: true } } },
           orderBy: { createdAt: 'asc' },
         },
       },
     }),
-  { models: ['Event', 'GalleryItem', 'Sponsor', 'EventOrganizer', 'User'] },
+  {
+    models: ['Event', 'GalleryItem', 'Sponsor', 'EventOrganizer', 'EventFlyerDesigner', 'User'],
+  },
 );

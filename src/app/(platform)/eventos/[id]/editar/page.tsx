@@ -45,6 +45,7 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
     streamingUrl: event.streamingUrl ?? '',
     markedAsFull: event.markedAsFull ?? false,
     callForSpeakersEnabled: event.callForSpeakersEnabled ?? false,
+    flyerDesigners: event.flyerDesigners,
     sponsors:
       event.sponsors?.map((sponsor) => ({
         name: sponsor.name,

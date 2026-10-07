@@ -18,7 +18,7 @@ export function MemoryFlyer({ src, eventName }: { src: string; eventName: string
         type="button"
         onClick={() => setOpen(true)}
         aria-label={`Ver el flyer de ${eventName} en pantalla completa`}
-        className="group/flyer relative hidden max-w-[42%] shrink-0 cursor-zoom-in overflow-hidden rounded-sm shadow-2xl ring-1 ring-white/10 transition hover:ring-pcnGreen/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen sm:block"
+        className="group/flyer relative block max-w-full shrink-0 cursor-zoom-in overflow-hidden rounded-sm shadow-2xl ring-1 ring-white/10 transition hover:ring-pcnGreen/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

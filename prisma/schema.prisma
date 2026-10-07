@@ -84,6 +84,7 @@ model User {
   articles             ArticleAuthor[]
   articleAuthorsAdded  ArticleAuthor[]       @relation("ArticleAuthorAdder")
   setups               Setup[]
+  flyerDesigns         EventFlyerDesigner[]
   setupLikes           SetupLike[]
 
   createdAt DateTime @default(now())
@@ -209,6 +210,7 @@ model Event {
   registrations   EventRegistration[]
   waitlistEntries EventWaitlistEntry[]
   sponsors        Sponsor[]
+  flyerDesigners  EventFlyerDesigner[]
   announcements   Announcement[]
   talkProposals   TalkProposal[]
   talks           Talk[]
@@ -421,6 +423,25 @@ model EventWaitlistEntry {
 
   @@unique([eventId, userId])
   @@index([eventId, cancelledAt, promotedAt, createdAt])
+  @@index([userId])
+}
+
+// Quién diseñó cada flyer de un evento: ninguno, uno o varios por flyer. Puede ser alguien con
+// cuenta (userId) o solo un nombre; el nombre se guarda siempre, para mostrarlo sin la cuenta.
+model EventFlyerDesigner {
+  id       String  @id @default(cuid())
+  eventId  String
+  // La URL del flyer (uno de Event.flyerImages): sigue valiendo aunque cambie el orden.
+  flyerSrc String
+  userId   String?
+  name     String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
   @@index([userId])
 }
 

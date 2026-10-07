@@ -16,6 +16,7 @@ import { getEventCounts } from '@/lib/event-index';
 import { MemoryConversations } from './memory-conversations';
 import { MemoryCoverPicker } from './memory-cover-picker';
 import { MemoryHero } from './memory-hero';
+import { FlyerCredits } from '@/components/events/flyer-credits';
 import { MemoryCoverFraming } from './memory-cover-framing';
 import { MemoryMosaic } from './memory-mosaic';
 import { MemoryTalks } from './memory-talks';
@@ -111,6 +112,15 @@ export async function PastEventMemory({
           covers={covers.map((photo) => photo.fullUrl)}
           flyer={event.flyerImages[0]}
           stats={stats}
+          flyerCredits={
+            event.flyerImages[0] && (
+              <FlyerCredits
+                flyers={[event.flyerImages[0]]}
+                credits={event.flyerDesigners}
+                className="text-right text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.8)]"
+              />
+            )
+          }
           framing={
             cover.chosenId
               ? { x: event.coverFocusX, y: event.coverFocusY, zoom: event.coverZoom }

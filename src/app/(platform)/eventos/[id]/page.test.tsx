@@ -63,6 +63,7 @@ const buildDetail = (overrides: Partial<DetailEvent> = {}) =>
     ...buildEvent({ _count: { registrations: 0, talks: 0, galleryItems: 0 } }),
     galleryItems: [],
     sponsors: [],
+    flyerDesigners: [],
     organizers: [],
     ...overrides,
   }) as DetailEvent;

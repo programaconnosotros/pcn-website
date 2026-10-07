@@ -60,6 +60,7 @@ const event = {
     callForSpeakersEnabled: true,
   }),
   organizers: [{ user: person('o1') }],
+  flyerDesigners: [],
   sponsors: [
     { id: 's1', name: 'Acme', website: 'https://acme.dev' },
     { id: 's2', name: 'Sin web', website: null },

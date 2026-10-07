@@ -42,6 +42,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { partners } from '@/data/partners';
+import { FlyerDesignersField } from '@/components/events/flyer-designers-field';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
@@ -67,6 +68,7 @@ export function EventForm({
       address: defaultValues?.address || '',
       placeName: defaultValues?.placeName || '',
       flyerImages: defaultValues?.flyerImages ?? [],
+      flyerDesigners: defaultValues?.flyerDesigners ?? [],
       googleMapsUrl: defaultValues?.googleMapsUrl ?? '',
       sponsors: defaultValues?.sponsors || [],
       capacity: defaultValues?.capacity?.toString() || '',
@@ -373,6 +375,25 @@ export function EventForm({
                         Podés subir uno o más flyers del evento (JPEG, PNG, WebP, GIF). Si no subís
                         ninguno, se mostrará un placeholder con el logo de PCN.
                       </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Crédito a quien diseñó cada flyer */}
+                <FormField
+                  control={form.control}
+                  name="flyerDesigners"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diseño de los flyers (opcional)</FormLabel>
+                      <FormControl>
+                        <FlyerDesignersField
+                          flyers={form.watch('flyerImages') ?? []}
+                          value={field.value ?? []}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

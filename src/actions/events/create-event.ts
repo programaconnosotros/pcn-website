@@ -9,6 +9,32 @@ import { canCreateEvents } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 
+/**
+ * Designers of the flyers the event keeps, deduplicated per flyer, with only user ids that
+ * exist (a stale id is kept as a plain name).
+ */
+const flyerDesignerRows = async (
+  designers: { flyerSrc: string; userId?: string | null; name: string }[],
+  flyers: string[],
+) => {
+  const kept = designers.filter((designer) => flyers.includes(designer.flyerSrc));
+  const ids = [...new Set(kept.flatMap((designer) => (designer.userId ? [designer.userId] : [])))];
+  const existing = new Set(
+    ids.length
+      ? (await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true } })).map(
+          (user) => user.id,
+        )
+      : [],
+  );
+  const seen = new Set<string>();
+  return kept.flatMap(({ flyerSrc, userId, name }) => {
+    const key = `${flyerSrc}|${userId ?? name.toLowerCase()}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ flyerSrc, name, userId: userId && existing.has(userId) ? userId : null }];
+  });
+};
+
 export const createEvent = async (data: EventFormData) => {
   await enforceRateLimit('createContent');
 
@@ -39,7 +65,8 @@ export const createEvent = async (data: EventFormData) => {
     throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
   }
 
-  const { sponsors, ...eventData } = validatedData;
+  const { sponsors, flyerDesigners, ...eventData } = validatedData;
+  const designers = await flyerDesignerRows(flyerDesigners, eventData.flyerImages);
 
   const event = await prisma.event.create({
     data: {
@@ -51,6 +78,7 @@ export const createEvent = async (data: EventFormData) => {
       createdById: session.user.id,
       // Quien crea el evento queda como organizador; el resto se suma desde su página.
       organizers: { create: { userId: session.user.id } },
+      flyerDesigners: { create: designers },
       sponsors: {
         create:
           sponsors
