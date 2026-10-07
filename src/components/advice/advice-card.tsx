@@ -112,12 +112,7 @@ export const AdviceCard = ({
     >
       <span
         aria-hidden
-        className={cn(
-          'pointer-events-none absolute inset-y-0 left-0 w-0.5 transition-colors',
-          isExtracted
-            ? 'bg-[repeating-linear-gradient(180deg,rgba(4,244,190,0.7)_0_4px,transparent_4px_8px)]'
-            : 'bg-transparent group-hover/advice:bg-pcnGreen group-hover/advice:shadow-[0_0_12px_rgba(4,244,190,0.8)]',
-        )}
+        className="pointer-events-none absolute inset-y-0 left-0 w-0.5 bg-transparent transition-colors group-hover/advice:bg-pcnGreen group-hover/advice:shadow-[0_0_12px_rgba(4,244,190,0.8)]"
       />
 
       <header className="flex min-w-0 items-center gap-2 whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground">
