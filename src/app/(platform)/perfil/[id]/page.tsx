@@ -16,7 +16,8 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { Github, Instagram, Linkedin, Pencil, Twitch, Youtube } from 'lucide-react';
+import { Pencil } from 'lucide-react';
+import { Github, Instagram, Linkedin, Twitch, Youtube } from '@/components/icons/brand-icons';
 import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
 import {
   ProfileTabPanel,

@@ -6,7 +6,6 @@ import {
   Database,
   GitBranch,
   GitPullRequest,
-  Github,
   Globe,
   Layers,
   MessageCircle,
@@ -17,6 +16,7 @@ import {
   Sparkles,
   Wrench,
 } from 'lucide-react';
+import { Github } from '@/components/icons/brand-icons';
 import { Suspense, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Team, teamSize } from '@/components/landing/team';

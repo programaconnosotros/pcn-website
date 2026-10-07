@@ -37,9 +37,9 @@ import {
   UserRound,
   Users,
   Wrench,
-  Youtube,
   type LucideIcon,
 } from 'lucide-react';
+import { Youtube } from '@/components/icons/brand-icons';
 
 export type OsProgramGroup = 'Inicio' | 'Actividades' | 'Recursos' | 'Comunidad' | 'Administración';
 

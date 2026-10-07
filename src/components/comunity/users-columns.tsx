@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { ColumnDef, type Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ArrowUpDown, Github, Linkedin, Twitter } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import { Github, Linkedin, Twitter } from '@/components/icons/brand-icons';
 
 import { UserWithoutPassword } from '@/actions/users/get-users';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

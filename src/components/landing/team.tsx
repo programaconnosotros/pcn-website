@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Linkedin } from 'lucide-react';
+import { Github, Linkedin } from '@/components/icons/brand-icons';
 import type { LinkedUser } from '@/lib/identity-links';
 import githubStats from '@/data/github-stats.json';
 
