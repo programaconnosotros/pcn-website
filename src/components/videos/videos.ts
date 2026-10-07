@@ -17,6 +17,84 @@ export interface Video {
 }
 
 const allVideos: Video[] = [
+  // The community's first Lightning Talks, streamed on its YouTube channel in 2020 and 2021.
+  {
+    id: 'QMyCntZ5rIY',
+    title: 'Lightning Talks: GitHub (octubre 2021)',
+    speaker: 'Mauricio Sánchez, Camila Rodriguez, Marcelo Núñez, Lucas Pérez y Tobías Paz Posse',
+    channel: 'programaConNosotros',
+    date: '2021-10-09',
+    durationSeconds: 3879,
+    language: 'es',
+  },
+  {
+    id: '4yBLY947A0E',
+    title: 'Lightning Talks: Git (junio 2021)',
+    speaker: 'Comunidad programaConNosotros',
+    channel: 'programaConNosotros',
+    date: '2021-06-26',
+    durationSeconds: 6522,
+    language: 'es',
+  },
+  {
+    id: '7F1m0PwHO38',
+    title: 'Lightning Talks: algoritmos, trabajo en equipo, programación y más (abril 2021)',
+    speaker:
+      'Agustín Sánchez, Mauricio Sánchez, Luna Moreno Ivanoff, Tobías Paz Posse, Gadiel Scharf, Germán Navarro y Esteban Sánchez',
+    channel: 'programaConNosotros',
+    date: '2021-04-24',
+    durationSeconds: 5522,
+    language: 'es',
+  },
+  {
+    id: 't41jcBED8y0',
+    title: 'Lightning Talks: Linux, entornos de escritorio y más (noviembre 2020)',
+    speaker: 'Mauricio Sánchez, Agustín Sánchez, Esteban Sánchez y Marcelo Núñez',
+    channel: 'programaConNosotros',
+    date: '2020-11-28',
+    durationSeconds: 2590,
+    language: 'es',
+  },
+  {
+    id: 'Nb0qN3x3Wfs',
+    title: 'Lightning Talks: Git y GitHub (octubre 2020)',
+    speaker:
+      'Agustín Sánchez, Iván Taddei, Marcelo Núñez, Agustín Lencina, Esteban Sánchez, Mauricio Sánchez y Germán Navarro',
+    channel: 'programaConNosotros',
+    date: '2020-10-24',
+    durationSeconds: 6605,
+    language: 'es',
+  },
+  {
+    id: 'o-rHlSQHNEk',
+    title: 'Lightning Talks: redes, bases de datos y más (septiembre 2020)',
+    speaker:
+      'Mauricio Sánchez, Agustín Sánchez, Marcelo Núñez, Iván Taddei, Germán Navarro, Facundo Gelatti, Agustín Lencina y Franco Tarchini',
+    channel: 'programaConNosotros',
+    date: '2020-09-20',
+    durationSeconds: 4810,
+    language: 'es',
+  },
+  {
+    id: 'cZiYoiNyVN0',
+    title: 'Lightning Talks: filosofía del software, programación competitiva y más (agosto 2020)',
+    speaker:
+      'Agustín Sánchez, Marcelo Núñez, Iván Taddei, Esteban Sánchez, David Leila y Mauricio Sánchez',
+    channel: 'programaConNosotros',
+    date: '2020-08-02',
+    durationSeconds: 6685,
+    language: 'es',
+  },
+  {
+    id: 'L4RP34KjHns',
+    title: 'Lightning Talks: ingeniería en sistemas, desarrollo de videojuegos y más (julio 2020)',
+    speaker:
+      'Agustín Sánchez, Germán Navarro, Esteban Sánchez, Marcelo Núñez, Marco Canevaro, Agustín Lencina y Mauricio Sánchez',
+    channel: 'programaConNosotros',
+    date: '2020-07-04',
+    durationSeconds: 10895,
+    language: 'es',
+  },
   {
     id: '6eBSHbLKuN0',
     title: 'Mastering Claude Code in 30 minutes',
