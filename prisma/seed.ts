@@ -33,6 +33,7 @@ function mapSpeakers(speakers: SpeakerSeedData[]) {
 }
 
 async function clearSeedData() {
+  await prisma.forumPost.deleteMany();
   await prisma.talkSpeaker.deleteMany();
   await prisma.talk.deleteMany();
   await prisma.talkProposalSpeaker.deleteMany();
@@ -60,60 +61,115 @@ async function clearSeedData() {
 async function main() {
   await clearSeedData();
 
-  const users = await Promise.all([
-    prisma.user.upsert({
-      where: { email: 'user@example.com' },
-      update: {},
-      create: {
-        email: 'user@example.com',
-        name: 'John Doe',
-        image: 'https://avatars.githubusercontent.com/u/12345678?v=4',
-        // 1234
-        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: 'maria.garcia@example.com' },
-      update: {},
-      create: {
-        email: 'maria.garcia@example.com',
-        name: 'María García',
-        image: 'https://avatars.githubusercontent.com/u/23456789?v=4',
-        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: 'juan.perez@example.com' },
-      update: {},
-      create: {
-        email: 'juan.perez@example.com',
-        name: 'Juan Pérez',
-        image: 'https://avatars.githubusercontent.com/u/34567890?v=4',
-        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: 'ana.lopez@example.com' },
-      update: {},
-      create: {
-        email: 'ana.lopez@example.com',
-        name: 'Ana López',
-        image: 'https://avatars.githubusercontent.com/u/45678901?v=4',
-        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: 'admin@example.com' },
-      update: {},
-      create: {
-        email: 'admin@example.com',
-        name: 'Admin User',
-        image: 'https://avatars.githubusercontent.com/u/56789012?v=4',
-        password: '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC',
-        role: 'ADMIN',
-      },
-    }),
-  ]);
+  // Every seeded account signs in with the password 1234.
+  const PASSWORD = '$2b$10$nqtpzM0al9akBrR41JrXu.X977mro1deFPFmH0s.YQd5GrxnEVFyC';
+  const people = [
+    {
+      email: 'user@example.com',
+      name: 'Lucas Fernández',
+      jobTitle: 'Frontend Developer',
+      enterprise: 'Mercado Libre',
+      province: 'Tucumán',
+      slogan: 'Aprendiendo en público',
+    },
+    {
+      email: 'maria.garcia@example.com',
+      name: 'María García',
+      jobTitle: 'Backend Developer',
+      enterprise: 'Globant',
+      province: 'Córdoba',
+      slogan: 'Postgres > todo',
+    },
+    {
+      email: 'juan.perez@example.com',
+      name: 'Juan Pérez',
+      career: 'Ingeniería en Sistemas',
+      studyPlace: 'UTN-FRT',
+      province: 'Tucumán',
+    },
+    {
+      email: 'ana.lopez@example.com',
+      name: 'Ana López',
+      jobTitle: 'QA Automation Engineer',
+      enterprise: 'Despegar',
+      province: 'Buenos Aires',
+    },
+    {
+      email: 'admin@example.com',
+      name: 'Valentina Ruiz',
+      jobTitle: 'Tech Lead',
+      enterprise: 'Ualá',
+      province: 'Tucumán',
+      role: 'ADMIN' as const,
+    },
+    {
+      email: 'sofia.martinez@example.com',
+      name: 'Sofía Martínez',
+      jobTitle: 'Data Engineer',
+      enterprise: 'Naranja X',
+      province: 'Córdoba',
+    },
+    {
+      email: 'tomas.gomez@example.com',
+      name: 'Tomás Gómez',
+      career: 'Licenciatura en Informática',
+      studyPlace: 'UNT',
+      province: 'Tucumán',
+      slogan: 'Primer año, primer commit',
+    },
+    {
+      email: 'camila.diaz@example.com',
+      name: 'Camila Díaz',
+      jobTitle: 'UX Engineer',
+      enterprise: 'Freelance',
+      province: 'Salta',
+    },
+    {
+      email: 'mateo.romero@example.com',
+      name: 'Mateo Romero',
+      jobTitle: 'DevOps Engineer',
+      enterprise: 'Belatrix',
+      province: 'Mendoza',
+    },
+    {
+      email: 'lucia.sosa@example.com',
+      name: 'Lucía Sosa',
+      career: 'Tecnicatura en Programación',
+      studyPlace: 'UTN-FRT',
+      province: 'Santiago del Estero',
+    },
+    {
+      email: 'nicolas.alvarez@example.com',
+      name: 'Nicolás Álvarez',
+      jobTitle: 'Mobile Developer',
+      enterprise: 'Rappi',
+      province: 'Jujuy',
+    },
+    {
+      email: 'florencia.torres@example.com',
+      name: 'Florencia Torres',
+      jobTitle: 'Engineering Manager',
+      enterprise: 'Auth0',
+      province: 'Buenos Aires',
+      slogan: 'Equipos sanos, software sano',
+    },
+  ];
+  const users = await Promise.all(
+    people.map(({ email, role, ...profile }) =>
+      prisma.user.upsert({
+        where: { email },
+        // Re-seeding refreshes the profile, so old seeds pick up the new names.
+        update: { ...profile, image: null },
+        create: {
+          email,
+          password: PASSWORD,
+          role: role ?? 'REGULAR',
+          countryOfOrigin: 'Argentina',
+          ...profile,
+        },
+      }),
+    ),
+  );
 
   const john = users.find((u) => u.email === 'user@example.com')!;
   const maria = users.find((u) => u.email === 'maria.garcia@example.com')!;
@@ -122,25 +178,21 @@ async function main() {
   const adminUser = users.find((u) => u.email === 'admin@example.com')!;
   const regularUsers = users.filter((u) => u.role !== 'ADMIN');
 
-  const adviceExamples = [
-    'No te rindas si no sale a la primera, vas a terminar aprendiendo más si fallas, luego revisas por qué falló y luego construyes sobre esas nuevas bases. ¡Éxitos!',
-    'No hay nada más fructífero que ver tus propios avances día a día, cosechando el conocimiento que fuiste cultivando con el tiempo.',
-    'Para llegar lejos en la industria del software se necesita pasión. Te tiene que encantar sentarte a estudiar cosas, conversar con colegas, analizar cómo hacer mejor las cosas.',
-    'Es esencial desarrollar un buen dominio del inglés. Este idioma es la base de la mayoría de los lenguajes de programación y de la documentación técnica.',
-    'La pasión es la clave, ¿la tenés?',
-    'El crecimiento no solo fue del proyecto, también fue mío. Me empujó a mejorar en todos los aspectos y a seguir formándome como programador.',
-    'Hay momentos que son bastante complicados también, y si te metiste en la industria del software solo por dinero y sin pasión, probablemente te estanques.',
-    'Al mejorar tus habilidades en inglés, ampliarás tus oportunidades laborales y estarás mejor preparado para colaborar en equipos internacionales.',
-    'Aprender de los errores es fundamental para crecer en cualquier área, especialmente en tecnología.',
-    'Rodéate de personas que te inspiren y te reten a ser mejor cada día.',
-  ];
-
+  // Real consejos from the community (src/data/consejos-extraidos), spread over the last year.
+  const adviceExamples = (
+    await import('../src/data/consejos-extraidos/consejos.json', { with: { type: 'json' } })
+  ).default
+    .slice(0, 60)
+    .map((consejo: { content: string; tags: string[] }) => consejo);
+  const DAY = 86_400_000;
   const advice = await Promise.all(
-    Array.from({ length: 300 }).map((_, i) =>
+    adviceExamples.map((consejo: { content: string; tags: string[] }, i: number) =>
       prisma.advice.create({
         data: {
-          content: adviceExamples[i % adviceExamples.length],
-          authorId: users[i % users.length].id,
+          content: consejo.content,
+          tags: i % 3 === 0 ? consejo.tags.slice(0, 1) : [],
+          authorId: users[(i * 7) % users.length].id,
+          createdAt: new Date(Date.now() - ((i * 37) % 365) * DAY - (i % 24) * 3_600_000),
         },
       }),
     ),
@@ -170,26 +222,93 @@ async function main() {
     }),
   );
 
+  // A year of meetups: past editions with photos, a few coming up, some online.
+  const EVENT_SEEDS = [
+    {
+      name: 'Meetup de desarrollo',
+      daysFromNow: -330,
+      online: false,
+      about: 'Charlas relámpago de la comunidad sobre lo que estamos construyendo.',
+    },
+    {
+      name: 'Taller de Git y GitHub desde cero',
+      daysFromNow: -290,
+      online: false,
+      about: 'Ramas, pull requests y cómo colaborar en un proyecto open source.',
+    },
+    {
+      name: 'Café virtual: primer trabajo en tecnología',
+      daysFromNow: -240,
+      online: true,
+      about: 'Charla abierta sobre CV, entrevistas y cómo conseguir la primera experiencia.',
+    },
+    {
+      name: 'Lightning Talks de otoño',
+      daysFromNow: -180,
+      online: false,
+      about: 'Cinco minutos por charla: testing, IA, bases de datos y más.',
+    },
+    {
+      name: 'Workshop de Docker para principiantes',
+      daysFromNow: -120,
+      online: false,
+      about: 'Contenedores, imágenes y docker compose con un proyecto real.',
+    },
+    {
+      name: 'Café virtual: agentes de IA en el día a día',
+      daysFromNow: -60,
+      online: true,
+      about: 'Cómo usamos Claude Code, Cursor y Codex en proyectos reales.',
+    },
+    {
+      name: 'Hackatón PCN',
+      daysFromNow: -21,
+      online: false,
+      about: 'Un fin de semana para construir algo en equipo y presentarlo.',
+    },
+    {
+      name: 'Meetup de arquitectura de software',
+      daysFromNow: 10,
+      online: false,
+      about: 'Monolitos modulares, colas y cuándo conviene separar servicios.',
+    },
+    {
+      name: 'Café virtual: system design para entrevistas',
+      daysFromNow: 24,
+      online: true,
+      about: 'Practicamos un ejercicio de diseño de sistemas en vivo.',
+    },
+    {
+      name: 'Dev Meetup de fin de año',
+      daysFromNow: 70,
+      online: false,
+      about: 'Cerramos el año con charlas, premios y pizza.',
+    },
+  ];
   const eventResults = await Promise.all(
-    Array.from({ length: 10 }).map(async (_, index) => {
+    EVENT_SEEDS.map(async ({ name, daysFromNow, online, about }, index) => {
       try {
         const startDate = new Date();
+        startDate.setDate(startDate.getDate() + daysFromNow);
+        startDate.setHours(19, 0, 0, 0);
         const endDate = new Date(startDate);
-        endDate.setHours(startDate.getHours() + 4);
+        endDate.setHours(startDate.getHours() + 3);
 
-        const includePhotos = index % 2 === 0;
+        const includePhotos = daysFromNow < 0 && !online;
 
         return prisma.event.create({
           data: {
-            name: `Titulo del evento numero ${index + 1}`,
+            name,
             flyerImages: ['/events/Lightning talks flyer.webp'],
-            description: `Esta es la descripción del contenido del evento numero ${index + 1}`,
+            description: `${about}\n\nEdición número ${index + 1} de los encuentros de la comunidad.`,
             date: startDate,
             endDate: endDate,
-            city: 'San Miguel de Tucumán',
-            address: 'Bernardino Rivadavia 1050',
-            placeName: 'UTN-FRT',
-            googleMapsUrl: 'https://www.google.com/maps?q=-26.844408,-65.22264',
+            isOnline: online,
+            streamingUrl: online ? 'https://meet.google.com/pcn-cafe' : null,
+            city: online ? null : 'San Miguel de Tucumán',
+            address: online ? null : 'Bernardino Rivadavia 1050',
+            placeName: online ? null : 'UTN-FRT',
+            googleMapsUrl: online ? null : 'https://www.google.com/maps?q=-26.844408,-65.22264',
             galleryItems: {
               create: includePhotos
                 ? Array.from({ length: 3 }).map(() => ({
@@ -202,7 +321,7 @@ async function main() {
           },
         });
       } catch (error) {
-        console.error(`Failed to create event ${index + 1}`, error);
+        console.error(`Failed to create event ${name}`, error);
         return null;
       }
     }),
@@ -210,49 +329,20 @@ async function main() {
 
   const events = eventResults.filter((e): e is NonNullable<typeof e> => e !== null);
 
-  const pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - 30);
-  const pastEndDate = new Date(pastDate);
-  pastEndDate.setHours(pastEndDate.getHours() + 4);
-
-  const futureDate = new Date();
-  futureDate.setDate(futureDate.getDate() + 14);
-  const futureEndDate = new Date(futureDate);
-  futureEndDate.setHours(futureEndDate.getHours() + 4);
-
+  // The latest past edition and the next two, which the rest of the seed hangs data off.
+  const byName = (name: string) => events.find((event) => event.name === name)!;
   const [pastEvent, futureEvent, onlineEvent] = await Promise.all([
     prisma.event.update({
-      where: { id: events[0].id },
-      data: {
-        name: 'Meetup de desarrollo - Edición pasada',
-        date: pastDate,
-        endDate: pastEndDate,
-        callForSpeakersEnabled: true,
-        capacity: 80,
-      },
+      where: { id: byName('Hackatón PCN').id },
+      data: { callForSpeakersEnabled: true, capacity: 80 },
     }),
     prisma.event.update({
-      where: { id: events[1].id },
-      data: {
-        name: 'Meetup de desarrollo - Próxima edición',
-        date: futureDate,
-        endDate: futureEndDate,
-        callForSpeakersEnabled: true,
-        capacity: 100,
-      },
+      where: { id: byName('Meetup de arquitectura de software').id },
+      data: { callForSpeakersEnabled: true, capacity: 100 },
     }),
     prisma.event.update({
-      where: { id: events[2].id },
-      data: {
-        name: 'Charla online: Buenas prácticas en Next.js',
-        date: futureDate,
-        endDate: futureEndDate,
-        isOnline: true,
-        streamingUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        city: null,
-        address: null,
-        placeName: null,
-      },
+      where: { id: byName('Café virtual: system design para entrevistas').id },
+      data: { capacity: 300 },
     }),
   ]);
 
@@ -736,6 +826,75 @@ async function main() {
       },
     ],
   });
+
+  // A few forum threads with replies; the categories come from their migration.
+  const FORUM_THREADS = [
+    {
+      category: 'forum-cat-ayuda',
+      author: juan,
+      title: '¿Cómo organizan un monorepo con pnpm?',
+      content:
+        'Estoy armando un monorepo con **pnpm workspaces** y no sé si sumar Turborepo.\n\n- ¿Qué usan para cachear builds?\n- ¿Cómo comparten el `tsconfig`?',
+      replies: [
+        { author: maria, content: 'Turborepo con remote cache nos bajó mucho los tiempos de CI.' },
+        {
+          author: john,
+          content:
+            'Para el tsconfig: un paquete `config` con un `tsconfig.base.json` y cada app lo extiende.',
+        },
+      ],
+    },
+    {
+      category: 'forum-cat-carrera',
+      author: users[6],
+      title: 'Primer trabajo: ¿proyectos propios o open source?',
+      content: 'Estoy en primer año y quiero armar un portfolio. ¿Qué pesa más en una entrevista?',
+      replies: [
+        {
+          author: users[11],
+          content:
+            'Un proyecto propio terminado y deployado, contado bien, vale más que diez a medias.',
+        },
+      ],
+    },
+    {
+      category: 'forum-cat-proyectos',
+      author: users[7],
+      title: 'Hice un design system con Tailwind, ¿feedback?',
+      content:
+        'Lo armé para mis clientes freelance: tokens, componentes y docs. Se aceptan críticas 🙌',
+      replies: [],
+    },
+    {
+      category: 'forum-cat-recursos',
+      author: ana,
+      title: 'Recursos para aprender testing de verdad',
+      content:
+        '> Si no tiene tests, no está terminado.\n\nComparto lo que me sirvió: Testing JavaScript, la doc de Playwright y practicar TDD con katas.',
+      replies: [{ author: users[5], content: 'Sumo el libro de Kent Beck, TDD by Example.' }],
+    },
+  ];
+  for (const [index, thread] of FORUM_THREADS.entries()) {
+    const createdAt = new Date(Date.now() - (FORUM_THREADS.length - index) * 3 * 86_400_000);
+    await prisma.forumPost.create({
+      data: {
+        title: thread.title,
+        content: thread.content,
+        categoryId: thread.category,
+        authorId: thread.author.id,
+        isPinned: index === 0,
+        createdAt,
+        activeAt: createdAt,
+        comments: {
+          create: thread.replies.map((reply) => ({
+            authorId: reply.author.id,
+            content: reply.content,
+          })),
+        },
+        likes: { create: users.slice(0, index + 2).map((user) => ({ userId: user.id })) },
+      },
+    });
+  }
 
   await prisma.eventRegistration.createMany({
     data: [
