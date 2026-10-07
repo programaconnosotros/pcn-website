@@ -81,7 +81,13 @@ describe('DesarrolloPage', () => {
       (li) => li.textContent,
     );
     expect(ids).toEqual(
-      expect.arrayContaining(['arquitectura', 'base-de-datos', 'team', 'por-que-contribuir']),
+      expect.arrayContaining([
+        'arquitectura',
+        'decisiones',
+        'base-de-datos',
+        'team',
+        'por-que-contribuir',
+      ]),
     );
     for (const view of architectureViews) {
       expect(ids).toContain(`diagrama-${view.id}`);
@@ -90,7 +96,7 @@ describe('DesarrolloPage', () => {
     for (const group of techNoteGroups) {
       for (const note of group.notes) expect(ids).toContain(`nota-${note.id}`);
     }
-    expect(ids).toHaveLength(13 + architectureViews.length + noteCount);
+    expect(ids).toHaveLength(14 + architectureViews.length + noteCount);
   });
 
   it('describes the database from the generated schema', () => {

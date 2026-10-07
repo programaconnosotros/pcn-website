@@ -28,6 +28,8 @@ import { TechNotes } from '@/components/desarrollo/tech-notes';
 import { technologies, toolchain } from '@/components/desarrollo/technologies';
 import { techNoteGroups } from './tech-notes';
 import { DesarrolloToc } from '@/components/desarrollo/desarrollo-toc';
+import { AdrList } from '@/components/desarrollo/adr-list';
+import { adrs } from './adrs';
 import { DbDiagram } from '@/components/desarrollo/db-diagram';
 import { ArchitectureDiagram } from '@/components/desarrollo/architecture-diagram';
 import { architectureViews } from './architecture';
@@ -277,6 +279,7 @@ const tocSections: TocSection[] = [
   section('diseno', 'Diseño UX/UI'),
   section('tecnologias', 'Tecnologías'),
   section('contribuir', 'Cómo contribuir'),
+  section('decisiones', 'Decisiones (ADRs)'),
   section('base-de-datos', 'Base de datos'),
   section('notas', 'Notas del stack'),
   ...techNoteGroups.flatMap((group) =>
@@ -428,6 +431,15 @@ const DesarrolloPage = () => (
                 </Section>
               </div>
             </div>
+
+            <Section id="decisiones" title={`Decisiones de arquitectura (${adrs.length} ADRs)`}>
+              <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+                Por qué el sitio está hecho como está: cada ADR cuenta el problema, lo que se
+                decidió, lo que cuesta y las alternativas que se descartaron. Si querés cambiar una
+                de estas decisiones, abrí un issue proponiendo un ADR nuevo que la reemplace.
+              </p>
+              <AdrList adrs={adrs} />
+            </Section>
 
             <Section id="base-de-datos" title="Diseño de la base de datos">
               <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
