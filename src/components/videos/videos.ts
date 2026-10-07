@@ -18,6 +18,16 @@ export interface Video {
 
 const allVideos: Video[] = [
   {
+    id: '6eBSHbLKuN0',
+    title: 'Mastering Claude Code in 30 minutes',
+    speaker: 'Boris Cherny (Anthropic)',
+    channel: 'Anthropic',
+    date: '2025-05-22',
+    durationSeconds: 1687,
+    language: 'en',
+    isTalk: true,
+  },
+  {
     id: 'SlGRN8jh2RI',
     title: 'Why coding is solved, and what comes next',
     speaker: 'Boris Cherny (Anthropic)',
