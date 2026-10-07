@@ -138,7 +138,7 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "~6.0.3"
   },
   "engines": {
     "node": ">=24"
