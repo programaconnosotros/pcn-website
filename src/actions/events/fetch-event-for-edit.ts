@@ -17,7 +17,7 @@ export const fetchEventForEdit = async (id: string) => {
     include: {
       sponsors: true,
       flyerDesigners: {
-        select: { flyerSrc: true, userId: true, name: true },
+        select: { userId: true, name: true },
         orderBy: { createdAt: 'asc' },
       },
       organizers: { select: { userId: true } },

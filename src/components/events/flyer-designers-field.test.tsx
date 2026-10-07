@@ -12,19 +12,30 @@ describe('FlyerDesignersField', () => {
     expect(screen.getByText(/Subí un flyer/)).toBeInTheDocument();
   });
 
-  it('adds a designer without an account to a flyer, once', async () => {
+  it('adds a designer without an account, once', async () => {
     const onChange = jest.fn();
-    render(<FlyerDesignersField flyers={['/a.png']} value={[]} onChange={onChange} />);
-    await userEvent.type(
-      screen.getByLabelText('Agregar un diseñador sin cuenta al flyer 1'),
-      'Beto{Enter}',
+    const { rerender } = render(
+      <FlyerDesignersField flyers={['/a.png', '/b.png']} value={[]} onChange={onChange} />,
     );
-    expect(onChange).toHaveBeenCalledWith([{ flyerSrc: '/a.png', name: 'Beto', userId: null }]);
+    const input = screen.getByLabelText('Agregar un diseñador sin cuenta');
+    await userEvent.type(input, 'Beto{Enter}');
+    expect(onChange).toHaveBeenCalledWith([{ name: 'Beto', userId: null }]);
+
+    onChange.mockClear();
+    rerender(
+      <FlyerDesignersField
+        flyers={['/a.png', '/b.png']}
+        value={[{ name: 'Beto', userId: null }]}
+        onChange={onChange}
+      />,
+    );
+    await userEvent.type(input, 'beto{Enter}');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('removes a credited designer', async () => {
     const onChange = jest.fn();
-    const beto = { flyerSrc: '/a.png', name: 'Beto', userId: null };
+    const beto = { name: 'Beto', userId: null };
     render(<FlyerDesignersField flyers={['/a.png']} value={[beto]} onChange={onChange} />);
     expect(screen.getByText(/1 diseñador/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Quitar a Beto' }));

@@ -115,7 +115,6 @@ export async function PastEventMemory({
           flyerCredits={
             event.flyerImages[0] && (
               <FlyerCredits
-                flyers={[event.flyerImages[0]]}
                 credits={event.flyerDesigners}
                 className="text-right text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.8)]"
               />

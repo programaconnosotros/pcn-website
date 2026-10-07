@@ -1079,10 +1079,6 @@ export const dbModels: DbModel[] = [
         fk: true,
       },
       {
-        name: 'flyerSrc',
-        type: 'String',
-      },
-      {
         name: 'userId',
         type: 'String',
         fk: true,

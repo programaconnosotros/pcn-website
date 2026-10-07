@@ -216,12 +216,8 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                 variant="detail"
               />
             </div>
-            {event.flyerDesigners.length > 0 && (
-              <FlyerCredits
-                flyers={event.flyerImages}
-                credits={event.flyerDesigners}
-                className="px-3 py-2"
-              />
+            {event.flyerImages.length > 0 && event.flyerDesigners.length > 0 && (
+              <FlyerCredits credits={event.flyerDesigners} className="px-3 py-2" />
             )}
 
             {(event.galleryItems.length > 0 || isAdmin) && (

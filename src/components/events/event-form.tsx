@@ -380,13 +380,13 @@ export function EventForm({
                   )}
                 />
 
-                {/* Crédito a quien diseñó cada flyer */}
+                {/* Crédito a quien diseñó el flyer (todas sus imágenes) */}
                 <FormField
                   control={form.control}
                   name="flyerDesigners"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Diseño de los flyers (opcional)</FormLabel>
+                      <FormLabel>Diseño del flyer (opcional)</FormLabel>
                       <FormControl>
                         <FlyerDesignersField
                           flyers={form.watch('flyerImages') ?? []}

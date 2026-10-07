@@ -29,7 +29,6 @@ const findEvent = cached(
         flyerDesigners: {
           select: {
             id: true,
-            flyerSrc: true,
             name: true,
             user: { select: { id: true, name: true, image: true } },
           },

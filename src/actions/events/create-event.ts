@@ -10,14 +10,14 @@ import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 
 /**
- * Designers of the flyers the event keeps, deduplicated per flyer, with only user ids that
- * exist (a stale id is kept as a plain name).
+ * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
+ * kept as a plain name). None when the event has no flyer left.
  */
 const flyerDesignerRows = async (
-  designers: { flyerSrc: string; userId?: string | null; name: string }[],
+  designers: { userId?: string | null; name: string }[],
   flyers: string[],
 ) => {
-  const kept = designers.filter((designer) => flyers.includes(designer.flyerSrc));
+  const kept = flyers.length > 0 ? designers : [];
   const ids = [...new Set(kept.flatMap((designer) => (designer.userId ? [designer.userId] : [])))];
   const existing = new Set(
     ids.length
@@ -27,11 +27,11 @@ const flyerDesignerRows = async (
       : [],
   );
   const seen = new Set<string>();
-  return kept.flatMap(({ flyerSrc, userId, name }) => {
-    const key = `${flyerSrc}|${userId ?? name.toLowerCase()}`;
+  return kept.flatMap(({ userId, name }) => {
+    const key = userId ?? `name:${name.toLowerCase()}`;
     if (seen.has(key)) return [];
     seen.add(key);
-    return [{ flyerSrc, name, userId: userId && existing.has(userId) ? userId : null }];
+    return [{ name, userId: userId && existing.has(userId) ? userId : null }];
   });
 };
 

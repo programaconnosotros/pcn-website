@@ -167,28 +167,29 @@ describe('createEvent dates and sponsors', () => {
     expect(prismaMock.event.create).not.toHaveBeenCalled();
   });
 
-  it('credits flyer designers, keeping only real users and flyers the event has', async () => {
+  it('credits flyer designers once per event, keeping only real users and only with a flyer', async () => {
     prismaMock.user.findMany.mockResolvedValue([{ id: 'u1' }] as any);
+    const flyerDesigners = [
+      { userId: 'u1', name: 'Ana' },
+      { userId: 'u1', name: 'Ana' },
+      { userId: 'ghost', name: 'Fantasma' },
+      { name: 'Beto' },
+      { name: 'beto' },
+    ];
     await expect(
-      createEvent({
-        ...validEventData,
-        flyerImages: ['/a.png'],
-        flyerDesigners: [
-          { flyerSrc: '/a.png', userId: 'u1', name: 'Ana' },
-          { flyerSrc: '/a.png', userId: 'ghost', name: 'Fantasma' },
-          { flyerSrc: '/a.png', name: 'Beto' },
-          { flyerSrc: '/a.png', name: 'beto' },
-          { flyerSrc: '/borrado.png', name: 'Caro' },
-        ],
-      }),
+      createEvent({ ...validEventData, flyerImages: ['/a.png', '/b.png'], flyerDesigners }),
+    ).rejects.toThrow('NEXT_REDIRECT');
+    await expect(
+      createEvent({ ...validEventData, flyerImages: [], flyerDesigners }),
     ).rejects.toThrow('NEXT_REDIRECT');
 
-    const { data } = prismaMock.event.create.mock.calls[0][0] as any;
-    expect(data.flyerDesigners.create).toEqual([
-      { flyerSrc: '/a.png', userId: 'u1', name: 'Ana' },
-      { flyerSrc: '/a.png', userId: null, name: 'Fantasma' },
-      { flyerSrc: '/a.png', userId: null, name: 'Beto' },
+    const [[withFlyer], [withoutFlyer]] = prismaMock.event.create.mock.calls as any;
+    expect(withFlyer.data.flyerDesigners.create).toEqual([
+      { userId: 'u1', name: 'Ana' },
+      { userId: null, name: 'Fantasma' },
+      { userId: null, name: 'Beto' },
     ]);
+    expect(withoutFlyer.data.flyerDesigners.create).toEqual([]);
   });
 
   it('stores a later end date, skips blank sponsors and nulls empty sponsor websites', async () => {

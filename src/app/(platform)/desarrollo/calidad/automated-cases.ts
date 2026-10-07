@@ -1062,7 +1062,7 @@ export const automatedSuites: AutomatedSuite[] = [
       ],
       [
         'TC-EVT-A053',
-        'createEvent dates and sponsors › credits flyer designers, keeping only real users and flyers the event has',
+        'createEvent dates and sponsors › credits flyer designers once per event, keeping only real users and only with a flyer',
       ],
       [
         'TC-EVT-A054',
@@ -6829,8 +6829,7 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-EVT-A353', 'FlyerCredits › credits a flyer to people with and without an account'],
-      ['TC-EVT-A354', 'FlyerCredits › lists each flyer when they have different designers'],
+      ['TC-EVT-A353', 'FlyerCredits › credits the flyer to people with and without an account'],
       ['TC-EVT-A355', 'FlyerCredits › renders nothing without credits'],
     ],
   },
@@ -6841,7 +6840,7 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       ['TC-EVT-A356', 'FlyerDesignersField › asks for a flyer before crediting anyone'],
-      ['TC-EVT-A357', 'FlyerDesignersField › adds a designer without an account to a flyer, once'],
+      ['TC-EVT-A357', 'FlyerDesignersField › adds a designer without an account, once'],
       ['TC-EVT-A358', 'FlyerDesignersField › removes a credited designer'],
     ],
   },

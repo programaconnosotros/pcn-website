@@ -495,15 +495,14 @@ model EventBroadcast {
   @@index([authorId])
 }
 
-// Quién diseñó cada flyer de un evento: ninguno, uno o varios por flyer. Puede ser alguien con
-// cuenta (userId) o solo un nombre; el nombre se guarda siempre, para mostrarlo sin la cuenta.
+// Quién diseñó el flyer de un evento: ninguno, uno o varios, para el evento entero (no por imagen
+// del carrusel). Puede ser alguien con cuenta (userId) o solo un nombre; el nombre se guarda
+// siempre, para mostrarlo sin la cuenta.
 model EventFlyerDesigner {
-  id       String  @id @default(cuid())
-  eventId  String
-  // La URL del flyer (uno de Event.flyerImages): sigue valiendo aunque cambie el orden.
-  flyerSrc String
-  userId   String?
-  name     String
+  id      String  @id @default(cuid())
+  eventId String
+  userId  String?
+  name    String
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)

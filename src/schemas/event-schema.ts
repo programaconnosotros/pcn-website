@@ -39,11 +39,10 @@ export const eventSchema = z
       )
       .optional()
       .default([]),
-    // Quién diseñó cada flyer: cero, uno o varios por flyer; alguien con cuenta o solo un nombre.
+    // Quién diseñó el flyer del evento (todas sus imágenes): alguien con cuenta o solo un nombre.
     flyerDesigners: z
       .array(
         z.object({
-          flyerSrc: z.string().min(1).max(2048),
           userId: z.string().max(40).optional().nullable(),
           name: z
             .string()
