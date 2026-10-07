@@ -5,6 +5,8 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    # Los PRs se abren contra testing: se prueban ahí antes de pasar a main.
+    target-branch: testing
     schedule:
       interval: weekly
       day: monday
@@ -23,6 +25,7 @@ updates:
 
   - package-ecosystem: github-actions
     directory: /
+    target-branch: testing
     schedule:
       interval: monthly
     labels: [dependencies]
