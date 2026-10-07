@@ -1539,6 +1539,58 @@ const allArticles: Article[] = [
     date: '2026-02-15',
     language: 'en',
   },
+  {
+    id: '118',
+    title: "Designing MCP Gateway: Uber's MCP Management Platform",
+    author: 'Uber Engineering',
+    source: 'x.com',
+    category: 'IA',
+    description:
+      'Cómo Uber pasó de integraciones MCP improvisadas a un gateway central que gestiona los servidores MCP de toda la empresa: descubrimiento, autenticación, permisos y observabilidad para sus agentes de IA.',
+    url: 'https://x.com/UberEng/status/2106071967619322330',
+    avatar: '/lectura/uber-engineering.webp',
+    date: '2026-10-02',
+    language: 'en',
+  },
+  {
+    id: '119',
+    title: 'The AI SDLC Transformation Playbook',
+    author: 'Matthew Canham',
+    source: 'atlassian.com',
+    category: 'IA',
+    description:
+      'La guía de Atlassian para pasar a un ciclo de vida de desarrollo nativo de IA: invertir en plataformas base como grafos de contexto y medición, y rediseñar la planificación, el diseño, el desarrollo, la revisión y el mantenimiento para trabajar con agentes.',
+    url: 'https://www.atlassian.com/blog/ai-at-work/ai-sdlc-transformation-playbook',
+    avatar: 'https://github.com/atlassian.png?size=128',
+    date: '2026-10-01',
+    language: 'en',
+  },
+  {
+    id: '120',
+    title: 'Harness Engineering: explicado desde cero',
+    author: 'Santiago M.',
+    source: 'x.com',
+    category: 'IA',
+    description:
+      'Por qué mejorar un agente ya no es solo cambiar de modelo o escribir un mejor prompt: qué es el harness que rodea al modelo (herramientas, contexto, loops y verificación) y cómo diseñarlo, explicado desde cero.',
+    url: 'https://x.com/santtiagom_/status/2098782814837543075',
+    avatar: '/lectura/santiago-m.webp',
+    date: '2026-09-12',
+    language: 'es',
+  },
+  {
+    id: '121',
+    title: 'Building Hybrid Applications with Electron',
+    author: 'Anaïs Betts',
+    source: 'slack.engineering',
+    category: 'Arquitectura',
+    description:
+      'Cómo Slack reconstruyó su app de escritorio con Electron usando una arquitectura híbrida: parte de los assets viajan con la app y el resto se carga remoto, con el modelo multiproceso, WebViews como frontera de seguridad y electron-remote para comunicar procesos.',
+    url: 'https://slack.engineering/building-hybrid-applications-with-electron/',
+    avatar: 'https://github.com/anaisbetts.png?size=128',
+    date: '2016-10-25',
+    language: 'en',
+  },
 ];
 
 export const articles = [...allArticles].sort((a, b) => b.date.localeCompare(a.date));
