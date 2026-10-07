@@ -97,7 +97,7 @@ describe('NewsTicker', () => {
   it('crawls the latest headlines with their kind', async () => {
     render(<NewsTicker />);
     expect(screen.getByRole('complementary', { name: 'Últimas novedades' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /PCN en vivo/ })).toHaveAttribute('href', '/feed');
+    expect(screen.getByRole('link', { name: /PCN News/ })).toHaveAttribute('href', '/feed');
     const meetup = screen.getAllByRole('link', { name: /EVENTO\s*Meetup de octubre/ });
     expect(meetup[0]).toHaveAttribute('href', '/eventos/e1');
     expect(screen.getAllByText('RARA')[0]).toBeInTheDocument();

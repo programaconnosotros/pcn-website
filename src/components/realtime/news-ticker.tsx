@@ -42,7 +42,7 @@ export function NewsTicker() {
           className="flex shrink-0 items-center gap-1.5 bg-pcnGreen px-3 font-bold uppercase tracking-wider text-black hover:bg-pcnGreen/90"
         >
           <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-red-600" />
-          PCN en vivo
+          PCN News
         </Link>
         <Marquee
           pauseOnHover
