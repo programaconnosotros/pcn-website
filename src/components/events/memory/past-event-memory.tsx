@@ -170,7 +170,10 @@ export async function PastEventMemory({
                     className="flex items-center gap-1 text-pcnGreen-700 hover:text-pcnGreen"
                   >
                     <Images className="size-3.5" />
-                    ver {totalItems === 1 ? 'en' : `los ${totalItems} en`} la galería →
+                    <span className="sm:hidden">galería ({totalItems}) →</span>
+                    <span className="max-sm:hidden">
+                      ver {totalItems === 1 ? 'en' : `los ${totalItems} en`} la galería →
+                    </span>
                   </Link>
                 )}
               </span>
