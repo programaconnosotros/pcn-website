@@ -13,7 +13,7 @@ export type CoverageGroup = CoverageMetrics & { folder: string; detail: string; 
 export const COVERAGE_UPDATED_AT = '2026-10-08';
 
 export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
-  total: { lines: 97.2, statements: 96.4, functions: 96.1, branches: 92.3 },
+  total: { lines: 97.6, statements: 96.7, functions: 96.2, branches: 92.6 },
   groups: [
     {
       folder: 'src/lib',
@@ -38,7 +38,7 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
       detail: 'validaciones con zod',
       files: 12,
       lines: 100,
-      statements: 99,
+      statements: 100,
       functions: 100,
       branches: 100,
     },
@@ -55,17 +55,17 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
       folder: 'src/components',
       detail: 'componentes',
       files: 419,
-      lines: 96.8,
-      statements: 96.2,
-      functions: 95.5,
-      branches: 92.4,
+      lines: 97.5,
+      statements: 96.8,
+      functions: 95.6,
+      branches: 93,
     },
     {
       folder: 'src/app',
       detail: 'páginas, layouts y route handlers',
-      files: 324,
+      files: 325,
       lines: 98.3,
-      statements: 97.1,
+      statements: 97,
       functions: 97.6,
       branches: 93.3,
     },

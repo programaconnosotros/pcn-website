@@ -2,14 +2,15 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ImagePlus } from 'lucide-react';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { canEditProject, canManageProject } from '@/actions/projects/get-session-user';
 import { Github } from '@/components/icons/brand-icons';
 import { ProjectMediaGrid } from '@/components/projects/project-media-grid';
-import { ProjectMediaUploader } from '@/components/projects/project-media-uploader';
 import { ProjectOwnerActions } from '@/components/projects/project-owner-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { PROJECT_MEDIA_LIMIT } from '@/schemas/project-media-schema';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { optimizedOgImage } from '@/lib/og-image';
@@ -271,7 +272,18 @@ export default async function ProjectPage(props: Props) {
 
           {canEdit && viewer && (
             <div className="space-y-3 p-3">
-              <ProjectMediaUploader projectId={project.id} count={project.media.length} />
+              {project.media.length < PROJECT_MEDIA_LIMIT ? (
+                <Button asChild variant="outline" size="sm" className="w-full font-mono">
+                  <Link href={`/proyectos/${project.id}/subir`}>
+                    <ImagePlus className="mr-1 size-4" />
+                    subirFotosYVideos();
+                  </Link>
+                </Button>
+              ) : (
+                <p className="font-mono text-[11px] text-muted-foreground">
+                  el proyecto llegó al límite de {PROJECT_MEDIA_LIMIT} fotos y videos
+                </p>
+              )}
               <ProjectOwnerActions
                 project={project}
                 currentUser={{
