@@ -25,6 +25,7 @@ import {
   isVideo,
   placeholderPoster,
   postFile,
+  preparePhotoForUpload,
   putFile,
   readTakenAt,
   readVideo,
@@ -79,7 +80,7 @@ async function prepare(file: File, eventId: string | null, events: EventOption[]
   };
   if (!isVideo(file)) {
     try {
-      const photo = await toJpegIfHeic(file);
+      const photo = await preparePhotoForUpload(await toJpegIfHeic(file));
       return { ...base, file: photo, preview: URL.createObjectURL(photo) };
     } catch (error) {
       return { ...base, unsupported: (error as Error).message };
@@ -128,6 +129,8 @@ export function PhotoUploader({
   const [eventId, setEventId] = useState<string | null>(defaultEventId);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  // Files picked but still being read (HEIC conversion, shrinking, video frames).
+  const [preparing, setPreparing] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const itemsRef = useRef(items);
   useEffect(() => {
@@ -174,17 +177,20 @@ export function PhotoUploader({
     const media = [...files].filter(
       (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
-    const added = await Promise.all(
-      media.map((file) =>
+    // One at a time, each shown as soon as it's ready: a phone converting and reading a dozen
+    // photos at once (many just downloaded from iCloud) runs out of memory and shows nothing.
+    setPreparing((count) => count + media.length);
+    for (const file of media) {
+      const item =
         !canUploadVideos && isVideo(file)
-          ? prepare(file, eventId, []).then((item) => ({
-              ...item,
+          ? {
+              ...(await prepare(file, eventId, [])),
               unsupported: 'Por ahora solo se pueden subir fotos.',
-            }))
-          : prepare(file, eventId, events),
-      ),
-    );
-    setItems((current) => [...current, ...added]);
+            }
+          : await prepare(file, eventId, events);
+      setItems((current) => [...current, item]);
+      setPreparing((count) => count - 1);
+    }
   };
 
   const setEventForAll = (next: string | null) => {
@@ -379,6 +385,17 @@ export function PhotoUploader({
           </span>
         </span>
       </label>
+
+      {preparing > 0 && (
+        <p
+          role="status"
+          className="flex items-center gap-2 border border-dashed border-pcnGreen-200 px-3 py-2 font-mono text-xs text-muted-foreground"
+        >
+          <Loader2 className="size-3.5 shrink-0 animate-spin text-pcnGreen" />
+          preparando {preparing} {preparing === 1 ? 'archivo' : 'archivos'}… si están en iCloud, el
+          teléfono primero los descarga.
+        </p>
+      )}
 
       {items.length > 0 && (
         <>

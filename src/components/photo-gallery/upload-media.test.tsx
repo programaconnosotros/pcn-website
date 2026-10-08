@@ -5,9 +5,12 @@ import {
   isVideo,
   placeholderPoster,
   postFile,
+  preparePhotoForUpload,
   putFile,
   readTakenAt,
   readVideo,
+  UPLOAD_STALL_MS,
+  withUploadRetries,
 } from './upload-media';
 
 jest.mock('exifr', () => ({ __esModule: true, default: { parse: jest.fn() } }));
@@ -245,72 +248,146 @@ describe('compressVideo', () => {
   });
 });
 
-describe('putFile', () => {
-  it('PUTs the file with its content type, and fails on S3 errors', async () => {
-    const fetchMock = jest
-      .fn()
-      .mockResolvedValueOnce({ ok: true })
-      .mockResolvedValueOnce({ ok: false });
-    global.fetch = fetchMock;
-    const blob = new Blob(['x']);
+// A scripted XMLHttpRequest: each request ends the way the next entry of `outcomes` says.
+type Outcome = number | 'drop' | 'stall';
+let outcomes: Outcome[] = [];
+let requests: FakeXhr[] = [];
 
-    await putFile('https://s3/put', blob, 'image/jpeg');
-    expect(fetchMock).toHaveBeenCalledWith('https://s3/put', {
-      method: 'PUT',
-      body: blob,
-      headers: { 'Content-Type': 'image/jpeg' },
+class FakeXhr {
+  status = 0;
+  upload: { onprogress?: (_e: Partial<ProgressEvent>) => void } = {};
+  onload?: () => void;
+  onerror?: () => void;
+  onabort?: () => void;
+  open = jest.fn();
+  setRequestHeader = jest.fn();
+  abort = jest.fn(() => this.onabort?.());
+  send = jest.fn(() => {
+    const outcome = outcomes.shift() ?? 200;
+    if (outcome === 'stall') return;
+    queueMicrotask(() => {
+      if (outcome === 'drop') return this.onerror?.();
+      this.upload.onprogress?.({ lengthComputable: true, loaded: 5, total: 10 });
+      this.status = outcome;
+      this.onload?.();
     });
-    await expect(putFile('https://s3/put', blob, 'image/jpeg')).rejects.toThrow(
-      'No se pudo subir el archivo a S3',
-    );
   });
-});
+  constructor() {
+    requests.push(this);
+  }
+}
 
-describe('postFile', () => {
-  let xhr: {
-    open: jest.Mock;
-    send: jest.Mock;
-    status: number;
-    upload: { onprogress?: (_e: Partial<ProgressEvent>) => void };
-    onload?: () => void;
-    onerror?: () => void;
-  };
-
+describe('S3 transfers', () => {
   beforeEach(() => {
-    window.XMLHttpRequest = jest.fn(() => {
-      xhr = { open: jest.fn(), send: jest.fn(), status: 0, upload: {} };
-      return xhr;
-    }) as never;
+    outcomes = [];
+    requests = [];
+    window.XMLHttpRequest = FakeXhr as never;
+    jest.useFakeTimers({ doNotFake: ['queueMicrotask'] });
+  });
+  afterEach(() => jest.useRealTimers());
+
+  it('PUTs a file with its content type', async () => {
+    const blob = new Blob(['x']);
+    await putFile('https://s3/put', blob, 'image/jpeg');
+    expect(requests[0].open).toHaveBeenCalledWith('PUT', 'https://s3/put');
+    expect(requests[0].setRequestHeader).toHaveBeenCalledWith('Content-Type', 'image/jpeg');
+    expect(requests[0].send).toHaveBeenCalledWith(blob);
   });
 
   it('posts the presigned form with the file and reports progress', async () => {
     const onProgress = jest.fn();
-    const video = file('a.mp4', 'video/mp4');
+    await postFile(
+      'https://s3/post',
+      { key: 'k', policy: 'p' },
+      file('a.mp4', 'video/mp4'),
+      onProgress,
+    );
 
-    const done = postFile('https://s3/post', { key: 'k', policy: 'p' }, video, onProgress);
-    xhr.upload.onprogress!({ lengthComputable: true, loaded: 5, total: 10 });
-    xhr.upload.onprogress!({ lengthComputable: false, loaded: 5, total: 0 });
-    xhr.status = 204;
-    xhr.onload!();
-    await done;
-
-    expect(xhr.open).toHaveBeenCalledWith('POST', 'https://s3/post');
-    const form = xhr.send.mock.calls[0][0] as FormData;
+    expect(requests[0].open).toHaveBeenCalledWith('POST', 'https://s3/post');
+    const form = (requests[0].send.mock.calls as unknown as [FormData][])[0][0];
     expect(form.get('key')).toBe('k');
     expect(form.get('policy')).toBe('p');
     expect(form.get('file')).toBeInstanceOf(File);
-    expect(onProgress).toHaveBeenCalledTimes(1);
-    expect(onProgress).toHaveBeenCalledWith(0.5);
+    expect(onProgress).toHaveBeenLastCalledWith(0.5);
   });
 
-  it('fails when S3 rejects the upload or the network drops', async () => {
-    const rejected = postFile('u', {}, file('a.mp4', 'video/mp4'), jest.fn());
-    xhr.status = 403;
-    xhr.onload!();
-    await expect(rejected).rejects.toThrow('No se pudo subir el video a S3');
+  it('retries when the connection drops, waiting longer each time', async () => {
+    outcomes = ['drop', 500, 204];
+    const done = putFile('u', new Blob(['x']), 'image/jpeg');
+    await jest.advanceTimersByTimeAsync(1000);
+    expect(requests).toHaveLength(2);
+    await jest.advanceTimersByTimeAsync(2000);
+    await done;
+    expect(requests).toHaveLength(3);
+  });
 
-    const dropped = postFile('u', {}, file('a.mp4', 'video/mp4'), jest.fn());
-    xhr.onerror!();
-    await expect(dropped).rejects.toThrow('No se pudo subir el video a S3');
+  it('gives up after three tries', async () => {
+    outcomes = ['drop', 'drop', 403];
+    const done = expect(postFile('u', {}, file('a.mp4', 'video/mp4'), jest.fn())).rejects.toThrow(
+      'No se pudo subir el archivo a S3',
+    );
+    await jest.advanceTimersByTimeAsync(5000);
+    await done;
+    expect(requests).toHaveLength(3);
+  });
+
+  it('aborts a transfer that stopped moving and tries again', async () => {
+    outcomes = ['stall', 204];
+    const done = putFile('u', new Blob(['x']), 'image/jpeg');
+    await jest.advanceTimersByTimeAsync(UPLOAD_STALL_MS + 5000);
+    expect(requests[0].abort).toHaveBeenCalled();
+    await jest.advanceTimersByTimeAsync(1000);
+    await done;
+    expect(requests).toHaveLength(2);
+  });
+});
+
+describe('withUploadRetries', () => {
+  it('returns the first success', async () => {
+    const task = jest.fn().mockRejectedValueOnce(new Error('x')).mockResolvedValue('ok');
+    await expect(withUploadRetries(task, { baseDelayMs: 0 })).resolves.toBe('ok');
+    expect(task).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('preparePhotoForUpload', () => {
+  const original = { createImageBitmap: window.createImageBitmap };
+  afterEach(() => {
+    window.createImageBitmap = original.createImageBitmap;
+    jest.restoreAllMocks();
+  });
+
+  it('copies the file into memory when it is not a JPEG to shrink', async () => {
+    const png = file('captura.png', 'image/png');
+    const prepared = await preparePhotoForUpload(png);
+    expect(prepared).not.toBe(png);
+    expect(prepared).toMatchObject({ name: 'captura.png', type: 'image/png', size: png.size });
+    expect(prepared.lastModified).toBe(LAST_MODIFIED);
+  });
+
+  it('shrinks a big JPEG to the size the site uses, upright', async () => {
+    const close = jest.fn();
+    window.createImageBitmap = jest.fn().mockResolvedValue({ width: 4032, height: 3024, close });
+    const drawImage = jest.fn();
+    jest.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage } as never);
+    jest
+      .spyOn(HTMLCanvasElement.prototype, 'toBlob')
+      .mockImplementation((callback) => callback(new Blob(['y'], { type: 'image/jpeg' })));
+
+    const photo = file('IMG_1.jpg', 'image/jpeg', 'x'.repeat(100));
+    const prepared = await preparePhotoForUpload(photo);
+
+    expect(window.createImageBitmap).toHaveBeenCalledWith(photo, {
+      imageOrientation: 'from-image',
+    });
+    expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 2560, 1920);
+    expect(prepared).toMatchObject({ name: 'IMG_1.jpg', type: 'image/jpeg', size: 1 });
+    expect(close).toHaveBeenCalled();
+  });
+
+  it('keeps the original when the browser cannot decode it', async () => {
+    window.createImageBitmap = jest.fn().mockRejectedValue(new Error('decode'));
+    const photo = file('IMG_2.jpg', 'image/jpeg');
+    await expect(preparePhotoForUpload(photo)).resolves.toMatchObject({ size: photo.size });
   });
 });

@@ -16,6 +16,7 @@ import {
   isVideo,
   placeholderPoster,
   postFile,
+  preparePhotoForUpload,
   readTakenAt,
   readVideo,
   type VideoInfo,
@@ -104,7 +105,7 @@ async function prepare(file: File): Promise<Item> {
   if (unsupported) return { ...base, unsupported };
   if (!isVideo(file)) {
     try {
-      const photo = await toJpegIfHeic(file);
+      const photo = await preparePhotoForUpload(await toJpegIfHeic(file));
       return { ...base, file: photo, preview: URL.createObjectURL(photo) };
     } catch (error) {
       return { ...base, unsupported: (error as Error).message };
@@ -131,6 +132,8 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
   const [items, setItems] = useState<Item[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  // Files picked but still being read (HEIC conversion, shrinking, video frames).
+  const [preparing, setPreparing] = useState(0);
   const itemsRef = useRef(items);
   useEffect(() => {
     itemsRef.current = items;
@@ -139,12 +142,34 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
   // Free the previews when leaving the page.
   useEffect(() => () => itemsRef.current.forEach((item) => URL.revokeObjectURL(item.preview)), []);
 
-  // Ask before leaving while something is going up.
+  // While uploading, keep the screen on (a locked phone suspends the tab and cuts the upload) and
+  // ask before leaving the page.
   useEffect(() => {
     if (!isUploading) return;
+    let wakeLock: WakeLockSentinel | null = null;
+    let released = false;
+    const requestWakeLock = async () => {
+      if (document.visibilityState !== 'visible' || !('wakeLock' in navigator)) return;
+      try {
+        const sentinel = await navigator.wakeLock.request('screen');
+        if (released) sentinel.release();
+        else wakeLock = sentinel;
+      } catch {
+        // Denied (low battery, unsupported): the on-screen notice is all we have.
+      }
+    };
     const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+
+    void requestWakeLock();
+    // The browser drops the lock whenever the tab is hidden; take it again on return.
+    document.addEventListener('visibilitychange', requestWakeLock);
     window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
+    return () => {
+      released = true;
+      void wakeLock?.release();
+      document.removeEventListener('visibilitychange', requestWakeLock);
+      window.removeEventListener('beforeunload', warn);
+    };
   }, [isUploading]);
 
   const done = items.filter((item) => item.status === 'done').length;
@@ -160,8 +185,14 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
     const picked = [...files].filter(
       (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
-    const added = await Promise.all(picked.map(prepare));
-    setItems((current) => [...current, ...added]);
+    // One at a time, each shown as soon as it's ready: a phone converting and reading a dozen
+    // photos at once (many just downloaded from iCloud) runs out of memory and shows nothing.
+    setPreparing((count) => count + picked.length);
+    for (const file of picked) {
+      const item = await prepare(file);
+      setItems((current) => [...current, item]);
+      setPreparing((count) => count - 1);
+    }
   };
 
   const remove = (item: Item) => {
@@ -294,6 +325,17 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
           event.target.value = '';
         }}
       />
+
+      {preparing > 0 && (
+        <p
+          role="status"
+          className="flex items-center gap-2 border border-dashed border-pcnGreen-200 px-3 py-2 font-mono text-xs text-muted-foreground"
+        >
+          <Loader2 className="size-3.5 shrink-0 animate-spin text-pcnGreen" />
+          preparando {preparing} {preparing === 1 ? 'archivo' : 'archivos'}… si están en iCloud, el
+          teléfono primero los descarga.
+        </p>
+      )}
 
       {items.length > 0 && (
         <>

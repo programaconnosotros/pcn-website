@@ -28,6 +28,8 @@ jest.mock('heic-to/csp', () => ({ heicTo: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 jest.mock('./upload-media', () => ({
   ...jest.requireActual('./upload-media'),
+  // Shrinking and copying photos has its own tests; here they go up as picked.
+  preparePhotoForUpload: jest.fn(async (file: File) => file),
   readTakenAt: jest.fn(),
   readVideo: jest.fn(),
   placeholderPoster: jest.fn(),

@@ -10,6 +10,7 @@ import {
 import {
   compressVideo,
   postFile,
+  preparePhotoForUpload,
   readTakenAt,
   readVideo,
 } from '@/components/photo-gallery/upload-media';
@@ -27,6 +28,8 @@ const refresh = jest.fn();
 jest.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
 jest.mock('@/components/photo-gallery/upload-media', () => ({
   ...jest.requireActual('@/components/photo-gallery/upload-media'),
+  // Shrinking and copying photos has its own tests; here they go up as picked.
+  preparePhotoForUpload: jest.fn(async (file: File) => file),
   readTakenAt: jest.fn(),
   readVideo: jest.fn(),
   placeholderPoster: jest.fn(),
@@ -171,5 +174,25 @@ describe('ProjectMediaUploader', () => {
     );
     // Once it's up the fields go away
     expect(screen.queryByLabelText('Fecha de foto.jpg')).not.toBeInTheDocument();
+  });
+
+  it('shows each file as soon as it is ready, saying how many are still being prepared', async () => {
+    let finishSecond!: (_file: File) => void;
+    jest
+      .mocked(preparePhotoForUpload)
+      .mockImplementationOnce(async (picked) => picked)
+      .mockImplementationOnce(
+        (picked) => new Promise((resolve) => (finishSecond = () => resolve(picked))),
+      );
+    const { add } = renderUploader();
+
+    void add(file('a.jpg', 'image/jpeg'), file('b.jpg', 'image/jpeg'));
+    expect(await screen.findByText('a.jpg')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('preparando 1 archivo');
+    expect(screen.queryByText('b.jpg')).not.toBeInTheDocument();
+
+    await act(async () => finishSecond(file('b.jpg', 'image/jpeg')));
+    expect(screen.getByText('b.jpg')).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 });

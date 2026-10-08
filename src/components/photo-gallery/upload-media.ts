@@ -212,21 +212,145 @@ export async function compressVideo(
 // H.264 needs even dimensions.
 const even = (value: number) => Math.max(2, Math.round(value / 2) * 2);
 
-/** PUTs a file to a presigned S3 URL. */
-export async function putFile(url: string, file: Blob, contentType: string) {
-  const response = await fetch(url, {
-    method: 'PUT',
-    body: file,
-    headers: { 'Content-Type': contentType },
+// Photos never need more than this on the site: the server stores them at 2560px anyway.
+const UPLOAD_PHOTO_MAX_SIDE = 2560;
+const UPLOAD_PHOTO_QUALITY = 0.88;
+
+const canvasBlob = (canvas: HTMLCanvasElement, type: string, quality: number) =>
+  new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('canvas'))), type, quality),
+  );
+
+/** The file's bytes, read now (FileReader where `arrayBuffer` is missing). */
+const readBytes = (file: File): Promise<ArrayBuffer> =>
+  typeof file.arrayBuffer === 'function'
+    ? file.arrayBuffer()
+    : new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as ArrayBuffer);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(file);
+      });
+
+/**
+ * A photo ready to go up from a phone, kept in memory. iPhone photos are often still in iCloud
+ * when picked: iOS downloads them for the picker, and a file read much later (when its turn to
+ * upload comes) can fail to read. Reading it now avoids that; and a big JPEG is shrunk to the
+ * size the site uses, so it goes up in a fraction of the time on mobile data. Other formats
+ * (PNG screenshots with transparency, WebP…) are only copied. Read the EXIF date before: the
+ * shrunk copy doesn't keep it.
+ */
+export async function preparePhotoForUpload(file: File): Promise<File> {
+  if (file.type === 'image/jpeg' && typeof createImageBitmap === 'function') {
+    try {
+      // `from-image` applies the EXIF rotation, which the shrunk copy doesn't carry.
+      const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      try {
+        const scale = Math.min(1, UPLOAD_PHOTO_MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+        if (scale < 1) {
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(bitmap.width * scale);
+          canvas.height = Math.round(bitmap.height * scale);
+          canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+          const jpeg = await canvasBlob(canvas, 'image/jpeg', UPLOAD_PHOTO_QUALITY);
+          // Shrinking only pays off when it's actually smaller.
+          if (jpeg.size < file.size) {
+            return new File([jpeg], file.name, {
+              type: 'image/jpeg',
+              lastModified: file.lastModified,
+            });
+          }
+        }
+      } finally {
+        bitmap.close();
+      }
+    } catch {
+      // The browser can't decode it here: send it as it is, the server optimizes it.
+    }
+  }
+  return new File([await readBytes(file)], file.name, {
+    type: file.type,
+    lastModified: file.lastModified,
   });
-  if (!response.ok) throw new Error('No se pudo subir el archivo a S3');
+}
+
+/** How long an upload can go without moving a byte before it counts as a dropped connection. */
+export const UPLOAD_STALL_MS = 60_000;
+const UPLOAD_ATTEMPTS = 3;
+
+export class UploadError extends Error {}
+
+/**
+ * Runs a transfer to S3 again when it fails: phones drop connections (switching from Wi-Fi to
+ * mobile data, the screen going off for a moment). Waits a little longer before each retry.
+ */
+export async function withUploadRetries<T>(
+  transfer: () => Promise<T>,
+  { attempts = UPLOAD_ATTEMPTS, baseDelayMs = 1000 } = {},
+): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await transfer();
+    } catch (error) {
+      if (attempt >= attempts) throw error;
+      await new Promise((resolve) => setTimeout(resolve, baseDelayMs * 2 ** (attempt - 1)));
+    }
+  }
 }
 
 /**
- * Sends a file through a presigned S3 POST form, reporting progress (0–1). Uses XHR because
- * fetch can't report upload progress.
+ * Sends a request body with XHR (fetch can't report upload progress), rejecting when the server
+ * answers with an error, the connection drops, or nothing moves for UPLOAD_STALL_MS.
  */
-export function postFile(
+function sendWithXhr(
+  method: 'PUT' | 'POST',
+  url: string,
+  body: Document | XMLHttpRequestBodyInit,
+  { contentType, onProgress }: { contentType?: string; onProgress?: (_progress: number) => void },
+) {
+  return new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    if (contentType) xhr.setRequestHeader('Content-Type', contentType);
+
+    let lastMove = Date.now();
+    const watchdog = setInterval(() => {
+      if (Date.now() - lastMove > UPLOAD_STALL_MS) xhr.abort();
+    }, 5_000);
+    const finish = (error?: Error) => {
+      clearInterval(watchdog);
+      if (error) reject(error);
+      else resolve();
+    };
+
+    xhr.upload.onprogress = (event) => {
+      lastMove = Date.now();
+      if (event.lengthComputable) onProgress?.(event.loaded / event.total);
+    };
+    xhr.onload = () =>
+      xhr.status >= 200 && xhr.status < 300
+        ? finish()
+        : finish(new UploadError('S3 rechazó el archivo'));
+    xhr.onerror = () => finish(new UploadError('Se cortó la conexión mientras se subía'));
+    xhr.onabort = () => finish(new UploadError('La subida se quedó sin conexión'));
+    xhr.send(body);
+  });
+}
+
+/** PUTs a file to a presigned S3 URL, retrying when the connection drops. */
+export async function putFile(url: string, file: Blob, contentType: string) {
+  try {
+    await withUploadRetries(() => sendWithXhr('PUT', url, file, { contentType }));
+  } catch {
+    throw new Error('No se pudo subir el archivo a S3');
+  }
+}
+
+/**
+ * Sends a file through a presigned S3 POST form, reporting progress (0–1) and retrying when the
+ * connection drops.
+ */
+export async function postFile(
   url: string,
   fields: Record<string, string>,
   file: File,
@@ -235,18 +359,12 @@ export function postFile(
   const form = new FormData();
   Object.entries(fields).forEach(([name, value]) => form.append(name, value));
   form.append('file', file);
-
-  return new Promise<void>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) onProgress(event.loaded / event.total);
-    };
-    xhr.onload = () =>
-      xhr.status >= 200 && xhr.status < 300
-        ? resolve()
-        : reject(new Error('No se pudo subir el video a S3'));
-    xhr.onerror = () => reject(new Error('No se pudo subir el video a S3'));
-    xhr.send(form);
-  });
+  try {
+    await withUploadRetries(() => {
+      onProgress(0);
+      return sendWithXhr('POST', url, form, { onProgress });
+    });
+  } catch {
+    throw new Error('No se pudo subir el archivo a S3');
+  }
 }
