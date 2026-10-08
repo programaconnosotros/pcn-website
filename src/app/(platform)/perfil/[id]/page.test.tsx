@@ -74,6 +74,7 @@ const profile = (overrides: Record<string, unknown> = {}) => ({
   badges: [],
   languages: [],
   positions: [],
+  createdAt: new Date('2024-03-15T12:00:00Z'),
   ...overrides,
 });
 
@@ -191,6 +192,16 @@ describe('/perfil/[id]', () => {
     expect(screen.queryByText('teléfono')).not.toBeInTheDocument();
     expect(screen.queryByText('ubicación')).not.toBeInTheDocument();
     expect(screen.getByText('email')).toBeInTheDocument();
+  });
+
+  it('shows when the user joined the platform', async () => {
+    findUser.mockResolvedValue(profile());
+    jest.mocked(getCurrentSession).mockResolvedValue(null);
+
+    await renderPage(page());
+
+    expect(screen.getByText('miembro desde')).toBeInTheDocument();
+    expect(screen.getByText('15 de marzo de 2024')).toBeInTheDocument();
   });
 
   it('lets the owner edit their profile', async () => {
