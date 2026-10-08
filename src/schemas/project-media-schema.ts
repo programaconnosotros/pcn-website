@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { todayInputValue } from '@/schemas/setup-schema';
+
 // Límites de las fotos y videos de la página de un proyecto, compartidos por el formulario y las
 // server actions.
 
@@ -10,3 +13,23 @@ export const PROJECT_IMAGE_MAX_BYTES = 15 * 1024 * 1024;
 export const PROJECT_VIDEO_MAX_BYTES = 300 * 1024 * 1024;
 /** Cuántas fotos y videos puede tener un proyecto. */
 export const PROJECT_MEDIA_LIMIT = 24;
+
+/** Lo que se carga de cada foto o video: una descripción opcional y el día en que se sacó. */
+export const projectMediaDetailsSchema = z.object({
+  description: z
+    .string()
+    .trim()
+    .max(500, 'Máximo 500 caracteres')
+    .nullish()
+    .transform((value) => value || null),
+  /** `YYYY-MM-DD`. Puede ser de antes pero no del futuro. */
+  takenAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Elegí una fecha válida' })
+    .refine((value) => !Number.isNaN(Date.parse(value)), { message: 'Elegí una fecha válida' })
+    .refine((value) => value <= todayInputValue(1), { message: 'La fecha no puede ser del futuro' })
+    .nullish()
+    .transform((value) => (value ? new Date(`${value}T00:00:00.000Z`) : null)),
+});
+
+export type ProjectMediaDetailsInput = z.input<typeof projectMediaDetailsSchema>;

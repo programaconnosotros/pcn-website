@@ -8,6 +8,7 @@ import {
   deleteProjectMedia,
   getProjectImageUploadForm,
   getProjectVideoUploadForm,
+  updateProjectMediaDetails,
 } from './project-media';
 
 jest.mock('@/lib/s3', () => ({
@@ -123,6 +124,27 @@ describe('addProjectPhoto', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/proyectos/proj-1');
   });
 
+  it('saves the description and the day it was taken, rejecting future days', async () => {
+    loginAs(author);
+    prismaMock.project.findUnique.mockResolvedValue(project() as any);
+
+    await addProjectPhoto('proj-1', originalKey(author.id), {
+      takenAt: '2025-05-12',
+      description: '  La demo  ',
+    });
+    expect(prismaMock.projectMedia.create.mock.calls[0][0].data).toMatchObject({
+      takenAt: new Date('2025-05-12T00:00:00.000Z'),
+      description: 'La demo',
+    });
+
+    await expect(
+      addProjectPhoto('proj-1', originalKey(author.id), { takenAt: '2999-01-01' }),
+    ).rejects.toThrow('La fecha no puede ser del futuro');
+    await expect(
+      addProjectPhoto('proj-1', originalKey(author.id), { takenAt: 'ayer' }),
+    ).rejects.toThrow('Elegí una fecha válida');
+  });
+
   it("rejects someone else's original", async () => {
     loginAs(author);
     prismaMock.project.findUnique.mockResolvedValue(project() as any);
@@ -143,6 +165,8 @@ describe('addProjectVideo', () => {
     const { data } = prismaMock.projectMedia.create.mock.calls[0][0];
     expect(data).toMatchObject({
       ...metadata,
+      takenAt: null,
+      description: null,
       kind: 'VIDEO',
       src: `https://cdn.example.com/${videoKey}`,
       thumbSrc: `https://cdn.example.com/projects/proj-1/${uuid}/poster.webp`,
@@ -192,5 +216,32 @@ describe('deleteProjectMedia', () => {
     prismaMock.projectMedia.findUnique.mockResolvedValue(media as any);
     await expect(deleteProjectMedia('m1')).rejects.toThrow('No tenés permisos');
     expect(prismaMock.projectMedia.delete).not.toHaveBeenCalled();
+  });
+});
+
+describe('updateProjectMediaDetails', () => {
+  const media = {
+    id: 'm1',
+    project: { id: 'proj-1', authorId: author.id, members: [{ userId: collaborator.id }] },
+  };
+
+  it('lets the team change the day and the description', async () => {
+    loginAs(collaborator);
+    prismaMock.projectMedia.findUnique.mockResolvedValue(media as any);
+
+    await updateProjectMediaDetails('m1', { takenAt: '2025-01-02', description: '' });
+
+    expect(prismaMock.projectMedia.update).toHaveBeenCalledWith({
+      where: { id: 'm1' },
+      data: { takenAt: new Date('2025-01-02T00:00:00.000Z'), description: null },
+    });
+    expect(revalidatePath).toHaveBeenCalledWith('/proyectos/proj-1');
+  });
+
+  it('rejects anyone outside the team', async () => {
+    loginAs(stranger);
+    prismaMock.projectMedia.findUnique.mockResolvedValue(media as any);
+    await expect(updateProjectMediaDetails('m1', {})).rejects.toThrow('No tenés permisos');
+    expect(prismaMock.projectMedia.update).not.toHaveBeenCalled();
   });
 });

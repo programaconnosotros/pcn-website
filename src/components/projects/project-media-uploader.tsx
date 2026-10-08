@@ -16,9 +16,13 @@ import {
   isVideo,
   placeholderPoster,
   postFile,
+  readTakenAt,
   readVideo,
   type VideoInfo,
 } from '@/components/photo-gallery/upload-media';
+import { DateInput } from '@/components/ui/date-input';
+import { Textarea } from '@/components/ui/textarea';
+import { todayInputValue } from '@/schemas/setup-schema';
 import { Button } from '@/components/ui/button';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { formatDuration } from '@/lib/gallery-filters';
@@ -43,6 +47,9 @@ type Item = {
   // Object URL of the photo, or of the frame captured as the video's poster.
   preview: string;
   video: VideoInfo | null;
+  /** The day it was taken, `YYYY-MM-DD`: from the photo's EXIF (or the file's date), editable. */
+  takenAt: string;
+  description: string;
   status: Status;
   progress?: number;
   // Why the file can't be uploaded at all (wrong format, too big, a HEIC that didn't convert).
@@ -57,6 +64,12 @@ const STEP_LABEL: Partial<Record<Status, string>> = {
 };
 
 const toMb = (bytes: number) => (bytes / MB).toFixed(1);
+
+/** A date as `YYYY-MM-DD` in the device's time zone: the day the person saw it happen. */
+const localDay = (date: Date) => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
 
 const unsupportedReason = (file: File) => {
   if (isVideo(file)) {
@@ -82,6 +95,9 @@ async function prepare(file: File): Promise<Item> {
     file,
     preview: '',
     video: null,
+    // Read before converting a HEIC: the conversion drops the EXIF.
+    takenAt: localDay(await readTakenAt(file)),
+    description: '',
     status: 'pending' as const,
   };
   const unsupported = unsupportedReason(file);
@@ -161,12 +177,13 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
 
   const uploadOne = async (item: Item) => {
     update(item.key, { error: undefined, progress: undefined });
+    const details = { takenAt: item.takenAt || null, description: item.description };
     try {
       if (!item.video) {
         update(item.key, { status: 'uploading' });
         const key = await uploadImage(item.file);
         update(item.key, { status: 'processing' });
-        await addProjectPhoto(projectId, key);
+        await addProjectPhoto(projectId, key, details);
       } else {
         update(item.key, { status: 'optimizing', progress: 0 });
         const compressed = await compressVideo(item.file, (progress) =>
@@ -192,6 +209,7 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
           durationSeconds: item.video.durationSeconds,
           width: compressed?.width ?? item.video.width,
           height: compressed?.height ?? item.video.height,
+          ...details,
         });
       }
       update(item.key, { status: 'done', progress: undefined });
@@ -332,6 +350,28 @@ export function ProjectMediaUploader({ projectId, count }: { projectId: string; 
                   </div>
 
                   {item.status === 'done' && <p className="text-pcnGreen-700">agregado ✓</p>}
+                  {!item.unsupported && (item.status === 'pending' || item.status === 'error') && (
+                    <div className="grid gap-2 sm:grid-cols-[12rem_minmax(0,1fr)] lg:max-w-2xl">
+                      <DateInput
+                        value={item.takenAt}
+                        onChange={(takenAt) => update(item.key, { takenAt })}
+                        max={todayInputValue()}
+                        disabled={isUploading}
+                        aria-label={`Fecha de ${item.file.name}`}
+                        className="text-xs"
+                      />
+                      <Textarea
+                        value={item.description}
+                        onChange={(event) => update(item.key, { description: event.target.value })}
+                        disabled={isUploading}
+                        placeholder="Descripción (opcional)"
+                        aria-label={`Descripción de ${item.file.name}`}
+                        maxLength={500}
+                        rows={2}
+                        className="font-sans text-sm"
+                      />
+                    </div>
+                  )}
                   {(item.unsupported ?? item.error) && (
                     <p className="text-red-500">{item.unsupported ?? item.error}</p>
                   )}

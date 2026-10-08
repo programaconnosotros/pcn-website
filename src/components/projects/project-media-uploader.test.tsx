@@ -7,7 +7,12 @@ import {
   getProjectImageUploadForm,
   getProjectVideoUploadForm,
 } from '@/actions/projects/project-media';
-import { compressVideo, postFile, readVideo } from '@/components/photo-gallery/upload-media';
+import {
+  compressVideo,
+  postFile,
+  readTakenAt,
+  readVideo,
+} from '@/components/photo-gallery/upload-media';
 import { ProjectMediaUploader } from './project-media-uploader';
 
 jest.mock('@/actions/projects/project-media', () => ({
@@ -22,6 +27,7 @@ const refresh = jest.fn();
 jest.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
 jest.mock('@/components/photo-gallery/upload-media', () => ({
   ...jest.requireActual('@/components/photo-gallery/upload-media'),
+  readTakenAt: jest.fn(),
   readVideo: jest.fn(),
   placeholderPoster: jest.fn(),
   compressVideo: jest.fn(),
@@ -66,6 +72,7 @@ describe('ProjectMediaUploader', () => {
       .mocked(readVideo)
       .mockResolvedValue({ durationSeconds: 9, width: 1280, height: 720, poster: new Blob() });
     jest.mocked(compressVideo).mockResolvedValue(null);
+    jest.mocked(readTakenAt).mockResolvedValue(new Date(2025, 4, 12, 21, 30));
   });
 
   it('lists the picked files and explains which ones cannot go up', async () => {
@@ -91,11 +98,13 @@ describe('ProjectMediaUploader', () => {
     await userEvent.click(screen.getByRole('button', { name: /subir 2 archivos/ }));
 
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith('2 archivos agregados'));
-    expect(addProjectPhoto).toHaveBeenCalledWith('p1', 'k-photo');
+    const details = { takenAt: '2025-05-12', description: '' };
+    expect(addProjectPhoto).toHaveBeenCalledWith('p1', 'k-photo', details);
     expect(addProjectVideo).toHaveBeenCalledWith('p1', 'k-video', 'k-photo', {
       durationSeconds: 9,
       width: 1280,
       height: 720,
+      ...details,
     });
     expect(screen.getAllByText('agregado ✓')).toHaveLength(2);
     expect(screen.getByRole('link', { name: /los 2 archivos en el proyecto/ })).toHaveAttribute(
@@ -139,5 +148,28 @@ describe('ProjectMediaUploader', () => {
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith('Archivo agregado'));
     expect(addProjectPhoto).toHaveBeenCalledTimes(1);
     expect(screen.getByText(/llegó al límite de 24/)).toBeInTheDocument();
+  });
+
+  it('takes the day from the photo and lets it be changed, with a description', async () => {
+    const { add } = renderUploader();
+    await add(file('foto.jpg', 'image/jpeg'));
+
+    const date = screen.getByLabelText('Fecha de foto.jpg');
+    expect(date).toHaveValue('2025-05-12');
+    fireEvent.change(date, { target: { value: '2025-05-10' } });
+    fireEvent.change(screen.getByLabelText('Descripción de foto.jpg'), {
+      target: { value: 'La demo del día del lanzamiento' },
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /subir 1 archivo/ }));
+
+    await waitFor(() =>
+      expect(addProjectPhoto).toHaveBeenCalledWith('p1', 'k-photo', {
+        takenAt: '2025-05-10',
+        description: 'La demo del día del lanzamiento',
+      }),
+    );
+    // Once it's up the fields go away
+    expect(screen.queryByLabelText('Fecha de foto.jpg')).not.toBeInTheDocument();
   });
 });

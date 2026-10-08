@@ -810,6 +810,10 @@ model ProjectMedia {
   width           Int?
   height          Int?
   durationSeconds Int?
+  // Lo que cuenta quien la sube (opcional) y el día en que se sacó: sale del archivo y se puede
+  // cambiar. Solo el día, sin hora.
+  description     String?
+  takenAt         DateTime?       @db.Date
   // Objetos de S3, para borrarlos junto con la foto, el video o el proyecto.
   storageKeys     String[]        @default([])
   order           Int             @default(0)

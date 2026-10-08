@@ -18,6 +18,8 @@ import {
   PROJECT_IMAGE_MAX_BYTES,
   PROJECT_MEDIA_LIMIT,
   PROJECT_VIDEO_MAX_BYTES,
+  projectMediaDetailsSchema,
+  type ProjectMediaDetailsInput,
 } from '@/schemas/project-media-schema';
 import { canEditProject, requireSessionUser } from './get-session-user';
 
@@ -67,6 +69,12 @@ async function requireProjectEditor(projectId: string) {
     throw new Error('No tenés permisos para realizar esta acción');
   return { user, project };
 }
+
+const parseDetails = (input: ProjectMediaDetailsInput = {}) => {
+  const parsed = projectMediaDetailsSchema.safeParse(input);
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? 'Datos inválidos');
+  return parsed.data;
+};
 
 const assertRoom = (project: { _count: { media: number } }) => {
   if (project._count.media >= PROJECT_MEDIA_LIMIT) {
@@ -125,11 +133,19 @@ export async function getProjectVideoUploadForm(
   return { url, fields, key };
 }
 
-/** Optimiza a WebP (grande y miniatura) la foto ya subida a S3 y la suma al proyecto. */
-export async function addProjectPhoto(projectId: string, originalKey: string) {
+/**
+ * Optimiza a WebP (grande y miniatura) la foto ya subida a S3 y la suma al proyecto, con su
+ * descripción y el día en que se sacó.
+ */
+export async function addProjectPhoto(
+  projectId: string,
+  originalKey: string,
+  input: ProjectMediaDetailsInput = {},
+) {
   await enforceRateLimit('createContent');
   const { user, project } = await requireProjectEditor(projectId);
   if (!isOwnOriginalKey(originalKey, user.id)) throw new Error('Archivo inválido');
+  const details = parseDetails(input);
   assertRoom(project);
 
   let photo: Awaited<ReturnType<typeof optimizePhoto>>;
@@ -152,6 +168,7 @@ export async function addProjectPhoto(projectId: string, originalKey: string) {
 
   const media = await prisma.projectMedia.create({
     data: {
+      ...details,
       projectId: project.id,
       kind: 'PHOTO',
       src: publicFileUrl(fullKey),
@@ -176,7 +193,7 @@ export async function addProjectVideo(
   projectId: string,
   videoKey: string,
   posterOriginalKey: string,
-  input: VideoMetadataInput,
+  input: VideoMetadataInput & ProjectMediaDetailsInput,
 ) {
   await enforceRateLimit('createContent');
   const { user, project } = await requireProjectEditor(projectId);
@@ -185,6 +202,7 @@ export async function addProjectVideo(
   }
   const metadata = videoMetadataSchema.safeParse(input);
   if (!metadata.success) throw new Error('Datos del video inválidos');
+  const details = parseDetails({ description: input.description, takenAt: input.takenAt });
   assertRoom(project);
 
   const video = await headObject(videoKey);
@@ -198,6 +216,7 @@ export async function addProjectVideo(
   const media = await prisma.projectMedia.create({
     data: {
       ...metadata.data,
+      ...details,
       projectId: project.id,
       kind: 'VIDEO',
       src: publicFileUrl(videoKey),
@@ -210,6 +229,28 @@ export async function addProjectVideo(
 
   revalidateProject(project.id);
   return media;
+}
+
+/** Cambia la descripción o el día de una foto o un video del proyecto. */
+export async function updateProjectMediaDetails(mediaId: string, input: ProjectMediaDetailsInput) {
+  await enforceRateLimit('editContent');
+  const user = await requireSessionUser();
+  const details = parseDetails(input);
+  const media = await prisma.projectMedia.findUnique({
+    where: { id: idSchema.parse(mediaId) },
+    select: {
+      id: true,
+      project: { select: { id: true, authorId: true, members: { select: { userId: true } } } },
+    },
+  });
+  if (!media) throw new Error('Archivo no encontrado');
+  if (!canEditProject(user, media.project)) {
+    throw new Error('No tenés permisos para realizar esta acción');
+  }
+
+  await prisma.projectMedia.update({ where: { id: media.id }, data: details });
+  revalidateProject(media.project.id);
+  return { success: true };
 }
 
 /** Quita una foto o un video del proyecto y borra sus archivos de S3. */

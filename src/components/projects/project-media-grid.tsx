@@ -2,9 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { CalendarDays, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { deleteProjectMedia } from '@/actions/projects/project-media';
+import { deleteProjectMedia, updateProjectMediaDetails } from '@/actions/projects/project-media';
+import { Button } from '@/components/ui/button';
+import { DateInput } from '@/components/ui/date-input';
+import { Textarea } from '@/components/ui/textarea';
+import { calendarDate, dateInputValue, todayInputValue } from '@/schemas/setup-schema';
 import { VideoBadge } from '@/components/photo-gallery/video-badge';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -18,7 +24,93 @@ export type ProjectMediaItem = {
   thumbSrc: string;
   width: number | null;
   height: number | null;
+  description: string | null;
+  /** The day it was taken (`@db.Date`, midnight UTC). */
+  takenAt: Date | null;
 };
+
+/** What a photo says under it in the viewer, and the form to change it for the team. */
+function MediaCaption({ item, canEdit }: { item: ProjectMediaItem; canEdit: boolean }) {
+  const router = useRouter();
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [takenAt, setTakenAt] = useState(item.takenAt ? dateInputValue(item.takenAt) : '');
+  const [description, setDescription] = useState(item.description ?? '');
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await updateProjectMediaDetails(item.id, { takenAt: takenAt || null, description });
+      toast.success('Guardado');
+      setEditing(false);
+      router.refresh();
+    } catch (error) {
+      toast.error(actionErrorMessage(error, 'No se pudo guardar', true));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (editing) {
+    return (
+      <div className="grid gap-2 font-mono text-xs sm:grid-cols-[12rem_minmax(0,1fr)_auto] sm:items-start">
+        <DateInput
+          value={takenAt}
+          onChange={setTakenAt}
+          max={todayInputValue()}
+          aria-label="Fecha"
+          className="text-xs"
+        />
+        <Textarea
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          placeholder="Descripción (opcional)"
+          aria-label="Descripción"
+          maxLength={500}
+          rows={2}
+          className="font-sans text-sm"
+        />
+        <div className="flex gap-2">
+          <Button size="sm" variant="pcn" onClick={() => void save()} loading={saving}>
+            guardar
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setEditing(false)} disabled={saving}>
+            cancelar
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!item.takenAt && !item.description && !canEdit) return null;
+  return (
+    <div className="flex items-start gap-3 font-mono text-xs text-muted-foreground">
+      <div className="min-w-0 flex-1 space-y-1">
+        {item.takenAt && (
+          <p className="flex items-center gap-1.5 text-pcnGreen-700">
+            <CalendarDays className="size-3.5" />
+            {format(calendarDate(new Date(item.takenAt)), "d 'de' MMMM 'de' yyyy", { locale: es })}
+          </p>
+        )}
+        {item.description && (
+          <p className="font-sans text-sm whitespace-pre-line text-foreground">
+            {item.description}
+          </p>
+        )}
+      </div>
+      {canEdit && (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="flex shrink-0 items-center gap-1 hover:text-pcnGreen"
+        >
+          <Pencil className="size-3.5" />
+          {item.takenAt || item.description ? 'editar' : 'agregar fecha y descripción'}
+        </button>
+      )}
+    </div>
+  );
+}
 
 /**
  * A project's photos and videos as square thumbnails; each opens full size (videos play there).
@@ -34,7 +126,9 @@ export function ProjectMediaGrid({
   canEdit: boolean;
 }) {
   const router = useRouter();
-  const [open, setOpen] = useState<ProjectMediaItem | null>(null);
+  // By id, so the viewer shows the refreshed item after editing it.
+  const [openId, setOpenId] = useState<string | null>(null);
+  const open = media.find((item) => item.id === openId) ?? null;
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const remove = async (item: ProjectMediaItem) => {
@@ -57,14 +151,14 @@ export function ProjectMediaGrid({
           <div key={item.id} className={cn(ruledCellClassName, 'relative group p-1')}>
             <button
               type="button"
-              onClick={() => setOpen(item)}
+              onClick={() => setOpenId(item.id)}
               className="relative block aspect-square w-full overflow-hidden bg-black"
               aria-label={`${item.kind === 'VIDEO' ? 'Ver video' : 'Ver foto'} ${index + 1} de ${title}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.thumbSrc}
-                alt=""
+                alt={item.description ?? ''}
                 loading="lazy"
                 decoding="async"
                 className="h-full w-full object-cover brightness-[0.85] transition duration-300 group-hover:scale-[1.04] group-hover:brightness-100"
@@ -87,8 +181,8 @@ export function ProjectMediaGrid({
         ))}
       </RuledGrid>
 
-      <Dialog open={!!open} onOpenChange={(value) => !value && setOpen(null)}>
-        <DialogContent className="max-w-5xl border-pcnGreen-200 bg-black p-2 sm:p-3">
+      <Dialog open={!!open} onOpenChange={(value) => !value && setOpenId(null)}>
+        <DialogContent className="max-w-5xl gap-3 border-pcnGreen-200 bg-black p-2 sm:p-3">
           <DialogTitle className="sr-only">{title}</DialogTitle>
           {open?.kind === 'VIDEO' ? (
             <video
@@ -98,7 +192,7 @@ export function ProjectMediaGrid({
               controls
               autoPlay
               playsInline
-              className="max-h-[80dvh] w-full"
+              className="max-h-[75dvh] w-full"
             />
           ) : (
             open && (
@@ -108,10 +202,11 @@ export function ProjectMediaGrid({
                 alt={title}
                 width={open.width ?? undefined}
                 height={open.height ?? undefined}
-                className="mx-auto max-h-[80dvh] w-auto max-w-full object-contain"
+                className="mx-auto max-h-[75dvh] w-auto max-w-full object-contain"
               />
             )
           )}
+          {open && <MediaCaption key={open.id} item={open} canEdit={canEdit} />}
         </DialogContent>
       </Dialog>
     </>

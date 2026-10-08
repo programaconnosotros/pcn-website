@@ -1832,6 +1832,16 @@ export const dbModels: DbModel[] = [
         optional: true,
       },
       {
+        name: 'description',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'takenAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
         name: 'storageKeys',
         type: 'String',
         list: true,
