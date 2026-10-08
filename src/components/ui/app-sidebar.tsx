@@ -77,6 +77,7 @@ const actividadesItems: NavItem[] = [
   { title: 'Charlas', url: '/charlas', icon: MicVocal },
   { title: 'Podcast', url: '/podcast', icon: Podcast },
   { title: 'Desarrollo', url: '/desarrollo', icon: Code2 },
+  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
 ];
 
 const recursosItems: NavItem[] = [
@@ -85,7 +86,6 @@ const recursosItems: NavItem[] = [
   { title: 'Videos', url: '/videos', icon: Youtube },
   { title: 'Especialidades', url: '/especialidades', icon: Layers },
   { title: 'Herramientas', url: '/herramientas', icon: Wrench },
-  { title: 'Proyectos', url: '/proyectos', icon: Rocket },
   { title: 'Entrevistas', url: '/entrevistas', icon: BriefcaseBusiness },
   {
     title: 'Más recursos',
