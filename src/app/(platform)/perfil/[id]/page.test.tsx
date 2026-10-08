@@ -298,7 +298,7 @@ describe('/perfil/[id]', () => {
     expect(screen.getByText('UNT')).toBeInTheDocument();
   });
 
-  it('orders badges: co-founder, ambassador, achievements, then custom ones', async () => {
+  it('orders badges: gold ones first, then co-founder, ambassador, achievements and custom ones', async () => {
     const achievement = {
       id: 'first-talk',
       name: 'Primera charla',
@@ -335,8 +335,10 @@ describe('/perfil/[id]', () => {
 
     expect(getUserAchievementMetrics).toHaveBeenCalledWith('p1');
     const { badges } = badgesProps();
-    expect(badges.slice(0, 3)).toEqual([COFOUNDER_BADGE, AMBASSADOR_BADGE, achievement]);
-    expect(badges[3]).toMatchObject({ id: 'b1', icon: 'award', custom: true, awardedAt });
+    expect(badges.slice(0, 2)).toEqual([COFOUNDER_BADGE, AMBASSADOR_BADGE]);
+    // The gold custom badge goes ahead of the green achievement
+    expect(badges[2]).toMatchObject({ id: 'b1', icon: 'award', custom: true, awardedAt });
+    expect(badges[3]).toEqual(achievement);
     // Unknown icons and tones fall back to the defaults
     expect(badges[4]).toMatchObject({ id: 'b2', icon: 'award', tone: 'green', custom: true });
   });

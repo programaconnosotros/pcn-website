@@ -202,8 +202,8 @@ export default async function ProfilePage(props: ProfilePageProps) {
   const isOwnProfile = session?.user?.id === params.id;
   const viewerIsAdmin = session?.user?.role === 'ADMIN';
 
-  // Built-in badges first, then the ones earned through activity, then the custom ones an admin
-  // awarded, oldest first.
+  // Gold badges first; within each group, built-in badges, then the ones earned through activity,
+  // then the custom ones an admin awarded, oldest first.
   const badges: (DisplayBadge & { custom?: boolean })[] = [
     ...(user.isCofounder ? [COFOUNDER_BADGE] : []),
     ...(user.isAmbassador ? [AMBASSADOR_BADGE] : []),
@@ -217,7 +217,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
       awardedAt,
       custom: true,
     })),
-  ];
+  ].sort((a, b) => Number(b.tone === 'gold') - Number(a.tone === 'gold'));
 
   const socialLinks = [
     {
