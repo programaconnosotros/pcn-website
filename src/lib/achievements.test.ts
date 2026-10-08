@@ -30,8 +30,8 @@ describe('earnedAchievements', () => {
     expect(ids({ ...EMPTY_METRICS, talksGiven: 3, speakerRank: 2 })).toEqual(['speaker']);
     // The top speaker doesn't also show "Speaker".
     expect(ids({ ...EMPTY_METRICS, talksGiven: 9, speakerRank: 1 })).toEqual(['top-speaker']);
+    // The soul of the group doesn't also show "Locuaz".
     expect(ids({ ...EMPTY_METRICS, conversations: 120, conversationsRank: 1 })).toEqual([
-      'conversations-100',
       'top-conversations',
     ]);
   });
