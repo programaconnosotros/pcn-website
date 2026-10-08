@@ -28,10 +28,8 @@ describe('earnedAchievements', () => {
 
   it('earns top speaker and the conversations crown only at #1', () => {
     expect(ids({ ...EMPTY_METRICS, talksGiven: 3, speakerRank: 2 })).toEqual(['speaker']);
-    expect(ids({ ...EMPTY_METRICS, talksGiven: 9, speakerRank: 1 })).toEqual([
-      'speaker',
-      'top-speaker',
-    ]);
+    // The top speaker doesn't also show "Speaker".
+    expect(ids({ ...EMPTY_METRICS, talksGiven: 9, speakerRank: 1 })).toEqual(['top-speaker']);
     expect(ids({ ...EMPTY_METRICS, conversations: 120, conversationsRank: 1 })).toEqual([
       'conversations-100',
       'top-conversations',

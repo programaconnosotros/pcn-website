@@ -250,7 +250,10 @@ export const isAchieved = (achievement: Achievement, metrics: AchievementMetrics
 };
 
 /** Badges a higher one makes redundant: the top contributor doesn't also show "Contributor". */
-const SUPERSEDED_BY: Record<string, string> = { contributor: 'top-contributor' };
+const SUPERSEDED_BY: Record<string, string> = {
+  contributor: 'top-contributor',
+  speaker: 'top-speaker',
+};
 
 /** The achievements a user already earned, in `ACHIEVEMENTS` order. */
 export const earnedAchievements = (metrics: AchievementMetrics) => {
