@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { groupPulls, pullSummary } from '@/lib/pull-kinds';
 import Link from 'next/link';
 import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import type { Conversation } from '@/data/whatsapp-conversations';
@@ -13,6 +12,8 @@ import type { fetchEvents } from '@/actions/events/fetch-events';
 import { EventExhibit } from '@/components/events/event-exhibit';
 import { EventPoster } from '@/components/events/event-poster';
 import { hasEventEnded } from '@/lib/event-status';
+import { ChangelogRow } from '@/components/changelog/changelog-row';
+import type { VisibleChangelogEntry } from '@/lib/changelog';
 
 export { PROFILE_TABS, isProfileTab, type ProfileTab } from './profile-tabs';
 
@@ -273,12 +274,9 @@ const BAR_WIDTH = 24;
 export const ContributionStats = ({
   contributions,
   totals,
-  detailed = false,
 }: {
   contributions: ContributorStat[];
   totals: { mergedPrs: number; commits: number };
-  /** In the contributions tab: also what they did, PR by PR. */
-  detailed?: boolean;
 }) => {
   const mergedPrs = contributions.reduce((sum, c) => sum + c.mergedPrs, 0);
   const commits = contributions.reduce((sum, c) => sum + c.commits, 0);
@@ -334,77 +332,22 @@ export const ContributionStats = ({
           </Link>
         </li>
       </ul>
-      {detailed && <PullsSummary contributions={contributions} />}
     </div>
   );
 };
 
-const REPO_PULL_URL = 'https://github.com/programaconnosotros/pcn-website/pull';
-const PULLS_PER_KIND = 6;
-const pullDate = new Intl.DateTimeFormat('es-AR', { month: 'short', year: 'numeric' });
-
 /**
- * What the person did in the repo: their merged PRs counted by kind (features, fixes, config…)
- * and the latest of each kind, linked to GitHub.
+ * What the person built in the site, entry by entry: the same /changelog entries that credit
+ * them, newest first.
  */
-function PullsSummary({ contributions }: { contributions: ContributorStat[] }) {
-  const pulls = contributions
-    .flatMap((contributor) => contributor.pulls ?? [])
-    .sort((a, b) => b.mergedAt.localeCompare(a.mergedAt));
-  if (pulls.length === 0) return null;
-  const groups = groupPulls(pulls);
-
-  return (
-    <section aria-label="Qué hizo en el repo" className="space-y-3 pt-2">
-      <p className="font-mono text-xs text-muted-foreground">
-        <span className="text-pcnGreen-500">$ </span>git log --merges | resumen
-      </p>
-      <ul className="flex flex-wrap gap-1.5 font-mono text-[11px]">
-        {groups.map((group) => (
-          <li
-            key={group.kind}
-            className="flex items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2 py-1"
-          >
-            <span className="font-semibold text-pcnGreen tabular-nums">{group.pulls.length}</span>
-            <span className="text-muted-foreground">{group.label}</span>
-          </li>
+export const ContributionChangelog = ({ entries }: { entries: VisibleChangelogEntry[] }) =>
+  entries.length > 0 && (
+    <section aria-label="Lo que construyó">
+      <SectionHeading label="lo que construyó" count={entries.length} />
+      <RuledGrid className="grid-cols-1 xl:grid-cols-2">
+        {entries.map((entry) => (
+          <ChangelogRow key={`${entry.date}-${entry.title}`} entry={entry} showDate />
         ))}
-      </ul>
-      <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
-        {groups.map((group) => (
-          <div key={group.kind}>
-            <h4 className="mb-1.5 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
-              <span className="text-pcnGreen-500">{'// '}</span>
-              {group.label}
-            </h4>
-            <ul className="space-y-1">
-              {group.pulls.slice(0, PULLS_PER_KIND).map((pull) => (
-                <li key={pull.number} className="flex items-baseline gap-2 text-xs">
-                  <a
-                    href={`${REPO_PULL_URL}/${pull.number}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 font-mono text-pcnGreen-700 hover:text-pcnGreen"
-                  >
-                    #{pull.number}
-                  </a>
-                  <span className="min-w-0 flex-1 text-foreground/85">
-                    {pullSummary(pull.title)}
-                  </span>
-                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
-                    {pullDate.format(new Date(pull.mergedAt))}
-                  </span>
-                </li>
-              ))}
-              {group.pulls.length > PULLS_PER_KIND && (
-                <li className="font-mono text-[11px] text-muted-foreground">
-                  +{group.pulls.length - PULLS_PER_KIND} más
-                </li>
-              )}
-            </ul>
-          </div>
-        ))}
-      </div>
+      </RuledGrid>
     </section>
   );
-}

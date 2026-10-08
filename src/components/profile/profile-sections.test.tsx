@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import {
+  ContributionChangelog,
   ContributionStats,
   ConversationRows,
   EmptyLine,
@@ -213,35 +214,30 @@ describe('profile sections', () => {
     expect(screen.getByText('del total').nextSibling).toHaveTextContent('0%');
   });
 
-  it('summarizes what the person did in the repo, by kind, only in the detailed view', () => {
-    const withPulls = {
-      ...contributor('ada', 10),
-      pulls: [
-        { number: 12, title: 'feat(eventos): sponsor logos', mergedAt: '2026-09-01T00:00:00Z' },
-        { number: 9, title: 'fix: login loop', mergedAt: '2026-08-01T00:00:00Z' },
-        { number: 3, title: 'feat: setups', mergedAt: '2026-07-01T00:00:00Z' },
-      ],
-    };
-    const { unmount } = render(
-      <ContributionStats contributions={[withPulls]} totals={{ mergedPrs: 3, commits: 9 }} />,
-    );
-    expect(screen.queryByRole('region', { name: 'Qué hizo en el repo' })).not.toBeInTheDocument();
-    unmount();
+  it('lists what the person built as changelog entries, with their date and co-authors', () => {
+    const entry = (title: string, date: string, logins: string[] = []) => ({
+      date,
+      area: 'eventos',
+      title,
+      description: `${title}, explicado`,
+      adminOnly: false,
+      authors: logins.map((login) => ({ login, user: null })),
+    });
+    const { container } = render(<ContributionChangelog entries={[]} />);
+    expect(container).toBeEmptyDOMElement();
 
     render(
-      <ContributionStats
-        contributions={[withPulls]}
-        totals={{ mergedPrs: 3, commits: 9 }}
-        detailed
+      <ContributionChangelog
+        entries={[
+          entry('Lista de espera', '2026-10-02', ['gmanavarro']),
+          entry('Setups', '2026-09-01'),
+        ]}
       />,
     );
-    const summary = screen.getByRole('region', { name: 'Qué hizo en el repo' });
-    expect(summary).toHaveTextContent('2features');
-    expect(summary).toHaveTextContent('1fixes');
-    expect(within(summary).getByRole('link', { name: '#12' })).toHaveAttribute(
-      'href',
-      'https://github.com/programaconnosotros/pcn-website/pull/12',
-    );
-    expect(within(summary).getByText('Sponsor logos')).toBeInTheDocument();
+    const list = screen.getByRole('region', { name: 'Lo que construyó' });
+    expect(list).toHaveTextContent('(2)');
+    expect(within(list).getByText('2026-10-02')).toBeInTheDocument();
+    expect(within(list).getByText('Lista de espera, explicado')).toBeInTheDocument();
+    expect(within(list).getByText('gmanavarro')).toBeInTheDocument();
   });
 });

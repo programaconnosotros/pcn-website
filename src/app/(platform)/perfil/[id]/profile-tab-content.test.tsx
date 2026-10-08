@@ -10,6 +10,7 @@ import {
   ProjectRows,
 } from '@/components/profile/profile-sections';
 import { ProfileTabCounts } from '@/components/profile/profile-tab-nav';
+import { getAdminUser } from '@/lib/admin';
 import { sessionRow } from '@/test/pages-m-z';
 import * as data from './profile-data';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
@@ -17,6 +18,7 @@ import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 jest.mock('./profile-data', () => ({
   getProfileAdvice: jest.fn(),
   getProfileArticles: jest.fn(),
+  getProfileChangelog: jest.fn(),
   getProfileContributions: jest.fn(),
   getProfileConversations: jest.fn(),
   getProfileCounts: jest.fn(),
@@ -29,6 +31,7 @@ jest.mock('./profile-data', () => ({
   getProfileVideos: jest.fn(),
   getProfileCourses: jest.fn(),
 }));
+jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/components/videos/video-grid', () => ({
   VideoGrid: ({ videos }: { videos: unknown[] }) => <p>{videos.length} videos</p>,
 }));
@@ -62,6 +65,7 @@ jest.mock('@/components/profile/profile-sections', () => {
     PhotoGrid: rows('fotos', 'photos'),
     ConversationRows: rows('conversaciones', 'conversations'),
     ContributionStats: rows('contribuidores', 'contributions'),
+    ContributionChangelog: rows('cambios', 'entries'),
   };
 });
 
@@ -132,6 +136,7 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   );
   m.getProfileContributions.mockResolvedValue(contributions(sizes.contributions ?? 0) as never);
   m.getProfileIdentities.mockResolvedValue({ whatsapp: [], github: [] } as never);
+  m.getProfileChangelog.mockResolvedValue(list(sizes.changelog ?? 0, 'ch') as never);
 };
 
 const person = { id: 'u1', name: 'Ana López', image: null };
@@ -419,5 +424,14 @@ describe('ProfileTabContent: one section', () => {
       screen.getByText('No pudimos traer las contribuciones de GitHub, probá más tarde.'),
     ).toBeInTheDocument();
     expect(OrganizedEvents).not.toHaveBeenCalled();
+  });
+
+  it('contribuciones lists what they built from the changelog, admin-only entries for admins', async () => {
+    mockData({ contributions: 1, changelog: 3 });
+    jest.mocked(getAdminUser).mockResolvedValue({ id: 'admin' } as never);
+    await renderTab('contribuciones');
+
+    expect(screen.getByText('3 cambios')).toBeInTheDocument();
+    expect(m.getProfileChangelog).toHaveBeenCalledWith(expect.any(String), true);
   });
 });

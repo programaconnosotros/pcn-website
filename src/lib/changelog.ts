@@ -26,3 +26,15 @@ export const visibleChangelog = (
       adminOnly: audience === 'admins',
       authors: authors.map((login) => ({ login, user: profiles[login] ?? null })),
     }));
+
+/**
+ * The entries one person built, for their profile: those crediting any of their GitHub logins,
+ * with only the co-authors left as authors since the profile already says who they are.
+ */
+export const changelogBy = (entries: VisibleChangelogEntry[], logins: string[]) =>
+  entries
+    .filter((entry) => entry.authors.some((author) => logins.includes(author.login)))
+    .map((entry) => ({
+      ...entry,
+      authors: entry.authors.filter((author) => !logins.includes(author.login)),
+    }));

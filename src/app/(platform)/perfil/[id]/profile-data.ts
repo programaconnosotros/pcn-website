@@ -9,7 +9,9 @@ import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
 import { listExtractedActivity } from '@/lib/consejos-server';
 import { getCollaborationStats } from '@/lib/github-stats';
-import { getUserIdentities } from '@/lib/identity-links';
+import { getIdentityMap, getUserIdentities } from '@/lib/identity-links';
+import { changelog } from '@/data/changelog';
+import { changelogBy, visibleChangelog } from '@/lib/changelog';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
 import { setupSelect } from '@/lib/setups';
 import { videoSpeakers, videos as allVideos } from '@/components/videos/videos';
@@ -221,6 +223,13 @@ export const getProfileContributions = cache(async (userId: string) => {
       ? null
       : contributions.reduce((sum, contributor) => sum + (contributor.linesAdded ?? 0), 0),
   };
+});
+
+// What this user built in the site, as the /changelog entries crediting their GitHub logins.
+export const getProfileChangelog = cache(async (userId: string, isAdmin: boolean) => {
+  const logins = (await getProfileIdentities(userId)).github;
+  if (logins.length === 0) return [];
+  return changelogBy(visibleChangelog(changelog, isAdmin, await getIdentityMap('github')), logins);
 });
 
 export const getProfileCounts = cache(

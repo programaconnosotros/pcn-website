@@ -21,6 +21,22 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-07',
+    area: 'perfil',
+    title: 'Lo que construyó cada contribuidor',
+    description:
+      'La pestaña de contribuciones de cada perfil lista lo que la persona construyó en la plataforma, con las mismas entradas que aparecen en este changelog.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-04',
+    area: 'os',
+    title: 'Sesión al día en el escritorio',
+    description:
+      'Si iniciás sesión desde una ventana de PCN OS, la barra del escritorio se actualiza enseguida y deja de mostrar "Iniciar sesión".',
+    authors: ['luki1qq'],
+  },
+  {
     date: '2026-10-04',
     area: 'infra',
     title: 'El sitio carga más rápido',

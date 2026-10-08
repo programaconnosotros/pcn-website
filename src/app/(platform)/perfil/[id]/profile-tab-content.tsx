@@ -5,11 +5,13 @@ import { AdviceCard } from '@/components/advice/advice-card';
 import type { Consejo } from '@/lib/consejos';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { cn } from '@/lib/utils';
+import { getAdminUser } from '@/lib/admin';
 import { ProfileArticles } from '@/components/profile/profile-articles';
 import { ProfileTalks } from '@/components/profile/profile-talks';
 import { ProfileTabCounts } from '@/components/profile/profile-tab-nav';
 import { profileTabHref } from '@/components/profile/profile-tabs';
 import {
+  ContributionChangelog,
   ContributionStats,
   ConversationRows,
   EmptyLine,
@@ -23,6 +25,7 @@ import {
 import {
   getProfileAdvice,
   getProfileArticles,
+  getProfileChangelog,
   getProfileContributions,
   getProfileConversations,
   getProfileCounts,
@@ -407,9 +410,15 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
       break;
     }
     case 'contribuciones': {
-      const github = await getProfileContributions(userId);
+      const [github, entries] = await Promise.all([
+        getProfileContributions(userId),
+        getAdminUser().then((admin) => getProfileChangelog(userId, !!admin)),
+      ]);
       content = github.contributions.length ? (
-        <ContributionStats contributions={github.contributions} totals={github.totals} detailed />
+        <div className="space-y-6">
+          <ContributionStats contributions={github.contributions} totals={github.totals} />
+          <ContributionChangelog entries={entries} />
+        </div>
       ) : (
         <EmptyLine>
           {github.linked

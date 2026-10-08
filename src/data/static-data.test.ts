@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { changelog } from './changelog';
 import { faqs } from './faqs';
+import githubStats from './github-stats.json';
 import { PARTNER_CONTACT_URL, partners } from './partners';
 import { WHATSAPP_GROUP_URL } from './whatsapp-group';
 
@@ -35,5 +37,17 @@ describe('faqs', () => {
 describe('WHATSAPP_GROUP_URL', () => {
   it('is a WhatsApp group invite', () => {
     expect(WHATSAPP_GROUP_URL).toMatch(/^https:\/\/chat\.whatsapp\.com\/\w+$/);
+  });
+});
+
+describe('changelog', () => {
+  // Profiles list what each contributor built from these entries, so nobody who got a PR merged
+  // should be missing from them.
+  it('credits everyone who contributed to the repo', () => {
+    const credited = new Set(changelog.flatMap((entry) => entry.authors));
+    const missing = githubStats.topContributors
+      .map((contributor) => contributor.login)
+      .filter((login) => !credited.has(login));
+    expect(missing).toEqual([]);
   });
 });
