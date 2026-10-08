@@ -96,7 +96,7 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
     {projects.map((project) => (
       <Link
         key={project.id}
-        href={`/proyectos?q=${encodeURIComponent(project.title)}`}
+        href={`/proyectos/${project.id}`}
         className={cn(
           ruledCellClassName,
           'flex group gap-3 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',

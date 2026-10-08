@@ -163,7 +163,7 @@ const projectItems = async (): Promise<FeedItem[]> => {
     title: project.title,
     meta: project.author?.name,
     description: project.description,
-    href: '/proyectos',
+    href: `/proyectos/${project.id}`,
   }));
 };
 

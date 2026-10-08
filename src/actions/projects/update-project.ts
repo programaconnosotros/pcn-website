@@ -49,6 +49,7 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
   if (!canManageProject(user, existing)) {
     await prisma.project.update({ where: { id }, data: basicInfo });
     revalidatePath('/proyectos');
+    revalidatePath(`/proyectos/${id}`);
     return { success: true };
   }
 
@@ -67,6 +68,7 @@ export const updateProject = async (id: string, data: ProjectFormData) => {
   ]);
 
   revalidatePath('/proyectos');
+  revalidatePath(`/proyectos/${id}`);
 
   return { success: true };
 };

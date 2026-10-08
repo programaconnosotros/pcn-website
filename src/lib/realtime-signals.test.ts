@@ -30,7 +30,7 @@ describe('signalWrite', () => {
       ],
       ['Talk', { title: 'Testing' }, { kind: 'charla', title: 'Testing', href: '/charlas' }],
       ['Setup', { id: 's1', title: 'Escritorio' }, { kind: 'setup', href: '/setups/s1' }],
-      ['Project', { title: 'App' }, { kind: 'proyecto', href: '/proyectos' }],
+      ['Project', { id: 'p1', title: 'App' }, { kind: 'proyecto', href: '/proyectos/p1' }],
       ['Advice', { id: 'a1', content: 'x'.repeat(100) }, { kind: 'consejo', href: '/consejos/a1' }],
     ];
     for (const [model, row, expected] of cases) {

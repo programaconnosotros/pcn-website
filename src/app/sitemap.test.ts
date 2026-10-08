@@ -12,6 +12,7 @@ const mockRecords = () => {
   prismaMock.advice.findMany.mockResolvedValue([{ id: 'a1', updatedAt }] as any);
   prismaMock.testimonial.findMany.mockResolvedValue([{ id: 't1', updatedAt }] as any);
   prismaMock.setup.findMany.mockResolvedValue([{ id: 's1', updatedAt }] as any);
+  prismaMock.project.findMany.mockResolvedValue([{ id: 'p1', updatedAt }] as any);
 };
 
 describe('sitemap', () => {
@@ -41,7 +42,13 @@ describe('sitemap', () => {
     mockRecords();
     const entries = await sitemap();
 
-    for (const path of ['/eventos/e1', '/consejos/a1', '/testimonios/t1', '/setups/s1'])
+    for (const path of [
+      '/eventos/e1',
+      '/consejos/a1',
+      '/testimonios/t1',
+      '/setups/s1',
+      '/proyectos/p1',
+    ])
       expect(entries).toContainEqual({ url: `${SITE}${path}`, lastModified: updatedAt });
     const extracted = extractedConsejos[0];
     expect(entries).toContainEqual({

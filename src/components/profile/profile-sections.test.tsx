@@ -72,7 +72,7 @@ describe('profile sections', () => {
     );
 
     const web = screen.getByRole('link', { name: /pcn web/ });
-    expect(web).toHaveAttribute('href', '/proyectos?q=pcn%20web');
+    expect(web).toHaveAttribute('href', '/proyectos/p1');
     expect(web).toHaveTextContent('PC');
     expect(web).toHaveTextContent('# Next · Prisma');
     expect(screen.getByRole('link', { name: /Bot/ })).toHaveTextContent('colaborador');

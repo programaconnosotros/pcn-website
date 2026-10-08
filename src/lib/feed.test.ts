@@ -253,7 +253,7 @@ describe('fetchFeed', () => {
       href: '/setups/s1',
       thumbs: [{ id: 's1', src: 'signed:thumb/s1' }],
     });
-    expect(project).toMatchObject({ id: 'proyecto-pr1', meta: 'Beto', href: '/proyectos' });
+    expect(project).toMatchObject({ id: 'proyecto-pr1', meta: 'Beto', href: '/proyectos/pr1' });
     expect(project.thumbs).toBeUndefined();
     expect(orphan.meta).toBeUndefined();
   });

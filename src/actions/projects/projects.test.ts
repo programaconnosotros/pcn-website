@@ -5,6 +5,9 @@ import { updateProject } from './update-project';
 import { deleteProject } from './delete-project';
 import { leaveProject } from './leave-project';
 import { reorderProjects } from './reorder-projects';
+import { deleteObjectsOrLog } from '@/lib/s3';
+
+jest.mock('@/lib/s3', () => ({ deleteObjectsOrLog: jest.fn().mockResolvedValue(undefined) }));
 
 const baseUser = {
   id: 'cm0000000000000000author01',
@@ -49,6 +52,7 @@ const existingProject = {
   techStack: [],
   order: 2,
   authorId: baseUser.id,
+  media: [],
   members: [{ userId: collaboratorId }, { userId: null }],
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -290,13 +294,20 @@ describe('updateProject', () => {
 });
 
 describe('deleteProject', () => {
-  it('lets the author delete their project', async () => {
+  it('lets the author delete their project, and its photos and videos from S3', async () => {
     loginAs(baseUser);
-    prismaMock.project.findUnique.mockResolvedValue(existingProject as any);
+    prismaMock.project.findUnique.mockResolvedValue({
+      ...existingProject,
+      media: [{ storageKeys: ['projects/a/full.webp', 'projects/a/thumb.webp'] }],
+    } as any);
 
     await deleteProject(existingProject.id);
 
     expect(prismaMock.project.delete).toHaveBeenCalledWith({ where: { id: existingProject.id } });
+    expect(deleteObjectsOrLog).toHaveBeenCalledWith([
+      'projects/a/full.webp',
+      'projects/a/thumb.webp',
+    ]);
   });
 
   it('rejects users who are neither the author nor an admin', async () => {

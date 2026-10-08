@@ -39,7 +39,7 @@ export type DbDomain =
   | 'auth'
   | 'sistema';
 
-export const DB_SCHEMA_UPDATED_AT = '2026-10-07';
+export const DB_SCHEMA_UPDATED_AT = '2026-10-08';
 
 export const dbEnums: { name: string; values: string[] }[] = [
   {
@@ -1779,6 +1779,63 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'ProjectMedia',
+    domain: 'proyectos',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'projectId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'kind',
+        type: 'GalleryItemKind',
+      },
+      {
+        name: 'src',
+        type: 'String',
+      },
+      {
+        name: 'thumbSrc',
+        type: 'String',
+      },
+      {
+        name: 'width',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'height',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'durationSeconds',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'storageKeys',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'order',
+        type: 'Int',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [],
+  },
+  {
     name: 'ProjectMember',
     domain: 'proyectos',
     fields: [
@@ -2553,6 +2610,14 @@ export const dbRelations: DbRelation[] = [
     to: 'User',
     label: 'author',
     optional: true,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'ProjectMedia',
+    to: 'Project',
+    label: 'project',
+    optional: false,
     many: true,
     onDelete: 'Cascade',
   },

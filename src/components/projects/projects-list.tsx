@@ -626,15 +626,17 @@ export function ProjectsList({ projects, currentUser }: Props) {
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <h2>
-                    <button
-                      type="button"
-                      onClick={() => !reordering && setReading(project)}
-                      disabled={reordering}
-                      className="project-glitch text-left font-mono text-base leading-snug font-semibold transition-colors group-hover:text-pcnGreen disabled:pointer-events-none"
+                    <Link
+                      href={`/proyectos/${project.id}`}
+                      onClick={(event) => reordering && event.preventDefault()}
+                      className={cn(
+                        'project-glitch text-left font-mono text-base leading-snug font-semibold transition-colors group-hover:text-pcnGreen',
+                        reordering && 'pointer-events-none',
+                      )}
                       data-text={project.title}
                     >
                       {project.title}
-                    </button>
+                    </Link>
                   </h2>
                   <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
                     {project.description}

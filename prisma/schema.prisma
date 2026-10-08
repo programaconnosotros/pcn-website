@@ -776,11 +776,37 @@ model Project {
   authorRole String?
 
   members ProjectMember[]
+  media   ProjectMedia[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([authorId])
+}
+
+// Fotos y videos que el equipo sube a la página de un proyecto. Las fotos se optimizan a WebP
+// (grande y miniatura) en el servidor; los videos se optimizan en el navegador y se suben con una
+// portada. Se sirven por CloudFront sin firmar, como los setups.
+model ProjectMedia {
+  id              String          @id @default(cuid())
+  projectId       String
+  kind            GalleryItemKind
+  // La foto grande o el video.
+  src             String
+  // La miniatura de la foto o la portada del video.
+  thumbSrc        String
+  width           Int?
+  height          Int?
+  durationSeconds Int?
+  // Objetos de S3, para borrarlos junto con la foto, el video o el proyecto.
+  storageKeys     String[]        @default([])
+  order           Int             @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
 }
 
 model ProjectMember {

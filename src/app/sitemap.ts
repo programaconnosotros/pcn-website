@@ -53,7 +53,7 @@ const STATIC_ROUTES = [
 const listSitemapRecords = cached(
   'sitemap-records',
   async () => {
-    const [events, advice, testimonials, setups] = await Promise.all([
+    const [events, advice, testimonials, setups, projects] = await Promise.all([
       prisma.event.findMany({
         where: { deletedAt: null },
         select: { id: true, updatedAt: true },
@@ -61,15 +61,16 @@ const listSitemapRecords = cached(
       prisma.advice.findMany({ select: { id: true, updatedAt: true } }),
       prisma.testimonial.findMany({ select: { id: true, updatedAt: true } }),
       prisma.setup.findMany({ select: { id: true, updatedAt: true } }),
+      prisma.project.findMany({ select: { id: true, updatedAt: true } }),
     ]);
-    return { events, advice, testimonials, setups };
+    return { events, advice, testimonials, setups, projects };
   },
-  { models: ['Event', 'Advice', 'Testimonial', 'Setup'] },
+  { models: ['Event', 'Advice', 'Testimonial', 'Setup', 'Project'] },
 );
 
 async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
   try {
-    const { events, advice, testimonials, setups } = await listSitemapRecords();
+    const { events, advice, testimonials, setups, projects } = await listSitemapRecords();
 
     return [
       ...events.map((e) => ({ url: `${SITE_URL}/eventos/${e.id}`, lastModified: e.updatedAt })),
@@ -83,6 +84,7 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
         lastModified: t.updatedAt,
       })),
       ...setups.map((s) => ({ url: `${SITE_URL}/setups/${s.id}`, lastModified: s.updatedAt })),
+      ...projects.map((p) => ({ url: `${SITE_URL}/proyectos/${p.id}`, lastModified: p.updatedAt })),
     ];
   } catch (error) {
     // A database outage should still serve the static part of the sitemap.

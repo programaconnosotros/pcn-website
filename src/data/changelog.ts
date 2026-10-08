@@ -22,6 +22,24 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-07',
+    area: 'proyectos',
+    title: 'Página de cada proyecto',
+    description:
+      'Cada proyecto de la comunidad tiene su propia página con la descripción completa, el stack, los links y el equipo. Los proyectos del feed, de PCN NEWS y de los perfiles abren directo en esa página.',
+    authors: ['agustin-sanc'],
+    href: '/proyectos',
+  },
+  {
+    date: '2026-10-07',
+    area: 'proyectos',
+    title: 'Fotos y videos en los proyectos',
+    description:
+      'El equipo de un proyecto puede subir capturas y videos de demo a su página. Los videos se optimizan en tu dispositivo antes de subirse, como en la galería.',
+    authors: ['agustin-sanc'],
+    href: '/proyectos',
+  },
+  {
+    date: '2026-10-07',
     area: 'perfil',
     title: 'Lo que construyó cada contribuidor',
     description:

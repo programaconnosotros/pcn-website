@@ -23,11 +23,14 @@ const announce: Partial<Record<ModelName, (_row: Row) => Announcement | null>> =
   GalleryItem: () => ({ kind: 'fotos', title: 'Nuevas fotos en la galería', href: '/galeria' }),
   Setup: (row) =>
     row?.id ? { kind: 'setup', title: text(row.title), href: `/setups/${row.id}` } : null,
-  Project: (row) => ({
-    kind: 'proyecto',
-    title: text(row?.title) || 'Nuevo proyecto',
-    href: '/proyectos',
-  }),
+  Project: (row) =>
+    row?.id
+      ? {
+          kind: 'proyecto',
+          title: text(row.title) || 'Nuevo proyecto',
+          href: `/proyectos/${row.id}`,
+        }
+      : null,
   ForumPost: (row) =>
     row?.id ? { kind: 'foro', title: text(row.title), href: `/foro/tema/${row.id}` } : null,
   Advice: (row) =>

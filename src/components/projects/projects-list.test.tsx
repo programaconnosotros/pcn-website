@@ -138,12 +138,17 @@ describe('ProjectsList', () => {
     expect(titles()).toHaveLength(3);
   });
 
-  it('opens a project in the web reader', async () => {
+  it('links each project to its page and opens it in the web reader with ./run', async () => {
     global.fetch = jest.fn().mockResolvedValue(jsonResponse({ embeddable: false }));
     const user = userEvent.setup();
     renderInPlatform(<ProjectsList projects={projects} currentUser={null} />);
 
-    await user.click(screen.getByRole('button', { name: 'PCN Dashboard' }));
+    expect(screen.getByRole('link', { name: 'PCN Dashboard' })).toHaveAttribute(
+      'href',
+      '/proyectos/p1',
+    );
+    const [dashboard] = articles();
+    await user.click(within(dashboard).getByRole('button', { name: /\.\/run/ }));
     const dialog = screen.getByRole('dialog');
     expect(within(dialog).getByText('Bruno Díaz · dashboard.example.com')).toBeInTheDocument();
     expect(await within(dialog).findByText(/no permite mostrarse embebido/)).toBeInTheDocument();
