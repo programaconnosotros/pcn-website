@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const StepHeading = () => <Skeleton className="mb-3 h-3 w-36" />;
 
 const Option = ({ hint = true }: { hint?: boolean }) => (
-  <div className="flex h-[45px] items-center gap-3 border-b border-r border-pcnGreen-200 px-3">
+  <div className="flex h-[45px] items-center gap-3 border-r border-b border-pcnGreen-200 px-3">
     <Skeleton className="h-3.5 w-5 shrink-0" />
     <Skeleton className="h-3.5 w-32" />
     {hint && <Skeleton className="ml-auto h-2.5 w-28 max-sm:hidden" />}
@@ -22,7 +22,7 @@ const PanelHeader = () => (
 export default function Loading() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         {/* Title, meta and the simulador / guías / live coding tabs. */}
         <PageTitleSkeleton
           titleClassName="w-44"

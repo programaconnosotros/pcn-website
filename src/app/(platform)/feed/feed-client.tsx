@@ -57,14 +57,14 @@ function FeedRow({ item }: { item: FeedItem }) {
   const kind = KINDS[item.kind];
 
   return (
-    <Link href={item.href} className={cn(ruledCellClassName, 'group flex flex-col gap-1.5 p-3')}>
+    <Link href={item.href} className={cn(ruledCellClassName, 'flex group flex-col gap-1.5 p-3')}>
       <span className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
         <span className={cn('border px-1 leading-4', kind.className)}>{item.tag ?? kind.tag}</span>
         {item.meta && <span className="min-w-0 truncate">{item.meta}</span>}
-        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground/60 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
       </span>
 
-      <h3 className="font-mono text-sm font-semibold leading-snug tracking-tight text-foreground group-hover:text-pcnGreen">
+      <h3 className="font-mono text-sm leading-snug font-semibold tracking-tight text-foreground group-hover:text-pcnGreen">
         {item.title}
       </h3>
 
@@ -135,7 +135,7 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
           <PageTitle path="feed" meta="tail -f comunidad.log" />
 
           {/* Scrolls sideways instead of wrapping when the window is narrow. */}
-          <div className="-mx-1 mb-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
+          <div className="-mx-1 mb-3 scrollbar-none overflow-x-auto px-1 pb-1">
             <div role="tablist" aria-label="Filtrar el feed" className={tabsListClassName}>
               {filters.map((value) => (
                 <button
@@ -171,7 +171,7 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
         {/* One column of news, easy to read top to bottom, with the side panels pinned at its
             right when there's room for them. */}
         <div className="flex items-start gap-6">
-          <div className="min-w-0 max-w-3xl flex-1">
+          <div className="max-w-3xl min-w-0 flex-1">
             {byDay.length === 0 ? (
               <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
                 <span className="text-pcnGreen-500">$ </span>nada nuevo por acá todavía
@@ -180,14 +180,14 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
               <div className="mb-14 space-y-6">
                 {byDay.map(([day, dayItems]) => (
                   <section key={day}>
-                    <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
                       <span className="text-pcnGreen">{'>'}</span>
                       <time dateTime={day} className="text-foreground">
                         {dayLabel(day, today)}
                       </time>
                       <span
                         aria-hidden
-                        className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                        className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
                       />
                       <span className="tabular-nums">[{dayItems.length}]</span>
                     </h2>

@@ -53,7 +53,7 @@ const isTypingTarget = (target: EventTarget | null) =>
   (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
 
 const buttonClassName =
-  'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 font-mono text-xs lowercase transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen disabled:pointer-events-none disabled:opacity-40';
+  'inline-flex items-center justify-center gap-1.5 border px-3 py-1.5 font-mono text-xs lowercase transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen disabled:pointer-events-none disabled:opacity-40';
 const primaryButtonClassName = cn(
   buttonClassName,
   'border-pcnGreen bg-pcnGreen/15 text-pcnGreen hover:bg-pcnGreen/25',
@@ -87,7 +87,7 @@ const Option = ({ selected, onSelect, label, hint }: OptionProps) => (
       selected && 'bg-pcnGreen/10 text-pcnGreen hover:bg-pcnGreen/10',
     )}
   >
-    <span className={cn('shrink-0', selected ? 'text-pcnGreen' : 'text-pcnGreen-500/50')}>
+    <span className={cn('shrink-0', selected ? 'text-pcnGreen' : 'text-pcnGreen/50')}>
       {selected ? '[x]' : '[ ]'}
     </span>
     <span className="font-semibold">{label}</span>
@@ -118,7 +118,7 @@ const TopicChips = ({ topics }: { topics: [string, number][] }) => (
         key={topic}
         className="border border-pcnGreen-200 px-1.5 py-0.5 text-[10px] text-muted-foreground"
       >
-        # {topic} <span className="tabular-nums text-pcnGreen-600">{count}</span>
+        # {topic} <span className="text-pcnGreen-600 tabular-nums">{count}</span>
       </span>
     ))}
   </div>
@@ -629,7 +629,7 @@ export function InterviewSimulator({ guideSections, tipo }: InterviewSimulatorPr
               </div>
             </div>
 
-            <h2 className="mb-6 font-mono text-lg font-semibold leading-snug md:text-xl">
+            <h2 className="mb-6 font-mono text-lg leading-snug font-semibold md:text-xl md:leading-7">
               <span className="text-pcnGreen-500">&gt; </span>
               {renderInlineCode(question)}
             </h2>

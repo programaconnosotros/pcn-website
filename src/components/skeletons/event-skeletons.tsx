@@ -27,7 +27,7 @@ export function TabStripSkeleton({ tabs, className }: { tabs: string[]; classNam
 export function TableOfContentsSkeleton({ rows = 14 }: { rows?: number }) {
   return (
     <>
-      <div className="-mx-4 border-b border-pcnGreen-200 px-4 pb-2 pt-2 lg:hidden">
+      <div className="-mx-4 border-b border-pcnGreen-200 px-4 pt-2 pb-2 lg:hidden">
         <div className="flex items-center gap-1.5">
           <Skeleton className="h-8 w-8 shrink-0 rounded-none" />
           <Skeleton className="h-8 flex-1 rounded-none" />
@@ -95,7 +95,7 @@ export function EventDetailSkeleton() {
 
       <div className="mb-14 grid grid-cols-1 divide-y divide-pcnGreen-200 border border-pcnGreen-200 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:divide-x md:divide-y-0">
         <div className="flex flex-col">
-          <Skeleton className="aspect-[4/5] w-full rounded-none" />
+          <Skeleton className="aspect-4/5 w-full rounded-none" />
         </div>
 
         <div className="flex flex-col divide-y divide-pcnGreen-200">
@@ -211,7 +211,7 @@ export function EventFormSkeleton() {
 function EventPosterSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn(cellClassName, 'flex flex-col gap-4 p-4', className)}>
-      <Skeleton className="aspect-[4/5] w-full" />
+      <Skeleton className="aspect-4/5 w-full" />
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <Skeleton className="h-3 w-32" />
@@ -231,7 +231,7 @@ function EventExhibitSkeleton() {
   return (
     <div className={cn(cellClassName, 'flex flex-col gap-3 p-3 sm:gap-4 sm:p-5')}>
       <div className="bg-pcnGreen/[0.03] p-2 sm:p-4">
-        <Skeleton className="aspect-[4/5] w-full rounded-none" />
+        <Skeleton className="aspect-4/5 w-full rounded-none" />
       </div>
       <div className="flex flex-col gap-1.5 border-l-2 border-pcnGreen-200 pl-2.5 sm:pl-3">
         <Skeleton className="h-2.5 w-12" />

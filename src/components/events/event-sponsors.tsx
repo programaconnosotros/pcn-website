@@ -35,7 +35,7 @@ const SponsorTile = ({ sponsor }: { sponsor: EventSponsor }) => {
             )}
           />
         ) : (
-          <span className="break-words text-center font-mono text-base font-semibold tracking-tight">
+          <span className="text-center font-mono text-base font-semibold tracking-tight wrap-break-word">
             {sponsor.name}
           </span>
         )}

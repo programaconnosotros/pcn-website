@@ -140,7 +140,7 @@ function VerifyEmailContent() {
         !isVerified && (
           <>
             Enviamos un código de 6 dígitos a{' '}
-            <span className="break-all font-mono text-foreground">{email}</span>
+            <span className="font-mono break-all text-foreground">{email}</span>
           </>
         )
       }

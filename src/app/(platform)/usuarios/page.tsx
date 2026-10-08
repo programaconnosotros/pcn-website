@@ -8,8 +8,8 @@ const DAY_MS = 86_400_000;
 
 const Stat = ({ label, value, hint }: { label: string; value: string | number; hint: string }) => (
   <RuledCell className="px-3 py-2">
-    <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
-    <p className="text-glow font-mono text-xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+    <p className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">{label}</p>
+    <p className="font-mono text-xl font-semibold text-pcnGreen tabular-nums text-glow">{value}</p>
     <p className="truncate font-mono text-[10px] text-muted-foreground/70">{hint}</p>
   </RuledCell>
 );

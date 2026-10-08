@@ -87,7 +87,7 @@ export const ArchitectureDiagram = ({
         </span>
       </figcaption>
 
-      <div ref={frameRef} className="min-h-40 overflow-auto [scrollbar-width:thin]">
+      <div ref={frameRef} className="min-h-40 scrollbar-thin overflow-auto">
         {svg ? (
           <div
             className="mx-auto w-max p-4 [&_svg]:h-auto [&_svg]:max-w-none"

@@ -174,16 +174,16 @@ export const Team = ({ profiles = {} }: { profiles?: Record<string, LinkedUser> 
   <div className="@container">
     <ul
       role="list"
-      className="grid grid-cols-1 border-l border-t border-pcnGreen-200 @2xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-4"
+      className="grid grid-cols-1 border-t border-l border-pcnGreen-200 @2xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-4"
     >
       {people.map((person, index) => {
         const profile = profileOf(person, profiles);
         return (
           <li
             key={person.name}
-            className="group flex items-center gap-3 border-b border-r border-pcnGreen-200 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
+            className="flex group items-center gap-3 border-r border-b border-pcnGreen-200 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
           >
-            <span className="w-5 shrink-0 font-mono text-[10px] text-pcnGreen-500/70">
+            <span className="w-5 shrink-0 font-mono text-[10px] text-pcnGreen/70">
               {String(index + 1).padStart(2, '0')}
             </span>
 

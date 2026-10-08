@@ -60,7 +60,7 @@ export function ShareDialog({ isOpen, onClose, url, title }: ShareDialogProps) {
             </Button>
           </div>
           {copied && (
-            <p className="text-glow text-xs text-pcnGreen">[ok] link copiado al portapapeles</p>
+            <p className="text-xs text-pcnGreen text-glow">[ok] link copiado al portapapeles</p>
           )}
         </div>
         <div className="flex justify-end">

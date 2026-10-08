@@ -18,7 +18,7 @@ export const PartnersMarquee = () => (
         </Link>
       </div>
 
-      <div className="w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+      <div className="w-full mask-[linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
         <Marquee pauseOnHover className="p-0 [--duration:45s] [--gap:3.5rem]">
           {partners.map((partner) => (
             <Link

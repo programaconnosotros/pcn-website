@@ -22,7 +22,7 @@ export function EmptyState({ title, description, showRefresh = true, onRefresh }
         </div>
 
         {/* Search icon overlay */}
-        <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-100 bg-white">
+        <div className="absolute -right-1 -bottom-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-100 bg-white">
           <Search className="h-4 w-4 text-gray-500" />
         </div>
       </div>

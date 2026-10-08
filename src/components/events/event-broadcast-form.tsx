@@ -101,7 +101,7 @@ export function EventBroadcastForm({
             )}
           >
             {option.label}
-            <span className="tabular-nums text-muted-foreground">[{counts[option.value]}]</span>
+            <span className="text-muted-foreground tabular-nums">[{counts[option.value]}]</span>
           </button>
         ))}
       </div>
@@ -147,7 +147,7 @@ export function EventBroadcastForm({
           <ul className="space-y-1 font-mono text-xs">
             {history.map((item) => (
               <li key={item.id} className="flex flex-wrap items-baseline gap-x-2">
-                <span className="tabular-nums text-muted-foreground">
+                <span className="text-muted-foreground tabular-nums">
                   {item.createdAt.toLocaleString('es-AR', {
                     dateStyle: 'short',
                     timeStyle: 'short',

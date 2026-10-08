@@ -19,7 +19,7 @@ export default function Loading() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2"
+                  className="flex flex-col gap-0.5 border-r border-b border-pcnGreen-200 px-3 py-2"
                 >
                   <TextLineSkeleton lineClassName="h-[15px]" className="h-2.5 w-16" />
                   <Skeleton className="h-6 w-12" />

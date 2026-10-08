@@ -31,7 +31,7 @@ export default function Loading() {
           {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col gap-2.5 border-b border-r border-pcnGreen-200 p-3"
+              className="flex flex-col gap-2.5 border-r border-b border-pcnGreen-200 p-3"
             >
               <Skeleton className="aspect-square w-full" />
               <div className="space-y-1.5 py-0.5">

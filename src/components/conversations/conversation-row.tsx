@@ -35,7 +35,7 @@ export function ConversationRow({
     <article
       className={cn(
         ruledCellClassName,
-        'group relative flex flex-col gap-1.5 p-3',
+        'relative flex group flex-col gap-1.5 p-3',
         isGroup &&
           'bg-pcnGreen/[0.035] bg-[repeating-linear-gradient(0deg,rgba(4,244,190,0.03)_0_1px,transparent_1px_3px)] hover:bg-pcnGreen/[0.07]',
       )}
@@ -49,7 +49,7 @@ export function ConversationRow({
 
       {/* Phones get a single short line here (short date, short badge); the hash and the event
           move out of the way so nothing wraps. */}
-      <div className="flex min-w-0 items-center gap-2 whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground">
+      <div className="flex min-w-0 items-center gap-2 font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums">
         <span className="hidden text-pcnGreen-600 sm:inline">{shortHash(conversation)}</span>
         <time dateTime={date}>
           <span className="sm:hidden">{formatShortDate(date)}</span>
@@ -59,7 +59,7 @@ export function ConversationRow({
           <ConversationEventLink conversation={conversation} />
         </span>
         {isGroup && (
-          <span className="shrink-0 border border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
+          <span className="shrink-0 border border-pcnGreen-600 px-1 text-[10px] leading-4 tracking-wider text-pcnGreen uppercase shadow-[0_0_10px_-2px_rgba(4,244,190,0.6)]">
             <span className="sm:hidden">grupal</span>
             <span className="hidden sm:inline">muchos participantes</span>
           </span>
@@ -105,20 +105,20 @@ export function ConversationRow({
       {/* The title button stretches over the whole card, so clicking anywhere opens the summary. */}
       <h3
         className={cn(
-          'font-mono text-sm font-semibold leading-snug transition-colors group-hover:text-pcnGreen',
+          'font-mono text-sm leading-snug font-semibold transition-colors group-hover:text-pcnGreen',
           isGroup && 'text-[15px]',
         )}
       >
         <button
           type="button"
           onClick={onOpen}
-          className="text-left after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen"
+          className="text-left after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset"
         >
           <Highlight text={title} query={query} />
         </button>
       </h3>
 
-      <p className="line-clamp-3 text-[13px] leading-relaxed text-muted-foreground sm:text-xs">
+      <p className="line-clamp-3 text-[13px] leading-relaxed text-muted-foreground sm:text-xs sm:leading-4">
         <Highlight text={summary} query={query} />
       </p>
 
@@ -129,7 +129,7 @@ export function ConversationRow({
       {/* On phones the chips stay on one line that scrolls sideways instead of stacking into
           rows, and the whole card already opens the summary, so "abrir resumen" goes away. Gaps
           let taps through to the card. */}
-      <div className="pointer-events-none -mx-3 mt-auto flex items-center gap-1 overflow-x-auto px-3 pt-1 font-mono text-[11px] [mask-image:linear-gradient(to_right,transparent,black_12px,black_calc(100%-24px),transparent)] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
+      <div className="pointer-events-none -mx-3 mt-auto flex scrollbar-none items-center gap-1 overflow-x-auto mask-[linear-gradient(to_right,transparent,black_12px,black_calc(100%-24px),transparent)] px-3 pt-1 font-mono text-[11px] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:mask-none sm:px-0 [&::-webkit-scrollbar]:hidden">
         {/* Lifted above the title's stretched hit area so `@name` filters instead of opening. */}
         {visibleParticipants.map((name) => (
           <span

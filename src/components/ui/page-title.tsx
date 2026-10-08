@@ -44,7 +44,7 @@ export const PageTitle = ({ path, meta, action, className }: PageTitleProps) => 
             </Link>
             {crumbs.map((crumb, i) => (
               <Fragment key={`${crumb.label}-${i}`}>
-                <span className="text-pcnGreen-500/60">/</span>
+                <span className="text-pcnGreen/60">/</span>
                 {crumb.href ? (
                   <Link
                     href={crumb.href}

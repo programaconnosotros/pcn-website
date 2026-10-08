@@ -21,7 +21,7 @@ const dateFormat = new Intl.DateTimeFormat('es-AR', {
 
 const Panel = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="border border-pcnGreen-200 bg-black/40">
-    <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen-600">
+    <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-[11px] tracking-[0.18em] text-pcnGreen-600 uppercase">
       <span className="text-pcnGreen-300">{'// '}</span>
       {title}
     </h2>
@@ -46,13 +46,13 @@ export async function FeedAside() {
         {next ? (
           <Link
             href={`/eventos/${next.id}`}
-            className="group flex flex-col gap-1 px-3 py-3 transition-colors hover:bg-pcnGreen/[0.05]"
+            className="flex group flex-col gap-1 px-3 py-3 transition-colors hover:bg-pcnGreen/[0.05]"
           >
             <span className="flex items-center gap-1.5 font-mono text-[11px] text-pcnGreen">
               <CalendarDays className="size-3.5" />
               {dateFormat.format(next.date)}
             </span>
-            <span className="font-mono text-sm font-semibold leading-snug group-hover:text-pcnGreen">
+            <span className="font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen">
               {next.name}
             </span>
             <span className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground group-hover:text-pcnGreen">
@@ -76,13 +76,13 @@ export async function FeedAside() {
               <li key={announcement.id}>
                 <Link
                   href="/anuncios"
-                  className="group flex flex-col gap-1 px-3 py-2.5 transition-colors hover:bg-pcnGreen/[0.05]"
+                  className="flex group flex-col gap-1 px-3 py-2.5 transition-colors hover:bg-pcnGreen/[0.05]"
                 >
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
                     <Megaphone className={cn('size-3', announcement.pinned && 'text-pcnGreen')} />
                     {announcement.pinned ? 'fijado' : announcement.category}
                   </span>
-                  <span className="text-sm font-medium leading-snug group-hover:text-pcnGreen">
+                  <span className="text-sm leading-snug font-medium group-hover:text-pcnGreen">
                     {announcement.title}
                   </span>
                   <span className="text-xs leading-relaxed text-muted-foreground">
@@ -104,7 +104,7 @@ export async function FeedAside() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={partner.name}
-                className="group flex h-16 items-center justify-center px-2"
+                className="flex h-16 group items-center justify-center px-2"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

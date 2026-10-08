@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 export const VideoBadge = ({ className }: { className?: string }) => (
   <span
     className={cn(
-      'pointer-events-none absolute bottom-1 left-1 flex size-5 items-center justify-center rounded-sm bg-black/70 text-pcnGreen backdrop-blur-sm',
+      'pointer-events-none absolute bottom-1 left-1 flex size-5 items-center justify-center rounded-sm bg-black/70 text-pcnGreen backdrop-blur-xs',
       className,
     )}
   >

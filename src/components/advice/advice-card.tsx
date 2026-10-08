@@ -115,13 +115,13 @@ export const AdviceCard = ({
         className="pointer-events-none absolute inset-y-0 left-0 w-0.5 bg-transparent transition-colors group-hover/advice:bg-pcnGreen group-hover/advice:shadow-[0_0_12px_rgba(4,244,190,0.8)]"
       />
 
-      <header className="flex min-w-0 items-center gap-2 whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground">
+      <header className="flex min-w-0 items-center gap-2 font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums">
         <span className="text-pcnGreen-600">#{consejoHash(consejo.id)}</span>
         <time dateTime={consejo.createdAt} title={formatDate(createdAt)} suppressHydrationWarning>
           {format(createdAt, 'yyyy-MM-dd', { locale: es })}
         </time>
         {isExtracted && (
-          <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] uppercase leading-4 tracking-wider text-pcnGreen">
+          <span className="border border-dashed border-pcnGreen-600 px-1 text-[10px] leading-4 tracking-wider text-pcnGreen uppercase">
             auto
           </span>
         )}
@@ -146,7 +146,7 @@ export const AdviceCard = ({
         <p
           ref={contentRef}
           className={cn(
-            'whitespace-pre-line text-[14px] leading-relaxed text-foreground/90 transition-colors group-hover/advice:text-foreground',
+            'text-[14px] leading-relaxed whitespace-pre-line text-foreground/90 transition-colors group-hover/advice:text-foreground',
             clamped && 'line-clamp-5',
           )}
         >
@@ -154,7 +154,7 @@ export const AdviceCard = ({
           <Link
             href={href}
             scroll={false}
-            className="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen"
+            className="after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset"
           >
             <Highlight text={consejo.content} query={query} />
           </Link>

@@ -18,7 +18,7 @@ export default function Loading() {
 
         {/* Video player beside the course info and the list of classes. */}
         <div className="grid border border-pcnGreen-200 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)]">
-          <div className="border-b border-pcnGreen-200 p-4 lg:border-b-0 lg:border-r">
+          <div className="border-b border-pcnGreen-200 p-4 lg:border-r lg:border-b-0">
             <Skeleton className="aspect-video w-full rounded-none" />
           </div>
           <div className="flex flex-col divide-y divide-pcnGreen-200">
@@ -56,11 +56,11 @@ export default function Loading() {
         </section>
 
         {/* Related articles. */}
-        <section className="mb-14 mt-8">
+        <section className="mt-8 mb-14">
           <SectionHeading />
           <RuledGrid className="grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex gap-3 border-b border-r border-pcnGreen-200 p-3">
+              <div key={i} className="flex gap-3 border-r border-b border-pcnGreen-200 p-3">
                 <Skeleton className="size-9 shrink-0" />
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
                   <Skeleton className="h-3.5 w-2/3" />

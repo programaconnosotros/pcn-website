@@ -101,7 +101,7 @@ const VideoCell = ({
   onToggleWatched: () => void;
   className?: string;
 }) => (
-  <div className={cn(ruledCellClassName, 'group relative flex flex-col gap-2 p-3', className)}>
+  <div className={cn(ruledCellClassName, 'relative flex group flex-col gap-2 p-3', className)}>
     <span className="relative block aspect-video overflow-hidden rounded-sm border border-pcnGreen-200 bg-black transition-colors group-hover:border-pcnGreen-500">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -109,8 +109,8 @@ const VideoCell = ({
         alt=""
         loading="lazy"
         className={cn(
-          'size-full object-cover transition-[opacity,transform,filter] duration-300 group-hover:scale-[1.03] group-hover:opacity-100 group-hover:[filter:none]',
-          watched ? 'opacity-50 [filter:grayscale(0.8)]' : 'opacity-80',
+          'size-full object-cover transition-[opacity,transform,filter] duration-300 group-hover:scale-[1.03] group-hover:opacity-100 group-hover:filter-none',
+          watched ? 'opacity-50 filter-[grayscale(0.8)]' : 'opacity-80',
         )}
       />
       <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.18)_0_1px,transparent_1px_3px)]" />
@@ -120,12 +120,12 @@ const VideoCell = ({
         </span>
       </span>
       {watched && (
-        <span className="absolute left-1.5 top-1.5 flex items-center gap-1 bg-pcnGreen px-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-black shadow-[0_0_10px_rgba(4,244,190,0.7)]">
+        <span className="absolute top-1.5 left-1.5 flex items-center gap-1 bg-pcnGreen px-1 font-mono text-[10px] font-semibold tracking-wider text-black uppercase shadow-[0_0_10px_rgba(4,244,190,0.7)]">
           <Eye className="size-3" />
           visto
         </span>
       )}
-      <span className="absolute bottom-1.5 right-1.5 bg-black/80 px-1 font-mono text-[10px] tabular-nums text-pcnGreen">
+      <span className="absolute right-1.5 bottom-1.5 bg-black/80 px-1 font-mono text-[10px] text-pcnGreen tabular-nums">
         {formatDuration(video.durationSeconds)}
       </span>
     </span>
@@ -135,11 +135,11 @@ const VideoCell = ({
       <button
         type="button"
         onClick={onPlay}
-        className="line-clamp-2 flex-1 text-left font-semibold leading-snug after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-inset focus-visible:after:ring-pcnGreen group-hover:text-pcnGreen"
+        className="line-clamp-2 flex-1 text-left leading-snug font-semibold group-hover:text-pcnGreen after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset"
       >
         {video.title}
       </button>
-      <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
+      <span className="shrink-0 text-[10px] text-muted-foreground tabular-nums">
         {formatDate(video.date)}
       </span>
     </span>
@@ -219,11 +219,11 @@ export function VideoGrid({
         >
           <span className="flex items-center gap-2 text-muted-foreground">
             vistos
-            <span aria-hidden className="tracking-[-0.05em]">
-              <span className="text-glow text-pcnGreen">{'█'.repeat(filled)}</span>
+            <span aria-hidden className="tracking-tighter">
+              <span className="text-pcnGreen text-glow">{'█'.repeat(filled)}</span>
               <span className="text-pcnGreen-200">{'░'.repeat(barWidth - filled)}</span>
             </span>
-            <span className="tabular-nums text-pcnGreen">
+            <span className="text-pcnGreen tabular-nums">
               {watchedCount}/{videos.length}
             </span>
             {!marks.isAuthenticated && !marks.isLoading && (
@@ -286,8 +286,8 @@ export function VideoGrid({
 
       <Dialog open={!!playing} onOpenChange={(open) => !open && setPlaying(null)}>
         {playing && (
-          <DialogContent className="flex w-[min(94vw,calc((100dvh_-_7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
-            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pl-3 pr-12 font-mono">
+          <DialogContent className="flex w-[min(94vw,calc((100dvh-7.5rem)*16/9))] max-w-5xl flex-col gap-0 overflow-hidden rounded-sm border border-pcnGreen-300 bg-black p-0 [&>button:last-child]:top-2.5">
+            <header className="flex items-center gap-3 border-b border-pcnGreen-200 py-2 pr-12 pl-3 font-mono">
               <div className="min-w-0 flex-1">
                 <DialogTitle className="truncate text-sm font-semibold">
                   {playing.title}

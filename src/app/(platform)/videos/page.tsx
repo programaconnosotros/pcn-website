@@ -33,7 +33,7 @@ const VideosPage = async () => {
   const speakerProfiles = await getIdentityMap('videos');
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <StickyHeader>
           <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
         </StickyHeader>

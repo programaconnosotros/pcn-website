@@ -23,10 +23,10 @@ import { ConsejosFilters, type FilterOption } from './consejos-filters';
 function Stat({ label, value, lit }: { label: string; value: number; lit?: boolean }) {
   return (
     <div className={cn(ruledCellClassName, 'flex flex-col gap-0.5 px-3 py-2 font-mono')}>
-      <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
+      <span className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">{label}</span>
       <span
         className={cn(
-          'text-2xl font-semibold tabular-nums leading-none',
+          'text-2xl leading-none font-semibold tabular-nums',
           lit ? 'text-pcnGreen [text-shadow:0_0_14px_rgba(4,244,190,0.6)]' : 'text-foreground',
         )}
       >
@@ -42,7 +42,7 @@ function Fortune({ consejo }: { consejo: Consejo }) {
     <Link
       href={consejoHref(consejo.id)}
       scroll={false}
-      className="group relative flex flex-col gap-2 overflow-hidden border border-pcnGreen-200 bg-black/40 p-4 font-mono transition-colors hover:border-pcnGreen-600"
+      className="relative flex group flex-col gap-2 overflow-hidden border border-pcnGreen-200 bg-black/40 p-4 font-mono transition-colors hover:border-pcnGreen-600"
     >
       <span
         aria-hidden
@@ -50,7 +50,7 @@ function Fortune({ consejo }: { consejo: Consejo }) {
       />
       <span className="relative flex items-center gap-2 text-[11px] text-muted-foreground">
         <span className="text-pcnGreen-600">$ fortune --consejos</span>
-        <span className="ml-auto text-pcnGreen-600/70">#{consejoHash(consejo.id)}</span>
+        <span className="ml-auto text-pcnGreen/70">#{consejoHash(consejo.id)}</span>
       </span>
       <span className="relative line-clamp-4 text-[15px] leading-relaxed text-foreground [text-shadow:0_0_18px_rgba(4,244,190,0.25)]">
         &ldquo;{consejo.content}&rdquo;

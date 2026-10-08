@@ -17,6 +17,6 @@ export const consejoUrl = (id: string) =>
 export const keyCapClassName = cn(
   'flex size-7 shrink-0 items-center justify-center rounded-sm border border-pcnGreen-200 bg-black/70 text-pcnGreen-600 transition-all',
   'hover:border-pcnGreen hover:text-pcnGreen hover:shadow-[0_0_14px_-2px_rgba(4,244,190,0.7)]',
-  'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+  'focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen',
   'disabled:pointer-events-none disabled:opacity-40',
 );

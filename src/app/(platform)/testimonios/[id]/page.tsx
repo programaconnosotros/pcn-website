@@ -135,7 +135,7 @@ const TestimonialDetailPage = async (props: { params: Promise<{ id: string }> })
               </Link>
             </div>
 
-            <p className="whitespace-pre-wrap p-3 text-sm leading-relaxed text-foreground">
+            <p className="p-3 text-sm leading-relaxed whitespace-pre-wrap text-foreground">
               {testimonial.body}
             </p>
 

@@ -76,7 +76,7 @@ const VisitasPage = async () => {
               { label: 'usuarios', value: stats.uniqueUsers.toLocaleString(), hint: 'logueados' },
             ].map((stat) => (
               <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
-                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                <p className="text-[11px] tracking-wider text-muted-foreground uppercase">
                   <span className="text-pcnGreen-500">{'// '}</span>
                   {stat.label}
                 </p>
@@ -87,16 +87,16 @@ const VisitasPage = async () => {
           </RuledGrid>
 
           <section className="mb-4 border border-pcnGreen-200">
-            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>páginas más visitadas
             </h2>
-            <ol className="divide-y divide-pcnGreen-200/60 font-mono text-xs">
+            <ol className="divide-y divide-pcnGreen/60 font-mono text-xs">
               {stats.topPages.map((page, index) => (
                 <li
                   key={page.path}
                   className="flex items-center gap-3 px-3 py-1 transition-colors hover:bg-pcnGreen/[0.05]"
                 >
-                  <span className="w-5 tabular-nums text-muted-foreground/60">
+                  <span className="w-5 text-muted-foreground/60 tabular-nums">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <span className="w-40 shrink-0 truncate sm:w-56" title={page.path}>
@@ -108,7 +108,7 @@ const VisitasPage = async () => {
                       style={{ width: `${(page.count / (stats.topPages[0]?.count || 1)) * 100}%` }}
                     />
                   </span>
-                  <span className="w-12 text-right tabular-nums text-pcnGreen">
+                  <span className="w-12 text-right text-pcnGreen tabular-nums">
                     {page.count.toLocaleString()}
                   </span>
                 </li>
@@ -117,7 +117,7 @@ const VisitasPage = async () => {
           </section>
 
           <section className="mb-14 border border-pcnGreen-200">
-            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>visitas recientes (últimas 500)
             </h2>
             {visits.length === 0 ? (
@@ -147,7 +147,7 @@ const VisitasPage = async () => {
                           </span>
                         )}
                       </TableCell>
-                      <TableCell className="whitespace-nowrap font-mono text-[11px] tabular-nums">
+                      <TableCell className="font-mono text-[11px] whitespace-nowrap tabular-nums">
                         {formatDate(visit.createdAt)}
                         <span className="ml-2 text-muted-foreground">
                           {formatRelativeTime(visit.createdAt)}

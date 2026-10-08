@@ -33,9 +33,9 @@ const BarsSkeleton = () => (
 );
 
 const RowsSkeleton = () => (
-  <div className="-mx-3 -my-3 divide-y divide-pcnGreen-200/60">
+  <div className="-mx-3 -my-3 divide-y divide-pcnGreen/60">
     {Array.from({ length: 6 }).map((_, i) => (
-      <div key={i} className="flex h-[1.875rem] items-center gap-2 px-3">
+      <div key={i} className="flex h-7.5 items-center gap-2 px-3">
         <Skeleton className="h-3 w-8" />
         <Skeleton className="h-3 flex-1" />
         <Skeleton className="h-3 w-12" />

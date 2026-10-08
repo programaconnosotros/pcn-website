@@ -16,7 +16,7 @@ const inline = (text: string): ReactNode =>
     part.startsWith('`') && part.endsWith('`') && part.length > 1 ? (
       <code
         key={index}
-        className="break-words bg-pcnGreen-100 px-1 font-mono text-[0.92em] text-pcnGreen"
+        className="bg-pcnGreen-100 px-1 font-mono text-[0.92em] wrap-break-word text-pcnGreen"
       >
         {part.slice(1, -1)}
       </code>
@@ -27,7 +27,7 @@ const inline = (text: string): ReactNode =>
 
 const Block = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="grid gap-1 sm:grid-cols-[110px_1fr] sm:gap-4">
-    <h4 className="font-mono text-[11px] uppercase tracking-[0.15em] text-pcnGreen-600">{label}</h4>
+    <h4 className="font-mono text-[11px] tracking-[0.15em] text-pcnGreen-600 uppercase">{label}</h4>
     <div className="text-sm leading-relaxed text-muted-foreground">{children}</div>
   </div>
 );
@@ -56,7 +56,7 @@ export function AdrList({ adrs }: { adrs: Adr[] }) {
             <span className="mt-0.5 shrink-0 font-mono text-[11px] text-pcnGreen-500 transition-transform group-open:rotate-90">
               ▸
             </span>
-            <span className="shrink-0 font-mono text-[11px] tabular-nums text-pcnGreen-600">
+            <span className="shrink-0 font-mono text-[11px] text-pcnGreen-600 tabular-nums">
               {adrNumber(adr)}
             </span>
             <span className="min-w-0 flex-1 text-sm font-medium">{adr.title}</span>

@@ -59,7 +59,7 @@ function ReplyForm({
         placeholder="Escribí tu respuesta (admite markdown)..."
         maxLength={5000}
         autoFocus={autoFocus}
-        className="min-h-[5rem] font-mono text-xs"
+        className="min-h-20 font-mono text-xs"
       />
       <div className="flex justify-end gap-2">
         {onDone && (
@@ -195,7 +195,7 @@ export function ForumComments({
     <section aria-labelledby="forum-replies" className="flex flex-col gap-4">
       <h2
         id="forum-replies"
-        className="font-mono text-xs uppercase tracking-wider text-muted-foreground"
+        className="font-mono text-xs tracking-wider text-muted-foreground uppercase"
       >
         {'// '}
         {total} {total === 1 ? 'respuesta' : 'respuestas'}

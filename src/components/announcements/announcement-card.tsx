@@ -136,9 +136,9 @@ export function AnnouncementCard({
           )}
         </div>
 
-        <h3 className="font-mono text-sm font-semibold leading-snug">{announcement.title}</h3>
+        <h3 className="font-mono text-sm leading-snug font-semibold">{announcement.title}</h3>
 
-        <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+        <p className="text-xs leading-relaxed whitespace-pre-wrap text-muted-foreground">
           {announcement.content}
         </p>
 

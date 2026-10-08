@@ -90,24 +90,24 @@ const Kpi = ({
     href={href}
     className={cn(
       ruledCellClassName,
-      'group relative block px-3 py-2.5 hover:shadow-[inset_2px_0_0_#04f4be]',
-      alert && 'bg-red-500/[0.06] hover:shadow-[inset_2px_0_0_#f87171]',
+      'relative block group px-3 py-2.5 hover:shadow-[inset_2px_0_0_#04f4be]',
+      alert && 'bg-red-500/6 hover:shadow-[inset_2px_0_0_#f87171]',
     )}
   >
-    <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+    <p className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
       {alert && <AlertTriangle className="size-3 text-red-400" aria-label="Requiere atención" />}
       {label}
     </p>
     <p
       className={cn(
         'font-mono text-2xl font-semibold tabular-nums',
-        alert ? 'text-red-400' : 'text-glow text-pcnGreen',
+        alert ? 'text-red-400' : 'text-pcnGreen text-glow',
       )}
     >
       {value}
     </p>
     <p className="truncate font-mono text-[10px] text-muted-foreground/70">{hint}</p>
-    <ChevronRight className="absolute right-2 top-2.5 size-3.5 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+    <ChevronRight className="absolute top-2.5 right-2 size-3.5 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
   </Link>
 );
 
@@ -126,7 +126,7 @@ const Panel = ({
 }) => (
   <section className={cn('min-w-0 border border-pcnGreen-200', className)}>
     <header className="flex items-center gap-3 border-b border-pcnGreen-200 bg-pcnGreen/[0.03] px-3 py-1.5 font-mono text-[11px]">
-      <h2 className="font-semibold uppercase tracking-widest text-pcnGreen">{title}</h2>
+      <h2 className="font-semibold tracking-widest text-pcnGreen uppercase">{title}</h2>
       <span className="min-w-0 truncate text-muted-foreground">
         <span className="text-pcnGreen-600">$ </span>
         {command}
@@ -285,7 +285,7 @@ export default async function AdminPanelPage() {
                 ✓ sin errores pendientes
               </p>
             ) : (
-              <ul className="-mx-3 -my-3 divide-y divide-pcnGreen-200/60 font-mono text-[11px]">
+              <ul className="-mx-3 -my-3 divide-y divide-pcnGreen/60 font-mono text-[11px]">
                 {recentErrors.map((error) => (
                   <li key={error.id} className="flex items-center gap-2 px-3 py-1.5">
                     <TableTag tone="danger">err</TableTag>
@@ -297,7 +297,7 @@ export default async function AdminPanelPage() {
                         {error.path}
                       </span>
                     )}
-                    <span className="shrink-0 tabular-nums text-muted-foreground/70">
+                    <span className="shrink-0 text-muted-foreground/70 tabular-nums">
                       {timeAgo(error.createdAt)}
                     </span>
                   </li>
@@ -335,7 +335,7 @@ export default async function AdminPanelPage() {
                               {event.name}
                             </Link>
                           </TableCell>
-                          <TableCell className="whitespace-nowrap font-mono text-[11px] text-muted-foreground">
+                          <TableCell className="font-mono text-[11px] whitespace-nowrap text-muted-foreground">
                             {dateFormat.format(event.date)}
                           </TableCell>
                           <TableCell className="font-mono text-[11px] tabular-nums">
@@ -379,7 +379,7 @@ export default async function AdminPanelPage() {
                       style={{ width: `${(page._count.path / maxTopPage) * 100}%` }}
                     />
                   </span>
-                  <span className="w-10 shrink-0 text-right tabular-nums text-muted-foreground">
+                  <span className="w-10 shrink-0 text-right text-muted-foreground tabular-nums">
                     {page._count.path}
                   </span>
                 </li>
@@ -388,7 +388,7 @@ export default async function AdminPanelPage() {
           </Panel>
 
           <Panel title="registros" command="tail users.log" href="/usuarios">
-            <ul className="-mx-3 -my-3 divide-y divide-pcnGreen-200/60 font-mono text-[11px]">
+            <ul className="-mx-3 -my-3 divide-y divide-pcnGreen/60 font-mono text-[11px]">
               {recentUsers.map((user) => (
                 <li key={user.id} className="flex items-center gap-2 px-3 py-1.5">
                   <span
@@ -404,7 +404,7 @@ export default async function AdminPanelPage() {
                   <span className="min-w-0 flex-1 truncate text-muted-foreground">
                     {user.email}
                   </span>
-                  <span className="shrink-0 tabular-nums text-muted-foreground/70">
+                  <span className="shrink-0 text-muted-foreground/70 tabular-nums">
                     {timeAgo(user.createdAt)}
                   </span>
                 </li>
@@ -418,11 +418,11 @@ export default async function AdminPanelPage() {
                 <li key={tool.id}>
                   <Link
                     href={tool.url}
-                    className="group flex items-center gap-2 border border-pcnGreen-200 p-2 font-mono text-xs transition-colors hover:border-pcnGreen-600 hover:bg-pcnGreen/[0.05]"
+                    className="flex group items-center gap-2 border border-pcnGreen-200 p-2 font-mono text-xs transition-colors hover:border-pcnGreen-600 hover:bg-pcnGreen/[0.05]"
                   >
                     <span
                       className={cn(
-                        'flex size-7 shrink-0 items-center justify-center rounded-sm bg-gradient-to-br text-white',
+                        'flex size-7 shrink-0 items-center justify-center rounded-sm bg-linear-to-br text-white',
                         tool.color,
                       )}
                     >

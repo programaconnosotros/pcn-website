@@ -61,12 +61,12 @@ export const HomeFooter = () => {
         // into that padding so its backdrop runs under the bar instead of stopping short,
         // and pad only by the bar's own height (h-16) so the wordmark sits right on it.
         // PCN OS windows never show the tab bar, so there is no padding to pull into.
-        'relative -mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden border-t border-pcnGreen-200 pb-[calc(4rem+env(safe-area-inset-bottom))] embedded:mb-0 embedded:pb-0 md:mb-0 md:pb-0',
+        'relative -mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden border-t border-pcnGreen-200 pb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0 md:pb-0 embedded:mb-0 embedded:pb-0',
       )}
     >
       {/* Backdrop: grid + green haze rising from the bottom */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="bg-grid-fade absolute inset-0 opacity-50" />
+        <div className="absolute inset-0 bg-grid-fade opacity-50" />
         <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(4,244,190,0.12),transparent_70%)]" />
       </div>
 
@@ -75,7 +75,7 @@ export const HomeFooter = () => {
 
       <div className="relative mx-auto max-w-6xl px-6 pt-10 lg:px-8">
         {/* Terminal window */}
-        <div className="overflow-hidden rounded-sm border border-pcnGreen-200 bg-black/70 shadow-[0_0_40px_-12px_rgba(4,244,190,0.35)] backdrop-blur-sm">
+        <div className="overflow-hidden rounded-sm border border-pcnGreen-200 bg-black/70 shadow-[0_0_40px_-12px_rgba(4,244,190,0.35)] backdrop-blur-xs">
           <div className="flex items-center gap-3 border-b border-pcnGreen-200 px-3 py-2">
             <div className="flex gap-1.5" aria-hidden="true">
               <span className="size-2.5 rounded-full bg-pcnGreen-200" />
@@ -88,7 +88,7 @@ export const HomeFooter = () => {
             <Link
               href="#top"
               aria-label="Volver arriba"
-              className="group flex items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-pcnGreen"
+              className="flex group items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-pcnGreen"
             >
               <ArrowUp className="size-3 transition-transform group-hover:-translate-y-0.5" />
               <span className="hidden sm:inline">cd /</span>
@@ -97,7 +97,7 @@ export const HomeFooter = () => {
 
           <div className="grid md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
             {/* Site map as `tree` output */}
-            <div className="border-b border-pcnGreen-200 p-4 md:border-b-0 md:border-r">
+            <div className="border-b border-pcnGreen-200 p-4 md:border-r md:border-b-0">
               <Prompt command="tree ~/pcn -L 2" />
               <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
                 {directories.map((directory) => (
@@ -108,13 +108,13 @@ export const HomeFooter = () => {
                         <li key={link.href} className="flex">
                           <span
                             aria-hidden="true"
-                            className="select-none whitespace-pre text-pcnGreen-400"
+                            className="whitespace-pre text-pcnGreen-400 select-none"
                           >
                             {index === directory.links.length - 1 ? '└── ' : '├── '}
                           </span>
                           <Link
                             href={link.href}
-                            className="group relative truncate text-foreground/70 transition-colors hover:text-pcnGreen"
+                            className="relative group truncate text-foreground/70 transition-colors hover:text-pcnGreen"
                           >
                             <span className="group-hover:text-glow">{link.label}</span>
                             <span className="ml-0.5 hidden text-pcnGreen group-hover:inline group-hover:animate-blink">
@@ -149,11 +149,11 @@ export const HomeFooter = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={network.name}
-                        className="group flex items-center gap-1.5 rounded-sm border border-pcnGreen-200 bg-pcnGreen-50 px-2 py-1 text-xs text-pcnGreen-700 transition-all hover:border-pcnGreen hover:bg-pcnGreen hover:text-black hover:shadow-[0_0_16px_-2px_rgb(4_244_190/0.7)]"
+                        className="flex group items-center gap-1.5 rounded-sm border border-pcnGreen-200 bg-pcnGreen-50 px-2 py-1 text-xs text-pcnGreen-700 transition-all hover:border-pcnGreen hover:bg-pcnGreen hover:text-black hover:shadow-[0_0_16px_-2px_rgb(4_244_190/0.7)]"
                       >
                         <SocialIcon name={network.name} className="size-3.5" />
                         <span>{network.name.toLowerCase()}</span>
-                        <ArrowUpRight className="size-3 opacity-50 transition-all group-hover:-translate-y-px group-hover:translate-x-px group-hover:opacity-100" />
+                        <ArrowUpRight className="size-3 opacity-50 transition-all group-hover:translate-x-px group-hover:-translate-y-px group-hover:opacity-100" />
                       </Link>
                     </li>
                   ))}
@@ -191,9 +191,9 @@ export const HomeFooter = () => {
       {/* Oversized wordmark bleeding off the bottom edge */}
       <div
         aria-hidden="true"
-        className="relative mx-auto max-w-6xl select-none overflow-hidden px-6 pt-6 lg:px-8"
+        className="relative mx-auto max-w-6xl overflow-hidden px-6 pt-6 select-none lg:px-8"
       >
-        <p className="-mb-[0.28em] whitespace-nowrap bg-[linear-gradient(180deg,rgba(4,244,190,0.55),rgba(4,244,190,0.04)_85%)] bg-clip-text text-center text-[clamp(1.75rem,7.4vw,5.75rem)] font-bold leading-none tracking-[-0.06em] text-transparent [filter:drop-shadow(0_0_24px_rgba(4,244,190,0.25))]">
+        <p className="mb-[-0.28em] bg-[linear-gradient(180deg,rgba(4,244,190,0.55),rgba(4,244,190,0.04)_85%)] bg-clip-text text-center text-[clamp(1.75rem,7.4vw,5.75rem)] leading-none font-bold tracking-[-0.06em] whitespace-nowrap text-transparent filter-[drop-shadow(0_0_24px_rgba(4,244,190,0.25))]">
           programaConNosotros
         </p>
       </div>

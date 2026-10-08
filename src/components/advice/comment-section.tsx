@@ -156,8 +156,8 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
   );
 
   return (
-    <div className="divide-y divide-pcnGreen-200 border-b border-r border-pcnGreen-200">
-      <h2 className="px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <div className="divide-y divide-pcnGreen-200 border-r border-b border-pcnGreen-200">
+      <h2 className="px-3 py-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
         <span className="text-pcnGreen-500">{'// '}</span>
         comentarios
       </h2>

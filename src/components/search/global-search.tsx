@@ -266,10 +266,10 @@ function GlobalSearchDialog({
             {search.loading && (
               <span
                 aria-hidden
-                className="search-scan pointer-events-none absolute inset-x-0 -bottom-px h-px overflow-hidden"
+                className="pointer-events-none search-scan absolute inset-x-0 -bottom-px h-px overflow-hidden"
               />
             )}
-            <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
+            <span aria-hidden className="shrink-0 text-pcnGreen-600 select-none">
               $ find ~ -iname
             </span>
             <input
@@ -287,7 +287,7 @@ function GlobalSearchDialog({
               autoCorrect="off"
               spellCheck={false}
               enterKeyHint="go"
-              className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-none placeholder:text-foreground/25"
+              className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-hidden placeholder:text-foreground/25"
             />
             {search.loading && (
               <Loader2 aria-hidden className="size-4 shrink-0 animate-spin text-pcnGreen-600" />
@@ -338,7 +338,7 @@ function GlobalSearchDialog({
                     search.loading && 'opacity-60',
                   )}
                 >
-                  <h3 className="px-4 pb-1 pt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  <h3 className="px-4 pt-2 pb-1 text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
                     <span className="text-pcnGreen-500">{'// '}</span>
                     {query.trim() ? group.label : 'ir a'}
                   </h3>
@@ -369,7 +369,7 @@ function GlobalSearchDialog({
                             aria-hidden
                             className={cn(
                               'shrink-0 text-pcnGreen-500',
-                              selected && 'text-glow text-pcnGreen',
+                              selected && 'text-pcnGreen text-glow',
                             )}
                           >
                             {'>'}

@@ -115,14 +115,14 @@ function ProgressBar({ current, target }: { current: number; target: number }) {
         aria-valuemin={0}
         aria-valuemax={target}
         aria-valuenow={current}
-        className="h-1.5 flex-1 overflow-hidden bg-pcnGreen-200/40"
+        className="h-1.5 flex-1 overflow-hidden bg-pcnGreen/40"
       >
         <div
           className="h-full bg-pcnGreen shadow-[0_0_8px_rgba(4,244,190,0.7)]"
           style={{ width: `${percent}%` }}
         />
       </div>
-      <span className="shrink-0 tabular-nums text-muted-foreground">
+      <span className="shrink-0 text-muted-foreground tabular-nums">
         <span className="text-foreground">{current}</span>/{target}
       </span>
     </div>
@@ -159,17 +159,17 @@ function BadgeRow({
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3
-              className="font-mono text-sm font-semibold uppercase tracking-wider"
+              className="font-mono text-sm font-semibold tracking-wider uppercase"
               style={{ color: status === 'locked' ? undefined : tone.light }}
             >
               {badge.name}
             </h3>
-            <p className="text-pretty text-xs leading-relaxed text-muted-foreground">
+            <p className="text-xs leading-relaxed text-pretty text-muted-foreground">
               {badge.description}
             </p>
           </div>
           {status === 'earned' && (
-            <span className="flex shrink-0 items-center gap-1 border border-pcnGreen-600 px-1 font-mono text-[10px] uppercase leading-4 tracking-wider text-pcnGreen">
+            <span className="flex shrink-0 items-center gap-1 border border-pcnGreen-600 px-1 font-mono text-[10px] leading-4 tracking-wider text-pcnGreen uppercase">
               <Check className="size-2.5" />
               tuyo
             </span>
@@ -416,7 +416,7 @@ export default async function LogrosPage() {
             <span className="text-pcnGreen-500">## </span>badges especiales
             <span className="ml-1 text-muted-foreground/60">[{specialBadges.length}]</span>
           </h2>
-          <p className="mb-2 mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 mb-2 text-xs text-muted-foreground">
             No se desbloquean solos: los entrega el equipo de programaConNosotros.
           </p>
           <RuledGrid className="grid-cols-1 lg:grid-cols-2">

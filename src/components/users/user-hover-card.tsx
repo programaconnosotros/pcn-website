@@ -250,7 +250,7 @@ export function UserHoverCard({ user, children, className }: UserHoverCardProps)
                 scheduleClose();
               }
             }}
-            className="fixed z-50 overflow-hidden border border-pcnGreen-400 bg-background/95 font-mono text-xs shadow-[0_0_32px_-10px_rgba(4,244,190,0.65)] backdrop-blur animate-in fade-in-0 zoom-in-95 motion-reduce:animate-none"
+            className="fixed z-50 overflow-hidden border border-pcnGreen-400 bg-background/95 font-mono text-xs shadow-[0_0_32px_-10px_rgba(4,244,190,0.65)] backdrop-blur-sm animate-in fade-in-0 zoom-in-95 motion-reduce:animate-none"
           >
             <UserSummaryCard user={user} state={state} />
           </div>,
@@ -278,7 +278,7 @@ function UserSummaryCard({ user, state }: { user: HoverCardUser; state: SummaryS
           <span className="text-pcnGreen-600">$ </span>
           finger <span className="text-foreground">@{handle}</span>
         </span>
-        <span className="ml-auto shrink-0 text-[9px] uppercase tracking-wider text-pcnGreen-500">
+        <span className="ml-auto shrink-0 text-[9px] tracking-wider text-pcnGreen-500 uppercase">
           {state.status === 'loading' ? 'fetching…' : 'tty/pcn'}
         </span>
       </div>
@@ -307,7 +307,7 @@ function UserSummaryCard({ user, state }: { user: HoverCardUser; state: SummaryS
             </p>
           )}
           {summary && (summary.isCofounder || summary.isAmbassador) && (
-            <p className="flex flex-wrap gap-1 pt-0.5 text-[9px] uppercase tracking-wider">
+            <p className="flex flex-wrap gap-1 pt-0.5 text-[9px] tracking-wider uppercase">
               {summary.isCofounder && (
                 <span className="border border-pcnGreen-400 px-1 text-pcnGreen">co-founder</span>
               )}
@@ -320,8 +320,8 @@ function UserSummaryCard({ user, state }: { user: HoverCardUser; state: SummaryS
       </div>
 
       {summary?.slogan && (
-        <p className="border-t border-dashed border-pcnGreen-200 px-2.5 py-1.5 text-[11px] italic text-muted-foreground">
-          <span className="not-italic text-pcnGreen-600"># </span>
+        <p className="border-t border-dashed border-pcnGreen-200 px-2.5 py-1.5 text-[11px] text-muted-foreground italic">
+          <span className="text-pcnGreen-600 not-italic"># </span>
           {summary.slogan}
         </p>
       )}
@@ -342,7 +342,7 @@ function UserSummaryCard({ user, state }: { user: HoverCardUser; state: SummaryS
       {state.status !== 'missing' && (
         <Link
           href={`/perfil/${user.id}`}
-          className="group flex items-center justify-between border-t border-pcnGreen-300 px-2.5 py-2 text-[11px] text-pcnGreen transition-colors hover:bg-pcnGreen/10 focus-visible:bg-pcnGreen/10 focus-visible:outline-none"
+          className="flex group items-center justify-between border-t border-pcnGreen-300 px-2.5 py-2 text-[11px] text-pcnGreen transition-colors hover:bg-pcnGreen/10 focus-visible:bg-pcnGreen/10 focus-visible:outline-hidden"
         >
           <span>
             <span className="text-pcnGreen-600">&gt; </span>ver perfil completo
@@ -378,7 +378,7 @@ function SummaryBody({ summary }: { summary: UserSummary }) {
               index >= 3 && 'border-t border-pcnGreen-200',
             )}
           >
-            <dt className="text-[9px] uppercase tracking-wider text-muted-foreground">{label}</dt>
+            <dt className="text-[9px] tracking-wider text-muted-foreground uppercase">{label}</dt>
             <dd
               className={cn(
                 'text-sm tabular-nums',

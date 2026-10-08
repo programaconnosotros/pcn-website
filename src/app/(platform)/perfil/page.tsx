@@ -63,7 +63,7 @@ const Profile = async () => {
 
         <ProfileForm user={user} languages={userLanguages} />
 
-        <div className="mb-14 mt-8 border border-pcnGreen-200 p-4">
+        <div className="mt-8 mb-14 border border-pcnGreen-200 p-4">
           <TwoFactorSettings
             enabledAt={user.twoFactorEnabledAt?.toISOString() ?? null}
             recoveryCodesLeft={twoFactor?.twoFactorRecoveryCodes?.length ?? 0}

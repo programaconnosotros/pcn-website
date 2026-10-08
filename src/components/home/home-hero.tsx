@@ -46,12 +46,12 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
           quality={40}
           className="object-cover object-center opacity-[0.22]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/85 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/85 to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_80%_10%,rgba(4,244,190,0.16),transparent_65%)]" />
-        <div className="bg-grid-fade absolute inset-0 opacity-60" />
+        <div className="absolute inset-0 bg-grid-fade opacity-60" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-3 md:pb-14 lg:px-8">
+      <div className="relative mx-auto max-w-6xl px-6 pt-3 pb-10 md:pb-14 lg:px-8">
         {title}
         <div className="grid items-center gap-8 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
           <div>
@@ -62,19 +62,19 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
             {/* No fade on the heading: it's the largest text on screen, so it shows at once. */}
             <h1
               style={delay(80)}
-              className="text-balance font-mono text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground duration-700 ease-out animate-in slide-in-from-bottom-3 fill-mode-both sm:text-4xl md:mt-4 lg:text-[2.6rem]"
+              className="font-mono text-3xl leading-[1.1] font-semibold tracking-[-0.03em] text-balance text-foreground duration-700 ease-out animate-in fill-mode-both slide-in-from-bottom-3 sm:text-4xl sm:leading-10 md:mt-4 lg:text-[2.6rem]"
             >
               {firstName ? (
                 <>
                   <span className="cursor-blink">
-                    Hola, <span className="text-glow text-pcnGreen">{firstName}</span>.
+                    Hola, <span className="text-pcnGreen text-glow">{firstName}</span>.
                   </span>
                 </>
               ) : (
                 <>
                   Programá
                   <br />
-                  <span className="cursor-blink text-glow text-pcnGreen">con nosotros.</span>
+                  <span className="cursor-blink text-pcnGreen text-glow">con nosotros.</span>
                 </>
               )}
             </h1>
@@ -134,7 +134,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                     href={WHATSAPP_GROUP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="group ml-1 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-pcnGreen"
+                    className="ml-1 inline-flex group items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-pcnGreen"
                   >
                     Solo quiero el WhatsApp
                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
@@ -152,7 +152,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
                 className={cn(
                   ENTER,
                   GeistMono.className,
-                  'mt-6 text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70',
+                  'mt-6 text-[11px] tracking-[0.18em] text-muted-foreground/70 uppercase',
                 )}
               >
                 Gratis · Sin spam · Desde {FOUNDING_YEAR}
@@ -162,7 +162,7 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
 
           <div
             style={delay(200)}
-            className="duration-700 ease-out animate-in fade-in zoom-in-[0.98] slide-in-from-bottom-6 fill-mode-both"
+            className="duration-700 ease-out animate-in fade-in fill-mode-both slide-in-from-bottom-6 zoom-in-[0.98]"
           >
             <StatsPanel />
           </div>
@@ -225,7 +225,7 @@ const TerminalOutput = ({ lines }: { lines: OutputLine[] }) => (
  * and needs no JavaScript. Browsers without `@property` just show the final number.
  */
 const CountUp = ({ value }: { value: number }) => (
-  <span className="tabular-nums tracking-tight">
+  <span className="tracking-tight tabular-nums">
     <span aria-hidden className="count-up" style={{ '--count-to': value } as CSSProperties} />
     <span className="sr-only">{value}</span>
   </span>
@@ -245,14 +245,14 @@ const StatsPanel = () => {
         <div className="grid grid-cols-2 gap-px bg-pcnGreen-200">
           {COMMUNITY_STATS.map((tile) => (
             <div key={tile.label} className="bg-black/90 p-4 md:p-5">
-              <div className="text-glow flex items-baseline gap-0.5 font-mono text-3xl font-semibold tracking-tight text-pcnGreen md:text-4xl">
+              <div className="flex items-baseline gap-0.5 font-mono text-3xl font-semibold tracking-tight text-pcnGreen text-glow md:text-4xl">
                 <CountUp value={tile.value} />
                 <span className="text-pcnGreen-600">+</span>
               </div>
               <p
                 className={cn(
                   GeistMono.className,
-                  'mt-1.5 text-[11px] uppercase tracking-[0.18em] text-muted-foreground',
+                  'mt-1.5 text-[11px] tracking-[0.18em] text-muted-foreground uppercase',
                 )}
               >
                 {tile.label}

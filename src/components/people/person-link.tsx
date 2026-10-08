@@ -9,7 +9,7 @@ export const PersonLink = ({ person, className }: { person: Person; className?: 
   <Link
     href={`/perfil/${person.id}`}
     className={cn(
-      'group flex min-w-0 items-center gap-2 font-mono text-xs hover:text-pcnGreen',
+      'flex min-w-0 group items-center gap-2 font-mono text-xs hover:text-pcnGreen',
       className,
     )}
   >

@@ -103,6 +103,6 @@ describe('/setups', () => {
 
   it('shows eight placeholder tiles while loading', () => {
     const container = expectOnlyPlaceholders(<Loading />);
-    expect(container.querySelectorAll('.aspect-\\[4\\/3\\]')).toHaveLength(8);
+    expect(container.querySelectorAll('.aspect-4\\/3')).toHaveLength(8);
   });
 });

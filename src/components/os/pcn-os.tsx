@@ -358,7 +358,7 @@ function SplitDivider({
         if (event.key === 'ArrowLeft') onMove(clampDivider(x - step, area));
         if (event.key === 'ArrowRight') onMove(clampDivider(x + step, area));
       }}
-      className="group absolute flex w-3 -translate-x-1/2 cursor-col-resize touch-none justify-center outline-none"
+      className="absolute flex w-3 -translate-x-1/2 group cursor-col-resize touch-none justify-center outline-hidden"
       style={{ left: shown, top: area.y, height: area.h, zIndex }}
     >
       <span
@@ -644,7 +644,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
           <div
             aria-hidden
             data-testid="snap-preview"
-            className="pointer-events-none absolute z-[2147483646] rounded-md border-2 border-pcnGreen/70 bg-pcnGreen/10 shadow-[0_0_40px_-8px_rgba(4,244,190,0.6),inset_0_0_60px_-20px_rgba(4,244,190,0.5)] transition-all duration-150"
+            className="pointer-events-none absolute z-2147483646 rounded-md border-2 border-pcnGreen/70 bg-pcnGreen/10 shadow-[0_0_40px_-8px_rgba(4,244,190,0.6),inset_0_0_60px_-20px_rgba(4,244,190,0.5)] transition-all duration-150"
             style={{
               left: snapPreview.x + 4,
               top: snapPreview.y + 4,
@@ -677,7 +677,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         {interactionCursor && (
           <div
             aria-hidden
-            className="absolute inset-0 z-[2147483647]"
+            className="absolute inset-0 z-2147483647"
             style={{ cursor: interactionCursor }}
           />
         )}
@@ -720,7 +720,7 @@ export function PcnOs({ user, isAdmin }: PcnOsProps) {
         {isOs && viewport && (
           <GlobalSearch
             // Above the windows, the dock, the menu bar and the launcher.
-            layerClassName="z-[6500]"
+            layerClassName="z-6500"
             onNavigate={(path) => dispatch({ type: 'openPath', path, viewport })}
           />
         )}

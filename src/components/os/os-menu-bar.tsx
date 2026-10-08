@@ -45,9 +45,9 @@ interface OsMenuBarProps {
   onOpenLauncher: () => void;
 }
 
-const menuContentClassName = 'z-[7000] min-w-52';
+const menuContentClassName = 'z-7000 min-w-52';
 const menuTriggerClassName =
-  'rounded-sm px-2 py-0.5 outline-none transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen data-[state=open]:bg-pcnGreen data-[state=open]:text-black';
+  'rounded-sm px-2 py-0.5 outline-hidden transition-colors hover:bg-pcnGreen-200 hover:text-pcnGreen data-[state=open]:bg-pcnGreen data-[state=open]:text-black';
 
 const DISPLAY_MODE_OPTIONS: { mode: OsDisplayMode; label: string; hint: string }[] = [
   { mode: 'full', label: 'Completo', hint: 'todos los efectos' },
@@ -83,7 +83,7 @@ const Clock = () => {
     const interval = window.setInterval(() => setNow(new Date()), 15_000);
     return () => window.clearInterval(interval);
   }, []);
-  return <span className="tabular-nums text-pcnGreen-800">{now ? formatClock(now) : ''}</span>;
+  return <span className="text-pcnGreen-800 tabular-nums">{now ? formatClock(now) : ''}</span>;
 };
 
 /**
@@ -102,10 +102,10 @@ export function OsMenuBar({
   const displayMode = useDisplayMode();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[5000] flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-5000 flex h-7 items-center gap-1 border-b border-pcnGreen-300 bg-black/85 px-2 font-mono text-xs text-pcnGreen-900 backdrop-blur-xl">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
-          className={cn(menuTriggerClassName, 'group flex items-center gap-1.5')}
+          className={cn(menuTriggerClassName, 'flex group items-center gap-1.5')}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -113,12 +113,12 @@ export function OsMenuBar({
             alt=""
             className="size-4 shrink-0 object-contain group-data-[state=open]:brightness-0"
           />
-          <span className="text-glow font-semibold text-pcnGreen group-data-[state=open]:text-black group-data-[state=open]:[text-shadow:none]">
+          <span className="font-semibold text-pcnGreen text-glow group-data-[state=open]:text-black group-data-[state=open]:text-shadow-none">
             PCN_OS
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className={menuContentClassName}>
-          <DropdownMenuLabel className="flex items-center justify-between gap-4 text-[10px] font-normal uppercase tracking-[0.18em] text-pcnGreen-600">
+          <DropdownMenuLabel className="flex items-center justify-between gap-4 text-[10px] font-normal tracking-[0.18em] text-pcnGreen-600 uppercase">
             <span>{'// pcn_os'}</span>
             <span className="flex items-center gap-1.5">
               <span className="size-1.5 animate-pulse rounded-full bg-pcnGreen shadow-[0_0_6px_rgba(4,244,190,0.9)]" />
@@ -194,7 +194,7 @@ export function OsMenuBar({
           onNavigate={onOpenPath}
           triggerClassName={cn(menuTriggerClassName, 'py-1')}
           // Above the windows, the dock and the menu bar, like the search.
-          layerClassName="z-[6500]"
+          layerClassName="z-6500"
         />
         <OsMusicControl
           player={musicPlayer}

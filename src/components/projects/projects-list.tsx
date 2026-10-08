@@ -128,8 +128,8 @@ const peopleOf = (project: ProjectWithMembers): Person[] => [
 
 const Stat = ({ label, value, hint }: { label: string; value: string | number; hint: string }) => (
   <div className={cn(ruledCellClassName, 'relative overflow-hidden px-3 py-2.5')}>
-    <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
-    <p className="text-glow font-mono text-2xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+    <p className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">{label}</p>
+    <p className="font-mono text-2xl font-semibold text-pcnGreen tabular-nums text-glow">{value}</p>
     <p className="truncate font-mono text-[11px] text-muted-foreground/70">{hint}</p>
   </div>
 );
@@ -404,7 +404,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
               />
             }
             // From md up the flags scroll sideways next to the search instead of wrapping.
-            panelClassName="gap-1.5 md:min-w-0 md:flex-1 md:flex-nowrap md:overflow-x-auto [scrollbar-width:none]"
+            panelClassName="gap-1.5 md:min-w-0 md:flex-1 md:flex-nowrap md:overflow-x-auto scrollbar-none"
           >
             {stats.openSource > 0 && (
               <>
@@ -434,7 +434,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
       </StickyHeader>
 
       <div className="relative mb-6">
-        <div aria-hidden className="bg-grid-fade pointer-events-none absolute inset-0 -z-10" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-grid-fade" />
         <p className="mb-2 font-mono text-xs text-muted-foreground">
           <span className="text-pcnGreen-500">pcn@comunidad</span>:
           <span className="text-foreground/80">~/proyectos</span>$ ls -la --sort=curado
@@ -515,16 +515,16 @@ export function ProjectsList({ projects, currentUser }: Props) {
               style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
               className={cn(
                 ruledCellClassName,
-                'project-boot group relative flex flex-col gap-3 overflow-hidden p-4',
+                'relative flex group project-boot flex-col gap-3 overflow-hidden p-4',
                 'hover:shadow-[inset_2px_0_0_#04f4be]',
                 reordering && 'cursor-grab select-none active:cursor-grabbing',
-                isDragging && 'bg-pcnGreen/10 opacity-60 outline-dashed outline-1 outline-pcnGreen',
+                isDragging && 'bg-pcnGreen/10 opacity-60 outline-1 outline-pcnGreen outline-dashed',
               )}
             >
               {/* Scan line sweeping down the row while hovered. */}
               <span
                 aria-hidden
-                className="article-scan pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-transparent via-pcnGreen/[0.07] to-transparent opacity-0 group-hover:opacity-100"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/4 article-scan bg-linear-to-b from-transparent via-pcnGreen/[0.07] to-transparent opacity-0 group-hover:opacity-100"
               />
 
               <header className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
@@ -551,7 +551,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
                     </button>
                   </span>
                 )}
-                <span className="tabular-nums text-pcnGreen-600">{hex(index)}</span>
+                <span className="text-pcnGreen-600 tabular-nums">{hex(index)}</span>
                 <span className="relative flex size-1.5">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-pcnGreen opacity-60" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-pcnGreen" />
@@ -606,7 +606,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
                     logos have baked in around their own rounded artwork. */}
                 <div
                   className={cn(
-                    'relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+                    'relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-shadow group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
                     !project.logoUrl && 'bg-white',
                   )}
                 >
@@ -630,7 +630,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
                       type="button"
                       onClick={() => !reordering && setReading(project)}
                       disabled={reordering}
-                      className="project-glitch text-left font-mono text-base font-semibold leading-snug transition-colors disabled:pointer-events-none group-hover:text-pcnGreen"
+                      className="project-glitch text-left font-mono text-base leading-snug font-semibold transition-colors group-hover:text-pcnGreen disabled:pointer-events-none"
                       data-text={project.title}
                     >
                       {project.title}

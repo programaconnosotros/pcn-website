@@ -214,7 +214,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                         }}
                         disabled={markingAsResolved !== null}
                         title="Marcar como resuelto"
-                        className="rounded-sm p-1 text-muted-foreground opacity-0 transition hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen disabled:opacity-30 group-focus-within:opacity-100 group-hover:opacity-100"
+                        className="rounded-sm p-1 text-muted-foreground opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden disabled:opacity-30"
                       >
                         <Check className="size-3.5" />
                         <span className="sr-only">Marcar como resuelto: {error.message}</span>
@@ -224,7 +224,7 @@ export function ErrorsClient({ errors, pagination }: ErrorsClientProps) {
                 </TableRow>
                 {expanded && (
                   // Plain <tr>: the detail sub-row shouldn't get zebra/hover chrome of its own.
-                  <tr id={detailsId} className="border-b border-pcnGreen-200/60 !bg-black/40">
+                  <tr id={detailsId} className="border-b border-pcnGreen/60 bg-black/40!">
                     <td colSpan={COLUMNS} className="px-3 py-2">
                       <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
                         <span>

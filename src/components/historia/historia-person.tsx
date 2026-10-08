@@ -135,7 +135,7 @@ export function HistoriaPerson({ name, children }: HistoriaPersonProps) {
           <Link
             href={`/perfil/${user.id}`}
             // A mention chip, so it reads as a link to someone and not as a spelling mark.
-            className="inline-flex items-baseline gap-1 whitespace-nowrap rounded-sm bg-pcnGreen/[0.08] px-1 font-medium text-pcnGreen transition-colors hover:bg-pcnGreen/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+            className="inline-flex items-baseline gap-1 rounded-sm bg-pcnGreen/[0.08] px-1 font-medium whitespace-nowrap text-pcnGreen transition-colors hover:bg-pcnGreen/20 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
           >
             <Avatar className="size-3.5 self-center rounded-full">
               <AvatarImage src={user.image ?? undefined} alt="" />
@@ -234,9 +234,9 @@ function TagButton({ name, user }: { name: HistoriaPersonName; user: LinkedUser 
           <div
             ref={panelRef}
             style={position}
-            className="fixed z-50 w-64 space-y-2 border border-pcnGreen-400 bg-background/95 p-2 font-mono text-xs shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur"
+            className="fixed z-50 w-64 space-y-2 border border-pcnGreen-400 bg-background/95 p-2 font-mono text-xs shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur-sm"
           >
-            <span className="block text-[10px] uppercase tracking-wider text-pcnGreen-500">
+            <span className="block text-[10px] tracking-wider text-pcnGreen-500 uppercase">
               {name}
             </span>
             {user && (

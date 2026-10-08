@@ -40,7 +40,7 @@ export const FormSection = ({
         <span
           className={cn(
             'shrink-0 text-[11px] tabular-nums',
-            done === total ? 'text-glow text-pcnGreen' : 'text-muted-foreground',
+            done === total ? 'text-pcnGreen text-glow' : 'text-muted-foreground',
           )}
         >
           {optional && <span className="text-muted-foreground/60">opcional · </span>}

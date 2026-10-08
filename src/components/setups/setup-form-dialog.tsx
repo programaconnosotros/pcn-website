@@ -219,7 +219,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                   pickFile(e.dataTransfer.files?.[0]);
                 }}
                 className={cn(
-                  'group relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-sm border border-dashed bg-black/40 font-mono text-xs transition-colors',
+                  'relative flex aspect-16/10 w-full group items-center justify-center overflow-hidden rounded-sm border border-dashed bg-black/40 font-mono text-xs transition-colors',
                   isDragging
                     ? 'border-pcnGreen bg-pcnGreen/[0.06]'
                     : 'border-pcnGreen-200 hover:border-pcnGreen-500',
@@ -234,7 +234,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                       alt=""
                       className="absolute inset-0 size-full object-cover"
                     />
-                    <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-sm bg-black/75 px-1.5 py-0.5 text-[11px] text-pcnGreen opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                    <span className="absolute right-2 bottom-2 flex items-center gap-1 rounded-sm bg-black/75 px-1.5 py-0.5 text-[11px] text-pcnGreen opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                       <RefreshCw className="size-3" />
                       cambiar foto
                     </span>

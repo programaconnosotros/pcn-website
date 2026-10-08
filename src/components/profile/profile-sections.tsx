@@ -25,15 +25,15 @@ export const SectionHeading = ({
   count?: number;
   href?: string;
 }) => (
-  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pcnGreen-500">
-    <span className="text-pcnGreen-500/60">#</span>
+  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-pcnGreen-500 uppercase">
+    <span className="text-pcnGreen/60">#</span>
     {label}
     {count !== undefined && <span className="text-muted-foreground/60">({count})</span>}
     <span className="h-px flex-1 bg-pcnGreen-200" />
     {href && (
       <ProfileTabLink
         href={href}
-        className="flex items-center gap-0.5 normal-case tracking-normal text-pcnGreen-700 hover:text-pcnGreen"
+        className="flex items-center gap-0.5 tracking-normal text-pcnGreen-700 normal-case hover:text-pcnGreen"
       >
         ver todo
         <ChevronRight className="size-3" />
@@ -60,10 +60,10 @@ export const ProfileStat = ({
 }) => {
   const content = (
     <>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <p className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
         {label}
       </p>
-      <p className="text-glow font-mono text-2xl font-semibold tabular-nums text-pcnGreen">
+      <p className="font-mono text-2xl font-semibold text-pcnGreen tabular-nums text-glow">
         {value}
       </p>
     </>
@@ -98,12 +98,12 @@ export const ProjectRows = ({ projects }: { projects: ProfileProject[] }) => (
         href={`/proyectos?q=${encodeURIComponent(project.title)}`}
         className={cn(
           ruledCellClassName,
-          'group flex gap-3 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
+          'flex group gap-3 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
         )}
       >
         <span
           className={cn(
-            'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-[box-shadow] group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
+            'flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[22%] transition-shadow group-hover:shadow-[0_0_22px_-4px_rgba(4,244,190,0.75)]',
             !project.logoUrl && 'bg-white',
           )}
         >
@@ -221,7 +221,7 @@ export const PhotoGrid = ({
       <Link
         key={photo.id}
         href={`/galeria/${photo.id}`}
-        className={cn(ruledCellClassName, 'group block p-1')}
+        className={cn(ruledCellClassName, 'block group p-1')}
       >
         <span className="relative block aspect-square overflow-hidden bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -247,17 +247,17 @@ export const ConversationRows = ({ conversations }: { conversations: Conversatio
         href={conversationHref(conversation)}
         className={cn(
           ruledCellClassName,
-          'group flex flex-col gap-1 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
+          'flex group flex-col gap-1 p-3 hover:shadow-[inset_2px_0_0_#04f4be]',
         )}
       >
-        <span className="font-mono text-[11px] tabular-nums text-muted-foreground">
+        <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
           <time dateTime={conversation.date}>{conversation.date}</time>
           <span className="text-muted-foreground/60">
             {' '}
             · {conversation.participants.length} participantes
           </span>
         </span>
-        <span className="font-mono text-sm font-semibold leading-snug group-hover:text-pcnGreen">
+        <span className="font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen">
           {conversation.title}
         </span>
         <span className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
@@ -365,7 +365,7 @@ function PullsSummary({ contributions }: { contributions: ContributorStat[] }) {
             key={group.kind}
             className="flex items-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2 py-1"
           >
-            <span className="font-semibold tabular-nums text-pcnGreen">{group.pulls.length}</span>
+            <span className="font-semibold text-pcnGreen tabular-nums">{group.pulls.length}</span>
             <span className="text-muted-foreground">{group.label}</span>
           </li>
         ))}
@@ -373,7 +373,7 @@ function PullsSummary({ contributions }: { contributions: ContributorStat[] }) {
       <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
         {groups.map((group) => (
           <div key={group.kind}>
-            <h4 className="mb-1.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            <h4 className="mb-1.5 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>
               {group.label}
             </h4>

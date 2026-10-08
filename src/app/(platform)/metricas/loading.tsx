@@ -16,7 +16,7 @@ const ListPanel = ({ rows }: { rows: number }) => (
     {Array.from({ length: rows }).map((_, i) => (
       <div
         key={i}
-        className="flex items-center gap-2 border-b border-pcnGreen-200/60 py-1.5 last:border-b-0"
+        className="flex items-center gap-2 border-b border-pcnGreen/60 py-1.5 last:border-b-0"
       >
         <Skeleton className="h-3 w-28" />
         <Skeleton className="h-1.5 flex-1" />
@@ -31,7 +31,7 @@ const ListPanel = ({ rows }: { rows: number }) => (
 export default function Loading() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <PageTitleSkeleton titleClassName="w-32" />
 
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border border-pcnGreen-200 px-3 py-2">

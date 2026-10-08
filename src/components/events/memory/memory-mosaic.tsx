@@ -26,7 +26,7 @@ const shapeClassName: Record<Shape, string> = {
 };
 
 const tileClassName =
-  'group relative overflow-hidden rounded-[3px] bg-black ring-1 ring-inset ring-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pcnGreen';
+  'group relative overflow-hidden rounded-[3px] bg-black ring-1 ring-inset ring-white/5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-pcnGreen';
 
 /**
  * The event's photos and videos as an album: full colour, in the order they were taken, each
@@ -45,7 +45,7 @@ export function MemoryMosaic({
   const remaining = total - items.length;
 
   return (
-    <div className="grid grid-flow-dense auto-rows-[8.5rem] grid-cols-2 gap-1 sm:auto-rows-[10rem] sm:grid-cols-4 lg:grid-cols-6">
+    <div className="grid grid-flow-dense auto-rows-34 grid-cols-2 gap-1 sm:auto-rows-40 sm:grid-cols-4 lg:grid-cols-6">
       {items.map((item, index) => {
         const isVideo = item.kind === 'VIDEO';
         return (
@@ -68,7 +68,7 @@ export function MemoryMosaic({
 
             {isVideo && (
               <span className="absolute inset-0 flex items-center justify-center">
-                <span className="flex size-10 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:border-pcnGreen group-hover:text-pcnGreen">
+                <span className="flex size-10 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white backdrop-blur-xs transition duration-300 group-hover:scale-110 group-hover:border-pcnGreen group-hover:text-pcnGreen">
                   <Play className="ml-0.5 size-4 fill-current" />
                 </span>
               </span>
@@ -76,10 +76,10 @@ export function MemoryMosaic({
 
             <span
               aria-hidden
-              className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-2 pb-1.5 pt-10 font-mono text-[10px] leading-tight text-white/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:hidden"
+              className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-linear-to-t from-black/85 via-black/40 to-transparent px-2 pt-10 pb-1.5 font-mono text-[10px] leading-tight text-white/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:hidden"
             >
               <span className="line-clamp-2 min-w-0">{item.description}</span>
-              <span className="shrink-0 tabular-nums text-pcnGreen">
+              <span className="shrink-0 text-pcnGreen tabular-nums">
                 {isVideo && item.durationSeconds !== null && (
                   <>{formatDuration(item.durationSeconds)} · </>
                 )}

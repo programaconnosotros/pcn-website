@@ -49,7 +49,7 @@ function ChangelogRow({ entry }: { entry: VisibleChangelogEntry }) {
       className={cn(
         ruledCellClassName,
         'relative flex flex-col gap-1.5 p-3',
-        entry.adminOnly && 'bg-amber-400/[0.03] hover:bg-amber-400/[0.06]',
+        entry.adminOnly && 'bg-amber-400/3 hover:bg-amber-400/6',
       )}
     >
       {entry.adminOnly && (
@@ -64,7 +64,7 @@ function ChangelogRow({ entry }: { entry: VisibleChangelogEntry }) {
           {entry.area}
         </span>
         {entry.adminOnly && (
-          <span className="border border-amber-400/60 px-1 text-[10px] uppercase leading-4 tracking-wider text-amber-400">
+          <span className="border border-amber-400/60 px-1 text-[10px] leading-4 tracking-wider text-amber-400 uppercase">
             solo admins
           </span>
         )}
@@ -75,14 +75,14 @@ function ChangelogRow({ entry }: { entry: VisibleChangelogEntry }) {
         </span>
       </div>
 
-      <h3 className="font-semibold leading-snug">
+      <h3 className="leading-snug font-semibold">
         {entry.href ? (
           <Link
             href={entry.href}
-            className="group inline-flex items-center gap-1 transition-colors hover:text-pcnGreen"
+            className="inline-flex group items-center gap-1 transition-colors hover:text-pcnGreen"
           >
             {entry.title}
-            <ArrowUpRight className="size-3.5 text-pcnGreen-600 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <ArrowUpRight className="size-3.5 text-pcnGreen-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         ) : (
           entry.title
@@ -149,7 +149,7 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
               label="Buscar cambios"
             />
             <p
-              className="ml-auto shrink-0 font-mono text-xs tabular-nums text-muted-foreground"
+              className="ml-auto shrink-0 font-mono text-xs text-muted-foreground tabular-nums"
               aria-live="polite"
             >
               <span className={cn(searchTerm.trim() ? 'text-pcnGreen' : 'text-foreground')}>
@@ -174,7 +174,7 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
           <div className="mb-14 space-y-6">
             {byDay.map(([date, items]) => (
               <section key={date}>
-                <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
                   <span className="text-pcnGreen">{'>'}</span>
                   <time dateTime={date} className="text-foreground">
                     {date}
@@ -182,7 +182,7 @@ export function ChangelogClient({ entries, isAdmin }: ChangelogClientProps) {
                   <span className="max-sm:hidden">{dayLabel(date)}</span>
                   <span
                     aria-hidden
-                    className="h-px flex-1 bg-gradient-to-r from-pcnGreen-400 to-transparent"
+                    className="h-px flex-1 bg-linear-to-r from-pcnGreen-400 to-transparent"
                   />
                   <span className="tabular-nums">[{items.length}]</span>
                 </h2>

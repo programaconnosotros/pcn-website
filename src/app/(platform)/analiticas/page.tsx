@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 const SectionLabel = ({ children }: { children: ReactNode }) => (
-  <p className="mb-2 mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-pcnGreen">
+  <p className="mt-6 mb-2 font-mono text-[11px] tracking-[0.18em] text-pcnGreen uppercase">
     <span className="text-pcnGreen-500">{'// '}</span>
     {children}
   </p>
@@ -305,12 +305,12 @@ const AnaliticasPage = async () => {
             return (
               <div key={stat.title} className={cn(ruledCellClassName, 'p-3')}>
                 <div className="flex items-center justify-between gap-2">
-                  <p className="truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <p className="truncate font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
                     {stat.title}
                   </p>
                   <Icon className="h-3.5 w-3.5 shrink-0 text-pcnGreen-500" />
                 </div>
-                <p className="mt-1 font-mono text-2xl font-semibold tabular-nums text-pcnGreen">
+                <p className="mt-1 font-mono text-2xl font-semibold text-pcnGreen tabular-nums">
                   {stat.value}
                 </p>
                 <p className="text-[11px] text-muted-foreground/70">{stat.description}</p>
@@ -380,7 +380,7 @@ const AnaliticasPage = async () => {
                 {['Nombre', 'Email', 'Trabajo', 'País', 'Registro'].map((heading) => (
                   <th
                     key={heading}
-                    className="px-3 py-2 text-left font-mono text-[11px] font-medium uppercase tracking-wider text-muted-foreground"
+                    className="px-3 py-2 text-left font-mono text-[11px] font-medium tracking-wider text-muted-foreground uppercase"
                   >
                     {heading}
                   </th>

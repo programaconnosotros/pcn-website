@@ -17,7 +17,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={theme as ToasterProps['theme']}
-      className="toaster group"
+      className="group toaster"
       icons={{
         success: <CircleCheck className={`${iconClassName} text-pcnGreen`} />,
         info: <Info className={`${iconClassName} text-pcnGreen`} />,
@@ -40,18 +40,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "text-[13px] font-semibold tracking-tight before:mr-1.5 before:text-pcnGreen before:content-['>']",
           description: 'group-[.toast]:text-xs group-[.toast]:text-muted-foreground',
           actionButton: [
-            'group-[.toast]:!rounded-none group-[.toast]:!border group-[.toast]:!border-pcnGreen group-[.toast]:!bg-pcnGreen group-[.toast]:!px-2.5 group-[.toast]:!py-1 group-[.toast]:!h-auto',
-            'group-[.toast]:!font-mono group-[.toast]:!text-[10px] group-[.toast]:!font-semibold group-[.toast]:!uppercase group-[.toast]:!tracking-[0.14em] group-[.toast]:!text-black',
+            'group-[.toast]:rounded-none! group-[.toast]:border! group-[.toast]:!border-pcnGreen group-[.toast]:!bg-pcnGreen group-[.toast]:px-2.5! group-[.toast]:py-1! group-[.toast]:h-auto!',
+            'group-[.toast]:font-mono! group-[.toast]:text-[10px]! group-[.toast]:font-semibold! group-[.toast]:uppercase! group-[.toast]:tracking-[0.14em]! group-[.toast]:text-black!',
             'group-[.toast]:shadow-[0_0_14px_-2px_rgba(4,244,190,0.8)] transition-[filter] hover:brightness-110',
           ].join(' '),
           cancelButton:
-            'group-[.toast]:!rounded-none group-[.toast]:!border group-[.toast]:!border-pcnGreen-300 group-[.toast]:!bg-transparent group-[.toast]:!font-mono group-[.toast]:!text-[10px] group-[.toast]:!uppercase group-[.toast]:!text-pcnGreen-700',
+            'group-[.toast]:rounded-none! group-[.toast]:border! group-[.toast]:!border-pcnGreen-300 group-[.toast]:bg-transparent! group-[.toast]:font-mono! group-[.toast]:text-[10px]! group-[.toast]:uppercase! group-[.toast]:!text-pcnGreen-700',
           closeButton:
-            'group-[.toast]:!left-auto group-[.toast]:!right-1.5 group-[.toast]:!top-1.5 group-[.toast]:!translate-x-0 group-[.toast]:!translate-y-0 group-[.toast]:!size-4 group-[.toast]:!rounded-none group-[.toast]:!border-pcnGreen-300 group-[.toast]:!bg-black group-[.toast]:!text-pcnGreen-700 hover:group-[.toast]:!border-pcnGreen hover:group-[.toast]:!text-pcnGreen',
+            'group-[.toast]:left-auto! group-[.toast]:right-1.5! group-[.toast]:top-1.5! group-[.toast]:translate-x-0! group-[.toast]:translate-y-0! group-[.toast]:size-4! group-[.toast]:rounded-none! group-[.toast]:!border-pcnGreen-300 group-[.toast]:bg-black! group-[.toast]:!text-pcnGreen-700 hover:group-[.toast]:!border-pcnGreen hover:group-[.toast]:!text-pcnGreen',
           error:
-            'group-[.toaster]:!border-red-500/60 before:!bg-red-500 before:!shadow-[0_0_12px_rgba(239,68,68,0.9)] after:!bg-red-500/70 [&_[data-title]]:before:!text-red-400',
+            'group-[.toaster]:border-red-500/60! before:bg-red-500! before:shadow-[0_0_12px_rgba(239,68,68,0.9)]! after:bg-red-500/70! **:data-title:before:text-red-400!',
           warning:
-            'group-[.toaster]:!border-amber-400/60 before:!bg-amber-400 before:!shadow-[0_0_12px_rgba(251,191,36,0.9)] after:!bg-amber-400/70 [&_[data-title]]:before:!text-amber-400',
+            'group-[.toaster]:border-amber-400/60! before:bg-amber-400! before:shadow-[0_0_12px_rgba(251,191,36,0.9)]! after:bg-amber-400/70! **:data-title:before:text-amber-400!',
         },
       }}
       {...props}

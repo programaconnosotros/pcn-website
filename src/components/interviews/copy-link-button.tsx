@@ -29,7 +29,7 @@ export function CopyLinkButton({ path, className }: { path: string; className?: 
       onClick={handleCopy}
       title="Copiar link para compartir"
       className={cn(
-        'inline-flex items-center gap-1.5 border px-3 py-1.5 font-mono text-xs lowercase transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+        'inline-flex items-center gap-1.5 border px-3 py-1.5 font-mono text-xs lowercase transition-colors focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden',
         copied
           ? 'border-pcnGreen text-pcnGreen'
           : 'border-pcnGreen-200 bg-black/40 text-muted-foreground hover:border-pcnGreen-500 hover:text-pcnGreen',

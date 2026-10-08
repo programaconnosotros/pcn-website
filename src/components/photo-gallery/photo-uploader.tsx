@@ -306,9 +306,9 @@ export function PhotoUploader({
         />
 
         <label className="space-y-1">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+          <span className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
             evento para todos
-            {mixedEvents && <span className="normal-case tracking-normal"> · hay varios</span>}
+            {mixedEvents && <span className="tracking-normal normal-case"> · hay varios</span>}
           </span>
           <PhotoEventSelect
             events={events}
@@ -344,7 +344,7 @@ export function PhotoUploader({
                     <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60">
                       <Loader2 className="size-5 animate-spin text-pcnGreen" />
                       {item.video && (
-                        <span className="text-center font-mono text-[10px] tabular-nums text-pcnGreen">
+                        <span className="text-center font-mono text-[10px] text-pcnGreen tabular-nums">
                           {item.status === 'compressing' ? 'optimizando' : 'subiendo'}
                           <br />
                           {Math.round((item.progress ?? 0) * 100)}%

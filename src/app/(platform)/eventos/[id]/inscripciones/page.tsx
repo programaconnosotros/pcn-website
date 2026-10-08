@@ -98,7 +98,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
               },
             ].map((stat) => (
               <div key={stat.label} className={cn(ruledCellClassName, 'p-3 font-mono')}>
-                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                <p className="text-[11px] tracking-wider text-muted-foreground uppercase">
                   <span className="text-pcnGreen-500">{'// '}</span>
                   {stat.label}
                 </p>
@@ -110,7 +110,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
 
           {waitlist.length > 0 && (
             <section className="mb-4 border border-pcnGreen-200">
-              <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
                 <span className="text-pcnGreen-500">{'// '}</span>
                 lista de espera · {waitlist.length}
               </h2>
@@ -135,7 +135,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
                           <TableCell className="font-mono text-xs">{entry.position}</TableCell>
                           <TableCell className="font-medium">{entry.name}</TableCell>
                           <TableCell className="text-sm">{entry.email}</TableCell>
-                          <TableCell className="whitespace-nowrap text-sm">
+                          <TableCell className="text-sm whitespace-nowrap">
                             <LocalDateTime date={entry.createdAt} />
                           </TableCell>
                         </TableRow>
@@ -148,7 +148,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
           )}
 
           <section className="mb-4 border border-pcnGreen-200">
-            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>
               mandar un mail a los inscriptos
             </h2>
@@ -170,7 +170,7 @@ const EventRegistrationsPage = async (props: { params: Promise<{ id: string }> }
           </section>
 
           <section className="mb-14 border border-pcnGreen-200">
-            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>
               inscripciones · {registrations.length} total
             </h2>

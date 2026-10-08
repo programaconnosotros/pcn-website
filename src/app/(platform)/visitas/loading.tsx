@@ -24,7 +24,7 @@ export default function Loading() {
 
         <section className="mb-4 border border-pcnGreen-200">
           <SectionHeaderSkeleton width="w-44" />
-          <div className="divide-y divide-pcnGreen-200/60">
+          <div className="divide-y divide-pcnGreen/60">
             {Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className="flex h-6 items-center gap-3 px-3">
                 <Skeleton className="h-2.5 w-5" />

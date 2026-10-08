@@ -65,7 +65,7 @@ export function FlyerDesignersField({ flyers, value, onChange }: FlyerDesignersF
             {value.map((designer) => (
               <li
                 key={`${designer.userId ?? ''}-${designer.name}`}
-                className="flex h-7 items-center gap-1.5 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 pl-2 pr-1 font-mono text-[11px] text-pcnGreen"
+                className="flex h-7 items-center gap-1.5 rounded-sm border border-pcnGreen-400 bg-pcnGreen/10 pr-1 pl-2 font-mono text-[11px] text-pcnGreen"
               >
                 <Palette className="size-3" aria-hidden />
                 {designer.userId ? '@' : ''}

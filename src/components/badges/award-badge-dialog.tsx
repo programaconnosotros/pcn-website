@@ -23,7 +23,7 @@ import { BadgeMedal } from './badge-medal';
 type CatalogBadge = Awaited<ReturnType<typeof listBadges>>[number];
 
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <p className="mb-1.5 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+  <p className="mb-1.5 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
     {children}
   </p>
 );
@@ -137,7 +137,7 @@ export function AwardBadgeDialog({
             <div className="group/badge flex w-24 shrink-0 flex-col items-center gap-2 pt-1 text-center">
               <BadgeMedal icon={icon} tone={tone} />
               <span
-                className="font-mono text-[10px] font-semibold uppercase leading-tight tracking-wider"
+                className="font-mono text-[10px] leading-tight font-semibold tracking-wider uppercase"
                 style={{ color: BADGE_TONES[tone].light }}
               >
                 {name || 'nombre'}

@@ -36,7 +36,7 @@ export default function Loading() {
               {Array.from({ length: 6 }).map((_, row) => (
                 <div
                   key={row}
-                  className="flex h-9 items-center gap-4 border-t border-pcnGreen-200/60 px-3"
+                  className="flex h-9 items-center gap-4 border-t border-pcnGreen/60 px-3"
                 >
                   <Skeleton className="h-2.5 w-4" />
                   <Skeleton className="h-3 w-32" />

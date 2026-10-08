@@ -91,7 +91,7 @@ export function MemoryCoverFraming({
       <button
         type="button"
         onClick={openEditor}
-        className="flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-sm transition-colors hover:border-pcnGreen hover:text-pcnGreen"
+        className="flex items-center gap-1.5 rounded-[3px] border border-white/20 bg-black/50 px-2 py-1 font-mono text-[11px] text-white/80 backdrop-blur-xs transition-colors hover:border-pcnGreen hover:text-pcnGreen"
       >
         <Crop className="size-3.5" />
         encuadre
@@ -111,7 +111,7 @@ export function MemoryCoverFraming({
             onPointerDown={startDrag}
             role="img"
             aria-label={`Vista previa: foco en ${draft.x}% ${draft.y}%, zoom ${draft.zoom}%`}
-            className="relative aspect-[21/9] cursor-grab touch-none select-none overflow-hidden rounded-sm bg-black ring-1 ring-pcnGreen-300 active:cursor-grabbing"
+            className="relative aspect-21/9 cursor-grab touch-none overflow-hidden rounded-sm bg-black ring-1 ring-pcnGreen-300 select-none active:cursor-grabbing"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -123,7 +123,7 @@ export function MemoryCoverFraming({
             />
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+              className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"
             />
             <span
               aria-hidden
@@ -142,9 +142,9 @@ export function MemoryCoverFraming({
               value={draft.zoom}
               onChange={(event) => setDraft({ ...draft, zoom: Number(event.target.value) })}
               aria-label="Zoom"
-              className="flex-1 accent-[#04f4be]"
+              className="flex-1 accent-pcnGreen"
             />
-            <span className="w-12 text-right tabular-nums text-pcnGreen">{draft.zoom}%</span>
+            <span className="w-12 text-right text-pcnGreen tabular-nums">{draft.zoom}%</span>
           </label>
 
           <div className="flex items-center justify-between gap-2">

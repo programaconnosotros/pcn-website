@@ -29,7 +29,7 @@ export const FrequentlyAskedQuestions = () => (
     <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-5">
-          <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">
+          <h2 className="text-2xl leading-10 font-bold tracking-tight text-gray-900">
             Preguntas frecuentes
           </h2>
 
@@ -49,7 +49,7 @@ export const FrequentlyAskedQuestions = () => (
           <dl className="space-y-10">
             {frequentlyAskedQuestions.map((faq) => (
               <div key={faq.question}>
-                <dt className="text-base font-semibold leading-7 text-gray-900">{faq.question}</dt>
+                <dt className="text-base leading-7 font-semibold text-gray-900">{faq.question}</dt>
 
                 <dd className="mt-2 text-base leading-7 text-gray-600">{faq.answer}</dd>
               </div>

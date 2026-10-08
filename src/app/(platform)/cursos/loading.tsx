@@ -5,12 +5,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Loading() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <PageTitleSkeleton titleClassName="w-28" />
 
         {/* `$ grep` and the --all / --pcn / --video / --web flags (a toggle on phones). */}
         <div className="mb-6 flex items-center gap-2">
-          <Skeleton className="h-8 min-w-0 max-w-md flex-1 md:max-w-sm" />
+          <Skeleton className="h-8 max-w-md min-w-0 flex-1 md:max-w-sm" />
           <Skeleton className="h-8 w-24 shrink-0 md:hidden" />
           {['w-16', 'w-16', 'w-20', 'w-16'].map((width, i) => (
             <Skeleton key={i} className={`h-8 shrink-0 max-md:hidden ${width}`} />
@@ -22,7 +22,7 @@ export default function Loading() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2.5 sm:px-4"
+                className="flex flex-col gap-0.5 border-r border-b border-pcnGreen-200 px-3 py-2.5 sm:px-4"
               >
                 <div className="flex h-7 items-center sm:h-8">
                   <Skeleton className="h-5 w-12 sm:h-6" />

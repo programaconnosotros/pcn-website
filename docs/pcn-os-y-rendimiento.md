@@ -344,7 +344,7 @@ layout de `(platform)`) lo agrega solo en modo standalone y con puntero táctil:
 | `src/components/os/os-classic-return.tsx`     | "Volver a PCN OS" en el layout clásico.          |
 | `src/components/os/os-window.tsx`             | Ventana: drag, resize, iframe, pausa.            |
 | `src/components/os/os-dock.tsx`               | Dock con magnificación.                          |
-| `tailwind.config.ts`                          | Variants `os:`, `embedded:` y `lite:`.           |
+| `src/app/globals.css`                         | Variants `os:`, `embedded:` y `lite:`.           |
 | `src/app/(platform)/home-sections.tsx`        | Home como server component.                      |
 | `src/components/home/home-hero.tsx`           | Hero con animaciones CSS y `CountUp`.            |
 | `src/components/home/reveal.tsx`              | Apariciones al scrollear en CSS.                 |

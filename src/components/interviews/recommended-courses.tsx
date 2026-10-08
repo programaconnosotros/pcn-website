@@ -22,7 +22,7 @@ export const RecommendedCourses = ({
             href={course.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-start gap-2 border border-pcnGreen-200 p-2 transition-colors hover:border-pcnGreen-500 hover:bg-pcnGreen/[0.04]"
+            className="flex group items-start gap-2 border border-pcnGreen-200 p-2 transition-colors hover:border-pcnGreen-500 hover:bg-pcnGreen/[0.04]"
           >
             <GraduationCap className="mt-0.5 size-3.5 shrink-0 text-pcnGreen-500" />
             <span className="flex min-w-0 flex-1 flex-col gap-0.5">

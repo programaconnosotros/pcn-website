@@ -72,7 +72,7 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
           </StickyHeader>
 
           <section className="mb-14 border border-pcnGreen-200">
-            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <h2 className="border-b border-pcnGreen-200 px-3 py-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
               <span className="text-pcnGreen-500">{'// '}</span>
               propuestas · {proposals.length} total
             </h2>
@@ -165,7 +165,7 @@ const TalkProposalsPage = async (props: { params: Promise<{ id: string }> }) => 
                               {statusLabel[proposal.status]}
                             </Badge>
                           </TableCell>
-                          <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                          <TableCell className="text-sm whitespace-nowrap text-muted-foreground">
                             <LocalDateTime date={proposal.createdAt} />
                           </TableCell>
                           <TableCell className="text-right">

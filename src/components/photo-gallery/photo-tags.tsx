@@ -138,7 +138,7 @@ export function PhotoTagCanvas({
       {children}
 
       {placing && (
-        <p className="pointer-events-none absolute inset-x-0 top-0 bg-black/75 px-3 py-1.5 text-center font-mono text-xs text-pcnGreen backdrop-blur-sm">
+        <p className="pointer-events-none absolute inset-x-0 top-0 bg-black/75 px-3 py-1.5 text-center font-mono text-xs text-pcnGreen backdrop-blur-xs">
           <Crosshair className="mr-1.5 inline size-3.5" />
           tocá dónde está {placing.name} en la foto ·{' '}
           <button
@@ -166,7 +166,7 @@ export function PhotoTagCanvas({
             'absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 transition-opacity duration-200',
             placing || highlighted === tag.id
               ? 'opacity-100'
-              : 'opacity-0 focus-visible:opacity-100 group-hover/tags:opacity-100 [@media(hover:none)]:opacity-100',
+              : 'opacity-0 group-hover/tags:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100',
           )}
         >
           <span
@@ -175,7 +175,7 @@ export function PhotoTagCanvas({
               highlighted === tag.id && 'scale-125 bg-pcnGreen/30',
             )}
           />
-          <span className="whitespace-nowrap rounded-sm bg-black/80 px-1.5 py-0.5 font-mono text-[10px] text-pcnGreen backdrop-blur-sm">
+          <span className="rounded-sm bg-black/80 px-1.5 py-0.5 font-mono text-[10px] whitespace-nowrap text-pcnGreen backdrop-blur-xs">
             {tag.name}
           </span>
         </Link>

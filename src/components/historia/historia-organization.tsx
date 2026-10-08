@@ -15,7 +15,7 @@ export const HistoriaOrganization = ({ name, children }: HistoriaOrganizationPro
     target="_blank"
     rel="noopener noreferrer"
     title={`Ir al sitio de ${name}`}
-    className="whitespace-nowrap font-medium text-foreground transition-colors hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+    className="font-medium whitespace-nowrap text-foreground transition-colors hover:text-pcnGreen focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
   >
     {children ?? name}
     <ArrowUpRight className="inline size-3 align-[1px] text-pcnGreen-500" />

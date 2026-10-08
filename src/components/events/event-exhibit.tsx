@@ -27,24 +27,24 @@ export const EventExhibit: React.FC<{
   return (
     <Link
       href={`/eventos/${event.id}`}
-      className={cn(ruledCellClassName, 'group flex flex-col gap-3 p-3 sm:gap-4 sm:p-5')}
+      className={cn(ruledCellClassName, 'flex group flex-col gap-3 p-3 sm:gap-4 sm:p-5')}
     >
       {/* The mat: a quiet margin around the flyer, like a framed print on a wall. */}
       <div className="bg-pcnGreen/[0.03] p-2 transition-colors group-hover:bg-pcnGreen/[0.07] sm:p-4">
         <FlyerFrame
           src={event.flyerImages[0]}
           alt={`Flyer de ${event.name}`}
-          className="aspect-[4/5] w-full shadow-md ring-1 ring-black/10 group-hover:shadow-xl dark:ring-white/10"
+          className="aspect-4/5 w-full shadow-md ring-1 ring-black/10 group-hover:shadow-xl dark:ring-white/10"
         />
       </div>
 
       <div className="flex flex-col gap-1 border-l-2 border-pcnGreen-200 pl-2.5 transition-colors group-hover:border-pcnGreen sm:pl-3">
         {catalogNumber !== undefined && (
-          <p className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-500 sm:text-[11px]">
+          <p className="font-mono text-[10px] tracking-widest text-pcnGreen-500 uppercase sm:text-[11px]">
             Nº {String(catalogNumber).padStart(3, '0')}
           </p>
         )}
-        <h3 className="line-clamp-2 font-mono text-sm font-semibold leading-snug group-hover:text-pcnGreen">
+        <h3 className="line-clamp-2 font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen">
           {event.name}
         </h3>
         <p className="font-mono text-[11px] text-muted-foreground sm:text-xs">

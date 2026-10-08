@@ -126,7 +126,7 @@ const WindowButton = ({
     onDoubleClick={(e) => e.stopPropagation()}
     onClick={onClick}
     className={cn(
-      'group/btn flex size-[18px] items-center justify-center outline-none transition-[filter] duration-200',
+      'group/btn flex size-[18px] items-center justify-center outline-hidden transition-[filter] duration-200',
       danger
         ? 'hover:drop-shadow-[0_0_6px_rgba(248,113,113,0.9)] focus-visible:drop-shadow-[0_0_6px_rgba(248,113,113,0.9)]'
         : 'hover:drop-shadow-[0_0_6px_rgba(4,244,190,0.9)] focus-visible:drop-shadow-[0_0_6px_rgba(4,244,190,0.9)]',
@@ -397,7 +397,7 @@ export function OsWindow({
       <header
         onPointerDown={startDrag}
         className={cn(
-          'relative flex h-7 shrink-0 cursor-default touch-none select-none items-center border-b bg-black px-1.5 font-mono',
+          'relative flex h-7 shrink-0 cursor-default touch-none items-center border-b bg-black px-1.5 font-mono select-none',
           focused ? 'border-pcnGreen-400' : 'border-pcnGreen-200',
         )}
       >
@@ -418,7 +418,7 @@ export function OsWindow({
             strokeWidth={2}
           />
           <span
-            className={cn('truncate', focused ? 'text-glow text-pcnGreen' : 'text-pcnGreen-500')}
+            className={cn('truncate', focused ? 'text-pcnGreen text-glow' : 'text-pcnGreen-500')}
           >
             ~/{program.name.toLowerCase()}
             {subtitle && <span className="text-pcnGreen-500"> — {subtitle}</span>}

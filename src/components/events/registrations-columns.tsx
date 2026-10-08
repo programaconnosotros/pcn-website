@@ -105,7 +105,7 @@ export const registrationColumns: ColumnDef<EventRegistrationRow>[] = [
       />
     ),
     cell: ({ getValue }) => (
-      <span className="whitespace-nowrap text-sm text-muted-foreground">
+      <span className="text-sm whitespace-nowrap text-muted-foreground">
         <LocalDateTime date={getValue<Date>()} />
       </span>
     ),

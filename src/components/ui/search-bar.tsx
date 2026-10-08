@@ -52,7 +52,7 @@ export function SearchBar({
         className,
       )}
     >
-      <span aria-hidden className="shrink-0 select-none text-pcnGreen-600">
+      <span aria-hidden className="shrink-0 text-pcnGreen-600 select-none">
         $ grep -i
       </span>
       <input
@@ -65,7 +65,7 @@ export function SearchBar({
         aria-label={label}
         spellCheck={false}
         autoComplete="off"
-        className="min-w-0 flex-1 bg-transparent text-pcnGreen caret-pcnGreen outline-none placeholder:text-muted-foreground/60"
+        className="min-w-0 flex-1 bg-transparent text-pcnGreen caret-pcnGreen outline-hidden placeholder:text-muted-foreground/60"
       />
       {searchQuery ? (
         <button

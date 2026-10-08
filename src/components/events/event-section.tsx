@@ -14,12 +14,12 @@ export const EventSection = ({
   children: React.ReactNode;
 }) => (
   <section className={cn('p-3', className)}>
-    <h2 className="mb-2 flex items-baseline justify-between gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <h2 className="mb-2 flex items-baseline justify-between gap-2 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
       <span>
         <span className="text-pcnGreen-500">{'// '}</span>
         {title}
       </span>
-      {aside && <span className="normal-case tracking-normal">{aside}</span>}
+      {aside && <span className="tracking-normal normal-case">{aside}</span>}
     </h2>
     {children}
   </section>

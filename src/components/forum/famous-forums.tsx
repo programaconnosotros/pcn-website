@@ -60,7 +60,7 @@ export function FamousForums() {
               href={forum.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col gap-0.5 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
+              className="flex group flex-col gap-0.5 px-3 py-2 transition-colors hover:bg-pcnGreen/[0.04]"
             >
               <span className="flex items-center gap-1.5 font-mono text-xs text-foreground group-hover:text-pcnGreen">
                 {forum.name}

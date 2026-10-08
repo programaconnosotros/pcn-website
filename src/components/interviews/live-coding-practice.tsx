@@ -30,7 +30,7 @@ const ListBlock = ({ label, items }: { label: string; items: string[] }) => (
     <ul className="space-y-1 text-[13px] text-muted-foreground">
       {items.map((item) => (
         <li key={item} className="flex gap-2">
-          <span className="shrink-0 font-mono text-pcnGreen-500/70">-</span>
+          <span className="shrink-0 font-mono text-pcnGreen/70">-</span>
           <span>{renderInlineCode(item)}</span>
         </li>
       ))}
@@ -184,7 +184,7 @@ export function LiveCodingPractice({
           <InterviewsPanel command="progreso --live-coding" meta={`${label} · ${seniorityLabel}`}>
             <p className="mb-1 flex justify-between text-xs text-muted-foreground">
               ejercicios
-              <span className="tabular-nums text-pcnGreen">
+              <span className="text-pcnGreen tabular-nums">
                 {exercisesDone.length}/{exercises.length}
               </span>
             </p>
@@ -195,7 +195,7 @@ export function LiveCodingPractice({
             />
             <p className="mb-1 flex justify-between text-xs text-muted-foreground">
               leetcode
-              <span className="tabular-nums text-pcnGreen">
+              <span className="text-pcnGreen tabular-nums">
                 {problemsDone.length}/{leetcode.length}
               </span>
             </p>

@@ -30,7 +30,7 @@ export function SidebarToggle({ className }: { className?: string }) {
       }}
       onAnimationEnd={() => setGlitching(false)}
       className={cn(
-        'group/toggle relative flex h-7 shrink-0 items-center overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/60 px-1.5 font-mono text-[11px] text-pcnGreen-600 outline-none transition-[border-color,box-shadow,color] duration-200',
+        'group/toggle relative flex h-7 shrink-0 items-center overflow-hidden rounded-sm border border-pcnGreen-300 bg-black/60 px-1.5 font-mono text-[11px] text-pcnGreen-600 outline-hidden transition-[border-color,box-shadow,color] duration-200',
         'hover:border-pcnGreen hover:text-pcnGreen hover:shadow-[0_0_14px_-4px_rgba(4,244,190,0.7)] focus-visible:border-pcnGreen focus-visible:text-pcnGreen',
         glitching && 'sidebar-toggle-glitch',
         className,
@@ -48,7 +48,7 @@ export function SidebarToggle({ className }: { className?: string }) {
             open ? 'w-[7px]' : 'w-0 border-r-0',
           )}
         />
-        <span className="ml-auto mr-0.5 mt-0.5 size-[3px] animate-pulse bg-current" />
+        <span className="mt-0.5 mr-0.5 ml-auto size-[3px] animate-pulse bg-current" />
       </span>
       <span
         aria-hidden

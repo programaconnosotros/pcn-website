@@ -69,7 +69,7 @@ export function ConsejosFilters({
   return (
     <CollapsibleFilters
       className="mb-4"
-      panelClassName="max-md:[&>*]:grow max-md:[&>*]:basis-[calc(50%-0.25rem)]"
+      panelClassName="max-md:*:grow max-md:*:basis-[calc(50%-0.25rem)]"
       activeCount={activeCount}
       search={
         <SearchBar
@@ -81,7 +81,7 @@ export function ConsejosFilters({
         />
       }
       aside={
-        <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
+        <p className="font-mono text-xs text-muted-foreground tabular-nums" aria-live="polite">
           <span className={cn(isFiltering ? 'text-pcnGreen' : 'text-foreground')}>{results}</span>/
           {total}
           <span className="max-sm:hidden"> resultados</span>
@@ -136,7 +136,7 @@ export function ConsejosFilters({
             title={origin.title}
             onClick={() => set({ origin: origin.value })}
             className={cn(
-              'flex-1 px-2.5 transition-colors [&:not(:first-child)]:border-l [&:not(:first-child)]:border-pcnGreen-200',
+              'flex-1 px-2.5 transition-colors not-first:border-l [&:not(:first-child)]:border-pcnGreen-200',
               filters.origin === origin.value
                 ? 'bg-pcnGreen/10 text-pcnGreen shadow-[inset_0_0_12px_-4px_rgba(4,244,190,0.6)]'
                 : 'text-muted-foreground hover:text-pcnGreen',

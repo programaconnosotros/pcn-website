@@ -189,7 +189,7 @@ const MenuRow = ({ item, active }: { item: MenuEntry; active: boolean }) => {
         <ScrambleText text={item.title} delay={delay} />
       </span>
       {item.badge ? (
-        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold tabular-nums text-black">
+        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
           {item.badge > 99 ? '99+' : item.badge}
         </span>
       ) : (
@@ -278,13 +278,13 @@ const MenuPanel = ({
   return (
     <>
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <div className="bg-grid-fade absolute inset-0" />
+        <div className="absolute inset-0 bg-grid-fade" />
         <div className="absolute -top-32 left-1/2 size-72 -translate-x-1/2 rounded-full bg-pcnGreen/15 blur-3xl" />
       </div>
 
-      <header className="relative shrink-0 border-b border-pcnGreen-200 bg-black/70 backdrop-blur">
-        <div className="flex h-12 items-center gap-2.5 pl-3 pr-2 min-[380px]:pl-4">
-          <span className="relative flex size-7 shrink-0 items-center justify-center rounded-sm ring-1 ring-inset ring-pcnGreen-400">
+      <header className="relative shrink-0 border-b border-pcnGreen-200 bg-black/70 backdrop-blur-sm">
+        <div className="flex h-12 items-center gap-2.5 pr-2 pl-3 min-[380px]:pl-4">
+          <span className="relative flex size-7 shrink-0 items-center justify-center rounded-sm ring-1 ring-pcnGreen-400 ring-inset">
             <span className="absolute inset-0 rounded-sm bg-pcnGreen/20 blur-md" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.webp" alt="" className="relative size-5" />
@@ -323,9 +323,9 @@ const MenuPanel = ({
             autoCorrect="off"
             spellCheck={false}
             enterKeyHint="go"
-            className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-none placeholder:text-foreground/25 [&::-webkit-search-cancel-button]:hidden"
+            className="min-w-0 flex-1 bg-transparent text-foreground caret-pcnGreen outline-hidden placeholder:text-foreground/25 [&::-webkit-search-cancel-button]:hidden"
           />
-          <span className="shrink-0 text-[10px] tabular-nums text-pcnGreen-500">
+          <span className="shrink-0 text-[10px] text-pcnGreen-500 tabular-nums">
             {pad(matches)}/{pad(total)}
           </span>
         </form>
@@ -373,11 +373,11 @@ const MenuPanel = ({
         ) : (
           filtered.map((group) => (
             <section key={group.label} className="mt-5">
-              <h2 className="mb-1.5 flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-pcnGreen-600">
+              <h2 className="mb-1.5 flex items-center gap-2 font-mono text-[10px] font-medium tracking-[0.2em] text-pcnGreen-600 uppercase">
                 <span className="text-pcnGreen-300">{'//'}</span>
                 {group.label}
-                <span className="h-px flex-1 bg-gradient-to-r from-pcnGreen-300 to-transparent" />
-                <span className="tabular-nums text-pcnGreen-400">{pad(group.entries.length)}</span>
+                <span className="h-px flex-1 bg-linear-to-r from-pcnGreen-300 to-transparent" />
+                <span className="text-pcnGreen-400 tabular-nums">{pad(group.entries.length)}</span>
               </h2>
               <div className="overflow-hidden rounded-sm border border-pcnGreen-200 bg-black/60">
                 {group.entries.map((item) => (
@@ -481,11 +481,11 @@ export function MobileNav({
         // transparent and paint an opaque fill in an absolute child instead. The fill runs
         // past the bottom edge: with the floating URL bar expanded, `bottom: 0` sits above it
         // and page content would otherwise scroll by underneath, visible through the glass.
-        className="mobile-tab-bar pointer-events-auto fixed inset-x-0 bottom-0 z-[60] bg-transparent pb-[env(safe-area-inset-bottom)] embedded:hidden md:hidden"
+        className="pointer-events-auto fixed inset-x-0 bottom-0 z-60 mobile-tab-bar bg-transparent pb-[env(safe-area-inset-bottom)] md:hidden embedded:hidden"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -bottom-[50vh] top-0 border-t border-pcnGreen-200 bg-black"
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-[-50vh] border-t border-pcnGreen-200 bg-black"
         />
         <div className="relative flex h-16 items-stretch">
           {tabItems.map((item) => {
@@ -547,7 +547,7 @@ export function MobileNav({
           onInteractOutside={(event) => {
             if (tabBarRef.current?.contains(event.target as Node)) event.preventDefault();
           }}
-          className="flex h-[100dvh] flex-col gap-0 overflow-hidden border-t-0 bg-black p-0 md:hidden [&>button:last-child]:hidden"
+          className="flex h-dvh flex-col gap-0 overflow-hidden border-t-0 bg-black p-0 md:hidden [&>button:last-child]:hidden"
         >
           <MenuPanel groups={groups} user={user} onClose={() => setOpenMobile(false)} />
 

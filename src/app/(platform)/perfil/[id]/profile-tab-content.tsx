@@ -314,7 +314,7 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
             <Link
               key={course.id}
               href={`/cursos/${course.id}`}
-              className={cn(ruledCellClassName, 'group flex flex-col gap-1 p-3')}
+              className={cn(ruledCellClassName, 'flex group flex-col gap-1 p-3')}
             >
               <span className="flex items-center gap-2 font-mono text-sm">
                 <span className="font-semibold group-hover:text-pcnGreen">{course.name}</span>

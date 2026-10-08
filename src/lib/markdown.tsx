@@ -164,7 +164,7 @@ export function Markdown({ content, className }: { content: string; className?: 
       blocks.push(
         <blockquote
           key={key}
-          className="border-l-2 border-pcnGreen-600 pl-3 italic text-muted-foreground"
+          className="border-l-2 border-pcnGreen-600 pl-3 text-muted-foreground italic"
         >
           {inlineLines(quoted, key)}
         </blockquote>,

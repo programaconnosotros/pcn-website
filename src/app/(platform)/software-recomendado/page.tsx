@@ -38,7 +38,7 @@ function SoftwareRecommendationCard({
       href={website}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn(ruledCellClassName, 'group flex gap-3 p-3')}
+      className={cn(ruledCellClassName, 'flex group gap-3 p-3')}
     >
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white p-1">
         <Image
@@ -95,7 +95,7 @@ function RecommendationsList({ header, recommendations }: RecommendationsListPro
       <StickyHeader>
         {header}
         {/* Search */}
-        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+        <div className="mb-4 flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
           <SearchBar
             searchQuery={searchTerm}
             setSearchQuery={setSearchTerm}

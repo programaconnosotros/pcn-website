@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Loading() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col p-4 pt-0">
-      <div className="mb-4 mt-4 flex items-center justify-between gap-4">
+      <div className="mt-4 mb-4 flex items-center justify-between gap-4">
         <Skeleton className="h-6 w-56" />
         <div className="flex gap-1.5">
           <Skeleton className="size-8 rounded-sm" />
@@ -34,7 +34,7 @@ export default function Loading() {
             <div key={section} className="space-y-2 p-3">
               <Skeleton className="h-3 w-16" />
               {Array.from({ length: rows }).map((_, row) => (
-                <Skeleton key={row} className="h-4 w-full max-w-[14rem]" />
+                <Skeleton key={row} className="h-4 w-full max-w-56" />
               ))}
             </div>
           ))}

@@ -31,7 +31,7 @@ export function LanguageChip({
   const content = (
     <>
       <span
-        className="flex h-5 min-w-[1.75rem] items-center justify-center px-1 text-[10px] font-bold lowercase transition-colors"
+        className="flex h-5 min-w-7 items-center justify-center px-1 text-[10px] font-bold lowercase transition-colors"
         style={{
           color: lit ? `rgb(${rgb})` : undefined,
           background: `rgba(${rgb},${lit ? 0.14 : 0.05})`,
@@ -76,7 +76,7 @@ export function LanguageChip({
       onClick={onToggle}
       className={cn(
         className,
-        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+        'focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden',
       )}
       style={style}
     >

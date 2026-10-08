@@ -67,22 +67,22 @@ export const SidebarUpcomingEvents = ({
               key={event.id}
               href={`/eventos/${event.id}`}
               className={cn(
-                'group flex items-center gap-2.5 rounded-lg border border-sidebar-border/70 bg-pcnGreen-50 p-2 transition-colors hover:border-pcnGreen/35 hover:bg-pcnGreen/[0.05]',
+                'flex group items-center gap-2.5 rounded-lg border border-sidebar-border/70 bg-pcnGreen-50 p-2 transition-colors hover:border-pcnGreen/35 hover:bg-pcnGreen/[0.05]',
                 isActive && 'border-pcnGreen/40 bg-pcnGreen/[0.07]',
               )}
             >
-              <div className="flex size-9 shrink-0 flex-col items-center justify-center rounded-sm bg-black text-pcnGreen ring-1 ring-inset ring-pcnGreen-400">
+              <div className="flex size-9 shrink-0 flex-col items-center justify-center rounded-sm bg-black text-pcnGreen ring-1 ring-pcnGreen-400 ring-inset">
                 <span
                   className={cn(
                     GeistMono.className,
-                    'text-[9px] uppercase leading-none tracking-wider',
+                    'text-[9px] leading-none tracking-wider uppercase',
                   )}
                   suppressHydrationWarning
                 >
                   {month}
                 </span>
                 <span
-                  className="mt-0.5 text-sm font-semibold leading-none"
+                  className="mt-0.5 text-sm leading-none font-semibold"
                   suppressHydrationWarning
                 >
                   {day}
@@ -102,7 +102,7 @@ export const SidebarUpcomingEvents = ({
 
         <Link
           href="/eventos"
-          className="group mt-0.5 flex items-center gap-1.5 px-2 py-1 font-mono text-[11px] font-medium text-pcnGreen-600 transition-colors hover:text-pcnGreen"
+          className="mt-0.5 flex group items-center gap-1.5 px-2 py-1 font-mono text-[11px] font-medium text-pcnGreen-600 transition-colors hover:text-pcnGreen"
         >
           <CalendarDays className="size-3.5" />
           Ver todos los eventos

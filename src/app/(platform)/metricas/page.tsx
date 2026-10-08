@@ -86,7 +86,7 @@ export default async function MetricasPage(props: Props) {
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <PageTitle
           path="metricas"
           meta={

@@ -31,7 +31,7 @@ export function ActivityGraph({ months }: { months: MonthActivity[] }) {
               aria-disabled={!hasMatches}
               title={`${month.key}: ${month.matches}/${month.total} conversaciones`}
               className={cn(
-                'group relative flex h-full flex-1 items-end',
+                'relative flex h-full flex-1 group items-end',
                 hasMatches ? 'cursor-pointer' : 'cursor-default',
               )}
             >
@@ -51,7 +51,7 @@ export function ActivityGraph({ months }: { months: MonthActivity[] }) {
           );
         })}
       </div>
-      <div className="mt-1 flex gap-0.5 text-[9px] tabular-nums text-muted-foreground/70 sm:gap-1">
+      <div className="mt-1 flex gap-0.5 text-[9px] text-muted-foreground/70 tabular-nums sm:gap-1">
         {months.map((month) => {
           const [year, monthNumber] = month.key.split('-');
           const showYear = monthNumber === '01' || month === months[0];

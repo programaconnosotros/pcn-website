@@ -56,7 +56,7 @@ const Section = ({ id, title, children }: { id: string; title: string; children:
     id={id}
     className="scroll-mt-32 p-4 lg:scroll-mt-[calc(var(--sticky-header-offset,0px)+1rem)]"
   >
-    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur lg:sticky lg:top-[var(--sticky-header-offset,0px)] lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
+    <h2 className="mb-3 bg-background/95 font-mono text-sm font-semibold backdrop-blur-sm lg:sticky lg:top-(--sticky-header-offset,0px) lg:z-20 lg:-mx-4 lg:-mt-4 lg:px-4 lg:py-2">
       <span className="text-pcnGreen-500">## </span>
       {title}
     </h2>
@@ -65,7 +65,7 @@ const Section = ({ id, title, children }: { id: string; title: string; children:
 );
 
 const SubHeading = ({ children }: { children: ReactNode }) => (
-  <h3 className="mb-2 mt-5 font-mono text-sm text-pcnGreen first:mt-0">
+  <h3 className="mt-5 mb-2 font-mono text-sm text-pcnGreen first:mt-0">
     <span className="text-pcnGreen-500">### </span>
     {children}
   </h3>
@@ -188,7 +188,7 @@ const DisenoPage = () => (
             <ol className="relative space-y-4 border-l border-pcnGreen-200 pl-4">
               {milestones.map((milestone) => (
                 <li key={milestone.date} className="relative">
-                  <span className="absolute -left-[21px] top-1.5 size-2.5 border border-pcnGreen bg-background" />
+                  <span className="absolute top-1.5 left-[-21px] size-2.5 border border-pcnGreen bg-background" />
                   <p className="font-mono text-[11px] text-pcnGreen-600">{milestone.date}</p>
                   <h3 className="font-mono text-sm font-semibold">{milestone.title}</h3>
                   <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">
@@ -239,9 +239,8 @@ const DisenoPage = () => (
             <Lead>
               Negro con un tinte verde y un único acento: el verde fósforo <Code>#04f4be</Code>. Los
               tokens semánticos de shadcn viven en <Code>src/app/globals.css</Code> (bloque{' '}
-              <Code>.dark</Code>) y la escala <Code>pcnGreen</Code> en{' '}
-              <Code>tailwind.config.ts</Code>. Los valores de abajo se leen en vivo de las variables
-              CSS de esta página.
+              <Code>.dark</Code>) y la escala <Code>pcnGreen</Code> en su bloque <Code>@theme</Code>
+              . Los valores de abajo se leen en vivo de las variables CSS de esta página.
             </Lead>
             <SubHeading>Tokens semánticos</SubHeading>
             <SemanticSwatches />
@@ -282,7 +281,7 @@ const DisenoPage = () => (
             </Lead>
             <RuledGrid className="mb-4 grid-cols-1 md:grid-cols-2">
               <div className={cn(ruledCellClassName, 'p-3')}>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-600">
+                <p className="font-mono text-[10px] tracking-widest text-pcnGreen-600 uppercase">
                   font-sans · Geist Sans
                 </p>
                 <p className="mt-2 text-sm leading-relaxed">
@@ -291,7 +290,7 @@ const DisenoPage = () => (
                 </p>
               </div>
               <div className={cn(ruledCellClassName, 'p-3')}>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-pcnGreen-600">
+                <p className="font-mono text-[10px] tracking-widest text-pcnGreen-600 uppercase">
                   font-mono · Geist Mono
                 </p>
                 <p className="mt-2 font-mono text-sm leading-relaxed">
@@ -373,7 +372,7 @@ const DisenoPage = () => (
           <Section id="movimiento" title="Movimiento">
             <Lead>
               El movimiento cuenta qué está pasando: algo se enfocó, algo falló, algo está cargando.
-              Las animaciones viven en <Code>tailwind.config.ts</Code> y <Code>globals.css</Code>.
+              Las animaciones viven en <Code>globals.css</Code>.
             </Lead>
             <DefinitionList items={motionRules} />
           </Section>

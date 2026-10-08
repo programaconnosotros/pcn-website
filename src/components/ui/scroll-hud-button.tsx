@@ -36,7 +36,7 @@ export const ScrollHudButton = ({
     exit={{ opacity: 0, scale: 0.85, filter: 'blur(4px)' }}
     transition={{ duration: 0.18, ease: 'easeOut' }}
     className={cn(
-      'fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-40 embedded:bottom-4 md:bottom-6 md:right-6',
+      'fixed right-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-40 md:right-6 md:bottom-6 embedded:bottom-4',
       className,
     )}
   >
@@ -44,7 +44,7 @@ export const ScrollHudButton = ({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="group relative flex h-9 w-9 items-center justify-center overflow-hidden bg-background/70 text-pcnPurple outline-none ring-1 ring-pcnPurple/25 backdrop-blur-md transition-[box-shadow,color] duration-200 hover:shadow-[0_0_18px_-2px_rgba(80,56,189,0.5)] hover:ring-pcnPurple/60 focus-visible:ring-2 focus-visible:ring-pcnPurple dark:text-pcnGreen dark:ring-pcnGreen/25 dark:hover:shadow-[0_0_18px_-2px_rgba(4,244,190,0.45)] dark:hover:ring-pcnGreen/60 dark:focus-visible:ring-pcnGreen"
+      className="relative flex h-9 w-9 group items-center justify-center overflow-hidden bg-background/70 text-pcnPurple ring-1 ring-pcnPurple/25 outline-hidden backdrop-blur-md transition-[box-shadow,color] duration-200 hover:shadow-[0_0_18px_-2px_rgba(80,56,189,0.5)] hover:ring-pcnPurple/60 focus-visible:ring-2 focus-visible:ring-pcnPurple dark:text-pcnGreen dark:ring-pcnGreen/25 dark:hover:shadow-[0_0_18px_-2px_rgba(4,244,190,0.45)] dark:hover:ring-pcnGreen/60 dark:focus-visible:ring-pcnGreen"
     >
       {/* scanlines */}
       <span
@@ -54,7 +54,7 @@ export const ScrollHudButton = ({
       {/* sweep on hover */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-full h-full bg-gradient-to-b from-transparent via-current to-transparent opacity-0 transition-none group-hover:top-full group-hover:opacity-20 group-hover:transition-[top,opacity] group-hover:duration-500"
+        className="pointer-events-none absolute inset-x-0 -top-full h-full bg-linear-to-b from-transparent via-current to-transparent opacity-0 transition-none group-hover:top-full group-hover:opacity-20 group-hover:transition-[top,opacity] group-hover:duration-500"
       />
       {/* HUD corner brackets */}
       {corners.map((c) => (
@@ -70,7 +70,7 @@ export const ScrollHudButton = ({
       {/* status code */}
       <span
         aria-hidden
-        className="pointer-events-none absolute left-1 top-0.5 font-mono text-[6px] leading-none tracking-wider opacity-60"
+        className="pointer-events-none absolute top-0.5 left-1 font-mono text-[6px] leading-none tracking-wider opacity-60"
       >
         {code}
       </span>

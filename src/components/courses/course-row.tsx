@@ -16,7 +16,7 @@ export const CourseRow = ({ course, index }: { course: Course; index: number }) 
   const content = (
     <>
       <div className="relative shrink-0 self-start">
-        <div className="flex size-12 items-center justify-center rounded-sm bg-white p-1.5 ring-1 ring-pcnGreen-200 transition-[box-shadow] group-hover:shadow-[0_0_16px_-4px_rgba(4,244,190,0.7)] group-hover:ring-pcnGreen-600 sm:size-10 sm:p-1">
+        <div className="flex size-12 items-center justify-center rounded-sm bg-white p-1.5 ring-1 ring-pcnGreen-200 transition-shadow group-hover:shadow-[0_0_16px_-4px_rgba(4,244,190,0.7)] group-hover:ring-pcnGreen-600 sm:size-10 sm:p-1">
           {course.logo && (
             <Image
               src={course.logo}
@@ -27,14 +27,14 @@ export const CourseRow = ({ course, index }: { course: Course; index: number }) 
             />
           )}
         </div>
-        <span className="absolute -bottom-1.5 -right-1.5 rounded-sm border border-pcnGreen-200 bg-background px-1 font-mono text-[9px] tabular-nums leading-3 text-pcnGreen-600">
+        <span className="absolute -right-1.5 -bottom-1.5 rounded-sm border border-pcnGreen-200 bg-background px-1 font-mono text-[9px] leading-3 text-pcnGreen-600 tabular-nums">
           {String(index + 1).padStart(2, '0')}
         </span>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:gap-1">
         <div className="flex items-start gap-2">
-          <h3 className="min-w-0 flex-1 font-mono text-base font-semibold leading-snug transition-colors group-hover:text-pcnGreen sm:text-sm">
+          <h3 className="min-w-0 flex-1 font-mono text-base leading-snug font-semibold transition-colors group-hover:text-pcnGreen sm:text-sm sm:leading-5">
             {course.name}
             {course.isMadeByCommunity && (
               <Badge className="ml-2 px-1.5 py-0 align-middle text-[10px]">pcn</Badge>
@@ -43,7 +43,7 @@ export const CourseRow = ({ course, index }: { course: Course; index: number }) 
           <Arrow className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-pcnGreen sm:mt-0.5 sm:size-3.5" />
         </div>
 
-        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:line-clamp-2 sm:text-xs">
+        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:line-clamp-2 sm:text-xs sm:leading-4">
           {course.description}
         </p>
 
@@ -62,7 +62,7 @@ export const CourseRow = ({ course, index }: { course: Course; index: number }) 
               ) : null}
             </span>
           )}
-          <span className="min-w-0 max-w-full truncate">
+          <span className="max-w-full min-w-0 truncate">
             <span className="text-pcnGreen-500">@ </span>
             {course.teachedBy}
           </span>
@@ -74,7 +74,7 @@ export const CourseRow = ({ course, index }: { course: Course; index: number }) 
   const className = cn(
     ruledCellClassName,
     'group flex gap-4 p-4 sm:gap-3 sm:p-3',
-    'hover:shadow-[inset_2px_0_0_#04f4be] focus-visible:shadow-[inset_2px_0_0_#04f4be] focus-visible:outline-none',
+    'hover:shadow-[inset_2px_0_0_#04f4be] focus-visible:shadow-[inset_2px_0_0_#04f4be] focus-visible:outline-hidden',
   );
 
   return isExternal ? (

@@ -72,7 +72,7 @@ const useSlowFrameProbe = (run: string | null, onSlow: () => void) => {
 };
 
 const buttonClassName =
-  'rounded-sm border px-2 py-1 text-[11px] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen';
+  'rounded-sm border px-2 py-1 text-[11px] transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen';
 
 /**
  * Tells visitors when PCN OS runs in its liviano mode because of their computer, so they know
@@ -102,7 +102,7 @@ export function OsPerformanceNotice() {
   return (
     <div
       role="status"
-      className="fixed right-3 top-10 z-[5600] w-[22rem] rounded-sm border border-pcnGreen-400 bg-black/95 font-mono text-xs shadow-[0_0_24px_-8px_rgba(4,244,190,0.5)] duration-300 animate-in fade-in slide-in-from-top-2"
+      className="fixed top-10 right-3 z-5600 w-88 rounded-sm border border-pcnGreen-400 bg-black/95 font-mono text-xs shadow-[0_0_24px_-8px_rgba(4,244,190,0.5)] duration-300 animate-in fade-in slide-in-from-top-2"
     >
       <div className="flex items-center gap-2 border-b border-pcnGreen-200 px-3 py-2">
         <Gauge className="size-3.5 shrink-0 text-pcnGreen" />

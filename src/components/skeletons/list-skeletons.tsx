@@ -58,7 +58,7 @@ export function StatCellSkeleton({
   value?: string;
 }) {
   return (
-    <div className={cn('border-b border-r border-pcnGreen-200', className)}>
+    <div className={cn('border-r border-b border-pcnGreen-200', className)}>
       <TextLineSkeleton lineClassName="h-4" className="h-2.5 w-16" />
       <TextLineSkeleton lineClassName={value} className="h-5 w-12" />
       <TextLineSkeleton lineClassName="h-4" className="h-2.5 w-24" />
@@ -84,7 +84,7 @@ export function DataTableRowsSkeleton({
       {Array.from({ length: rows }).map((_, row) => (
         <div
           key={row}
-          className="flex h-9 items-center gap-6 border-b border-dashed border-foreground/[0.08] px-3"
+          className="flex h-9 items-center gap-6 border-b border-dashed border-foreground/8 px-3"
         >
           {columns.map((width, i) => (
             <Skeleton key={i} className={cn('h-3 shrink-0', width)} />
@@ -101,7 +101,7 @@ export function DataTableRowsSkeleton({
  */
 export function MediaRowCellSkeleton({ media }: { media: string }) {
   return (
-    <div className="flex gap-3 border-b border-r border-pcnGreen-200 p-3">
+    <div className="flex gap-3 border-r border-b border-pcnGreen-200 p-3">
       <Skeleton className={cn('shrink-0 rounded-sm', media)} />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex h-5 items-center gap-2">

@@ -77,13 +77,13 @@ export function IdentityLinksTable({
   return (
     <section className="min-w-0 border border-pcnGreen-200">
       <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-pcnGreen-200 bg-pcnGreen/[0.03] px-3 py-2 font-mono text-xs">
-        <h2 className="font-semibold uppercase tracking-widest text-pcnGreen">{title}</h2>
+        <h2 className="font-semibold tracking-widest text-pcnGreen uppercase">{title}</h2>
         <span className="text-muted-foreground">
           <span className="text-pcnGreen-600">$ </span>
           {command}
         </span>
-        <span className="ml-auto flex items-center gap-2 tabular-nums text-muted-foreground">
-          <span aria-hidden className="tracking-[-0.05em]">
+        <span className="ml-auto flex items-center gap-2 text-muted-foreground tabular-nums">
+          <span aria-hidden className="tracking-tighter">
             <span className="text-pcnGreen">
               {'█'.repeat(Math.round((linkedCount / Math.max(rows.length, 1)) * 12))}
             </span>
@@ -102,7 +102,7 @@ export function IdentityLinksTable({
           placeholder="grep -i nombre"
           aria-label={`Filtrar ${title}`}
           spellCheck={false}
-          className="h-7 min-w-0 flex-1 rounded-sm border border-pcnGreen-200 bg-black/40 px-2 font-mono text-xs text-pcnGreen outline-none placeholder:text-muted-foreground/60 focus:border-pcnGreen-600"
+          className="h-7 min-w-0 flex-1 rounded-sm border border-pcnGreen-200 bg-black/40 px-2 font-mono text-xs text-pcnGreen outline-hidden placeholder:text-muted-foreground/60 focus:border-pcnGreen-600"
         />
         <div
           role="group"
@@ -131,7 +131,7 @@ export function IdentityLinksTable({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] border-collapse font-mono text-xs">
           <thead>
-            <tr className="text-left text-[10px] uppercase tracking-wider text-muted-foreground">
+            <tr className="text-left text-[10px] tracking-wider text-muted-foreground uppercase">
               <th className="w-8 px-3 py-1.5 font-normal">#</th>
               <th className="px-2 py-1.5 font-normal">
                 {source === 'github' ? 'login' : 'nombre'}
@@ -153,11 +153,11 @@ export function IdentityLinksTable({
               <tr
                 key={row.externalName}
                 className={cn(
-                  'group h-9 border-t border-pcnGreen-200/60 transition-colors hover:bg-pcnGreen/[0.05]',
+                  'h-9 group border-t border-pcnGreen/60 transition-colors hover:bg-pcnGreen/[0.05]',
                   pendingName === row.externalName && 'animate-pulse',
                 )}
               >
-                <td className="px-3 tabular-nums text-muted-foreground/60">
+                <td className="px-3 text-muted-foreground/60 tabular-nums">
                   {String(index + 1).padStart(2, '0')}
                 </td>
                 <td className="px-2">
@@ -180,7 +180,7 @@ export function IdentityLinksTable({
                     <span className="truncate">{row.externalName}</span>
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-2 tabular-nums text-muted-foreground">
+                <td className="px-2 whitespace-nowrap text-muted-foreground tabular-nums">
                   {row.detail}
                 </td>
                 <td className="px-3 py-1">
@@ -204,7 +204,7 @@ export function IdentityLinksTable({
                         onClick={() => save(row.externalName, null)}
                         disabled={pendingName !== null}
                         title="Desvincular"
-                        className="ml-auto shrink-0 rounded-sm p-1 text-muted-foreground opacity-0 transition hover:bg-red-500/10 hover:text-red-400 focus-visible:opacity-100 disabled:opacity-30 group-hover:opacity-100"
+                        className="ml-auto shrink-0 rounded-sm p-1 text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-400 focus-visible:opacity-100 disabled:opacity-30"
                       >
                         <Unlink className="size-3.5" />
                         <span className="sr-only">Desvincular {row.externalName}</span>

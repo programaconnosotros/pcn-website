@@ -89,9 +89,9 @@ export function RuledGridSkeleton({
   className?: string;
 }) {
   return (
-    <div className={`grid border-l border-t border-pcnGreen-200 ${className}`}>
+    <div className={`grid border-t border-l border-pcnGreen-200 ${className}`}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex gap-3 border-b border-r border-pcnGreen-200 p-3">
+        <div key={i} className="flex gap-3 border-r border-b border-pcnGreen-200 p-3">
           <Skeleton className="h-9 w-9 shrink-0 rounded-sm" />
           <div className="flex flex-1 flex-col gap-2">
             <Skeleton className="h-4 w-1/3" />
@@ -107,7 +107,7 @@ export function RuledGridSkeleton({
 // Mirrors CourseRow: the logo tile, then title, a short description and the source/author line.
 export function CourseRowSkeleton() {
   return (
-    <div className="flex gap-4 border-b border-r border-pcnGreen-200 p-4 sm:gap-3 sm:p-3">
+    <div className="flex gap-4 border-r border-b border-pcnGreen-200 p-4 sm:gap-3 sm:p-3">
       <Skeleton className="size-12 shrink-0 sm:size-10" />
       <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-1.5">
         <Skeleton className="h-4 w-1/2" />

@@ -49,13 +49,13 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
           onClick={onClose}
-          className="fixed inset-0 z-[6000] overflow-y-auto bg-black/80 px-10 pb-32 pt-16 font-mono backdrop-blur-xl"
+          className="fixed inset-0 z-6000 overflow-y-auto bg-black/80 px-10 pt-16 pb-32 font-mono backdrop-blur-xl"
         >
           <button
             type="button"
             onClick={onClose}
             aria-label="Salir"
-            className="group fixed right-4 top-10 z-10 flex items-center gap-2 border border-pcnGreen-300 bg-black/80 px-2.5 py-1 text-xs text-pcnGreen-700 outline-none transition-all duration-200 [clip-path:polygon(0_0,calc(100%-6px)_0,100%_6px,100%_100%,6px_100%,0_calc(100%-6px))] hover:border-red-500 hover:bg-red-500 hover:text-black hover:shadow-[0_0_14px_#ef4444] focus-visible:border-pcnGreen"
+            className="fixed top-10 right-4 z-10 flex group items-center gap-2 border border-pcnGreen-300 bg-black/80 px-2.5 py-1 text-xs text-pcnGreen-700 outline-hidden transition-all duration-200 [clip-path:polygon(0_0,calc(100%-6px)_0,100%_6px,100%_100%,6px_100%,0_calc(100%-6px))] hover:border-red-500 hover:bg-red-500 hover:text-black hover:shadow-[0_0_14px_#ef4444] focus-visible:border-pcnGreen"
           >
             <span className="text-pcnGreen-500 group-hover:text-black">[esc]</span>
             salir
@@ -73,7 +73,7 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
               onClick={(e) => e.stopPropagation()}
               className="mx-auto flex w-full max-w-sm items-center gap-2 rounded-sm border border-pcnGreen-400 bg-black/80 px-3 py-1.5 text-sm text-pcnGreen shadow-[0_0_24px_-8px_#04f4be99] focus-within:border-pcnGreen"
             >
-              <span className="select-none text-pcnGreen-700">$</span>
+              <span className="text-pcnGreen-700 select-none">$</span>
               <Search className="size-4 text-pcnGreen-600" />
               <input
                 ref={inputRef}
@@ -83,7 +83,7 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
                   if (e.key === 'Enter' && matches[0]) onOpenProgram(matches[0]);
                 }}
                 placeholder="buscar programas…"
-                className="w-full bg-transparent outline-none placeholder:text-pcnGreen-500"
+                className="w-full bg-transparent outline-hidden placeholder:text-pcnGreen-500"
               />
             </label>
 
@@ -92,7 +92,7 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
               if (groupPrograms.length === 0) return null;
               return (
                 <section key={group} className="flex flex-col gap-4">
-                  <h2 className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-pcnGreen-600">
+                  <h2 className="flex items-center gap-3 text-xs tracking-[0.2em] text-pcnGreen-600 uppercase">
                     <span className="text-pcnGreen-400">##</span>
                     {group}
                     <span aria-hidden className="h-px flex-1 bg-pcnGreen-200" />
@@ -106,10 +106,10 @@ export function OsLauncher({ open, programs, onOpenProgram, onClose }: OsLaunche
                           e.stopPropagation();
                           onOpenProgram(program);
                         }}
-                        className="group flex flex-col items-center gap-2 rounded-md p-2 outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+                        className="flex group flex-col items-center gap-2 rounded-md p-2 outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen"
                       >
                         <ProgramIcon program={program} className="size-16" />
-                        <span className="text-center text-xs lowercase text-pcnGreen-700 transition-colors group-hover:text-pcnGreen">
+                        <span className="text-center text-xs text-pcnGreen-700 lowercase transition-colors group-hover:text-pcnGreen">
                           {program.name}
                         </span>
                       </button>

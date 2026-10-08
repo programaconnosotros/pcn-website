@@ -9,7 +9,7 @@ export default function Loading() {
 
         {/* The terminal reader: path bar with its key caps, the consejo and the comments. */}
         <div className="mx-auto mb-14 w-full max-w-3xl border border-pcnGreen-200 bg-black/40">
-          <div className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pl-3 pr-2">
+          <div className="flex items-center gap-3 border-b border-dashed border-pcnGreen-200 py-2 pr-2 pl-3">
             <Skeleton className="h-3 w-40" />
             <div className="ml-auto flex shrink-0 gap-1">
               {Array.from({ length: 3 }).map((_, i) => (

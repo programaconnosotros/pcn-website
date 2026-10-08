@@ -50,7 +50,7 @@ export const SocialLinks = () => (
           rel="noopener noreferrer"
           className={cn(
             ruledCellClassName,
-            'group relative flex items-center gap-3 overflow-hidden p-3',
+            'relative flex group items-center gap-3 overflow-hidden p-3',
           )}
         >
           <span className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_2px,rgb(4_244_190/0.04)_2px,rgb(4_244_190/0.04)_3px)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -73,7 +73,7 @@ export const SocialLinks = () => (
               {network.description}
             </p>
           </div>
-          <ArrowUpRight className="relative size-4 shrink-0 text-muted-foreground/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pcnGreen" />
+          <ArrowUpRight className="relative size-4 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-pcnGreen" />
           <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,#04f4be,transparent)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </Link>
       ))}

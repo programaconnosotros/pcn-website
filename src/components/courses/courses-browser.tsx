@@ -25,8 +25,8 @@ const byName = (a: Course, b: Course) =>
   a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
 
 const SectionHeading = ({ label, count }: { label: string; count: number }) => (
-  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pcnGreen-500">
-    <span className="text-pcnGreen-500/60">#</span>
+  <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-widest text-pcnGreen-500 uppercase">
+    <span className="text-pcnGreen/60">#</span>
     {label}
     <span className="text-muted-foreground/60">({count})</span>
     <span className="h-px flex-1 bg-pcnGreen-200" />
@@ -34,11 +34,11 @@ const SectionHeading = ({ label, count }: { label: string; count: number }) => (
 );
 
 const Stat = ({ value, label }: { value: string | number; label: string }) => (
-  <div className="flex flex-col gap-0.5 border-b border-r border-pcnGreen-200 px-3 py-2.5 sm:px-4">
-    <span className="font-mono text-xl font-semibold tabular-nums text-pcnGreen sm:text-2xl">
+  <div className="flex flex-col gap-0.5 border-r border-b border-pcnGreen-200 px-3 py-2.5 sm:px-4">
+    <span className="font-mono text-xl font-semibold text-pcnGreen tabular-nums sm:text-2xl">
       {value}
     </span>
-    <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <span className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
       {label}
     </span>
   </div>
@@ -118,7 +118,7 @@ export const CoursesBrowser = ({ header, courses }: { header: ReactNode; courses
       </StickyHeader>
 
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-2 border-l border-t border-pcnGreen-200 sm:grid-cols-4">
+        <div className="grid grid-cols-2 border-t border-l border-pcnGreen-200 sm:grid-cols-4">
           <Stat value={courses.length} label="cursos" />
           <Stat value={`${stats.hours}h`} label="de contenido" />
           <Stat value={stats.videos} label="videos" />

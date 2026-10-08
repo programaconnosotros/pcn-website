@@ -15,11 +15,7 @@ export default function Loading() {
           </div>
           <div className="p-3">
             {['w-full', 'w-full', 'w-11/12', 'w-full', 'w-2/3'].map((width, i) => (
-              <TextLineSkeleton
-                key={i}
-                lineClassName="h-[1.4375rem]"
-                className={`h-3.5 ${width}`}
-              />
+              <TextLineSkeleton key={i} lineClassName="h-5.75" className={`h-3.5 ${width}`} />
             ))}
           </div>
           <div className="p-3">

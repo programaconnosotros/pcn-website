@@ -129,7 +129,7 @@ export function UserCombobox<T extends UserOption = SpeakerUserOption>({
           aria-label={placeholder}
           spellCheck={false}
           autoComplete="off"
-          className="min-w-0 flex-1 bg-transparent text-pcnGreen outline-none placeholder:text-muted-foreground/60 disabled:opacity-50"
+          className="min-w-0 flex-1 bg-transparent text-pcnGreen outline-hidden placeholder:text-muted-foreground/60 disabled:opacity-50"
         />
         {loading && <Loader2 className="size-3 animate-spin text-pcnGreen-600" />}
       </label>
@@ -139,7 +139,7 @@ export function UserCombobox<T extends UserOption = SpeakerUserOption>({
           role="listbox"
           style={{ maxHeight: placement.maxHeight }}
           className={cn(
-            'absolute left-0 right-0 z-50 overflow-auto rounded-sm border border-pcnGreen-400 bg-background/95 py-1 shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur',
+            'absolute right-0 left-0 z-50 overflow-auto rounded-sm border border-pcnGreen-400 bg-background/95 py-1 shadow-[0_0_24px_-8px_rgba(4,244,190,0.6)] backdrop-blur-sm',
             placement.above ? 'bottom-full mb-1' : 'top-full mt-1',
           )}
         >

@@ -85,7 +85,7 @@ const Pane = ({
 }) => (
   <section
     className={cn(
-      'absolute overflow-hidden border border-pcnGreen-200 bg-black/70 font-mono text-[10px] leading-[1.45] text-pcnGreen-700 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] [contain:paint]',
+      'absolute overflow-hidden border border-pcnGreen-200 bg-black/70 font-mono text-[10px] leading-[1.45] text-pcnGreen-700 shadow-[0_0_40px_-18px_rgba(4,244,190,0.5)] contain-[paint]',
       className,
     )}
   >
@@ -102,7 +102,7 @@ const Pane = ({
     {/* Scan line: a transform-only animation, so it never triggers layout. */}
     <div
       className={cn(
-        'os-scan pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-transparent via-pcnGreen/[0.07] to-transparent',
+        'pointer-events-none absolute inset-x-0 top-0 h-10 os-scan bg-linear-to-b from-transparent via-pcnGreen/[0.07] to-transparent',
         !active && '[animation-play-state:paused]',
       )}
     />
@@ -147,7 +147,7 @@ function Htop({ active }: { active: boolean }) {
       title="htop — pcn-prod-01"
       status={`load ${load}`}
       active={active}
-      className="left-6 top-12 w-[330px]"
+      className="top-12 left-6 w-[330px]"
     >
       <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
         {cores.map((value, index) => (
@@ -282,7 +282,7 @@ function Agent({ active }: { active: boolean }) {
       title="agent@pcn — ~/pcn-website"
       status={done ? '● idle' : `${SPINNER[step % SPINNER.length]} working`}
       active={active}
-      className="right-6 top-12 w-[390px]"
+      className="top-12 right-6 w-[390px]"
     >
       <ol className="h-[176px] overflow-hidden">
         {shown.slice(-VISIBLE_AGENT_LINES).map((line, index, visible) => (
@@ -350,8 +350,8 @@ function EventStream({ active }: { active: boolean }) {
     >
       <ol className="h-[128px] overflow-hidden">
         {lines.map((line) => (
-          <li key={line.id} className="os-line-in flex gap-2 whitespace-nowrap">
-            <span className="tabular-nums text-pcnGreen-500">{line.time}</span>
+          <li key={line.id} className="flex os-line-in gap-2 whitespace-nowrap">
+            <span className="text-pcnGreen-500 tabular-nums">{line.time}</span>
             <span className="text-pcnGreen">{line.type}</span>
             <span className="truncate text-foreground/60">{line.detail}</span>
           </li>
@@ -391,7 +391,7 @@ function NetMonitor({ active }: { active: boolean }) {
       title="netmon — edge"
       status={`${Math.round(current * 4.2)} req/s`}
       active={active}
-      className="bottom-28 right-6 hidden w-[320px] xl:block"
+      className="right-6 bottom-28 hidden w-[320px] xl:block"
     >
       <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} preserveAspectRatio="none" className="h-14 w-full">
         <polygon
@@ -420,7 +420,7 @@ export function OsProcesses({ covered }: { covered: boolean }) {
   const active = useBackgroundActive(covered);
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 select-none opacity-80">
+    <div aria-hidden className="pointer-events-none absolute inset-0 opacity-80 select-none">
       <Htop active={active} />
       <Agent active={active} />
       <EventStream active={active} />

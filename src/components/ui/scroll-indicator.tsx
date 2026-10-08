@@ -44,7 +44,7 @@ export const ScrollIndicator = () => {
           code="DN"
           icon={
             <motion.span
-              className="block motion-reduce:!transform-none"
+              className="block motion-reduce:transform-none!"
               animate={{ y: [-2, 2, -2] }}
               transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
             >

@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 export default function Loading() {
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
-      <div className="mb-14 mt-4">
+      <div className="mt-4 mb-14">
         <PageTitleSkeleton titleClassName="w-28" />
 
         <div className="flex flex-col gap-2 border border-b-0 border-pcnGreen-200 px-3 py-2 md:flex-row md:flex-wrap md:items-center md:gap-x-4">

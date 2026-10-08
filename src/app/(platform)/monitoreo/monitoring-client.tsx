@@ -78,13 +78,13 @@ export function MonitoringClient({
       <TabsList aria-label="Vista de monitoreo">
         <TabsTrigger value="errors">
           errores
-          <span className="tabular-nums text-muted-foreground/70">
+          <span className="text-muted-foreground/70 tabular-nums">
             ({unresolvedErrors.toLocaleString()})
           </span>
         </TabsTrigger>
         <TabsTrigger value="logs">
           logs
-          <span className="tabular-nums text-muted-foreground/70">
+          <span className="text-muted-foreground/70 tabular-nums">
             ({logCounts.total.toLocaleString()})
           </span>
         </TabsTrigger>

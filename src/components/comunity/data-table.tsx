@@ -128,7 +128,7 @@ export function DataTable<TData, TValue>({
 
           <div className="flex shrink-0 items-center gap-2">
             <span
-              className="font-mono text-xs tabular-nums text-muted-foreground"
+              className="font-mono text-xs text-muted-foreground tabular-nums"
               aria-live="polite"
             >
               <span className="text-pcnGreen">{table.getFilteredRowModel().rows.length}</span>/
@@ -173,7 +173,7 @@ export function DataTable<TData, TValue>({
 
       <div className="mb-14 space-y-2">
         {/* Table */}
-        <div className="max-h-[calc(100dvh-12rem)] overflow-auto border border-pcnGreen-200 [scrollbar-width:thin]">
+        <div className="max-h-[calc(100dvh-12rem)] scrollbar-thin overflow-auto border border-pcnGreen-200">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((hg) => (

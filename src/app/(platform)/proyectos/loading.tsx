@@ -35,7 +35,7 @@ export default function Loading() {
               <div className="flex items-start gap-3">
                 <Skeleton className="size-14 shrink-0 rounded-[22%]" />
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <TextLineSkeleton lineClassName="h-[1.375rem]" className="h-4 w-1/2" />
+                  <TextLineSkeleton lineClassName="h-5.5" className="h-4 w-1/2" />
                   <div>
                     <TextLineSkeleton lineClassName="h-5" className="h-3 w-full" />
                     <TextLineSkeleton lineClassName="h-5" className="h-3 w-full" />

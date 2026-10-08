@@ -31,7 +31,7 @@ export function TalksList({ talks, eventId }: Props) {
   return (
     <section className="mb-14 border border-pcnGreen-200">
       <div className="flex items-center justify-between border-b border-pcnGreen-200 px-3 py-2">
-        <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+        <h2 className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
           <span className="text-pcnGreen-500">{'// '}</span>
           charlas · {talks.length} total
         </h2>

@@ -85,10 +85,10 @@ export interface DateInputProps {
 }
 
 const navButtonClassName =
-  'flex size-7 items-center justify-center rounded-sm border border-pcnGreen-200 text-pcnGreen-600 transition-colors hover:border-pcnGreen-500 hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen';
+  'flex size-7 items-center justify-center rounded-sm border border-pcnGreen-200 text-pcnGreen-600 transition-colors hover:border-pcnGreen-500 hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen';
 
 const footerButtonClassName =
-  'rounded-sm px-1.5 py-0.5 text-[11px] text-pcnGreen-700 transition-colors hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen';
+  'rounded-sm px-1.5 py-0.5 text-[11px] text-pcnGreen-700 transition-colors hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-pcnGreen';
 
 /** A scrollable column of two-digit values (hours or minutes) that keeps the chosen one in view. */
 function TimeColumn({
@@ -112,14 +112,14 @@ function TimeColumn({
 
   return (
     <div className="flex min-w-0 flex-col">
-      <span className="border-b border-pcnGreen-200 px-1 py-1 text-center text-[10px] uppercase tracking-widest text-pcnGreen-600">
+      <span className="border-b border-pcnGreen-200 px-1 py-1 text-center text-[10px] tracking-widest text-pcnGreen-600 uppercase">
         {label}
       </span>
       <div
         ref={listRef}
         role="listbox"
         aria-label={label}
-        className="relative h-[13.5rem] overflow-y-auto overscroll-contain [scrollbar-width:none]"
+        className="relative h-54 scrollbar-none overflow-y-auto overscroll-contain"
       >
         {options.map((option) => {
           const selected = option === value;
@@ -131,7 +131,7 @@ function TimeColumn({
               aria-selected={selected}
               onClick={() => onSelect(option)}
               className={cn(
-                'block w-full px-2 py-1 text-center text-xs tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-pcnGreen',
+                'block w-full px-2 py-1 text-center text-xs tabular-nums transition-colors focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden focus-visible:ring-inset',
                 selected
                   ? 'bg-pcnGreen font-semibold text-black shadow-[0_0_12px_rgba(4,244,190,0.6)]'
                   : 'text-muted-foreground hover:bg-pcnGreen/10 hover:text-pcnGreen',
@@ -274,7 +274,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
               ? 'h-6 text-muted-foreground focus-within:text-foreground data-[state=open]:text-pcnGreen'
               : cn(
                   fieldClassName,
-                  'flex h-9 py-0 pl-1.5 pr-3 focus-within:border-pcnGreen-500 data-[state=open]:border-pcnGreen-500',
+                  'flex h-9 py-0 pr-3 pl-1.5 focus-within:border-pcnGreen-500 data-[state=open]:border-pcnGreen-500',
                 ),
             disabled && 'pointer-events-none opacity-60',
             className,
@@ -284,7 +284,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
             <button
               type="button"
               aria-label={withTime ? 'Abrir el calendario y la hora' : 'Abrir el calendario'}
-              className="flex size-6 shrink-0 items-center justify-center rounded-sm text-pcnGreen-600 transition-colors hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen group-data-[state=open]/date:text-pcnGreen"
+              className="flex size-6 shrink-0 items-center justify-center rounded-sm text-pcnGreen-600 transition-colors group-data-[state=open]/date:text-pcnGreen hover:bg-pcnGreen/10 hover:text-pcnGreen focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
             >
               <CalendarDays aria-hidden className="size-3.5" />
             </button>
@@ -310,8 +310,8 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
             onBlur={onFieldBlur}
             {...aria}
             className={cn(
-              'min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted-foreground/50',
-              bare ? 'w-[5.5rem] flex-none' : 'h-full',
+              'min-w-0 flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/50',
+              bare ? 'w-22 flex-none' : 'h-full',
             )}
           />
           {!bare && display && (
@@ -333,7 +333,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
           onInteractOutside={(event) => {
             if (fieldRef.current?.contains(event.target as Node)) event.preventDefault();
           }}
-          className={cn(menuContentClassName, 'z-[60] p-0 text-xs')}
+          className={cn(menuContentClassName, 'z-60 p-0 text-xs')}
         >
           <header className="flex items-center gap-2 border-b border-pcnGreen-200 px-2 py-1.5">
             <span className="text-[10px] text-pcnGreen-600">
@@ -343,7 +343,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
               type="button"
               onClick={() => setMode(mode === 'days' ? 'months' : 'days')}
               aria-label={mode === 'days' ? 'Elegir mes y año' : 'Volver a los días'}
-              className="text-glow flex-1 rounded-sm px-1 py-0.5 text-center text-[13px] font-semibold uppercase tracking-widest text-pcnGreen transition-colors hover:bg-pcnGreen/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+              className="flex-1 rounded-sm px-1 py-0.5 text-center text-[13px] font-semibold tracking-widest text-pcnGreen uppercase transition-colors text-glow hover:bg-pcnGreen/10 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
             >
               {mode === 'days' ? `${MONTHS[viewMonth]} ${viewYear}` : viewYear}
               <span aria-hidden className="ml-1 text-pcnGreen-600">
@@ -376,7 +376,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
                 role="grid"
                 aria-label={`${MONTHS[viewMonth]} ${viewYear}`}
                 onKeyDown={onGridKeyDown}
-                className="date-grid-in w-[16.5rem] p-2"
+                className="w-66 date-grid-in p-2"
               >
                 <div role="row" className="mb-1 grid grid-cols-7">
                   {WEEKDAYS.map((weekday, i) => (
@@ -384,7 +384,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
                       key={weekday}
                       role="columnheader"
                       className={cn(
-                        'py-1 text-center text-[10px] uppercase tracking-wider',
+                        'py-1 text-center text-[10px] tracking-wider uppercase',
                         i >= 5 ? 'text-pcnGreen-700' : 'text-pcnGreen-500',
                       )}
                     >
@@ -414,7 +414,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
                         onClick={() => pickDay(day)}
                         onFocus={() => setCursor(day)}
                         className={cn(
-                          'relative flex aspect-square items-center justify-center bg-black text-xs tabular-nums transition-colors duration-150 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-pcnGreen',
+                          'relative flex aspect-square items-center justify-center bg-black text-xs tabular-nums transition-colors duration-150 focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden focus-visible:ring-inset',
                           inMonth ? 'text-foreground/85' : 'text-muted-foreground/30',
                           !selected &&
                             !outOfRange &&
@@ -430,11 +430,11 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
                           <>
                             <span
                               aria-hidden
-                              className="pointer-events-none absolute left-0.5 top-0.5 size-1.5 border-l border-t border-pcnGreen"
+                              className="pointer-events-none absolute top-0.5 left-0.5 size-1.5 border-t border-l border-pcnGreen"
                             />
                             <span
                               aria-hidden
-                              className="pointer-events-none absolute bottom-0.5 right-0.5 size-1.5 border-b border-r border-pcnGreen"
+                              className="pointer-events-none absolute right-0.5 bottom-0.5 size-1.5 border-r border-b border-pcnGreen"
                             />
                           </>
                         )}
@@ -446,7 +446,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
             ) : (
               <div
                 key={`months-${viewYear}`}
-                className="date-grid-in grid w-[16.5rem] grid-cols-3 gap-px border-pcnGreen-200 p-2"
+                className="grid w-66 date-grid-in grid-cols-3 gap-px border-pcnGreen-200 p-2"
               >
                 {MONTHS.map((month, i) => {
                   const current = i === viewMonth;
@@ -461,7 +461,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
                         focusOnRender.current = true;
                       }}
                       className={cn(
-                        'rounded-sm border py-3 text-xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen',
+                        'rounded-sm border py-3 text-xs tracking-widest uppercase transition-colors focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden',
                         current
                           ? 'border-pcnGreen bg-pcnGreen/15 text-pcnGreen shadow-[0_0_12px_-2px_rgba(4,244,190,0.6)]'
                           : 'border-pcnGreen-200 text-muted-foreground hover:border-pcnGreen-500 hover:text-pcnGreen',
@@ -475,7 +475,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
             )}
 
             {withTime && (
-              <div className="grid w-[6.5rem] grid-cols-2 border-l border-pcnGreen-200">
+              <div className="grid w-26 grid-cols-2 border-l border-pcnGreen-200">
                 <TimeColumn
                   label="hh"
                   options={HOURS}
@@ -502,7 +502,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(func
           </div>
 
           <footer className="flex items-center gap-1 border-t border-pcnGreen-200 px-2 py-1">
-            <span className="mr-auto truncate text-[10px] tabular-nums text-muted-foreground/70">
+            <span className="mr-auto truncate text-[10px] text-muted-foreground/70 tabular-nums">
               <span className="text-pcnGreen-500">→ </span>
               {isoPreview ?? 'sin fecha'}
               <span className="animate-blink text-pcnGreen">_</span>

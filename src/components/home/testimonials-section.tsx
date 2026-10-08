@@ -53,7 +53,7 @@ export const TestimonialsSection = ({ testimonials }: { testimonials: FeaturedTe
                 <Link
                   href={testimonial.source.href}
                   title={`Extraído de «${testimonial.source.title}»`}
-                  className="ml-auto shrink-0 border border-dashed border-pcnGreen-600 px-1 font-mono text-[10px] uppercase leading-4 text-pcnGreen hover:bg-pcnGreen/10"
+                  className="ml-auto shrink-0 border border-dashed border-pcnGreen-600 px-1 font-mono text-[10px] leading-4 text-pcnGreen uppercase hover:bg-pcnGreen/10"
                 >
                   auto
                 </Link>

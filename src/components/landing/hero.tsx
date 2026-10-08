@@ -22,7 +22,7 @@ export const Hero = () => (
     </div>
 
     {/* Add this new div for the gradient overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70" />
+    <div className="absolute inset-0 bg-linear-to-t from-black to-transparent opacity-70" />
 
     <div className="relative z-10 flex w-full flex-col items-center">
       <GlowingText>programaConNosotros</GlowingText>

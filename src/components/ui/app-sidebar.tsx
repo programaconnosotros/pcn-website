@@ -169,10 +169,10 @@ export function AppSidebar(props: AppSidebarProps) {
     <Sidebar
       collapsible="offcanvas"
       variant="sidebar"
-      className="border-pcnGreen-200 [&_[data-sidebar=sidebar]]:bg-black"
+      className="border-pcnGreen-200 **:data-[sidebar=sidebar]:bg-black"
       {...sidebarProps}
     >
-      <SidebarHeader className="px-3 pb-1 pt-3">
+      <SidebarHeader className="px-3 pt-3 pb-1">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -181,19 +181,19 @@ export function AppSidebar(props: AppSidebarProps) {
               className="h-12 rounded-sm px-2 hover:bg-sidebar-accent/70"
             >
               <Link href="/" className="flex items-center gap-3">
-                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-sm bg-black ring-1 ring-inset ring-pcnGreen-400">
+                <span className="relative flex size-9 shrink-0 items-center justify-center rounded-sm bg-black ring-1 ring-pcnGreen-400 ring-inset">
                   <span className="absolute inset-0 rounded-sm bg-pcnGreen/20 blur-md" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/logo.webp" alt="programaConNosotros" className="relative size-6" />
                 </span>
                 <span className="grid min-w-0 flex-1 text-left leading-tight">
-                  <span className="text-glow truncate font-mono text-[13px] font-semibold tracking-tight text-pcnGreen">
+                  <span className="truncate font-mono text-[13px] font-semibold tracking-tight text-pcnGreen text-glow">
                     programaConNosotros
                   </span>
                   <span
                     className={cn(
                       GeistMono.className,
-                      'truncate text-[10px] uppercase tracking-[0.1em] text-pcnGreen-500',
+                      'truncate text-[10px] tracking-widest text-pcnGreen-500 uppercase',
                     )}
                   >
                     Comunidad · desde 2020
@@ -206,7 +206,7 @@ export function AppSidebar(props: AppSidebarProps) {
         <SearchTrigger className="mt-2" />
       </SidebarHeader>
 
-      <SidebarContent className="gap-0 px-1 [scrollbar-width:thin]">
+      <SidebarContent className="scrollbar-thin gap-0 px-1">
         <NavMain items={homeItems} />
         <SidebarUpcomingEvents events={upcomingEvents} />
         <NavMain items={actividadesItems} label="Actividades" />

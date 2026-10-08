@@ -13,7 +13,7 @@ const renderInline = (text: string): ReactNode =>
     part.startsWith('`') && part.endsWith('`') && part.length > 1 ? (
       <code
         key={index}
-        className="break-words bg-pcnGreen-100 px-1 font-mono text-[0.92em] text-pcnGreen"
+        className="bg-pcnGreen-100 px-1 font-mono text-[0.92em] wrap-break-word text-pcnGreen"
       >
         {part.slice(1, -1)}
       </code>
@@ -57,10 +57,10 @@ const Note = ({ note }: { note: TechNote }) => (
     id={`nota-${note.id}`}
     className={cn(
       ruledCellClassName,
-      'group min-w-0 scroll-mt-32 open:hover:bg-transparent lg:scroll-mt-[4rem]',
+      'min-w-0 group scroll-mt-32 hover:open:bg-transparent lg:scroll-mt-16',
     )}
   >
-    <summary className="flex cursor-pointer list-none items-start gap-2 px-3 py-2.5 font-mono group-open:border-b group-open:border-pcnGreen-200 group-open:bg-background/95 group-open:backdrop-blur lg:group-open:sticky lg:group-open:top-[4rem] lg:group-open:z-[5] [&::-webkit-details-marker]:hidden">
+    <summary className="flex cursor-pointer list-none items-start gap-2 px-3 py-2.5 font-mono group-open:border-b group-open:border-pcnGreen-200 group-open:bg-background/95 group-open:backdrop-blur-sm lg:group-open:sticky lg:group-open:top-16 lg:group-open:z-5 [&::-webkit-details-marker]:hidden">
       <span
         aria-hidden
         className="w-3 shrink-0 text-sm text-pcnGreen-500 transition-transform group-open:rotate-90"
@@ -120,7 +120,7 @@ const Note = ({ note }: { note: TechNote }) => (
             href={`${REPO_TREE_URL}/${note.sourcePath}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="max-w-full break-words text-pcnGreen underline-offset-4 hover:underline"
+            className="max-w-full wrap-break-word text-pcnGreen underline-offset-4 hover:underline"
           >
             <span className="text-pcnGreen-500">$ </span>cd {note.sourcePath} → ver el código ↗
           </a>
@@ -144,7 +144,7 @@ export const TechNotes = ({ groups }: { groups: TechNoteGroup[] }) => (
   <div className="min-w-0 space-y-5">
     {groups.map((group) => (
       <div key={group.id} className="min-w-0">
-        <h3 className="mb-2 bg-background/95 font-mono text-xs text-muted-foreground backdrop-blur lg:sticky lg:top-9 lg:z-10 lg:py-1.5">
+        <h3 className="mb-2 bg-background/95 font-mono text-xs text-muted-foreground backdrop-blur-sm lg:sticky lg:top-9 lg:z-10 lg:py-1.5">
           <span className="text-pcnGreen-500">$ </span>ls notas/{group.id}{' '}
           <span className="text-pcnGreen-700"># {group.title}</span>
         </h3>

@@ -201,7 +201,7 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
             />
           }
           aside={
-            <p className="font-mono text-xs tabular-nums text-muted-foreground" aria-live="polite">
+            <p className="font-mono text-xs text-muted-foreground tabular-nums" aria-live="polite">
               {searchQuery.trim() ? (
                 <>
                   <span className="text-pcnGreen">{filteredItems.length}</span>/{items.length}{' '}
@@ -260,9 +260,9 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
                       aria-pressed={isSelected}
                       aria-label={`Seleccionar ${photoCaption(item)}`}
                       className={cn(
-                        'absolute inset-1 z-10 flex items-start justify-end p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-pcnGreen',
+                        'absolute inset-1 z-10 flex items-start justify-end p-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-pcnGreen focus-visible:outline-hidden focus-visible:ring-inset',
                         isSelected
-                          ? 'bg-pcnGreen/15 ring-2 ring-inset ring-pcnGreen'
+                          ? 'bg-pcnGreen/15 ring-2 ring-pcnGreen ring-inset'
                           : 'bg-black/30 hover:bg-black/10',
                       )}
                     >

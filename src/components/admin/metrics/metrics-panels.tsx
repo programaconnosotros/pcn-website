@@ -13,7 +13,7 @@ const percent = (value: number) =>
 /** `// título` heading of each block, with an optional note on the right. */
 export const PanelTitle = ({ children, note }: { children: ReactNode; note?: ReactNode }) => (
   <div className="mb-2 flex items-end justify-between gap-3 font-mono">
-    <h2 className="text-[11px] uppercase tracking-[0.18em] text-pcnGreen">
+    <h2 className="text-[11px] tracking-[0.18em] text-pcnGreen uppercase">
       <span className="text-pcnGreen-500">{'// '}</span>
       {children}
     </h2>
@@ -94,8 +94,8 @@ export function KpiTile({
 }) {
   return (
     <div className={cn(ruledCellClassName, 'flex flex-col gap-1 p-3 font-mono')}>
-      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
-      <span className="text-2xl font-semibold tabular-nums text-foreground [text-shadow:0_0_14px_rgba(4,244,190,0.35)]">
+      <span className="text-[10px] tracking-wider text-muted-foreground uppercase">{label}</span>
+      <span className="text-2xl font-semibold text-foreground tabular-nums [text-shadow:0_0_14px_rgba(4,244,190,0.35)]">
         {value}
       </span>
       <span className="flex items-center justify-between gap-2 text-[10px]">
@@ -110,7 +110,7 @@ export function KpiTile({
 /** A labelled horizontal bar: the bar shows the share of `max`, the number sits beside it. */
 function Bar({ value, max }: { value: number; max: number }) {
   return (
-    <span className="relative block h-1.5 flex-1 bg-pcnGreen-200/30">
+    <span className="relative block h-1.5 flex-1 bg-pcnGreen/30">
       <span
         className="absolute inset-y-0 left-0 rounded-r-[2px] bg-pcnGreen-600 group-hover:bg-pcnGreen group-hover:shadow-[0_0_8px_rgba(4,244,190,0.7)]"
         style={{ width: `${max > 0 ? Math.max(1.5, (value / max) * 100) : 0}%` }}
@@ -145,10 +145,10 @@ export function ModuleRanking({
         return (
           <li
             key={module.section}
-            className="group grid grid-cols-[1.5rem_minmax(0,9rem)_1fr_auto] items-center gap-2 border-b border-pcnGreen-200/60 py-1.5 font-mono text-xs last:border-b-0"
+            className="grid group grid-cols-[1.5rem_minmax(0,9rem)_1fr_auto] items-center gap-2 border-b border-pcnGreen/60 py-1.5 font-mono text-xs last:border-b-0"
             title={`${number(module.visitors)} visitantes únicos · ${number(module.members)} miembros`}
           >
-            <span className="text-[10px] tabular-nums text-muted-foreground/60">
+            <span className="text-[10px] text-muted-foreground/60 tabular-nums">
               {String(index + 1).padStart(2, '0')}
             </span>
             <span className="flex min-w-0 items-center gap-1.5">
@@ -178,7 +178,7 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
   return (
     <table className="w-full font-mono text-xs">
       <thead>
-        <tr className="text-left text-[10px] uppercase tracking-wider text-muted-foreground">
+        <tr className="text-left text-[10px] tracking-wider text-muted-foreground uppercase">
           <th className="pb-1 font-normal">ruta</th>
           <th className="w-1/3 pb-1 font-normal" aria-label="Proporción" />
           <th className="pb-1 text-right font-normal">visitas</th>
@@ -187,7 +187,7 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
       </thead>
       <tbody>
         {pages.map((page) => (
-          <tr key={page.path} className="group border-t border-pcnGreen-200/60">
+          <tr key={page.path} className="group border-t border-pcnGreen/60">
             <td className="max-w-0 truncate py-1.5 pr-2">
               <Link href={page.path} className="text-muted-foreground hover:text-pcnGreen">
                 <span className="text-pcnGreen-500">~</span>
@@ -199,10 +199,10 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
                 <Bar value={page.visits} max={max} />
               </span>
             </td>
-            <td className="py-1.5 text-right tabular-nums text-foreground">
+            <td className="py-1.5 text-right text-foreground tabular-nums">
               {number(page.visits)}
             </td>
-            <td className="py-1.5 pl-3 text-right tabular-nums text-muted-foreground">
+            <td className="py-1.5 pl-3 text-right text-muted-foreground tabular-nums">
               {number(page.visitors)}
             </td>
           </tr>
@@ -247,15 +247,15 @@ export function SignupFunnel({ steps }: { steps: FunnelStep[] }) {
                 </p>
               )}
               <div
-                className="group grid grid-cols-[1.25rem_1fr] items-center gap-2"
+                className="grid group grid-cols-[1.25rem_1fr] items-center gap-2"
                 title={step.hint}
               >
-                <span className="text-[10px] tabular-nums text-muted-foreground/60">
+                <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                   {index + 1}.
                 </span>
-                <div className="relative h-8 overflow-hidden border border-pcnGreen-200 bg-pcnGreen-200/10">
+                <div className="relative h-8 overflow-hidden border border-pcnGreen-200 bg-pcnGreen/10">
                   <div
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-pcnGreen-700/70 to-pcnGreen/60 transition-[width] duration-700 group-hover:to-pcnGreen/80"
+                    className="absolute inset-y-0 left-0 bg-linear-to-r from-pcnGreen/70 to-pcnGreen/60 transition-[width] duration-700 group-hover:to-pcnGreen/80"
                     style={{ width: `${Math.max(share, step.count > 0 ? 1 : 0)}%` }}
                   />
                   <div className="relative flex h-full items-center justify-between gap-2 px-2 text-xs">
@@ -307,7 +307,7 @@ export function HourHeatmap({ grid }: { grid: number[][] }) {
               <span
                 key={hour}
                 title={`${WEEKDAYS[dow]} ${hour}h · ${number(visits)} visitas`}
-                className="h-4 rounded-[2px] border border-pcnGreen-200/40 transition-transform hover:scale-125 hover:border-pcnGreen sm:h-5"
+                className="h-4 rounded-[2px] border border-pcnGreen/40 transition-transform hover:scale-125 hover:border-pcnGreen sm:h-5"
                 style={{
                   backgroundColor:
                     visits > 0 ? `rgba(4,244,190,${0.12 + (visits / max) * 0.88})` : undefined,
@@ -361,7 +361,7 @@ export function RankedList({
       {items.map(({ label, value }) => (
         <li
           key={label}
-          className="group grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-2"
+          className="grid group grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-2"
         >
           <span className="truncate text-muted-foreground group-hover:text-pcnGreen">{label}</span>
           <Bar value={value} max={max} />

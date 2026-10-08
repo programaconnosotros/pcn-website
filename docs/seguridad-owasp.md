@@ -118,9 +118,9 @@ el proxy corre en páginas y no en archivos estáticos ni en la API).
   desactualizados. **No corre tests en CI**: cada PR se prueba localmente antes de mergear.
 - Antes de agregar una dependencia, revisar `pnpm audit` y que esté mantenida.
 - Alertas abiertas sin versión corregida publicada, que no tienen override posible:
-  - `braces` 3.0.3 (DoS con patrones muy anidados): la traen `chokidar` y `micromatch` de
-    Tailwind 3, solo al compilar el CSS, con los globs fijos de `tailwind.config`. Nunca recibe
-    input de usuarios. Se va al migrar a Tailwind 4.
+  - `braces` 3.0.3 (DoS con patrones muy anidados): la trae `micromatch` vía `fast-glob` de
+    `eslint-config-next`, solo al lintear, con los globs fijos de la config. Nunca recibe input de
+    usuarios.
   - `sprintf-js` 1.0.3 (DoS con precisión sin límite): la trae `argparse` 1 vía `js-yaml` 3 de la
     cobertura de Jest. Solo corre en los tests locales.
 
@@ -253,7 +253,7 @@ elige de una allowlist de fragmentos fijos con `Prisma.sql`, nunca desde el inpu
 | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | El registro dice "ese email ya existe"                                       | Es la experiencia esperada al registrarse; el rate limit de registro frena la enumeración masiva.   |
 | Rate limits en memoria                                                       | El sitio corre en un solo proceso (Kamal, un servidor). Se reinician con cada deploy.               |
-| `braces` vulnerable en el watcher de Tailwind 3                              | No hay versión parcheada y solo corre al compilar, nunca en producción.                             |
+| `braces` vulnerable en el linter (`eslint-config-next`)                      | No hay versión parcheada y solo corre al lintear, nunca en producción.                              |
 | `style-src`, `img-src`, `frame-src` y `connect-src` abiertos en la CSP       | El sitio embebe contenido externo y sube a S3; lo que ejecuta código (scripts) sí está restringido. |
 | Organizadores de eventos ven email y teléfono de usuarios al cargar oradores | Lo necesitan para contactarlos; tope de 20 resultados por búsqueda.                                 |
 | Los tests automatizados no corren en CI                                      | Decisión del equipo por tiempo: corren en el `pre-push` (`pnpm test`) y a mano (`pnpm test:db`).    |

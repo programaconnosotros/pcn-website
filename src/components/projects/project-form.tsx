@@ -198,7 +198,7 @@ export function ProjectForm({ project, currentUser, onSuccess, onCancel }: Props
                 </FormControl>
                 <FormLabel
                   htmlFor="isOpenSource"
-                  className="cursor-pointer normal-case tracking-normal text-foreground before:content-none"
+                  className="cursor-pointer tracking-normal text-foreground normal-case before:content-none"
                 >
                   Es open-source
                 </FormLabel>

@@ -64,8 +64,10 @@ const asciiBar = (value: number, max: number) => {
 
 const Stat = ({ label, value, hint }: { label: string; value: string; hint?: string }) => (
   <RuledCell className="min-w-0 px-3 py-2.5">
-    <p className="break-words font-mono text-[11px] leading-tight text-muted-foreground">{label}</p>
-    <p className="font-mono text-xl font-semibold tabular-nums text-pcnGreen">{value}</p>
+    <p className="font-mono text-[11px] leading-tight wrap-break-word text-muted-foreground">
+      {label}
+    </p>
+    <p className="font-mono text-xl font-semibold text-pcnGreen tabular-nums">{value}</p>
     {hint && <p className="font-mono text-[11px] leading-tight text-muted-foreground/70">{hint}</p>}
   </RuledCell>
 );
@@ -93,7 +95,7 @@ const WeeklyActivity = ({ weeks, until }: { weeks: number[]; until: string }) =>
         {weeks.map((count, index) => {
           const weekStart = new Date(now - (weeks.length - index) * WEEK_MS);
           return (
-            <div key={index} className="group relative flex h-full flex-1 items-end">
+            <div key={index} className="relative flex h-full flex-1 group items-end">
               <div
                 className={cn(
                   'w-full rounded-t-[2px] transition-colors',
@@ -101,7 +103,7 @@ const WeeklyActivity = ({ weeks, until }: { weeks: number[]; until: string }) =>
                 )}
                 style={{ height: count > 0 ? `${Math.max(6, (count / max) * 100)}%` : '2px' }}
               />
-              <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 whitespace-nowrap border border-pcnGreen-200 bg-background px-1.5 py-0.5 font-mono text-[11px] group-hover:block">
+              <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 border border-pcnGreen-200 bg-background px-1.5 py-0.5 font-mono text-[11px] whitespace-nowrap group-hover:block">
                 {count} commits · sem. {weekFormat.format(weekStart)}
               </span>
             </div>
@@ -162,7 +164,7 @@ const Languages = ({
                 style={{ backgroundColor: languageColor(language.name) }}
               />
               <span>{language.name}</span>
-              <span className="tabular-nums text-muted-foreground">
+              <span className="text-muted-foreground tabular-nums">
                 {formatPercent(language.percent)}
               </span>
             </li>
@@ -186,7 +188,7 @@ export const CollaborationStats = async () => {
   // Everything follows the width the stats get (a container query), not the screen: next to the
   // index or in a PCN OS window that's much less than the viewport, and the list used to overflow.
   return (
-    <div className="space-y-5 @container">
+    <div className="@container space-y-5">
       <RuledGrid className="grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-6">
         <Stat label="commits" value={numberFormat.format(stats.commits)} />
         <Stat
@@ -224,9 +226,9 @@ export const CollaborationStats = async () => {
             return (
               <li
                 key={contributor.login}
-                className="group flex min-w-0 items-center gap-2 font-mono text-xs"
+                className="flex min-w-0 group items-center gap-2 font-mono text-xs"
               >
-                <span className="w-5 shrink-0 text-right tabular-nums text-muted-foreground/70">
+                <span className="w-5 shrink-0 text-right text-muted-foreground/70 tabular-nums">
                   {index + 1}
                 </span>
                 <Image
@@ -249,7 +251,7 @@ export const CollaborationStats = async () => {
                   <span className="text-pcnGreen-600 group-hover:text-pcnGreen">{bar.filled}</span>
                   <span className="text-pcnGreen-200">{bar.empty}</span>
                 </span>
-                <span className="ml-auto shrink-0 tabular-nums text-muted-foreground @2xl:ml-2 @2xl:w-40">
+                <span className="ml-auto shrink-0 text-muted-foreground tabular-nums @2xl:ml-2 @2xl:w-40">
                   <span className="text-foreground">{contributor.mergedPrs}</span> PRs ·{' '}
                   {numberFormat.format(contributor.commits)} commits
                 </span>
@@ -302,7 +304,7 @@ export const CollaborationStats = async () => {
 };
 
 export const CollaborationStatsSkeleton = () => (
-  <div className="space-y-5 @container">
+  <div className="@container space-y-5">
     <RuledGrid className="grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-6">
       {Array.from({ length: 6 }, (_, index) => (
         <RuledCell key={index} className="h-[74px] animate-pulse bg-pcnGreen-50" />

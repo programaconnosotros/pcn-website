@@ -44,7 +44,7 @@ export function ArticleWriters({ articleId, writers, isAdmin, isEditing, onEditi
     <div className="relative z-10 space-y-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         {isEditing && writers.length > 0 && (
-          <span className="font-mono text-[10px] uppercase tracking-wider text-pcnGreen-500">
+          <span className="font-mono text-[10px] tracking-wider text-pcnGreen-500 uppercase">
             escrito por
           </span>
         )}

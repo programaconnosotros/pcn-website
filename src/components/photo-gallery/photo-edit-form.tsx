@@ -36,7 +36,7 @@ type Props = {
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <label className="block space-y-1">
-    <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+    <span className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
       {label}
     </span>
     {children}

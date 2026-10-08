@@ -86,14 +86,14 @@ export default function OpinionsPage() {
               <ol className="relative p-4 pl-8">
                 <span
                   aria-hidden
-                  className="absolute bottom-6 left-[1.1rem] top-6 w-px bg-pcnGreen-200"
+                  className="absolute top-6 bottom-6 left-[1.1rem] w-px bg-pcnGreen-200"
                 />
                 {opinions.map((opinion) => (
                   <li key={`${opinion.date}-${opinion.text}`} className="relative pb-4 last:pb-0">
                     <span
                       aria-hidden
                       className={cn(
-                        'absolute -left-[0.9rem] top-1.5 size-2.5 ring-4 ring-background',
+                        'absolute top-1.5 left-[-0.9rem] size-2.5 ring-4 ring-background',
                         STANCE[opinion.stance].dot,
                       )}
                     />

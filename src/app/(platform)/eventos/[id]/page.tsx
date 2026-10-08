@@ -388,7 +388,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
             {/* Descripción */}
             {event.description && (
               <Section title="descripción">
-                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
                   {event.description}
                 </p>
               </Section>

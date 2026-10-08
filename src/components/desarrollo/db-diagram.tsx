@@ -177,7 +177,7 @@ export const DbDiagram = ({
         </div>
       </figcaption>
 
-      <div ref={frameRef} className="h-[70vh] min-h-80 overflow-auto [scrollbar-width:thin]">
+      <div ref={frameRef} className="h-[70vh] min-h-80 scrollbar-thin overflow-auto">
         {svg ? (
           <div
             className="w-max p-4 [&_svg]:h-auto [&_svg]:max-w-none"

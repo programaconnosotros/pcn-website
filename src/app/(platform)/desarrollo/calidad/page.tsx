@@ -77,7 +77,7 @@ const ItemList = ({ items, planned }: { items: QualityItem[]; planned?: boolean 
                 href={`${REPO_BLOB_URL}/${item.file}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="break-all font-mono text-pcnGreen-700 underline-offset-4 hover:text-pcnGreen hover:underline"
+                className="font-mono break-all text-pcnGreen-700 underline-offset-4 hover:text-pcnGreen hover:underline"
               >
                 {item.file} ↗
               </a>
@@ -133,7 +133,7 @@ const METRIC_LABELS: Record<keyof CoverageMetrics, string> = {
 };
 
 const CoverageBar = ({ value }: { value: number }) => (
-  <span className="flex h-2 w-full bg-pcnGreen-200/40">
+  <span className="flex h-2 w-full bg-pcnGreen/40">
     <span className="h-2 bg-pcnGreen/70" style={{ width: `${value}%` }} />
   </span>
 );
@@ -179,7 +179,7 @@ const CalidadPage = () => (
                   {gate.stage}
                 </span>
                 <span className="leading-relaxed text-muted-foreground">
-                  <code className="mb-0.5 block break-all font-mono text-foreground">
+                  <code className="mb-0.5 block font-mono break-all text-foreground">
                     <span className="text-pcnGreen-500">$ </span>
                     {gate.command}
                   </code>

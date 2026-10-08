@@ -168,7 +168,7 @@ describe('StickyHeader', () => {
     sentinelTop = 80;
     renderHeader(true);
 
-    expect(header()).toHaveClass('top-[var(--rest-top)]');
+    expect(header()).toHaveClass('top-(--rest-top)');
     expect(header().style.getPropertyValue('--rest-top')).toBe('80px');
     expect(offset()).toBe('130px');
 
@@ -185,7 +185,7 @@ describe('StickyHeader', () => {
     desktopMatches = true;
     act(() => mediaListeners.forEach((listener) => listener()));
     expect(header()).toHaveAttribute('data-state', 'rest');
-    expect(header()).toHaveClass('top-[var(--rest-top)]');
+    expect(header()).toHaveClass('top-(--rest-top)');
   });
 
   it('stops listening once unmounted', () => {

@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const cell = 'border-b border-r border-pcnGreen-200 p-3';
 
 const SectionLabel = () => (
-  <div className="mb-2 mt-6 flex h-4 items-center">
+  <div className="mt-6 mb-2 flex h-4 items-center">
     <Skeleton className="h-2.5 w-28" />
   </div>
 );

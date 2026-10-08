@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 // sections with the same skeletons the page streams them in behind.
 const Loading = () => (
   <div className="-mx-1 md:-mx-6">
-    <section className="mx-auto max-w-6xl px-6 pb-10 pt-3 md:pb-14 lg:px-8">
+    <section className="mx-auto max-w-6xl px-6 pt-3 pb-10 md:pb-14 lg:px-8">
       <PageTitleSkeleton titleClassName="w-6" meta="w-20" className="mb-0" />
       <div className="grid items-center gap-8 pt-6 md:pt-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
         <div>

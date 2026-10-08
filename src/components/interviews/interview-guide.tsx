@@ -64,7 +64,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
               <CopyLinkButton path={`/entrevistas/guias/${guide.track}`} />
               <Link
                 href={practice.href}
-                className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
+                className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 font-mono text-xs text-pcnGreen lowercase transition-colors hover:bg-pcnGreen/25"
               >
                 {practice.label}
                 <ArrowRight className="size-3.5" />
@@ -86,7 +86,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
 
         <div className="mb-14 min-w-0 flex-1">
           <div className="mx-auto max-w-3xl">
-            <header className="mb-4 mt-4 font-mono">
+            <header className="mt-4 mb-4 font-mono">
               <h2 className="text-lg font-semibold">
                 <span className="text-pcnGreen-500"># </span>
                 {label}
@@ -157,8 +157,8 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
                           <li key={text}>
                             {/* Each point opens its explanation, so the guide is all you need. */}
                             <details className="group">
-                              <summary className="flex cursor-pointer list-none gap-2 rounded-sm py-0.5 transition-colors hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen [&::-webkit-details-marker]:hidden">
-                                <span className="w-3 shrink-0 font-mono text-pcnGreen-500/70 group-open:hidden">
+                              <summary className="flex cursor-pointer list-none gap-2 rounded-sm py-0.5 transition-colors hover:text-pcnGreen focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden [&::-webkit-details-marker]:hidden">
+                                <span className="w-3 shrink-0 font-mono text-pcnGreen/70 group-open:hidden">
                                   +
                                 </span>
                                 <span className="hidden w-3 shrink-0 font-mono text-pcnGreen group-open:inline">
@@ -168,7 +168,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
                                   {renderInlineCode(text)}
                                 </span>
                               </summary>
-                              <p className="mb-2 ml-5 mt-1 text-[13px] leading-relaxed text-muted-foreground">
+                              <p className="mt-1 mb-2 ml-5 text-[13px] leading-relaxed text-muted-foreground">
                                 {renderInlineCode(explanation)}
                               </p>
                             </details>
@@ -181,7 +181,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
                       <button
                         type="button"
                         onClick={() => markReadAndContinue(index)}
-                        className="mt-4 inline-flex items-center gap-1.5 border border-pcnGreen-200 bg-black/40 px-3 py-1.5 font-mono text-xs lowercase text-muted-foreground transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-pcnGreen"
+                        className="mt-4 inline-flex items-center gap-1.5 border border-pcnGreen-200 bg-black/40 px-3 py-1.5 font-mono text-xs text-muted-foreground lowercase transition-colors hover:border-pcnGreen-500 hover:text-pcnGreen focus-visible:ring-1 focus-visible:ring-pcnGreen focus-visible:outline-hidden"
                       >
                         <Check className="size-3.5" />
                         {index < total - 1 ? 'marcar como leída y seguir' : 'marcar como leída'}
@@ -197,7 +197,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
                 <span className="text-pcnGreen">guía completa. ahora ponete a prueba:</span>
                 <Link
                   href={practice.href}
-                  className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 lowercase text-pcnGreen transition-colors hover:bg-pcnGreen/25"
+                  className="inline-flex items-center gap-1.5 border border-pcnGreen bg-pcnGreen/15 px-3 py-1.5 text-pcnGreen lowercase transition-colors hover:bg-pcnGreen/25"
                 >
                   {practice.label}
                   <ArrowRight className="size-3.5" />

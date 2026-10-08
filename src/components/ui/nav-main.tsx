@@ -56,7 +56,7 @@ export const SidebarSectionLabel = ({ children }: { children: React.ReactNode })
   <SidebarGroupLabel
     className={cn(
       GeistMono.className,
-      'h-7 px-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-pcnGreen-500 before:mr-1.5 before:text-pcnGreen-300 before:content-["##"]',
+      'h-7 px-2.5 text-[10px] font-medium tracking-[0.18em] text-pcnGreen-500 uppercase before:mr-1.5 before:text-pcnGreen-300 before:content-["##"]',
     )}
   >
     {children}
@@ -65,7 +65,7 @@ export const SidebarSectionLabel = ({ children }: { children: React.ReactNode })
 
 // `nav-hack` (globals.css) is the hover effect; the background it paints replaces the accent fill.
 const menuButtonClassName =
-  'nav-hack relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-transparent hover:font-mono [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors hover:[&>svg]:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
+  'nav-hack relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-transparent hover:font-mono [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors [&>svg]:hover:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
 
 export function NavMain({ items, label }: { items: NavItem[]; label?: string }) {
   const pathname = usePathname();
@@ -92,7 +92,7 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                 {(isActive || hasActiveSubItem) && (
                   <span
                     aria-hidden
-                    className="absolute -left-2 top-2.5 h-4 w-[3px] bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.8)]"
+                    className="absolute top-2.5 -left-2 h-4 w-[3px] bg-pcnGreen shadow-[0_0_10px_rgba(4,244,190,0.8)]"
                   />
                 )}
 
@@ -112,7 +112,7 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                       <item.icon strokeWidth={1.75} />
                       <span>{item.title}</span>
                       {item.badge !== undefined && item.badge > 0 && (
-                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold tabular-nums text-black">
+                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
                           {item.badge > 99 ? '99+' : item.badge}
                         </span>
                       )}

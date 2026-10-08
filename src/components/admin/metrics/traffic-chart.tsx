@@ -69,7 +69,7 @@ export function TrafficChart({ points, unit }: { points: TrafficPoint[]; unit: '
             </button>
           ))}
         </div>
-        <span className="tabular-nums text-muted-foreground">
+        <span className="text-muted-foreground tabular-nums">
           {active ? (
             <>
               {unit === 'week' ? 'semana del ' : ''}
@@ -91,7 +91,7 @@ export function TrafficChart({ points, unit }: { points: TrafficPoint[]; unit: '
         {ticks.map((tick) => (
           <span
             key={tick}
-            className="pointer-events-none absolute left-0 -translate-y-1/2 font-mono text-[10px] tabular-nums text-muted-foreground/60"
+            className="pointer-events-none absolute left-0 -translate-y-1/2 font-mono text-[10px] text-muted-foreground/60 tabular-nums"
             style={{ top: `${(y(tick) / HEIGHT) * 100}%` }}
           >
             {tick.toLocaleString('es-AR')}

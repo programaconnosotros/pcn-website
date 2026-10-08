@@ -16,7 +16,7 @@ function EventFlyerPlaceholder({ variant }: { variant: 'card' | 'detail' }) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-[#04130f] dark:to-black',
+        'flex items-center justify-center bg-linear-to-br from-neutral-100 to-neutral-200 dark:from-[#04130f] dark:to-black',
         variant === 'card' ? 'aspect-square w-full' : 'aspect-video w-full',
       )}
     >
@@ -79,7 +79,7 @@ export function EventFlyerCarousel({
   return (
     <div className="relative">
       <Carousel setApi={setApi} opts={{ loop: true }}>
-        <CarouselContent className="-ml-0">
+        <CarouselContent className="ml-0">
           {images.map((src, i) => (
             <CarouselItem key={i} className="pl-0">
               <div className={imageContainerClass}>
@@ -103,7 +103,7 @@ export function EventFlyerCarousel({
             e.stopPropagation();
             api?.scrollPrev();
           }}
-          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+          className="absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-xs transition-colors hover:bg-black/60"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -115,7 +115,7 @@ export function EventFlyerCarousel({
             e.stopPropagation();
             api?.scrollNext();
           }}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+          className="absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-xs transition-colors hover:bg-black/60"
         >
           <ArrowRight className="h-4 w-4" />
         </button>

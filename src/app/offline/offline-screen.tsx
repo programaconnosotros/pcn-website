@@ -81,7 +81,7 @@ const Trivia = () => {
       <div className="flex flex-col items-start gap-3">
         <Prompt>./trivia --resultado</Prompt>
         <p>
-          <span className="text-glow text-3xl font-bold tabular-nums text-pcnGreen">
+          <span className="text-3xl font-bold text-pcnGreen tabular-nums text-glow">
             {pad(score)}/{pad(questions.length)}
           </span>
           <span className="ml-3 text-muted-foreground">
@@ -126,7 +126,7 @@ const Trivia = () => {
                   answered && !isAnswer && !isWrongPick && 'text-muted-foreground/60',
                 )}
               >
-                <span className="w-6 shrink-0 text-center tabular-nums text-pcnGreen-600">
+                <span className="w-6 shrink-0 text-center text-pcnGreen-600 tabular-nums">
                   {answered && isAnswer ? '✓' : isWrongPick ? '✗' : `[${i + 1}]`}
                 </span>
                 <span>{option}</span>
