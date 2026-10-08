@@ -177,7 +177,7 @@ export function FeedClient({ items, today, aside }: FeedClientProps) {
                 <span className="text-pcnGreen-500">$ </span>nada nuevo por acá todavía
               </p>
             ) : (
-              <div className="mb-14 space-y-6">
+              <div className="mb-14 space-y-6 pt-4">
                 {byDay.map(([day, dayItems]) => (
                   <section key={day}>
                     <h2 className="mb-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
