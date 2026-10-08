@@ -67,10 +67,7 @@ export default function OpinionsPage() {
           />
         </StickyHeader>
 
-        <p className="mb-4 max-w-3xl text-sm text-muted-foreground">
-          {DESCRIPTION} Son opiniones del grupo en conjunto, resumidas de cada conversación: nunca
-          de una persona.
-        </p>
+        <p className="mb-4 max-w-3xl text-sm text-muted-foreground">{DESCRIPTION}</p>
 
         <nav aria-label="Tecnologías" className="mb-8 flex flex-wrap gap-1.5 font-mono text-xs">
           {timelines.map(({ slug, name, opinions }) => (
