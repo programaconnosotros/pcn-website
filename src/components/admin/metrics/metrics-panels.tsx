@@ -180,9 +180,9 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
       <thead>
         <tr className="text-left text-[10px] tracking-wider text-muted-foreground uppercase">
           <th className="pb-1 font-normal">ruta</th>
-          <th className="w-1/3 pb-1 font-normal" aria-label="Proporción" />
-          <th className="pb-1 text-right font-normal">visitas</th>
-          <th className="pb-1 text-right font-normal">únicos</th>
+          <th className="w-1/4 pb-1 font-normal" aria-label="Proporción" />
+          <th className="w-px pb-1 text-right font-normal whitespace-nowrap">visitas</th>
+          <th className="w-px pb-1 pl-3 text-right font-normal whitespace-nowrap">únicos</th>
         </tr>
       </thead>
       <tbody>
@@ -199,10 +199,10 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
                 <Bar value={page.visits} max={max} />
               </span>
             </td>
-            <td className="py-1.5 text-right text-foreground tabular-nums">
+            <td className="py-1.5 text-right whitespace-nowrap text-foreground tabular-nums">
               {number(page.visits)}
             </td>
-            <td className="py-1.5 pl-3 text-right text-muted-foreground tabular-nums">
+            <td className="py-1.5 pl-3 text-right whitespace-nowrap text-muted-foreground tabular-nums">
               {number(page.visitors)}
             </td>
           </tr>

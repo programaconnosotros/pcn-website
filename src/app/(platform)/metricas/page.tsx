@@ -188,7 +188,7 @@ export default async function MetricasPage(props: Props) {
           </Panel>
         </RuledGrid>
 
-        <RuledGrid className="mb-6 grid-cols-1 xl:grid-cols-[3fr_2fr]">
+        <RuledGrid className="mb-6 grid-cols-1 xl:grid-cols-[1fr_1fr]">
           <Panel>
             <PanelTitle note="top 15">páginas más vistas</PanelTitle>
             <TopPages pages={metrics.pages} />
