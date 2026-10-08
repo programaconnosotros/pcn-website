@@ -15,25 +15,42 @@ interface SetupTileProps {
   showAuthor?: boolean;
 }
 
-// One setup in the grid: the photo dimmed until hover (like the gallery), then its title, a
-// couple of lines of description and who shared it.
+// One setup in the grid: the photo in a tall frame, dimmed until hover (like the gallery), then
+// its title, a couple of lines of description and who shared it.
 export function SetupTile({ setup, viewerId, showAuthor = true }: SetupTileProps) {
   const href = `/setups/${setup.id}`;
+  const isLandscape = setup.width > setup.height;
 
   return (
     <article className={cn(ruledCellClassName, 'flex group flex-col')}>
       <Link
         href={href}
-        className="relative block aspect-4/3 overflow-hidden bg-black"
+        className="relative block aspect-3/4 overflow-hidden bg-black"
         aria-label={`Ver setup: ${setup.title}`}
       >
+        {isLandscape && (
+          // A horizontal photo doesn't fit the tall frame: it's shown whole over a blurred copy
+          // of itself, instead of cropping away most of the desk.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={setup.thumbUrl}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full scale-110 object-cover opacity-60 blur-xl brightness-50"
+          />
+        )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={setup.thumbUrl}
           alt=""
           loading="lazy"
           decoding="async"
-          className="size-full object-cover brightness-[0.85] saturate-[0.8] transition duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-100 group-hover:saturate-100"
+          className={cn(
+            'relative size-full brightness-[0.85] saturate-[0.8] transition duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-100 group-hover:saturate-100',
+            isLandscape ? 'object-contain' : 'object-cover',
+          )}
         />
       </Link>
 

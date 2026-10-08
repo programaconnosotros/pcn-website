@@ -23,6 +23,23 @@ const setup = {
 };
 
 describe('SetupTile', () => {
+  it('fills the tall frame with a vertical photo', () => {
+    const { container } = render(
+      <SetupTile setup={{ ...setup, width: 1200, height: 1600 }} viewerId={null} />,
+    );
+    const photos = container.querySelectorAll('img[src="/thumb.webp"]');
+    expect(photos).toHaveLength(1);
+    expect(photos[0]).toHaveClass('object-cover');
+  });
+
+  it('shows a horizontal photo whole, over a blurred copy of itself', () => {
+    const { container } = render(<SetupTile setup={setup} viewerId={null} />);
+    const [backdrop, photo] = container.querySelectorAll('img[src="/thumb.webp"]');
+    expect(backdrop).toHaveAttribute('aria-hidden', 'true');
+    expect(backdrop).toHaveClass('blur-xl', 'object-cover');
+    expect(photo).toHaveClass('object-contain');
+  });
+
   it('shows the photo, title, author, date and likes, liked by the viewer', () => {
     render(<SetupTile setup={setup} viewerId="u2" />);
 
