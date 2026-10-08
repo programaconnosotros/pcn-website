@@ -136,6 +136,7 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   );
   m.getProfileContributions.mockResolvedValue(contributions(sizes.contributions ?? 0) as never);
   m.getProfileIdentities.mockResolvedValue({ whatsapp: [], github: [] } as never);
+  jest.mocked(getAdminUser).mockResolvedValue(null);
   m.getProfileChangelog.mockResolvedValue(list(sizes.changelog ?? 0, 'ch') as never);
 };
 
