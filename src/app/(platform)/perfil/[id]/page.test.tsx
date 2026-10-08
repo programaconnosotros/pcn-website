@@ -194,14 +194,14 @@ describe('/perfil/[id]', () => {
     expect(screen.getByText('email')).toBeInTheDocument();
   });
 
-  it('shows when the user joined the platform', async () => {
+  it('does not show when the user joined the platform', async () => {
     findUser.mockResolvedValue(profile());
     jest.mocked(getCurrentSession).mockResolvedValue(null);
 
     await renderPage(page());
 
-    expect(screen.getByText('miembro desde')).toBeInTheDocument();
-    expect(screen.getByText('15 de marzo de 2024')).toBeInTheDocument();
+    expect(screen.queryByText('miembro desde')).not.toBeInTheDocument();
+    expect(screen.queryByText('15 de marzo de 2024')).not.toBeInTheDocument();
   });
 
   it('lets the owner edit their profile', async () => {

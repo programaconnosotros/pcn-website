@@ -4802,7 +4802,7 @@ export const automatedSuites: AutomatedSuite[] = [
       ],
       ['TC-PER-A108', '/perfil/[id] › shows the email and phone to members'],
       ['TC-PER-A109', '/perfil/[id] › skips missing contact data and an empty location'],
-      ['TC-PER-A110', '/perfil/[id] › shows when the user joined the platform'],
+      ['TC-PER-A110', '/perfil/[id] › does not show when the user joined the platform'],
       ['TC-PER-A111', '/perfil/[id] › lets the owner edit their profile'],
       ['TC-PER-A112', '/perfil/[id] › links admins back to /usuarios and lets them manage badges'],
       ['TC-PER-A113', '/perfil/[id] › links every social network the member has'],

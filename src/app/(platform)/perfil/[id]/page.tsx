@@ -16,7 +16,6 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { formatDate } from '@/lib/date-formatter';
 import { Pencil } from 'lucide-react';
 import { Github, Instagram, Linkedin, Twitch, Youtube } from '@/components/icons/brand-icons';
 import { isProfileTab, type ProfileTab } from '@/components/profile/profile-tabs';
@@ -271,7 +270,6 @@ export default async function ProfilePage(props: ProfilePageProps) {
       label: 'ubicación',
       value: [user.province, user.countryOfOrigin].filter(Boolean).join(', '),
     },
-    { label: 'miembro desde', value: formatDate(user.createdAt) },
     // El contacto lo ven solo los miembros logueados: visitantes anónimos y bots no
     ...(session
       ? [
