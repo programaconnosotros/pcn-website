@@ -1,6 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
-import { partnerLogoGroupHoverClassName } from '@/components/home/partner-logo-styles';
 import { partners } from '@/data/partners';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +20,9 @@ const SponsorTile = ({ sponsor }: { sponsor: EventSponsor }) => {
       <div
         className={cn(
           'flex h-16 w-full items-center justify-center',
-          sponsor.website && partnerLogoGroupHoverClassName,
+          // In their own colors, unlike the monochrome partner marks: here they're the thanks.
+          sponsor.website &&
+            'transition-transform duration-300 group-hover:scale-105 group-focus-visible:scale-105',
         )}
       >
         {sponsor.logo ? (
