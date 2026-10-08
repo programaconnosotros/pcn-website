@@ -21,4 +21,14 @@ describe('/conversaciones/opiniones', () => {
     ).toHaveAttribute('href', first.opinions[0].conversation.href);
     expect(screen.getAllByRole('region')).toHaveLength(technologyTimelines.length);
   });
+
+  it('has its own share preview, not the conversations one', () => {
+    expect(metadata.openGraph).toMatchObject({
+      title: 'Qué opina la comunidad de cada tecnología | programaConNosotros',
+      url: expect.stringMatching(/\/conversaciones\/opiniones$/),
+    });
+    expect(metadata.openGraph?.title).not.toMatch(/Conversaciones/);
+    expect(metadata.twitter).toMatchObject({ card: 'summary_large_image' });
+    expect(metadata.twitter?.description).toBe(metadata.openGraph?.description);
+  });
 });

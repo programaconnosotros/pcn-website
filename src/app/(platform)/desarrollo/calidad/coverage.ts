@@ -63,7 +63,7 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
     {
       folder: 'src/app',
       detail: 'páginas, layouts y route handlers',
-      files: 321,
+      files: 324,
       lines: 98.3,
       statements: 97.1,
       functions: 97.6,

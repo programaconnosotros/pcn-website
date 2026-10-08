@@ -5,13 +5,30 @@ import { StickyHeader } from '@/components/ui/sticky-header';
 import { technologyTimelines, type Stance } from '@/data/opiniones-tecnologia';
 import { cn } from '@/lib/utils';
 import { tabTitle } from '@/lib/tab-title';
+import { OPINIONS_SHARE_DESCRIPTION, OPINIONS_SHARE_TITLE } from './share';
 
 const DESCRIPTION =
   'Cómo cambió lo que piensa el grupo de cada tecnología: una línea de tiempo armada a partir de sus conversaciones.';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
+
+// Its own preview: without it the link inherits the conversations page's title and card. The
+// image comes from opengraph-image.tsx / twitter-image.tsx in this folder.
 export const metadata: Metadata = {
   title: tabTitle.ls('conversaciones/opiniones'),
   description: DESCRIPTION,
+  openGraph: {
+    title: `${OPINIONS_SHARE_TITLE} | programaConNosotros`,
+    description: OPINIONS_SHARE_DESCRIPTION,
+    url: `${SITE_URL}/conversaciones/opiniones`,
+    type: 'website',
+    siteName: 'programaConNosotros',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${OPINIONS_SHARE_TITLE} | programaConNosotros`,
+    description: OPINIONS_SHARE_DESCRIPTION,
+  },
 };
 
 const STANCE: Record<Stance, { label: string; dot: string; text: string }> = {
