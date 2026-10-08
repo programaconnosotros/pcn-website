@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowDownRight, ArrowUpRight, Minus, TrendingDown } from 'lucide-react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
@@ -227,6 +227,7 @@ export function SignupFunnel({ steps }: { steps: FunnelStep[] }) {
       <ol className="flex flex-col gap-2">
         {steps.map((step, index) => {
           const share = top > 0 ? (step.count / top) * 100 : 0;
+          const barWidth = Math.max(share, step.count > 0 ? 1 : 0);
           const fromPrevious =
             index > 0 && steps[index - 1].count > 0
               ? (step.count / steps[index - 1].count) * 100
@@ -256,17 +257,27 @@ export function SignupFunnel({ steps }: { steps: FunnelStep[] }) {
                 <div className="relative h-8 overflow-hidden border border-pcnGreen-200 bg-pcnGreen/10">
                   <div
                     className="absolute inset-y-0 left-0 bg-linear-to-r from-pcnGreen/70 to-pcnGreen/60 transition-[width] duration-700 group-hover:to-pcnGreen/80"
-                    style={{ width: `${Math.max(share, step.count > 0 ? 1 : 0)}%` }}
+                    style={{ width: `${barWidth}%` }}
                   />
-                  <div className="relative flex h-full items-center justify-between gap-2 px-2 text-xs">
-                    <span className="truncate text-foreground">{step.label}</span>
-                    <span className="shrink-0 tabular-nums">
-                      <span className="font-semibold text-foreground">{number(step.count)}</span>
-                      <span className="ml-2 text-[10px] text-muted-foreground">
-                        {percent(share)}
-                      </span>
-                    </span>
-                  </div>
+                  <FunnelLabels
+                    label={step.label}
+                    count={step.count}
+                    share={share}
+                    className="relative text-foreground"
+                    mutedClassName="text-muted-foreground"
+                  />
+                  {/* Dark copy clipped to the bar, so text over the green reads in black. */}
+                  {barWidth > 0 && (
+                    <FunnelLabels
+                      label={step.label}
+                      count={step.count}
+                      share={share}
+                      className="absolute inset-0 text-black transition-[clip-path] duration-700"
+                      mutedClassName="text-black/60"
+                      style={{ clipPath: `inset(0 ${100 - barWidth}% 0 0)` }}
+                      aria-hidden
+                    />
+                  )}
                 </div>
               </div>
             </li>
@@ -277,6 +288,33 @@ export function SignupFunnel({ steps }: { steps: FunnelStep[] }) {
         <span className="text-pcnGreen-500">&gt; </span>
         de quienes se registraron en el período; los pasos se cumplen en orden
       </p>
+    </div>
+  );
+}
+
+function FunnelLabels({
+  label,
+  count,
+  share,
+  className,
+  mutedClassName,
+  ...props
+}: {
+  label: string;
+  count: number;
+  share: number;
+  mutedClassName: string;
+} & ComponentProps<'div'>) {
+  return (
+    <div
+      className={cn('flex h-full items-center justify-between gap-2 px-2 text-xs', className)}
+      {...props}
+    >
+      <span className="truncate">{label}</span>
+      <span className="shrink-0 tabular-nums">
+        <span className="font-semibold">{number(count)}</span>
+        <span className={cn('ml-2 text-[10px]', mutedClassName)}>{percent(share)}</span>
+      </span>
     </div>
   );
 }
