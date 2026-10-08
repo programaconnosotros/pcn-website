@@ -459,7 +459,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
             }
           />
           <Stat
-            label="último push"
+            label="última publicación"
             value={stats.newest ? timeAgo(stats.newest) : '—'}
             hint="proyecto más reciente"
           />
