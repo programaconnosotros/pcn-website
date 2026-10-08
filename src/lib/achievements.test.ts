@@ -36,13 +36,11 @@ describe('earnedAchievements', () => {
     ]);
   });
 
-  it('earns consejero at 25 consejos and top consejero (too) only at #1', () => {
+  it('earns consejero at 25 consejos and top consejero (instead) only at #1', () => {
     expect(ids({ ...EMPTY_METRICS, consejos: 30, consejosRank: 2 })).toEqual(['consejos-25']);
     expect(ids({ ...EMPTY_METRICS, consejos: 3, consejosRank: 1 })).toEqual(['top-consejos']);
-    expect(ids({ ...EMPTY_METRICS, consejos: 90, consejosRank: 1 })).toEqual([
-      'consejos-25',
-      'top-consejos',
-    ]);
+    // The top consejero doesn't also show "Consejero".
+    expect(ids({ ...EMPTY_METRICS, consejos: 90, consejosRank: 1 })).toEqual(['top-consejos']);
   });
 
   it('earns espectador after watching 25 talks', () => {

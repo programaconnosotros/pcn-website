@@ -253,6 +253,7 @@ export const isAchieved = (achievement: Achievement, metrics: AchievementMetrics
 const SUPERSEDED_BY: Record<string, string> = {
   contributor: 'top-contributor',
   speaker: 'top-speaker',
+  'consejos-25': 'top-consejos',
 };
 
 /** The achievements a user already earned, in `ACHIEVEMENTS` order. */
