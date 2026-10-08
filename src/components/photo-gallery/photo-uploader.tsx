@@ -107,11 +107,22 @@ async function prepare(file: File, eventId: string | null, events: EventOption[]
 export function PhotoUploader({
   events,
   defaultEventId,
+  canUploadVideos = true,
+  needsReview = false,
+  defaultWorking = false,
 }: {
   events: EventOption[];
   defaultEventId: string | null;
+  /** Videos are admins only: they're big and there's no review queue for them. */
+  canUploadVideos?: boolean;
+  /** What a member uploads waits for an admin before it shows in the gallery. */
+  needsReview?: boolean;
+  /** Coming from "upload a photo at work" on the profile. */
+  defaultWorking?: boolean;
 }) {
   const [items, setItems] = useState<Item[]>([]);
+  // Photos of the uploader at work: they go to the gallery's "trabajando" tab and their profile.
+  const [working, setWorking] = useState(defaultWorking);
   // Event for every file: new files start with it and changing it re-tags the pending ones.
   // Each file can still be moved to another event on its own.
   const [eventId, setEventId] = useState<string | null>(defaultEventId);
@@ -163,7 +174,16 @@ export function PhotoUploader({
     const media = [...files].filter(
       (file) => file.type.startsWith('image/') || isVideo(file) || isHeic(file),
     );
-    const added = await Promise.all(media.map((file) => prepare(file, eventId, events)));
+    const added = await Promise.all(
+      media.map((file) =>
+        !canUploadVideos && isVideo(file)
+          ? prepare(file, eventId, []).then((item) => ({
+              ...item,
+              unsupported: 'Por ahora solo se pueden subir fotos.',
+            }))
+          : prepare(file, eventId, events),
+      ),
+    );
     setItems((current) => [...current, ...added]);
   };
 
@@ -229,7 +249,7 @@ export function PhotoUploader({
         update(item.key, { status: 'uploading' });
         const { uploadUrl, key } = await getPhotoUploadUrl(item.file.name, item.file.type);
         await putFile(uploadUrl, item.file, item.file.type);
-        created = await createPhoto(key, details);
+        created = await createPhoto(key, { ...details, working });
       }
       update(item.key, { status: 'done', itemId: created.id });
       return true;
@@ -255,8 +275,13 @@ export function PhotoUploader({
     }
     setIsUploading(false);
 
-    if (uploaded === uploadable.length) toast.success(`${uploaded} archivos subidos`);
-    else toast.error(`Se subieron ${uploaded} de ${uploadable.length} archivos`);
+    if (uploaded === uploadable.length) {
+      toast.success(
+        needsReview
+          ? `${uploaded} ${uploaded === 1 ? 'foto enviada' : 'fotos enviadas'}: se publican cuando un admin las apruebe`
+          : `${uploaded} archivos subidos`,
+      );
+    } else toast.error(`Se subieron ${uploaded} de ${uploadable.length} archivos`);
   };
 
   const pendingCount = items.filter(
@@ -273,6 +298,15 @@ export function PhotoUploader({
 
   return (
     <div className="mb-14 space-y-4">
+      {needsReview && (
+        <p
+          role="note"
+          className="border border-dashed border-pcnGreen-200 px-3 py-2 font-mono text-xs text-muted-foreground"
+        >
+          <span className="text-pcnGreen">[revisión]</span> Las fotos que subís aparecen en la
+          galería cuando un admin las aprueba.
+        </p>
+      )}
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] sm:items-end">
         <button
           type="button"
@@ -294,16 +328,19 @@ export function PhotoUploader({
           )}
         >
           <ImagePlus className="size-6" />
-          <span>arrastrá fotos y videos o hacé click para elegirlos</span>
+          <span>
+            arrastrá {canUploadVideos ? 'fotos y videos' : 'fotos'} o hacé click para elegirlos
+          </span>
           <span className="text-[10px] text-muted-foreground/70">
-            fotos: JPG, PNG, WebP, AVIF, HEIC (se optimizan a WebP) · videos: MP4, WebM, MOV hasta{' '}
-            {MAX_VIDEO_MB} MB (se optimizan a MP4 1080p)
+            fotos: JPG, PNG, WebP, AVIF, HEIC (se optimizan a WebP)
+            {canUploadVideos &&
+              ` · videos: MP4, WebM, MOV hasta ${MAX_VIDEO_MB} MB (se optimizan a MP4 1080p)`}
           </span>
         </button>
         <input
           ref={inputRef}
           type="file"
-          accept="image/*,video/mp4,video/webm,video/quicktime"
+          accept={canUploadVideos ? 'image/*,video/mp4,video/webm,video/quicktime' : 'image/*'}
           multiple
           hidden
           onChange={(event) => {
@@ -325,6 +362,23 @@ export function PhotoUploader({
           />
         </label>
       </div>
+
+      <label className="flex w-fit cursor-pointer items-center gap-2 font-mono text-xs">
+        <input
+          type="checkbox"
+          checked={working}
+          onChange={(event) => setWorking(event.target.checked)}
+          disabled={isUploading}
+          className="size-4 cursor-pointer accent-pcnPurple dark:accent-pcnGreen"
+        />
+        <span>
+          son fotos mías trabajando
+          <span className="text-muted-foreground">
+            {' '}
+            · van a la pestaña &quot;trabajando&quot; de la galería y a tu perfil
+          </span>
+        </span>
+      </label>
 
       {items.length > 0 && (
         <>
@@ -388,7 +442,11 @@ export function PhotoUploader({
                     )}
                   </div>
 
-                  {item.status === 'done' && item.itemId ? (
+                  {item.status === 'done' && needsReview ? (
+                    <p className="font-mono text-xs text-muted-foreground">
+                      en revisión: se publica cuando un admin la apruebe
+                    </p>
+                  ) : item.status === 'done' && item.itemId ? (
                     <Link
                       href={`/galeria/${item.itemId}`}
                       className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
@@ -462,7 +520,7 @@ export function PhotoUploader({
           )}
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            {done.length > 0 && (
+            {done.length > 0 && !needsReview && (
               <Link
                 href={doneEventId ? `/galeria?evento=${doneEventId}` : '/galeria'}
                 className="font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"

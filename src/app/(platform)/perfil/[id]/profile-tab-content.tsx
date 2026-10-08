@@ -37,9 +37,13 @@ import {
   getProfileTalks,
   getProfileVideos,
   getProfileCourses,
+  getProfilePendingWorkingPhotos,
+  getProfileWorkingPhotos,
 } from './profile-data';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { SetupTile } from '@/components/setups/setup-tile';
+import { Button } from '@/components/ui/button';
+import { Hourglass, Laptop } from 'lucide-react';
 
 // How many items of each section the overview shows before "ver todo".
 const PREVIEW = 2;
@@ -74,6 +78,32 @@ const SetupGrid = ({ setups, session }: { setups: ProfileSetup[]; session: Sessi
         viewerId={session?.user?.id ?? null}
         showAuthor={false}
       />
+    ))}
+  </RuledGrid>
+);
+
+type PendingPhoto = Awaited<ReturnType<typeof getProfilePendingWorkingPhotos>>[number];
+
+// The owner's photos still in review: no link (their page doesn't exist until approved).
+const PendingPhotoGrid = ({ photos }: { photos: PendingPhoto[] }) => (
+  <RuledGrid className="grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+    {photos.map((photo) => (
+      <div key={photo.id} className={cn(ruledCellClassName, 'p-1')}>
+        <span className="relative block aspect-square overflow-hidden bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo.thumbUrl}
+            alt={photo.description ?? 'Foto en revisión'}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover opacity-60"
+          />
+          <span className="absolute bottom-1 left-1 flex items-center gap-1 bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-pcnGreen">
+            <Hourglass className="size-3" />
+            en revisión
+          </span>
+        </span>
+      </div>
     ))}
   </RuledGrid>
 );
@@ -390,6 +420,51 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
           </Link>
           .
         </EmptyLine>
+      );
+      break;
+    }
+    case 'trabajando': {
+      const isOwner = session?.user?.id === userId;
+      const [photos, pending] = await Promise.all([
+        getProfileWorkingPhotos(userId),
+        isOwner ? getProfilePendingWorkingPhotos(userId) : Promise.resolve([]),
+      ]);
+      content = (
+        <div className="space-y-4">
+          {isOwner && (
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-mono text-xs text-muted-foreground">
+                Fotos tuyas trabajando: aparecen acá y en la galería cuando un admin las aprueba.
+              </p>
+              <Link href="/galeria/subir?trabajando=1">
+                <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
+                  <Laptop className="h-4 w-4" />
+                  subirFoto();
+                </Button>
+              </Link>
+            </div>
+          )}
+          {pending.length > 0 && <PendingPhotoGrid photos={pending} />}
+          {photos.length ? (
+            <PhotoGrid photos={photos} />
+          ) : (
+            !pending.length && (
+              <EmptyLine>
+                {isOwner
+                  ? 'Todavía no subiste fotos trabajando.'
+                  : `${firstName} todavía no tiene fotos trabajando en la `}
+                {!isOwner && (
+                  <>
+                    <Link href="/galeria?tipo=trabajando" className="text-pcnGreen hover:underline">
+                      galería
+                    </Link>
+                    .
+                  </>
+                )}
+              </EmptyLine>
+            )
+          )}
+        </div>
       );
       break;
     }

@@ -25,6 +25,8 @@ export const RATE_LIMITS = {
   photoDownload: { limit: 30, windowSeconds: 60 * 60 },
   log: { limit: 60, windowSeconds: 10 * 60 },
   pageVisit: { limit: 300, windowSeconds: 10 * 60 },
+  // Photos a member (not an admin) uploads to the gallery, waiting for approval.
+  galleryUpload: { limit: 40, windowSeconds: 60 * 60 },
   // Each run of an AI agent (talk from its photo, event from its flyers) is a paid model call.
   aiAgent: { limit: 30, windowSeconds: 60 * 60 },
 } satisfies Record<string, RateLimitRule>;

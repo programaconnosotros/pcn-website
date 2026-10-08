@@ -37,7 +37,11 @@ describe('getHistoriaEvents', () => {
     prismaMock.event.findMany.mockResolvedValue([] as any);
     await getHistoriaEvents();
     const { select } = prismaMock.event.findMany.mock.calls[0][0] as any;
-    expect(select.galleryItems.where).toEqual({ legacyId: null, kind: 'PHOTO' });
+    expect(select.galleryItems.where).toEqual({
+      legacyId: null,
+      status: 'APPROVED',
+      kind: 'PHOTO',
+    });
   });
 
   it('returns no events instead of failing when the database errors', async () => {

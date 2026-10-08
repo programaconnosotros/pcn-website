@@ -22,6 +22,34 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-08',
+    area: 'galería',
+    title: 'Subí tus fotos a la galería',
+    description:
+      'Cualquier miembro puede subir fotos de los eventos a la galería desde subir(). Se publican cuando un admin las revisa y las aprueba.',
+    authors: ['agustin-sanc'],
+    href: '/galeria/subir',
+  },
+  {
+    date: '2026-10-08',
+    area: 'galería',
+    title: 'Fotos trabajando',
+    description:
+      'Nueva pestaña "trabajando" en la galería con fotos de la comunidad en su escritorio, la oficina o una hackatón. Subí las tuyas desde la pestaña "trabajando" de tu perfil.',
+    authors: ['agustin-sanc'],
+    href: '/galeria?tipo=trabajando',
+  },
+  {
+    date: '2026-10-08',
+    area: 'galería',
+    title: 'Revisión de fotos de la comunidad',
+    description:
+      'Las fotos que suben los miembros esperan en /galeria/pendientes, con aviso a los admins, para aprobarlas o rechazarlas de a una o todas juntas.',
+    authors: ['agustin-sanc'],
+    href: '/galeria/pendientes',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-08',
     area: 'eventos',
     title: 'Completar un evento con sus flyers',
     description:

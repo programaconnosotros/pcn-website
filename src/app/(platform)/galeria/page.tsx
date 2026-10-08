@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import { Gallery } from '@/components/photo-gallery/gallery';
 import { getAdminUser } from '@/lib/admin';
-import { getGalleryFilterOptions, listGalleryItems } from '@/lib/gallery';
+import { countPendingGalleryItems, getGalleryFilterOptions, listGalleryItems } from '@/lib/gallery';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
 import { parseGalleryFilter } from '@/lib/gallery-filters';
 import prisma from '@/lib/prisma';
 
@@ -15,10 +16,11 @@ export default async function GalleryPage(props: {
 
   const filter = parseGalleryFilter(searchParams);
   const adminPromise = getAdminUser();
-  const [items, options, admin, events] = await Promise.all([
+  const [items, options, session, pendingCount, events] = await Promise.all([
     listGalleryItems(filter),
     getGalleryFilterOptions(),
-    adminPromise,
+    getCurrentSession(),
+    adminPromise.then((admin) => (admin ? countPendingGalleryItems() : null)),
     // Every event, for the admins' bulk editing (the filters only list the ones with photos).
     // Starts as soon as the session is known instead of after the gallery queries.
     adminPromise.then((admin) =>
@@ -38,8 +40,9 @@ export default async function GalleryPage(props: {
         items={items}
         filter={filter}
         options={options}
-        canUpload={!!admin}
+        canUpload={!!session}
         events={events}
+        pendingCount={pendingCount}
       />
     </div>
   );

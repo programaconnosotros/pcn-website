@@ -1,11 +1,13 @@
 // Filters of the gallery, kept in the URL so every view can be shared and browsed:
-// `?tipo=fotos|videos&evento=<id>&persona=<userId>`. The item page receives the same params so
+// `?tipo=fotos|videos|trabajando&evento=<id>&persona=<userId>`. The item page receives the same params so
 // prev/next stays within the filtered set.
 
 export const GALLERY_TYPES = [
   { value: 'todo', label: 'todo' },
   { value: 'fotos', label: 'fotos' },
   { value: 'videos', label: 'videos' },
+  // Members at work: at their desk, the office, a hackathon.
+  { value: 'trabajando', label: 'trabajando' },
 ] as const;
 
 export type GalleryType = (typeof GALLERY_TYPES)[number]['value'];
@@ -20,7 +22,7 @@ const first = (value: string | string[] | undefined) =>
 export function parseGalleryFilter(params: SearchParams): GalleryFilter {
   const tipo = first(params.tipo);
   return {
-    type: tipo === 'fotos' || tipo === 'videos' ? tipo : 'todo',
+    type: GALLERY_TYPES.some(({ value }) => value === tipo) ? (tipo as GalleryType) : 'todo',
     eventId: first(params.evento),
     userId: first(params.persona),
   };

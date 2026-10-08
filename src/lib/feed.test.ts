@@ -180,7 +180,7 @@ describe('fetchFeed', () => {
     ] as never);
     const feed = await fetchFeed();
     expect(prismaMock.galleryItem.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { legacyId: null }, take: 120 }),
+      expect.objectContaining({ where: { legacyId: null, status: 'APPROVED' }, take: 120 }),
     );
     expect(feed).toHaveLength(3);
     expect(feed[0]).toMatchObject({

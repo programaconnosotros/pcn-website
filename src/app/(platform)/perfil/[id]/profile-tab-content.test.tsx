@@ -30,6 +30,8 @@ jest.mock('./profile-data', () => ({
   getProfileTalks: jest.fn(),
   getProfileVideos: jest.fn(),
   getProfileCourses: jest.fn(),
+  getProfileWorkingPhotos: jest.fn(),
+  getProfilePendingWorkingPhotos: jest.fn(),
 }));
 jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/components/videos/video-grid', () => ({
@@ -138,18 +140,25 @@ const mockData = (sizes: Partial<Record<string, number>> = {}) => {
   m.getProfileIdentities.mockResolvedValue({ whatsapp: [], github: [] } as never);
   jest.mocked(getAdminUser).mockResolvedValue(null);
   m.getProfileChangelog.mockResolvedValue(list(sizes.changelog ?? 0, 'ch') as never);
+  m.getProfileWorkingPhotos.mockResolvedValue(list(sizes.working ?? 0, 'wk') as never);
+  m.getProfilePendingWorkingPhotos.mockResolvedValue(
+    list(sizes.pending ?? 0, 'pd').map((photo) => ({ ...photo, thumbUrl: '/t.webp' })) as never,
+  );
 };
 
 const person = { id: 'u1', name: 'Ana López', image: null };
 const session = sessionRow({ id: 'viewer' });
 
 /** Awaits the tab, and the async overview component it returns for `resumen`. */
-const renderTab = async (tab: Parameters<typeof ProfileTabContent>[0]['tab']) => {
+const renderTab = async (
+  tab: Parameters<typeof ProfileTabContent>[0]['tab'],
+  viewer: typeof session = session,
+) => {
   let node: ReactNode = await ProfileTabContent({
     tab,
     userId: 'u1',
     firstName: 'Ana',
-    session,
+    session: viewer,
     person,
   });
   if (isValidElement(node) && typeof node.type === 'function') {
@@ -337,6 +346,38 @@ describe('ProfileTabContent: one section', () => {
     expect(screen.getByText(/no aparece en ninguna foto ni video/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'galería' })).toHaveAttribute('href', '/galeria');
     expect(PhotoGrid).toHaveBeenCalledTimes(1);
+  });
+
+  it('trabajando shows the photos at work, and the owner can upload and sees theirs in review', async () => {
+    mockData({ working: 3, pending: 2 });
+    const { unmount } = await renderTab('trabajando');
+    expect(screen.getByText('3 fotos')).toBeInTheDocument();
+    expect(screen.queryByText('en revisión')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /subirFoto/ })).not.toBeInTheDocument();
+    expect(m.getProfilePendingWorkingPhotos).not.toHaveBeenCalled();
+    unmount();
+
+    await renderTab('trabajando', sessionRow({ id: 'u1' }));
+    expect(screen.getAllByText('en revisión')).toHaveLength(2);
+    expect(screen.getByRole('link', { name: /subirFoto/ })).toHaveAttribute(
+      'href',
+      '/galeria/subir?trabajando=1',
+    );
+    expect(m.getProfilePendingWorkingPhotos).toHaveBeenCalledWith('u1');
+  });
+
+  it('trabajando points visitors to the gallery and the owner to their first upload', async () => {
+    mockData();
+    const { unmount } = await renderTab('trabajando');
+    expect(screen.getByText(/no tiene fotos trabajando/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'galería' })).toHaveAttribute(
+      'href',
+      '/galeria?tipo=trabajando',
+    );
+    unmount();
+
+    await renderTab('trabajando', sessionRow({ id: 'u1' }));
+    expect(screen.getByText('Todavía no subiste fotos trabajando.')).toBeInTheDocument();
   });
 
   it('setups previews three in the overview and lists them all in their tab', async () => {

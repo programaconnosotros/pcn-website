@@ -7,6 +7,7 @@ describe('gallery filters', () => {
       eventId: 'e1',
       userId: 'u1',
     });
+    expect(parseGalleryFilter({ tipo: 'trabajando' }).type).toBe('trabajando');
     expect(parseGalleryFilter({ tipo: 'gifs' })).toEqual({
       type: 'todo',
       eventId: undefined,

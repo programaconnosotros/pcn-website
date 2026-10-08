@@ -130,6 +130,28 @@ describe('Gallery', () => {
     expect(screen.getByRole('link', { name: /subir/ })).toHaveAttribute('href', '/galeria/subir');
   });
 
+  it('uploads photos at work from the trabajando tab', () => {
+    renderGallery({ canUpload: true, filter: { type: 'trabajando' } });
+
+    expect(screen.getByRole('link', { name: /subir/ })).toHaveAttribute(
+      'href',
+      '/galeria/subir?trabajando=1',
+    );
+  });
+
+  it('shows admins how many uploads wait for review', () => {
+    const { unmount } = renderGallery({ canUpload: true, pendingCount: 0 });
+    expect(screen.queryByRole('link', { name: /pendientes/ })).not.toBeInTheDocument();
+    unmount();
+
+    renderGallery({ canUpload: true, pendingCount: 3 });
+    expect(screen.getByRole('link', { name: /pendientes/ })).toHaveAttribute(
+      'href',
+      '/galeria/pendientes',
+    );
+    expect(screen.getByRole('link', { name: /pendientes/ })).toHaveTextContent('3');
+  });
+
   it('opens the share dialog for a tile', async () => {
     renderGallery();
 

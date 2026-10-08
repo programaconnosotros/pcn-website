@@ -10,7 +10,7 @@ import { dateContainsString } from '@/lib/date-formatter';
 import type { GalleryFilterOptions, GalleryTile } from '@/lib/gallery';
 import { galleryQuery, isFiltered, type GalleryFilter } from '@/lib/gallery-filters';
 import { cn } from '@/lib/utils';
-import { Check, ImagePlus, ListChecks } from 'lucide-react';
+import { Check, Hourglass, ImagePlus, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { GalleryBulkBar } from './gallery-bulk-bar';
@@ -68,14 +68,24 @@ interface GalleryProps {
   items: GalleryTile[];
   filter: GalleryFilter;
   options: GalleryFilterOptions;
+  /** Anyone logged in: what members upload waits for an admin. */
   canUpload: boolean;
   /** Every event, for admins: enables selecting many items to edit them at once. */
   events: EventOption[] | null;
+  /** For admins: how many members' uploads wait for review. */
+  pendingCount?: number | null;
 }
 
 // The community's photos and videos, mixed and newest first, filterable by type, event and
 // person (in the URL) and searchable by text.
-export function Gallery({ items, filter, options, canUpload, events }: GalleryProps) {
+export function Gallery({
+  items,
+  filter,
+  options,
+  canUpload,
+  events,
+  pendingCount = null,
+}: GalleryProps) {
   const [sharedItem, setSharedItem] = useState<GalleryTile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   // Admins' bulk editing: while selecting, a click on a tile toggles it instead of opening it.
@@ -173,8 +183,29 @@ export function Gallery({ items, filter, options, canUpload, events }: GalleryPr
                   <span className="max-sm:sr-only">{isSelecting ? 'listo' : 'seleccionar'}</span>
                 </Button>
               )}
+              {!!pendingCount && (
+                <Link href="/galeria/pendientes">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1.5 font-mono"
+                  >
+                    <Hourglass className="h-4 w-4" />
+                    <span className="max-sm:sr-only">pendientes</span>
+                    <span className="text-pcnGreen">{pendingCount}</span>
+                  </Button>
+                </Link>
+              )}
               {canUpload && (
-                <Link href={event ? `/galeria/subir?evento=${event.id}` : '/galeria/subir'}>
+                <Link
+                  href={
+                    event
+                      ? `/galeria/subir?evento=${event.id}`
+                      : filter.type === 'trabajando'
+                        ? '/galeria/subir?trabajando=1'
+                        : '/galeria/subir'
+                  }
+                >
                   <Button variant="pcn" size="sm" className="flex items-center gap-1.5">
                     <ImagePlus className="h-4 w-4" />
                     subir();

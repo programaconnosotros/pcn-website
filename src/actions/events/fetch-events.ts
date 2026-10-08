@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
+import { visibleGalleryItem } from '@/lib/gallery';
 
 const listEvents = cached(
   'events',
@@ -15,7 +16,7 @@ const listEvents = cached(
         _count: {
           select: {
             registrations: { where: { cancelledAt: null } },
-            galleryItems: true,
+            galleryItems: { where: visibleGalleryItem },
             talks: true,
           },
         },

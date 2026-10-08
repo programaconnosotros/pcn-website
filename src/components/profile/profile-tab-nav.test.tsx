@@ -25,7 +25,7 @@ describe('Profile tabs', () => {
     renderTabs();
 
     const nav = screen.getByRole('navigation', { name: 'Secciones del perfil' });
-    expect(nav.querySelectorAll('a')).toHaveLength(12);
+    expect(nav.querySelectorAll('a')).toHaveLength(13);
     expect(screen.getByRole('link', { name: /resumen/ })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: /resumen/ })).toHaveAttribute('href', '/perfil/u1');
     expect(screen.getByRole('link', { name: /proyectos/ })).toHaveTextContent('proyectos(3)');

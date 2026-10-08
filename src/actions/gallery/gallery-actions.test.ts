@@ -9,6 +9,7 @@ import {
   putImmutableObject,
 } from '@/lib/s3';
 import {
+  approveGalleryItems,
   bulkDeleteGalleryItems,
   bulkSetGalleryItemsEvent,
   createPhoto,
@@ -16,6 +17,7 @@ import {
   deleteGalleryItem,
   getPhotoUploadUrl,
   getVideoUploadUrl,
+  rejectGalleryItems,
   updateGalleryItem,
 } from './gallery-actions';
 
@@ -55,12 +57,40 @@ const loginAs = (user: { id: string }) => {
 const details = { takenAt: '2026-05-12T20:30:00.000Z', description: '  Cierre  ', eventId: '' };
 
 describe('photo uploads', () => {
-  it('only lets admins upload photos', async () => {
-    loginAs(regular);
+  it('asks visitors to log in before uploading', async () => {
+    mockCookies({});
 
-    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).rejects.toThrow('No autorizado');
-    await expect(createPhoto('gallery/originals/a.jpg', details)).rejects.toThrow('No autorizado');
+    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).rejects.toThrow('Iniciá sesión');
+    await expect(createPhoto('gallery/originals/a.jpg', details)).rejects.toThrow('Iniciá sesión');
     expect(getObjectBuffer).not.toHaveBeenCalled();
+  });
+
+  it("keeps a member's photo pending and tells the admins once per batch", async () => {
+    loginAs({ ...regular, name: 'Ada' } as any);
+    prismaMock.galleryItem.create.mockResolvedValue({ id: 'photo-1', status: 'PENDING' } as any);
+    prismaMock.galleryItem.count.mockResolvedValueOnce(0).mockResolvedValueOnce(1);
+    prismaMock.user.findMany.mockResolvedValue([{ id: 'admin-1' }] as any);
+
+    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).resolves.toMatchObject({
+      key: 'gallery/originals/a.jpg',
+    });
+    await createPhoto('gallery/originals/a.jpg', { ...details, working: true });
+    await createPhoto('gallery/originals/a.jpg', details);
+
+    const [first, second] = prismaMock.galleryItem.create.mock.calls.map(([args]) => args.data);
+    expect(first).toMatchObject({
+      uploadedById: 'user-1',
+      status: 'PENDING',
+      working: true,
+      // Whoever uploads a photo at work is in it
+      tags: { create: { userId: 'user-1', taggedById: 'user-1' } },
+    });
+    expect(second).toMatchObject({ status: 'PENDING', working: false });
+    expect(second).not.toHaveProperty('tags');
+    expect(prismaMock.notification.createMany).toHaveBeenCalledTimes(1);
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ type: 'gallery_item_pending', userId: 'admin-1' })],
+    });
   });
 
   it('rejects formats sharp cannot read', async () => {
@@ -103,9 +133,12 @@ describe('photo uploads', () => {
         height: 1707,
         storageKeys: [fullKey, thumbKey],
         uploadedById: 'admin-1',
+        status: 'APPROVED',
+        working: false,
       },
-      select: { id: true },
+      select: { id: true, status: true },
     });
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
   });
 
   it('does not attach photos to unknown events', async () => {
@@ -120,13 +153,29 @@ describe('photo uploads', () => {
 });
 
 describe('photo editing', () => {
-  it('only lets admins edit or delete photos', async () => {
+  it('only lets admins edit photos, and admins or the uploader delete them', async () => {
     loginAs(regular);
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
+      eventId: null,
+      storageKeys: ['k'],
+      uploadedById: 'someone-else',
+      tags: [],
+    } as any);
 
     await expect(updateGalleryItem('photo-1', details)).rejects.toThrow('No autorizado');
     await expect(deleteGalleryItem('photo-1')).rejects.toThrow('No autorizado');
     expect(prismaMock.galleryItem.update).not.toHaveBeenCalled();
     expect(prismaMock.galleryItem.delete).not.toHaveBeenCalled();
+
+    prismaMock.galleryItem.findUnique.mockResolvedValue({
+      eventId: null,
+      storageKeys: ['k'],
+      uploadedById: 'user-1',
+      tags: [],
+    } as any);
+    await expect(deleteGalleryItem('photo-1')).resolves.toEqual({ success: true });
+    expect(deleteObjects).toHaveBeenCalledWith(['k']);
+    expect(prismaMock.galleryItem.delete).toHaveBeenCalledWith({ where: { id: 'photo-1' } });
   });
 
   it('updates the date, description and event', async () => {
@@ -334,6 +383,50 @@ describe('getPhotoUploadUrl', () => {
     await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).resolves.toEqual({
       uploadUrl: 'https://s3.example.com/presigned',
       key: 'gallery/originals/a.jpg',
+    });
+  });
+});
+
+describe('review of members uploads', () => {
+  it('is only for admins', async () => {
+    loginAs(regular);
+
+    await expect(approveGalleryItems(['p1'])).rejects.toThrow('No autorizado');
+    await expect(rejectGalleryItems(['p1'])).rejects.toThrow('No autorizado');
+    expect(prismaMock.galleryItem.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('publishes only pending items', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([
+      { id: 'p1', eventId: null, uploadedById: 'user-1', tags: [{ userId: 'user-1' }] },
+    ] as any);
+
+    await expect(approveGalleryItems(['p1', 'p2'])).resolves.toEqual({ approved: 1 });
+
+    expect(prismaMock.galleryItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: { in: ['p1', 'p2'] }, status: 'PENDING' } }),
+    );
+    expect(prismaMock.galleryItem.updateMany).toHaveBeenCalledWith({
+      where: { id: { in: ['p1'] } },
+      data: { status: 'APPROVED' },
+    });
+  });
+
+  it('deletes rejected items with their files, and never approved ones', async () => {
+    loginAs(admin);
+    prismaMock.galleryItem.findMany.mockResolvedValue([
+      { id: 'p1', storageKeys: ['a', 'b'], uploadedById: 'user-1' },
+    ] as any);
+
+    await expect(rejectGalleryItems(['p1'])).resolves.toEqual({ rejected: 1 });
+
+    expect(prismaMock.galleryItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: { in: ['p1'] }, status: 'PENDING' } }),
+    );
+    expect(deleteObjects).toHaveBeenCalledWith(['a', 'b']);
+    expect(prismaMock.galleryItem.deleteMany).toHaveBeenCalledWith({
+      where: { id: { in: ['p1'] } },
     });
   });
 });

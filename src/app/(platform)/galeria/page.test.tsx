@@ -3,10 +3,12 @@ import { renderInPlatform } from '@/test/platform';
 import { buildTile } from '@/test/gallery';
 import { getCurrentSession } from '@/actions/auth/get-current-session';
 import {
+  countPendingGalleryItems,
   getGalleryFilterOptions,
   getGalleryItem,
   getGalleryNeighbours,
   listGalleryItems,
+  listPendingGalleryItems,
 } from '@/lib/gallery';
 import prisma from '@/lib/prisma';
 import { Gallery } from '@/components/photo-gallery/gallery';
@@ -19,6 +21,8 @@ import GaleriaLayout, { metadata as layoutMetadata } from './layout';
 import GalleryPage from './page';
 import Loading from './loading';
 import UploadPhotosPage from './subir/page';
+import PendingGalleryPage from './pendientes/page';
+import { PendingGalleryReview } from '@/components/photo-gallery/pending-gallery-review';
 import EditPhotoPage from './[id]/editar/page';
 import GalleryItemPage, { generateMetadata } from './[id]/page';
 import ItemLoading from './[id]/loading';
@@ -29,6 +33,11 @@ jest.mock('@/lib/gallery', () => ({
   getGalleryFilterOptions: jest.fn(),
   getGalleryItem: jest.fn(),
   getGalleryNeighbours: jest.fn(),
+  countPendingGalleryItems: jest.fn(),
+  listPendingGalleryItems: jest.fn(),
+}));
+jest.mock('@/components/photo-gallery/pending-gallery-review', () => ({
+  PendingGalleryReview: jest.fn(() => null),
 }));
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
@@ -122,14 +131,32 @@ describe('/galeria', () => {
     );
     const filter = { type: 'videos', eventId: 'e1', userId: undefined };
     expect(listGalleryItems).toHaveBeenCalledWith(filter);
-    expect(galleryProps()).toMatchObject({ filter, canUpload: false, events: null });
+    expect(galleryProps()).toMatchObject({
+      filter,
+      canUpload: false,
+      events: null,
+      pendingCount: null,
+    });
     expect(prisma.event.findMany).not.toHaveBeenCalled();
   });
 
-  it('lets admins upload and gives them every event', async () => {
-    signIn(admin);
+  it('lets members upload, without the review queue', async () => {
+    signIn(member as never);
     renderInPlatform(await GalleryPage({ searchParams: Promise.resolve({}) }));
-    expect(galleryProps()).toMatchObject({ canUpload: true, events });
+    expect(galleryProps()).toMatchObject({ canUpload: true, events: null, pendingCount: null });
+    expect(countPendingGalleryItems).not.toHaveBeenCalled();
+  });
+
+  it('filters the photos of members at work', async () => {
+    renderInPlatform(await GalleryPage({ searchParams: Promise.resolve({ tipo: 'trabajando' }) }));
+    expect(listGalleryItems).toHaveBeenCalledWith(expect.objectContaining({ type: 'trabajando' }));
+  });
+
+  it('lets admins upload and gives them every event and the pending count', async () => {
+    signIn(admin);
+    jest.mocked(countPendingGalleryItems).mockResolvedValue(3);
+    renderInPlatform(await GalleryPage({ searchParams: Promise.resolve({}) }));
+    expect(galleryProps()).toMatchObject({ canUpload: true, events, pendingCount: 3 });
     expect(prisma.event.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { deletedAt: null } }),
     );
@@ -149,11 +176,26 @@ describe('/galeria', () => {
 });
 
 describe('/galeria/subir', () => {
-  it('is only for admins', async () => {
-    signIn(member as never);
-    await expect(UploadPhotosPage({ searchParams: Promise.resolve({}) })).rejects.toThrow(
-      'NEXT_REDIRECT:/',
+  it('asks visitors to log in and come back', async () => {
+    await expect(
+      UploadPhotosPage({ searchParams: Promise.resolve({ trabajando: '1' }) }),
+    ).rejects.toThrow(
+      `NEXT_REDIRECT:/autenticacion/iniciar-sesion?redirect=${encodeURIComponent('/galeria/subir?trabajando=1')}`,
     );
+  });
+
+  it('lets members upload photos only, for review, at work when coming from the profile', async () => {
+    signIn(member as never);
+    renderInPlatform(
+      await UploadPhotosPage({ searchParams: Promise.resolve({ trabajando: '1' }) }),
+    );
+    expect(jest.mocked(PhotoUploader).mock.calls[0][0]).toEqual({
+      events,
+      defaultEventId: null,
+      canUploadVideos: false,
+      needsReview: true,
+      defaultWorking: true,
+    });
   });
 
   it('preselects the event from the link when it exists', async () => {
@@ -162,6 +204,9 @@ describe('/galeria/subir', () => {
     expect(jest.mocked(PhotoUploader).mock.calls[0][0]).toEqual({
       events,
       defaultEventId: 'e2',
+      canUploadVideos: true,
+      needsReview: false,
+      defaultWorking: false,
     });
   });
 
@@ -169,6 +214,22 @@ describe('/galeria/subir', () => {
     signIn(admin);
     renderInPlatform(await UploadPhotosPage({ searchParams: Promise.resolve({ evento: 'zz' }) }));
     expect(jest.mocked(PhotoUploader).mock.calls[0][0].defaultEventId).toBeNull();
+  });
+});
+
+describe('/galeria/pendientes', () => {
+  it('is only for admins', async () => {
+    signIn(member as never);
+    await expect(PendingGalleryPage()).rejects.toThrow('NEXT_REDIRECT:/');
+  });
+
+  it('lists what waits for review', async () => {
+    signIn(admin);
+    const pending = [{ id: 'p1' }, { id: 'p2' }];
+    jest.mocked(listPendingGalleryItems).mockResolvedValue(pending as never);
+    renderInPlatform(await PendingGalleryPage());
+    expect(screen.getByText('2 fotos para revisar')).toBeInTheDocument();
+    expect(jest.mocked(PendingGalleryReview).mock.calls[0][0]).toEqual({ items: pending });
   });
 });
 

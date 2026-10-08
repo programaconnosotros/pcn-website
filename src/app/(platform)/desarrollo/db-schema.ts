@@ -51,6 +51,10 @@ export const dbEnums: { name: string; values: string[] }[] = [
     values: ['PHOTO', 'VIDEO'],
   },
   {
+    name: 'GalleryItemStatus',
+    values: ['PENDING', 'APPROVED'],
+  },
+  {
     name: 'TalkProposalStatus',
     values: ['PENDING', 'ACCEPTED', 'REJECTED'],
   },
@@ -634,6 +638,14 @@ export const dbModels: DbModel[] = [
         type: 'String',
         fk: true,
         optional: true,
+      },
+      {
+        name: 'status',
+        type: 'GalleryItemStatus',
+      },
+      {
+        name: 'working',
+        type: 'Boolean',
       },
       {
         name: 'legacyId',

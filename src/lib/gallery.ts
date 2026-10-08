@@ -5,10 +5,14 @@ import type { GalleryFilter } from '@/lib/gallery-filters';
 import { signGalleryItem, signGallerySrc } from '@/lib/gallery-signing';
 
 /**
- * The items the gallery shows: the photos of the old static gallery (the ones with a
- * `legacyId`, served from /public) are kept in the database but no longer shown.
+ * The items the gallery shows: the approved ones (what members upload waits for an admin), but
+ * not the photos of the old static gallery (the ones with a `legacyId`, served from /public),
+ * which are kept in the database but no longer shown.
  */
-export const visibleGalleryItem = { legacyId: null } satisfies Prisma.GalleryItemWhereInput;
+export const visibleGalleryItem = {
+  legacyId: null,
+  status: 'APPROVED',
+} satisfies Prisma.GalleryItemWhereInput;
 
 // What a tile needs: its kind, caption, thumbnail and enough to search it.
 export const galleryTileSelect = {
@@ -38,6 +42,7 @@ const galleryWhere = (filter: Partial<GalleryFilter>): Prisma.GalleryItemWhereIn
   ...visibleGalleryItem,
   ...(filter.type === 'fotos' && { kind: 'PHOTO' }),
   ...(filter.type === 'videos' && { kind: 'VIDEO' }),
+  ...(filter.type === 'trabajando' && { working: true }),
   ...(filter.eventId && { eventId: filter.eventId }),
   ...(filter.userId && { tags: { some: { userId: filter.userId } } }),
 });
@@ -327,3 +332,58 @@ export async function listStoryCardPhotos(perCard = 20) {
 }
 
 export type StoryCardPhotos = Awaited<ReturnType<typeof listStoryCardPhotos>>;
+
+/**
+ * What members uploaded and an admin hasn't reviewed yet, oldest first (the queue). Only for
+ * admins, so never cached: it changes with every upload and review.
+ */
+export async function listPendingGalleryItems() {
+  const items = await prisma.galleryItem.findMany({
+    where: { legacyId: null, status: 'PENDING' },
+    select: {
+      id: true,
+      kind: true,
+      src: true,
+      thumbSrc: true,
+      takenAt: true,
+      createdAt: true,
+      description: true,
+      working: true,
+      event: { select: { id: true, name: true } },
+      uploadedBy: { select: { id: true, name: true, image: true } },
+    },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+  });
+  return items.map(signGalleryItem);
+}
+
+export type PendingGalleryItem = Awaited<ReturnType<typeof listPendingGalleryItems>>[number];
+
+/** How many uploads wait for an admin, for the link from the gallery. */
+export const countPendingGalleryItems = () =>
+  prisma.galleryItem.count({ where: { legacyId: null, status: 'PENDING' } });
+
+const listWorkingPhotos = cached(
+  'gallery-working-photos',
+  (userId: string) =>
+    prisma.galleryItem.findMany({
+      where: { ...visibleGalleryItem, working: true, tags: { some: { userId } } },
+      select: { id: true, kind: true, description: true, src: true, thumbSrc: true },
+      orderBy: galleryOrder,
+    }),
+  { models: ['GalleryItem', 'GalleryItemTag'] },
+);
+
+/** The photos of someone at work (they appear in them), for their profile. */
+export const getWorkingPhotos = async (userId: string) =>
+  (await listWorkingPhotos(userId)).map(signGalleryItem);
+
+/** The working photos someone uploaded that still wait for approval: only they see them. */
+export async function getPendingWorkingPhotos(userId: string) {
+  const items = await prisma.galleryItem.findMany({
+    where: { legacyId: null, status: 'PENDING', working: true, uploadedById: userId },
+    select: { id: true, kind: true, description: true, src: true, thumbSrc: true },
+    orderBy: galleryOrder,
+  });
+  return items.map(signGalleryItem);
+}

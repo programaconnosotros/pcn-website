@@ -277,9 +277,16 @@ enum GalleryItemKind {
   VIDEO
 }
 
+// Lo que suben los admins se publica directo; lo que sube un miembro espera a que un admin lo
+// apruebe (si lo rechaza, se borra con sus archivos).
+enum GalleryItemStatus {
+  PENDING
+  APPROVED
+}
+
 model GalleryItem {
-  id              String          @id @default(cuid())
-  kind            GalleryItemKind @default(PHOTO)
+  id              String            @id @default(cuid())
+  kind            GalleryItemKind   @default(PHOTO)
   // La foto (webp) o el video tal cual se subió.
   src             String
   // Miniatura de la foto, o portada del video (webp).
@@ -291,14 +298,18 @@ model GalleryItem {
   width           Int?
   height          Int?
   // Objetos de S3 del ítem, para borrarlos junto con él. Vacío en las fotos de /public.
-  storageKeys     String[]        @default([])
+  storageKeys     String[]          @default([])
   // Cuándo se sacó o grabó (por defecto, la fecha del archivo).
   takenAt         DateTime
   description     String?
   eventId         String?
   uploadedById    String?
+  status          GalleryItemStatus @default(APPROVED)
+  // Foto de alguien trabajando (en su escritorio, la oficina, una hackatón): va a la pestaña
+  // "trabajando" de la galería y al perfil de quien aparece.
+  working         Boolean           @default(false)
   // Id en la galería estática anterior, para que sigan andando los links `/galeria?foto=<n>`.
-  legacyId        Int?            @unique
+  legacyId        Int?              @unique
 
   event      Event?           @relation(fields: [eventId], references: [id], onDelete: SetNull)
   coverOf    Event?           @relation("EventCoverPhoto")
@@ -312,6 +323,7 @@ model GalleryItem {
   @@index([eventId])
   @@index([uploadedById])
   @@index([createdAt])
+  @@index([status])
 }
 
 // Persona que aparece en una foto o video. La etiquetan los admins o la propia persona.

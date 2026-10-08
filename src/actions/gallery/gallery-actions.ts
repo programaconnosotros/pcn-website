@@ -3,6 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
+import { getCurrentSession } from '@/actions/auth/get-current-session';
+import { notifyAdmins } from '@/actions/notifications/notify-admins';
+import { enforceRateLimit } from '@/lib/rate-limit';
 import { optimizePhoto, optimizePoster } from '@/lib/photo-processing';
 import {
   deleteObjects,
@@ -18,8 +21,10 @@ import {
   MAX_VIDEO_BYTES,
   galleryDetailsSchema,
   parseGalleryItemIds,
+  photoUploadSchema,
   videoMetadataSchema,
   type GalleryDetailsInput,
+  type PhotoUploadInput,
   type VideoMetadataInput,
 } from './gallery-schema';
 
@@ -69,9 +74,39 @@ const revalidateItems = (photoIds: string[], eventIds: (string | null)[] = []) =
 const revalidateItem = (photoId: string, eventIds: (string | null)[] = []) =>
   revalidateItems([photoId], eventIds);
 
-/** URL firmada para subir el original de una foto a S3. Solo admins. */
+// Cualquier miembro sube fotos; lo de quien no es admin queda pendiente de aprobación.
+async function requireUploader() {
+  const session = await getCurrentSession();
+  if (!session) throw new Error('Iniciá sesión para subir fotos');
+  const isAdmin = session.user.role === 'ADMIN';
+  if (!isAdmin) await enforceRateLimit('galleryUpload');
+  return { user: session.user, isAdmin };
+}
+
+// Si ya mandó otra foto hace un rato, los admins ya tienen el aviso de esa tanda.
+const NOTIFY_AFTER_MS = 30 * 60 * 1000;
+
+async function notifyPendingUpload(user: { id: string; name: string }, photoId: string) {
+  const earlier = await prisma.galleryItem.count({
+    where: {
+      uploadedById: user.id,
+      status: 'PENDING',
+      id: { not: photoId },
+      createdAt: { gte: new Date(Date.now() - NOTIFY_AFTER_MS) },
+    },
+  });
+  if (earlier) return;
+  await notifyAdmins({
+    type: 'gallery_item_pending',
+    title: 'Fotos para aprobar en la galería',
+    message: `${user.name} subió fotos a la galería. Revisalas en /galeria/pendientes.`,
+    metadata: { userId: user.id, galleryItemId: photoId },
+  });
+}
+
+/** URL firmada para subir el original de una foto a S3. Cualquier miembro con sesión. */
 export async function getPhotoUploadUrl(fileName: string, contentType: string) {
-  await requireAdmin();
+  await requireUploader();
   if (!UPLOAD_TYPES.includes(contentType)) {
     throw new Error('Formato no soportado. Subí JPG, PNG, WebP, AVIF, TIFF o GIF.');
   }
@@ -141,12 +176,17 @@ export async function createVideo(
 
 /**
  * Crea una foto a partir del original ya subido: la optimiza a WebP (grande y miniatura), la
- * guarda en S3 para servirla por CloudFront y borra el original. Solo admins.
+ * guarda en S3 para servirla por CloudFront y borra el original. La de un admin se publica; la de
+ * otro miembro espera a que un admin la apruebe. En una foto trabajando aparece quien la sube.
  */
-export async function createPhoto(originalKey: string, input: GalleryDetailsInput) {
-  const admin = await requireAdmin();
+export async function createPhoto(
+  originalKey: string,
+  input: GalleryDetailsInput & PhotoUploadInput,
+) {
+  const { user, isAdmin } = await requireUploader();
   if (!isOriginalKey(originalKey)) throw new Error('Archivo inválido');
   const details = parseDetails(input);
+  const { working } = photoUploadSchema.parse({ working: input.working === true });
   await assertEventExists(details.eventId);
 
   const { full, thumb, width, height } = await optimizePhoto(await getObjectBuffer(originalKey));
@@ -169,12 +209,20 @@ export async function createPhoto(originalKey: string, input: GalleryDetailsInpu
       width,
       height,
       storageKeys: [fullKey, thumbKey],
-      uploadedById: admin.id,
+      uploadedById: user.id,
+      status: isAdmin ? 'APPROVED' : 'PENDING',
+      working,
+      ...(working && { tags: { create: { userId: user.id, taggedById: user.id } } }),
     },
-    select: { id: true },
+    select: { id: true, status: true },
   });
 
-  revalidateItem(photo.id, [details.eventId]);
+  if (photo.status === 'PENDING') {
+    await notifyPendingUpload(user, photo.id);
+  } else {
+    revalidateItem(photo.id, [details.eventId]);
+  }
+  revalidatePath(`/perfil/${user.id}`);
   return photo;
 }
 
@@ -195,15 +243,24 @@ export async function updateGalleryItem(photoId: string, input: GalleryDetailsIn
   return { success: true };
 }
 
-/** Elimina una foto o video, sus etiquetas y sus archivos en S3. Solo admins. */
+/** Elimina una foto o video, sus etiquetas y sus archivos en S3. Admins, o quien la subió. */
 export async function deleteGalleryItem(photoId: string) {
-  await requireAdmin();
+  const session = await getCurrentSession();
+  if (!session) throw new Error('No autorizado');
 
   const photo = await prisma.galleryItem.findUnique({
     where: { id: photoId },
-    select: { eventId: true, storageKeys: true, tags: { select: { userId: true } } },
+    select: {
+      eventId: true,
+      storageKeys: true,
+      uploadedById: true,
+      tags: { select: { userId: true } },
+    },
   });
   if (!photo) throw new Error('Foto no encontrada');
+  if (session.user.role !== 'ADMIN' && photo.uploadedById !== session.user.id) {
+    throw new Error('No autorizado');
+  }
 
   // Primero los archivos: si S3 falla, la foto sigue en la galería y se puede reintentar.
   await deleteObjects(photo.storageKeys);
@@ -258,4 +315,49 @@ export async function bulkDeleteGalleryItems(itemIds: string[]) {
     revalidatePath(`/perfil/${userId}`),
   );
   return { deleted: items.length };
+}
+
+/** Publica fotos que subieron los miembros. Solo admins. */
+export async function approveGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids }, status: 'PENDING' },
+    select: { id: true, eventId: true, uploadedById: true, tags: { select: { userId: true } } },
+  });
+  await prisma.galleryItem.updateMany({
+    where: { id: { in: items.map((item) => item.id) } },
+    data: { status: 'APPROVED' },
+  });
+
+  revalidateItems(
+    items.map((item) => item.id),
+    items.map((item) => item.eventId),
+  );
+  new Set(
+    items.flatMap((item) => [item.uploadedById, ...item.tags.map((tag) => tag.userId)]),
+  ).forEach((userId) => userId && revalidatePath(`/perfil/${userId}`));
+  revalidatePath('/galeria/pendientes');
+  return { approved: items.length };
+}
+
+/** Rechaza fotos que subieron los miembros: las borra con sus archivos. Solo admins. */
+export async function rejectGalleryItems(itemIds: string[]) {
+  await requireAdmin();
+  const ids = parseGalleryItemIds(itemIds);
+
+  const items = await prisma.galleryItem.findMany({
+    where: { id: { in: ids }, status: 'PENDING' },
+    select: { id: true, storageKeys: true, uploadedById: true },
+  });
+
+  await deleteObjects(items.flatMap((item) => item.storageKeys));
+  await prisma.galleryItem.deleteMany({ where: { id: { in: items.map((item) => item.id) } } });
+
+  new Set(items.map((item) => item.uploadedById)).forEach(
+    (userId) => userId && revalidatePath(`/perfil/${userId}`),
+  );
+  revalidatePath('/galeria/pendientes');
+  return { rejected: items.length };
 }

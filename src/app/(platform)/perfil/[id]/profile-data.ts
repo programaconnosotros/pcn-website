@@ -1,7 +1,12 @@
 import { cache } from 'react';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { galleryOrder, visibleGalleryItem } from '@/lib/gallery';
+import {
+  galleryOrder,
+  getPendingWorkingPhotos,
+  getWorkingPhotos,
+  visibleGalleryItem,
+} from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
 import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
@@ -120,7 +125,7 @@ export const getProfileEvents = cached(
         _count: {
           select: {
             registrations: { where: { cancelledAt: null } },
-            galleryItems: true,
+            galleryItems: { where: visibleGalleryItem },
             talks: true,
           },
         },
@@ -175,6 +180,10 @@ const listProfilePhotos = cached(
 export const getProfilePhotos = cache(async (userId: string) =>
   (await listProfilePhotos(userId)).map(signGalleryItem),
 );
+
+// Photos of the person at work (they appear in them), and the ones they uploaded still in review.
+export const getProfileWorkingPhotos = cache(getWorkingPhotos);
+export const getProfilePendingWorkingPhotos = getPendingWorkingPhotos;
 
 // Articles from /lectura that an admin marked as written by this user, one by one or through
 // an author name linked in /vinculos, newest first. `index` is the article's spot in /lectura.
@@ -244,6 +253,7 @@ export const getProfileCounts = cache(
       events,
       photos,
       setups,
+      working,
       conversations,
       github,
     ] = await Promise.all([
@@ -256,6 +266,7 @@ export const getProfileCounts = cache(
       getProfileEvents(userId),
       getProfilePhotos(userId),
       getProfileSetups(userId),
+      getProfileWorkingPhotos(userId),
       getProfileConversations(userId),
       getProfileContributions(userId),
     ]);
@@ -269,6 +280,7 @@ export const getProfileCounts = cache(
       eventos: events.length,
       fotos: photos.length,
       setups: setups.length,
+      trabajando: working.length,
       conversaciones: conversations.length,
       ...(github.contributions.length > 0 && { contribuciones: github.mergedPrs }),
     };

@@ -161,6 +161,7 @@ describe('PhotoUploader', () => {
       takenAt: ON_MEETUP.toISOString(),
       description: 'Brindis',
       eventId: 'e1',
+      working: false,
     });
     expect(getVideoUploadUrl).toHaveBeenCalledWith('video/mp4', compressed.size);
     expect(postFile).toHaveBeenCalledWith(
@@ -331,5 +332,43 @@ describe('PhotoUploader', () => {
     await waitFor(() => expect(toast.success).toHaveBeenCalled());
     expect(release).toHaveBeenCalled();
     delete (navigator as { wakeLock?: unknown }).wakeLock;
+  });
+
+  it('lets members upload photos only, at work, and says they wait for review', async () => {
+    const view = render(
+      <PhotoUploader
+        events={events}
+        defaultEventId={null}
+        canUploadVideos={false}
+        needsReview
+        defaultWorking
+      />,
+    );
+    const input = view.container.querySelector('input[type="file"]') as HTMLInputElement;
+    expect(input).toHaveAttribute('accept', 'image/*');
+    expect(screen.getByRole('note')).toHaveTextContent('cuando un admin las aprueba');
+    expect(screen.getByLabelText(/son fotos mías trabajando/)).toBeChecked();
+
+    await act(async () => {
+      fireEvent.change(input, {
+        target: { files: [file('mesa.jpg', 'image/jpeg'), file('clip.mp4', 'video/mp4')] },
+      });
+    });
+    expect(screen.getByText('Por ahora solo se pueden subir fotos.')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /subir 1 archivo/ }));
+
+    await waitFor(() =>
+      expect(toast.success).toHaveBeenCalledWith(
+        '1 foto enviada: se publican cuando un admin las apruebe',
+      ),
+    );
+    expect(createPhoto).toHaveBeenCalledWith('k-photo', expect.objectContaining({ working: true }));
+    expect(getVideoUploadUrl).not.toHaveBeenCalled();
+    expect(
+      screen.getByText('en revisión: se publica cuando un admin la apruebe'),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /ver y etiquetar/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /subidas en la galería/ })).not.toBeInTheDocument();
   });
 });

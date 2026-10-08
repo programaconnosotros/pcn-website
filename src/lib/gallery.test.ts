@@ -1,11 +1,15 @@
 import { prismaMock } from '@/test/prisma';
 import {
+  countPendingGalleryItems,
   getEventCover,
   getEventMemories,
   getGalleryFilterOptions,
   getGalleryItem,
   getGalleryNeighbours,
+  getPendingWorkingPhotos,
+  getWorkingPhotos,
   listGalleryItems,
+  listPendingGalleryItems,
   listLatestGalleryItems,
   listRandomGalleryPhotos,
   listStoryCardPhotos,
@@ -30,9 +34,14 @@ describe('listGalleryItems', () => {
     expect(findMany().mock.calls[0][0]?.where).toEqual(visibleGalleryItem);
   });
 
+  it('never shows what waits for review', () => {
+    expect(visibleGalleryItem).toEqual({ legacyId: null, status: 'APPROVED' });
+  });
+
   it.each([
     [{ type: 'fotos' as const }, { kind: 'PHOTO' }],
     [{ type: 'videos' as const }, { kind: 'VIDEO' }],
+    [{ type: 'trabajando' as const }, { working: true }],
     [{ eventId: 'e1' }, { eventId: 'e1' }],
     [{ userId: 'u1' }, { tags: { some: { userId: 'u1' } } }],
   ])('filters by %j', async (filter, where) => {
@@ -41,6 +50,44 @@ describe('listGalleryItems', () => {
     await listGalleryItems(filter);
 
     expect(findMany().mock.calls[0][0]?.where).toEqual({ ...visibleGalleryItem, ...where });
+  });
+});
+
+describe('review queue and photos at work', () => {
+  it('lists the pending uploads oldest first, signed', async () => {
+    findMany().mockResolvedValue([tile('p')] as never);
+
+    await expect(listPendingGalleryItems()).resolves.toEqual([
+      { ...tile('p'), thumbUrl: '/thumb/p.webp', fullUrl: '/full/p.webp' },
+    ]);
+    const args = findMany().mock.calls[0][0]!;
+    expect(args.where).toEqual({ legacyId: null, status: 'PENDING' });
+    expect(args.orderBy).toEqual([{ createdAt: 'asc' }, { id: 'asc' }]);
+
+    prismaMock.galleryItem.count.mockResolvedValue(4);
+    await expect(countPendingGalleryItems()).resolves.toBe(4);
+    expect(prismaMock.galleryItem.count).toHaveBeenCalledWith({
+      where: { legacyId: null, status: 'PENDING' },
+    });
+  });
+
+  it('finds the approved photos of someone at work, and their own pending ones', async () => {
+    findMany().mockResolvedValue([tile('w')] as never);
+
+    await getWorkingPhotos('u1');
+    expect(findMany().mock.calls[0][0]?.where).toEqual({
+      ...visibleGalleryItem,
+      working: true,
+      tags: { some: { userId: 'u1' } },
+    });
+
+    await getPendingWorkingPhotos('u1');
+    expect(findMany().mock.calls[1][0]?.where).toEqual({
+      legacyId: null,
+      status: 'PENDING',
+      working: true,
+      uploadedById: 'u1',
+    });
   });
 });
 

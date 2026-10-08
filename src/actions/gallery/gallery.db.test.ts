@@ -1,12 +1,14 @@
 import prisma from '@/lib/prisma';
 import { deleteObjects, getPresignedUploadUrl, headObject, putImmutableObject } from '@/lib/s3';
 import {
+  approveGalleryItems,
   bulkDeleteGalleryItems,
   bulkSetGalleryItemsEvent,
   createPhoto,
   createVideo,
   deleteGalleryItem,
   getPhotoUploadUrl,
+  rejectGalleryItems,
   updateGalleryItem,
 } from '@/actions/gallery/gallery-actions';
 import {
@@ -23,7 +25,10 @@ import {
   getGalleryFilterOptions,
   getGalleryItem,
   getGalleryNeighbours,
+  getPendingWorkingPhotos,
+  getWorkingPhotos,
   listGalleryItems,
+  listPendingGalleryItems,
 } from '@/lib/gallery';
 import type { Prisma } from '@/generated/prisma/client';
 import { actAs } from '@/test/db/fixtures';
@@ -151,14 +156,58 @@ describe('creating photos and videos', () => {
     expect(putImmutableObject).not.toHaveBeenCalled();
   });
 
-  it('only admins can upload', async () => {
+  it('members upload photos that stay hidden until an admin approves them', async () => {
     const user = await createUser();
     await actAs(user.id);
+
+    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).resolves.toMatchObject({
+      key: 'gallery/originals/x.jpg',
+    });
+    const working = await createPhoto('gallery/originals/a.jpg', {
+      takenAt: '2025-01-01',
+      working: true,
+    });
+    const other = await createPhoto('gallery/originals/b.jpg', { takenAt: '2025-01-02' });
+    expect(working.status).toBe('PENDING');
+
+    // Hidden everywhere public; only the uploader sees their photo at work in review
+    expect((await listGalleryItems()).map((i) => i.id)).not.toContain(working.id);
+    expect(await getGalleryItem(working.id)).toBeNull();
+    expect(await getWorkingPhotos(user.id)).toEqual([]);
+    expect((await getPendingWorkingPhotos(user.id)).map((i) => i.id)).toEqual([working.id]);
+    expect(
+      (await listPendingGalleryItems()).filter((i) => i.uploadedBy?.id === user.id),
+    ).toHaveLength(2);
+    expect(
+      await prisma.notification.count({
+        where: { type: 'gallery_item_pending', userId: admin.id },
+      }),
+    ).toBeGreaterThan(0);
+
+    // Members can't review their own uploads
+    await expect(approveGalleryItems([working.id])).rejects.toThrow('No autorizado');
+
+    await actAs(admin.id);
+    await expect(approveGalleryItems([working.id])).resolves.toEqual({ approved: 1 });
+    await expect(rejectGalleryItems([other.id])).resolves.toEqual({ rejected: 1 });
+
+    expect((await listGalleryItems({ type: 'trabajando' })).map((i) => i.id)).toContain(working.id);
+    expect((await listGalleryItems({ type: 'trabajando' })).map((i) => i.id)).not.toContain(
+      other.id,
+    );
+    expect((await getWorkingPhotos(user.id)).map((i) => i.id)).toEqual([working.id]);
+    expect(await prisma.galleryItem.findUnique({ where: { id: other.id } })).toBeNull();
+    // An approved photo isn't rejected (deleted) by a stale review
+    await expect(rejectGalleryItems([working.id])).resolves.toEqual({ rejected: 0 });
+  });
+
+  it('asks visitors to log in and checks the format', async () => {
+    await actAs();
     const before = await prisma.galleryItem.count();
 
-    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).rejects.toThrow('No autorizado');
+    await expect(getPhotoUploadUrl('a.jpg', 'image/jpeg')).rejects.toThrow('Iniciá sesión');
     await expect(createPhoto('gallery/originals/a.jpg', { takenAt: '2025-01-01' })).rejects.toThrow(
-      'No autorizado',
+      'Iniciá sesión',
     );
     await actAs(admin.id);
     await expect(getPhotoUploadUrl('a.pdf', 'application/pdf')).rejects.toThrow(

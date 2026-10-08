@@ -276,6 +276,7 @@ describe('getProfileCounts', () => {
       eventos: 1,
       fotos: 0,
       setups: 1,
+      trabajando: 0,
       conversaciones: 0,
     });
   });

@@ -24,6 +24,11 @@ export const galleryDetailsSchema = z.object({
 
 export type GalleryDetailsInput = z.input<typeof galleryDetailsSchema>;
 
+// Al subir una foto: si es de alguien trabajando (va a la pestaña "trabajando" de la galería).
+export const photoUploadSchema = z.object({ working: z.boolean().default(false) });
+
+export type PhotoUploadInput = z.input<typeof photoUploadSchema>;
+
 // Lo que el navegador lee del video al subirlo.
 export const videoMetadataSchema = z.object({
   durationSeconds: z
