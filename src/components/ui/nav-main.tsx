@@ -63,9 +63,9 @@ export const SidebarSectionLabel = ({ children }: { children: React.ReactNode })
   </SidebarGroupLabel>
 );
 
-// `nav-hack` (globals.css) is the hover effect; the background it paints replaces the accent fill.
+// `nav-hack` (globals.css) is the hover and the active look; what it paints replaces the accent fill.
 const menuButtonClassName =
-  'nav-hack relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-transparent hover:font-mono [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors [&>svg]:hover:text-sidebar-foreground data-[active=true]:bg-pcnGreen/[0.09] data-[active=true]:font-mono data-[active=true]:text-pcnGreen data-[active=true]:shadow-[inset_0_0_0_1px_rgba(4,244,190,0.25)] data-[active=true]:hover:bg-pcnGreen/[0.12] data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
+  'nav-hack relative h-9 rounded-sm px-2.5 text-[13px] font-medium text-sidebar-foreground/70 transition-colors hover:bg-transparent hover:font-mono [&>svg]:size-4 [&>svg]:text-sidebar-foreground/45 [&>svg]:transition-colors [&>svg]:hover:text-sidebar-foreground data-[active=true]:bg-transparent data-[active=true]:font-mono data-[active=true]:font-semibold data-[active=true]:text-pcnGreen data-[active=true]:hover:bg-transparent data-[active=true]:hover:text-pcnGreen data-[active=true]:[&>svg]:text-pcnGreen data-[state=open]:hover:bg-sidebar-accent';
 
 export function NavMain({ items, label }: { items: NavItem[]; label?: string }) {
   const pathname = usePathname();
@@ -111,6 +111,16 @@ export function NavMain({ items, label }: { items: NavItem[]; label?: string }) 
                     <NavLink href={item.url!} className="flex items-center gap-2.5">
                       <item.icon strokeWidth={1.75} />
                       <span>{item.title}</span>
+                      {isActive && !(item.badge && item.badge > 0) && (
+                        // "You are here": a pulsing marker at the end of the row.
+                        <span
+                          aria-hidden
+                          className="ml-auto flex items-center gap-1 font-mono text-[9px] tracking-widest text-pcnGreen/80"
+                        >
+                          <span className="size-1.5 animate-pulse rounded-full bg-pcnGreen shadow-[0_0_8px_rgba(4,244,190,1)]" />
+                          aquí
+                        </span>
+                      )}
                       {item.badge !== undefined && item.badge > 0 && (
                         <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-sm bg-pcnGreen px-1.5 font-mono text-[10px] font-semibold text-black tabular-nums">
                           {item.badge > 99 ? '99+' : item.badge}
