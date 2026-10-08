@@ -97,6 +97,16 @@ const allVideos: Video[] = [
     language: 'es',
   },
   {
+    id: 'HqB3t7046QE',
+    title: "AI Won't Replace Craftsmanship",
+    speaker: 'Javi Velasco (Vercel)',
+    channel: 'Manfred',
+    date: '2026-10-06',
+    durationSeconds: 2071,
+    language: 'es',
+    isTalk: true,
+  },
+  {
     id: '6eBSHbLKuN0',
     title: 'Mastering Claude Code in 30 minutes',
     speaker: 'Boris Cherny (Anthropic)',
