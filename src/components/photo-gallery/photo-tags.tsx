@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { Crosshair } from 'lucide-react';
+import { Crosshair, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { setGalleryTagPosition } from '@/actions/gallery/gallery-tags';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
@@ -102,9 +102,14 @@ export function PhotoTagsProvider({
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
+// Touch screens have no hover: there the markers start hidden and a tap on the photo toggles them.
+const isTouchScreen = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(hover: none)').matches;
+
 /**
  * The photo with a marker where each placed person is (shown on hover, or always while placing
- * someone). While placing, a click on the photo sets where that person is.
+ * someone; on touch screens, after tapping the photo). While placing, a click on the photo sets
+ * where that person is.
  */
 export function PhotoTagCanvas({
   children,
@@ -114,6 +119,7 @@ export function PhotoTagCanvas({
   className?: string;
 }) {
   const context = usePhotoTags();
+  const [revealed, setRevealed] = useState(false);
   if (!context) return <>{children}</>;
   const { tags, placing, place, cancelPlacing, highlighted, setHighlighted } = context;
   const placed = Object.values(tags).filter((tag) => tag.position);
@@ -126,7 +132,10 @@ export function PhotoTagCanvas({
         className,
       )}
       onClick={(event) => {
-        if (!placing) return;
+        if (!placing) {
+          if (placed.length && isTouchScreen()) setRevealed((shown) => !shown);
+          return;
+        }
         const box = event.currentTarget.getBoundingClientRect();
         void place({
           x: clamp((event.clientX - box.left) / box.width),
@@ -154,19 +163,33 @@ export function PhotoTagCanvas({
         </p>
       )}
 
+      {placed.length > 0 && !placing && !revealed && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute right-2 bottom-2 hidden items-center gap-1 rounded-sm bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-pcnGreen backdrop-blur-xs [@media(hover:none)]:flex"
+        >
+          <Users className="size-3" />
+          {placed.length} · tocá para ver
+        </span>
+      )}
+
       {placed.map((tag) => (
         <Link
           key={tag.id}
           href={`/perfil/${tag.id}`}
-          onClick={(event) => placing && event.preventDefault()}
+          onClick={(event) => {
+            // A tap on a marker opens the profile; it doesn't also hide the markers.
+            event.stopPropagation();
+            if (placing) event.preventDefault();
+          }}
           onMouseEnter={() => setHighlighted(tag.id)}
           onMouseLeave={() => setHighlighted(null)}
           style={{ left: `${tag.position!.x * 100}%`, top: `${tag.position!.y * 100}%` }}
           className={cn(
             'absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 transition-opacity duration-200',
-            placing || highlighted === tag.id
+            placing || revealed || highlighted === tag.id
               ? 'opacity-100'
-              : 'opacity-0 group-hover/tags:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100',
+              : 'opacity-0 group-hover/tags:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:pointer-events-none',
           )}
         >
           <span

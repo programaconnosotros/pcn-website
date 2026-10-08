@@ -57,4 +57,36 @@ describe('PhotoTagCanvas', () => {
     expect(screen.getByRole('link', { name: 'Beto' })).toHaveStyle({ left: '50%', top: '25%' });
     expect(screen.queryByText(/tocá dónde está/)).not.toBeInTheDocument();
   });
+
+  it('on touch screens, hides the markers until the photo is tapped, and toggles them', () => {
+    const matchMedia = jest
+      .spyOn(window, 'matchMedia')
+      .mockImplementation(
+        (query: string) => ({ matches: query === '(hover: none)' }) as MediaQueryList,
+      );
+    renderPhoto();
+    const ana = screen.getByRole('link', { name: 'Ana' });
+    const canvas = screen.getByRole('img', { name: 'la foto' }).parentElement!;
+    expect(ana).toHaveClass('opacity-0');
+    expect(screen.getByText(/tocá para ver/)).toBeInTheDocument();
+
+    fireEvent.click(canvas);
+    expect(ana).toHaveClass('opacity-100');
+    expect(screen.queryByText(/tocá para ver/)).not.toBeInTheDocument();
+
+    // Tapping a marker opens the profile without hiding the rest
+    fireEvent.click(ana);
+    expect(ana).toHaveClass('opacity-100');
+
+    fireEvent.click(canvas);
+    expect(ana).toHaveClass('opacity-0');
+    matchMedia.mockRestore();
+  });
+
+  it('keeps hover for mouse screens: a click on the photo does nothing', () => {
+    renderPhoto();
+    const ana = screen.getByRole('link', { name: 'Ana' });
+    fireEvent.click(screen.getByRole('img', { name: 'la foto' }).parentElement!);
+    expect(ana).toHaveClass('opacity-0');
+  });
 });
