@@ -84,6 +84,24 @@ describe('HistoriaEvents', () => {
     );
   });
 
+  it.each([
+    [3, 3],
+    [6, 4],
+    [8, 8],
+    [12, 8],
+  ])(
+    'shows %i photos as full rows of four (%i), two rows when there are plenty',
+    (count, shown) => {
+      render(<HistoriaEvents flyers={['f']} events={[event('e1', 'f', count)]} />);
+      const photos = screen.getAllByRole('link', { name: /Foto/ });
+      expect(photos).toHaveLength(shown);
+      // Phones show two rows of two
+      expect(photos.filter((link) => link.classList.contains('max-sm:hidden'))).toHaveLength(
+        Math.max(0, shown - 4),
+      );
+    },
+  );
+
   it('renders nothing for events not on the platform and skips photo strips without photos', () => {
     const { container, rerender } = render(<HistoriaEvents flyers={['nada']} events={[]} />);
     expect(container).toBeEmptyDOMElement();

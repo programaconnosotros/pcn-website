@@ -1,6 +1,7 @@
 import type { HistoriaEvent } from '@/lib/historia-events';
 import { ArrowUpRight, CalendarDays, Images } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('es-AR', {
@@ -9,6 +10,15 @@ const formatDate = (date: Date) =>
     year: 'numeric',
     timeZone: 'America/Argentina/Buenos_Aires',
   });
+
+// Rows of four photos: two when the event has plenty, one otherwise, never a row half empty.
+const COLUMNS = 4;
+const shownPhotos = <T,>(photos: T[]) =>
+  photos.length < COLUMNS
+    ? photos
+    : photos.slice(0, photos.length >= 2 * COLUMNS ? 2 * COLUMNS : COLUMNS);
+
+const GRID_COLUMNS = ['', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3'];
 
 interface HistoriaEventsProps {
   /** Flyers shown in the section; the events using them are listed in the same order. */
@@ -48,19 +58,30 @@ export function HistoriaEvents({ flyers, events }: HistoriaEventsProps) {
           </Link>
           {event.photos.length > 0 && (
             <div className="border-t border-pcnGreen-200 p-2">
-              <div className="grid grid-cols-4 gap-1 sm:grid-cols-8">
-                {event.photos.map((photo) => (
+              <div
+                className={cn(
+                  'grid gap-1.5',
+                  event.photos.length < COLUMNS
+                    ? GRID_COLUMNS[event.photos.length]
+                    : 'grid-cols-2 sm:grid-cols-4',
+                )}
+              >
+                {shownPhotos(event.photos).map((photo, index) => (
                   <Link
                     key={photo.id}
                     href={`/galeria/${photo.id}?evento=${event.id}`}
-                    className="block aspect-square overflow-hidden border border-pcnGreen-200 transition-colors hover:border-pcnGreen"
+                    className={cn(
+                      'block aspect-4/3 overflow-hidden border border-pcnGreen-200 transition-colors hover:border-pcnGreen',
+                      // Phones show two rows of two.
+                      index >= COLUMNS && 'max-sm:hidden',
+                    )}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={photo.thumbUrl}
                       alt={photo.description ?? `Foto de ${event.name}`}
                       loading="lazy"
-                      className="size-full object-cover"
+                      className="size-full object-cover transition-transform duration-300 hover:scale-[1.03]"
                     />
                   </Link>
                 ))}
