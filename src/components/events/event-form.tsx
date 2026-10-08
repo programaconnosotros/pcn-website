@@ -44,12 +44,15 @@ import {
 import { partners } from '@/data/partners';
 import { FlyerDesignersField } from '@/components/events/flyer-designers-field';
 import { DateInput } from '@/components/ui/date-input';
+import { FillFromFlyersButton } from '@/components/events/fill-from-flyers-button';
 
 type EventFormProps = {
   defaultValues?: Partial<EventFormData>;
   onSubmit: (_values: EventFormData) => Promise<void>;
   submitLabel?: string;
   cancelHref?: string;
+  // Botón para completar el evento con IA a partir de los flyers (solo admins: son quienes suben flyers).
+  flyerAgent?: boolean;
 };
 
 export function EventForm({
@@ -57,6 +60,7 @@ export function EventForm({
   onSubmit,
   submitLabel = 'guardarEvento();',
   cancelHref = '/eventos',
+  flyerAgent = false,
 }: EventFormProps) {
   const form = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
@@ -382,6 +386,8 @@ export function EventForm({
                     </FormItem>
                   )}
                 />
+
+                {flyerAgent && <FillFromFlyersButton />}
 
                 {/* Crédito a quien diseñó el flyer (todas sus imágenes) */}
                 <FormField

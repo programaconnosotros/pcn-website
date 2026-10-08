@@ -21,6 +21,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-08',
+    area: 'eventos',
+    title: 'Completar un evento con sus flyers',
+    description:
+      'En el formulario de un evento, completarConFlyers() lee los flyers adjuntos con IA y llena los campos vacíos: nombre, descripción, fecha, lugar, links, cupo y sponsors. Si el lugar ya se usó, trae su dirección y su mapa; si un sponsor es partner, su logo.',
+    authors: ['agustin-sanc'],
+    href: '/eventos/nuevo',
+    audience: 'admins',
+  },
+  {
     date: '2026-10-07',
     area: 'charlas',
     title: 'Cargar charlas con solo la foto',

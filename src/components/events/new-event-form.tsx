@@ -7,7 +7,7 @@ import { isRedirectError } from '@/lib/error-handler';
 import { toast } from 'sonner';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 
-export function NewEventForm() {
+export function NewEventForm({ flyerAgent = false }: { flyerAgent?: boolean }) {
   const onSubmit = async (values: EventFormData) => {
     const toastId = toast.loading('Creando evento...');
 
@@ -26,5 +26,12 @@ export function NewEventForm() {
     }
   };
 
-  return <EventForm onSubmit={onSubmit} submitLabel="crearEvento();" cancelHref="/eventos" />;
+  return (
+    <EventForm
+      onSubmit={onSubmit}
+      submitLabel="crearEvento();"
+      cancelHref="/eventos"
+      flyerAgent={flyerAgent}
+    />
+  );
 }

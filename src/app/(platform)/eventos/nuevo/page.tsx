@@ -26,7 +26,7 @@ const NewEventPage = async () => {
             <PageTitle path="eventos/nuevo" />
           </StickyHeader>
 
-          <NewEventForm />
+          <NewEventForm flyerAgent={user?.role === 'ADMIN'} />
         </div>
       </div>
     </>

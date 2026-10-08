@@ -1,6 +1,6 @@
 import { prismaMock } from '@/test/prisma';
 import { getObjectBuffer } from '@/lib/s3';
-import { imageForModel, talkAgent, talkDraftSchema } from './talk-agent';
+import { talkAgent, talkDraftSchema } from './talk-agent';
 
 // `ai` is ESM only and Jest runs CommonJS: a shim that keeps what the agent was built with.
 jest.mock('ai', () => ({
@@ -161,11 +161,5 @@ describe('talkDraftSchema', () => {
         speakers: [],
       }).success,
     ).toBe(true);
-  });
-});
-
-describe('imageForModel', () => {
-  it('returns a JPEG buffer', async () => {
-    await expect(imageForModel(Buffer.from('x'))).resolves.toEqual(Buffer.from('jpeg'));
   });
 });

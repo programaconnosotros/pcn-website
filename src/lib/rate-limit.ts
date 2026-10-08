@@ -25,8 +25,8 @@ export const RATE_LIMITS = {
   photoDownload: { limit: 30, windowSeconds: 60 * 60 },
   log: { limit: 60, windowSeconds: 10 * 60 },
   pageVisit: { limit: 300, windowSeconds: 10 * 60 },
-  // Each run of the talk-from-photo agent is a paid model call with several steps.
-  talkAgent: { limit: 20, windowSeconds: 60 * 60 },
+  // Each run of an AI agent (talk from its photo, event from its flyers) is a paid model call.
+  aiAgent: { limit: 30, windowSeconds: 60 * 60 },
 } satisfies Record<string, RateLimitRule>;
 
 export type RateLimitName = keyof typeof RATE_LIMITS;

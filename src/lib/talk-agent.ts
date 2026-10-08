@@ -1,26 +1,12 @@
 import { Output, ToolLoopAgent, isStepCount, tool } from 'ai';
-import sharp from 'sharp';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
-import { getObjectBuffer, keyFromPublicUrl } from '@/lib/s3';
+import { AGENT_MODEL, bucketImagesForModel } from '@/lib/agents';
 import { searchPeople } from '@/lib/people-search';
 
 // Agente que arma una charla a partir de su foto: busca el evento, la propuesta y los oradores en
 // la base y devuelve los datos para crearla. Sus tools solo leen; quien crea la charla es la
 // action (createTalkFromPhoto), después de validar lo que devolvió.
-
-export const TALK_AGENT_MODEL = 'anthropic/claude-sonnet-5.5';
-
-// Lado más largo de las imágenes que ve el modelo: más grande no le suma y cuesta más tokens.
-const MAX_IMAGE_SIDE = 1568;
-
-/** La imagen achicada a JPEG, derecha según su EXIF, para mandársela al modelo. */
-export const imageForModel = (buffer: Buffer) =>
-  sharp(buffer)
-    .rotate()
-    .resize(MAX_IMAGE_SIDE, MAX_IMAGE_SIDE, { fit: 'inside', withoutEnlargement: true })
-    .jpeg({ quality: 80 })
-    .toBuffer();
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -144,13 +130,7 @@ const viewEventFlyers = tool({
       where: { id: eventId, deletedAt: null },
       select: { flyerImages: true },
     });
-    const keys = (event?.flyerImages ?? [])
-      .map(keyFromPublicUrl)
-      .filter((key): key is string => !!key)
-      .slice(0, 4);
-    const images = await Promise.all(
-      keys.map(async (key) => (await imageForModel(await getObjectBuffer(key))).toString('base64')),
-    );
+    const images = await bucketImagesForModel(event?.flyerImages ?? []);
     return { images };
   },
   toModelOutput: ({ output }) => ({
@@ -245,7 +225,7 @@ La descripción tiene entre 10 y 2000 caracteres, en español y en el tono de la
 Si no podés identificar el evento o la charla con confianza razonable, respondé found=false y explicá en reason qué viste y qué faltó. Es preferible no cargar nada a cargar una charla equivocada.`;
 
 export const talkAgent = new ToolLoopAgent({
-  model: TALK_AGENT_MODEL,
+  model: AGENT_MODEL,
   instructions,
   tools: { findEvents, getEventDetails, viewEventFlyers, searchUsers },
   output: Output.object({ schema: talkDraftSchema }),

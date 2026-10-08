@@ -6,7 +6,8 @@ import { requireAdmin } from '@/lib/admin';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { getObjectBuffer, keyFromPublicUrl } from '@/lib/s3';
 import { talkSchema, type TalkFormData } from '@/schemas/talk-schema';
-import { imageForModel, talkAgent, type TalkDraft } from '@/lib/talk-agent';
+import { talkAgent, type TalkDraft } from '@/lib/talk-agent';
+import { MISSING_AGENT_KEY, imageForModel } from '@/lib/agents';
 
 // La carpeta donde el form de charlas sube las fotos: el agente no lee nada fuera de ella.
 const PORTRAITS_FOLDER = 'talks/portraits/';
@@ -108,7 +109,7 @@ const checkReferences = async (draft: TalkDraft) => {
  */
 export const createTalkFromPhoto = async (photoUrl: string): Promise<CreateTalkFromPhotoResult> => {
   await requireAdmin();
-  await enforceRateLimit('talkAgent');
+  await enforceRateLimit('aiAgent');
 
   const key = typeof photoUrl === 'string' ? keyFromPublicUrl(photoUrl) : null;
   if (!key?.startsWith(PORTRAITS_FOLDER)) {
@@ -116,10 +117,7 @@ export const createTalkFromPhoto = async (photoUrl: string): Promise<CreateTalkF
   }
 
   if (!process.env.AI_GATEWAY_API_KEY) {
-    return {
-      status: 'failed',
-      reason: 'Falta configurar AI_GATEWAY_API_KEY en el servidor para usar el agente',
-    };
+    return { status: 'failed', reason: MISSING_AGENT_KEY };
   }
 
   const original = await getObjectBuffer(key);

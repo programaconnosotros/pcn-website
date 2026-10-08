@@ -5,6 +5,9 @@ import { EventForm } from './event-form';
 jest.mock('@/actions/users/search-users-for-speaker', () => ({
   searchUsersForSpeaker: jest.fn().mockResolvedValue([]),
 }));
+jest.mock('@/components/events/fill-from-flyers-button', () => ({
+  FillFromFlyersButton: () => <p>completar con flyers</p>,
+}));
 jest.mock('@/components/ui/multi-file-upload', () => ({
   MultiFileUpload: ({ value, onChange }: { value: string[]; onChange: (_v: string[]) => void }) => (
     <button type="button" onClick={() => onChange([...value, '/flyer.png'])}>
@@ -26,6 +29,15 @@ jest.setTimeout(20_000);
 const type = (input: HTMLElement, value: string) => fireEvent.change(input, { target: { value } });
 
 describe('EventForm', () => {
+  it('offers the flyer agent only when asked to (admins)', () => {
+    const { unmount } = render(<EventForm onSubmit={jest.fn()} />);
+    expect(screen.queryByText('completar con flyers')).not.toBeInTheDocument();
+    unmount();
+
+    render(<EventForm onSubmit={jest.fn()} flyerAgent />);
+    expect(screen.getByText('completar con flyers')).toBeInTheDocument();
+  });
+
   it('shows validation messages and does not submit an empty in-person event', async () => {
     const onSubmit = jest.fn();
     render(<EventForm onSubmit={onSubmit} />);

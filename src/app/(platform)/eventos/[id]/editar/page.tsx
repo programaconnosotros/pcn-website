@@ -73,7 +73,11 @@ const EditEventPage = async (props: { params: Promise<{ id: string }> }) => {
             />
           </StickyHeader>
 
-          <EditEventForm eventId={id} defaultValues={defaultValues} />
+          <EditEventForm
+            eventId={id}
+            defaultValues={defaultValues}
+            flyerAgent={session.user.role === 'ADMIN'}
+          />
         </div>
       </div>
     </>

@@ -14,8 +14,9 @@ jest.mock('@/lib/s3', () => ({
     url.startsWith('https://cdn.dev/') ? url.slice('https://cdn.dev/'.length) : null,
   getObjectBuffer: jest.fn(),
 }));
-jest.mock('@/lib/talk-agent', () => ({
-  talkAgent: { generate: jest.fn() },
+jest.mock('@/lib/talk-agent', () => ({ talkAgent: { generate: jest.fn() } }));
+jest.mock('@/lib/agents', () => ({
+  ...jest.requireActual('@/lib/agents'),
   imageForModel: jest.fn(async () => Buffer.from('small')),
 }));
 jest.mock('exifr', () => ({
@@ -78,7 +79,7 @@ describe('createTalkFromPhoto', () => {
     expect(getObjectBuffer).not.toHaveBeenCalled();
 
     await createTalkFromPhoto(PHOTO);
-    expect(enforceRateLimit).toHaveBeenCalledWith('talkAgent');
+    expect(enforceRateLimit).toHaveBeenCalledWith('aiAgent');
   });
 
   it('only reads photos uploaded to the talk portraits folder', async () => {

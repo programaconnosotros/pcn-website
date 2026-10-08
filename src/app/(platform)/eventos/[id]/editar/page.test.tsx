@@ -90,6 +90,7 @@ describe('EditEventPage', () => {
           { name: 'Otro', website: '' },
         ],
       },
+      flyerAgent: true,
     });
   });
 
@@ -102,6 +103,7 @@ describe('EditEventPage', () => {
     renderInPlatform(await EditEventPage(params));
 
     expect(screen.queryByRole('button', { name: /eliminar/ })).not.toBeInTheDocument();
+    expect(formProps().flyerAgent).toBe(false);
     expect(formProps().defaultValues).toMatchObject({
       endDate: '',
       city: '',
