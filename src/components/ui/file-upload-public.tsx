@@ -9,6 +9,7 @@ import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public
 import { postUploadForm } from '@/lib/upload-form';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
+import { toJpegIfHeic } from '@/lib/heic';
 
 type FileUploadPublicProps = {
   value?: string;
@@ -26,7 +27,7 @@ type FileUploadPublicProps = {
 export function FileUploadPublic({
   value,
   onChange,
-  accept = 'image/jpeg,image/png,image/webp,image/gif',
+  accept = 'image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif',
   maxSize = 10 * 1024 * 1024, // 10MB por defecto
   className,
   disabled = false,
@@ -45,10 +46,19 @@ export function FileUploadPublic({
   }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const picked = e.target.files?.[0];
+    if (!picked) return;
 
     setError(null);
+
+    let file: File;
+    try {
+      file = await toJpegIfHeic(picked);
+    } catch (err) {
+      setError((err as Error).message);
+      if (inputRef.current) inputRef.current.value = '';
+      return;
+    }
 
     // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
     if (!isAllowedImage(file)) {
@@ -155,7 +165,7 @@ export function FileUploadPublic({
       )}
 
       <p className="text-xs text-muted-foreground">
-        JPEG, PNG, WebP (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+        JPEG, PNG, WebP, HEIC (máx. {Math.round(maxSize / 1024 / 1024)}MB)
       </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}

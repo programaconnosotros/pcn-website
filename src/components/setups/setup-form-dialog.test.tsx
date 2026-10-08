@@ -5,6 +5,7 @@ import { createSetup, getSetupUploadForm, updateSetup } from '@/actions/setups/s
 import { postUploadForm } from '@/lib/upload-form';
 import { mockRouter } from '@/test/dom';
 import { SetupFormDialog } from './setup-form-dialog';
+import { heicTo } from 'heic-to/csp';
 import { todayInputValue } from '@/schemas/setup-schema';
 
 jest.mock('@/actions/setups/setup-actions', () => ({
@@ -13,6 +14,7 @@ jest.mock('@/actions/setups/setup-actions', () => ({
   updateSetup: jest.fn(),
 }));
 jest.mock('@/lib/upload-form', () => ({ postUploadForm: jest.fn() }));
+jest.mock('heic-to/csp', () => ({ heicTo: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 
 const photo = (name = 'setup.jpg', type = 'image/jpeg', size?: number) => {
@@ -97,16 +99,17 @@ describe('SetupFormDialog', () => {
     expect(createSetup).not.toHaveBeenCalled();
   });
 
-  it('rejects HEIC, unsupported and too big photos', async () => {
+  it('rejects HEIC that cannot be converted, unsupported and too big photos', async () => {
+    jest.mocked(heicTo).mockRejectedValueOnce(new Error('libheif'));
     render(<SetupFormDialog open onOpenChange={jest.fn()} />);
 
     await pick(photo('IMG.HEIC', ''));
     expect(
-      screen.getByText('HEIC no está soportado: exportá la foto como JPG.'),
+      screen.getByText('No se pudo convertir la foto HEIC: exportala como JPG.'),
     ).toBeInTheDocument();
     await pick(photo('a.gif', 'image/gif'));
     expect(
-      screen.getByText('Formato no soportado. Subí JPG, PNG, WebP o AVIF.'),
+      screen.getByText('Formato no soportado. Subí JPG, PNG, WebP, AVIF o HEIC.'),
     ).toBeInTheDocument();
     await pick(photo('big.png', 'image/png', 11 * 1024 * 1024));
     expect(screen.getByText('La foto pesa más de 10 MB.')).toBeInTheDocument();

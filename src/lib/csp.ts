@@ -13,8 +13,10 @@ export const buildContentSecurityPolicy = (nonce: string, { dev = false } = {}) 
     // 'strict-dynamic': los scripts con nonce pueden cargar los chunks de Next; nada más.
     // En desarrollo, React y el HMR de Next usan eval.
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${dev ? " 'unsafe-eval'" : ''}`,
-    // El service worker de la PWA (/sw.js). Con 'strict-dynamic' no alcanza 'self' en script-src.
-    "worker-src 'self'",
+    // El service worker de la PWA (/sw.js); con 'strict-dynamic' no alcanza 'self' en script-src.
+    // blob: para el worker que convierte fotos HEIC (src/lib/heic.ts): solo lo puede crear un
+    // script que ya pasó el nonce.
+    "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

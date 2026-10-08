@@ -2,7 +2,6 @@ import exifr from 'exifr';
 import * as mediabunny from 'mediabunny';
 import {
   compressVideo,
-  isHeic,
   isVideo,
   placeholderPoster,
   postFile,
@@ -52,10 +51,7 @@ beforeEach(() => {
 });
 
 describe('file checks', () => {
-  it('detects HEIC photos by type or extension, and videos', () => {
-    expect(isHeic(file('a.jpg', 'image/heic'))).toBe(true);
-    expect(isHeic(file('IMG.HEIF', ''))).toBe(true);
-    expect(isHeic(file('a.jpg', 'image/jpeg'))).toBe(false);
+  it('detects videos', () => {
     expect(isVideo(file('a.mp4', 'video/mp4'))).toBe(true);
     expect(isVideo(file('a.jpg', 'image/jpeg'))).toBe(false);
   });

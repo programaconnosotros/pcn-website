@@ -375,8 +375,8 @@ export function EventForm({
                         />
                       </FormControl>
                       <FormDescription>
-                        Podés subir uno o más flyers del evento (JPEG, PNG, WebP, GIF). Si no subís
-                        ninguno, se mostrará un placeholder con el logo de PCN.
+                        Podés subir uno o más flyers del evento (JPEG, PNG, WebP, GIF, HEIC). Si no
+                        subís ninguno, se mostrará un placeholder con el logo de PCN.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

@@ -21,9 +21,20 @@ export const galleryCases = defineManualCases('galeria', [
     title: 'Formatos no soportados al subir',
     priority: 'media',
     pre: ['Admin en /galeria/subir'],
-    steps: ['Elegir una foto HEIC', 'Elegir un video .avi', 'Elegir un video de más de 500 MB'],
+    steps: ['Elegir un video .avi', 'Elegir un video de más de 500 MB'],
     expected:
-      'Rechazos: "HEIC no está soportado: exportala como JPG.", "Formato de video no soportado: subí MP4, WebM o MOV." y "El video pesa más de 500 MB.".',
+      'Rechazos: "Formato de video no soportado: subí MP4, WebM o MOV." y "El video pesa más de 500 MB.".',
+  },
+  {
+    title: 'Fotos HEIC de iPhone',
+    priority: 'media',
+    pre: [
+      'Admin en /galeria/subir',
+      'Una foto .heic en la computadora (de un iPhone, por AirDrop)',
+    ],
+    steps: ['Elegir la foto .heic desde Chrome', 'Subirla'],
+    expected:
+      'Se ve la vista previa con la fecha en que se sacó, se sube y queda en WebP como cualquier otra foto.',
   },
   {
     title: 'La foto se ve derecha y sin datos de ubicación',

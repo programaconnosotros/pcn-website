@@ -16,6 +16,7 @@ import {
   readVideo,
 } from './upload-media';
 import { PhotoUploader } from './photo-uploader';
+import { heicTo } from 'heic-to/csp';
 
 jest.mock('@/actions/gallery/gallery-actions', () => ({
   createPhoto: jest.fn(),
@@ -23,6 +24,7 @@ jest.mock('@/actions/gallery/gallery-actions', () => ({
   getPhotoUploadUrl: jest.fn(),
   getVideoUploadUrl: jest.fn(),
 }));
+jest.mock('heic-to/csp', () => ({ heicTo: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 jest.mock('./upload-media', () => ({
   ...jest.requireActual('./upload-media'),
@@ -92,6 +94,7 @@ describe('PhotoUploader', () => {
   });
 
   it('checks the picked files and explains which ones cannot be uploaded', async () => {
+    jest.mocked(heicTo).mockRejectedValueOnce(new Error('libheif'));
     const { add } = renderUploader();
 
     await add(
@@ -102,12 +105,30 @@ describe('PhotoUploader', () => {
     );
 
     expect(screen.queryByText('notas.txt')).not.toBeInTheDocument();
-    expect(screen.getByText('HEIC no está soportado: exportala como JPG.')).toBeInTheDocument();
+    expect(
+      screen.getByText('No se pudo convertir la foto HEIC: exportala como JPG.'),
+    ).toBeInTheDocument();
     expect(
       screen.getByText('Formato de video no soportado: subí MP4, WebM o MOV.'),
     ).toBeInTheDocument();
     expect(screen.getByText('El video pesa más de 500 MB.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /subir 0 archivos/ })).toBeDisabled();
+  });
+
+  it('converts HEIC photos to JPEG, keeping the date they were taken', async () => {
+    jest.mocked(readTakenAt).mockResolvedValue(ON_MEETUP);
+    jest.mocked(heicTo).mockResolvedValueOnce(new Blob(['jpeg'], { type: 'image/jpeg' }));
+    const { add } = renderUploader();
+    const heic = file('IMG_1.HEIC', '');
+
+    await add(heic);
+
+    expect(readTakenAt).toHaveBeenCalledWith(heic);
+    expect(screen.getByText('evento elegido por la fecha del archivo')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /subir 1 archivo/ }));
+
+    await waitFor(() => expect(createPhoto).toHaveBeenCalled());
+    expect(getPhotoUploadUrl).toHaveBeenCalledWith('IMG_1.jpg', 'image/jpeg');
   });
 
   it('uploads photos and compressed videos one by one', async () => {

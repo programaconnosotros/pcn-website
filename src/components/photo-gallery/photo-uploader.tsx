@@ -22,7 +22,6 @@ import { PhotoEventSelect, type EventOption } from './photo-event-select';
 import {
   VIDEO_TYPES,
   compressVideo,
-  isHeic,
   isVideo,
   placeholderPoster,
   postFile,
@@ -32,6 +31,7 @@ import {
   type VideoInfo,
 } from './upload-media';
 import { DateInput } from '@/components/ui/date-input';
+import { isHeic, toJpegIfHeic } from '@/lib/heic';
 
 type Status = 'pending' | 'compressing' | 'uploading' | 'done' | 'error';
 
@@ -47,7 +47,7 @@ type Item = {
   // The event was picked because the file's date falls on it.
   eventFromDate: boolean;
   status: Status;
-  // Why the file can't be uploaded at all (HEIC, a video the browser can't read, too big…).
+  // Why the file can't be uploaded at all (a HEIC that didn't convert, a video too big…).
   unsupported?: string;
   error?: string;
   progress?: number;
@@ -61,7 +61,8 @@ const MAX_VIDEO_MB = MAX_VIDEO_BYTES / 1024 / 1024;
 const toMb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1);
 
 // Checks a picked file and reads what the form needs from it. Files taken during an event
-// start with that event; the rest, with the one chosen for every file.
+// start with that event; the rest, with the one chosen for every file. HEIC photos become JPEGs
+// here, after reading their date (the conversion drops the EXIF).
 async function prepare(file: File, eventId: string | null, events: EventOption[]): Promise<Item> {
   const takenAt = await readTakenAt(file);
   const eventOnDate = findEventForDate(events, takenAt);
@@ -76,8 +77,14 @@ async function prepare(file: File, eventId: string | null, events: EventOption[]
     eventFromDate: !!eventOnDate,
     status: 'pending' as Status,
   };
-  if (isHeic(file)) return { ...base, unsupported: 'HEIC no está soportado: exportala como JPG.' };
-  if (!isVideo(file)) return { ...base, preview: URL.createObjectURL(file) };
+  if (!isVideo(file)) {
+    try {
+      const photo = await toJpegIfHeic(file);
+      return { ...base, file: photo, preview: URL.createObjectURL(photo) };
+    } catch (error) {
+      return { ...base, unsupported: (error as Error).message };
+    }
+  }
 
   if (!VIDEO_TYPES.includes(file.type)) {
     return { ...base, unsupported: 'Formato de video no soportado: subí MP4, WebM o MOV.' };
@@ -289,7 +296,7 @@ export function PhotoUploader({
           <ImagePlus className="size-6" />
           <span>arrastrá fotos y videos o hacé click para elegirlos</span>
           <span className="text-[10px] text-muted-foreground/70">
-            fotos: JPG, PNG, WebP, AVIF (se optimizan a WebP) · videos: MP4, WebM, MOV hasta{' '}
+            fotos: JPG, PNG, WebP, AVIF, HEIC (se optimizan a WebP) · videos: MP4, WebM, MOV hasta{' '}
             {MAX_VIDEO_MB} MB (se optimizan a MP4 1080p)
           </span>
         </button>

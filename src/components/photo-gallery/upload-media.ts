@@ -3,9 +3,6 @@
 
 export const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
-// sharp's prebuilt binaries can't decode HEIC, so iPhone photos have to be exported first.
-export const isHeic = (file: File) => /hei[cf]$/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
-
 export const isVideo = (file: File) => file.type.startsWith('video/');
 
 // The date the photo was taken from its EXIF data, or the file's date when it has none.

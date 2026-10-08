@@ -7,11 +7,13 @@ import { MultiFileUpload } from './multi-file-upload';
 import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
 import { getPresignedUrlPublic } from '@/actions/upload/get-presigned-url-public';
 import { postUploadForm } from '@/lib/upload-form';
+import { heicTo } from 'heic-to/csp';
 
 jest.mock('@/actions/upload/get-presigned-url', () => ({ getPresignedUrl: jest.fn() }));
 jest.mock('@/actions/upload/get-presigned-url-public', () => ({
   getPresignedUrlPublic: jest.fn(),
 }));
+jest.mock('heic-to/csp', () => ({ heicTo: jest.fn() }));
 jest.mock('@/lib/upload-form', () => ({ postUploadForm: jest.fn() }));
 
 const presigned = getPresignedUrl as jest.Mock;
@@ -70,6 +72,26 @@ describe('FileUpload', () => {
       'src',
       'https://cdn/subida.png',
     );
+  });
+
+  it('converts a HEIC photo to JPEG before uploading it', async () => {
+    const jpeg = new Blob(['jpeg'], { type: 'image/jpeg' });
+    jest.mocked(heicTo).mockResolvedValueOnce(jpeg);
+    const { container } = render(<FileUpload onChange={jest.fn()} />);
+    await pick(container, new File(['heic'], 'IMG_1.HEIC', { type: 'image/heic' }));
+    expect(presigned).toHaveBeenCalledWith({ contentType: 'image/jpeg', folder: 'events' });
+    const uploaded = post.mock.calls[0][2] as File;
+    expect([uploaded.name, uploaded.type]).toEqual(['IMG_1.jpg', 'image/jpeg']);
+  });
+
+  it('explains when a HEIC photo cannot be converted', async () => {
+    jest.mocked(heicTo).mockRejectedValueOnce(new Error('libheif'));
+    const { container } = render(<FileUpload onChange={jest.fn()} />);
+    await pick(container, new File(['heic'], 'IMG_1.HEIC', { type: '' }));
+    expect(
+      screen.getByText('No se pudo convertir la foto HEIC: exportala como JPG.'),
+    ).toBeInTheDocument();
+    expect(presigned).not.toHaveBeenCalled();
   });
 
   it('shows a spinner over the local preview while uploading', async () => {
@@ -185,7 +207,7 @@ describe('FileUploadPublic', () => {
   it('uploads through the public action', async () => {
     const onChange = jest.fn();
     const { container } = render(<FileUploadPublic onChange={onChange} />);
-    expect(screen.getByText('JPEG, PNG, WebP (máx. 10MB)')).toBeInTheDocument();
+    expect(screen.getByText('JPEG, PNG, WebP, HEIC (máx. 10MB)')).toBeInTheDocument();
     const click = jest.spyOn(fileInput(container), 'click');
     await userEvent.click(screen.getByRole('button'));
     expect(click).toHaveBeenCalled();

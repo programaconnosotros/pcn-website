@@ -9,6 +9,7 @@ import { getPresignedUrl } from '@/actions/upload/get-presigned-url';
 import { postUploadForm } from '@/lib/upload-form';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { IMAGE_TYPE_ERROR, isAllowedImage } from '@/lib/image-types';
+import { toJpegIfHeic } from '@/lib/heic';
 
 type FileUploadProps = {
   value?: string;
@@ -38,7 +39,7 @@ export function FileUpload({
   value,
   onChange,
   folder = 'events',
-  accept = 'image/jpeg,image/png,image/webp,image/gif',
+  accept = 'image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif',
   maxSize = 10 * 1024 * 1024, // 10MB por defecto
   className,
   disabled = false,
@@ -64,16 +65,23 @@ export function FileUpload({
     }
   };
 
-  const handleMultipleFiles = async (files: File[]) => {
+  const handleMultipleFiles = async (picked: File[]) => {
     setError(null);
+
+    const converted = await Promise.allSettled(picked.map(toJpegIfHeic));
+    const files = converted.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+    const unconverted = picked.filter((_, i) => converted[i].status === 'rejected');
 
     const wrongType = files.filter((file) => !isAllowedImage(file));
     const tooLarge = files.filter((file) => isAllowedImage(file) && file.size > maxSize);
     const valid = files.filter((file) => isAllowedImage(file) && file.size <= maxSize);
     const errors: string[] = [];
+    if (unconverted.length > 0) {
+      errors.push(`${unconverted.map((f) => f.name).join(', ')}: no se pudo convertir de HEIC`);
+    }
     if (wrongType.length > 0) {
       errors.push(
-        `${wrongType.map((f) => f.name).join(', ')}: no es una imagen JPEG, PNG, WebP o GIF`,
+        `${wrongType.map((f) => f.name).join(', ')}: no es una imagen JPEG, PNG, WebP, GIF o HEIC`,
       );
     }
     if (tooLarge.length > 0) {
@@ -110,10 +118,19 @@ export function FileUpload({
       return;
     }
 
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const picked = e.target.files?.[0];
+    if (!picked) return;
 
     setError(null);
+
+    let file: File;
+    try {
+      file = await toJpegIfHeic(picked);
+    } catch (err) {
+      setError((err as Error).message);
+      resetInput();
+      return;
+    }
 
     // El tipo se valida acá: si lo rechaza el servidor, en producción el mensaje no llega
     if (!isAllowedImage(file)) {
@@ -246,7 +263,7 @@ export function FileUpload({
                       : 'Haz clic para subir una imagen'}
                   </span>
                   <span className="text-xs text-muted-foreground/70">
-                    JPEG, PNG, WebP, GIF (máx. {Math.round(maxSize / 1024 / 1024)}MB)
+                    JPEG, PNG, WebP, GIF, HEIC (máx. {Math.round(maxSize / 1024 / 1024)}MB)
                   </span>
                 </>
               )}

@@ -2,6 +2,6 @@
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 export const IMAGE_TYPE_ERROR =
-  'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF)';
+  'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP, GIF, HEIC)';
 
 export const isAllowedImage = (file: { type: string }) => ALLOWED_IMAGE_TYPES.includes(file.type);

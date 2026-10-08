@@ -28,6 +28,7 @@ import { dialogFormActionBarClassName } from '@/components/ui/form-action-bar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { HEIC_TYPES, toJpegIfHeic } from '@/lib/heic';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { postUploadForm } from '@/lib/upload-form';
 import { cn } from '@/lib/utils';
@@ -82,9 +83,7 @@ async function uploadOriginal(file: File) {
 
 const fileError = (file: File) => {
   if (!SETUP_IMAGE_TYPES.includes(file.type)) {
-    return /hei[cf]$/i.test(file.type) || /\.hei[cf]$/i.test(file.name)
-      ? 'HEIC no está soportado: exportá la foto como JPG.'
-      : 'Formato no soportado. Subí JPG, PNG, WebP o AVIF.';
+    return 'Formato no soportado. Subí JPG, PNG, WebP, AVIF o HEIC.';
   }
   if (file.size > SETUP_MAX_BYTES) return `La foto pesa más de ${MAX_MB} MB.`;
   return null;
@@ -111,8 +110,15 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
   // Free the local preview when it's replaced or the dialog goes away.
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
-  const pickFile = (picked: File | undefined) => {
-    if (!picked) return;
+  const pickFile = async (original: File | undefined) => {
+    if (!original) return;
+    let picked: File;
+    try {
+      picked = await toJpegIfHeic(original);
+    } catch (error) {
+      setPhotoError((error as Error).message);
+      return;
+    }
     const error = fileError(picked);
     setPhotoError(error);
     if (error) return;
@@ -197,7 +203,7 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                 ref={inputRef}
                 id="setup-photo"
                 type="file"
-                accept={SETUP_IMAGE_TYPES.join(',')}
+                accept={[...SETUP_IMAGE_TYPES, ...HEIC_TYPES].join(',')}
                 className="hidden"
                 onChange={(e) => {
                   pickFile(e.target.files?.[0]);
@@ -246,7 +252,9 @@ export function SetupFormDialog({ setup, withTrigger, open, onOpenChange }: Setu
                       <span className="text-pcnGreen-500">$ </span>
                       soltá la foto o hacé clic
                     </span>
-                    <span className="text-[10px]">JPG, PNG, WebP o AVIF · hasta {MAX_MB} MB</span>
+                    <span className="text-[10px]">
+                      JPG, PNG, WebP, AVIF o HEIC · hasta {MAX_MB} MB
+                    </span>
                   </span>
                 )}
               </button>
