@@ -1800,7 +1800,7 @@ export const changelog: ChangelogEntry[] = [
     date: '2024-06-21',
     area: 'infra',
     title: 'Comienza la plataforma',
-    description: 'Primer commit de la plataforma de Programa Con Nosotros.',
+    description: 'Primer commit de la plataforma de programaConNosotros.',
     authors: ['agustin-sanc'],
   },
 ];
