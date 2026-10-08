@@ -6,6 +6,7 @@ import { TrafficChart } from '@/components/admin/metrics/traffic-chart';
 import {
   HourHeatmap,
   KpiTile,
+  ModuleDetails,
   ModuleRanking,
   Panel,
   PanelTitle,
@@ -48,7 +49,9 @@ const ratio = (part: number, whole: number) => (whole > 0 ? (part / whole) * 100
 const percent = (value: number) =>
   `${value.toLocaleString('es-AR', { maximumFractionDigits: value < 10 ? 1 : 0 })}%`;
 
-type Props = { searchParams: Promise<{ rango?: string; desde?: string; hasta?: string }> };
+type Props = {
+  searchParams: Promise<{ rango?: string; desde?: string; hasta?: string; admins?: string }>;
+};
 
 export default async function MetricasPage(props: Props) {
   const metrics = await getCachedProductMetrics(await props.searchParams, OWN_HOSTS);
@@ -106,7 +109,12 @@ export default async function MetricasPage(props: Props) {
             <span className="text-pcnGreen-500">$</span> metrics --from {isoDate(range.from)} --to{' '}
             {isoDate(lastDay)} --compare previous
           </p>
-          <RangeFilter preset={range.preset} from={range.from} to={lastDay} />
+          <RangeFilter
+            preset={range.preset}
+            from={range.from}
+            to={lastDay}
+            includeAdmins={metrics.includeAdmins}
+          />
         </div>
 
         <p className="mb-2 font-mono text-[10px] text-muted-foreground">
@@ -114,8 +122,8 @@ export default async function MetricasPage(props: Props) {
           <span className="text-muted-foreground/60">
             {' '}
             · comparado con {shortDate.format(metrics.previous.from)} →{' '}
-            {shortDate.format(new Date(metrics.previous.to.getTime() - 1))} · sin visitas de admins
-            · se actualiza cada hora
+            {shortDate.format(new Date(metrics.previous.to.getTime() - 1))} ·{' '}
+            {metrics.includeAdmins ? 'con admins' : 'sin admins'} · se actualiza cada hora
           </span>
         </p>
 
@@ -187,6 +195,20 @@ export default async function MetricasPage(props: Props) {
             <SignupFunnel steps={funnel} />
           </Panel>
         </RuledGrid>
+
+        <div className="mb-6">
+          <PanelTitle note="tráfico, profundidad, recurrencia y uso de cada módulo">
+            módulos en detalle
+          </PanelTitle>
+          <ModuleDetails
+            modules={metrics.modules}
+            previous={metrics.previousModules}
+            usage={metrics.usage}
+            previousUsage={metrics.previousUsage}
+            pages={metrics.pagesByModule}
+            returning={metrics.returningByModule}
+          />
+        </div>
 
         <RuledGrid className="mb-6 grid-cols-1 xl:grid-cols-[1fr_1fr]">
           <Panel>

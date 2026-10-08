@@ -54,6 +54,13 @@ const mockRawQueries = (overrides: Partial<Record<string, unknown[]>> = {}) => {
           signups: BigInt(0),
         },
       ]);
+    if (sql.includes('row_number()'))
+      return pick('modulePages', [
+        { section: '/eventos', path: '/eventos/abc', visits: BigInt(6) },
+        { section: '/eventos', path: '/eventos', visits: BigInt(4) },
+      ]);
+    if (sql.includes('module_returning'))
+      return pick('moduleReturning', [{ section: '/eventos', visitors: BigInt(2) }]);
     if (sql.includes('split_part'))
       return pick('sections', [
         {
@@ -61,6 +68,7 @@ const mockRawQueries = (overrides: Partial<Record<string, unknown[]>> = {}) => {
           visits: isPrevious ? BigInt(2) : BigInt(10),
           visitors: BigInt(4),
           members: BigInt(1),
+          memberVisits: BigInt(3),
         },
       ]);
     if (sql.includes('extract(dow'))
@@ -104,7 +112,14 @@ beforeEach(() => {
   prismaMock.project.count.mockResolvedValue(15);
   prismaMock.talkProposal.count.mockResolvedValue(16);
   prismaMock.contentMark.count.mockImplementation((({ where }: { where: { mark: string } }) =>
-    Promise.resolve(where.mark === 'read' ? 17 : 18)) as never);
+    Promise.resolve(where.mark === 'read' ? 17 : where.mark === 'saved' ? 19 : 18)) as never);
+  prismaMock.forumPost.count.mockResolvedValue(21);
+  prismaMock.forumComment.count.mockResolvedValue(22);
+  prismaMock.forumPostLike.count.mockResolvedValue(23);
+  prismaMock.galleryItem.count.mockResolvedValue(24);
+  prismaMock.galleryItemTag.count.mockResolvedValue(25);
+  prismaMock.setup.count.mockResolvedValue(26);
+  prismaMock.setupLike.count.mockResolvedValue(27);
 });
 
 describe('getProductMetrics', () => {
@@ -126,7 +141,39 @@ describe('getProductMetrics', () => {
       { day: new Date('2026-09-01T00:00:00Z'), visits: 5, visitors: 3, signups: 1 },
       { day: new Date('2026-09-02T00:00:00Z'), visits: 0, visitors: 0, signups: 0 },
     ]);
-    expect(metrics.modules).toEqual([{ section: '/eventos', visits: 10, visitors: 4, members: 1 }]);
+    expect(metrics.includeAdmins).toBe(false);
+    expect(metrics.modules).toEqual([
+      { section: '/eventos', visits: 10, visitors: 4, members: 1, memberVisits: 3 },
+    ]);
+    expect(metrics.pagesByModule).toEqual([
+      { section: '/eventos', path: '/eventos/abc', visits: 6 },
+      { section: '/eventos', path: '/eventos', visits: 4 },
+    ]);
+    expect(metrics.returningByModule).toEqual({ '/eventos': 2 });
+    const counts = (section: string) =>
+      metrics.usage[section].map(({ key, count }) => [key, count]);
+    expect(counts('/eventos')).toEqual([
+      ['registrations', 11],
+      ['proposals', 16],
+    ]);
+    expect(counts('/foro')).toEqual([
+      ['forumPosts', 21],
+      ['forumComments', 22],
+      ['forumLikes', 23],
+    ]);
+    expect(counts('/galeria')).toEqual([
+      ['galleryUploads', 24],
+      ['galleryTags', 25],
+    ]);
+    expect(counts('/setups')).toEqual([
+      ['setups', 26],
+      ['setupLikes', 27],
+    ]);
+    expect(counts('/lectura')).toEqual([
+      ['articlesRead', 17],
+      ['articlesSaved', 19],
+    ]);
+    expect(metrics.previousUsage).toEqual(metrics.usage);
     expect(metrics.previousModules[0].visits).toBe(2);
     expect(metrics.pages).toEqual([{ path: '/eventos/abc', visits: 8, visitors: 5 }]);
     expect(metrics.hours).toHaveLength(7);
@@ -167,7 +214,51 @@ describe('getProductMetrics', () => {
     mockRawQueries();
     await getProductMetrics(range, []);
     expect(prismaMock.eventRegistration.count).toHaveBeenCalledWith({
-      where: { createdAt: { gte: range.from, lt: range.to }, cancelledAt: null },
+      where: {
+        createdAt: { gte: range.from, lt: range.to },
+        cancelledAt: null,
+        NOT: { user: { role: 'ADMIN' } },
+      },
+    });
+  });
+
+  it("leaves admins' visits, signups and actions out by default", async () => {
+    mockRawQueries();
+    await getProductMetrics(range, []);
+    const visitQueries = queries.filter(({ sql }) => sql.includes('"PageVisit"'));
+    expect(visitQueries.length).toBeGreaterThan(0);
+    for (const { sql } of visitQueries) expect(sql).toContain("visitor.role = 'ADMIN'");
+    expect(queries.find(({ sql }) => sql.includes('generate_series'))?.sql).toContain(
+      "role <> 'ADMIN'",
+    );
+    expect(prismaMock.user.count).toHaveBeenCalledWith({
+      where: { createdAt: { gte: range.from, lt: range.to }, role: { not: 'ADMIN' } },
+    });
+    expect(prismaMock.advice.count).toHaveBeenCalledWith({
+      where: { createdAt: { gte: range.from, lt: range.to }, NOT: { author: { role: 'ADMIN' } } },
+    });
+    expect(prismaMock.galleryItem.count).toHaveBeenCalledWith({
+      where: {
+        createdAt: { gte: range.from, lt: range.to },
+        legacyId: null,
+        NOT: { uploadedBy: { role: 'ADMIN' } },
+      },
+    });
+  });
+
+  it('counts admins too when asked', async () => {
+    mockRawQueries();
+    const metrics = await getProductMetrics(range, [], { includeAdmins: true });
+    expect(metrics.includeAdmins).toBe(true);
+    for (const { sql } of queries) {
+      expect(sql).not.toContain("visitor.role = 'ADMIN'");
+      expect(sql).not.toContain("role <> 'ADMIN'");
+    }
+    expect(prismaMock.user.count).toHaveBeenCalledWith({
+      where: { createdAt: { gte: range.from, lt: range.to } },
+    });
+    expect(prismaMock.advice.count).toHaveBeenCalledWith({
+      where: { createdAt: { gte: range.from, lt: range.to } },
     });
   });
 
@@ -235,6 +326,13 @@ describe('getCachedProductMetrics', () => {
     expect(metrics.range.preset).toBeNull();
     expect(metrics.range.from.toISOString()).toBe('2026-01-01T03:00:00.000Z');
     expect(metrics.range.to.toISOString()).toBe('2026-01-11T03:00:00.000Z');
+  });
+
+  it('keys the admin filter apart from the default view', async () => {
+    const withAdmins = await getCachedProductMetrics({ rango: '7d', admins: '1' }, []);
+    expect(withAdmins.includeAdmins).toBe(true);
+    const without = await getCachedProductMetrics({ rango: '7d', admins: 'no' }, []);
+    expect(without.includeAdmins).toBe(false);
   });
 
   it('caches for an hour under a fixed key', () => {

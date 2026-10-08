@@ -125,6 +125,19 @@ describe('AdminPanelPage', () => {
     expect(screen.getByRole('link', { name: /^eventos 2/ })).toBeInTheDocument();
   });
 
+  it("leaves admins' own visits out of the visit counts and top pages", async () => {
+    asAdmin();
+    seed();
+    await renderPage();
+
+    for (const [args] of db.pageVisit.count.mock.calls) {
+      expect(args.where).toMatchObject({ NOT: { user: { role: 'ADMIN' } } });
+    }
+    expect(db.pageVisit.groupBy.mock.calls[0][0].where).toMatchObject({
+      NOT: { user: { role: 'ADMIN' } },
+    });
+  });
+
   it('charts the last 30 days of visits and signups, filling missing days with 0', async () => {
     asAdmin();
     seed();

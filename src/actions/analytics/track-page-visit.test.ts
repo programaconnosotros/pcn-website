@@ -67,14 +67,19 @@ describe('trackPageVisit', () => {
     );
   });
 
-  it('does not record a visit for admin users', async () => {
+  it("records admins' visits with their user, so the metrics can leave them out or count them", async () => {
     mockCookies({ sessionId: adminSession.id });
     mockHeaders({});
     prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.pageVisit.create.mockResolvedValue({} as any);
 
     await trackPageVisit('/admin');
 
-    expect(prismaMock.pageVisit.create).not.toHaveBeenCalled();
+    expect(prismaMock.pageVisit.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ path: '/admin', userId: adminSession.userId }),
+      }),
+    );
   });
 
   it('records a visit with userId for a regular user session', async () => {

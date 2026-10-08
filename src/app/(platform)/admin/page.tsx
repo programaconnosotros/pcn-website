@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { AlertTriangle, ChevronRight } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { requireAdminPage } from '@/lib/admin';
+import { nonAdminVisit, nonAdminVisitSql } from '@/lib/page-visit-filters';
 import { OS_PROGRAMS } from '@/components/os/programs';
 import { DailyBars, type DailyCount } from '@/components/admin/daily-bars';
 import { PageTitle } from '@/components/ui/page-title';
@@ -60,7 +61,7 @@ const dailyCounts = async (table: 'PageVisit' | 'User', since: Date): Promise<Da
       ? await prisma.$queryRaw<{ day: string; count: number }[]>`
           SELECT to_char(("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${TZ}, 'YYYY-MM-DD') AS day,
                  count(*)::int AS count
-          FROM "PageVisit" WHERE "createdAt" >= ${since} GROUP BY 1`
+          FROM "PageVisit" WHERE "createdAt" >= ${since} AND ${nonAdminVisitSql} GROUP BY 1`
       : await prisma.$queryRaw<{ day: string; count: number }[]>`
           SELECT to_char(("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${TZ}, 'YYYY-MM-DD') AS day,
                  count(*)::int AS count
@@ -171,8 +172,8 @@ export default async function AdminPanelPage() {
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { createdAt: { gte: weekAgo } } }),
-    prisma.pageVisit.count({ where: { createdAt: { gte: dayAgo } } }),
-    prisma.pageVisit.count({ where: { createdAt: { gte: weekAgo } } }),
+    prisma.pageVisit.count({ where: { ...nonAdminVisit, createdAt: { gte: dayAgo } } }),
+    prisma.pageVisit.count({ where: { ...nonAdminVisit, createdAt: { gte: weekAgo } } }),
     prisma.errorLog.count({ where: { resolved: false } }),
     prisma.errorLog.count({ where: { createdAt: { gte: dayAgo } } }),
     prisma.talkProposal.count({ where: { status: 'PENDING' } }),
@@ -202,7 +203,7 @@ export default async function AdminPanelPage() {
     }),
     prisma.pageVisit.groupBy({
       by: ['path'],
-      where: { createdAt: { gte: weekAgo } },
+      where: { ...nonAdminVisit, createdAt: { gte: weekAgo } },
       _count: { path: true },
       orderBy: { _count: { path: 'desc' } },
       take: 6,

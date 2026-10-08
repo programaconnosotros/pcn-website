@@ -34,7 +34,7 @@ describe('trackPageVisit', () => {
     });
   });
 
-  it('links the visit to a logged-in member but never tracks admins', async () => {
+  it('links the visit to whoever is logged in, admins included, but the panel leaves admins out', async () => {
     const [user, admin] = [await createUser(), await createAdmin()];
     const path = `/perfil/${uniqueId()}`;
 
@@ -43,7 +43,9 @@ describe('trackPageVisit', () => {
     await actAs(admin.id);
     await trackPageVisit(path);
 
-    expect((await visitsTo(path)).map((v) => v.userId)).toEqual([user.id]);
+    expect((await visitsTo(path)).map((v) => v.userId).sort()).toEqual([user.id, admin.id].sort());
+    const listed = (await fetchPageVisits(1000)).filter((visit) => visit.path === path);
+    expect(listed.map((visit) => visit.userId)).toEqual([user.id]);
   });
 
   it('ignores paths that are not routes and clips long ones', async () => {

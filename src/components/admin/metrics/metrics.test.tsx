@@ -6,6 +6,7 @@ import {
   EmptyPanel,
   HourHeatmap,
   KpiTile,
+  ModuleDetails,
   ModuleRanking,
   Panel,
   PanelTitle,
@@ -209,6 +210,85 @@ describe('RangeFilter', () => {
     fireEvent.change(hasta, { target: { value: '2025-03-20' } });
     await user.click(screen.getByRole('button', { name: 'aplicar' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/metricas?desde=2025-03-05&hasta=2025-03-20');
+  });
+
+  it('leaves admins out by default and keeps the range when switching', async () => {
+    const { unmount } = render(<RangeFilter preset="30d" from={from} to={to} />);
+    expect(screen.getByRole('button', { name: 'excluir' })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(screen.getByRole('button', { name: 'incluir' }));
+    expect(mockRouter.push).toHaveBeenLastCalledWith('/metricas?rango=30d&admins=1');
+    unmount();
+
+    render(<RangeFilter preset={null} from={from} to={to} includeAdmins />);
+    expect(screen.getByRole('button', { name: 'incluir' })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(screen.getByRole('button', { name: '7d' }));
+    expect(mockRouter.push).toHaveBeenLastCalledWith('/metricas?rango=7d&admins=1');
+    await userEvent.click(screen.getByRole('button', { name: 'excluir' }));
+    expect(mockRouter.push).toHaveBeenLastCalledWith('/metricas?desde=2025-03-01&hasta=2025-03-31');
+  });
+});
+
+describe('ModuleDetails', () => {
+  const usage = {
+    '/eventos': [
+      { key: 'registrations', label: 'inscripciones', count: 12 },
+      { key: 'proposals', label: 'propuestas de charla', count: 0 },
+    ],
+    '/foro': [{ key: 'forumPosts', label: 'hilos', count: 3 }],
+    '/setups': [{ key: 'setups', label: 'setups', count: 0 }],
+  };
+
+  it('details each module: traffic, depth, logged-in share, recurrence, usage and top pages', () => {
+    render(
+      <ModuleDetails
+        modules={[
+          { section: '/eventos', visits: 80, visitors: 20, members: 5, memberVisits: 40 },
+          { section: '/charlas', visits: 20, visitors: 10, members: 0, memberVisits: 0 },
+        ]}
+        previous={[{ section: '/eventos', visits: 40 }]}
+        usage={usage}
+        previousUsage={{ ...usage, '/eventos': [{ key: 'registrations', label: '', count: 6 }] }}
+        pages={[
+          { section: '/eventos', path: '/eventos/abc', visits: 50 },
+          { section: '/eventos', path: '/eventos', visits: 30 },
+        ]}
+        returning={{ '/eventos': 5 }}
+      />,
+    );
+    const [eventos, charlas, foro] = screen.getAllByRole('article');
+    expect(eventos).toHaveTextContent('Eventos');
+    expect(eventos).toHaveTextContent('80');
+    expect(eventos).toHaveTextContent('+100%');
+    expect(eventos).toHaveTextContent('80% del tráfico');
+    // 80 visits by 20 visitors, half of them logged in, 5 of 20 came back
+    expect(eventos).toHaveTextContent('por visitante4');
+    expect(eventos).toHaveTextContent('logueados50%');
+    expect(eventos).toHaveTextContent('vuelven25%');
+    expect(eventos).toHaveTextContent('inscripciones12+100%');
+    expect(screen.getByRole('link', { name: '~ /eventos/abc' })).toHaveAttribute(
+      'href',
+      '/eventos/abc',
+    );
+    expect(charlas).toHaveTextContent('nuevo');
+    expect(charlas).not.toHaveTextContent('+ ');
+    // The forum had posts but no tracked visits; setups had nothing at all
+    expect(foro).toHaveTextContent('/foro');
+    expect(foro).toHaveTextContent('hilos3');
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+  });
+
+  it('shows an empty panel without modules', () => {
+    render(
+      <ModuleDetails
+        modules={[]}
+        previous={[]}
+        usage={{}}
+        previousUsage={{}}
+        pages={[]}
+        returning={{}}
+      />,
+    );
+    expect(screen.getByText('sin datos en este período')).toBeInTheDocument();
   });
 });
 

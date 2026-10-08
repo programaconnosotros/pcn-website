@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { getProductMetrics } from '@/lib/product-metrics';
 import { parseMetricsRange } from '@/lib/metrics-range';
-import { createTestEvent, createUser } from '@/test/db/content-fixtures';
+import { createAdmin, createTestEvent, createUser } from '@/test/db/content-fixtures';
 
 // Las agregaciones en SQL de /metricas con datos conocidos. Todo pasa en marzo de 2020 (y en el
 // período anterior, fines de febrero), fechas en las que ningún otro test crea filas, así los
@@ -18,6 +18,7 @@ const IPAD = 'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X)';
 const BOT = 'Googlebot/2.1 (+http://www.google.com/bot.html)';
 
 let metrics: Awaited<ReturnType<typeof getProductMetrics>>;
+let withAdmins: Awaited<ReturnType<typeof getProductMetrics>>;
 let member: Awaited<ReturnType<typeof createUser>>;
 
 beforeAll(async () => {
@@ -127,7 +128,36 @@ beforeAll(async () => {
     },
   });
 
+  // Un admin navegando y publicando en el rango: queda afuera salvo que se pida contarlo
+  const admin = await createAdmin();
+  await prisma.pageVisit.createMany({
+    data: [
+      {
+        path: '/eventos/abc',
+        ipAddress: '10.0.0.7',
+        userAgent: DESKTOP,
+        userId: admin.id,
+        createdAt: at('2020-03-02T16:00:00Z'),
+      },
+      {
+        path: '/foro',
+        ipAddress: '10.0.0.7',
+        userAgent: DESKTOP,
+        userId: admin.id,
+        createdAt: at('2020-03-03T16:00:00Z'),
+      },
+    ],
+  });
+  await prisma.advice.create({
+    data: {
+      content: 'Consejo de admin',
+      authorId: admin.id,
+      createdAt: at('2020-03-03T13:00:00Z'),
+    },
+  });
+
   metrics = await getProductMetrics(range, OWN_HOSTS);
+  withAdmins = await getProductMetrics(range, OWN_HOSTS, { includeAdmins: true });
 });
 
 it('resolves the custom range in Argentina time and the previous period of the same length', () => {
@@ -163,10 +193,31 @@ it('groups pages and modules', () => {
   // /autenticacion y /eventos empatan en visitas: el orden entre ellas no está definido
   expect(metrics.modules.map((m) => m.section).at(-1)).toBe('/charlas');
   expect([...metrics.modules].sort((a, b) => a.section.localeCompare(b.section))).toEqual([
-    { section: '/autenticacion', visits: 3, visitors: 3, members: 0 },
-    { section: '/charlas', visits: 1, visitors: 1, members: 0 },
-    { section: '/eventos', visits: 3, visitors: 1, members: 1 },
+    { section: '/autenticacion', visits: 3, visitors: 3, members: 0, memberVisits: 0 },
+    { section: '/charlas', visits: 1, visitors: 1, members: 0, memberVisits: 0 },
+    { section: '/eventos', visits: 3, visitors: 1, members: 1, memberVisits: 1 },
   ]);
+});
+
+it("ranks each module's top pages and counts who came back to it", () => {
+  expect(metrics.pagesByModule.filter((page) => page.section === '/eventos')).toEqual([
+    { section: '/eventos', path: '/eventos/abc', visits: 2 },
+    { section: '/eventos', path: '/eventos', visits: 1 },
+  ]);
+  // 10.0.0.1 entró a /eventos el 2/3 y el 3/3 (hora local)
+  expect(metrics.returningByModule).toEqual({ '/eventos': 1 });
+  expect(metrics.usage['/eventos'].find((u) => u.key === 'registrations')?.count).toBe(1);
+  expect(metrics.usage['/consejos'].find((u) => u.key === 'advice')?.count).toBe(1);
+});
+
+it("leaves admins' visits and posts out by default, and counts them when asked", () => {
+  expect(metrics.modules.map((m) => m.section)).not.toContain('/foro');
+  expect(withAdmins.traffic).toEqual({ visits: 9, visitors: 6, members: 2 });
+  expect(withAdmins.modules.find((m) => m.section === '/foro')?.visits).toBe(1);
+  expect(withAdmins.modules.find((m) => m.section === '/eventos')?.visits).toBe(4);
+  expect(withAdmins.activity.advice).toBe(2);
+  expect(withAdmins.hours.flat().reduce((a, b) => a + b, 0)).toBe(9);
+  expect(withAdmins.deviceSplit.desktop).toBe(6);
 });
 
 it('places each visit in the heatmap by local weekday and hour', () => {

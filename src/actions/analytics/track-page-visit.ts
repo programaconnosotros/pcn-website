@@ -25,13 +25,9 @@ export const trackPageVisit = async (path: string) => {
     let userId: string | undefined = undefined;
     if (sessionId) {
       const session = await findSession(sessionId);
-      if (session) {
-        // Si el usuario es admin, no registrar la visita
-        if (session.user.role === 'ADMIN') {
-          return;
-        }
-        userId = session.userId;
-      }
+      // Las de admins también se guardan: las lecturas las excluyen salvo que /metricas pida
+      // contarlas (src/lib/page-visit-filters.ts).
+      if (session) userId = session.userId;
     }
 
     // Obtener información del request
@@ -40,7 +36,7 @@ export const trackPageVisit = async (path: string) => {
     const referer = headersList.get('referer') || null;
     const ipAddress = clientIpFrom(headersList);
 
-    // Registrar la visita (solo para usuarios no-admin o anónimos)
+    // Registrar la visita
     await prisma.pageVisit.create({
       data: {
         path: path.slice(0, MAX_LENGTH),

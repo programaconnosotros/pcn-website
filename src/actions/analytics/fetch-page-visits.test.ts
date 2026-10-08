@@ -1,6 +1,7 @@
 import { prismaMock } from '@/test/prisma';
 import { fetchPageVisits, getPageVisitStats } from './fetch-page-visits';
 import { requireAdmin } from '@/lib/admin';
+import { nonAdminVisit } from '@/lib/page-visit-filters';
 
 // Admin-only data: every test runs as an admin unless it says otherwise.
 jest.mock('@/lib/admin', () => ({ requireAdmin: jest.fn() }));
@@ -23,7 +24,7 @@ describe('fetchPageVisits', () => {
     await fetchPageVisits();
 
     expect(prismaMock.pageVisit.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ take: 100 }),
+      expect.objectContaining({ take: 100, where: nonAdminVisit }),
     );
   });
 
@@ -169,9 +170,23 @@ describe('getPageVisitStats', () => {
     expect(prismaMock.pageVisit.groupBy).toHaveBeenCalledWith(
       expect.objectContaining({
         by: ['userId'],
-        where: { userId: { not: null } },
+        where: { ...nonAdminVisit, userId: { not: null } },
       }),
     );
+  });
+
+  it('leaves admin visits out of every count', async () => {
+    prismaMock.pageVisit.count.mockResolvedValue(0);
+    (prismaMock.pageVisit.groupBy as jest.Mock).mockResolvedValue([] as any);
+
+    await getPageVisitStats();
+
+    for (const [args] of prismaMock.pageVisit.count.mock.calls) {
+      expect(args?.where).toMatchObject(nonAdminVisit);
+    }
+    for (const [args] of (prismaMock.pageVisit.groupBy as jest.Mock).mock.calls) {
+      expect(args.where).toMatchObject(nonAdminVisit);
+    }
   });
 });
 

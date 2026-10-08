@@ -3,7 +3,13 @@ import Link from 'next/link';
 import { ArrowDownRight, ArrowUpRight, Minus, TrendingDown } from 'lucide-react';
 import { RuledGrid, ruledCellClassName } from '@/components/ui/ruled-grid';
 import { findProgramForPath, GENERIC_PROGRAM } from '@/components/os/programs';
-import type { FunnelStep, PathCount } from '@/lib/product-metrics';
+import type {
+  FunnelStep,
+  ModulePage,
+  ModuleTraffic,
+  ModuleUsageMap,
+  PathCount,
+} from '@/lib/product-metrics';
 import { cn } from '@/lib/utils';
 
 const number = (value: number) => value.toLocaleString('es-AR');
@@ -412,6 +418,166 @@ export function RankedList({
         </li>
       ))}
     </ul>
+  );
+}
+
+/** One number of a module's cell: a small label over its value. */
+const ModuleStat = ({ label, value, title }: { label: string; value: string; title?: string }) => (
+  <div className="flex min-w-0 flex-col" title={title}>
+    <span className="truncate text-[9px] tracking-wider text-muted-foreground/70 uppercase">
+      {label}
+    </span>
+    <span className="text-sm text-foreground tabular-nums">{value}</span>
+  </div>
+);
+
+const perVisitor = (visits: number, visitors: number) =>
+  visitors > 0 ? (visits / visitors).toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—';
+const shareOf = (part: number, whole: number) => (whole > 0 ? percent((part / whole) * 100) : '—');
+
+/**
+ * Every module in detail: how much it's visited (and against the period before), by how many
+ * people, how deep they go, how many were logged in or came back another day, what they did in
+ * it and its most visited pages.
+ */
+export function ModuleDetails({
+  modules,
+  previous,
+  usage,
+  previousUsage,
+  pages,
+  returning,
+}: {
+  modules: ModuleTraffic[];
+  previous: { section: string; visits: number }[];
+  usage: ModuleUsageMap;
+  previousUsage: ModuleUsageMap;
+  pages: ModulePage[];
+  returning: Record<string, number>;
+}) {
+  const total = modules.reduce((sum, module) => sum + module.visits, 0);
+  // Modules with actions but no tracked visits in the range still show what was done in them.
+  const quiet = Object.keys(usage)
+    .filter(
+      (section) =>
+        !modules.some((module) => module.section === section) &&
+        usage[section].some(({ count }) => count > 0),
+    )
+    .map((section) => ({ section, visits: 0, visitors: 0, members: 0, memberVisits: 0 }));
+  const rows = [...modules.slice(0, 15), ...quiet];
+  if (rows.length === 0) return <EmptyPanel />;
+  const max = rows[0]?.visits ?? 0;
+
+  return (
+    <RuledGrid className="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
+      {rows.map((module, index) => {
+        const { name, icon: Icon } = moduleName(module.section);
+        const before = previous.find(({ section }) => section === module.section)?.visits ?? 0;
+        const actions = usage[module.section] ?? [];
+        const top = pages.filter(({ section }) => section === module.section);
+        const back = returning[module.section] ?? 0;
+        return (
+          <article
+            key={module.section}
+            className={cn(ruledCellClassName, 'flex min-w-0 group flex-col gap-3 p-3 font-mono')}
+          >
+            <header className="flex items-start justify-between gap-2">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="text-[10px] text-muted-foreground/60 tabular-nums">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {Icon && <Icon className="size-4 shrink-0 text-pcnGreen-600" aria-hidden />}
+                <h3 className="min-w-0">
+                  <span className="block truncate text-sm font-semibold group-hover:text-pcnGreen">
+                    {name}
+                  </span>
+                  <span className="block truncate text-[10px] text-muted-foreground/70">
+                    ~{module.section}
+                  </span>
+                </h3>
+              </div>
+              <div className="flex shrink-0 flex-col items-end">
+                <span className="text-lg font-semibold tabular-nums [text-shadow:0_0_12px_rgba(4,244,190,0.35)]">
+                  {number(module.visits)}
+                </span>
+                <span className="text-[10px]">
+                  <Delta current={module.visits} previous={before} />
+                </span>
+              </div>
+            </header>
+
+            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+              <Bar value={module.visits} max={max} />
+              <span className="w-24 text-right tabular-nums">
+                {shareOf(module.visits, total)} del tráfico
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2">
+              <ModuleStat label="únicos" value={number(module.visitors)} />
+              <ModuleStat
+                label="por visitante"
+                value={perVisitor(module.visits, module.visitors)}
+                title="visitas por visitante único: cuánto navegan dentro del módulo"
+              />
+              <ModuleStat
+                label="logueados"
+                value={shareOf(module.memberVisits, module.visits)}
+                title={`${number(module.members)} miembros distintos`}
+              />
+              <ModuleStat
+                label="vuelven"
+                value={shareOf(back, module.visitors)}
+                title={`${number(back)} visitantes entraron en 2+ días distintos`}
+              />
+            </div>
+
+            {actions.length > 0 && (
+              <ul className="flex flex-col gap-1 border-t border-pcnGreen/60 pt-2 text-[11px]">
+                {actions.map((action) => {
+                  const earlier =
+                    previousUsage[module.section]?.find(({ key }) => key === action.key)?.count ??
+                    0;
+                  return (
+                    <li key={action.key} className="flex items-center justify-between gap-2">
+                      <span className="truncate text-muted-foreground">
+                        <span className="text-pcnGreen-500">+ </span>
+                        {action.label}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2 tabular-nums">
+                        <span className="text-foreground">{number(action.count)}</span>
+                        <span className="w-12 text-right text-[10px]">
+                          <Delta current={action.count} previous={earlier} />
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {top.length > 0 && (
+              <ol className="flex flex-col gap-0.5 border-t border-pcnGreen/60 pt-2 text-[11px]">
+                {top.map((page) => (
+                  <li key={page.path} className="flex items-center justify-between gap-2">
+                    <Link
+                      href={page.path}
+                      className="min-w-0 truncate text-muted-foreground hover:text-pcnGreen"
+                    >
+                      <span className="text-pcnGreen-500">~</span>
+                      {page.path}
+                    </Link>
+                    <span className="shrink-0 text-muted-foreground tabular-nums">
+                      {number(page.visits)}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </article>
+        );
+      })}
+    </RuledGrid>
   );
 }
 

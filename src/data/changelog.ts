@@ -22,6 +22,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-08',
+    area: 'métricas',
+    title: 'Métricas de cada módulo',
+    description:
+      'Métricas tiene el detalle de cada módulo: visitas y su cambio, visitantes únicos, quiénes vuelven, qué se hizo ahí (inscripciones, consejos, hilos, fotos, setups, likes…) y sus páginas más vistas. Las visitas de los admins se excluyen por defecto, con un filtro para contarlas.',
+    authors: ['agustin-sanc'],
+    href: '/metricas',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-08',
     area: 'galería',
     title: 'Subí tus fotos a la galería',
     description:

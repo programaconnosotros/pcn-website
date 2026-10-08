@@ -6,8 +6,12 @@ import MetricasPage, { metadata } from './page';
 
 jest.mock('@/lib/product-metrics', () => ({ getCachedProductMetrics: jest.fn() }));
 jest.mock('@/components/admin/metrics/range-filter', () => ({
-  RangeFilter: (props: { preset: string | null; from: Date; to: Date }) => (
-    <div data-testid="range-filter" data-preset={props.preset ?? ''}>
+  RangeFilter: (props: { preset: string | null; from: Date; to: Date; includeAdmins: boolean }) => (
+    <div
+      data-testid="range-filter"
+      data-preset={props.preset ?? ''}
+      data-admins={String(props.includeAdmins)}
+    >
       {props.from.toISOString()}|{props.to.toISOString()}
     </div>
   ),
@@ -43,6 +47,7 @@ const buildMetrics = (overrides: Partial<ProductMetrics> = {}) =>
       from: new Date('2026-01-30T03:00:00Z'),
       to: new Date('2026-03-01T03:00:00Z'),
     },
+    includeAdmins: false,
     traffic,
     previousTraffic: { visits: 1000, visitors: 200, members: 20 },
     signups: 20,
@@ -68,6 +73,10 @@ const buildMetrics = (overrides: Partial<ProductMetrics> = {}) =>
     ],
     activity: activityOf(3),
     previousActivity: activityOf(1),
+    usage: { '/eventos': [{ key: 'registrations', label: 'inscripciones', count: 3 }] },
+    previousUsage: { '/eventos': [{ key: 'registrations', label: 'inscripciones', count: 1 }] },
+    pagesByModule: [],
+    returningByModule: {},
     ...overrides,
   }) as unknown as ProductMetrics;
 
@@ -109,6 +118,32 @@ describe('/metricas', () => {
     // activation: 5 active of 20 new accounts
     expect(screen.getByText('activación 25% de las cuentas nuevas')).toBeInTheDocument();
     expect(screen.getByText('inscripciones a eventos')).toBeInTheDocument();
+  });
+
+  it('says whether admins are counted and hands the filter its state', async () => {
+    metricsMock.mockResolvedValue(buildMetrics());
+    const { unmount } = await renderPage(MetricasPage({ searchParams: Promise.resolve({}) }));
+    expect(screen.getByText(/sin admins/)).toBeInTheDocument();
+    expect(screen.getByTestId('range-filter')).toHaveAttribute('data-admins', 'false');
+    unmount();
+
+    metricsMock.mockResolvedValue(buildMetrics({ includeAdmins: true }));
+    await renderPage(MetricasPage({ searchParams: Promise.resolve({ admins: '1' }) }));
+    expect(metricsMock).toHaveBeenLastCalledWith({ admins: '1' }, expect.any(Array));
+    expect(screen.getByText(/con admins/)).toBeInTheDocument();
+    expect(screen.getByTestId('range-filter')).toHaveAttribute('data-admins', 'true');
+  });
+
+  it('details every module with its usage', async () => {
+    metricsMock.mockResolvedValue(
+      buildMetrics({
+        modules: [{ section: '/eventos', visits: 50, visitors: 10, members: 2, memberVisits: 20 }],
+      }),
+    );
+    await renderPage(MetricasPage({ searchParams: Promise.resolve({}) }));
+    expect(screen.getByText('módulos en detalle')).toBeInTheDocument();
+    const [module] = screen.getAllByRole('article');
+    expect(module).toHaveTextContent('inscripciones3+200%');
   });
 
   it('hands the range to the filter and the series to the chart with ISO days', async () => {

@@ -9,22 +9,38 @@ import { DateInput } from '@/components/ui/date-input';
 const inputDate = (date: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(date);
 
-/** Preset ranges plus a custom from/to, kept in the URL so a view can be shared. */
+const segmentClassName = (active: boolean) =>
+  cn(
+    'border-r border-pcnGreen-200 px-2.5 last:border-r-0 hover:text-pcnGreen',
+    active
+      ? 'bg-pcnGreen/15 text-pcnGreen shadow-[inset_0_-2px_0_#04f4be]'
+      : 'text-muted-foreground',
+  );
+
+/**
+ * Preset ranges plus a custom from/to, and whether to count admins, kept in the URL so a view
+ * can be shared.
+ */
 export function RangeFilter({
   preset,
   from,
   to,
+  includeAdmins = false,
 }: {
   preset: RangePreset | null;
   from: Date;
   to: Date;
+  /** Admins (mostly the people building the site) are left out unless asked. */
+  includeAdmins?: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [desde, setDesde] = useState(inputDate(from));
   const [hasta, setHasta] = useState(inputDate(to));
+  const rangeQuery = preset ? `rango=${preset}` : `desde=${inputDate(from)}&hasta=${inputDate(to)}`;
 
-  const go = (query: string) => startTransition(() => router.push(`/metricas?${query}`));
+  const go = (query: string, admins = includeAdmins) =>
+    startTransition(() => router.push(`/metricas?${query}${admins ? '&admins=1' : ''}`));
 
   return (
     <div
@@ -45,12 +61,7 @@ export function RangeFilter({
             type="button"
             aria-pressed={preset === id}
             onClick={() => go(`rango=${id}`)}
-            className={cn(
-              'border-r border-pcnGreen-200 px-2.5 last:border-r-0 hover:text-pcnGreen',
-              preset === id
-                ? 'bg-pcnGreen/15 text-pcnGreen shadow-[inset_0_-2px_0_#04f4be]'
-                : 'text-muted-foreground',
-            )}
+            className={segmentClassName(preset === id)}
           >
             {label}
           </button>
@@ -73,6 +84,29 @@ export function RangeFilter({
           aplicar
         </button>
       </form>
+      <div
+        className="flex h-8 items-center border border-pcnGreen-200"
+        role="group"
+        aria-label="Visitas de admins"
+      >
+        <span className="border-r border-pcnGreen-200 px-2 text-muted-foreground/70">admins:</span>
+        <button
+          type="button"
+          aria-pressed={!includeAdmins}
+          onClick={() => go(rangeQuery, false)}
+          className={cn(segmentClassName(!includeAdmins), 'h-full')}
+        >
+          excluir
+        </button>
+        <button
+          type="button"
+          aria-pressed={includeAdmins}
+          onClick={() => go(rangeQuery, true)}
+          className={cn(segmentClassName(includeAdmins), 'h-full')}
+        >
+          incluir
+        </button>
+      </div>
     </div>
   );
 }
