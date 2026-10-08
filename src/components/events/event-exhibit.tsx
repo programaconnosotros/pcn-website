@@ -27,10 +27,10 @@ export const EventExhibit: React.FC<{
   return (
     <Link
       href={`/eventos/${event.id}`}
-      className={cn(ruledCellClassName, 'flex group flex-col gap-3 p-3 sm:gap-4 sm:p-5')}
+      className={cn(ruledCellClassName, 'flex group flex-col gap-3 p-2 sm:gap-4 sm:p-4')}
     >
       {/* The mat: a quiet margin around the flyer, like a framed print on a wall. */}
-      <div className="bg-pcnGreen/[0.03] p-2 transition-colors group-hover:bg-pcnGreen/[0.07] sm:p-4">
+      <div className="bg-pcnGreen/[0.03] p-1.5 transition-colors group-hover:bg-pcnGreen/[0.07] sm:p-3">
         <FlyerFrame
           src={event.flyerImages[0]}
           alt={`Flyer de ${event.name}`}
@@ -44,7 +44,7 @@ export const EventExhibit: React.FC<{
             Nº {String(catalogNumber).padStart(3, '0')}
           </p>
         )}
-        <h3 className="line-clamp-2 font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen">
+        <h3 className="line-clamp-2 font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen sm:text-base">
           {event.name}
         </h3>
         <p className="font-mono text-[11px] text-muted-foreground sm:text-xs">

@@ -65,7 +65,7 @@ export const EventsList: React.FC = async () => {
       <section>
         <SectionHeading label="en cartelera" count={upcoming.length} />
         {upcoming.length > 0 ? (
-          <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+          <RuledGrid className="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
             {upcoming.map((event) => (
               <EventPoster key={event.id} event={event} />
             ))}
@@ -95,7 +95,7 @@ export const EventsList: React.FC = async () => {
                     {yearEvents.length} {yearEvents.length === 1 ? 'evento' : 'eventos'}
                   </span>
                 </h3>
-                <RuledGrid className="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                <RuledGrid className="grid-cols-2 lg:grid-cols-3">
                   {yearEvents.map((event) => (
                     <EventExhibit
                       key={event.id}

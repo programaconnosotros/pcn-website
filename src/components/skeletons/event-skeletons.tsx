@@ -260,7 +260,7 @@ export function EventsListSkeleton() {
     <div className="mb-14 flex flex-col gap-12">
       <section>
         <ListHeadingSkeleton width="w-32" />
-        <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+        <RuledGrid className="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
           {/* Usually one or two events are coming up: a single poster on phones. */}
           <EventPosterSkeleton />
           <EventPosterSkeleton className="max-sm:hidden" />
@@ -272,7 +272,7 @@ export function EventsListSkeleton() {
           <Skeleton className="h-8 w-20 sm:h-9" />
           <Skeleton className="h-3 w-16" />
         </div>
-        <RuledGrid className="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <RuledGrid className="grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 10 }).map((_, i) => (
             <EventExhibitSkeleton key={i} />
           ))}
