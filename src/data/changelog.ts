@@ -22,6 +22,16 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-07',
+    area: 'charlas',
+    title: 'Cargar charlas con solo la foto',
+    description:
+      'En /charlas, cargarConFoto() recibe una foto de la charla y un agente de IA busca el evento, la propuesta y los oradores, y la carga sola. Si le falta algún dato, abre el formulario precargado para completarlo.',
+    authors: ['agustin-sanc'],
+    href: '/charlas',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-07',
     area: 'proyectos',
     title: 'Página de cada proyecto',
     description:

@@ -75,6 +75,8 @@ const getEventLocation = (event: EventOption) => {
 type Props = {
   eventId?: string;
   talk?: TalkWithSpeakers;
+  // Charla nueva precargada, por ejemplo con lo que dedujo el agente a partir de la foto.
+  draft?: TalkFormData;
   onSuccess?: () => void;
   onCancel?: () => void;
 };
@@ -283,7 +285,7 @@ function SpeakerFields({
   );
 }
 
-export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
+export function TalkForm({ eventId, talk, draft, onSuccess, onCancel }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [events, setEvents] = useState<EventOption[]>([]);
 
@@ -296,33 +298,42 @@ export function TalkForm({ eventId, talk, onSuccess, onCancel }: Props) {
     // createTalk/updateTalk lo vuelven a validar con el mismo schema y la fecha transformada (un
     // Date) no pasa como texto: con un evento elegido, guardar fallaba con "Invalid input".
     resolver: zodResolver(talkSchema, undefined, { raw: true }),
-    defaultValues: {
-      eventId: talk?.eventId ?? eventId ?? null,
-      manualEventTitle: talk?.manualEventTitle ?? '',
-      manualEventDate: toDateInputValue(talk?.manualEventDate),
-      manualEventLocation: talk?.manualEventLocation ?? '',
-      title: talk?.title ?? '',
-      description: talk?.description ?? '',
-      speakers:
-        talk?.speakers && talk.speakers.length > 0
-          ? talk.speakers.map((s) => ({
-              userId: s.userId ?? null,
-              speakerName: s.speakerName,
-              speakerPhone: s.speakerPhone,
-              isProfessional: s.isProfessional,
-              jobTitle: s.jobTitle ?? '',
-              enterprise: s.enterprise ?? '',
-              isStudent: s.isStudent,
-              career: s.career ?? '',
-              studyPlace: s.studyPlace ?? '',
-            }))
-          : [{ ...EMPTY_SPEAKER }],
-      order: talk?.order ?? 0,
-      portraitUrl: talk?.portraitUrl ?? '',
-      slidesUrl: talk?.slidesUrl ?? '',
-      slideImages: talk?.slideImages ?? [],
-      videoUrl: talk?.videoUrl ?? '',
-    },
+    defaultValues: draft
+      ? {
+          manualEventTitle: '',
+          manualEventDate: '',
+          manualEventLocation: '',
+          slidesUrl: '',
+          videoUrl: '',
+          ...draft,
+        }
+      : {
+          eventId: talk?.eventId ?? eventId ?? null,
+          manualEventTitle: talk?.manualEventTitle ?? '',
+          manualEventDate: toDateInputValue(talk?.manualEventDate),
+          manualEventLocation: talk?.manualEventLocation ?? '',
+          title: talk?.title ?? '',
+          description: talk?.description ?? '',
+          speakers:
+            talk?.speakers && talk.speakers.length > 0
+              ? talk.speakers.map((s) => ({
+                  userId: s.userId ?? null,
+                  speakerName: s.speakerName,
+                  speakerPhone: s.speakerPhone,
+                  isProfessional: s.isProfessional,
+                  jobTitle: s.jobTitle ?? '',
+                  enterprise: s.enterprise ?? '',
+                  isStudent: s.isStudent,
+                  career: s.career ?? '',
+                  studyPlace: s.studyPlace ?? '',
+                }))
+              : [{ ...EMPTY_SPEAKER }],
+          order: talk?.order ?? 0,
+          portraitUrl: talk?.portraitUrl ?? '',
+          slidesUrl: talk?.slidesUrl ?? '',
+          slideImages: talk?.slideImages ?? [],
+          videoUrl: talk?.videoUrl ?? '',
+        },
   });
 
   const selectedEventId = useWatch({ control: form.control, name: 'eventId' });

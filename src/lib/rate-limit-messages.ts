@@ -53,6 +53,8 @@ const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
   log: (wait) => `Demasiados registros seguidos. Probá de nuevo en ${wait}.`,
   // Nunca llega a la UI: las visitas se descartan en silencio al pasar el límite.
   pageVisit: (wait) => `Demasiadas visitas seguidas: probá de nuevo en ${wait}.`,
+  talkAgent: (wait) =>
+    `Cargaste muchas charlas con IA en la última hora. Cada carga cuesta plata, así que hay un límite: probá de nuevo en ${wait} o cargala a mano.`,
 };
 
 /** El mensaje para mostrarle a quien llegó al límite de `name`. */

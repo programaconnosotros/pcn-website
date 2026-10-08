@@ -16,10 +16,12 @@ import {
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Construction, MicVocal, Plus } from 'lucide-react';
+import { Construction, MicVocal, Plus, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { TalkForm } from './talk-form';
+import { TalkFromPhotoDialog } from './talk-from-photo-dialog';
+import type { TalkFormData } from '@/schemas/talk-schema';
 import { VideoGrid } from '@/components/videos/video-grid';
 import { externalTalks } from '@/components/videos/videos';
 import { deleteTalk } from '@/actions/talks/delete-talk';
@@ -34,6 +36,8 @@ interface Props {
 
 export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
   const [showCreate, setShowCreate] = useState(false);
+  const [showFromPhoto, setShowFromPhoto] = useState(false);
+  const [draft, setDraft] = useState<TalkFormData | undefined>();
   const [editingTalk, setEditingTalk] = useState<Awaited<
     ReturnType<typeof fetchTalkForEdit>
   > | null>(null);
@@ -80,10 +84,16 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
               className="mb-0 flex-1"
             />
             {isAdmin ? (
-              <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
-                <Plus className="mr-1.5 h-4 w-4" />
-                nuevaCharla();
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setShowFromPhoto(true)}>
+                  <Sparkles className="mr-1.5 h-4 w-4" />
+                  cargarConFoto();
+                </Button>
+                <Button variant="pcn" size="sm" onClick={() => setShowCreate(true)}>
+                  <Plus className="mr-1.5 h-4 w-4" />
+                  nuevaCharla();
+                </Button>
+              </div>
             ) : (
               <Link
                 href="https://wa.me/5493815777562"
@@ -129,13 +139,38 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
         </TabsContent>
       </Tabs>
 
+      <TalkFromPhotoDialog
+        open={showFromPhoto}
+        onOpenChange={setShowFromPhoto}
+        onDraft={(next) => {
+          setDraft(next);
+          setShowCreate(true);
+        }}
+      />
+
       {/* Create dialog */}
-      <Dialog open={showCreate} onOpenChange={setShowCreate}>
+      <Dialog
+        open={showCreate}
+        onOpenChange={(open) => {
+          setShowCreate(open);
+          if (!open) setDraft(undefined);
+        }}
+      >
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Nueva charla</DialogTitle>
           </DialogHeader>
-          <TalkForm onSuccess={() => setShowCreate(false)} onCancel={() => setShowCreate(false)} />
+          <TalkForm
+            draft={draft}
+            onSuccess={() => {
+              setShowCreate(false);
+              setDraft(undefined);
+            }}
+            onCancel={() => {
+              setShowCreate(false);
+              setDraft(undefined);
+            }}
+          />
         </DialogContent>
       </Dialog>
 

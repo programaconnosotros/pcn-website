@@ -203,6 +203,49 @@ describe('TalkForm', () => {
     expect(screen.getByLabelText('Título del evento')).toBeEnabled();
   });
 
+  it('starts from a draft, like the one the photo agent leaves', async () => {
+    jest.mocked(createTalk).mockResolvedValue(undefined as never);
+    const onSuccess = jest.fn();
+    await renderForm(
+      <TalkForm
+        onSuccess={onSuccess}
+        draft={{
+          eventId: null,
+          title: 'Rust en producción',
+          description: 'Cómo migramos un servicio a Rust.',
+          portraitUrl: 'https://cdn.dev/talks/portraits/p.jpg',
+          order: 0,
+          slideImages: [],
+          speakers: [
+            {
+              userId: null,
+              speakerName: 'Ada Lovelace',
+              speakerPhone: '',
+              isProfessional: true,
+              jobTitle: '',
+              enterprise: '',
+              isStudent: false,
+              career: '',
+              studyPlace: '',
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByLabelText('Título de la charla')).toHaveValue('Rust en producción');
+    type(screen.getByLabelText('Rol / Puesto'), 'Engineer');
+    type(screen.getByLabelText('Empresa'), 'Acme');
+    await userEvent.click(screen.getByRole('button', { name: 'crearCharla();' }));
+
+    await waitFor(() => expect(onSuccess).toHaveBeenCalled());
+    expect(jest.mocked(createTalk).mock.calls[0][0]).toMatchObject({
+      title: 'Rust en producción',
+      portraitUrl: 'https://cdn.dev/talks/portraits/p.jpg',
+      speakers: [{ speakerName: 'Ada Lovelace', jobTitle: 'Engineer', enterprise: 'Acme' }],
+    });
+  });
+
   it('updates an existing talk inside an event and can be cancelled', async () => {
     jest.mocked(updateTalk).mockResolvedValue(undefined as never);
     const onCancel = jest.fn();

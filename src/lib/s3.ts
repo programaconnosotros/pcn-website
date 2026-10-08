@@ -79,6 +79,14 @@ export function publicFileUrl(key: string) {
     : `https://${S3_BUCKET}.s3.amazonaws.com/${key}`;
 }
 
+/** La key de un objeto del bucket a partir de su URL pública, o null si la URL no es del bucket. */
+export function keyFromPublicUrl(url: string) {
+  const prefix = publicFileUrl('');
+  if (!url.startsWith(prefix)) return null;
+  const key = decodeURIComponent(url.slice(prefix.length).split(/[?#]/)[0]);
+  return key && !key.split('/').includes('..') ? key : null;
+}
+
 /** Descarga un objeto del bucket entero a memoria. */
 export async function getObjectBuffer(key: string) {
   const { Body } = await s3Client.send(new GetObjectCommand({ Bucket: S3_BUCKET, Key: key }));

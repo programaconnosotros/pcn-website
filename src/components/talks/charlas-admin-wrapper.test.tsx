@@ -17,15 +17,17 @@ jest.mock('@/components/videos/video-grid', () => ({
 jest.mock('./talk-form', () => ({
   TalkForm: ({
     talk,
+    draft,
     onSuccess,
     onCancel,
   }: {
     talk?: { title: string };
+    draft?: { title: string };
     onSuccess: () => void;
     onCancel: () => void;
   }) => (
     <div>
-      <p>form {talk?.title ?? 'nueva'}</p>
+      <p>form {talk?.title ?? draft?.title ?? 'nueva'}</p>
       <button type="button" onClick={onSuccess}>
         guardar
       </button>
@@ -34,6 +36,21 @@ jest.mock('./talk-form', () => ({
       </button>
     </div>
   ),
+}));
+
+jest.mock('./talk-from-photo-dialog', () => ({
+  TalkFromPhotoDialog: ({
+    open,
+    onDraft,
+  }: {
+    open: boolean;
+    onDraft: (_draft: { title: string }) => void;
+  }) =>
+    open ? (
+      <button type="button" onClick={() => onDraft({ title: 'Borrador IA' })}>
+        borrador
+      </button>
+    ) : null,
 }));
 
 const talks = [buildTalk({ id: 't1', title: 'Rust' })];
@@ -63,6 +80,7 @@ describe('CharlasAdminWrapper', () => {
       'https://wa.me/5493815777562',
     );
     expect(screen.queryByRole('button', { name: /nuevaCharla/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /cargarConFoto/ })).not.toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('[mantenimiento]');
 
     await userEvent.click(screen.getByRole('tab', { name: 'Externas' }));
@@ -87,6 +105,22 @@ describe('CharlasAdminWrapper', () => {
     await userEvent.click(screen.getByRole('button', { name: /nuevaCharla/ }));
     await userEvent.click(screen.getByRole('button', { name: 'cancelar' }));
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('continues the photo agent draft in the new talk form', async () => {
+    renderWrapper(true);
+
+    await userEvent.click(screen.getByRole('button', { name: /cargarConFoto/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'borrador' }));
+    expect(screen.getByRole('dialog', { name: 'Nueva charla' })).toHaveTextContent(
+      'form Borrador IA',
+    );
+
+    // Cerrado, el próximo nuevaCharla() arranca vacío
+    await userEvent.click(screen.getByRole('button', { name: 'cancelar' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: /nuevaCharla/ }));
+    expect(screen.getByRole('dialog', { name: 'Nueva charla' })).toHaveTextContent('form nueva');
   });
 
   it('loads the full talk (with phones) before editing', async () => {

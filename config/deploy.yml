@@ -55,6 +55,7 @@ env:
     - AWS_CLOUDFRONT_KEY_PAIR_ID
     - AWS_CLOUDFRONT_PRIVATE_KEY_BASE64
     - RESEND_API_KEY
+    - AI_GATEWAY_API_KEY
     - CLOUDFRONT_ORIGIN_SECRET
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:

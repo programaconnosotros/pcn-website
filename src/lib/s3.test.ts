@@ -11,6 +11,7 @@ import {
   getPresignedDownloadUrl,
   getPresignedUploadUrl,
   headObject,
+  keyFromPublicUrl,
   publicFileUrl,
   putImmutableObject,
   s3Client,
@@ -111,6 +112,21 @@ describe('getPresignedUploadUrl', () => {
     const { key } = await getPresignedUploadUrl('', 'image/jpeg');
 
     expect(key).toMatch(/^events\/\d+-[0-9a-f-]{36}\.jpg$/);
+  });
+});
+
+describe('keyFromPublicUrl', () => {
+  it('reads the key back from a public URL of the bucket', () => {
+    expect(keyFromPublicUrl(publicFileUrl('talks/portraits/a%20b.jpg'))).toBe(
+      'talks/portraits/a b.jpg',
+    );
+    expect(keyFromPublicUrl(`${publicFileUrl('events/x.png')}?v=1`)).toBe('events/x.png');
+  });
+
+  it('rejects other hosts and path traversal', () => {
+    expect(keyFromPublicUrl('https://evil.example.com/talks/portraits/x.jpg')).toBeNull();
+    expect(keyFromPublicUrl(publicFileUrl('talks/portraits/../../secret'))).toBeNull();
+    expect(keyFromPublicUrl(publicFileUrl(''))).toBeNull();
   });
 });
 
