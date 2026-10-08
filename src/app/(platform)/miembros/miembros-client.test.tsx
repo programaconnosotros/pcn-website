@@ -105,4 +105,25 @@ describe('MiembrosClient', () => {
 
     expect(screen.getByText(/0 resultados/)).toHaveTextContent(/^\$ 0 resultados$/);
   });
+
+  it('shows the community status panel, but not while searching', async () => {
+    renderInPlatform(<MiembrosClient members={members} />);
+    expect(screen.getByRole('region', { name: 'La comunidad en números' })).toBeInTheDocument();
+
+    await userEvent.type(screen.getByRole('textbox', { name: 'Buscar miembros' }), 'bruno');
+    expect(
+      screen.queryByRole('region', { name: 'La comunidad en números' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('numbers each member by when they joined', () => {
+    renderInPlatform(<MiembrosClient members={members} />);
+    const todos = document.getElementById('todos')!;
+    // Newest first: Diego joined last
+    expect(
+      within(todos)
+        .getAllByText(/^#\d{4}$/)
+        .map((n) => n.textContent),
+    ).toEqual(['#0004', '#0003', '#0002', '#0001']);
+  });
 });

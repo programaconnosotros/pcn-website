@@ -408,6 +408,112 @@
   }
 }
 
+@utility members-hero {
+  /* /miembros status panel: a faint scan line drifts down it, like a CRT refreshing. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 40%;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(4, 244, 190, 0.05), transparent);
+    animation: members-scan 6s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+}
+
+@utility member-wall-node {
+  /* One face of the /miembros wall: muted until hovered, then it pops out lit up. */
+  filter: grayscale(0.85) brightness(0.8);
+  transition:
+    filter 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  &:hover,
+  &:focus-visible {
+    z-index: 10;
+    filter: none;
+    transform: scale(1.6);
+    box-shadow:
+      0 0 0 1px #04f4be,
+      0 0 14px rgba(4, 244, 190, 0.8);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+@utility member-node {
+  /* A member row of /miembros: hovering locks a targeting reticle on it (corner brackets) and a
+     beam sweeps across once, while the avatar powers up from grayscale. */
+  isolation: isolate;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      linear-gradient(#04f4be, #04f4be) top left / 10px 1px no-repeat,
+      linear-gradient(#04f4be, #04f4be) top left / 1px 10px no-repeat,
+      linear-gradient(#04f4be, #04f4be) top right / 10px 1px no-repeat,
+      linear-gradient(#04f4be, #04f4be) top right / 1px 10px no-repeat,
+      linear-gradient(#04f4be, #04f4be) bottom left / 10px 1px no-repeat,
+      linear-gradient(#04f4be, #04f4be) bottom left / 1px 10px no-repeat,
+      linear-gradient(#04f4be, #04f4be) bottom right / 10px 1px no-repeat,
+      linear-gradient(#04f4be, #04f4be) bottom right / 1px 10px no-repeat,
+      repeating-linear-gradient(0deg, rgba(4, 244, 190, 0.05) 0 1px, transparent 1px 3px);
+    transform: scale(1.04);
+    transition:
+      opacity 0.15s,
+      transform 0.25s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: -35%;
+    width: 35%;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(4, 244, 190, 0.18), transparent);
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+  &:hover::after {
+    animation: nav-beam 0.6s ease-out;
+  }
+  & .member-avatar {
+    filter: grayscale(0.7);
+    transition:
+      filter 0.2s,
+      box-shadow 0.2s;
+  }
+  &:hover .member-avatar,
+  &:focus-visible .member-avatar {
+    filter: none;
+    box-shadow: 0 0 12px rgba(4, 244, 190, 0.6);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      transition: none;
+    }
+    &:hover::after {
+      animation: none;
+    }
+  }
+}
+
 @utility sidebar-toggle-glitch {
   /* Classic layout's sidebar toggle: a short RGB-split glitch when pressed. */
   animation: sidebar-toggle-glitch 280ms steps(2, end);
@@ -1199,6 +1305,14 @@
   @keyframes cursor-blink {
     50% {
       opacity: 0;
+    }
+  }
+  @keyframes members-scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(250%);
     }
   }
   @keyframes nav-beam {

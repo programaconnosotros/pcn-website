@@ -11,6 +11,7 @@ import { CollapsibleFilters } from '@/components/ui/collapsible-filters';
 import { matchesPeopleQuery } from '@/lib/people-search';
 import type { CommunityMember } from '@/actions/users/fetch-community-members';
 import { cn } from '@/lib/utils';
+import { MembersHero, memberInitials } from '@/components/members/members-hero';
 
 type Stat = 'talks' | 'events' | 'projects';
 
@@ -22,14 +23,6 @@ const STAT_LABELS: Record<Stat, [string, string]> = {
 
 const statLabel = (stat: Stat, count: number) =>
   `${count} ${STAT_LABELS[stat][count === 1 ? 0 : 1]}`;
-
-const initials = (name: string) =>
-  name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
 
 const byStat = (stat: Stat) => (a: CommunityMember, b: CommunityMember) =>
   b[stat] - a[stat] || a.name.localeCompare(b.name, 'es');
@@ -59,11 +52,17 @@ function memberRoles(member: CommunityMember) {
 
 function MemberRow({
   member,
+  number,
   stat,
+  rank,
   accent,
 }: {
   member: CommunityMember;
+  /** Their place in the community, by when they joined: node #0042. */
+  number: number;
   stat?: Stat;
+  /** Top three of a ranked section (most talks, events, projects). */
+  rank?: number;
   accent?: Section['accent'];
 }) {
   const role = memberRoles(member).join(' · ');
@@ -72,8 +71,14 @@ function MemberRow({
   return (
     <Link
       href={`/perfil/${member.id}`}
-      className={cn(ruledCellClassName, 'relative flex min-w-0 group gap-3 p-3')}
+      className={cn(ruledCellClassName, 'member-node relative flex min-w-0 group gap-3 p-3')}
     >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute right-3 bottom-2 font-mono text-[9px] tracking-widest text-muted-foreground/40 tabular-nums transition-colors group-hover:text-pcnGreen/70"
+      >
+        #{String(number).padStart(4, '0')}
+      </span>
       {accent && (
         <span
           aria-hidden
@@ -83,10 +88,26 @@ function MemberRow({
           )}
         />
       )}
-      <Avatar className="size-9 shrink-0 rounded-sm ring-1 ring-pcnGreen-200 group-hover:ring-pcnGreen-600">
-        <AvatarImage src={member.image ?? undefined} alt="" />
-        <AvatarFallback className="rounded-sm text-[10px]">{initials(member.name)}</AvatarFallback>
-      </Avatar>
+      <div className="relative shrink-0">
+        <Avatar className="member-avatar size-10 rounded-sm ring-1 ring-pcnGreen-200 group-hover:ring-pcnGreen">
+          <AvatarImage src={member.image ?? undefined} alt="" />
+          <AvatarFallback className="rounded-sm text-[10px]">
+            {memberInitials(member.name)}
+          </AvatarFallback>
+        </Avatar>
+        {rank !== undefined && (
+          <span
+            className={cn(
+              'absolute -top-1.5 -left-1.5 flex h-4 min-w-4 items-center justify-center px-0.5 font-mono text-[9px] font-semibold tabular-nums',
+              rank === 1
+                ? 'bg-pcnGreen text-black shadow-[0_0_10px_rgba(4,244,190,0.9)]'
+                : 'border border-pcnGreen-200 bg-background text-pcnGreen',
+            )}
+          >
+            {String(rank).padStart(2, '0')}
+          </span>
+        )}
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="truncate font-mono text-sm font-medium transition-colors group-hover:text-pcnGreen">
@@ -131,6 +152,11 @@ function MemberRow({
 export function MiembrosClient({ members }: { members: CommunityMember[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const query = searchTerm.trim();
+  // Members come oldest first: that order numbers the nodes.
+  const numbers = useMemo(
+    () => new Map(members.map((member, index) => [member.id, index + 1])),
+    [members],
+  );
 
   const filtered = useMemo(() => {
     if (!query) return members;
@@ -235,6 +261,8 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
           </CollapsibleFilters>
         </StickyHeader>
 
+        {!query && members.length > 0 && <MembersHero members={members} />}
+
         {sections.length === 0 ? (
           <p className="mb-14 border border-dashed border-pcnGreen-200 py-10 text-center font-mono text-sm text-muted-foreground">
             <span className="text-pcnGreen-500">$ </span>0 resultados
@@ -258,13 +286,23 @@ export function MiembrosClient({ members }: { members: CommunityMember[] }) {
                   />
                   <span className="tabular-nums">[{section.members.length}]</span>
                 </h2>
-                <p className="mt-1 mb-2 text-xs text-muted-foreground">{section.description}</p>
+                <p className="mt-1 mb-2 font-mono text-xs text-muted-foreground">
+                  <span className="text-pcnGreen-500"># </span>
+                  {section.description}
+                </p>
                 <RuledGrid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-                  {section.members.map((member) => (
+                  {section.members.map((member, index) => (
                     <MemberRow
                       key={member.id}
                       member={member}
+                      number={numbers.get(member.id) ?? 0}
                       stat={section.stat}
+                      // A podium only means something when more than three compete.
+                      rank={
+                        section.stat && section.members.length > 3 && index < 3
+                          ? index + 1
+                          : undefined
+                      }
                       accent={section.accent}
                     />
                   ))}
