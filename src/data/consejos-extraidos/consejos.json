@@ -212,7 +212,7 @@
     "member": "Gonzalo Morales",
     "date": "2026-09-28",
     "title": "Servicios gratuitos para alojar imágenes: Cloudflare R2, Cloudinary y Supabase Storage",
-    "content": "Ojo con el free tier de Cloudinary: al superarlo le bloquearon las imágenes. Se pasó a Supabase Storage sin problemas.",
+    "content": "Ojo con el free tier de Cloudinary: al superarlo me bloquearon las imágenes. Me pasé a Supabase Storage sin problemas.",
     "tags": ["backend", "herramientas"]
   },
   {
@@ -284,7 +284,7 @@
     "member": "Agustín Sánchez",
     "date": "2026-09-23",
     "title": "La keynote de DHH en Rails World y el fin de programar a mano",
-    "content": "Con agentes, el lenguaje a dominar ahora es el inglés: probó que podés ejecutar proyectos en lenguajes que nunca usaste a mano si sabés explicar qué querés.",
+    "content": "Con agentes, el lenguaje a dominar ahora es el inglés: comprobé que podés ejecutar proyectos en lenguajes que nunca usaste a mano si sabés explicar qué querés.",
     "tags": ["ia", "aprendizaje"]
   },
   {
@@ -492,7 +492,7 @@
     "member": "Facundo Padilla",
     "date": "2026-09-05",
     "title": "Suite de skills de Matt Pocock: grill-me y el flujo de especificación a implementación",
-    "content": "Llegá al grilleo con la idea muy trabajada: las preguntas se vuelven muy granulares, llegó a unas 50. Con grill-me, las skills marcan un camino claro, aunque el proceso es lento y consume muchos tokens.",
+    "content": "Llegá al grilleo con la idea muy trabajada: las preguntas se vuelven muy granulares, a mí me llegaron a hacer unas 50. Con grill-me, las skills marcan un camino claro, aunque el proceso es lento y consume muchos tokens.",
     "tags": ["ia", "productividad"]
   },
   {
@@ -692,7 +692,7 @@
     "member": "Facundo Padilla",
     "date": "2026-08-20",
     "title": "Fable para interfaces, la skill Impeccable y el rol del design engineer",
-    "content": "Para sacarle el aspecto genérico de lo generado por IA, usá la skill Impeccable y empezá desde un brandbook extenso. Con eso armó un UI kit completo en un día.",
+    "content": "Para sacarle el aspecto genérico de lo generado por IA, usá la skill Impeccable y empezá desde un brandbook extenso. Con eso armé un UI kit completo en un día.",
     "tags": ["frontend", "ia"]
   },
   {
@@ -756,7 +756,7 @@
     "member": "Agustín Sánchez",
     "date": "2026-08-18",
     "title": "Qué presupuesto de IA asignar a un desarrollador full time",
-    "content": "El gasto en IA depende más de cómo manejás el contexto, los prompts y los modelos que del plan. Con Claude Max de 100 USD cubre su trabajo full time; pasaría al de 200 solo por tener loops de agentes corriendo en paralelo.",
+    "content": "El gasto en IA depende más de cómo manejás el contexto, los prompts y los modelos que del plan. Con Claude Max de 100 USD me alcanza para trabajar full time; me pasaría al de 200 solo por tener loops de agentes corriendo en paralelo.",
     "tags": ["ia", "productividad"]
   },
   {
@@ -844,7 +844,7 @@
     "member": "Facundo García Martoni",
     "date": "2026-08-12",
     "title": "Costos de CI con GitHub Actions: self-hosted runners, Depot y Blacksmith",
-    "content": "Si los minutos de CI de GitHub Actions se te disparan, probá Depot.dev (o Blacksmith) en lugar de armar tus propios runners: le resultó lo más eficiente en producción.",
+    "content": "Si los minutos de CI de GitHub Actions se te disparan, probá Depot.dev (o Blacksmith) en lugar de armar tus propios runners: a mí me resultó lo más eficiente en producción.",
     "tags": ["devops", "herramientas"]
   },
   {
@@ -988,7 +988,7 @@
     "member": "Juan Farber",
     "date": "2026-07-27",
     "title": "Reducir el gasto de tokens con OpenCode Go, modelos baratos y herramientas de contexto",
-    "content": "Para gastar menos tokens combiná un modelo económico con herramientas como rtk, caveman, dynamic context pruning y graphify. Pasó de unos 20 USD por sesión a menos de un dólar.",
+    "content": "Para gastar menos tokens combiná un modelo económico con herramientas como rtk, caveman, dynamic context pruning y graphify. Pasé de unos 20 USD por sesión a menos de un dólar.",
     "tags": ["ia", "productividad"]
   },
   {
@@ -1484,7 +1484,7 @@
     "member": "Facundo García Martoni",
     "date": "2026-06-13",
     "title": "Aprendizajes de las charlas del evento de la comunidad",
-    "content": "Tomá notas de las charlas y aplicalas enseguida: trabajar con tres a cinco worktrees a la vez le permitió resolver unos diez tickets en seis horas. Además, recordá que las expresiones regulares no sirven para procesar JSON o XML, lo que ayuda a detectar malas soluciones de un modelo.",
+    "content": "Tomá notas de las charlas y aplicalas enseguida: trabajar con tres a cinco worktrees a la vez me permitió resolver unos diez tickets en seis horas. Además, recordá que las expresiones regulares no sirven para procesar JSON o XML, lo que ayuda a detectar malas soluciones de un modelo.",
     "tags": ["aprendizaje", "productividad"]
   },
   {
@@ -2332,7 +2332,7 @@
     "member": "Facundo García Martoni",
     "date": "2025-10-14",
     "title": "Procesadores de pago en Argentina: la odisea de cobrar en dólares",
-    "content": "Para cobrar desde Argentina, DLocal Go es una opción que funcionó en su caso. Probalo si Stripe no está disponible.",
+    "content": "Para cobrar desde Argentina, DLocal Go es una opción que me funcionó. Probalo si Stripe no está disponible.",
     "tags": ["freelance", "backend"]
   },
   {
@@ -2468,7 +2468,7 @@
     "member": "Facundo García Martoni",
     "date": "2025-09-08",
     "title": "Claude 4.1 Opus para animación CSS compleja y búsqueda de experto",
-    "content": "Para tareas complejas de CSS, como animar una mascota, probá modelos distintos: en su caso Opus fue el único que dio algo decente tras varios prompts. Sabé que la IA todavía está lejos de hacer buen CSS drawing.",
+    "content": "Para tareas complejas de CSS, como animar una mascota, probá modelos distintos: en mi caso Opus fue el único que dio algo decente tras varios prompts. Sabé que la IA todavía está lejos de hacer buen CSS drawing.",
     "tags": ["ia", "frontend"]
   },
   {
@@ -3012,7 +3012,7 @@
     "member": "Agustín Sánchez",
     "date": "2025-05-21",
     "title": "Auriculares inalámbricos: recomendaciones y experiencias",
-    "content": "Antes de comprar auriculares Bluetooth para trabajar con Mac, revisá si hay problemas de compatibilidad conocidos: algunos Sony se cortan con las Mac M1 al sacar y volver a poner el auricular. Los AirPods Pro fueron la opción más cómoda y de mayor batería que probó.",
+    "content": "Antes de comprar auriculares Bluetooth para trabajar con Mac, revisá si hay problemas de compatibilidad conocidos: algunos Sony se cortan con las Mac M1 al sacar y volver a poner el auricular. Los AirPods Pro fueron la opción más cómoda y de mayor batería que probé.",
     "tags": ["herramientas"]
   },
   {

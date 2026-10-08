@@ -6,7 +6,8 @@ import raw from './consejos.json';
 // group, rewritten as a standalone consejo. Nobody published these by hand, so they live here
 // next to the conversation data instead of in the Advice table (which needs a platform author):
 // the member is a WhatsApp name, resolved to a platform user at render time through the identity
-// links an admin manages on /vinculos, exactly like /conversaciones does.
+// links an admin manages on /vinculos, exactly like /conversaciones does. Each one is written in
+// the member's own voice, as if they had published it: "me funcionó", never "le funcionó".
 
 export interface ExtractedConsejo {
   /** Stable id (`auto-<conversation hash>-<member>`), used in /consejos/<id>. */
