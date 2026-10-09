@@ -5,15 +5,18 @@ import { findSession } from '@/lib/session';
 import { mockCookies } from '@/test/cookies';
 import Loading from './loading';
 import Talks, { metadata } from './page';
+import { testVideos } from '@/test/recommendations';
 
 jest.mock('next/headers', () => ({ cookies: jest.fn() }));
 jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/actions/talks/fetch-public-talks', () => ({ fetchPublicTalks: jest.fn() }));
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 jest.mock('@/components/talks/charlas-admin-wrapper', () => ({
   CharlasAdminWrapper: jest.fn(() => null),
 }));
 
 const talks = [{ id: 't1', title: 'Testing en serio' }];
+const externalTalks = testVideos.filter((video) => video.isTalk);
 const wrapperProps = () => jest.mocked(CharlasAdminWrapper).mock.calls[0][0];
 
 describe('Talks page', () => {
@@ -34,7 +37,7 @@ describe('Talks page', () => {
     render(await Talks());
 
     expect(findSession).not.toHaveBeenCalled();
-    expect(wrapperProps()).toEqual({ talks, isAdmin: false });
+    expect(wrapperProps()).toEqual({ talks, externalTalks, isAdmin: false });
   });
 
   it('keeps admin tools away from members', async () => {
@@ -43,7 +46,7 @@ describe('Talks page', () => {
     render(await Talks());
 
     expect(findSession).toHaveBeenCalledWith('s1');
-    expect(wrapperProps()).toEqual({ talks, isAdmin: false });
+    expect(wrapperProps()).toEqual({ talks, externalTalks, isAdmin: false });
   });
 
   it('turns on the admin tools for admins', async () => {
@@ -51,7 +54,7 @@ describe('Talks page', () => {
     jest.mocked(findSession).mockResolvedValue({ user: { role: 'ADMIN' } } as never);
     render(await Talks());
 
-    expect(wrapperProps()).toEqual({ talks, isAdmin: true });
+    expect(wrapperProps()).toEqual({ talks, externalTalks, isAdmin: true });
   });
 
   it('treats an expired session as anonymous', async () => {
@@ -59,7 +62,7 @@ describe('Talks page', () => {
     jest.mocked(findSession).mockResolvedValue(null);
     render(await Talks());
 
-    expect(wrapperProps()).toEqual({ talks, isAdmin: false });
+    expect(wrapperProps()).toEqual({ talks, externalTalks, isAdmin: false });
   });
 });
 

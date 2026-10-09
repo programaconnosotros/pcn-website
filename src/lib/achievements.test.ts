@@ -1,10 +1,14 @@
 import { prismaMock } from '@/test/prisma';
 import { getCollaborationStats } from '@/lib/github-stats';
-import { externalTalks } from '@/components/videos/videos';
+import { testVideos } from '@/test/recommendations';
 import { conversations } from '@/data/whatsapp-conversations';
 import { extractedConsejos } from '@/data/consejos-extraidos';
 import { ACHIEVEMENTS, EMPTY_METRICS, earnedAchievements } from './achievements';
 import { getAchievementMetrics, getUserAchievementMetrics } from './achievement-metrics';
+
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
+
+const externalTalks = testVideos.filter((video) => video.isTalk);
 
 const ids = (metrics: Parameters<typeof earnedAchievements>[0]) =>
   earnedAchievements(metrics).map(({ id }) => id);

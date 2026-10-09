@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { fetchPublicTalks } from '@/actions/talks/fetch-public-talks';
 import { CharlasAdminWrapper } from '@/components/talks/charlas-admin-wrapper';
 import { findSession } from '@/lib/session';
+import { getExternalTalks } from '@/lib/recommendations';
 import { tabTitle } from '@/lib/tab-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -29,8 +30,9 @@ export const metadata: Metadata = {
 
 const Talks = async () => {
   const sessionId = (await cookies()).get('sessionId')?.value;
-  const [talks, session] = await Promise.all([
+  const [talks, externalTalks, session] = await Promise.all([
     fetchPublicTalks(),
+    getExternalTalks(),
     sessionId ? findSession(sessionId) : null,
   ]);
 
@@ -39,7 +41,7 @@ const Talks = async () => {
   return (
     <>
       <div className="flex flex-1 flex-col p-4 pt-0">
-        <CharlasAdminWrapper talks={talks} isAdmin={isAdmin} />
+        <CharlasAdminWrapper talks={talks} externalTalks={externalTalks} isAdmin={isAdmin} />
       </div>
     </>
   );

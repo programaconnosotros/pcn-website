@@ -6,7 +6,11 @@ import { CoursesBrowser } from '@/components/courses/courses-browser';
 import { CoursePlayer } from '@/components/courses/course-player';
 import { CourseRow } from '@/components/courses/course-row';
 import { RelatedArticles } from '@/components/courses/related-articles';
-import { communityCourses, courseTeachers, externalCourses } from './courses';
+import { courseTeachers } from './courses';
+import {
+  testCommunityCourses as communityCourses,
+  testExternalCourses as externalCourses,
+} from '@/test/recommendations';
 import Courses, { metadata } from './page';
 import Loading from './loading';
 import Course, { generateMetadata } from './[courseId]/page';
@@ -15,6 +19,10 @@ import CourseLoading from './[courseId]/loading';
 import CourseImage from './[courseId]/opengraph-image';
 
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn(async () => ({})) }));
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
+jest.mock('@/components/recommendations/recommend-button', () =>
+  require('@/test/recommendations').mockRecommendButton(),
+);
 jest.mock('@/lib/og/terminal-card', () => ({
   OG_SIZE: { width: 1200, height: 630 },
   OG_CONTENT_TYPE: 'image/png',
@@ -41,13 +49,14 @@ const external = externalCourses.find((course) => course.youtubeUrls?.length)!;
 const website = externalCourses.find((course) => course.websiteUrl)!;
 
 describe('/cursos', () => {
-  it('lists every community and external course', () => {
-    renderInPlatform(<Courses />);
+  it('lists every community and external course, with a button to recommend one', async () => {
+    renderInPlatform(await Courses());
     expect(jest.mocked(CoursesBrowser).mock.calls[0][0].courses).toEqual([
       ...communityCourses,
       ...externalCourses,
     ]);
     expect(screen.getByText(/curados por la comunidad/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'recomendar COURSE' })).toBeInTheDocument();
     expect(metadata.title).toBe('ls ~/cursos');
   });
 

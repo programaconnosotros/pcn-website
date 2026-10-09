@@ -90,6 +90,8 @@ model User {
   flyerDesigns         EventFlyerDesigner[]
   eventBroadcasts      EventBroadcast[]
   setupLikes           SetupLike[]
+  recommendations      Recommendation[]      @relation("RecommendationSubmitter")
+  reviewedRecs         Recommendation[]      @relation("RecommendationReviewer")
 
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
@@ -912,9 +914,9 @@ model UserBadge {
   @@index([badgeId])
 }
 
-// Miembro de la comunidad que escribió uno de los artículos de /lectura (que son contenido
-// estático: `articleId` es el id del artículo en src/app/(platform)/lectura/articles.ts). Lo
-// asigna un admin y el artículo aparece en su perfil.
+// Miembro de la comunidad que escribió uno de los artículos de /lectura (`articleId` es el slug
+// de su Recommendation de tipo ARTICLE, sin clave foránea). Lo asigna un admin y el artículo
+// aparece en su perfil.
 model ArticleAuthor {
   id        String  @id @default(cuid())
   articleId String
@@ -1020,4 +1022,81 @@ model TwoFactorChallenge {
   createdAt  DateTime @default(now())
 
   @@index([userId])
+}
+
+// ─── Recomendaciones ──────────────────────────────────────────────────────────
+// Lo que la comunidad recomienda en /lectura (artículos y libros), /cursos y /videos (las charlas
+// externas de /charlas son los videos con `isTalk`). Una sola tabla para los cuatro tipos: comparten
+// la revisión (lo que manda un miembro espera a un admin) y casi todos los campos; los que son de
+// un solo tipo quedan vacíos en el resto. Las listas que antes vivían en el repo se cargaron con una
+// migración de datos, aprobadas y sin `submittedBy`.
+
+enum RecommendationKind {
+  ARTICLE
+  BOOK
+  COURSE
+  VIDEO
+}
+
+enum RecommendationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Recommendation {
+  id                String               @id @default(cuid())
+  kind              RecommendationKind
+  // Clave estable dentro del tipo: el id de YouTube de un video, el slug de la URL de un curso
+  // (/cursos/<slug>), el id de un artículo o libro. ContentMark y ArticleAuthor la referencian.
+  slug              String
+  status            RecommendationStatus @default(PENDING)
+  title             String
+  description       String               @default("")
+  // La web del artículo, libro o curso. Los videos la arman con su id de YouTube.
+  url               String?
+  // Quién lo escribió (artículo, libro), lo dicta (curso) o lo presenta (video).
+  author            String?
+  // Quienes firmaron un artículo junto con `author`.
+  coauthors         String[]             @default([])
+  // El sitio de un artículo o el canal de YouTube de un video.
+  source            String?
+  // Categorías de un libro; la de un artículo es la primera.
+  categories        String[]             @default([])
+  // "es" o "en".
+  language          String?
+  // Fecha de publicación de un artículo o video, o la del curso.
+  publishedAt       DateTime?
+  // Año de un libro.
+  year              Int?
+  // Avatar del autor de un artículo, tapa de un libro o logo de un curso.
+  imageUrl          String?
+  isbn              String?
+  durationSeconds   Int?
+  // Horas de un curso.
+  hours             Int?
+  // Videos de YouTube (embed) de un curso.
+  youtubeUrls       String[]             @default([])
+  // Charla de una conferencia: también se lista en las externas de /charlas.
+  isTalk            Boolean              @default(false)
+  isMadeByCommunity Boolean              @default(false)
+  acceptDonations   Boolean              @default(false)
+  // Orden entre las del mismo tipo con la misma fecha (el de las listas del repo).
+  position          Int                  @default(0)
+  // Por qué lo recomienda quien lo mandó. Solo lo ven los admins.
+  note              String?
+  submittedById     String?
+  reviewedById      String?
+  reviewedAt        DateTime?
+
+  submittedBy User? @relation("RecommendationSubmitter", fields: [submittedById], references: [id], onDelete: SetNull)
+  reviewedBy  User? @relation("RecommendationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, slug])
+  @@index([kind, status])
+  @@index([status, createdAt])
+  @@index([submittedById])
 }

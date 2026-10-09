@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { communityCourses, externalCourses } from './(platform)/cursos/courses';
+import { getAllCourses } from '@/lib/recommendations';
 import { TRACKS } from './(platform)/entrevistas/questions/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
@@ -94,7 +94,8 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const courses = [...communityCourses, ...externalCourses].map((course) => ({
+  // A database outage leaves the courses out, like the other dynamic routes.
+  const courses = (await getAllCourses().catch(() => [])).map((course) => ({
     url: `${SITE_URL}/cursos/${course.id}`,
   }));
   const interviewGuides = [...TRACKS.map((track) => track.id), 'live-coding'].map((guide) => ({

@@ -48,10 +48,17 @@ describe('renderSectionCard', () => {
     expect(Number.parseInt(questions)).toBeGreaterThan(0);
   });
 
-  it.each(['cursos', 'lectura', 'videos', 'especialidades', 'music'] as const)(
-    'shows a count for %s',
-    async (key) => {
-      expect((await rendered(key)).meta![0]).toMatch(/^\d+ /);
-    },
-  );
+  it.each(['especialidades', 'music'] as const)('shows a count for %s', async (key) => {
+    expect((await rendered(key)).meta![0]).toMatch(/^\d+ /);
+  });
+
+  it('takes the meta of the sections counted in the database from their route', async () => {
+    expect((await rendered('videos')).meta).toEqual(['recomendados por la comunidad']);
+    await renderSectionCard('cursos', ['13 cursos', 'gratis']);
+    expect(jest.mocked(renderTerminalCard).mock.calls.at(-1)![0]).toMatchObject({
+      path: 'cursos',
+      title: 'Cursos',
+      meta: ['13 cursos', 'gratis'],
+    });
+  });
 });

@@ -1,5 +1,5 @@
 import { prismaMock } from '@/test/prisma';
-import { articles } from '@/app/(platform)/lectura/articles';
+import { testArticles as articles } from '@/test/recommendations';
 import { conversations } from '@/data/whatsapp-conversations';
 import { extractedConsejos } from '@/data/consejos-extraidos';
 import { getCollaborationStats } from '@/lib/github-stats';
@@ -17,6 +17,7 @@ import {
 } from './profile-data';
 
 jest.mock('@/lib/identity-links', () => ({ getUserIdentities: jest.fn() }));
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 jest.mock('@/lib/consejos-server', () => ({ listExtractedActivity: jest.fn(async () => ({})) }));
 jest.mock('@/lib/github-stats', () => ({ getCollaborationStats: jest.fn() }));
 jest.mock('@/lib/gallery-signing', () => ({

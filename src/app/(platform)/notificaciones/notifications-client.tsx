@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { REVIEW_QUEUE_PATH } from '@/schemas/recommendation-schema';
 
 type Notification = {
   id: string;
@@ -138,6 +139,7 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     const hasTestimonialLink = isTestimonialNotification(notification) && testimonialId;
     const eventId = getEventId(notification);
     const hasEventLink = isEventNotification(notification) && eventId;
+    const hasRecommendationLink = notification.type === 'recommendation_pending';
     const linkClassName =
       'flex items-center gap-1 font-mono text-[11px] text-pcnGreen-700 transition-colors hover:text-pcnGreen';
 
@@ -157,11 +159,17 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             </span>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">{notification.message}</p>
-          {(hasTestimonialLink || hasEventLink) && (
+          {(hasTestimonialLink || hasEventLink || hasRecommendationLink) && (
             <div className="flex flex-wrap gap-3">
               {hasTestimonialLink && (
                 <Link href={`/testimonios/${testimonialId}`} className={linkClassName}>
                   ver testimonio
+                  <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              )}
+              {hasRecommendationLink && (
+                <Link href={REVIEW_QUEUE_PATH} className={linkClassName}>
+                  revisar recomendaciones
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
               )}

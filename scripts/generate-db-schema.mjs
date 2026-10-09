@@ -18,6 +18,7 @@ const DOMAINS = {
     'Notification',
     'Setup',
     'SetupLike',
+    'Recommendation',
   ],
   consejos: ['Advice', 'Comment', 'Like', 'HiddenConsejo'],
   foro: ['ForumCategory', 'ForumPost', 'ForumComment', 'ForumPostLike'],

@@ -34,6 +34,11 @@ const AREAS = [
   [/^src\/actions\/projects\//, 'proyectos'],
   [/^src\/actions\/(articles|content-marks)\//, 'lectura'],
   [/^src\/lib\/embeddable/, 'lectura'],
+  // Recommended articles, books, courses and videos (the lists of /lectura, /cursos and /videos).
+  [
+    /^src\/(actions\/recommendations|components\/recommendations|lib\/(recommendations|youtube-metadata)|schemas\/recommendation)/,
+    'lectura',
+  ],
   [/^src\/lib\/og\//, 'perfil'],
   [/^src\/app\/\(platform\)\/entrevistas\//, 'entrevistas'],
   [/^src\/actions\/notifications\//, 'notificaciones'],

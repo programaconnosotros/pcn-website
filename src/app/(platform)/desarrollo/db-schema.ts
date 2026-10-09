@@ -39,7 +39,7 @@ export type DbDomain =
   | 'auth'
   | 'sistema';
 
-export const DB_SCHEMA_UPDATED_AT = '2026-10-08';
+export const DB_SCHEMA_UPDATED_AT = '2026-10-09';
 
 export const dbEnums: { name: string; values: string[] }[] = [
   {
@@ -57,6 +57,14 @@ export const dbEnums: { name: string; values: string[] }[] = [
   {
     name: 'TalkProposalStatus',
     values: ['PENDING', 'ACCEPTED', 'REJECTED'],
+  },
+  {
+    name: 'RecommendationKind',
+    values: ['ARTICLE', 'BOOK', 'COURSE', 'VIDEO'],
+  },
+  {
+    name: 'RecommendationStatus',
+    values: ['PENDING', 'APPROVED', 'REJECTED'],
   },
 ];
 
@@ -2248,6 +2256,149 @@ export const dbModels: DbModel[] = [
     ],
     uniques: [],
   },
+  {
+    name: 'Recommendation',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'kind',
+        type: 'RecommendationKind',
+      },
+      {
+        name: 'slug',
+        type: 'String',
+      },
+      {
+        name: 'status',
+        type: 'RecommendationStatus',
+      },
+      {
+        name: 'title',
+        type: 'String',
+      },
+      {
+        name: 'description',
+        type: 'String',
+      },
+      {
+        name: 'url',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'author',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'coauthors',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'source',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'categories',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'language',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'publishedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'year',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'imageUrl',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'isbn',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'durationSeconds',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'hours',
+        type: 'Int',
+        optional: true,
+      },
+      {
+        name: 'youtubeUrls',
+        type: 'String',
+        list: true,
+      },
+      {
+        name: 'isTalk',
+        type: 'Boolean',
+      },
+      {
+        name: 'isMadeByCommunity',
+        type: 'Boolean',
+      },
+      {
+        name: 'acceptDonations',
+        type: 'Boolean',
+      },
+      {
+        name: 'position',
+        type: 'Int',
+      },
+      {
+        name: 'note',
+        type: 'String',
+        optional: true,
+      },
+      {
+        name: 'submittedById',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'reviewedById',
+        type: 'String',
+        fk: true,
+        optional: true,
+      },
+      {
+        name: 'reviewedAt',
+        type: 'DateTime',
+        optional: true,
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['kind', 'slug']],
+  },
 ];
 
 export const dbRelations: DbRelation[] = [
@@ -2778,5 +2929,21 @@ export const dbRelations: DbRelation[] = [
     optional: false,
     many: true,
     onDelete: 'Cascade',
+  },
+  {
+    from: 'Recommendation',
+    to: 'User',
+    label: 'submittedBy',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
+  },
+  {
+    from: 'Recommendation',
+    to: 'User',
+    label: 'reviewedBy',
+    optional: true,
+    many: true,
+    onDelete: 'SetNull',
   },
 ];

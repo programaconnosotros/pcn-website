@@ -4,6 +4,7 @@ import { getStaticIndex, toEntry } from '@/lib/search/search-index';
 import type { SearchResponse } from '@/lib/search/types';
 import { GET } from './route';
 
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 jest.mock('@/lib/search/search-index', () => ({
   ...jest.requireActual('@/lib/search/search-index'),
   getStaticIndex: jest.fn(),
@@ -206,6 +207,18 @@ describe('GET /api/search', () => {
     mockCorpus();
     const { body } = await search('beto');
     expect(body.results.map((result) => result.title)).toEqual(['Beto', 'Testing en React']);
+  });
+
+  it('finds the recommended articles, videos and courses', async () => {
+    mockCorpus();
+    const { body } = await search('engineering');
+    expect(body.results.filter((r) => r.type === 'lectura').map((r) => r.title)).toEqual([
+      'Loop Engineering',
+      'Harness Engineering: explicado desde cero',
+    ]);
+    expect(body.results.filter((r) => r.type === 'video').map((r) => r.title)).toEqual([
+      '¿Qué es esto del Harness Engineering?',
+    ]);
   });
 
   it('caps the query at 100 characters', async () => {

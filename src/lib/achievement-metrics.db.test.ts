@@ -2,11 +2,13 @@ import prisma from '@/lib/prisma';
 import { getAchievementMetrics, getUserAchievementMetrics } from '@/lib/achievement-metrics';
 import { EMPTY_METRICS } from '@/lib/achievements';
 import { getCollaborationStats } from '@/lib/github-stats';
-import { externalTalks } from '@/components/videos/videos';
 import { createTestEvent, createUser, daysFromNow, uniqueId } from '@/test/db/content-fixtures';
 
 // Los conteos detrás de los logros, contra Postgres real: cada uno cuenta lo que debe (eventos ya
 // pasados y vivos, inscripciones activas, etc.) y nada más.
+
+// An external talk the data migration loaded (Recommendation, kind VIDEO with isTalk).
+const EXTERNAL_TALK = 'HqB3t7046QE';
 
 const createProject = (authorId: string | null, memberIds: string[] = []) =>
   prisma.project.create({
@@ -70,7 +72,7 @@ it('counts talks given, talks watched, articles read, advice and shared projects
   });
   await prisma.contentMark.createMany({
     data: [
-      { userId: user.id, contentType: 'video', contentId: externalTalks[0].id, mark: 'watched' },
+      { userId: user.id, contentType: 'video', contentId: EXTERNAL_TALK, mark: 'watched' },
       // Un video que no es una charla externa no cuenta
       { userId: user.id, contentType: 'video', contentId: 'otro-video', mark: 'watched' },
       { userId: user.id, contentType: 'article', contentId: 'a1', mark: 'read' },

@@ -55,6 +55,8 @@ const MESSAGES: Record<RateLimitName, (_wait: string) => string> = {
   pageVisit: (wait) => `Demasiadas visitas seguidas: probá de nuevo en ${wait}.`,
   galleryUpload: (wait) =>
     `Subiste muchas fotos en la última hora. Para que los admins puedan revisarlas hay un límite: vas a poder subir más en ${wait}.`,
+  recommendation: (wait) =>
+    `Mandaste muchas recomendaciones en la última hora. Para que los admins puedan revisarlas hay un límite: vas a poder recomendar de nuevo en ${wait}.`,
   aiAgent: (wait) =>
     `Usaste mucho los agentes de IA en la última hora. Cada carga cuesta plata, así que hay un límite: probá de nuevo en ${wait} o cargá los datos a mano.`,
 };

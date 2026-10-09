@@ -1,11 +1,10 @@
 import { CoursesBrowser } from '@/components/courses/courses-browser';
 import { PageTitle } from '@/components/ui/page-title';
 import { LearningPlatforms } from '@/components/courses/learning-platforms';
-import { communityCourses, externalCourses } from './courses';
+import { RecommendButton } from '@/components/recommendations/recommend-button';
+import { getAllCourses } from '@/lib/recommendations';
 import type { Metadata } from 'next';
 import { tabTitle } from '@/lib/tab-title';
-
-const allCourses = [...communityCourses, ...externalCourses];
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -29,12 +28,18 @@ export const metadata: Metadata = {
   },
 };
 
-const Courses = () => (
+const Courses = async () => (
   <div className="flex flex-1 flex-col p-4 pt-0">
     <div className="mt-4">
       <CoursesBrowser
-        header={<PageTitle path="cursos" meta="gratis · curados por la comunidad" />}
-        courses={allCourses}
+        header={
+          <PageTitle
+            path="cursos"
+            meta="gratis · curados por la comunidad"
+            action={<RecommendButton kind="COURSE" />}
+          />
+        }
+        courses={await getAllCourses()}
       />
       <LearningPlatforms />
     </div>

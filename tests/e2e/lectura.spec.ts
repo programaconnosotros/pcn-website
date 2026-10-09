@@ -12,7 +12,7 @@ import { expect as baseExpect, test } from './support/fixtures';
 test.describe.configure({ timeout: 120_000 });
 const expect = baseExpect.configure({ timeout: 20_000 });
 
-// Artículos fijos de src/app/(platform)/lectura/articles.ts
+// Artículos que carga la migración de datos de Recommendation (las listas que vivían en el repo)
 const LOOP = {
   id: '1',
   title: 'Loop Engineering',

@@ -2,6 +2,8 @@ import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { setIdentityLink } from './set-identity-link';
 
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
+
 const admin = { id: 'admin-1', name: 'Admin', email: 'admin@pcn.com', role: 'ADMIN' as const };
 const regular = { ...admin, id: 'user-1', role: 'REGULAR' as const };
 
@@ -41,13 +43,13 @@ describe('setIdentityLink', () => {
 
     await setIdentityLink({
       source: 'articulos',
-      externalName: 'Santiago Villada',
+      externalName: 'Santiago M.',
       userId: 'user-2',
     });
 
     expect(prismaMock.identityLink.upsert).toHaveBeenCalledWith({
-      where: { source_externalName: { source: 'articulos', externalName: 'Santiago Villada' } },
-      create: { source: 'articulos', externalName: 'Santiago Villada', userId: 'user-2' },
+      where: { source_externalName: { source: 'articulos', externalName: 'Santiago M.' } },
+      create: { source: 'articulos', externalName: 'Santiago M.', userId: 'user-2' },
       update: { userId: 'user-2' },
     });
   });
@@ -57,6 +59,27 @@ describe('setIdentityLink', () => {
 
     await expect(
       setIdentityLink({ source: 'articulos', externalName: 'Alguien Inventado', userId: 'user-2' }),
+    ).rejects.toThrow('Nombre desconocido');
+  });
+
+  it.each([
+    ['videos', 'Boris Cherny'],
+    ['cursos', 'Lydia Hallie'],
+  ] as const)('links someone credited in the %s to a user', async (source, externalName) => {
+    loginAs(admin);
+    prismaMock.identityLink.findUnique.mockResolvedValue(null);
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-2' } as any);
+
+    await setIdentityLink({ source, externalName, userId: 'user-2' });
+
+    expect(prismaMock.identityLink.upsert).toHaveBeenCalled();
+  });
+
+  it.each(['videos', 'cursos'] as const)('rejects names the %s do not credit', async (source) => {
+    loginAs(admin);
+
+    await expect(
+      setIdentityLink({ source, externalName: 'Alguien Inventado', userId: 'user-2' }),
     ).rejects.toThrow('Nombre desconocido');
   });
 

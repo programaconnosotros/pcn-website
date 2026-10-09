@@ -24,25 +24,30 @@ jest.mock('@/data/whatsapp-conversations/members', () => ({
   members: [{ name: 'Ana' }, { name: 'Bea' }, { name: 'Ceci' }, { name: 'Abel' }],
 }));
 jest.mock('@/app/(platform)/lectura/articles', () => ({
-  articles: [
-    { author: 'Zoe' },
-    { author: 'Zoe', coauthors: ['Ana'] },
-    { author: 'Ana' },
-    { author: 'Leo' },
-  ],
   articleAuthors: (article: { author: string; coauthors?: string[] }) => [
     article.author,
     ...(article.coauthors ?? []),
   ],
 }));
+jest.mock('@/lib/recommendations', () => ({
+  getArticles: async () => [
+    { author: 'Zoe' },
+    { author: 'Zoe', coauthors: ['Ana'] },
+    { author: 'Ana' },
+    { author: 'Leo' },
+  ],
+  getAllCourses: async () => [{ teachedBy: 'Ana y Zoe' }, { teachedBy: 'Dalto' }],
+  getVideos: async () => [
+    { speaker: 'Ana (Acme) y Leo' },
+    { speaker: 'Ana' },
+    { speaker: undefined },
+  ],
+}));
 jest.mock('@/components/historia/people', () => ({ HISTORIA_PEOPLE: ['Zoe', 'Abel'] }));
 jest.mock('@/app/(platform)/cursos/courses', () => ({
-  communityCourses: [{ teachedBy: 'Ana y Zoe' }],
-  externalCourses: [{ teachedBy: 'Dalto' }],
   courseTeachers: (course: { teachedBy: string }) => course.teachedBy.split(' y '),
 }));
 jest.mock('@/components/videos/videos', () => ({
-  videos: [{ speaker: 'Ana (Acme) y Leo' }, { speaker: 'Ana' }, { speaker: undefined }],
   videoSpeakers: (video: { speaker?: string }) =>
     video.speaker ? video.speaker.replace(/ \(.*?\)/, '').split(' y ') : [],
 }));

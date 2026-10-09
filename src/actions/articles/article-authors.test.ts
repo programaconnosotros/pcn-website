@@ -1,6 +1,5 @@
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
-import { articles } from '@/app/(platform)/lectura/articles';
 import { addArticleAuthor, removeArticleAuthor } from './article-authors';
 
 const admin = { id: 'admin-1', role: 'ADMIN' as const };
@@ -11,7 +10,13 @@ const loginAs = (user: { id: string }) => {
   prismaMock.session.findUnique.mockResolvedValue({ id: 's', userId: user.id, user } as any);
 };
 
-const articleId = articles[0].id;
+const articleId = '1';
+
+// The article exists, approved, unless a test says otherwise.
+beforeEach(() => {
+  prismaMock.recommendation.findUnique.mockImplementation((async ({ where }: any) =>
+    where.kind_slug.slug === articleId ? { status: 'APPROVED' } : null) as any);
+});
 
 describe('article authors', () => {
   it('only lets admins pick the writers', async () => {
@@ -44,6 +49,17 @@ describe('article authors', () => {
     );
     await expect(addArticleAuthor(articleId, 'ghost')).rejects.toThrow('Usuario no encontrado');
     expect(prismaMock.articleAuthor.upsert).not.toHaveBeenCalled();
+  });
+
+  it('rejects articles that are not published', async () => {
+    loginAs(admin);
+    prismaMock.recommendation.findUnique.mockResolvedValue({ status: 'PENDING' } as any);
+
+    await expect(addArticleAuthor(articleId, 'user-2')).rejects.toThrow('Artículo no encontrado');
+    expect(prismaMock.recommendation.findUnique).toHaveBeenCalledWith({
+      where: { kind_slug: { kind: 'ARTICLE', slug: articleId } },
+      select: { status: true },
+    });
   });
 
   it('removes a writer', async () => {

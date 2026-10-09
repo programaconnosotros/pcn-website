@@ -8,7 +8,7 @@ import {
   visibleGalleryItem,
 } from '@/lib/gallery';
 import { signGalleryItem } from '@/lib/gallery-signing';
-import { articleAuthors, articles as allArticles } from '@/app/(platform)/lectura/articles';
+import { articleAuthors } from '@/app/(platform)/lectura/articles';
 import { conversations as allConversations } from '@/data/whatsapp-conversations';
 import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { fromAdvice, fromExtracted, sortByNewest } from '@/lib/consejos';
@@ -19,8 +19,9 @@ import { changelog } from '@/data/changelog';
 import { changelogBy, visibleChangelog } from '@/lib/changelog';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
 import { setupSelect } from '@/lib/setups';
-import { videoSpeakers, videos as allVideos } from '@/components/videos/videos';
-import { communityCourses, courseTeachers, externalCourses } from '@/app/(platform)/cursos/courses';
+import { videoSpeakers } from '@/components/videos/videos';
+import { courseTeachers } from '@/app/(platform)/cursos/courses';
+import { getAllCourses, getArticles, getVideos } from '@/lib/recommendations';
 
 // One loader per profile section, so a tab only waits for its own data while the overview and
 // the tab counts reuse whatever the other loaders fetched. The ones that read the database are
@@ -140,7 +141,9 @@ export const getProfileEvents = cached(
 export const getProfileVideos = cache(async (userId: string) => {
   const names = new Set((await getProfileIdentities(userId)).videos);
   if (names.size === 0) return [];
-  return allVideos.filter((video) => videoSpeakers(video).some((name) => names.has(name)));
+  return (await getVideos()).filter((video) =>
+    videoSpeakers(video).some((name) => names.has(name)),
+  );
 });
 
 // Courses from /cursos the user taught, through the teacher names linked to them in /vinculos,
@@ -148,7 +151,7 @@ export const getProfileVideos = cache(async (userId: string) => {
 export const getProfileCourses = cache(async (userId: string) => {
   const names = new Set((await getProfileIdentities(userId)).cursos);
   if (names.size === 0) return [];
-  return [...communityCourses, ...externalCourses]
+  return (await getAllCourses())
     .filter((course) => courseTeachers(course).some((name) => names.has(name)))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 });
@@ -190,9 +193,10 @@ export const getProfilePendingWorkingPhotos = getPendingWorkingPhotos;
 export const getProfileArticles = cached(
   'profile-articles',
   async (userId: string) => {
-    const [authorships, identities] = await Promise.all([
+    const [authorships, identities, allArticles] = await Promise.all([
       prisma.articleAuthor.findMany({ where: { userId }, select: { articleId: true } }),
       getProfileIdentities(userId),
+      getArticles(),
     ]);
     const writtenIds = new Set(authorships.map(({ articleId }) => articleId));
     const authorNames = new Set(identities.articulos);
@@ -205,7 +209,7 @@ export const getProfileArticles = cached(
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((article) => ({ article, index: allArticles.indexOf(article) }));
   },
-  { models: ['ArticleAuthor', 'IdentityLink'] },
+  { models: ['ArticleAuthor', 'IdentityLink', 'Recommendation'] },
 );
 
 // Conversations where any of the WhatsApp names an admin linked to this user took part.

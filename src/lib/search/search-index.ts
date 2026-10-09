@@ -1,6 +1,6 @@
-import { communityCourses, externalCourses } from '@/app/(platform)/cursos/courses';
-import { articles } from '@/app/(platform)/lectura/articles';
-import { videos } from '@/components/videos/videos';
+import type { Course } from '@/app/(platform)/cursos/courses';
+import type { Article } from '@/app/(platform)/lectura/articles';
+import type { Video } from '@/components/videos/videos';
 import { specialties } from '@/components/especialidades/specialties';
 import { visiblePrograms } from '@/components/os/programs';
 import { conversations } from '@/data/whatsapp-conversations';
@@ -48,41 +48,6 @@ const buildStaticIndex = (): IndexedEntry[] => [
   ...visiblePrograms(false).map((program) =>
     toEntry({ type: 'seccion', title: program.name, href: program.url }, program.url),
   ),
-  ...[...communityCourses, ...externalCourses].map((course) =>
-    toEntry(
-      {
-        type: 'curso',
-        title: course.name,
-        subtitle: course.teachedBy,
-        href: `/cursos/${course.id}`,
-      },
-      course.description,
-    ),
-  ),
-  ...videos.map((video) =>
-    toEntry(
-      {
-        type: 'video',
-        title: video.title,
-        subtitle: video.speaker ?? video.channel,
-        href: `https://www.youtube.com/watch?v=${video.id}`,
-      },
-      video.channel,
-    ),
-  ),
-  ...articles.map((article) =>
-    toEntry(
-      {
-        type: 'lectura',
-        title: article.title,
-        subtitle: article.author,
-        href: withQuery('/lectura', article.title),
-      },
-      article.source,
-      article.category,
-      article.description,
-    ),
-  ),
   ...specialties.map((specialty) =>
     toEntry(
       {
@@ -116,6 +81,53 @@ const buildStaticIndex = (): IndexedEntry[] => [
       },
       consejo.content,
       consejo.member,
+    ),
+  ),
+];
+
+/** The courses, videos and articles the community recommends (they live in the database). */
+export const buildRecommendationEntries = ({
+  courses,
+  videos,
+  articles,
+}: {
+  courses: Course[];
+  videos: Video[];
+  articles: Article[];
+}): IndexedEntry[] => [
+  ...courses.map((course) =>
+    toEntry(
+      {
+        type: 'curso',
+        title: course.name,
+        subtitle: course.teachedBy,
+        href: `/cursos/${course.id}`,
+      },
+      course.description,
+    ),
+  ),
+  ...videos.map((video) =>
+    toEntry(
+      {
+        type: 'video',
+        title: video.title,
+        subtitle: video.speaker ?? video.channel,
+        href: `https://www.youtube.com/watch?v=${video.id}`,
+      },
+      video.channel,
+    ),
+  ),
+  ...articles.map((article) =>
+    toEntry(
+      {
+        type: 'lectura',
+        title: article.title,
+        subtitle: article.author,
+        href: withQuery('/lectura', article.title),
+      },
+      article.source,
+      article.category,
+      article.description,
     ),
   ),
 ];

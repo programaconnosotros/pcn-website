@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderInPlatform } from '@/test/platform';
 import { VideoGrid } from './video-grid';
-import { externalTalks, otherVideos, videos as allVideos, type Video } from './videos';
+import type { Video } from './videos';
 
 const mockMarks = { watched: new Set<string>(), toggle: jest.fn(), isAuthenticated: true };
 jest.mock('@/hooks/use-content-marks', () => ({
@@ -132,11 +132,6 @@ describe('VideoGrid', () => {
     renderInPlatform(<VideoGrid videos={videos} />);
 
     expect(screen.getByText(/iniciá sesión para guardar/)).toBeInTheDocument();
-  });
-
-  it('splits the catalog into talks and other videos', () => {
-    expect(externalTalks.length + otherVideos.length).toBe(allVideos.length);
-    expect(externalTalks.every((video) => video.isTalk)).toBe(true);
   });
 
   it('links the speakers who are platform users to their profiles', () => {

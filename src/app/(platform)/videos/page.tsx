@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import { VideoGrid } from '@/components/videos/video-grid';
-import { videos } from '@/components/videos/videos';
+import { RecommendButton } from '@/components/recommendations/recommend-button';
+import { getVideos } from '@/lib/recommendations';
 import { tabTitle } from '@/lib/tab-title';
 import { getIdentityMap } from '@/lib/identity-links';
 
@@ -30,12 +31,16 @@ export const metadata: Metadata = {
 
 const VideosPage = async () => {
   // Speakers who are platform users, linked in /vinculos.
-  const speakerProfiles = await getIdentityMap('videos');
+  const [speakerProfiles, videos] = await Promise.all([getIdentityMap('videos'), getVideos()]);
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <div className="mt-4 mb-14">
         <StickyHeader>
-          <PageTitle path="videos" meta={`${videos.length} videos recomendados por la comunidad`} />
+          <PageTitle
+            path="videos"
+            meta={`${videos.length} videos recomendados por la comunidad`}
+            action={<RecommendButton kind="VIDEO" />}
+          />
         </StickyHeader>
         <VideoGrid videos={videos} searchable speakerProfiles={speakerProfiles} />
       </div>

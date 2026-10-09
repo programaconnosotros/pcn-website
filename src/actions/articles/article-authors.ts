@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
-import { articles } from '@/app/(platform)/lectura/articles';
 
 const revalidateWriter = (userId: string) => {
   revalidatePath('/lectura');
@@ -13,7 +12,11 @@ const revalidateWriter = (userId: string) => {
 /** Marca a un usuario como escritor de un artículo de /lectura. Solo admins. */
 export async function addArticleAuthor(articleId: string, userId: string) {
   const admin = await requireAdmin();
-  if (!articles.some((article) => article.id === articleId)) {
+  const article = await prisma.recommendation.findUnique({
+    where: { kind_slug: { kind: 'ARTICLE', slug: String(articleId) } },
+    select: { status: true },
+  });
+  if (article?.status !== 'APPROVED') {
     throw new Error('Artículo no encontrado');
   }
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });

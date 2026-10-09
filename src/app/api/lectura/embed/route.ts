@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
-import { articles } from '@/app/(platform)/lectura/articles';
+import { getArticles } from '@/lib/recommendations';
 import { EMBED_CACHE_HEADERS, isEmbeddable } from '@/lib/embeddable';
 
 export const runtime = 'nodejs';
-
-const allowedUrls = new Set(articles.map((a) => a.url));
 
 /** Tells the reading page whether an article can be shown in an iframe of its original site. */
 export async function GET(request: Request) {
@@ -16,7 +14,8 @@ export async function GET(request: Request) {
   }
 
   // SSRF guard: only allow URLs present in the articles data
-  if (!allowedUrls.has(url)) {
+  const articles = await getArticles();
+  if (!articles.some((article) => article.url === url)) {
     return NextResponse.json({ error: 'URL not allowed' }, { status: 400 });
   }
 

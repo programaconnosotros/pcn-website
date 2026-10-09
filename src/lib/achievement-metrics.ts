@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getCollaborationStats } from '@/lib/github-stats';
-import { externalTalks } from '@/components/videos/videos';
+import { getExternalTalks } from '@/lib/recommendations';
 import { conversations } from '@/data/whatsapp-conversations';
 import { visibleExtractedConsejos } from '@/lib/hidden-consejos';
 import { EMPTY_METRICS, type AchievementMetrics } from '@/lib/achievements';
@@ -51,7 +51,10 @@ const computeAchievementMetrics = async (
   userIds?: string[],
 ): Promise<Map<string, AchievementMetrics>> => {
   const forUsers = userIds ? { userId: { in: userIds } } : {};
-  const extractedConsejos = await visibleExtractedConsejos();
+  const [extractedConsejos, externalTalks] = await Promise.all([
+    visibleExtractedConsejos(),
+    getExternalTalks(),
+  ]);
 
   const now = new Date();
   const [
@@ -215,6 +218,7 @@ const cachedAchievementMetrics = cached(
       'ProjectMember',
       'Advice',
       'HiddenConsejo',
+      'Recommendation',
     ],
     revalidate: 3600,
   },

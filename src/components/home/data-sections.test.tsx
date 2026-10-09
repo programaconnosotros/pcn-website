@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { articles } from '@/app/(platform)/lectura/articles';
 import { AdviceCountCard } from './advice-count-card';
 import { AmbassadorsSection } from './ambassadors-section';
 import { LatestArticlesSection } from './latest-articles';
@@ -19,6 +18,13 @@ jest.mock('@/lib/cache', () => ({
   cached: (_name: string, fn: (..._args: unknown[]) => unknown) => fn,
 }));
 jest.mock('@/lib/article-writers', () => ({ getArticleWriters: jest.fn() }));
+// Seven articles, newest first: the section shows the first six.
+const articles = Array.from({ length: 7 }, (_, index) => ({
+  id: `a${index}`,
+  title: `Artículo ${index}`,
+  date: `2026-0${9 - index}-01`,
+}));
+jest.mock('@/lib/recommendations', () => ({ getArticles: jest.fn(async () => articles) }));
 jest.mock('@/lib/gallery', () => ({ listLatestGalleryItems: jest.fn() }));
 jest.mock('@/actions/talks/fetch-public-talks', () => ({ fetchPublicTalks: jest.fn() }));
 jest.mock('@/components/courses/related-articles', () => ({

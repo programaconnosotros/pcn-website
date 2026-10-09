@@ -1,8 +1,11 @@
 import { prismaMock } from '@/test/prisma';
 import { extractedConsejos } from '@/data/consejos-extraidos';
-import { communityCourses, externalCourses } from './(platform)/cursos/courses';
+import { testCourses } from '@/test/recommendations';
+import { getAllCourses } from '@/lib/recommendations';
 import { TRACKS } from './(platform)/entrevistas/questions/types';
 import sitemap from './sitemap';
+
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 
 const SITE = 'https://programaconnosotros.com';
 const updatedAt = new Date('2025-05-01T00:00:00Z');
@@ -32,8 +35,7 @@ describe('sitemap', () => {
     mockRecords();
     const urls = (await sitemap()).map((entry) => entry.url);
 
-    for (const course of [...communityCourses, ...externalCourses])
-      expect(urls).toContain(`${SITE}/cursos/${course.id}`);
+    for (const course of testCourses) expect(urls).toContain(`${SITE}/cursos/${course.id}`);
     for (const track of TRACKS) expect(urls).toContain(`${SITE}/entrevistas/guias/${track.id}`);
     expect(urls).toContain(`${SITE}/entrevistas/guias/live-coding`);
   });
@@ -74,5 +76,15 @@ describe('sitemap', () => {
       'sitemap: failed to load dynamic routes',
       expect.any(Error),
     );
+  });
+
+  it('leaves the courses out when they cannot be read', async () => {
+    mockRecords();
+    jest.mocked(getAllCourses).mockRejectedValueOnce(new Error('db down'));
+
+    const urls = (await sitemap()).map((entry) => entry.url);
+
+    expect(urls).toContain(`${SITE}/cursos`);
+    expect(urls.some((url) => url.startsWith(`${SITE}/cursos/`))).toBe(false);
   });
 });

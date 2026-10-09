@@ -5,12 +5,15 @@ import { deleteTalk } from '@/actions/talks/delete-talk';
 import { fetchTalkForEdit } from '@/actions/talks/fetch-talks';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { buildTalk } from '@/test/talks';
+import type { Video } from '@/components/videos/videos';
 import { CharlasAdminWrapper } from './charlas-admin-wrapper';
 
 jest.mock('@/actions/talks/delete-talk', () => ({ deleteTalk: jest.fn() }));
 jest.mock('@/actions/talks/fetch-talks', () => ({ fetchTalkForEdit: jest.fn() }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
-jest.mock('@/components/videos/videos', () => ({ externalTalks: [{ id: 'x' }, { id: 'y' }] }));
+jest.mock('@/components/recommendations/recommend-button', () =>
+  require('@/test/recommendations').mockRecommendButton(),
+);
 jest.mock('@/components/videos/video-grid', () => ({
   VideoGrid: ({ videos }: { videos: unknown[] }) => <p>{videos.length} videos externos</p>,
 }));
@@ -54,9 +57,12 @@ jest.mock('./talk-from-photo-dialog', () => ({
 }));
 
 const talks = [buildTalk({ id: 't1', title: 'Rust' })];
+const externalTalks = [{ id: 'x' }, { id: 'y' }] as Video[];
 
 const renderWrapper = (isAdmin: boolean) =>
-  render(<CharlasAdminWrapper talks={talks} isAdmin={isAdmin} />, { wrapper: SidebarProvider });
+  render(<CharlasAdminWrapper talks={talks} externalTalks={externalTalks} isAdmin={isAdmin} />, {
+    wrapper: SidebarProvider,
+  });
 
 const openMenu = async (item: 'Editar' | 'Eliminar') => {
   const article = screen.getByText('Rust').closest('article')!;
@@ -83,8 +89,13 @@ describe('CharlasAdminWrapper', () => {
     expect(screen.queryByRole('button', { name: /cargarConFoto/ })).not.toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('[mantenimiento]');
 
+    expect(screen.queryByRole('button', { name: 'recomendar charla' })).not.toBeInTheDocument();
+
     await userEvent.click(screen.getByRole('tab', { name: 'Externas' }));
     expect(screen.getByText('2 videos externos')).toBeInTheDocument();
+    // Out there anyone can recommend a talk, in place of the invitation to give one.
+    expect(screen.getByRole('button', { name: 'recomendar charla' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /quiero dar una charla/ })).not.toBeInTheDocument();
   });
 
   it('opens the external tab from ?tab=externas', () => {

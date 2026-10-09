@@ -130,17 +130,17 @@ export const adrs: Adr[] = [
   {
     number: 6,
     slug: 'contenido-en-el-repo',
-    title: 'El contenido curado vive en el repo, no en la base',
+    title: 'El contenido curado vive en el repo, salvo las recomendaciones',
     status: 'aceptada',
     date: '2025-06-01',
     context:
-      'Artículos, videos, cursos recomendados, conversaciones del grupo y el changelog los curan pocas personas y cambian por PR. Guardarlos en la base exige paneles de admin y migraciones de datos.',
+      'Las conversaciones del grupo, el changelog y otros textos curados los escriben pocas personas y cambian por PR. Guardarlos en la base exige paneles de admin y migraciones de datos.',
     decision:
-      'Ese contenido son archivos TypeScript y JSON versionados (`src/data`, `lectura/articles.ts`, `videos.ts`…). La base guarda solo lo que generan los usuarios y referencia el contenido del repo por id, sin clave foránea (ArticleAuthor, ContentMark).',
+      'Ese contenido son archivos TypeScript y JSON versionados (`src/data`, `conversaciones`…). La base guarda lo que generan los usuarios y referencia el contenido del repo por id, sin clave foránea (ContentMark). Desde octubre de 2026 las recomendaciones (artículos, libros, cursos y videos) son la excepción: cualquier miembro las propone, así que viven en la tabla Recommendation con revisión de admins en /admin/recomendaciones, y las listas del repo se cargaron con una migración de datos que mantuvo sus ids.',
     consequences: [
-      'Agregar un artículo es un PR revisable, con historia en git y sin panel de admin.',
-      'Los ids del repo no se pueden reutilizar: la base podría tener marcas que apunten a ellos.',
-      'Cambiar el contenido requiere un deploy.',
+      'Agregar una conversación o un cambio del changelog es un PR revisable, con historia en git y sin panel de admin.',
+      'Los ids del repo no se pueden reutilizar: la base podría tener marcas que apunten a ellos. Lo mismo vale para el slug de una recomendación.',
+      'Cambiar el contenido del repo requiere un deploy; una recomendación aprobada aparece al instante.',
     ],
   },
   {

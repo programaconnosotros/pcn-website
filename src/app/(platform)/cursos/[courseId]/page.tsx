@@ -5,11 +5,11 @@ import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
-import { communityCourses, courseTeachers, externalCourses, getCourseById } from '../courses';
+import { courseTeachers } from '../courses';
+import { getAllCourses, getArticles, getCourseById } from '@/lib/recommendations';
 import { getIdentityMap } from '@/lib/identity-links';
 import Link from 'next/link';
 import { Fragment } from 'react';
-import { articles } from '../../lectura/articles';
 import { CourseRow } from '@/components/courses/course-row';
 import { RelatedArticles } from '@/components/courses/related-articles';
 import { RuledGrid } from '@/components/ui/ruled-grid';
@@ -23,7 +23,7 @@ export async function generateMetadata(props: {
   params: Promise<{ courseId: string }>;
 }): Promise<Metadata> {
   const { courseId } = await props.params;
-  const course = getCourseById(courseId);
+  const course = await getCourseById(courseId);
 
   if (!course) {
     return {
@@ -76,15 +76,19 @@ const Course = async (props: { params: Promise<{ courseId: string }> }) => {
 
   const { courseId } = params;
 
-  const course = getCourseById(courseId);
+  const course = await getCourseById(courseId);
 
   if (!course) return <div>El curso no existe.</div>;
 
   // Teachers who are platform users, linked in /vinculos.
-  const teacherProfiles = await getIdentityMap('cursos');
+  const [teacherProfiles, allCourses, articles] = await Promise.all([
+    getIdentityMap('cursos'),
+    getAllCourses(),
+    getArticles(),
+  ]);
 
   // Community courses first, then the newest, so ties in relevance favor what we made.
-  const otherCourses = [...communityCourses, ...externalCourses]
+  const otherCourses = [...allCourses]
     .filter((other) => other.id !== course.id)
     .sort(
       (a, b) =>

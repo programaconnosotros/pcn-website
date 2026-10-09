@@ -1,7 +1,14 @@
 import type { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
-import { getStaticIndex, rankEntries, toEntry } from '@/lib/search/search-index';
+import {
+  buildRecommendationEntries,
+  getStaticIndex,
+  rankEntries,
+  toEntry,
+  type IndexedEntry,
+} from '@/lib/search/search-index';
+import { getAllCourses, getArticles, getVideos } from '@/lib/recommendations';
 import { listHiddenConsejoIds } from '@/lib/hidden-consejos';
 import { SEARCH_GROUPS, type SearchResponse } from '@/lib/search/types';
 import { visibleGalleryItem } from '@/lib/gallery';
@@ -101,6 +108,16 @@ const loadSearchCorpus = cached(
     ],
   },
 );
+
+// The courses, videos and articles the community recommends, from their cached listing.
+const loadRecommendationEntries = async () => {
+  const [courses, videos, articles] = await Promise.all([
+    getAllCourses(),
+    getVideos(),
+    getArticles(),
+  ]);
+  return buildRecommendationEntries({ courses, videos, articles });
+};
 
 const clip = (text: string, max = 90) =>
   text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
@@ -274,14 +291,15 @@ export async function GET(request: NextRequest) {
     return Response.json({ query, results: [] } satisfies SearchResponse);
   }
 
-  let databaseEntries: Awaited<ReturnType<typeof loadDatabaseEntries>> = [];
+  let databaseEntries: IndexedEntry[] = [];
   let hidden = new Set<string>();
   try {
-    const [entries, hiddenIds] = await Promise.all([
+    const [entries, recommendations, hiddenIds] = await Promise.all([
       loadDatabaseEntries(query),
+      loadRecommendationEntries(),
       listHiddenConsejoIds(),
     ]);
-    databaseEntries = entries;
+    databaseEntries = [...recommendations, ...entries];
     hidden = new Set(hiddenIds.map((id) => `/consejos/${id}`));
   } catch (error) {
     // Static content is still searchable when the database is unavailable.

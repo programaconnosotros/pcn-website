@@ -5,10 +5,12 @@ import LecturaLayout, { metadata } from './layout';
 import Loading from './loading';
 import LecturaPage from './page';
 import { ReadingPage } from './reading-page';
+import { testArticles, testBooks } from '@/test/recommendations';
 
 jest.mock('@/lib/admin', () => ({ getAdminUser: jest.fn() }));
 jest.mock('@/lib/article-writers', () => ({ getArticleWriters: jest.fn() }));
 jest.mock('./reading-page', () => ({ ReadingPage: jest.fn(() => null) }));
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 
 const articleWriters = { 'articulo-1': [{ id: 'u1', name: 'Ana', image: null }] };
 
@@ -17,11 +19,16 @@ describe('LecturaPage', () => {
     jest.mocked(getArticleWriters).mockResolvedValue(articleWriters as never);
   });
 
-  it('passes the article writers to the reading page', async () => {
+  it('passes the articles, the books and their writers to the reading page', async () => {
     jest.mocked(getAdminUser).mockResolvedValue(null);
     render(await LecturaPage());
 
-    expect(jest.mocked(ReadingPage).mock.calls[0][0]).toEqual({ articleWriters, isAdmin: false });
+    expect(jest.mocked(ReadingPage).mock.calls[0][0]).toEqual({
+      articles: testArticles,
+      books: testBooks,
+      articleWriters,
+      isAdmin: false,
+    });
   });
 
   it('tells the reading page when the viewer is an admin', async () => {

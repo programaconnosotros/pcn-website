@@ -1,8 +1,5 @@
-import { communityCourses, externalCourses } from '@/app/(platform)/cursos/courses';
-import { articles } from '@/app/(platform)/lectura/articles';
 import { specialties } from '@/components/especialidades/specialties';
 import { musicSets } from '@/components/music/music-sets';
-import { videos } from '@/components/videos/videos';
 import { conversations } from '@/data/whatsapp-conversations';
 import { changelog } from '@/data/changelog';
 import { TRACKS, trackQuestionCount } from '@/app/(platform)/entrevistas/questions';
@@ -23,7 +20,9 @@ interface SectionCard {
   meta: string[];
 }
 
-// Only static data here: these cards are rendered at build time, without a database.
+// Only static data here: these cards are rendered at build time, without a database. The ones
+// whose count lives in the database (cursos, lectura, videos) get it from their own route, which
+// renders per request; the meta here is what they show if the database can't be read.
 const SECTION_CARDS = {
   inicio: {
     command: 'whoami',
@@ -91,21 +90,21 @@ const SECTION_CARDS = {
     title: 'Cursos',
     description:
       'Cursos de ingeniería de software hechos y recomendados por la comunidad para crecer en tu carrera.',
-    meta: [`${communityCourses.length + externalCourses.length} cursos`, 'gratis'],
+    meta: ['curados por la comunidad', 'gratis'],
   },
   lectura: {
     command: 'cat lecturas.md',
     title: 'Lectura',
     description:
       'Artículos y libros recomendados para leer sobre ingeniería de software. Llevá registro de lo que vas leyendo y marcá lo que te interesa leer.',
-    meta: [`${articles.length} artículos`, 'libros'],
+    meta: ['artículos', 'libros'],
   },
   videos: {
     command: 'ls videos/',
     title: 'Videos',
     description:
       'Charlas de conferencias y videos sobre ingeniería de software que la comunidad recomienda ver.',
-    meta: [`${videos.length} videos`],
+    meta: ['recomendados por la comunidad'],
   },
   especialidades: {
     command: 'man especialidades',
@@ -244,5 +243,10 @@ export type SectionCardKey = keyof typeof SECTION_CARDS;
 export const sectionCardAlt = (key: SectionCardKey) =>
   `${SECTION_CARDS[key].title} · programaConNosotros`;
 
-export const renderSectionCard = (key: SectionCardKey) =>
-  renderTerminalCard({ path: key === 'inicio' ? '' : key, ...SECTION_CARDS[key] });
+/** The card of a section; `meta` replaces its static one (e.g. with a count from the database). */
+export const renderSectionCard = (key: SectionCardKey, meta?: string[]) =>
+  renderTerminalCard({
+    path: key === 'inicio' ? '' : key,
+    ...SECTION_CARDS[key],
+    ...(meta && { meta }),
+  });

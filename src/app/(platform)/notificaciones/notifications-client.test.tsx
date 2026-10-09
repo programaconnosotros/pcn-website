@@ -113,6 +113,19 @@ describe('NotificationsClient', () => {
     expect(screen.getAllByRole('link')).toHaveLength(3);
   });
 
+  it('links a new recommendation to the review queue', () => {
+    render(
+      <NotificationsClient
+        notifications={[notification({ type: 'recommendation_pending', title: 'Nueva' })]}
+      />,
+    );
+
+    expect(screen.getByRole('link', { name: /revisar recomendaciones/ })).toHaveAttribute(
+      'href',
+      '/admin/recomendaciones',
+    );
+  });
+
   it('marks one notification as read', async () => {
     (markNotificationAsRead as jest.Mock).mockResolvedValue(undefined);
     render(<NotificationsClient notifications={[notification()]} />);

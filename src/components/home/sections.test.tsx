@@ -39,6 +39,11 @@ jest.mock('@/components/music/music-grid', () => ({
 jest.mock('@/components/videos/video-grid', () => ({
   VideoGrid: ({ videos }: { videos: unknown[] }) => <p>{videos.length} videos</p>,
 }));
+// More than the four the home shows of each.
+jest.mock('@/lib/recommendations', () => ({
+  getExternalTalks: async () => Array.from({ length: 6 }, (_, index) => ({ id: `t${index}` })),
+  getOtherVideos: async () => Array.from({ length: 5 }, (_, index) => ({ id: `v${index}` })),
+}));
 jest.mock('@/data/changelog', () => ({
   changelog: [
     { date: '2026-01-01', area: 'perfil', title: 'Viejo', description: 'd' },
@@ -254,11 +259,11 @@ describe('static home sections', () => {
     expect(screen.getByTestId('typewriter')).toHaveTextContent('6');
   });
 
-  it('MusicSection and RecommendedWatchSection pass their content down', () => {
+  it('MusicSection and RecommendedWatchSection pass their content down', async () => {
     render(
       <>
         <MusicSection />
-        <RecommendedWatchSection />
+        {await RecommendedWatchSection()}
       </>,
     );
     expect(screen.getByText(/radios$/)).toBeInTheDocument();

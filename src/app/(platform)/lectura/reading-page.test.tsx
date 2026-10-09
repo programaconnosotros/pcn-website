@@ -2,43 +2,64 @@ import { screen, within } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { jsonResponse, renderInPlatform } from '@/test/platform';
 import { ReadingPage } from './reading-page';
+import type { Book } from './books';
 
-jest.mock('./articles', () => {
-  const list = [
-    {
-      id: 'a1',
-      title: 'Loop Engineering',
-      author: 'Addy Osmani',
-      coauthors: ['Ana López'],
-      source: 'addyosmani.com',
-      category: 'IA',
-      description: 'Sobre loops de agentes',
-      url: 'https://addyosmani.com/loop',
-      avatar: '/addy.png',
-      date: '2025-03-05',
-      language: 'en',
-    },
-    {
-      id: 'a2',
-      title: 'Monolitos modulares',
-      author: 'Martin Fowler',
-      source: 'martinfowler.com',
-      category: 'Arquitectura',
-      description: 'Cuándo partir un monolito',
-      url: 'https://martinfowler.com/mono',
-      avatar: '/martin.png',
-      date: '2024-01-10',
-      language: 'es',
-    },
-  ];
-  return {
-    articles: list,
-    articleAuthors: (article: { author: string; coauthors?: string[] }) => [
-      article.author,
-      ...(article.coauthors ?? []),
-    ],
-  };
+const articles = [
+  {
+    id: 'a1',
+    title: 'Loop Engineering',
+    author: 'Addy Osmani',
+    coauthors: ['Ana López'],
+    source: 'addyosmani.com',
+    category: 'IA',
+    description: 'Sobre loops de agentes',
+    url: 'https://addyosmani.com/loop',
+    avatar: '/addy.png',
+    date: '2025-03-05',
+    language: 'en' as const,
+  },
+  {
+    id: 'a2',
+    title: 'Monolitos modulares',
+    author: 'Martin Fowler',
+    source: 'martinfowler.com',
+    category: 'Arquitectura',
+    description: 'Cuándo partir un monolito',
+    url: 'https://martinfowler.com/mono',
+    avatar: '/martin.png',
+    date: '2024-01-10',
+    language: 'es' as const,
+  },
+];
+
+const book = (title: string, author: string, categories: string[], extra = {}): Book => ({
+  id: title,
+  title,
+  author,
+  language: 'en',
+  categories,
+  description: `Sobre ${title}`,
+  cover: '/lectura/cover.jpg',
+  ...extra,
 });
+
+// Sorted by title, the way getBooks returns them.
+const books: Book[] = [
+  book('Clean Code', 'Robert C. Martin', ['Programación'], { year: 2008, isbn: '0132350882' }),
+  book('Hands-On Large Language Models', 'Jay Alammar', ['IA'], {
+    url: 'https://www.amazon.com/dp/1098150961',
+  }),
+  book('Refactoring', 'Martin Fowler', ['Programación']),
+  book('The Mythical Man-Month', 'Frederick P. Brooks Jr.', ['Gestión'], { cover: undefined }),
+];
+
+const page = (props: Partial<Parameters<typeof ReadingPage>[0]> = {}) => (
+  <ReadingPage articles={articles} books={books} articleWriters={{}} isAdmin={false} {...props} />
+);
+
+jest.mock('@/components/recommendations/recommend-button', () =>
+  require('@/test/recommendations').mockRecommendButton(),
+);
 
 const mockMarks = { saved: new Set<string>(), read: new Set<string>() };
 jest.mock('@/hooks/use-content-marks', () => ({
@@ -82,7 +103,7 @@ describe('ReadingPage', () => {
   afterEach(() => window.history.replaceState(null, '', '/'));
 
   it('opens on the articles with the reading list count', () => {
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     expect(screen.getByRole('tab', { name: /Artículos/ })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByTitle('1 en tu lista para leer')).toHaveTextContent('1');
@@ -95,7 +116,7 @@ describe('ReadingPage', () => {
 
   it('searches articles by co-author, source and language', async () => {
     const user = userEvent.setup();
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     await user.type(search(), 'ana lópez');
     expect(articleTitles()).toEqual(['Loop Engineering']);
@@ -110,7 +131,7 @@ describe('ReadingPage', () => {
 
   it('filters articles by category and reading status, keeping the status in the URL', async () => {
     const user = userEvent.setup();
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     await user.click(screen.getByRole('button', { name: '#Arquitectura 1' }));
     expect(articleTitles()).toEqual(['Monolitos modulares']);
@@ -125,14 +146,14 @@ describe('ReadingPage', () => {
 
   it('opens straight into a reading list from ?lista=', () => {
     window.history.replaceState(null, '', '/lectura?lista=para-leer');
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     expect(articleTitles()).toEqual(['Monolitos modulares']);
   });
 
   it('ignores an unknown ?lista=', () => {
     window.history.replaceState(null, '', '/lectura?lista=otra');
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     expect(articleTitles()).toHaveLength(2);
   });
@@ -140,7 +161,7 @@ describe('ReadingPage', () => {
   it('reads an article in the web reader', async () => {
     global.fetch = jest.fn().mockResolvedValue(jsonResponse({ embeddable: false }));
     const user = userEvent.setup();
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
 
     await user.click(screen.getByRole('button', { name: 'Loop Engineering' }));
     const dialog = screen.getByRole('dialog');
@@ -154,20 +175,17 @@ describe('ReadingPage', () => {
 
   it('lists books, filters them by category and search and says when none match', async () => {
     const user = userEvent.setup();
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
     await toBooks(user);
 
-    const all = bookTitles();
-    expect(all.length).toBeGreaterThan(10);
-    expect([...all].sort((a, b) => a!.localeCompare(b!))).toEqual(all);
+    expect(bookTitles()).toEqual(books.map((book) => book.title));
     expect(
       screen.getAllByRole('link', { name: /Hands-On Large Language Models/ })[0],
     ).toHaveAttribute('target', '_blank');
 
     await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: 'Gestión' }));
-    expect(bookTitles()).toContain('The Mythical Man-Month');
-    expect(bookTitles()).not.toContain('Clean Code');
+    expect(bookTitles()).toEqual(['The Mythical Man-Month']);
 
     await user.click(search());
     await user.paste('zzzz');
@@ -178,7 +196,7 @@ describe('ReadingPage', () => {
 
   it('finds books by author and resets the category when switching tabs', async () => {
     const user = userEvent.setup();
-    renderInPlatform(<ReadingPage articleWriters={{}} isAdmin={false} />);
+    renderInPlatform(page());
     await toBooks(user);
 
     await user.click(search());
@@ -188,5 +206,33 @@ describe('ReadingPage', () => {
     await user.click(screen.getByRole('tab', { name: /Artículos/ }));
     expect(articleTitles()).toEqual(['Monolitos modulares']);
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  });
+
+  it('recommends an article or a book depending on the tab', async () => {
+    const user = userEvent.setup();
+    renderInPlatform(page());
+    expect(screen.getByRole('button', { name: 'recomendar ARTICLE' })).toBeInTheDocument();
+
+    await toBooks(user);
+    expect(screen.getByRole('button', { name: 'recomendar BOOK' })).toBeInTheDocument();
+  });
+
+  it('shows a plain spine for a book without a cover and remote covers unoptimized', async () => {
+    const user = userEvent.setup();
+    renderInPlatform(
+      page({
+        books: [
+          books[3],
+          book('Remote', 'Ana', ['IA'], { cover: 'https://covers.example.com/remote.jpg' }),
+        ],
+      }),
+    );
+    await toBooks(user);
+
+    expect(screen.queryByAltText('Portada de The Mythical Man-Month')).not.toBeInTheDocument();
+    expect(screen.getByAltText('Portada de Remote')).toHaveAttribute(
+      'src',
+      'https://covers.example.com/remote.jpg',
+    );
   });
 });

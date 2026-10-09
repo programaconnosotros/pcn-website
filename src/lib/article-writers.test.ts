@@ -3,14 +3,10 @@ import { getIdentityMap } from '@/lib/identity-links';
 import { getArticleWriters } from './article-writers';
 
 jest.mock('@/lib/identity-links', () => ({ getIdentityMap: jest.fn() }));
-jest.mock('@/app/(platform)/lectura/articles', () => ({
-  articles: [
+jest.mock('@/lib/recommendations', () => ({
+  getArticles: async () => [
     { id: 'a1', author: 'Ana Pérez', coauthors: ['Beto'] },
     { id: 'a2', author: 'Desconocido' },
-  ],
-  articleAuthors: (article: { author: string; coauthors?: string[] }) => [
-    article.author,
-    ...(article.coauthors ?? []),
   ],
 }));
 

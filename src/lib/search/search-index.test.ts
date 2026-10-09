@@ -1,4 +1,11 @@
-import { getStaticIndex, normalizeSearchText, rankEntries, toEntry } from './search-index';
+import { testArticles, testCourses, testVideos } from '@/test/recommendations';
+import {
+  buildRecommendationEntries,
+  getStaticIndex,
+  normalizeSearchText,
+  rankEntries,
+  toEntry,
+} from './search-index';
 import { SEARCH_GROUPS } from './types';
 
 const entries = [
@@ -61,11 +68,11 @@ describe('rankEntries', () => {
 });
 
 describe('getStaticIndex', () => {
-  it('indexes sections, courses, videos, articles, specialties, conversations and consejos', () => {
+  it('indexes sections, specialties, conversations and consejos', () => {
     const index = getStaticIndex();
     const types = new Set(index.map((entry) => entry.type));
 
-    for (const type of ['seccion', 'curso', 'video', 'lectura', 'especialidad', 'conversacion'])
+    for (const type of ['seccion', 'especialidad', 'conversacion', 'consejo'])
       expect(types).toContain(type);
     expect(index.every((entry) => entry.text.startsWith(' ') && entry.href)).toBe(true);
   });
@@ -93,10 +100,31 @@ describe('getStaticIndex', () => {
       href: '/herramientas?q=Docker',
     });
   });
+});
 
-  it('links articles to the /lectura search', () => {
-    const article = getStaticIndex().find((entry) => entry.type === 'lectura');
-    expect(article?.href).toMatch(/^\/lectura\?q=/);
+describe('buildRecommendationEntries', () => {
+  const index = buildRecommendationEntries({
+    courses: testCourses,
+    videos: testVideos,
+    articles: testArticles,
+  });
+
+  it('indexes every course, video and article', () => {
+    expect(index).toHaveLength(testCourses.length + testVideos.length + testArticles.length);
+    expect(new Set(index.map((entry) => entry.type))).toEqual(
+      new Set(['curso', 'video', 'lectura']),
+    );
+  });
+
+  it('links courses to their page, videos to YouTube and articles to the /lectura search', () => {
+    expect(index.find((entry) => entry.type === 'curso')?.href).toBe('/cursos/git-and-github');
+    expect(index.find((entry) => entry.title === testVideos[1].title)).toMatchObject({
+      href: `https://www.youtube.com/watch?v=${testVideos[1].id}`,
+      subtitle: 'BettaTech',
+    });
+    expect(index.find((entry) => entry.type === 'lectura')?.href).toBe(
+      '/lectura?q=Loop%20Engineering',
+    );
   });
 });
 

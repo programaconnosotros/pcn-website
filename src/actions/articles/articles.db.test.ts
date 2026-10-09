@@ -1,12 +1,13 @@
 import prisma from '@/lib/prisma';
 import { addArticleAuthor, removeArticleAuthor } from '@/actions/articles/article-authors';
-import { articles } from '@/app/(platform)/lectura/articles';
 import { actAs } from '@/test/db/fixtures';
 import { expiredModel, quickUser } from '@/test/db/actions-fixtures';
 
 // Escritores de los artículos de /lectura contra Postgres real.
 
-const articleId = articles[0].id;
+// Articles the data migration loaded from the old list (Recommendation, kind ARTICLE).
+const articleId = '1';
+const otherArticleId = '2';
 
 const writersOf = (userId: string) => prisma.articleAuthor.findMany({ where: { userId } });
 
@@ -68,14 +69,14 @@ describe('removeArticleAuthor', () => {
       data: [
         { articleId, userId: a.id },
         { articleId, userId: b.id },
-        { articleId: articles[1].id, userId: a.id },
+        { articleId: otherArticleId, userId: a.id },
       ],
     });
     await actAs(admin.id);
 
     await expect(removeArticleAuthor(articleId, a.id)).resolves.toEqual({ success: true });
 
-    expect((await writersOf(a.id)).map((row) => row.articleId)).toEqual([articles[1].id]);
+    expect((await writersOf(a.id)).map((row) => row.articleId)).toEqual([otherArticleId]);
     expect(await writersOf(b.id)).toHaveLength(1);
   });
 

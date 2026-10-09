@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma';
 import { cached } from '@/lib/cache';
 import { getIdentityMap } from '@/lib/identity-links';
-import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
+import { articleAuthors } from '@/app/(platform)/lectura/articles';
+import { getArticles } from '@/lib/recommendations';
 import type { Writer } from '@/app/(platform)/lectura/article-writers';
 
 /**
@@ -19,9 +20,10 @@ const listArticleAuthors = cached(
 );
 
 export const getArticleWriters = async (): Promise<Record<string, Writer[]>> => {
-  const [authors, authorLinks] = await Promise.all([
+  const [authors, authorLinks, articles] = await Promise.all([
     listArticleAuthors(),
     getIdentityMap('articulos'),
+    getArticles(),
   ]);
 
   const articleWriters: Record<string, Writer[]> = {};

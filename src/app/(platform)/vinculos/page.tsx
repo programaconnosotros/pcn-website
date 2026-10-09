@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { articleAuthors, articles } from '@/app/(platform)/lectura/articles';
+import { articleAuthors } from '@/app/(platform)/lectura/articles';
 import { conversations } from '@/data/whatsapp-conversations';
 import { members } from '@/data/whatsapp-conversations/members';
 import { HISTORIA_PEOPLE } from '@/components/historia/people';
-import { videoSpeakers, videos } from '@/components/videos/videos';
-import { communityCourses, courseTeachers, externalCourses } from '@/app/(platform)/cursos/courses';
+import { videoSpeakers } from '@/components/videos/videos';
+import { courseTeachers } from '@/app/(platform)/cursos/courses';
+import { getAllCourses, getArticles, getVideos } from '@/lib/recommendations';
 import { requireAdminPage } from '@/lib/admin';
 import { getCollaborationStats } from '@/lib/github-stats';
 import { getIdentityMap } from '@/lib/identity-links';
@@ -21,16 +22,29 @@ export const metadata: Metadata = {
 export default async function VinculosPage() {
   await requireAdminPage();
 
-  const [whatsappLinks, githubLinks, authorLinks, historiaLinks, videoLinks, courseLinks, stats] =
-    await Promise.all([
-      getIdentityMap('whatsapp'),
-      getIdentityMap('github'),
-      getIdentityMap('articulos'),
-      getIdentityMap('historia'),
-      getIdentityMap('videos'),
-      getIdentityMap('cursos'),
-      getCollaborationStats(),
-    ]);
+  const [
+    whatsappLinks,
+    githubLinks,
+    authorLinks,
+    historiaLinks,
+    videoLinks,
+    courseLinks,
+    stats,
+    articles,
+    videos,
+    courses,
+  ] = await Promise.all([
+    getIdentityMap('whatsapp'),
+    getIdentityMap('github'),
+    getIdentityMap('articulos'),
+    getIdentityMap('historia'),
+    getIdentityMap('videos'),
+    getIdentityMap('cursos'),
+    getCollaborationStats(),
+    getArticles(),
+    getVideos(),
+    getAllCourses(),
+  ]);
 
   const conversationCounts = new Map<string, number>();
   for (const conversation of conversations) {
@@ -98,7 +112,7 @@ export default async function VinculosPage() {
     .sort((a, b) => b.weight - a.weight || a.externalName.localeCompare(b.externalName));
 
   const courseCounts = new Map<string, number>();
-  for (const name of [...communityCourses, ...externalCourses].flatMap(courseTeachers)) {
+  for (const name of courses.flatMap(courseTeachers)) {
     courseCounts.set(name, (courseCounts.get(name) ?? 0) + 1);
   }
   const courseRows: IdentityRow[] = [...courseCounts]
@@ -152,7 +166,7 @@ export default async function VinculosPage() {
           <IdentityLinksTable
             source="articulos"
             title="artículos"
-            command="grep author lectura/articles.ts"
+            command="select author from recommendations --articles"
             rows={authorRows}
           />
           <IdentityLinksTable
@@ -164,13 +178,13 @@ export default async function VinculosPage() {
           <IdentityLinksTable
             source="videos"
             title="videos"
-            command="grep speaker videos/videos.ts"
+            command="select author from recommendations --videos"
             rows={videoRows}
           />
           <IdentityLinksTable
             source="cursos"
             title="cursos"
-            command="grep teachedBy cursos/courses.ts"
+            command="select author from recommendations --cursos"
             rows={courseRows}
           />
         </div>

@@ -1,7 +1,8 @@
-import { articles } from '@/app/(platform)/lectura/articles';
+import { testArticles as articles } from '@/test/recommendations';
 import { isEmbeddable } from '@/lib/embeddable';
 import { GET } from './route';
 
+jest.mock('@/lib/recommendations', () => require('@/test/recommendations').mockRecommendations());
 jest.mock('@/lib/embeddable', () => ({
   EMBED_CACHE_HEADERS: { 'Cache-Control': 'public, max-age=60' },
   isEmbeddable: jest.fn(),

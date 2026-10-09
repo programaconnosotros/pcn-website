@@ -1,5 +1,5 @@
 import { OG_CONTENT_TYPE, OG_SIZE, renderTerminalCard } from '@/lib/og/terminal-card';
-import { getCourseById } from '../courses';
+import { getCourseById } from '@/lib/recommendations';
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
@@ -7,7 +7,7 @@ export const alt = 'Curso de programaConNosotros';
 
 export default async function Image({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
-  const course = getCourseById(courseId);
+  const course = await getCourseById(courseId);
 
   return renderTerminalCard({
     path: `cursos/${courseId}`,

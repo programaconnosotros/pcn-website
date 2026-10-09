@@ -22,6 +22,25 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-08',
+    area: 'lectura',
+    title: 'Recomendá artículos, libros, cursos y videos',
+    description:
+      'Con recomendar en /lectura, /cursos, /videos y las charlas externas de /charlas podés sumar lo que te sirvió. Un admin lo revisa antes de publicarlo y mientras tanto lo ves como pendiente de revisión.',
+    authors: ['agustin-sanc'],
+    href: '/lectura',
+  },
+  {
+    date: '2026-10-08',
+    area: 'admin',
+    title: 'Revisión de recomendaciones',
+    description:
+      'Lo que recomiendan los miembros espera en /admin/recomendaciones, con aviso a los admins, para completarlo, aprobarlo o rechazarlo. Ahí también se editan o despublican las recomendaciones que ya están en las listas.',
+    authors: ['agustin-sanc'],
+    href: '/admin/recomendaciones',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-08',
     area: 'métricas',
     title: 'Métricas de cada módulo',
     description:

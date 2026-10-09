@@ -23,7 +23,8 @@ import { TalkForm } from './talk-form';
 import { TalkFromPhotoDialog } from './talk-from-photo-dialog';
 import type { TalkFormData } from '@/schemas/talk-schema';
 import { VideoGrid } from '@/components/videos/video-grid';
-import { externalTalks } from '@/components/videos/videos';
+import type { Video } from '@/components/videos/videos';
+import { RecommendButton } from '@/components/recommendations/recommend-button';
 import { deleteTalk } from '@/actions/talks/delete-talk';
 import { fetchTalkForEdit } from '@/actions/talks/fetch-talks';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
@@ -31,10 +32,12 @@ import { CommunityTalks, type TalkWithEvent } from './community-talks';
 
 interface Props {
   talks: TalkWithEvent[];
+  /** Talks from other conferences the community recommends, newest first. */
+  externalTalks: Video[];
   isAdmin: boolean;
 }
 
-export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
+export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
   const [showCreate, setShowCreate] = useState(false);
   const [showFromPhoto, setShowFromPhoto] = useState(false);
   const [draft, setDraft] = useState<TalkFormData | undefined>();
@@ -83,7 +86,10 @@ export function CharlasAdminWrapper({ talks, isAdmin }: Props) {
               meta={`${talks.length} de la comunidad · ${externalTalks.length} recomendadas`}
               className="mb-0 flex-1"
             />
-            {isAdmin ? (
+            {/* External talks are recommended like any video; community ones are given at PCN. */}
+            {tab === 'externas' ? (
+              <RecommendButton kind="VIDEO" defaults={{ isTalk: true }} label="recomendar charla" />
+            ) : isAdmin ? (
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => setShowFromPhoto(true)}>
                   <Sparkles className="mr-1.5 h-4 w-4" />
