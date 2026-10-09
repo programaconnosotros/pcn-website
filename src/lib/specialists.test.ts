@@ -38,4 +38,13 @@ describe('getSpecialists', () => {
     expect(specialists.qa.map((s) => s.id)).toEqual(['u3']);
     expect(specialists.devops).toEqual([]);
   });
+
+  it('leaves suspended accounts out', async () => {
+    prismaMock.user.findMany.mockResolvedValue([]);
+    await getSpecialists();
+
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { suspendedAt: null } }),
+    );
+  });
 });

@@ -13,12 +13,13 @@ export type CommunityMemberOption = {
 
 // Búsqueda de usuarios para cualquier miembro logueado. Solo devuelve datos públicos; busca por
 // cualquier parte del nombre, slogan, trabajo y estudio. El email solo cuenta cuando busca un
-// admin, para no dejar averiguar a quién pertenece una dirección.
+// admin, para no dejar averiguar a quién pertenece una dirección. Las cuentas suspendidas no salen.
 // Everyone, cached: the search runs on every keystroke. Emails only come along for admins.
 const listSearchablePeople = cached(
   'searchable-people',
   (withEmail: boolean) =>
     prisma.user.findMany({
+      where: { suspendedAt: null },
       select: {
         id: true,
         name: true,

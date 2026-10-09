@@ -53,6 +53,17 @@ it('finds live events, talks by speaker, advice and projects', async () => {
   expect(JSON.stringify(results)).not.toContain('5491100000000');
 });
 
+it('leaves suspended accounts out of the people results', async () => {
+  const word = `zorzal${uniqueId()}`;
+  const active = await createUser({ name: `Activa ${word}` });
+  const suspended = await createUser({ name: `Suspendida ${word}`, suspendedAt: new Date() });
+
+  const hrefs = (await search(word)).results.map((r) => r.href);
+
+  expect(hrefs).toContain(`/perfil/${active.id}`);
+  expect(hrefs).not.toContain(`/perfil/${suspended.id}`);
+});
+
 it('answers an empty query without searching', async () => {
   await expect(search('   ')).resolves.toEqual({ query: '', results: [] });
 });

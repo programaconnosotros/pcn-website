@@ -59,12 +59,14 @@ export const specialtiesFromTitle = (title: string | null | undefined) => {
 
 /**
  * Who in the community works in each specialty: those who marked it on their profile first,
- * then those whose current job title points at it (only when they haven't marked any).
+ * then those whose current job title points at it (only when they haven't marked any). Suspended
+ * accounts are left out.
  */
 export const getSpecialists = cached(
   'specialists',
   async (): Promise<Record<string, Specialist[]>> => {
     const users = await prisma.user.findMany({
+      where: { suspendedAt: null },
       select: { id: true, name: true, image: true, specialties: true, jobTitle: true },
       orderBy: { name: 'asc' },
     });

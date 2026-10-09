@@ -46,8 +46,9 @@ const loadSearchCorpus = cached(
         prisma.project.findMany({
           select: { title: true, description: true, techStack: true, url: true },
         }),
-        // Only what a public profile shows: never emails or phones.
+        // Only what a public profile shows: never emails or phones. Suspended accounts stay out.
         prisma.user.findMany({
+          where: { suspendedAt: null },
           orderBy: { createdAt: 'asc' },
           select: {
             id: true,

@@ -40,7 +40,8 @@ const speakerSelect = {
   studyPlace: true,
 } as const;
 
-// Busca por cualquier parte del nombre, email, slogan, trabajo y estudio (ver searchPeople).
+// Busca por cualquier parte del nombre, email, slogan, trabajo y estudio (ver searchPeople). Las
+// cuentas suspendidas no se ofrecen como oradores.
 export async function searchUsersForSpeaker(q: string, limit = 20): Promise<SpeakerUserOption[]> {
   await requireAdmin();
   // El límite llega del navegador: sin tope, `limit` enorme devolvería el email y el teléfono de
@@ -48,10 +49,16 @@ export async function searchUsersForSpeaker(q: string, limit = 20): Promise<Spea
   limit = Math.min(Math.max(Math.trunc(Number(limit)) || 1, 1), MAX_RESULTS);
   const trimmed = String(q ?? '').trim();
   if (!trimmed) {
-    return prisma.user.findMany({ select: speakerSelect, orderBy: { name: 'asc' }, take: limit });
+    return prisma.user.findMany({
+      where: { suspendedAt: null },
+      select: speakerSelect,
+      orderBy: { name: 'asc' },
+      take: limit,
+    });
   }
 
   const users = await prisma.user.findMany({
+    where: { suspendedAt: null },
     select: {
       ...speakerSelect,
       slogan: true,

@@ -55,6 +55,7 @@ describe('searchCommunityMembers', () => {
       { id: 'u-1', name: 'Agustín Sánchez', image: 'a.png' },
     ]);
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: { suspendedAt: null },
       select: expect.objectContaining({ email: false }),
     });
   });
@@ -86,6 +87,7 @@ describe('searchCommunityMembers', () => {
       { id: 'u-3', name: 'Carla', image: null },
     ]);
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: { suspendedAt: null },
       select: expect.objectContaining({ email: true }),
     });
   });
