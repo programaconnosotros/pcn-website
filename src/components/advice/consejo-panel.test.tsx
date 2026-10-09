@@ -121,7 +121,7 @@ describe('ConsejoModal', () => {
     expect(screen.getByRole('button', { name: 'Anterior' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDisabled();
 
-    await user.click(screen.getByPlaceholderText('Escribe tu comentario...'));
+    await user.click(screen.getByPlaceholderText('Escribí acá tu comentario'));
     await user.keyboard('{ArrowLeft}');
     expect(mockRouter.replace).not.toHaveBeenCalled();
   });

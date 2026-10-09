@@ -54,7 +54,7 @@ describe('CommentSection', () => {
     const user = userEvent.setup();
     render(<CommentSection adviceId="a1" comments={[]} session={buildSession()} />);
 
-    await write(user, 'Escribe tu comentario...', 'Gran consejo');
+    await write(user, 'Escribí acá tu comentario', 'Gran consejo');
     await user.click(screen.getByRole('button', { name: 'enviarComentario();' }));
 
     expect(createMock).toHaveBeenCalledWith({
@@ -63,7 +63,7 @@ describe('CommentSection', () => {
       parentCommentId: null,
     });
     expect(toast.success).toHaveBeenCalledWith('Comentario creado');
-    expect(screen.getByPlaceholderText('Escribe tu comentario...')).toHaveValue('');
+    expect(screen.getByPlaceholderText('Escribí acá tu comentario')).toHaveValue('');
   });
 
   it('rejects an empty comment', async () => {
@@ -81,7 +81,7 @@ describe('CommentSection', () => {
     const user = userEvent.setup();
     render(<CommentSection adviceId="a1" comments={[]} session={buildSession()} />);
 
-    await write(user, 'Escribe tu comentario...', 'Hola');
+    await write(user, 'Escribí acá tu comentario', 'Hola');
     await user.click(screen.getByRole('button', { name: 'enviarComentario();' }));
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Error al crear el comentario'));
