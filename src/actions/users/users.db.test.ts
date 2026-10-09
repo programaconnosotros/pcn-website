@@ -174,6 +174,17 @@ describe('fetchCommunityMembers', () => {
     expect(entry).not.toHaveProperty('phoneNumber');
   });
 
+  it('leaves suspended accounts out of the directory', async () => {
+    const active = await quickUser();
+    const suspended = await quickUser();
+    await prisma.user.update({ where: { id: suspended.id }, data: { suspendedAt: new Date() } });
+
+    const ids = (await fetchCommunityMembers()).map((member) => member.id);
+
+    expect(ids).toContain(active.id);
+    expect(ids).not.toContain(suspended.id);
+  });
+
   it('lists members oldest first', async () => {
     const members = await fetchCommunityMembers();
     const dates = members.map((member) => member.createdAt.getTime());

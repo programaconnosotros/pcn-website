@@ -42,6 +42,15 @@ describe('completePasswordReset', () => {
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
 
+  it('returns INVALID_CODE and keeps the password when the account is suspended', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({ id: 'user-1', suspendedAt: new Date() } as any);
+
+    await expect(completePasswordReset('test@example.com', '654321', 'NewP@ss12')).resolves.toEqual(
+      { success: false, error: 'INVALID_CODE' },
+    );
+    expect(prismaMock.$transaction).not.toHaveBeenCalled();
+  });
+
   it('hashes the password at cost 12, uses the token, signs out everywhere and succeeds', async () => {
     prismaMock.user.findUnique.mockResolvedValue({ id: 'user-1' } as any);
     bcryptMock.hash.mockResolvedValue('new-hash' as never);

@@ -34,8 +34,9 @@ export const requestPasswordReset = async (email: string): Promise<RequestPasswo
     where: { email },
   });
 
-  // No revelar si el usuario existe: se responde igual que cuando se envía el código
-  if (!user) {
+  // No revelar si el usuario existe: se responde igual que cuando se envía el código. Una cuenta
+  // suspendida tampoco puede cambiar la contraseña, y se responde igual para no revelarlo.
+  if (!user || user.suspendedAt) {
     return { success: true, waitSeconds: RATE_LIMIT_SECONDS };
   }
 

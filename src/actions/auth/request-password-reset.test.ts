@@ -36,6 +36,16 @@ describe('requestPasswordReset', () => {
     expect(emailLibMock.sendEmail).not.toHaveBeenCalled();
   });
 
+  it('answers like a sent code but sends nothing when the account is suspended', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({ ...baseUser, suspendedAt: new Date() } as any);
+
+    const result = await requestPasswordReset('test@example.com');
+
+    expect(result).toEqual({ success: true, waitSeconds: 60 });
+    expect(prismaMock.passwordResetToken.create).not.toHaveBeenCalled();
+    expect(emailLibMock.sendEmail).not.toHaveBeenCalled();
+  });
+
   it('invalidates old tokens, creates a new one, sends the email and returns success', async () => {
     prismaMock.user.findUnique.mockResolvedValue(baseUser as any);
     prismaMock.passwordResetToken.create.mockResolvedValue({} as any);

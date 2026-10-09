@@ -29,6 +29,15 @@ describe('fetchCommunityMembers', () => {
     expect(select).not.toHaveProperty('password');
   });
 
+  it('leaves suspended accounts out of the directory', async () => {
+    prismaMock.user.findMany.mockResolvedValue([]);
+    await fetchCommunityMembers();
+
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { suspendedAt: null } }),
+    );
+  });
+
   it('flattens the talk and event counts', async () => {
     prismaMock.user.findMany.mockResolvedValue([
       row({ _count: { speakerTalks: 3, organizedEvents: 2 } }),

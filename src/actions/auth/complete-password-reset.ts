@@ -36,9 +36,10 @@ export const completePasswordReset = async (
 
   const user = await prisma.user.findUnique({
     where: { email },
-    select: { id: true },
+    select: { id: true, suspendedAt: true },
   });
-  if (!user) return { success: false, error: 'INVALID_CODE' };
+  // Una cuenta suspendida no puede cambiar la contraseña
+  if (!user || user.suspendedAt) return { success: false, error: 'INVALID_CODE' };
 
   const hashedPassword = await hashPassword(newPassword);
 

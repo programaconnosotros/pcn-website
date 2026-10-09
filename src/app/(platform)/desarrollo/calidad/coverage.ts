@@ -31,7 +31,7 @@ export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
       lines: 96.6,
       statements: 95.5,
       functions: 96.5,
-      branches: 88.5,
+      branches: 88.6,
     },
     {
       folder: 'src/schemas',
