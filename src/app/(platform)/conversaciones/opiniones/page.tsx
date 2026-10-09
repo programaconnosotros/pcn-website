@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { PageTitle } from '@/components/ui/page-title';
 import { StickyHeader } from '@/components/ui/sticky-header';
-import { technologyTimelines, type Stance } from '@/data/opiniones-tecnologia';
-import { cn } from '@/lib/utils';
+import { RuledGrid } from '@/components/ui/ruled-grid';
+import { technologyTimelines } from '@/data/opiniones-tecnologia';
 import { tabTitle } from '@/lib/tab-title';
+import { OpinionTimeline, StanceStrip } from './opinion-timeline';
 import { OPINIONS_SHARE_DESCRIPTION, OPINIONS_SHARE_TITLE } from './share';
 
 const DESCRIPTION =
@@ -31,27 +31,6 @@ export const metadata: Metadata = {
   },
 };
 
-const STANCE: Record<Stance, { label: string; dot: string; text: string }> = {
-  positiva: { label: 'a favor', dot: 'bg-pcnGreen', text: 'text-pcnGreen' },
-  mixta: { label: 'dividido', dot: 'bg-amber-400', text: 'text-amber-400' },
-  negativa: { label: 'en contra', dot: 'bg-red-400', text: 'text-red-400' },
-};
-
-const monthYear = new Intl.DateTimeFormat('es-AR', {
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
-
-/** The stances of a timeline as a strip of colored ticks, oldest to newest. */
-const StanceStrip = ({ stances }: { stances: Stance[] }) => (
-  <span className="flex h-2 gap-px" aria-hidden>
-    {stances.map((stance, i) => (
-      <span key={i} className={cn('w-1.5', STANCE[stance].dot)} />
-    ))}
-  </span>
-);
-
 // /conversaciones/opiniones: one timeline per technology the group keeps coming back to.
 export default function OpinionsPage() {
   const timelines = technologyTimelines.filter(({ opinions }) => opinions.length > 0);
@@ -74,7 +53,7 @@ export default function OpinionsPage() {
             <a
               key={slug}
               href={`#${slug}`}
-              className="flex items-center gap-2 border border-pcnGreen-200 px-2 py-1 text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen"
+              className="flex items-center gap-2 border border-pcnGreen-200 px-2 py-1 text-muted-foreground transition-colors hover:border-pcnGreen-600 hover:text-pcnGreen hover:box-glow focus-visible:border-pcnGreen-600 focus-visible:text-pcnGreen focus-visible:box-glow focus-visible:outline-none"
             >
               {name}
               <StanceStrip stances={opinions.map(({ stance }) => stance)} />
@@ -82,59 +61,11 @@ export default function OpinionsPage() {
           ))}
         </nav>
 
-        <div className="mb-14 grid gap-6 xl:grid-cols-2">
-          {timelines.map(({ slug, name, summary, opinions }) => (
-            <section
-              key={slug}
-              id={slug}
-              aria-labelledby={`${slug}-title`}
-              className="scroll-mt-20 border border-pcnGreen-200"
-            >
-              <header className="border-b border-dashed border-pcnGreen-200 p-4">
-                <h2 id={`${slug}-title`} className="text-base font-semibold text-foreground">
-                  {name}
-                </h2>
-                <p className="font-mono text-[11px] text-pcnGreen-600">$ git log --{slug}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{summary}</p>
-              </header>
-              <ol className="relative p-4 pl-8">
-                <span
-                  aria-hidden
-                  className="absolute top-6 bottom-6 left-[1.1rem] w-px bg-pcnGreen-200"
-                />
-                {opinions.map((opinion) => (
-                  <li key={`${opinion.date}-${opinion.text}`} className="relative pb-4 last:pb-0">
-                    <span
-                      aria-hidden
-                      className={cn(
-                        'absolute top-1.5 left-[-0.9rem] size-2.5 ring-4 ring-background',
-                        STANCE[opinion.stance].dot,
-                      )}
-                    />
-                    <p className="flex flex-wrap items-baseline gap-x-2 font-mono text-[11px] text-muted-foreground">
-                      <time dateTime={opinion.date}>
-                        {monthYear.format(new Date(`${opinion.date}T12:00:00Z`))}
-                      </time>
-                      <span className={STANCE[opinion.stance].text}>
-                        {STANCE[opinion.stance].label}
-                      </span>
-                      <Link
-                        href={opinion.conversation.href}
-                        title={`«${opinion.conversation.title}»`}
-                        className="text-pcnGreen-600 underline decoration-dotted underline-offset-2 hover:text-pcnGreen"
-                      >
-                        #{opinion.conversation.hash}
-                      </Link>
-                    </p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-foreground/90">
-                      {opinion.text}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </section>
+        <RuledGrid className="mb-14 xl:grid-cols-2">
+          {timelines.map((timeline) => (
+            <OpinionTimeline key={timeline.slug} {...timeline} />
           ))}
-        </div>
+        </RuledGrid>
       </div>
     </div>
   );
