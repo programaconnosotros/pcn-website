@@ -65,6 +65,31 @@ describe('PhotoTagCanvas', () => {
     expect(screen.queryByRole('link', { name: 'Ana' })).not.toBeInTheDocument();
   });
 
+  it('hides the previous marker of whoever is being placed again', async () => {
+    const MoveAna = () => {
+      const tags = usePhotoTags()!;
+      return (
+        <button type="button" onClick={() => tags.startPlacing({ id: 'u1', name: 'Ana' })}>
+          mover a Ana
+        </button>
+      );
+    };
+    render(
+      <PhotoTagsProvider
+        photoId="p1"
+        initial={[{ id: 'u1', name: 'Ana', position: { x: 0.25, y: 0.5 } }]}
+      >
+        <PhotoTagCanvas>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="la foto" src="/p.webp" />
+        </PhotoTagCanvas>
+        <MoveAna />
+      </PhotoTagsProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'mover a Ana' }));
+    expect(screen.queryByRole('link', { name: 'Ana' })).not.toBeInTheDocument();
+  });
+
   it('on touch screens, hides the markers until the photo is tapped, and toggles them', () => {
     const matchMedia = jest
       .spyOn(window, 'matchMedia')

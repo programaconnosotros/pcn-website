@@ -109,7 +109,7 @@ const isTouchScreen = () =>
 /**
  * The photo with a marker where each placed person is (shown on hover; on touch screens, after
  * tapping the photo). While placing someone, a click on the photo sets where that person is and
- * the other markers are hidden.
+ * the markers are hidden, their own previous one included.
  */
 export function PhotoTagCanvas({
   children,
@@ -123,9 +123,9 @@ export function PhotoTagCanvas({
   if (!context) return <>{children}</>;
   const { tags, placing, place, cancelPlacing, highlighted, setHighlighted } = context;
   const placed = Object.values(tags).filter((tag) => tag.position);
-  // While placing someone, the other markers would catch the click meant for the photo when
-  // people stand close together, so only that person's marker stays.
-  const shown = placing ? placed.filter((tag) => tag.id === placing.id) : placed;
+  // While placing someone, any marker would catch the click meant for the photo when people stand
+  // close together (or the new spot is near their old one), so none is shown.
+  const shown = placing ? [] : placed;
 
   return (
     <div
@@ -183,14 +183,13 @@ export function PhotoTagCanvas({
           onClick={(event) => {
             // A tap on a marker opens the profile; it doesn't also hide the markers.
             event.stopPropagation();
-            if (placing) event.preventDefault();
           }}
           onMouseEnter={() => setHighlighted(tag.id)}
           onMouseLeave={() => setHighlighted(null)}
           style={{ left: `${tag.position!.x * 100}%`, top: `${tag.position!.y * 100}%` }}
           className={cn(
             'absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 transition-opacity duration-200',
-            placing || revealed || highlighted === tag.id
+            revealed || highlighted === tag.id
               ? 'opacity-100'
               : 'opacity-0 group-hover/tags:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:pointer-events-none',
           )}
