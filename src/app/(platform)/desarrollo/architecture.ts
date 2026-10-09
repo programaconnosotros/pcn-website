@@ -29,7 +29,7 @@ const logical: ArchitectureView = {
     routes["Route handlers<br/>src/app/api · feed.xml · /up"]
     schemas["Validación Zod<br/>src/schemas"]
     lib["Dominio y utilidades<br/>src/lib"]
-    content["Contenido versionado<br/>src/data · artículos · cursos"]
+    content["Contenido versionado<br/>src/data · conversaciones"]
     orm["Prisma Client<br/>src/lib/prisma.ts"]
   end
   subgraph externos["Servicios externos"]
@@ -97,7 +97,7 @@ const logical: ArchitectureView = {
     {
       term: 'Contenido versionado',
       detail:
-        'Lo que cambia poco vive en el repo y no en la base: changelog, preguntas frecuentes, partners, conversaciones, artículos de /lectura, cursos y las estadísticas de GitHub (src/data/github-stats.json). Se edita con una PR y se publica con el deploy.',
+        'Lo que cambia poco vive en el repo y no en la base: changelog, preguntas frecuentes, partners, conversaciones y las estadísticas de GitHub (src/data/github-stats.json). Se edita con una PR y se publica con el deploy. Las recomendaciones (artículos, libros, cursos, videos y charlas externas) pasaron a la base porque las proponen los miembros.',
     },
     {
       term: 'Prisma Client',
@@ -107,7 +107,7 @@ const logical: ArchitectureView = {
     {
       term: 'PostgreSQL',
       detail:
-        'La fuente de verdad de todo lo que crea la comunidad: usuarios, sesiones, eventos, inscripciones, charlas, galería, comentarios, notificaciones, visitas y logs de errores. Más abajo está el diagrama completo de entidades.',
+        'La fuente de verdad de todo lo que crea la comunidad: usuarios, sesiones, eventos, inscripciones, charlas, galería, comentarios, notificaciones, recomendaciones (artículos, libros, cursos y videos, con revisión de admins), visitas y logs de errores. Más abajo está el diagrama completo de entidades.',
     },
     {
       term: 'S3 y CloudFront',

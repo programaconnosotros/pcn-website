@@ -251,9 +251,9 @@ const databaseDesign = [
       'Los oradores de charlas y propuestas y los miembros de proyectos tienen userId opcional y guardan su nombre aparte: una charla puede tener un orador que no tiene cuenta en el sitio.',
   },
   {
-    term: 'Contenido en el código',
+    term: 'Recomendaciones',
     detail:
-      'Los artículos de /lectura viven en el repo, no en la base: ArticleAuthor y ContentMark los referencian por id (articleId, contentType + contentId) sin clave foránea.',
+      'Artículos, libros, cursos y videos (las charlas externas son videos con isTalk) comparten la tabla Recommendation, con un kind y un status (PENDING, APPROVED, REJECTED) para la revisión de admins. El slug es único por kind y conserva los ids que tenían en el repo, así ArticleAuthor y ContentMark los siguen referenciando por id (articleId, contentType + contentId) sin clave foránea.',
   },
   {
     term: 'Enums',
