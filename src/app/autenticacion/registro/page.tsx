@@ -152,7 +152,7 @@ function SignUpContent() {
                 <FormItem>
                   <FormLabel>Nombre completo</FormLabel>
                   <FormControl>
-                    <Input placeholder="Lionel Messi" {...field} />
+                    <Input placeholder="Lionel Messi" autoComplete="name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
