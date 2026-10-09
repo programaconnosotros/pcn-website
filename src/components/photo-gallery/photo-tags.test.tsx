@@ -58,6 +58,13 @@ describe('PhotoTagCanvas', () => {
     expect(screen.queryByText(/tocá dónde está/)).not.toBeInTheDocument();
   });
 
+  it('hides the other markers while placing someone', async () => {
+    renderPhoto();
+    expect(screen.getByRole('link', { name: 'Ana' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'ubicar a Beto' }));
+    expect(screen.queryByRole('link', { name: 'Ana' })).not.toBeInTheDocument();
+  });
+
   it('on touch screens, hides the markers until the photo is tapped, and toggles them', () => {
     const matchMedia = jest
       .spyOn(window, 'matchMedia')

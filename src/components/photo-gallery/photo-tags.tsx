@@ -107,9 +107,9 @@ const isTouchScreen = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(hover: none)').matches;
 
 /**
- * The photo with a marker where each placed person is (shown on hover, or always while placing
- * someone; on touch screens, after tapping the photo). While placing, a click on the photo sets
- * where that person is.
+ * The photo with a marker where each placed person is (shown on hover; on touch screens, after
+ * tapping the photo). While placing someone, a click on the photo sets where that person is and
+ * the other markers are hidden.
  */
 export function PhotoTagCanvas({
   children,
@@ -123,6 +123,9 @@ export function PhotoTagCanvas({
   if (!context) return <>{children}</>;
   const { tags, placing, place, cancelPlacing, highlighted, setHighlighted } = context;
   const placed = Object.values(tags).filter((tag) => tag.position);
+  // While placing someone, the other markers would catch the click meant for the photo when
+  // people stand close together, so only that person's marker stays.
+  const shown = placing ? placed.filter((tag) => tag.id === placing.id) : placed;
 
   return (
     <div
@@ -173,7 +176,7 @@ export function PhotoTagCanvas({
         </span>
       )}
 
-      {placed.map((tag) => (
+      {shown.map((tag) => (
         <Link
           key={tag.id}
           href={`/perfil/${tag.id}`}
