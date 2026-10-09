@@ -200,19 +200,14 @@ export const TalkCell = ({
             type="button"
             onClick={primaryAction}
             className={cn(
-              'flex-1 text-left font-mono text-sm leading-snug font-semibold group-hover:text-pcnGreen after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset',
-              !fullText && 'line-clamp-2',
+              // Titles always show whole: the cell grows instead of cutting them.
+              'min-w-0 flex-1 text-left font-mono text-sm leading-snug font-semibold wrap-break-word group-hover:text-pcnGreen after:absolute after:inset-0 focus-visible:outline-hidden focus-visible:after:ring-1 focus-visible:after:ring-pcnGreen focus-visible:after:ring-inset',
             )}
           >
             {talk.title}
           </button>
         ) : (
-          <h3
-            className={cn(
-              'flex-1 font-mono text-sm leading-snug font-semibold',
-              !fullText && 'line-clamp-2',
-            )}
-          >
+          <h3 className="min-w-0 flex-1 font-mono text-sm leading-snug font-semibold wrap-break-word">
             {talk.title}
           </h3>
         )}
@@ -542,7 +537,8 @@ export function CommunityTalks({ talks, isAdmin, onEdit, onDelete }: Props) {
                 {items.length} {items.length === 1 ? 'charla' : 'charlas'}
               </span>
             </h2>
-            <RuledGrid className="grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {/* Big cells: 3 per row on large screens (4 only on very wide ones), like the skeleton. */}
+            <RuledGrid className="grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {items.map((talk) => (
                 <TalkCell
                   key={talk.id}

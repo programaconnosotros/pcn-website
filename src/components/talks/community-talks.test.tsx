@@ -100,6 +100,18 @@ describe('CommunityTalks', () => {
     expect(within(cell('sin nada')).getByText('SN')).toBeInTheDocument();
   });
 
+  it('shows every title whole, in a grid of three per row on large screens', () => {
+    renderTalks();
+
+    // Playable talks title a button; the others, a heading. Neither is ever cut.
+    for (const title of ['Rust en producción', 'sin nada']) {
+      expect(screen.getByText(title).className).not.toMatch(/line-clamp|truncate/);
+    }
+    const grid = cell('Rust en producción').parentElement!;
+    expect(grid).toHaveClass('lg:grid-cols-3', '2xl:grid-cols-4');
+    expect(grid.className).not.toMatch(/(^|\s)xl:grid-cols-4/);
+  });
+
   it('filters by video, slides and search text', async () => {
     renderTalks();
 

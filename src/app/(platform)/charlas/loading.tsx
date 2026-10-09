@@ -27,8 +27,8 @@ export default function Loading() {
           <div className="h-px flex-1 bg-pcnGreen-200 opacity-60" />
           <Skeleton className="h-3 w-16" />
         </div>
-        <RuledGrid className="mb-14 grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {Array.from({ length: 10 }).map((_, i) => (
+        <RuledGrid className="mb-14 grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
               className="flex flex-col gap-2.5 border-r border-b border-pcnGreen-200 p-3"
