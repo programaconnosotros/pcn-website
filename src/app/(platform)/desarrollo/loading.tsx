@@ -38,7 +38,7 @@ export default function Loading() {
             </div>
             <Skeleton className="mt-2 h-1 w-full rounded-none" />
           </div>
-          <aside className="sticky top-24 hidden h-[calc(100vh-7rem)] w-72 shrink-0 flex-col border border-pcnGreen-200 lg:flex">
+          <aside className="sticky top-24 hidden h-[calc(100vh-7rem-var(--news-ticker-height,0px))] w-72 shrink-0 flex-col border border-pcnGreen-200 lg:flex">
             <div className="flex h-[33px] items-center justify-between border-b border-pcnGreen-200 px-3">
               <Skeleton className="h-3 w-32" />
               <Skeleton className="h-3 w-10" />

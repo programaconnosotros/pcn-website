@@ -30,7 +30,10 @@ export function NewsTicker() {
   // The page column is a min-h-svh flex column: `mt-auto` keeps the crawl on the bottom edge even
   // when the page is shorter than the screen (loading skeletons), and the spacer keeps the gap
   // above it when it isn't, unless the page ends in something meant to sit right on the crawl
-  // (`data-ticker-flush`, like the home footer's wordmark).
+  // (`data-ticker-flush`, like the home footer's wordmark). Being sticky, it floats over the page
+  // as it scrolls: `data-news-ticker` publishes its height as `--news-ticker-height` (globals.css)
+  // so bottom-anchored bars, floating buttons and viewport-tall side panels end above it. Its
+  // height (2rem plus the safe-area inset, for iPads with a home indicator) must match that value.
   return (
     <>
       <div
@@ -39,7 +42,8 @@ export function NewsTicker() {
       />
       <aside
         aria-label="Últimas novedades"
-        className="sticky bottom-0 z-30 -mx-6 mt-auto hidden h-8 items-stretch border-t border-pcnGreen-200 bg-background/95 font-mono text-xs backdrop-blur-sm md:flex embedded:hidden"
+        data-news-ticker
+        className="sticky bottom-0 z-30 -mx-6 mt-auto hidden h-[calc(2rem+env(safe-area-inset-bottom))] items-stretch border-t border-pcnGreen-200 bg-background/95 pb-[env(safe-area-inset-bottom)] font-mono text-xs backdrop-blur-sm md:flex embedded:hidden"
       >
         <Link
           href="/feed"

@@ -1239,6 +1239,30 @@
      status bar / toolbar from the page, so the canvas behind them must never be transparent. */
   html {
     @apply bg-background;
+    /* Keyboard focus and scrollIntoView stop above the PCN News crawl, never under it. */
+    scroll-padding-bottom: var(--news-ticker-height);
+  }
+  /*
+    --news-ticker-height: the space the PCN News crawl (news-ticker.tsx) takes at the bottom of
+    the viewport, 0 wherever it isn't shown. The crawl is sticky, so it floats over the page while
+    it scrolls: anything else anchored to the bottom edge (sticky bars, floating buttons) or sized
+    to the viewport (sticky side panels) subtracts this so it ends above the crawl. It shows from
+    md up, in the classic layout only: not inside a PCN OS window, and not on large screens where
+    the PCN OS desktop replaces the classic layout (any mode but `classic`). Must match the
+    crawl's own height (2rem plus the safe-area inset).
+  */
+  :root {
+    --news-ticker-height: 0px;
+  }
+  @media (width >= 48rem) {
+    html:not([data-embedded]):has([data-news-ticker]) {
+      --news-ticker-height: calc(2rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+  @media (width >= 1024px) {
+    html:not([data-os-mode='classic']):has([data-news-ticker]) {
+      --news-ticker-height: 0px;
+    }
   }
   body {
     @apply bg-background text-foreground;

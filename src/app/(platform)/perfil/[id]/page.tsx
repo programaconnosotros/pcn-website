@@ -308,7 +308,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
           {/* Columna izquierda: Información del usuario (fija en pantallas grandes, y con scroll
               propio cuando no entra en la pantalla) */}
           <div className="lg:col-span-1">
-            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto">
+            <div className="divide-y divide-pcnGreen-200 border border-pcnGreen-200 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem-var(--news-ticker-height,0px))] lg:overflow-y-auto">
               <div className="flex items-center gap-3 p-4">
                 <Avatar className="h-12 w-12 rounded-sm">
                   <AvatarImage src={user.image ?? undefined} alt={user.name ?? 'Usuario'} />

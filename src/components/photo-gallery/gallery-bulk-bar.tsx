@@ -109,7 +109,7 @@ export function GalleryBulkBar({
     <div
       role="region"
       aria-label="Edición masiva"
-      className="sticky bottom-3 z-30 mt-3 border border-pcnGreen bg-background/95 p-3 font-mono shadow-[0_0_30px_-8px_rgba(4,244,190,0.45)] backdrop-blur-sm"
+      className="sticky bottom-[calc(0.75rem+var(--news-ticker-height,0px))] z-30 mt-3 border border-pcnGreen bg-background/95 p-3 font-mono shadow-[0_0_30px_-8px_rgba(4,244,190,0.45)] backdrop-blur-sm"
     >
       <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
         <span aria-live="polite">

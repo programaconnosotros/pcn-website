@@ -96,7 +96,10 @@ describe('LiveNews', () => {
 describe('NewsTicker', () => {
   it('crawls the latest headlines with their kind', async () => {
     render(<NewsTicker />);
-    expect(screen.getByRole('complementary', { name: 'Últimas novedades' })).toBeInTheDocument();
+    // Marked so globals.css can publish its height (--news-ticker-height) for the page to avoid.
+    expect(screen.getByRole('complementary', { name: 'Últimas novedades' })).toHaveAttribute(
+      'data-news-ticker',
+    );
     expect(screen.getByRole('link', { name: /PCN News/ })).toHaveAttribute('href', '/feed');
     const meetup = screen.getAllByRole('link', { name: /EVENTO\s*Meetup de octubre/ });
     expect(meetup[0]).toHaveAttribute('href', '/eventos/e1');
