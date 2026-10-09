@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma, { typedNameOf } from '@/lib/prisma';
 import { ProfileForm } from '@components/profile/profile-form';
 import { TwoFactorSettings } from '@/components/auth/two-factor-settings';
 import { PageTitle } from '@/components/ui/page-title';
@@ -61,7 +61,7 @@ const Profile = async () => {
           <PageTitle path="perfil" meta={user.email} />
         </StickyHeader>
 
-        <ProfileForm user={user} languages={userLanguages} />
+        <ProfileForm user={user} typedName={await typedNameOf(user.id)} languages={userLanguages} />
 
         <div className="mt-8 mb-14 border border-pcnGreen-200 p-4">
           <TwoFactorSettings

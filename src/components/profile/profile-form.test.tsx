@@ -41,8 +41,14 @@ const baseUser = {
 };
 const ts = { languageId: 'typescript', color: '#4aa3ff', logo: 'ts', experienceLevel: 100 };
 
-const renderForm = (user = {}, languages = [ts]) =>
-  render(<ProfileForm user={{ ...baseUser, ...user } as never} languages={languages} />);
+const renderForm = (user = {}, languages = [ts], typedName = 'Ada Lovelace') =>
+  render(
+    <ProfileForm
+      user={{ ...baseUser, ...user } as never}
+      typedName={typedName}
+      languages={languages}
+    />,
+  );
 
 const form = () => screen.getByRole('button', { name: 'guardarCambios();' }).closest('form')!;
 
@@ -69,6 +75,13 @@ describe('ProfileForm', () => {
     expect(screen.getByText('todo guardado')).toBeInTheDocument();
     expect(screen.getByText('Dev')).toBeInTheDocument();
     expect(screen.getByText('github↗')).toBeInTheDocument();
+  });
+
+  it('edits the name as typed and previews it capitalized', () => {
+    renderForm({ name: 'Grace de Hopper' }, [ts], 'grace de hopper');
+
+    expect(screen.getByLabelText('nombre')).toHaveValue('grace de hopper');
+    expect(screen.getByText('Grace de Hopper')).toBeInTheDocument();
   });
 
   it('prefers the saved positions and shows the empty work state without any', async () => {

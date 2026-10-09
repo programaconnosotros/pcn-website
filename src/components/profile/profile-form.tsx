@@ -37,6 +37,7 @@ import { formActionBarClassName } from '@/components/ui/form-action-bar';
 import { FormSection } from '@/components/ui/form-section';
 import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { displayName } from '@/lib/people-names';
 
 // Lista de países
 const COUNTRIES = [
@@ -120,15 +121,18 @@ const initialPositions = (user: SessionUser & { positions: UserPosition[] }) => 
 
 export const ProfileForm = ({
   user,
+  typedName,
   languages,
 }: {
   user: SessionUser & { positions: UserPosition[] };
+  /** El nombre tal como lo escribió la persona: `user.name` llega formateado para mostrar. */
+  typedName: string;
   languages: UserProgrammingLanguage[];
 }) => {
   const form = useForm<ProfileFormInput, unknown, ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user.name ?? '',
+      name: typedName,
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
       image: user.image ?? '',
@@ -323,7 +327,7 @@ export const ProfileForm = ({
 
             <div className="min-w-0 space-y-1.5 font-mono">
               <p className="truncate text-base font-semibold text-glow">
-                {values.name || 'sin nombre'}
+                {displayName(values.name ?? '') || 'sin nombre'}
               </p>
               {filledPositions.length > 0 ? (
                 <ul className="space-y-0.5 text-[11px] text-muted-foreground">

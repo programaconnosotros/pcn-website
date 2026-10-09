@@ -12,6 +12,7 @@ jest.mock('@/lib/session', () => ({ findSession: jest.fn() }));
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   default: { user: { findUnique: jest.fn() } },
+  typedNameOf: jest.fn(async () => 'ana pérez'),
 }));
 jest.mock('@components/profile/profile-form', () => ({
   ProfileForm: jest.fn(() => <form aria-label="perfil" />),
@@ -74,6 +75,7 @@ describe('/perfil', () => {
     expect(screen.getByRole('form', { name: 'perfil' })).toBeInTheDocument();
     expect(jest.mocked(ProfileForm).mock.calls[0][0]).toEqual({
       user,
+      typedName: 'ana pérez',
       languages: [{ languageId: 'ts', color: '#3178c6', logo: '/ts.svg' }],
     });
   });

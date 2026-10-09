@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { typedNameOf } from '@/lib/prisma';
 import { signIn } from '@/actions/auth/sign-in';
 import { requestPasswordReset } from '@/actions/auth/request-password-reset';
 import { createAdvice } from '@/actions/advice/create-advice';
@@ -167,8 +167,9 @@ describe.each(PAYLOADS)('SQL injection with %p', (payload) => {
     );
 
     const saved = await prisma.user.findUniqueOrThrow({ where: { id: attacker.id } });
+    // Stored as typed: only what the site shows gets capitalized.
+    await expect(typedNameOf(attacker.id)).resolves.toBe(`Atacante ${payload}`);
     expect(saved).toMatchObject({
-      name: `Atacante ${payload}`,
       slogan: payload,
       career: payload,
       jobTitle: payload,

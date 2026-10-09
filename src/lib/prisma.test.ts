@@ -21,13 +21,18 @@ const ORIGINAL_NODE_ENV = env.NODE_ENV;
 
 let extension: { name: string; query: { $allModels: { $allOperations: Operation } } };
 const extended = { extended: true };
+let displayNames: typeof extension;
 
 beforeEach(() => {
   delete globals.prismaGlobal;
   jest.mocked(PrismaClient).mockImplementation(
     () =>
       ({
-        $extends: (ext: typeof extension) => {
+        $extends(ext: typeof extension) {
+          if (ext.name !== 'data-cache') {
+            if (ext.name === 'display-name') displayNames = ext;
+            return this;
+          }
           extension = ext;
           return extended;
         },
@@ -71,6 +76,44 @@ describe('prisma client', () => {
       },
     });
     expect(extension.name).toBe('data-cache');
+  });
+
+  it('shows the name of every user it returns, nested ones too, with long words capitalized', async () => {
+    load();
+    const rows = [
+      {
+        name: 'juan de la fuente',
+        advice: [{ content: 'hola mundo', author: { name: 'ana maría' } }],
+        _count: { name: 'sin tocar' },
+      },
+    ];
+
+    const result = await displayNames.query.$allModels.$allOperations({
+      model: 'User',
+      operation: 'findMany',
+      args: {},
+      query: async () => rows,
+    });
+
+    expect(result).toEqual([
+      {
+        name: 'Juan de la Fuente',
+        advice: [{ content: 'hola mundo', author: { name: 'ana María' } }],
+        _count: { name: 'sin tocar' },
+      },
+    ]);
+  });
+
+  it('leaves the names of other models as they are', async () => {
+    load();
+    const result = await displayNames.query.$allModels.$allOperations({
+      model: 'Badge',
+      operation: 'findFirst',
+      args: {},
+      query: async () => ({ name: 'primer evento' }),
+    });
+
+    expect(result).toEqual({ name: 'primer evento' });
   });
 
   it('reuses the client kept on globalThis outside production (hot reload)', () => {

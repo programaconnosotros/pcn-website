@@ -28,6 +28,9 @@ const relations = new Map<string, Map<string, string>>(
   ]),
 );
 
+/** The model a relation field of `model` points to, if `field` is one. */
+export const relatedModel = (model: string, field: string) => relations.get(model)?.get(field);
+
 /**
  * model → the models whose rows go away or change when one of its rows is deleted: the ones
  * holding a foreign key to it (cascade or set null) and the other side of its many-to-many
