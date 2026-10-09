@@ -136,12 +136,17 @@ const findGalleryItem = cached(
           },
           orderBy: { createdAt: 'asc' },
         },
+        // Photos of someone at work show who uploaded them instead of who appears in them.
+        uploadedBy: { select: { id: true, name: true, image: true } },
       },
     }),
   { models: GALLERY_MODELS },
 );
 
-/** A photo or video with everything its page shows: event, people and who tagged them. */
+/**
+ * A photo or video with everything its page shows: event, people and who tagged them, and who
+ * uploaded it.
+ */
 export async function getGalleryItem(id: string) {
   const item = await findGalleryItem(id);
   return item && signGalleryItem(item);

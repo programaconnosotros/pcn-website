@@ -12,7 +12,7 @@ export type AutomatedSuite = {
   tests: [string, string][];
 };
 
-export const AUTOMATED_CASES_UPDATED_AT = '2026-10-08';
+export const AUTOMATED_CASES_UPDATED_AT = '2026-10-09';
 
 export const automatedSuites: AutomatedSuite[] = [
   {
@@ -4347,20 +4347,26 @@ export const automatedSuites: AutomatedSuite[] = [
         '/galeria/[id] › metadata › uses the poster of a video and a generic description',
       ],
       ['TC-GAL-A082', '/galeria/[id] › is not found for a missing photo'],
-      ['TC-GAL-A083', '/galeria/[id] › shows a photo to a visitor, without navigation or editing'],
+      ['TC-GAL-A083', '/galeria/[id] › shows who uploaded a photo at work instead of who is in it'],
       [
         'TC-GAL-A084',
-        '/galeria/[id] › lays wide photos across the page and keeps tall ones beside their details',
+        '/galeria/[id] › says it has no data when the uploader of a photo at work is gone',
       ],
-      ['TC-GAL-A085', '/galeria/[id] › keeps the filters in prev/next links and the counter'],
-      ['TC-GAL-A086', '/galeria/[id] › links the place of the event to a maps search'],
+      ['TC-GAL-A085', '/galeria/[id] › lists who is in a gallery photo, not who uploaded it'],
+      ['TC-GAL-A086', '/galeria/[id] › shows a photo to a visitor, without navigation or editing'],
       [
         'TC-GAL-A087',
+        '/galeria/[id] › lays wide photos across the page and keeps tall ones beside their details',
+      ],
+      ['TC-GAL-A088', '/galeria/[id] › keeps the filters in prev/next links and the counter'],
+      ['TC-GAL-A089', '/galeria/[id] › links the place of the event to a maps search'],
+      [
+        'TC-GAL-A090',
         '/galeria/[id] › prefers the event maps link, and shows online or missing places as text',
       ],
-      ['TC-GAL-A088', '/galeria/[id] › plays a video with its duration'],
-      ['TC-GAL-A089', '/galeria/[id] › lets admins edit the photo and set it as the event cover'],
-      ['TC-GAL-A090', '/galeria/[id] › does not offer a video as the event cover'],
+      ['TC-GAL-A091', '/galeria/[id] › plays a video with its duration'],
+      ['TC-GAL-A092', '/galeria/[id] › lets admins edit the photo and set it as the event cover'],
+      ['TC-GAL-A093', '/galeria/[id] › does not offer a video as the event cover'],
     ],
   },
   {
@@ -4680,11 +4686,11 @@ export const automatedSuites: AutomatedSuite[] = [
       ['TC-ADM-A224', 'ErrorsClient › marks an error as resolved and refreshes'],
       [
         'TC-ADM-A225',
-        'ErrorsClient › reports a failure to resolve (Error: No autorizado\n    at /Users/agus/Development/pcn-website/src/app/(platform)/monitoreo/monitoring-client.test.tsx:215:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/app/(platform)/monitoreo/monitoring-client.test.tsx:83:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'ErrorsClient › reports a failure to resolve (Error: No autorizado\n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/app/(platform)/monitoreo/monitoring-client.test.tsx:215:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/app/(platform)/monitoreo/monitoring-client.test.tsx:83:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
       [
         'TC-ADM-A226',
-        'ErrorsClient › reports a failure to resolve (Error: \n    at /Users/agus/Development/pcn-website/src/app/(platform)/monitoreo/monitoring-client.test.tsx:216:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/app/(platform)/monitoreo/monitoring-client.test.tsx:83:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'ErrorsClient › reports a failure to resolve (Error: \n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/app/(platform)/monitoreo/monitoring-client.test.tsx:216:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/app/(platform)/monitoreo/monitoring-client.test.tsx:83:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
       ['TC-ADM-A227', 'ErrorsClient › pages through errors keeping the other params'],
       ['TC-ADM-A228', 'LogsClient › lists logs with the level counts and expands details'],
@@ -5413,10 +5419,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'integration',
     priority: 'alta',
     tests: [
-      ['TC-GAL-A091', 'answers uploaded files with a presigned S3 URL named after the photo'],
-      ['TC-GAL-A092', 'serves photos stored in /public as an attachment'],
-      ['TC-GAL-A093', 'answers 404 for missing, legacy, missing-on-disk and path-traversal items'],
-      ['TC-GAL-A094', 'answers 429 while rate limited, before touching the database'],
+      ['TC-GAL-A094', 'answers uploaded files with a presigned S3 URL named after the photo'],
+      ['TC-GAL-A095', 'serves photos stored in /public as an attachment'],
+      ['TC-GAL-A096', 'answers 404 for missing, legacy, missing-on-disk and path-traversal items'],
+      ['TC-GAL-A097', 'answers 429 while rate limited, before touching the database'],
     ],
   },
   {
@@ -5426,29 +5432,29 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-GAL-A095',
+        'TC-GAL-A098',
         'GET /api/galeria/[id]/descargar › answers uploaded files with a presigned S3 download URL',
       ],
       [
-        'TC-GAL-A096',
+        'TC-GAL-A099',
         'GET /api/galeria/[id]/descargar › keeps the video extension in the file name',
       ],
-      ['TC-GAL-A097', 'GET /api/galeria/[id]/descargar › serves photos stored in /public'],
-      ['TC-GAL-A098', 'GET /api/galeria/[id]/descargar › never reads outside /public'],
+      ['TC-GAL-A100', 'GET /api/galeria/[id]/descargar › serves photos stored in /public'],
+      ['TC-GAL-A101', 'GET /api/galeria/[id]/descargar › never reads outside /public'],
       [
-        'TC-GAL-A099',
+        'TC-GAL-A102',
         'GET /api/galeria/[id]/descargar › rate limits downloads with a message that says why and for how long',
       ],
       [
-        'TC-GAL-A100',
+        'TC-GAL-A103',
         'GET /api/galeria/[id]/descargar › answers 404 for an item that does not exist or is hidden',
       ],
       [
-        'TC-GAL-A101',
+        'TC-GAL-A104',
         'GET /api/galeria/[id]/descargar › answers 404 when the /public file is missing',
       ],
       [
-        'TC-GAL-A102',
+        'TC-GAL-A105',
         'GET /api/galeria/[id]/descargar › answers 404 for a relative src that is not under /public',
       ],
     ],
@@ -5458,7 +5464,7 @@ export const automatedSuites: AutomatedSuite[] = [
     area: 'galeria',
     layer: 'integration',
     priority: 'alta',
-    tests: [['TC-GAL-A103', 'samples visible photos only (no videos, no legacy photos), uncached']],
+    tests: [['TC-GAL-A106', 'samples visible photos only (no videos, no legacy photos), uncached']],
   },
   {
     file: 'src/app/api/galeria/aleatorias/route.test.ts',
@@ -5467,11 +5473,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A104',
+        'TC-GAL-A107',
         'GET /api/galeria/aleatorias › answers a fresh sample of 40 photos that is never cached',
       ],
       [
-        'TC-GAL-A105',
+        'TC-GAL-A108',
         'GET /api/galeria/aleatorias › answers an empty list when the gallery has no photos',
       ],
     ],
@@ -6306,7 +6312,7 @@ export const automatedSuites: AutomatedSuite[] = [
       ['TC-BUS-A027', 'UserFlagToggle › turns the suspended flag off'],
       [
         'TC-BUS-A028',
-        'UserFlagToggle › reverts and reports a failure (Error: No podés quitarte el admin\n    at /Users/agus/Development/pcn-website/src/components/comunity/users-table.test.tsx:210:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/components/comunity/users-table.test.tsx:176:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'UserFlagToggle › reverts and reports a failure (Error: No podés quitarte el admin\n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/comunity/users-table.test.tsx:210:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/comunity/users-table.test.tsx:176:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
       ['TC-BUS-A029', 'UserFlagToggle › reverts and reports a failure (raro)'],
       [
@@ -7308,7 +7314,7 @@ export const automatedSuites: AutomatedSuite[] = [
       ],
       [
         'TC-PLT-A383',
-        'HistoriaPerson › restores the tag when saving fails (Error: No autorizado\n    at /Users/agus/Development/pcn-website/src/components/historia/historia.test.tsx:273:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/components/historia/historia.test.tsx:182:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'HistoriaPerson › restores the tag when saving fails (Error: No autorizado\n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/historia/historia.test.tsx:273:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/historia/historia.test.tsx:182:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
       ['TC-PLT-A384', 'HistoriaPerson › restores the tag when saving fails (raro)'],
     ],
@@ -8129,11 +8135,11 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A106', 'DownloadKey › opens the signed S3 url of uploaded files'],
-      ['TC-GAL-A107', 'DownloadKey › saves public files with their name'],
-      ['TC-GAL-A108', 'DownloadKey › downloads without a name when the server sends none'],
-      ['TC-GAL-A109', 'DownloadKey › shows the rate limit message'],
-      ['TC-GAL-A110', 'DownloadKey › opens the route itself on other errors or network failures'],
+      ['TC-GAL-A109', 'DownloadKey › opens the signed S3 url of uploaded files'],
+      ['TC-GAL-A110', 'DownloadKey › saves public files with their name'],
+      ['TC-GAL-A111', 'DownloadKey › downloads without a name when the server sends none'],
+      ['TC-GAL-A112', 'DownloadKey › shows the rate limit message'],
+      ['TC-GAL-A113', 'DownloadKey › opens the route itself on other errors or network failures'],
     ],
   },
   {
@@ -8142,8 +8148,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A111', 'EventCoverKey › makes the photo the event cover'],
-      ['TC-GAL-A112', 'EventCoverKey › goes back to a random cover, and toasts failures'],
+      ['TC-GAL-A114', 'EventCoverKey › makes the photo the event cover'],
+      ['TC-GAL-A115', 'EventCoverKey › goes back to a random cover, and toasts failures'],
     ],
   },
   {
@@ -8152,15 +8158,15 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-GAL-A113', 'findEventForDate › matches photos taken during the event'],
-      [
-        'TC-GAL-A114',
-        'findEventForDate › matches photos taken earlier on the day the event starts',
-      ],
-      ['TC-GAL-A115', 'findEventForDate › matches photos from the early hours after the event'],
-      ['TC-GAL-A116', 'findEventForDate › matches nothing on days without events'],
+      ['TC-GAL-A116', 'findEventForDate › matches photos taken during the event'],
       [
         'TC-GAL-A117',
+        'findEventForDate › matches photos taken earlier on the day the event starts',
+      ],
+      ['TC-GAL-A118', 'findEventForDate › matches photos from the early hours after the event'],
+      ['TC-GAL-A119', 'findEventForDate › matches nothing on days without events'],
+      [
+        'TC-GAL-A120',
         'findEventForDate › picks the event that started closest to the photo when several match',
       ],
     ],
@@ -8171,16 +8177,16 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A118', 'GalleryBulkBar › disables every action without a selection'],
-      ['TC-GAL-A119', 'GalleryBulkBar › selects all, clears and exits'],
-      ['TC-GAL-A120', 'GalleryBulkBar › moves the selection to an event or out of every event'],
-      ['TC-GAL-A121', 'GalleryBulkBar › tags a person in every selected file'],
+      ['TC-GAL-A121', 'GalleryBulkBar › disables every action without a selection'],
+      ['TC-GAL-A122', 'GalleryBulkBar › selects all, clears and exits'],
+      ['TC-GAL-A123', 'GalleryBulkBar › moves the selection to an event or out of every event'],
+      ['TC-GAL-A124', 'GalleryBulkBar › tags a person in every selected file'],
       [
-        'TC-GAL-A122',
+        'TC-GAL-A125',
         'GalleryBulkBar › untags someone tagged in the selection, showing in how many files they are',
       ],
-      ['TC-GAL-A123', 'GalleryBulkBar › deletes the selection after confirming'],
-      ['TC-GAL-A124', 'GalleryBulkBar › toasts the error when an action fails'],
+      ['TC-GAL-A126', 'GalleryBulkBar › deletes the selection after confirming'],
+      ['TC-GAL-A127', 'GalleryBulkBar › toasts the error when an action fails'],
     ],
   },
   {
@@ -8190,11 +8196,11 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A125',
+        'TC-GAL-A128',
         'GalleryFilters › links each type keeping the other filters, and offers no reset when unfiltered',
       ],
       [
-        'TC-GAL-A126',
+        'TC-GAL-A129',
         'GalleryFilters › navigates when picking an event or a person, and clears with "todos"',
       ],
     ],
@@ -8205,18 +8211,18 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A127', 'Gallery › counts photos and videos and links each tile within the filter'],
-      ['TC-GAL-A128', 'Gallery › searches descriptions, events, people and dates ignoring accents'],
-      ['TC-GAL-A129', 'Gallery › shows empty states with and without filters'],
-      ['TC-GAL-A130', 'Gallery › links uploads to the filtered event'],
-      ['TC-GAL-A131', 'Gallery › links uploads to the general uploader without an event'],
-      ['TC-GAL-A132', 'Gallery › uploads photos at work from the trabajando tab'],
-      ['TC-GAL-A133', 'Gallery › shows admins how many uploads wait for review'],
-      ['TC-GAL-A134', 'Gallery › opens the share dialog for a tile'],
-      ['TC-GAL-A135', 'Gallery › lets admins select tiles one by one, by range, all, and leave'],
-      ['TC-GAL-A136', 'Gallery › leaves the selection with Esc, or with the toggle'],
+      ['TC-GAL-A130', 'Gallery › counts photos and videos and links each tile within the filter'],
+      ['TC-GAL-A131', 'Gallery › searches descriptions, events, people and dates ignoring accents'],
+      ['TC-GAL-A132', 'Gallery › shows empty states with and without filters'],
+      ['TC-GAL-A133', 'Gallery › links uploads to the filtered event'],
+      ['TC-GAL-A134', 'Gallery › links uploads to the general uploader without an event'],
+      ['TC-GAL-A135', 'Gallery › uploads photos at work from the trabajando tab'],
+      ['TC-GAL-A136', 'Gallery › shows admins how many uploads wait for review'],
+      ['TC-GAL-A137', 'Gallery › opens the share dialog for a tile'],
+      ['TC-GAL-A138', 'Gallery › lets admins select tiles one by one, by range, all, and leave'],
+      ['TC-GAL-A139', 'Gallery › leaves the selection with Esc, or with the toggle'],
       [
-        'TC-GAL-A137',
+        'TC-GAL-A140',
         'Gallery › mounts the tiles a page at a time, loading more as the end comes near',
       ],
     ],
@@ -8227,10 +8233,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A138', 'PendingGalleryReview › says when there is nothing to review'],
-      ['TC-GAL-A139', 'PendingGalleryReview › shows who uploaded each photo and where it would go'],
-      ['TC-GAL-A140', 'PendingGalleryReview › approves or rejects one photo, or approves them all'],
-      ['TC-GAL-A141', 'PendingGalleryReview › says when the review fails'],
+      ['TC-GAL-A141', 'PendingGalleryReview › says when there is nothing to review'],
+      ['TC-GAL-A142', 'PendingGalleryReview › shows who uploaded each photo and where it would go'],
+      ['TC-GAL-A143', 'PendingGalleryReview › approves or rejects one photo, or approves them all'],
+      ['TC-GAL-A144', 'PendingGalleryReview › says when the review fails'],
     ],
   },
   {
@@ -8239,12 +8245,12 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A142', 'PhotoActionsBar › downloads and shares the photo'],
-      ['TC-GAL-A143', 'SortSelector › shows the default order and changes it'],
-      ['TC-GAL-A144', 'SortSelector › shows the date-asc order and changes it'],
-      ['TC-GAL-A145', 'SortSelector › shows the date-desc order and changes it'],
-      ['TC-GAL-A146', 'SortSelector › offers every order'],
-      ['TC-GAL-A147', 'VideoBadge › marks a video thumbnail'],
+      ['TC-GAL-A145', 'PhotoActionsBar › downloads and shares the photo'],
+      ['TC-GAL-A146', 'SortSelector › shows the default order and changes it'],
+      ['TC-GAL-A147', 'SortSelector › shows the date-asc order and changes it'],
+      ['TC-GAL-A148', 'SortSelector › shows the date-desc order and changes it'],
+      ['TC-GAL-A149', 'SortSelector › offers every order'],
+      ['TC-GAL-A150', 'VideoBadge › marks a video thumbnail'],
     ],
   },
   {
@@ -8253,10 +8259,10 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A148', 'PhotoCard › links to the photo with its caption, number, date and people'],
-      ['TC-GAL-A149', 'PhotoCard › marks videos with their duration and shares them'],
+      ['TC-GAL-A151', 'PhotoCard › links to the photo with its caption, number, date and people'],
+      ['TC-GAL-A152', 'PhotoCard › marks videos with their duration and shares them'],
       [
-        'TC-GAL-A150',
+        'TC-GAL-A153',
         'PhotoCard › says "video" when the duration is unknown, and drifts with the pointer',
       ],
     ],
@@ -8268,12 +8274,12 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A151',
+        'TC-GAL-A154',
         'PhotoEditForm › saves the date, description and event, then goes back to the photo',
       ],
-      ['TC-GAL-A152', 'PhotoEditForm › toasts when saving fails'],
-      ['TC-GAL-A153', 'PhotoEditForm › deletes the photo after confirming'],
-      ['TC-GAL-A154', 'PhotoEditForm › toasts when deleting fails'],
+      ['TC-GAL-A155', 'PhotoEditForm › toasts when saving fails'],
+      ['TC-GAL-A156', 'PhotoEditForm › deletes the photo after confirming'],
+      ['TC-GAL-A157', 'PhotoEditForm › toasts when deleting fails'],
     ],
   },
   {
@@ -8282,9 +8288,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A155', 'PhotoKeyboardNav › prefetches the neighbours and steps with the arrows'],
+      ['TC-GAL-A158', 'PhotoKeyboardNav › prefetches the neighbours and steps with the arrows'],
       [
-        'TC-GAL-A156',
+        'TC-GAL-A159',
         'PhotoKeyboardNav › ignores the arrows with modifiers, while typing or at the ends',
       ],
     ],
@@ -8295,18 +8301,18 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A157', 'PhotoPeople › invites anonymous visitors to log in to tag themselves'],
-      ['TC-GAL-A158', 'PhotoPeople › lets members tag themselves optimistically'],
-      ['TC-GAL-A159', 'PhotoPeople › undoes the tag when the server rejects it'],
+      ['TC-GAL-A160', 'PhotoPeople › invites anonymous visitors to log in to tag themselves'],
+      ['TC-GAL-A161', 'PhotoPeople › lets members tag themselves optimistically'],
+      ['TC-GAL-A162', 'PhotoPeople › undoes the tag when the server rejects it'],
       [
-        'TC-GAL-A160',
+        'TC-GAL-A163',
         'PhotoPeople › lets members untag themselves and puts them back in place if it fails',
       ],
       [
-        'TC-GAL-A161',
+        'TC-GAL-A164',
         'PhotoPeople › lets admins tag and untag anyone, ignoring double clicks while saving',
       ],
-      ['TC-GAL-A162', 'PhotoPeople › resyncs with a fresh list from the server'],
+      ['TC-GAL-A165', 'PhotoPeople › resyncs with a fresh list from the server'],
     ],
   },
   {
@@ -8316,16 +8322,16 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A163',
+        'TC-GAL-A166',
         'PhotoTagCanvas › marks where each placed person is, linking to their profile',
       ],
-      ['TC-GAL-A164', 'PhotoTagCanvas › places someone where the photo is clicked'],
+      ['TC-GAL-A167', 'PhotoTagCanvas › places someone where the photo is clicked'],
       [
-        'TC-GAL-A165',
+        'TC-GAL-A168',
         'PhotoTagCanvas › on touch screens, hides the markers until the photo is tapped, and toggles them',
       ],
       [
-        'TC-GAL-A166',
+        'TC-GAL-A169',
         'PhotoTagCanvas › keeps hover for mouse screens: a click on the photo does nothing',
       ],
     ],
@@ -8337,31 +8343,31 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A167',
+        'TC-GAL-A170',
         'PhotoUploader › checks the picked files and explains which ones cannot be uploaded',
       ],
       [
-        'TC-GAL-A168',
+        'TC-GAL-A171',
         'PhotoUploader › converts HEIC photos to JPEG, keeping the date they were taken',
       ],
-      ['TC-GAL-A169', 'PhotoUploader › uploads photos and compressed videos one by one'],
+      ['TC-GAL-A172', 'PhotoUploader › uploads photos and compressed videos one by one'],
       [
-        'TC-GAL-A170',
+        'TC-GAL-A173',
         'PhotoUploader › uploads the original video when it cannot be compressed or read',
       ],
-      ['TC-GAL-A171', 'PhotoUploader › marks failed files and lets you retry them'],
-      [
-        'TC-GAL-A172',
-        'PhotoUploader › applies the event for all to pending files, and re-picks the event when the date changes',
-      ],
-      ['TC-GAL-A173', 'PhotoUploader › removes files and accepts dropped ones'],
-      ['TC-GAL-A174', 'PhotoUploader › opens the file picker from the drop zone'],
+      ['TC-GAL-A174', 'PhotoUploader › marks failed files and lets you retry them'],
       [
         'TC-GAL-A175',
+        'PhotoUploader › applies the event for all to pending files, and re-picks the event when the date changes',
+      ],
+      ['TC-GAL-A176', 'PhotoUploader › removes files and accepts dropped ones'],
+      ['TC-GAL-A177', 'PhotoUploader › opens the file picker from the drop zone'],
+      [
+        'TC-GAL-A178',
         'PhotoUploader › keeps the screen on and asks before leaving while uploading',
       ],
       [
-        'TC-GAL-A176',
+        'TC-GAL-A179',
         'PhotoUploader › lets members upload photos only, at work, and says they wait for review',
       ],
     ],
@@ -8372,13 +8378,13 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A177', 'photo utils › formats dates for captions and datetime inputs'],
+      ['TC-GAL-A180', 'photo utils › formats dates for captions and datetime inputs'],
       [
-        'TC-GAL-A178',
+        'TC-GAL-A181',
         'photo utils › names downloads after the public file or the upload date and id',
       ],
-      ['TC-GAL-A179', 'photo utils › captions with the description, the event or a default'],
-      ['TC-GAL-A180', 'photo utils › pads indexes to the width of the total'],
+      ['TC-GAL-A182', 'photo utils › captions with the description, the event or a default'],
+      ['TC-GAL-A183', 'photo utils › pads indexes to the width of the total'],
     ],
   },
   {
@@ -8387,8 +8393,8 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A181', 'ShareDialog › copies the link and confirms for two seconds'],
-      ['TC-GAL-A182', 'ShareDialog › logs when the clipboard is not available, and closes'],
+      ['TC-GAL-A184', 'ShareDialog › copies the link and confirms for two seconds'],
+      ['TC-GAL-A185', 'ShareDialog › logs when the clipboard is not available, and closes'],
     ],
   },
   {
@@ -8397,43 +8403,43 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'component',
     priority: 'media',
     tests: [
-      ['TC-GAL-A183', 'file checks › detects videos'],
-      ['TC-GAL-A184', 'readTakenAt › reads the EXIF date the photo was taken'],
+      ['TC-GAL-A186', 'file checks › detects videos'],
+      ['TC-GAL-A187', 'readTakenAt › reads the EXIF date the photo was taken'],
       [
-        'TC-GAL-A185',
+        'TC-GAL-A188',
         'readTakenAt › falls back to the file date without EXIF, with a broken one or for videos',
       ],
-      ['TC-GAL-A186', 'placeholderPoster › paints a black JPEG'],
-      ['TC-GAL-A187', 'placeholderPoster › fails when the canvas cannot be encoded'],
-      ['TC-GAL-A188', 'readVideo › reads duration and size and grabs a frame as poster'],
-      ['TC-GAL-A189', 'readVideo › uses a black poster when no frame can be grabbed'],
-      ['TC-GAL-A190', 'readVideo › fails when the browser cannot read the video'],
+      ['TC-GAL-A189', 'placeholderPoster › paints a black JPEG'],
+      ['TC-GAL-A190', 'placeholderPoster › fails when the canvas cannot be encoded'],
+      ['TC-GAL-A191', 'readVideo › reads duration and size and grabs a frame as poster'],
+      ['TC-GAL-A192', 'readVideo › uses a black poster when no frame can be grabbed'],
+      ['TC-GAL-A193', 'readVideo › fails when the browser cannot read the video'],
       [
-        'TC-GAL-A191',
+        'TC-GAL-A194',
         'compressVideo › re-encodes to a 1080p, 30 fps H.264 MP4 when it comes out smaller',
       ],
-      ['TC-GAL-A192', 'compressVideo › gives up when the browser has no encoder'],
+      ['TC-GAL-A195', 'compressVideo › gives up when the browser has no encoder'],
       [
-        'TC-GAL-A193',
+        'TC-GAL-A196',
         'compressVideo › gives up without a video track, without an H.264 encoder or if it would lose a track',
       ],
-      ['TC-GAL-A194', 'compressVideo › keeps the original when the result is not smaller'],
-      ['TC-GAL-A195', 'S3 transfers › PUTs a file with its content type'],
-      ['TC-GAL-A196', 'S3 transfers › posts the presigned form with the file and reports progress'],
-      ['TC-GAL-A197', 'S3 transfers › retries when the connection drops, waiting longer each time'],
-      ['TC-GAL-A198', 'S3 transfers › gives up after three tries'],
-      ['TC-GAL-A199', 'S3 transfers › aborts a transfer that stopped moving and tries again'],
-      ['TC-GAL-A200', 'withUploadRetries › returns the first success'],
+      ['TC-GAL-A197', 'compressVideo › keeps the original when the result is not smaller'],
+      ['TC-GAL-A198', 'S3 transfers › PUTs a file with its content type'],
+      ['TC-GAL-A199', 'S3 transfers › posts the presigned form with the file and reports progress'],
+      ['TC-GAL-A200', 'S3 transfers › retries when the connection drops, waiting longer each time'],
+      ['TC-GAL-A201', 'S3 transfers › gives up after three tries'],
+      ['TC-GAL-A202', 'S3 transfers › aborts a transfer that stopped moving and tries again'],
+      ['TC-GAL-A203', 'withUploadRetries › returns the first success'],
       [
-        'TC-GAL-A201',
+        'TC-GAL-A204',
         'preparePhotoForUpload › copies the file into memory when it is not a JPEG to shrink',
       ],
       [
-        'TC-GAL-A202',
+        'TC-GAL-A205',
         'preparePhotoForUpload › shrinks a big JPEG to the size the site uses, upright',
       ],
       [
-        'TC-GAL-A203',
+        'TC-GAL-A206',
         'preparePhotoForUpload › keeps the original when the browser cannot decode it',
       ],
     ],
@@ -8445,10 +8451,10 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'media',
     tests: [
       [
-        'TC-GAL-A204',
+        'TC-GAL-A207',
         'useParallax › sets --parallax while the element is on screen and listens to scroll only then',
       ],
-      ['TC-GAL-A205', 'useParallax › stays still for reduced motion'],
+      ['TC-GAL-A208', 'useParallax › stays still for reduced motion'],
     ],
   },
   {
@@ -8604,11 +8610,11 @@ export const automatedSuites: AutomatedSuite[] = [
       ['TC-PRO-A097', 'ProjectForm › lets admins manage old projects without an author'],
       [
         'TC-PRO-A098',
-        'ProjectForm › reports a failed save (Error: Ya existe un proyecto con esa URL\n    at /Users/agus/Development/pcn-website/src/components/projects/project-form.test.tsx:209:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/components/projects/project-form.test.tsx:48:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'ProjectForm › reports a failed save (Error: Ya existe un proyecto con esa URL\n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/projects/project-form.test.tsx:209:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/projects/project-form.test.tsx:48:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
       [
         'TC-PRO-A099',
-        'ProjectForm › reports a failed save (Error: \n    at /Users/agus/Development/pcn-website/src/components/projects/project-form.test.tsx:210:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/src/components/projects/project-form.test.tsx:48:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
+        'ProjectForm › reports a failed save (Error: \n    at /Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/projects/project-form.test.tsx:210:6\n    at _dispatchDescribe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:626:26)\n    at describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/jestAdapterInit.js:594:44)\n    at Object.describe (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/src/components/projects/project-form.test.tsx:48:1)\n    at ModuleExecutor.exec (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:3055:26)\n    at CjsLoader.loadModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:440:36)\n    at CjsLoader.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:335:12)\n    at Runtime.requireModule (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runtime@30.5.2/node_modules/jest-runtime/build/index.js:4981:27)\n    at jestAdapter (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-circus@30.5.2/node_modules/jest-circus/build/runner.js:96:13)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at runTestInternal (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:247:16)\n    at runTest (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:315:7)\n    at Object.worker (/Users/agus/Development/pcn-website/.claude/worktrees/agent-acf3fa372c50edf10/node_modules/.pnpm/jest-runner@30.5.2/node_modules/jest-runner/build/testWorker.js:479:12))',
       ],
     ],
   },
@@ -10617,9 +10623,9 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-GAL-A206', 'gallery filters › reads the filters from the URL, ignoring unknown types'],
-      ['TC-GAL-A207', 'gallery filters › writes them back, leaving out the defaults'],
-      ['TC-GAL-A208', 'gallery filters › formats video durations'],
+      ['TC-GAL-A209', 'gallery filters › reads the filters from the URL, ignoring unknown types'],
+      ['TC-GAL-A210', 'gallery filters › writes them back, leaving out the defaults'],
+      ['TC-GAL-A211', 'gallery filters › formats video durations'],
     ],
   },
   {
@@ -10629,17 +10635,17 @@ export const automatedSuites: AutomatedSuite[] = [
     priority: 'alta',
     tests: [
       [
-        'TC-GAL-A209',
+        'TC-GAL-A212',
         'signGallerySrc › signs uploaded gallery photos with a key the public key verifies',
       ],
       [
-        'TC-GAL-A210',
+        'TC-GAL-A213',
         'signGallerySrc › expires at the end of the next hour, so URLs stay stable for an hour',
       ],
-      ['TC-GAL-A211', 'signGallerySrc › signs again once the hour changes'],
-      ['TC-GAL-A212', 'signGallerySrc › leaves photos that live in /public untouched'],
+      ['TC-GAL-A214', 'signGallerySrc › signs again once the hour changes'],
+      ['TC-GAL-A215', 'signGallerySrc › leaves photos that live in /public untouched'],
       [
-        'TC-GAL-A213',
+        'TC-GAL-A216',
         'signGalleryItem › adds signed URLs for the thumbnail and the full file, ready to render',
       ],
     ],
@@ -11067,11 +11073,11 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'unit',
     priority: 'media',
     tests: [
-      ['TC-GAL-A214', 'optimizePhoto › shrinks large photos into a webp and a thumbnail'],
-      ['TC-GAL-A215', 'optimizePhoto › never enlarges small photos'],
-      ['TC-GAL-A216', 'optimizePhoto › applies the EXIF rotation'],
-      ['TC-GAL-A217', 'optimizePoster › shrinks a video frame into a webp poster'],
-      ['TC-GAL-A218', 'optimizePoster › never enlarges small frames'],
+      ['TC-GAL-A217', 'optimizePhoto › shrinks large photos into a webp and a thumbnail'],
+      ['TC-GAL-A218', 'optimizePhoto › never enlarges small photos'],
+      ['TC-GAL-A219', 'optimizePhoto › applies the EXIF rotation'],
+      ['TC-GAL-A220', 'optimizePoster › shrinks a video frame into a webp poster'],
+      ['TC-GAL-A221', 'optimizePoster › never enlarges small frames'],
     ],
   },
   {
@@ -12772,31 +12778,31 @@ export const automatedSuites: AutomatedSuite[] = [
     layer: 'e2e',
     priority: 'baja',
     tests: [
-      ['TC-GAL-A219', 'TC-GAL-005 Filtros de la galería en la URL'],
-      ['TC-GAL-A220', 'TC-GAL-009 Descargar una foto'],
-      ['TC-GAL-A221', 'TC-GAL-006 Etiquetarse en una foto'],
-      ['TC-GAL-A222', 'TC-GAL-008 Edición masiva'],
-      ['TC-GAL-A223', 'an admin tags someone else on a photo and removes them'],
-      ['TC-GAL-A224', 'anonymous visitor › TC-GAL-007 Visitante anónimo en una foto'],
+      ['TC-GAL-A222', 'TC-GAL-005 Filtros de la galería en la URL'],
+      ['TC-GAL-A223', 'TC-GAL-009 Descargar una foto'],
+      ['TC-GAL-A224', 'TC-GAL-006 Etiquetarse en una foto'],
+      ['TC-GAL-A225', 'TC-GAL-008 Edición masiva'],
+      ['TC-GAL-A226', 'an admin tags someone else on a photo and removes them'],
+      ['TC-GAL-A227', 'anonymous visitor › TC-GAL-007 Visitante anónimo en una foto'],
       [
-        'TC-GAL-A225',
+        'TC-GAL-A228',
         'anonymous visitor › the sign-in link on a photo brings the visitor back to it',
       ],
-      ['TC-GAL-A226', 'anonymous visitor › downloading a photo that does not exist answers 404'],
-      ['TC-GAL-A227', 'anonymous visitor › a photo that does not exist shows the not-found screen'],
-      ['TC-GAL-A228', 'anonymous visitor › links from the old static gallery go to /galeria'],
+      ['TC-GAL-A229', 'anonymous visitor › downloading a photo that does not exist answers 404'],
+      ['TC-GAL-A230', 'anonymous visitor › a photo that does not exist shows the not-found screen'],
+      ['TC-GAL-A231', 'anonymous visitor › links from the old static gallery go to /galeria'],
       [
-        'TC-GAL-A229',
+        'TC-GAL-A232',
         'anonymous visitor › the video filter shows only videos and an empty filter offers to see everything',
       ],
       [
-        'TC-GAL-A230',
+        'TC-GAL-A233',
         'anonymous visitor › searching the gallery narrows the tiles and says when nothing matches',
       ],
-      ['TC-GAL-A231', 'signed in as a member › TC-GAL-004 Solo admins pueden subir'],
-      ['TC-GAL-A232', 'signed in as an admin › TC-GAL-010 Usar una foto como portada del evento'],
-      ['TC-GAL-A233', 'signed in as an admin › the upload page starts with the event from the URL'],
-      ['TC-GAL-A234', 'signed in as an admin › TC-GAL-002 Formatos no soportados al subir'],
+      ['TC-GAL-A234', 'signed in as a member › TC-GAL-004 Solo admins pueden subir'],
+      ['TC-GAL-A235', 'signed in as an admin › TC-GAL-010 Usar una foto como portada del evento'],
+      ['TC-GAL-A236', 'signed in as an admin › the upload page starts with the event from the URL'],
+      ['TC-GAL-A237', 'signed in as an admin › TC-GAL-002 Formatos no soportados al subir'],
     ],
   },
   {

@@ -9,6 +9,7 @@ import { LocalDate } from '@/components/ui/local-date-time';
 import { PhotoActionsBar } from '@/components/photo-gallery/photo-actions-bar';
 import { EventCoverKey } from '@/components/photo-gallery/event-cover-key';
 import { PhotoPeople } from '@/components/photo-gallery/photo-people';
+import { PersonLink } from '@/components/people/person-link';
 import { PhotoTagCanvas, PhotoTagsProvider } from '@/components/photo-gallery/photo-tags';
 import { PhotoKeyboardNav } from '@/components/photo-gallery/photo-keyboard-nav';
 import {
@@ -320,14 +321,25 @@ export default async function GalleryItemPage(props: Props) {
               </Section>
             )}
 
-            <Section title="en la foto">
-              <PhotoPeople
-                photoId={photo.id}
-                people={photo.tags.map((tag) => tag.user)}
-                viewer={viewer && { id: viewer.id, name: viewer.name, image: viewer.image }}
-                isAdmin={isAdmin}
-              />
-            </Section>
+            {photo.working ? (
+              // A photo of someone at work is theirs: it shows who uploaded it, not who's in it.
+              <Section title="subida por">
+                {photo.uploadedBy ? (
+                  <PersonLink person={photo.uploadedBy} />
+                ) : (
+                  <span className="font-mono text-xs text-muted-foreground">sin datos</span>
+                )}
+              </Section>
+            ) : (
+              <Section title="en la foto">
+                <PhotoPeople
+                  photoId={photo.id}
+                  people={photo.tags.map((tag) => tag.user)}
+                  viewer={viewer && { id: viewer.id, name: viewer.name, image: viewer.image }}
+                  isAdmin={isAdmin}
+                />
+              </Section>
+            )}
 
             <p
               className={cn(

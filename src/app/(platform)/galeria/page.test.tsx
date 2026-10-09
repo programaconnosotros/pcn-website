@@ -302,6 +302,40 @@ describe('/galeria/[id]', () => {
     await expect(GalleryItemPage(props('x'))).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
+  it('shows who uploaded a photo at work instead of who is in it', async () => {
+    jest
+      .mocked(getGalleryItem)
+      .mockResolvedValue(buildItem({ working: true, uploadedBy: member }) as never);
+    renderInPlatform(await GalleryItemPage(props()));
+
+    expect(screen.getByText('subida por')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Ana/ })).toHaveAttribute('href', '/perfil/user-1');
+    expect(screen.queryByText('en la foto')).not.toBeInTheDocument();
+    expect(PhotoPeople).not.toHaveBeenCalled();
+  });
+
+  it('says it has no data when the uploader of a photo at work is gone', async () => {
+    jest
+      .mocked(getGalleryItem)
+      .mockResolvedValue(buildItem({ working: true, uploadedBy: null }) as never);
+    renderInPlatform(await GalleryItemPage(props()));
+
+    expect(screen.getByText('subida por')).toBeInTheDocument();
+    expect(screen.getByText('sin datos')).toBeInTheDocument();
+    expect(PhotoPeople).not.toHaveBeenCalled();
+  });
+
+  it('lists who is in a gallery photo, not who uploaded it', async () => {
+    jest
+      .mocked(getGalleryItem)
+      .mockResolvedValue(buildItem({ working: false, uploadedBy: member }) as never);
+    renderInPlatform(await GalleryItemPage(props()));
+
+    expect(screen.getByText('en la foto')).toBeInTheDocument();
+    expect(screen.queryByText('subida por')).not.toBeInTheDocument();
+    expect(PhotoPeople).toHaveBeenCalled();
+  });
+
   it('shows a photo to a visitor, without navigation or editing', async () => {
     jest.mocked(getGalleryItem).mockResolvedValue(buildItem() as never);
     renderInPlatform(await GalleryItemPage(props()));
