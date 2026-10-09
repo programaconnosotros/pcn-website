@@ -80,10 +80,24 @@ const features: Feature[] = [
     icon: Wrench,
   },
   {
+    title: 'Setups',
+    description:
+      'Los escritorios, equipos y periféricos con los que programan los miembros de la comunidad.',
+    href: '/setups',
+    icon: Monitor,
+  },
+  {
     title: 'Proyectos',
     description: 'Los proyectos de software que construyen los miembros de la comunidad.',
     href: '/proyectos',
     icon: Rocket,
+  },
+  {
+    title: 'Foro',
+    description:
+      'Preguntas técnicas, carrera, proyectos y recursos, con respuestas de otros devs que quedan para siempre.',
+    href: '/foro',
+    icon: MessageSquare,
   },
   {
     title: 'Conversaciones',
@@ -153,29 +167,6 @@ const WhatsAppCell = () => (
   </div>
 );
 
-const comingSoon = [
-  { icon: MessageSquare, title: 'Foro', description: 'Preguntas y discusiones que quedan.' },
-  { icon: Monitor, title: 'Setups', description: 'Los espacios de trabajo de la comunidad.' },
-];
-
-const ComingSoonCell = () => (
-  <div
-    className={cn(
-      ruledCellClassName,
-      'flex flex-col gap-2 p-4 text-muted-foreground hover:bg-transparent sm:col-span-2 md:col-span-3 md:flex-row md:items-center md:gap-6',
-    )}
-  >
-    <span className="font-mono text-[11px] tracking-[0.18em] uppercase">{'// próximamente'}</span>
-    {comingSoon.map((item) => (
-      <p key={item.title} className="flex items-center gap-2 text-xs">
-        <item.icon className="size-3.5" strokeWidth={1.75} />
-        <span className="font-mono text-foreground/80">{item.title.toLowerCase()}</span>
-        <span className="hidden sm:inline">— {item.description}</span>
-      </p>
-    ))}
-  </div>
-);
-
 export const FeatureBento = () => (
   <section>
     <SectionHeader
@@ -193,7 +184,6 @@ export const FeatureBento = () => (
       {features.map((feature) => (
         <FeatureCard key={feature.title} feature={feature} />
       ))}
-      <ComingSoonCell />
     </RuledGrid>
   </section>
 );

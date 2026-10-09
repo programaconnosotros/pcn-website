@@ -123,7 +123,9 @@ describe('static home sections', () => {
     render(<FeatureBento />);
     expect(screen.getByRole('link', { name: /eventos/ })).toHaveAttribute('href', '/eventos');
     expect(screen.getByRole('link', { name: /unirmeAlGrupo/ })).toHaveAttribute('target', '_blank');
-    expect(screen.getByText('// próximamente')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /foro/ })).toHaveAttribute('href', '/foro');
+    expect(screen.getByRole('link', { name: /setups/ })).toHaveAttribute('href', '/setups');
+    expect(screen.queryByText(/próximamente/i)).not.toBeInTheDocument();
   });
 
   it('HomeFooter shows the site map as a tree and the social networks', () => {
