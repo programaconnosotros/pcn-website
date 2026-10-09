@@ -1,10 +1,20 @@
 'use client';
 
+import { memo, useMemo } from 'react';
 import Link from 'next/link';
-import type { CommunityMember } from '@/actions/users/fetch-community-members';
 import { cn } from '@/lib/utils';
+import type { DirectoryMember } from './directory-members';
 import { MemberGrowthChart } from './member-growth-chart';
+import { MemberPhoto } from './member-photo';
 import { communitySummary } from './member-stats';
+
+type WallMember = Pick<DirectoryMember, 'id' | 'name' | 'image'> &
+  Partial<Pick<DirectoryMember, 'optimizeImage'>>;
+type HeroMember = WallMember &
+  Pick<
+    DirectoryMember,
+    'isCofounder' | 'isAmbassador' | 'talks' | 'events' | 'projects' | 'createdAt'
+  >;
 
 export const memberInitials = (name: string) =>
   name
@@ -41,15 +51,17 @@ function Readout({ label, value, accent }: { label: string; value: number; accen
 
 /**
  * Everyone's face in one wall, newest last: a grid of tiny nodes that light up on hover. Photos
- * load lazily, so hundreds of them don't hold the page back.
+ * load lazily as 32px thumbnails, and the links don't prefetch: hundreds of them are on screen
+ * at once, and prefetching every profile would flood the network right as the page loads.
  */
-export function MemberWall({ members }: { members: CommunityMember[] }) {
+export const MemberWall = memo(function MemberWall({ members }: { members: WallMember[] }) {
   return (
     <ul aria-label="Todos los miembros" className="flex flex-wrap gap-1">
       {members.map((member) => (
         <li key={member.id}>
           <Link
             href={`/perfil/${member.id}`}
+            prefetch={false}
             title={member.name}
             aria-label={member.name}
             className={cn(
@@ -58,14 +70,7 @@ export function MemberWall({ members }: { members: CommunityMember[] }) {
             )}
           >
             {member.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={member.image}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="size-full object-cover"
-              />
+              <MemberPhoto src={member.image} optimize={member.optimizeImage} size={40} />
             ) : (
               <span className="flex size-full items-center justify-center font-mono text-[9px] text-pcnGreen-700">
                 {memberInitials(member.name)}
@@ -76,14 +81,14 @@ export function MemberWall({ members }: { members: CommunityMember[] }) {
       ))}
     </ul>
   );
-}
+});
 
 /**
  * The top of /miembros: a terminal status readout of the community (real counts), how it grew
  * month by month, and the wall with everyone's face.
  */
-export function MembersHero({ members }: { members: CommunityMember[] }) {
-  const summary = communitySummary(members);
+export const MembersHero = memo(function MembersHero({ members }: { members: HeroMember[] }) {
+  const summary = useMemo(() => communitySummary(members), [members]);
 
   return (
     <section
@@ -138,4 +143,4 @@ export function MembersHero({ members }: { members: CommunityMember[] }) {
       </div>
     </section>
   );
-}
+});

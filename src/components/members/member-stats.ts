@@ -33,8 +33,13 @@ export function memberGrowth(members: Pick<CommunityMember, 'createdAt'>[], now 
   return points;
 }
 
+type SummaryMember = Pick<
+  CommunityMember,
+  'isCofounder' | 'isAmbassador' | 'talks' | 'events' | 'projects' | 'createdAt'
+>;
+
 /** The headline numbers of the community, for the page's status panel. */
-export function communitySummary(members: CommunityMember[], now = new Date()) {
+export function communitySummary(members: SummaryMember[], now = new Date()) {
   const growth = memberGrowth(members, now);
   const thisMonth = growth.at(-1)?.joined ?? 0;
   return {

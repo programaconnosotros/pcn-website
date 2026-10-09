@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { CommunityMember } from '@/actions/users/fetch-community-members';
+import { toDirectoryMembers } from '@/components/members/directory-members';
 import { renderInPlatform } from '@/test/platform';
 import { MiembrosClient } from './miembros-client';
 
@@ -23,7 +24,7 @@ const member = (overrides: Partial<CommunityMember>): CommunityMember => ({
   ...overrides,
 });
 
-const members = [
+const members = toDirectoryMembers([
   member({
     id: 'a',
     name: 'Agustín Sánchez',
@@ -41,11 +42,12 @@ const members = [
   member({ id: 'b', name: 'Bruno', jobTitle: 'QA', enterprise: 'Acme', talks: 4 }),
   member({ id: 'c', name: 'Carla', isAmbassador: true, career: 'Sistemas', events: 1 }),
   member({ id: 'd', name: 'Diego' }),
-];
+]);
 
+// The rows a search leaves out stay mounted but hidden, so only the visible ones count.
 const sectionNames = (id: string) =>
   Array.from(
-    document.getElementById(id)?.querySelectorAll('a span.font-medium') ?? [],
+    document.getElementById(id)?.querySelectorAll('a:not([hidden]) span.font-medium') ?? [],
     (span) => span.textContent,
   );
 
@@ -83,12 +85,74 @@ describe('MiembrosClient', () => {
 
     await user.type(search, 'acme');
     expect(sectionNames('todos')).toEqual(['Bruno']);
-    expect(document.getElementById('co-founders')).toBeNull();
+    expect(document.getElementById('co-founders')).not.toBeVisible();
+    expect(screen.queryByRole('link', { name: '#co-founders' })).not.toBeInTheDocument();
 
     await user.clear(search);
     await user.type(search, 'sistemas');
     expect(sectionNames('todos')).toEqual(['Carla']);
     expect(screen.getByText(/ miembros$/)).toHaveTextContent('1/4 miembros');
+  });
+
+  it('hides the rows a search leaves out instead of rebuilding them, and re-ranks the rest', async () => {
+    const user = userEvent.setup();
+    const speakers = toDirectoryMembers(
+      ['Ana', 'Beto', 'Caro', 'Dani', 'Eva'].map((name, i) =>
+        member({ id: name, name, talks: 10 - i, career: i < 4 ? 'Sistemas' : null }),
+      ),
+    );
+    renderInPlatform(<MiembrosClient members={speakers} />);
+    const row = within(document.getElementById('speakers')!).getByRole('link', { name: /Ana/ });
+    const ranks = () =>
+      Array.from(
+        document.getElementById('speakers')!.querySelectorAll('a:not([hidden]) .font-semibold'),
+        (badge) => badge.textContent,
+      );
+    expect(ranks()).toEqual(['01', '02', '03']);
+
+    const search = screen.getByRole('textbox', { name: 'Buscar miembros' });
+    await user.type(search, 'beto');
+    // Ana's row is still the same element, only hidden
+    expect(row).not.toBeVisible();
+    expect(sectionNames('speakers')).toEqual(['Beto']);
+    // Alone, there's no podium
+    expect(ranks()).toEqual([]);
+
+    await user.clear(search);
+    await user.type(search, 'sistemas');
+    expect(sectionNames('speakers')).toEqual(['Ana', 'Beto', 'Caro', 'Dani']);
+    expect(ranks()).toEqual(['01', '02', '03']);
+
+    await user.clear(search);
+    expect(row).toBeVisible();
+    expect(within(document.getElementById('speakers')!).getByRole('link', { name: /Ana/ })).toBe(
+      row,
+    );
+  });
+
+  it('shows thumbnails that load lazily, without preloading every photo up front', () => {
+    const preload = jest.spyOn(window, 'Image');
+    renderInPlatform(
+      <MiembrosClient
+        members={toDirectoryMembers(
+          [
+            member({ id: 'a', name: 'Ana Paz', image: 'https://cdn.example.net/ana.jpg' }),
+            member({ id: 'b', name: 'Beto', image: 'https://lh3.googleusercontent.com/beto' }),
+          ],
+          (src) => !!src?.startsWith('https://cdn.example.net/'),
+        )}
+      />,
+    );
+    const photos = Array.from(document.getElementById('todos')!.querySelectorAll('img'));
+
+    expect(preload).not.toHaveBeenCalled();
+    expect(photos).toHaveLength(2);
+    for (const photo of photos) expect(photo).toHaveAttribute('loading', 'lazy');
+    expect(photos[1].getAttribute('src')).toContain('/_next/image?url=');
+    expect(photos[0]).toHaveAttribute('src', 'https://lh3.googleusercontent.com/beto');
+    // Initials stay under the photo, for while it loads or if it fails
+    expect(within(document.getElementById('todos')!).getByText('AP')).toBeInTheDocument();
+    preload.mockRestore();
   });
 
   it('says when nobody matches', async () => {

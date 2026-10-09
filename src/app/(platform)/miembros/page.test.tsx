@@ -30,17 +30,55 @@ describe('/miembros', () => {
     expect(screen.getByText('contenido')).toBeInTheDocument();
   });
 
-  it('is always fresh and hands the members to the directory', async () => {
-    const members = [{ id: 'u1', name: 'Ana' }] as unknown as Awaited<
-      ReturnType<typeof fetchCommunityMembers>
-    >;
-    jest.mocked(fetchCommunityMembers).mockResolvedValue(members);
+  it('is always fresh and hands the directory only what it shows', async () => {
+    const original = process.env.AWS_CLOUDFRONT_URL;
+    process.env.AWS_CLOUDFRONT_URL = 'https://cdn.example.net';
+    const base = {
+      jobTitle: 'Dev',
+      enterprise: 'Acme',
+      positions: [],
+      slogan: null,
+      career: 'Sistemas',
+      studyPlace: null,
+      isCofounder: false,
+      isAmbassador: false,
+      createdAt: new Date('2024-01-01'),
+      talks: 0,
+      events: 0,
+      projects: 0,
+    };
+    jest.mocked(fetchCommunityMembers).mockResolvedValue([
+      { ...base, id: 'u1', name: 'Ana', image: 'https://cdn.example.net/ana.jpg' },
+      { ...base, id: 'u2', name: 'Beto', image: 'https://lh3.googleusercontent.com/beto' },
+    ]);
 
-    render(await MiembrosPage());
+    try {
+      render(await MiembrosPage());
+    } finally {
+      process.env.AWS_CLOUDFRONT_URL = original;
+    }
 
     expect(revalidate).toBe(0);
     expect(screen.getByText('directorio')).toBeInTheDocument();
-    expect(jest.mocked(MiembrosClient).mock.calls[0][0]).toEqual({ members });
+    const [ana, beto] = jest.mocked(MiembrosClient).mock.calls[0][0].members;
+    expect(ana).toEqual({
+      id: 'u1',
+      name: 'Ana',
+      image: 'https://cdn.example.net/ana.jpg',
+      optimizeImage: true,
+      role: 'Dev @ Acme',
+      slogan: null,
+      career: 'Sistemas',
+      studyPlace: null,
+      isCofounder: false,
+      isAmbassador: false,
+      createdAt: new Date('2024-01-01'),
+      talks: 0,
+      events: 0,
+      projects: 0,
+    });
+    // A host next/image isn't allowed to fetch stays a plain image.
+    expect(beto).toMatchObject({ name: 'Beto', optimizeImage: false });
   });
 
   it('uses the members section card for link previews', async () => {

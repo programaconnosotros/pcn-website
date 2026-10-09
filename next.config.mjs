@@ -64,6 +64,7 @@ const nextConfig = {
   images: {
     // 75 is the default; 40 is for the home hero backdrop, shown faded under gradients.
     qualities: [40, 75],
+    // Keep src/lib/image-hosts.ts in sync: it tells components which URLs they can optimize.
     remotePatterns: [
       {
         hostname: 'avatars.githubusercontent.com',
