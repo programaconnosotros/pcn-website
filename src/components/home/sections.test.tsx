@@ -125,6 +125,10 @@ describe('static home sections', () => {
     expect(screen.getByRole('link', { name: /unirmeAlGrupo/ })).toHaveAttribute('target', '_blank');
     expect(screen.getByRole('link', { name: /foro/ })).toHaveAttribute('href', '/foro');
     expect(screen.getByRole('link', { name: /setups/ })).toHaveAttribute('href', '/setups');
+    expect(screen.getByRole('link', { name: /opiniones/ })).toHaveAttribute(
+      'href',
+      '/conversaciones/opiniones',
+    );
     expect(screen.queryByText(/próximamente/i)).not.toBeInTheDocument();
   });
 

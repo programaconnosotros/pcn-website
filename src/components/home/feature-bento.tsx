@@ -15,6 +15,7 @@ import {
   Monitor,
   Podcast,
   Rocket,
+  Scale,
   Users,
   Wrench,
   type LucideIcon,
@@ -104,6 +105,13 @@ const features: Feature[] = [
     description: 'Resúmenes de las mejores discusiones técnicas que pasaron por el grupo.',
     href: '/conversaciones',
     icon: Code2,
+  },
+  {
+    title: 'Opiniones',
+    description:
+      'Cómo cambió lo que piensa el grupo de cada tecnología, en una línea de tiempo armada con sus conversaciones.',
+    href: '/conversaciones/opiniones',
+    icon: Scale,
   },
 ];
 
