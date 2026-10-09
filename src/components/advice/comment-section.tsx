@@ -166,7 +166,7 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 p-3">
           <Textarea
             {...register('content')}
-            placeholder="Escribe tu comentario..."
+            placeholder="Escribí acá tu comentario"
             className="min-h-[72px] resize-none"
           />
 
