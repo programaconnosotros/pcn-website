@@ -35,6 +35,7 @@ export const newPasswordSchema = z
   .string({
     error: (issue) => (issue.input === undefined ? 'Campo obligatorio' : undefined),
   })
+  .min(1, { error: 'Campo obligatorio', abort: true })
   .min(8, 'La contraseña debe tener al menos 8 caracteres')
   .max(72, 'La contraseña no puede tener más de 72 caracteres');
 

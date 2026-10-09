@@ -35,6 +35,12 @@ describe('newPasswordSchema', () => {
       'Campo obligatorio',
     );
   });
+
+  it('asks for the password, not for 8 characters, when the field is empty', () => {
+    expect(newPasswordSchema.safeParse('').error?.issues.map((issue) => issue.message)).toEqual([
+      'Campo obligatorio',
+    ]);
+  });
 });
 
 describe('signUpSchema', () => {
