@@ -103,6 +103,8 @@ export function CharlasAdminWrapper({ talks, externalTalks, isAdmin }: Props) {
             ) : (
               <Link
                 href="https://wa.me/5493815777562"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-1.5 font-mono text-xs text-pcnGreen-700 hover:text-pcnGreen"
               >
                 <MicVocal className="h-3.5 w-3.5" />
