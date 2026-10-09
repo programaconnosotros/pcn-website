@@ -88,7 +88,7 @@ describe('home sections with data', () => {
     expect(screen.getByRole('link', { name: /Charlas/ })).toHaveAttribute('href', '/charlas');
   });
 
-  it('AmbassadorsSection lists ambassadors with their initials and profile links', async () => {
+  it('AmbassadorsSection lists ambassadors who are not suspended, with initials and profile links', async () => {
     mockPrisma.user.findMany.mockResolvedValue([
       { id: 'u1', name: 'ada lovelace byron', image: null },
       { id: 'u2', name: 'Linus', image: '/linus.png' },
@@ -96,7 +96,7 @@ describe('home sections with data', () => {
     render(await AmbassadorsSection());
 
     expect(mockPrisma.user.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { isAmbassador: true } }),
+      expect.objectContaining({ where: { isAmbassador: true, suspendedAt: null } }),
     );
     expect(screen.getByRole('link', { name: /ada lovelace byron/ })).toHaveAttribute(
       'href',

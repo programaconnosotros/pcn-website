@@ -224,7 +224,8 @@ const getLogrosData = cached(
       getAchievementMetrics(),
       prisma.user.count(),
       prisma.user.findMany({
-        where: { OR: [{ isCofounder: true }, { isAmbassador: true }] },
+        // A suspended account doesn't represent the community anymore.
+        where: { OR: [{ isCofounder: true }, { isAmbassador: true }], suspendedAt: null },
         select: { id: true, name: true, image: true, isCofounder: true, isAmbassador: true },
       }),
       prisma.badge.findMany({

@@ -103,6 +103,18 @@ describe('/logros', () => {
     expect(screen.getByText('[3]')).toBeInTheDocument();
   });
 
+  it('leaves suspended accounts out of the cofounders and ambassadors', async () => {
+    signIn(null);
+    setData();
+    renderInPlatform(await LogrosPage());
+
+    expect(prisma.user.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { OR: [{ isCofounder: true }, { isAmbassador: true }], suspendedAt: null },
+      }),
+    );
+  });
+
   it('shows less than 1% for a badge few members have', async () => {
     signIn(null);
     setData({ members: 5000 });

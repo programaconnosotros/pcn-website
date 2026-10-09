@@ -29,7 +29,8 @@ const listAmbassadors = cached(
   'ambassadors',
   () =>
     prisma.user.findMany({
-      where: { isAmbassador: true },
+      // A suspended account doesn't represent the community anymore.
+      where: { isAmbassador: true, suspendedAt: null },
       select: { id: true, name: true, image: true },
       orderBy: { name: 'asc' },
     }),
