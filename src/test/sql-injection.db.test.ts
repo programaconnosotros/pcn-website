@@ -46,11 +46,14 @@ const timed = async <T>(run: () => Promise<T>) => {
 let victim: Awaited<ReturnType<typeof createUser>>;
 let attacker: Awaited<ReturnType<typeof createUser>>;
 let userCount: number;
+let adminCount: number;
 
 beforeAll(async () => {
   victim = await createUser({ email: 'victima@test.pcn', password: 'la-clave-de-la-victima' });
   attacker = await createUser({ email: 'atacante@test.pcn' });
   userCount = await prisma.user.count();
+  // La base es compartida: otros archivos dejan admins propios, así que se compara contra los de antes
+  adminCount = await prisma.user.count({ where: { role: 'ADMIN' } });
 });
 
 afterAll(async () => {
@@ -59,7 +62,7 @@ afterAll(async () => {
     SELECT to_regclass('public."User"') IS NOT NULL AS exists`;
   expect(exists).toBe(true);
   expect(await prisma.user.count()).toBe(userCount);
-  expect(await prisma.user.count({ where: { role: 'ADMIN' } })).toBe(0);
+  expect(await prisma.user.count({ where: { role: 'ADMIN' } })).toBe(adminCount);
 });
 
 // Control: los mismos payloads contra una query armada concatenando strings sí la rompen. Si esto
