@@ -44,7 +44,16 @@ export function RecommendButton({ kind, defaults, label, className }: Props) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const info = RECOMMENDATION_KIND_INFO[kind];
+  // External talks are videos with `isTalk`, but on /charlas they're talks, not videos
+  const info = defaults?.isTalk
+    ? {
+        ...RECOMMENDATION_KIND_INFO[kind],
+        label: 'charla',
+        article: 'una' as const,
+        href: '/charlas',
+      }
+    : RECOMMENDATION_KIND_INFO[kind];
+  const it = defaults?.isTalk ? 'la' : 'lo';
 
   const { data } = useQuery({
     queryKey: myRecommendationsKey(kind),
@@ -68,10 +77,12 @@ export function RecommendButton({ kind, defaults, label, className }: Props) {
       setOpen(false);
       await queryClient.invalidateQueries({ queryKey: myRecommendationsKey(kind) });
       if (result.status === 'APPROVED') {
-        toast.success(`Publicaste ${info.article} ${info.label} nuevo`);
+        toast.success(
+          `Publicaste ${info.article} ${info.label} ${defaults?.isTalk ? 'nueva' : 'nuevo'}`,
+        );
         router.refresh();
       } else {
-        toast.success('¡Gracias! Un admin lo va a revisar antes de sumarlo a la lista');
+        toast.success(`¡Gracias! Un admin ${it} va a revisar antes de sumar${it} a la lista`);
       }
       return null;
     } catch (error) {
@@ -110,7 +121,7 @@ export function RecommendButton({ kind, defaults, label, className }: Props) {
             <DialogDescription className="font-mono text-xs">
               {data?.isAdmin
                 ? `Como sos admin, ${info.article} ${info.label} que cargues se publica directo.`
-                : `Un admin lo revisa y, si va, lo sumamos a ${info.href}.`}
+                : `Un admin ${it} revisa y, si va, ${it} sumamos a ${info.href}.`}
             </DialogDescription>
           </DialogHeader>
 

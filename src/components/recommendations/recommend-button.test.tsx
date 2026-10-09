@@ -73,6 +73,9 @@ describe('RecommendButton', () => {
     );
 
     await open(/recomendar charla/);
+    expect(screen.getByRole('dialog')).toHaveTextContent(
+      'Un admin la revisa y, si va, la sumamos a /charlas.',
+    );
     // Members only see what they fill: no duration or date.
     expect(screen.queryByLabelText('duración')).not.toBeInTheDocument();
     await userEvent.type(screen.getByLabelText(/link de youtube/), 'https://youtu.be/HqB3t7046QE');
@@ -91,7 +94,7 @@ describe('RecommendButton', () => {
       ),
     );
     expect(toast.success).toHaveBeenCalledWith(
-      '¡Gracias! Un admin lo va a revisar antes de sumarlo a la lista',
+      '¡Gracias! Un admin la va a revisar antes de sumarla a la lista',
     );
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(refresh).not.toHaveBeenCalled();
