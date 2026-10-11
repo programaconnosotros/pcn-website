@@ -5,13 +5,16 @@ import { cookies, headers } from 'next/headers';
 import { findSession } from '@/lib/session';
 import { clientIpFrom } from '@/lib/client-ip';
 import { enforceRateLimit } from '@/lib/rate-limit';
+import { isSitePath } from '@/lib/safe-redirect';
 
 // Se llama sin login desde cada página: nadie debería poder llenar la tabla con rutas gigantes.
 const MAX_LENGTH = 500;
 const clip = (value: string | null) => (value ? value.slice(0, MAX_LENGTH) : null);
 
 export const trackPageVisit = async (path: string) => {
-  if (typeof path !== 'string' || !path.startsWith('/')) return;
+  // Endpoint público: solo se cuentan rutas de este sitio, nunca `//otro-dominio` (se muestran
+  // como links en /metricas).
+  if (!isSitePath(path, MAX_LENGTH)) return;
 
   // Pasado el límite se descarta en silencio: el tracking no puede romper la página
   try {
@@ -39,7 +42,7 @@ export const trackPageVisit = async (path: string) => {
     // Registrar la visita
     await prisma.pageVisit.create({
       data: {
-        path: path.slice(0, MAX_LENGTH),
+        path,
         userId: userId || null,
         userAgent: clip(userAgent),
         referer: clip(referer),

@@ -11,6 +11,7 @@ import type {
   PathCount,
 } from '@/lib/product-metrics';
 import { cn } from '@/lib/utils';
+import { isSitePath } from '@/lib/safe-redirect';
 
 const number = (value: number) => value.toLocaleString('es-AR');
 const percent = (value: number) =>
@@ -178,6 +179,25 @@ export function ModuleRanking({
   );
 }
 
+/**
+ * Una ruta registrada por `trackPageVisit`. Las visitas las manda cualquiera, así que solo se
+ * linkea lo que es una ruta de este sitio; el resto (`//otro-dominio`, filas viejas) va como texto.
+ */
+function PathLabel({ path, className }: { path: string; className?: string }) {
+  const label = (
+    <>
+      <span className="text-pcnGreen-500">~</span>
+      {path}
+    </>
+  );
+  if (!isSitePath(path)) return <span className={className}>{label}</span>;
+  return (
+    <Link href={path} className={cn(className, 'hover:text-pcnGreen')}>
+      {label}
+    </Link>
+  );
+}
+
 export function TopPages({ pages }: { pages: PathCount[] }) {
   if (pages.length === 0) return <EmptyPanel />;
   const max = pages[0].visits;
@@ -195,10 +215,7 @@ export function TopPages({ pages }: { pages: PathCount[] }) {
         {pages.map((page) => (
           <tr key={page.path} className="group border-t border-pcnGreen/60">
             <td className="max-w-0 truncate py-1.5 pr-2">
-              <Link href={page.path} className="text-muted-foreground hover:text-pcnGreen">
-                <span className="text-pcnGreen-500">~</span>
-                {page.path}
-              </Link>
+              <PathLabel path={page.path} className="text-muted-foreground" />
             </td>
             <td className="py-1.5 pr-3">
               <span className="flex">
@@ -560,13 +577,10 @@ export function ModuleDetails({
               <ol className="flex flex-col gap-0.5 border-t border-pcnGreen/60 pt-2 text-[11px]">
                 {top.map((page) => (
                   <li key={page.path} className="flex items-center justify-between gap-2">
-                    <Link
-                      href={page.path}
-                      className="min-w-0 truncate text-muted-foreground hover:text-pcnGreen"
-                    >
-                      <span className="text-pcnGreen-500">~</span>
-                      {page.path}
-                    </Link>
+                    <PathLabel
+                      path={page.path}
+                      className="min-w-0 truncate text-muted-foreground"
+                    />
                     <span className="shrink-0 text-muted-foreground tabular-nums">
                       {number(page.visits)}
                     </span>

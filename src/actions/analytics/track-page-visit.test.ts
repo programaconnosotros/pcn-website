@@ -153,21 +153,32 @@ describe('trackPageVisit', () => {
     await expect(trackPageVisit('/crash')).resolves.toBeUndefined();
   });
 
-  it('clips long paths and headers so nobody can fill the table', async () => {
+  it('clips long headers so nobody can fill the table', async () => {
     mockCookies();
     mockHeaders({ 'user-agent': 'U'.repeat(5000), referer: 'R'.repeat(5000) });
     prismaMock.pageVisit.create.mockResolvedValue({} as any);
 
-    await trackPageVisit(`/${'A'.repeat(900_000)}`);
+    await trackPageVisit('/home');
 
     const { data } = prismaMock.pageVisit.create.mock.calls[0][0];
-    expect(data.path).toHaveLength(500);
     expect(data.userAgent).toHaveLength(500);
     expect(data.referer).toHaveLength(500);
   });
 
   it('ignores anything that is not a path of the site', async () => {
-    for (const path of ['https://evil.test', '', 42 as unknown as string]) {
+    for (const path of [
+      'https://evil.test',
+      '',
+      42 as unknown as string,
+      // `//` y `/\` los navegadores los toman como otro dominio: terminarían linkeados en /metricas
+      '//open-redirect-landing.vercel.app/',
+      '/\\open-redirect-landing.vercel.app/',
+      '/eventos?x=1',
+      '/eventos#x',
+      '/a b',
+      'javascript:alert(1)',
+      `/${'A'.repeat(900_000)}`,
+    ]) {
       await trackPageVisit(path);
     }
 

@@ -16,3 +16,17 @@ export const safeRedirectPath = (value: string | null | undefined, fallback = '/
     return fallback;
   }
 };
+
+// Solo una ruta de este sitio: sin `//` ni `/\` al principio, sin query, hash ni espacios.
+const SITE_PATH = /^\/(?![/\\])[\p{L}\p{N}\-._~%/]*$/u;
+
+/**
+ * `true` si `value` es solo una ruta de este sitio (lo que devuelve `usePathname`). Las rutas que
+ * llegan de afuera (como las visitas que registra cualquiera en /metricas) se validan con esto
+ * antes de guardarlas o de usarlas como link.
+ */
+export const isSitePath = (value: unknown, maxLength = 500): value is string =>
+  typeof value === 'string' &&
+  value.length <= maxLength &&
+  SITE_PATH.test(value) &&
+  safeRedirectPath(value, '') !== '';

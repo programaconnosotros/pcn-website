@@ -112,6 +112,17 @@ describe('metrics panels', () => {
     expect(screen.getByText(/^1\.?500$/)).toBeInTheDocument();
   });
 
+  it('shows paths that are not of the site as plain text, never as a link', () => {
+    const { container } = render(
+      <TopPages
+        pages={[{ path: '//open-redirect-landing.vercel.app/', visits: 64, visitors: 1 }]}
+      />,
+    );
+
+    expect(screen.getByText('//open-redirect-landing.vercel.app/')).toBeInTheDocument();
+    expect(container.querySelector('a')).toBeNull();
+  });
+
   it('draws the signup funnel and calls out the biggest leak', () => {
     render(
       <SignupFunnel
