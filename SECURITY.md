@@ -22,7 +22,6 @@ Usá alguno de estos canales privados:
 
 1. **GitHub Private Vulnerability Reporting (preferido):** ingresá a la pestaña **Security** del repositorio y hacé clic en **"Report a vulnerability"**.
 2. **Correo electrónico:** [agus@dizenz.com](mailto:agus@dizenz.com)
-   - Si querés cifrar el reporte, usá nuestra clave PGP: `<KEY_ID / FINGERPRINT>` (disponible en `<URL>`).
 
 ### Qué incluir en el reporte
 
@@ -105,7 +104,9 @@ Si no estás seguro de que tu investigación cumpla con esta política, escribin
 
 ## Reconocimientos
 
-Actualmente PCN no cuenta con un programa de recompensas (bug bounty) pago. Los reportes válidos serán reconocidos en el aviso de seguridad correspondiente y en nuestra sección de [Agradecimientos / Hall of Fame](<URL>), con el consentimiento del reportante.
+Actualmente PCN no cuenta con un programa de recompensas (bug bounty) pago. Los reportes válidos serán reconocidos en el aviso de seguridad correspondiente (con el consentimiento del reportante) y a quienes los realicen se les brindará el badge **"Bug Bounty"**, que aparece en la [página de logros](https://programaconnosotros.com/logros) y en su perfil de PCN.
+
+Para recibir el badge es necesario tener una cuenta en PCN. Quienes no tengan cuenta igualmente recibirán el crédito en el aviso de seguridad.
 
 ## Actualizaciones de seguridad
 
