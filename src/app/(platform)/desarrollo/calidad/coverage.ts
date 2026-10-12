@@ -10,19 +10,19 @@ export type CoverageMetrics = {
 
 export type CoverageGroup = CoverageMetrics & { folder: string; detail: string; files: number };
 
-export const COVERAGE_UPDATED_AT = '2026-10-09';
+export const COVERAGE_UPDATED_AT = '2026-10-12';
 
 export const coverage: { total: CoverageMetrics; groups: CoverageGroup[] } = {
-  total: { lines: 97.7, statements: 96.7, functions: 96.3, branches: 92.5 },
+  total: { lines: 97.7, statements: 96.7, functions: 96.1, branches: 92.5 },
   groups: [
     {
       folder: 'src/lib',
       detail: 'lógica compartida, seguridad, cache, S3',
-      files: 93,
+      files: 95,
       lines: 97.8,
       statements: 96.7,
-      functions: 96.4,
-      branches: 92.3,
+      functions: 95.2,
+      branches: 92.2,
     },
     {
       folder: 'src/actions',

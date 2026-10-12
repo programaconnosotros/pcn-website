@@ -6,6 +6,8 @@ import { findSession } from '@/lib/session';
 import { clientIpFrom } from '@/lib/client-ip';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { isSitePath } from '@/lib/safe-redirect';
+import { matchSiteRoute } from '@/lib/site-routes';
+import { isExistingPage } from '@/lib/page-visit-targets';
 
 // Se llama sin login desde cada página: nadie debería poder llenar la tabla con rutas gigantes.
 const MAX_LENGTH = 500;
@@ -14,7 +16,8 @@ const clip = (value: string | null) => (value ? value.slice(0, MAX_LENGTH) : nul
 export const trackPageVisit = async (path: string) => {
   // Endpoint público: solo se cuentan rutas de este sitio, nunca `//otro-dominio` (se muestran
   // como links en /metricas).
-  if (!isSitePath(path, MAX_LENGTH)) return;
+  // Y solo páginas reales: una ruta inventada (`/estafa-reclama-tu-premio`) también aparecería.
+  if (!isSitePath(path, MAX_LENGTH) || !matchSiteRoute(path)) return;
 
   // Pasado el límite se descarta en silencio: el tracking no puede romper la página
   try {
@@ -24,6 +27,9 @@ export const trackPageVisit = async (path: string) => {
   }
 
   try {
+    // Después del rate limit: busca en la base lo que nombra la ruta (el evento, el perfil...).
+    if (!(await isExistingPage(path))) return;
+
     const sessionId = (await cookies()).get('sessionId')?.value;
     let userId: string | undefined = undefined;
     if (sessionId) {
