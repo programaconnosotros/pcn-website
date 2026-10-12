@@ -92,11 +92,21 @@ const timeline = async (period: Period, where: VisitWhere, signupsWhere: Prisma.
 
 export type PathCount = { path: string; visits: number; visitors: number };
 
-const topPaths = async (period: Period, where: VisitWhere, limit: number) => {
+/**
+ * Visitantes distintos que necesita una página para salir en los rankings públicos de /metricas.
+ * Cualquiera puede registrar visitas sin cuenta: así una sola persona (una IP) repitiendo la misma
+ * ruta no la mete en el ranking, por más visitas que sume.
+ */
+export const MIN_PAGE_VISITORS = 5;
+
+const VISITOR = Prisma.sql`coalesce("ipAddress", "userAgent")`;
+
+const topPaths = async (period: Period, where: VisitWhere, limit: number, minVisitors: number) => {
   const rows = await prisma.$queryRaw<{ path: string; visits: bigint; visitors: bigint }[]>`
-    SELECT path, count(*) AS visits, count(DISTINCT coalesce("ipAddress", "userAgent")) AS visitors
+    SELECT path, count(*) AS visits, count(DISTINCT ${VISITOR}) AS visitors
       FROM "PageVisit" WHERE ${where(period)}
-     GROUP BY path ORDER BY visits DESC LIMIT ${limit}`;
+     GROUP BY path HAVING count(DISTINCT ${VISITOR}) >= ${minVisitors}
+     ORDER BY visits DESC LIMIT ${limit}`;
   return rows.map((row) => ({
     path: row.path,
     visits: toNumber(row.visits),
@@ -130,14 +140,18 @@ export type ModuleTraffic = Awaited<ReturnType<typeof sections>>[number];
 
 export type ModulePage = { section: string; path: string; visits: number };
 
-/** The three most visited pages inside each module. */
-const modulePages = async (period: Period, where: VisitWhere): Promise<ModulePage[]> => {
+/** The three most visited pages inside each module, among those with enough visitors. */
+const modulePages = async (
+  period: Period,
+  where: VisitWhere,
+  minVisitors: number,
+): Promise<ModulePage[]> => {
   const rows = await prisma.$queryRaw<{ section: string; path: string; visits: bigint }[]>`
     SELECT section, path, visits FROM (
       SELECT ${SECTION} AS section, path, count(*) AS visits,
              row_number() OVER (PARTITION BY ${SECTION} ORDER BY count(*) DESC, path) AS rank
         FROM "PageVisit" WHERE ${where(period)}
-       GROUP BY path
+       GROUP BY path HAVING count(DISTINCT ${VISITOR}) >= ${minVisitors}
     ) AS ranked
      WHERE rank <= 3
      ORDER BY section, visits DESC`;
@@ -410,12 +424,14 @@ export type Engagement = ReturnType<typeof engagementOf>;
 export type MetricsOptions = {
   /** Count admins' visits and actions too. */
   includeAdmins?: boolean;
+  /** Distinct visitors a page needs to be listed; MIN_PAGE_VISITORS unless a test lowers it. */
+  minPageVisitors?: number;
 };
 
 export const getProductMetrics = async (
   range: MetricsRange,
   ownHosts: string[],
-  { includeAdmins = false }: MetricsOptions = {},
+  { includeAdmins = false, minPageVisitors = MIN_PAGE_VISITORS }: MetricsOptions = {},
 ) => {
   const previous = previousRange(range);
   const where = visitsWhere(includeAdmins);
@@ -453,7 +469,7 @@ export const getProductMetrics = async (
     timeline(range, where, signupsWhere),
     sections(range, where),
     sections(previous, where),
-    topPaths(range, where, 15),
+    topPaths(range, where, 15, minPageVisitors),
     heatmap(range, where),
     referrers(range, where, ownHosts),
     devices(range, where),
@@ -461,7 +477,7 @@ export const getProductMetrics = async (
     signupFunnel(range, where, includeAdmins),
     moduleUsage(range, includeAdmins),
     moduleUsage(previous, includeAdmins),
-    modulePages(range, where),
+    modulePages(range, where, minPageVisitors),
     moduleReturning(range, where),
   ]);
   return {

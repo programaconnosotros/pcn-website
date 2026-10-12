@@ -15,7 +15,7 @@ import {
   SignupFunnel,
   TopPages,
 } from '@/components/admin/metrics/metrics-panels';
-import { getCachedProductMetrics } from '@/lib/product-metrics';
+import { getCachedProductMetrics, MIN_PAGE_VISITORS } from '@/lib/product-metrics';
 import { METRICS_TIME_ZONE } from '@/lib/metrics-range';
 import { tabTitle } from '@/lib/tab-title';
 
@@ -212,7 +212,9 @@ export default async function MetricasPage(props: Props) {
 
         <RuledGrid className="mb-6 grid-cols-1 xl:grid-cols-[1fr_1fr]">
           <Panel>
-            <PanelTitle note="top 15">páginas más vistas</PanelTitle>
+            <PanelTitle note={`top 15 · desde ${MIN_PAGE_VISITORS} visitantes`}>
+              páginas más vistas
+            </PanelTitle>
             <TopPages pages={metrics.pages} />
           </Panel>
           <Panel>

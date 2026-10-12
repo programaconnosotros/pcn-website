@@ -156,8 +156,12 @@ beforeAll(async () => {
     },
   });
 
-  metrics = await getProductMetrics(range, OWN_HOSTS);
-  withAdmins = await getProductMetrics(range, OWN_HOSTS, { includeAdmins: true });
+  // Con tan pocas visitas, el mínimo de visitantes por página dejaría los rankings vacíos
+  metrics = await getProductMetrics(range, OWN_HOSTS, { minPageVisitors: 1 });
+  withAdmins = await getProductMetrics(range, OWN_HOSTS, {
+    includeAdmins: true,
+    minPageVisitors: 1,
+  });
 });
 
 it('resolves the custom range in Argentina time and the previous period of the same length', () => {
@@ -208,6 +212,18 @@ it("ranks each module's top pages and counts who came back to it", () => {
   expect(metrics.returningByModule).toEqual({ '/eventos': 1 });
   expect(metrics.usage['/eventos'].find((u) => u.key === 'registrations')?.count).toBe(1);
   expect(metrics.usage['/consejos'].find((u) => u.key === 'advice')?.count).toBe(1);
+});
+
+it('lists a page only when enough distinct visitors saw it, however many visits it has', async () => {
+  // /eventos/abc tiene 2 visitas de una sola IP; el registro, 3 visitantes distintos
+  const strict = await getProductMetrics(range, OWN_HOSTS, { minPageVisitors: 3 });
+  expect(strict.pages).toEqual([{ path: '/autenticacion/registro', visits: 3, visitors: 3 }]);
+  expect(strict.pagesByModule).toEqual([
+    { section: '/autenticacion', path: '/autenticacion/registro', visits: 3 },
+  ]);
+  // Los totales y los módulos no cambian
+  expect(strict.traffic).toEqual(metrics.traffic);
+  expect(strict.modules).toEqual(metrics.modules);
 });
 
 it("leaves admins' visits and posts out by default, and counts them when asked", () => {
