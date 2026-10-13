@@ -22,12 +22,30 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-12',
+    area: 'consejos',
+    title: 'Los consejos que te gustaron',
+    description:
+      'Con sesión iniciada, el filtro --liked de /consejos deja solo los consejos a los que les diste like.',
+    authors: ['agustin-sanc'],
+    href: '/consejos',
+  },
+  {
+    date: '2026-10-12',
     area: 'motivación',
     title: 'Frases motivacionales para tu segundo monitor',
     description:
       'Dejá /motivacion abierta en otro monitor mientras trabajás: muestra una frase sobre una foto de la comunidad y cambia sola cada 5 minutos, con botón de pantalla completa y sin que se apague la pantalla.',
     authors: ['agustin-sanc'],
     href: '/motivacion',
+  },
+  {
+    date: '2026-10-08',
+    area: 'miembros',
+    title: 'Panel de la comunidad en Miembros',
+    description:
+      'Miembros arranca con un panel de estado con los números reales de la comunidad (conectados, cofundadores, embajadores, oradores, charlas, organizadores y builders), la curva de crecimiento mes a mes y un muro con la cara de cada miembro.',
+    authors: ['agustin-sanc'],
+    href: '/miembros',
   },
   {
     date: '2026-10-08',
@@ -131,6 +149,182 @@ export const changelog: ChangelogEntry[] = [
     description:
       'La pestaña de contribuciones de cada perfil lista lo que la persona construyó en la plataforma, con las mismas entradas que aparecen en este changelog.',
     authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'foro',
+    title: 'Foro de la comunidad',
+    description:
+      'Llegó el foro: categorías, hilos en markdown con vista previa mientras escribís, respuestas anidadas y likes. Los autores editan o borran lo suyo y los admins fijan y cierran hilos. También lista otros foros para developers que vale la pena conocer.',
+    authors: ['agustin-sanc'],
+    href: '/foro',
+  },
+  {
+    date: '2026-10-07',
+    area: 'autenticación',
+    title: 'Verificación en dos pasos',
+    description:
+      'Desde tu perfil podés activar códigos de una app autenticadora (Google Authenticator, 1Password, Authy…) para iniciar sesión, con diez códigos de recuperación por si perdés el celular.',
+    authors: ['agustin-sanc'],
+    href: '/perfil',
+  },
+  {
+    date: '2026-10-07',
+    area: 'ui',
+    title: 'Novedades en vivo',
+    description:
+      'Cuando hay algo nuevo en la comunidad aparece un aviso con su link, el feed muestra un banner para cargar las novedades sin mover la lista y, en el escritorio, una barra inferior pasa los últimos titulares. En la página de un evento, los cupos y la lista de espera se actualizan solos.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'conversaciones',
+    title: 'Qué opina el grupo de cada tecnología',
+    description:
+      'En /conversaciones/opiniones, cómo cambió la opinión del grupo sobre 15 tecnologías (Claude Code, Cursor, Codex, MCP, Vercel, Docker…) a lo largo del tiempo, con cada momento enlazado a su conversación. Siempre el grupo, nunca una persona.',
+    authors: ['agustin-sanc'],
+    href: '/conversaciones/opiniones',
+  },
+  {
+    date: '2026-10-07',
+    area: 'testimonios',
+    title: 'Testimonios desde las conversaciones',
+    description:
+      'Los momentos en que alguien le contó al grupo lo que la comunidad significó para esa persona se suman a /testimonios y al inicio, enlazados a su conversación.',
+    authors: ['agustin-sanc'],
+    href: '/testimonios',
+  },
+  {
+    date: '2026-10-07',
+    area: 'consejos',
+    title: 'Consejos de las conversaciones y meetups',
+    description:
+      '347 consejos más sacados de las conversaciones y meetups, ahora con likes y comentarios como cualquier otro. Si un consejo te lo atribuyen a vos, podés ocultarlo desde su detalle.',
+    authors: ['agustin-sanc'],
+    href: '/consejos',
+  },
+  {
+    date: '2026-10-07',
+    area: 'consejos',
+    title: 'Categorías en los consejos',
+    description:
+      'Al publicar un consejo elegís hasta tres categorías o creás una nueva, y también se le suman los temas que se deducen del texto para filtrar por ellos.',
+    authors: ['agustin-sanc'],
+    href: '/consejos',
+  },
+  {
+    date: '2026-10-07',
+    area: 'entrevistas',
+    title: 'Entrevistas de liderazgo',
+    description:
+      'Nuevos tipos de entrevista de tech lead, arquitectura de software, engineering manager y soft skills, con preguntas de junior a senior en el simulador y su guía de preparación.',
+    authors: ['agustin-sanc'],
+    href: '/entrevistas/guias',
+  },
+  {
+    date: '2026-10-07',
+    area: 'videos',
+    title: 'Lightning Talks de la comunidad',
+    description:
+      'Las primeras Lightning Talks de la comunidad, de 2020 y 2021, están en /videos. Los oradores de los videos y los profes de los cursos se vinculan a su perfil, que suma pestañas de videos y cursos.',
+    authors: ['agustin-sanc'],
+    href: '/videos',
+  },
+  {
+    date: '2026-10-07',
+    area: 'galería',
+    title: 'Marcá dónde está cada persona en una foto',
+    description:
+      'Además de etiquetar a alguien en una foto, podés marcar dónde está: los nombres aparecen sobre la foto al pasar el mouse y llevan a cada perfil.',
+    authors: ['agustin-sanc'],
+    href: '/galeria',
+  },
+  {
+    date: '2026-10-07',
+    area: 'especialidades',
+    title: 'Quién trabaja en cada especialidad',
+    description:
+      'Cada especialidad muestra los miembros que la marcaron en su perfil, para que sepas a quién consultarle. Ya podés marcar todas las que quieras.',
+    authors: ['agustin-sanc'],
+    href: '/especialidades',
+  },
+  {
+    date: '2026-10-07',
+    area: 'setups',
+    title: 'El software de cada setup',
+    description:
+      'Un setup puede contar su sistema operativo, navegador, editor, terminal y otras herramientas. Los perfiles suman una pestaña de setups.',
+    authors: ['agustin-sanc'],
+    href: '/setups',
+  },
+  {
+    date: '2026-10-07',
+    area: 'logros',
+    title: 'Nuevos badges',
+    description:
+      'Top speaker para quien dio más charlas, alma del grupo para quien participó en más conversaciones interesantes y top consejero para quien tiene más consejos. El badge de 100 conversaciones ahora se llama Locuaz.',
+    authors: ['agustin-sanc'],
+    href: '/logros',
+  },
+  {
+    date: '2026-10-07',
+    area: 'perfil',
+    title: 'Tus contribuciones al sitio',
+    description:
+      'La pestaña de contribuciones de cada perfil resume los PRs mergeados por tipo (features, fixes, diseño, tests…) y el feed anuncia la primera contribución de cada developer.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'búsqueda',
+    title: 'Búsqueda en todo el sitio',
+    description:
+      'La búsqueda ahora también encuentra perfiles, historia, setups, fotos, testimonios, herramientas, preguntas frecuentes, partners y el changelog.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'ui',
+    title: 'Todos los atajos de teclado',
+    description:
+      'Apretá ? en cualquier página para ver todos los atajos agrupados por dónde funcionan, con un filtro. También se abre desde el menú de PCN OS y el de tu usuario.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'os',
+    title: 'Ventanas a media pantalla y notificaciones en PCN OS',
+    description:
+      'Arrastrá una ventana contra un borde para que ocupe la mitad del escritorio; dos ventanas lado a lado comparten un divisor que las redimensiona. La barra de menú suma una campana con las novedades.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'eventos',
+    title: 'Email a los inscriptos',
+    description:
+      'Desde las inscripciones de un evento, escribí un mensaje y mandalo a los confirmados, a la lista de espera o a todos.',
+    authors: ['agustin-sanc'],
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-07',
+    area: 'usuarios',
+    title: 'Suspender o eliminar cuentas',
+    description:
+      'Los admins pueden suspender una cuenta, que deja de poder iniciar sesión al instante y desaparece del sitio, o eliminarla con todo su contenido.',
+    authors: ['agustin-sanc'],
+    href: '/usuarios',
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-07',
+    area: 'desarrollo',
+    title: 'Decisiones de arquitectura',
+    description:
+      '/desarrollo suma nueve ADRs (stack, base de datos, deploy, caché, emails…) con su contexto, la decisión, sus consecuencias y las alternativas descartadas.',
+    authors: ['agustin-sanc'],
+    href: '/desarrollo',
   },
   {
     date: '2026-10-04',
