@@ -97,7 +97,7 @@ export type PathCount = { path: string; visits: number; visitors: number };
  * Cualquiera puede registrar visitas sin cuenta: así una sola persona (una IP) repitiendo la misma
  * ruta no la mete en el ranking, por más visitas que sume.
  */
-export const MIN_PAGE_VISITORS = 5;
+export const MIN_PAGE_VISITORS = 2;
 
 const VISITOR = Prisma.sql`coalesce("ipAddress", "userAgent")`;
 
