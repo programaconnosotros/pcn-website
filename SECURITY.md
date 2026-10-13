@@ -6,11 +6,11 @@ Los mantenedores de **PCN** se toman en serio la seguridad del proyecto y de sus
 
 PCN es un sitio web con despliegue continuo y no publica versiones numeradas. Solo recibe soporte de seguridad la versión desplegada actualmente en producción ([programaconnosotros.com](https://programaconnosotros.com)), que corresponde a la rama `main`.
 
-| Entorno / rama              | Soporte                                                                  |
-| --------------------------- | ------------------------------------------------------------------------ |
-| Producción (`main`)         | :white_check_mark:                                                       |
-| `testing` (preproducción)   | :x: (aceptamos reportes si el problema puede llegar a producción)        |
-| Otras ramas y forks         | :x:                                                                      |
+| Entorno / rama            | Soporte                                                           |
+| ------------------------- | ----------------------------------------------------------------- |
+| Producción (`main`)       | :white_check_mark:                                                |
+| `testing` (preproducción) | :x: (aceptamos reportes si el problema puede llegar a producción) |
+| Otras ramas y forks       | :x:                                                               |
 
 Al reportar, indicá el hash del commit o la fecha y hora en que observaste el problema.
 
@@ -111,4 +111,3 @@ Para recibir el badge es necesario tener una cuenta en PCN. Quienes no tengan cu
 ## Actualizaciones de seguridad
 
 Los avisos de seguridad se publican en la sección [Security Advisories](../../security/advisories) del repositorio. Para recibir notificaciones, seguí el repositorio con **Watch → Custom → Security alerts**.
-
