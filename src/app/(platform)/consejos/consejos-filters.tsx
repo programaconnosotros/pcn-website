@@ -16,7 +16,7 @@ import {
   type ConsejoSort,
 } from '@/lib/consejos';
 import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
+import { Heart, X } from 'lucide-react';
 
 const ALL = '__all__';
 
@@ -42,11 +42,13 @@ interface ConsejosFiltersProps {
   authors: FilterOption[];
   results: number;
   total: number;
+  /** Signed in: offers keeping only the consejos the member liked. */
+  canFilterLiked: boolean;
 }
 
 const triggerClassName = 'h-8 font-mono text-xs';
 
-// The header row: `$ grep` always visible, then tema / autor / origen / orden. On phones those
+// The header row: `$ grep` always visible, then tema / autor / origen / liked / orden. On phones those
 // fold behind the shared `filtros` toggle so the sticky header stays one line tall.
 export function ConsejosFilters({
   filters,
@@ -55,6 +57,7 @@ export function ConsejosFilters({
   authors,
   results,
   total,
+  canFilterLiked,
 }: ConsejosFiltersProps) {
   const set = (patch: Partial<ConsejoFilters>) => onChange({ ...filters, ...patch });
 
@@ -62,6 +65,7 @@ export function ConsejosFilters({
     filters.topic,
     filters.author,
     filters.origin !== 'todos',
+    filters.liked,
     filters.sort !== 'recientes',
   ].filter(Boolean).length;
   const isFiltering = activeCount > 0 || filters.query.trim() !== '';
@@ -146,6 +150,24 @@ export function ConsejosFilters({
           </button>
         ))}
       </div>
+
+      {canFilterLiked && (
+        <button
+          type="button"
+          aria-pressed={filters.liked}
+          title="Solo los consejos que te gustaron"
+          onClick={() => set({ liked: !filters.liked })}
+          className={cn(
+            'flex h-8 items-center justify-center gap-1.5 rounded-sm border border-pcnGreen-200 px-2.5 font-mono text-[11px] transition-colors',
+            filters.liked
+              ? 'bg-pcnGreen/10 text-pcnGreen shadow-[inset_0_0_12px_-4px_rgba(4,244,190,0.6)]'
+              : 'text-muted-foreground hover:border-pcnGreen-600 hover:text-pcnGreen',
+          )}
+        >
+          <Heart className={cn('size-3.5', filters.liked && 'fill-current')} />
+          --liked
+        </button>
+      )}
 
       <Select value={filters.sort} onValueChange={(value) => set({ sort: value as ConsejoSort })}>
         <SelectTrigger className={cn(triggerClassName, 'md:w-[170px]')} aria-label="Orden">

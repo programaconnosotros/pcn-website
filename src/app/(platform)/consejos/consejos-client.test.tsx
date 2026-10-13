@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { useConsejosNav, ConsejosNavProvider } from '@/components/advice/consejos-nav';
-import { buildConsejo, extractedSource, renderInPlatform } from '@/test/platform';
+import { buildConsejo, buildSession, extractedSource, renderInPlatform } from '@/test/platform';
 import { ConsejosClient } from './consejos-client';
 
 jest.mock('@/actions/advice/like-advice', () => ({ toggleLike: jest.fn() }));
@@ -37,12 +37,16 @@ const consejos = [
 
 const NavIds = () => <output aria-label="ids">{useConsejosNav().ids.join(',')}</output>;
 
-const renderClient = (list = consejos, fortuneId: string | null = 'b') =>
+const renderClient = (
+  list = consejos,
+  fortuneId: string | null = 'b',
+  session: ReturnType<typeof buildSession> | null = null,
+) =>
   renderInPlatform(
     <ConsejosNavProvider>
       <ConsejosClient
         consejos={list}
-        session={null}
+        session={session}
         fortuneId={fortuneId}
         addButton={<button type="button">nuevo</button>}
       />
@@ -135,6 +139,21 @@ describe('ConsejosClient', () => {
     expect(cards()).toEqual(['Usá git todos los días']);
     await pick(user, 'Autor', /--autor=\*/);
     expect(cards()).toHaveLength(3);
+  });
+
+  it('keeps only the consejos the member liked', async () => {
+    const user = userEvent.setup();
+    renderClient(consejos, 'b', buildSession({ id: 'x' }));
+
+    await user.click(screen.getByRole('button', { name: '--liked' }));
+    expect(cards()).toEqual(['Hacé tests de todo']);
+    await user.click(screen.getByRole('button', { name: '--liked' }));
+    expect(cards()).toHaveLength(3);
+  });
+
+  it('offers the liked filter only to signed-in members', () => {
+    renderClient();
+    expect(screen.queryByRole('button', { name: '--liked' })).not.toBeInTheDocument();
   });
 
   it('sorts and resets', async () => {

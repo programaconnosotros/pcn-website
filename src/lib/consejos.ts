@@ -150,6 +150,8 @@ export type ConsejoFilters = {
   /** Author key (see `authorKey`). */
   author: string | null;
   origin: ConsejoOrigin;
+  /** Only the ones the signed-in member liked. */
+  liked: boolean;
   sort: ConsejoSort;
 };
 
@@ -158,18 +160,27 @@ export const DEFAULT_CONSEJO_FILTERS: ConsejoFilters = {
   topic: null,
   author: null,
   origin: 'todos',
+  liked: false,
   sort: 'recientes',
 };
 
 /** Platform user id, or the WhatsApp name for members nobody linked yet. */
 export const authorKey = ({ author }: Pick<Consejo, 'author'>) => author.id ?? `wa:${author.name}`;
 
-/** Search, filter and sort the list the way /consejos shows it. */
-export const filterConsejos = (consejos: Consejo[], filters: ConsejoFilters): Consejo[] => {
+/**
+ * Search, filter and sort the list the way /consejos shows it. `viewerId` is the signed-in
+ * member, whose likes `liked` keeps; without one, `liked` matches nothing.
+ */
+export const filterConsejos = (
+  consejos: Consejo[],
+  filters: ConsejoFilters,
+  viewerId: string | null = null,
+): Consejo[] => {
   const query = normalizeText(filters.query).trim();
   const matches = consejos.filter(
     (consejo) =>
       (filters.origin === 'todos' || (filters.origin === 'auto') === (consejo.source !== null)) &&
+      (!filters.liked || consejo.likes.some(({ userId }) => userId === viewerId)) &&
       (!filters.author || authorKey(consejo) === filters.author) &&
       (!filters.topic || consejoTopics(consejo).includes(filters.topic)) &&
       (!query ||

@@ -76,8 +76,8 @@ describe('filterConsejos', () => {
   });
   const c = published({ id: 'c', commentCount: 4, createdAt: '2025-12-01' });
   const all = [a, b, c];
-  const ids = (filters: Partial<typeof DEFAULT_CONSEJO_FILTERS>) =>
-    filterConsejos(all, { ...DEFAULT_CONSEJO_FILTERS, ...filters }).map(({ id }) => id);
+  const ids = (filters: Partial<typeof DEFAULT_CONSEJO_FILTERS>, viewerId?: string | null) =>
+    filterConsejos(all, { ...DEFAULT_CONSEJO_FILTERS, ...filters }, viewerId).map(({ id }) => id);
 
   it('lists everything newest first by default', () => {
     expect(ids({})).toEqual(['b', 'a', 'c']);
@@ -94,6 +94,13 @@ describe('filterConsejos', () => {
     expect(ids({ origin: 'manual' })).toEqual(['a', 'c']);
     expect(ids({ author: authorKey(b) })).toEqual(['b']);
     expect(ids({ topic: 'herramientas' })).toEqual(['b']);
+  });
+
+  it('keeps only the ones the viewer liked', () => {
+    expect(ids({ liked: true }, 'x')).toEqual(['a']);
+    expect(ids({ liked: true }, 'y')).toEqual([]);
+    expect(ids({ liked: true })).toEqual([]);
+    expect(ids({ liked: false }, 'x')).toEqual(['b', 'a', 'c']);
   });
 
   it('sorts by likes, comments or oldest', () => {

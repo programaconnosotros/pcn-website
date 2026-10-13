@@ -120,7 +120,11 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
   }, [consejos]);
 
   const fortune = consejos.find(({ id }) => id === fortuneId);
-  const visible = useMemo(() => filterConsejos(consejos, filters), [consejos, filters]);
+  const viewerId = session?.user.id ?? null;
+  const visible = useMemo(
+    () => filterConsejos(consejos, filters, viewerId),
+    [consejos, filters, viewerId],
+  );
   const isFiltering = visible.length !== consejos.length || filters.sort !== 'recientes';
 
   // The modal steps through exactly what the list shows.
@@ -144,6 +148,7 @@ export function ConsejosClient({ consejos, session, fortuneId, addButton }: Cons
             authors={authors}
             results={visible.length}
             total={consejos.length}
+            canFilterLiked={viewerId !== null}
           />
         </StickyHeader>
 
