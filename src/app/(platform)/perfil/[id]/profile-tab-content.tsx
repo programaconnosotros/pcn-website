@@ -9,6 +9,7 @@ import { getAdminUser } from '@/lib/admin';
 import { ProfileArticles } from '@/components/profile/profile-articles';
 import { ProfileTalks } from '@/components/profile/profile-talks';
 import { ProfileTabCounts } from '@/components/profile/profile-tab-nav';
+import { ProfileTimeline } from '@/components/profile/profile-timeline';
 import { profileTabHref } from '@/components/profile/profile-tabs';
 import {
   ContributionChangelog,
@@ -35,6 +36,7 @@ import {
   getProfileProjects,
   getProfileSetups,
   getProfileTalks,
+  getProfileTimeline,
   getProfileVideos,
   getProfileCourses,
   getProfilePendingWorkingPhotos,
@@ -288,6 +290,16 @@ export async function ProfileTabContent({ tab, ...props }: TabProps & { tab: Pro
 
   let content: React.ReactNode;
   switch (tab) {
+    case 'timeline': {
+      const admin = await getAdminUser();
+      const items = await getProfileTimeline(userId, !!admin);
+      content = items.length ? (
+        <ProfileTimeline items={items} />
+      ) : (
+        <EmptyLine>{firstName} todavía no tiene actividad en la comunidad.</EmptyLine>
+      );
+      break;
+    }
     case 'proyectos': {
       const projects = await getProfileProjects(userId);
       content = projects.length ? (

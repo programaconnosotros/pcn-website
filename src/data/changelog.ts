@@ -21,6 +21,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-13',
+    area: 'perfil',
+    title: 'Timeline en el perfil',
+    description:
+      'La pestaña timeline de cada perfil muestra todo lo que la persona fue haciendo en la comunidad, mes a mes: proyectos, consejos, charlas, artículos, eventos que organizó, setups, temas del foro, conversaciones, lo que construyó en el sitio, sus badges y el día que se sumó.',
+    authors: ['agustin-sanc'],
+  },
+  {
     date: '2026-10-12',
     area: 'notificaciones',
     title: 'Notificaciones para todos',

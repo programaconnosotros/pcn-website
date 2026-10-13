@@ -1,5 +1,6 @@
 export const PROFILE_TABS = [
   { id: 'resumen', label: 'resumen' },
+  { id: 'timeline', label: 'timeline' },
   { id: 'proyectos', label: 'proyectos' },
   { id: 'consejos', label: 'consejos' },
   { id: 'charlas', label: 'charlas' },

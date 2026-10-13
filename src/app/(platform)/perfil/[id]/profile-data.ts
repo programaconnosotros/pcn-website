@@ -18,6 +18,9 @@ import { getIdentityMap, getUserIdentities } from '@/lib/identity-links';
 import { changelog } from '@/data/changelog';
 import { changelogBy, visibleChangelog } from '@/lib/changelog';
 import type { ProfileProject, ProfileTab } from '@/components/profile/profile-sections';
+import type { TimelineItem } from '@/components/profile/profile-timeline';
+import { conversationHref } from '@/components/conversations/conversation-utils';
+import { toFeedDay } from '@/lib/feed';
 import { setupSelect } from '@/lib/setups';
 import { videoSpeakers } from '@/components/videos/videos';
 import { courseTeachers } from '@/app/(platform)/cursos/courses';
@@ -288,5 +291,183 @@ export const getProfileCounts = cache(
       conversaciones: conversations.length,
       ...(github.contributions.length > 0 && { contribuciones: github.mergedPrs }),
     };
+  },
+);
+
+// Platform records only the timeline needs: when they joined, the projects they published or
+// were added to, their forum threads and the badges an admin gave them.
+const listTimelineRecords = cached(
+  'profile-timeline',
+  async (userId: string) => {
+    const [user, authored, memberships, threads, badges] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { createdAt: true } }),
+      prisma.project.findMany({
+        where: { authorId: userId },
+        select: { id: true, title: true, description: true, createdAt: true },
+      }),
+      prisma.projectMember.findMany({
+        where: { userId, project: { authorId: { not: userId } } },
+        select: {
+          createdAt: true,
+          project: { select: { id: true, title: true, description: true } },
+        },
+      }),
+      prisma.forumPost.findMany({
+        where: { authorId: userId },
+        select: { id: true, title: true, createdAt: true, category: { select: { name: true } } },
+      }),
+      prisma.userBadge.findMany({
+        where: { userId },
+        select: { awardedAt: true, badge: { select: { id: true, name: true, description: true } } },
+      }),
+    ]);
+    return { joinedAt: user?.createdAt ?? null, authored, memberships, threads, badges };
+  },
+  {
+    models: [
+      'User',
+      'Project',
+      'ProjectMember',
+      'ForumPost',
+      'ForumCategory',
+      'UserBadge',
+      'Badge',
+    ],
+  },
+);
+
+// A `@db.Date` or a date typed without a time is midnight UTC: its day is the UTC one.
+const utcDay = (date: Date) => date.toISOString().slice(0, 10);
+
+/**
+ * Everything the person did in the community, newest first: what they published, the talks they
+ * gave, the events they organized, the conversations they took part in and what they built in
+ * the site. Only things that already happened, so an upcoming event or talk doesn't top it.
+ */
+export const getProfileTimeline = cache(
+  async (userId: string, isAdmin: boolean): Promise<TimelineItem[]> => {
+    const [records, advice, talks, articles, events, setups, conversations, changes] =
+      await Promise.all([
+        listTimelineRecords(userId),
+        getProfileAdvice(userId),
+        getProfileTalks(userId),
+        getProfileArticles(userId),
+        getProfileEvents(userId),
+        getProfileSetups(userId),
+        getProfileConversations(userId),
+        getProfileChangelog(userId, isAdmin),
+      ]);
+
+    const items: TimelineItem[] = [
+      ...records.authored.map((project) => ({
+        id: `proyecto-${project.id}`,
+        kind: 'proyecto' as const,
+        day: toFeedDay(project.createdAt),
+        title: `Publicó el proyecto ${project.title}`,
+        description: project.description,
+        href: `/proyectos/${project.id}`,
+      })),
+      ...records.memberships.map(({ project, createdAt }) => ({
+        id: `proyecto-${project.id}`,
+        kind: 'proyecto' as const,
+        day: toFeedDay(createdAt),
+        title: `Se sumó al proyecto ${project.title}`,
+        description: project.description,
+        href: `/proyectos/${project.id}`,
+      })),
+      ...advice.map((consejo) => ({
+        id: `consejo-${consejo.id}`,
+        kind: 'consejo' as const,
+        day: consejo.source
+          ? consejo.createdAt.slice(0, 10)
+          : toFeedDay(new Date(consejo.createdAt)),
+        title: consejo.source ? 'Dejó un consejo en el grupo' : 'Compartió un consejo',
+        description: consejo.content,
+        href: `/consejos/${consejo.id}`,
+      })),
+      ...talks.map((talk) => {
+        const day = talk.event
+          ? toFeedDay(talk.event.date)
+          : talk.manualEventDate
+            ? utcDay(talk.manualEventDate)
+            : toFeedDay(talk.createdAt);
+        return {
+          id: `charla-${talk.id}`,
+          kind: 'charla' as const,
+          day,
+          title: `Dio la charla “${talk.title}”`,
+          description: talk.event?.name ?? talk.manualEventTitle ?? undefined,
+          href: talk.event ? `/eventos/${talk.event.id}` : '/charlas',
+        };
+      }),
+      ...articles.map(({ article }) => ({
+        id: `articulo-${article.id}`,
+        kind: 'articulo' as const,
+        day: article.date,
+        title: `Escribió “${article.title}”`,
+        description: article.description,
+        href: article.url,
+      })),
+      ...events.map((event) => ({
+        id: `evento-${event.id}`,
+        kind: 'evento' as const,
+        day: toFeedDay(event.date),
+        title: `Organizó ${event.name}`,
+        href: `/eventos/${event.id}`,
+      })),
+      ...setups.map((setup) => ({
+        id: `setup-${setup.id}`,
+        kind: 'setup' as const,
+        day: utcDay(setup.date),
+        title: `Compartió su setup “${setup.title}”`,
+        description: setup.description,
+        href: `/setups/${setup.id}`,
+      })),
+      ...records.threads.map((thread) => ({
+        id: `foro-${thread.id}`,
+        kind: 'foro' as const,
+        day: toFeedDay(thread.createdAt),
+        title: `Abrió el tema “${thread.title}”`,
+        description: `en ${thread.category.name}`,
+        href: `/foro/tema/${thread.id}`,
+      })),
+      ...conversations.map((conversation) => ({
+        id: `conversacion-${conversationHref(conversation)}`,
+        kind: 'conversacion' as const,
+        day: conversation.date,
+        title: `Participó en “${conversation.title}”`,
+        description: conversation.summary,
+        href: conversationHref(conversation),
+      })),
+      ...changes.map((entry, index) => ({
+        id: `cambio-${entry.date}-${index}`,
+        kind: 'cambio' as const,
+        day: entry.date,
+        title: `Construyó “${entry.title}”`,
+        description: entry.description,
+        href: entry.href ?? '/changelog',
+      })),
+      ...records.badges.map(({ badge, awardedAt }) => ({
+        id: `logro-${badge.id}`,
+        kind: 'logro' as const,
+        day: toFeedDay(awardedAt),
+        title: `Recibió el badge ${badge.name}`,
+        description: badge.description,
+      })),
+      ...(records.joinedAt
+        ? [
+            {
+              id: 'alta',
+              kind: 'alta' as const,
+              day: toFeedDay(records.joinedAt),
+              title: 'Se sumó a programaConNosotros',
+            },
+          ]
+        : []),
+    ];
+
+    const today = toFeedDay(new Date());
+    // Stable sort: within a day, items keep the order above, with joining the site last.
+    return items.filter((item) => item.day <= today).sort((a, b) => b.day.localeCompare(a.day));
   },
 );

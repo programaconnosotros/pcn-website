@@ -28,6 +28,7 @@ jest.mock('./profile-data', () => ({
   getProfileProjects: jest.fn(),
   getProfileSetups: jest.fn(),
   getProfileTalks: jest.fn(),
+  getProfileTimeline: jest.fn(),
   getProfileVideos: jest.fn(),
   getProfileCourses: jest.fn(),
   getProfileWorkingPhotos: jest.fn(),
@@ -475,5 +476,37 @@ describe('ProfileTabContent: one section', () => {
 
     expect(screen.getByText('3 cambios')).toBeInTheDocument();
     expect(m.getProfileChangelog).toHaveBeenCalledWith(expect.any(String), true);
+  });
+});
+
+describe('ProfileTabContent: timeline', () => {
+  it('shows what the member did, newest first', async () => {
+    mockData();
+    m.getProfileTimeline.mockResolvedValue([
+      {
+        id: 'a',
+        kind: 'consejo',
+        day: '2024-03-05',
+        title: 'Compartió un consejo',
+        href: '/consejos/a',
+      },
+      { id: 'b', kind: 'alta', day: '2024-01-10', title: 'Se sumó a programaConNosotros' },
+    ]);
+    await renderTab('timeline');
+
+    expect(m.getProfileTimeline).toHaveBeenCalledWith('u1', false);
+    expect(screen.getByRole('link', { name: /Compartió un consejo/ })).toHaveAttribute(
+      'href',
+      '/consejos/a',
+    );
+    expect(screen.getByText('Se sumó a programaConNosotros')).toBeInTheDocument();
+  });
+
+  it('says when the member has no activity yet', async () => {
+    mockData();
+    m.getProfileTimeline.mockResolvedValue([]);
+    await renderTab('timeline');
+
+    expect(screen.getByText('Ana todavía no tiene actividad en la comunidad.')).toBeInTheDocument();
   });
 });

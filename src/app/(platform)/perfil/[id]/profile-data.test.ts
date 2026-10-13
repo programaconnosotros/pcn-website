@@ -14,6 +14,7 @@ import {
   getProfilePhotos,
   getProfileProjects,
   getProfileTalks,
+  getProfileTimeline,
 } from './profile-data';
 
 jest.mock('@/lib/identity-links', () => ({ getUserIdentities: jest.fn() }));
@@ -292,5 +293,96 @@ describe('getProfileCounts', () => {
     });
 
     expect((await getProfileCounts('u1')).contribuciones).toBe(5);
+  });
+});
+
+describe('getProfileTimeline', () => {
+  it('merges everything the user did, newest first, and leaves out what has not happened yet', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      ...user,
+      createdAt: new Date('2024-01-10T15:00:00Z'),
+    } as any);
+    prismaMock.advice.findMany.mockResolvedValue([
+      {
+        id: 'adv1',
+        content: 'Leé el código de otros',
+        createdAt: new Date('2024-03-05T15:00:00Z'),
+        author: user,
+        likes: [],
+        _count: { comments: 0 },
+      },
+    ] as any);
+    prismaMock.project.findMany.mockResolvedValue([
+      {
+        id: 'p1',
+        title: 'Bot',
+        description: 'Un bot',
+        createdAt: new Date('2024-02-01T15:00:00Z'),
+      },
+    ] as any);
+    prismaMock.projectMember.findMany.mockResolvedValue([
+      {
+        createdAt: new Date('2024-04-01T15:00:00Z'),
+        project: { id: 'p2', title: 'App', description: 'Una app' },
+      },
+    ] as any);
+    prismaMock.forumPost.findMany.mockResolvedValue([
+      {
+        id: 'f1',
+        title: '¿Qué editor usan?',
+        createdAt: new Date('2024-05-01T15:00:00Z'),
+        category: { name: 'General' },
+      },
+    ] as any);
+    prismaMock.userBadge.findMany.mockResolvedValue([
+      {
+        awardedAt: new Date('2024-06-01T15:00:00Z'),
+        badge: { id: 'b1', name: 'Mentor', description: 'Ayuda a otros' },
+      },
+    ] as any);
+    prismaMock.talk.findMany.mockResolvedValue([
+      {
+        id: 't1',
+        title: 'Testing',
+        createdAt: new Date('2024-01-01T00:00:00Z'),
+        manualEventTitle: null,
+        manualEventDate: null,
+        event: { id: 'e1', name: 'Meetup', date: new Date('2024-07-01T23:00:00Z') },
+      },
+    ] as any);
+    prismaMock.event.findMany.mockResolvedValue([
+      { id: 'e2', name: 'Hackatón', date: new Date('2999-01-01T15:00:00Z') },
+    ] as any);
+    prismaMock.articleAuthor.findMany.mockResolvedValue([]);
+    prismaMock.setup.findMany.mockResolvedValue([
+      {
+        id: 's1',
+        title: 'Mi escritorio',
+        description: 'Dos monitores',
+        date: new Date('2024-08-01T00:00:00Z'),
+      },
+    ] as any);
+
+    const items = await getProfileTimeline('timeline-user', false);
+
+    expect(items.map((item) => [item.day, item.kind, item.title])).toEqual([
+      ['2024-08-01', 'setup', 'Compartió su setup “Mi escritorio”'],
+      // An evening event in Argentina is still that day, not the next one in UTC.
+      ['2024-07-01', 'charla', 'Dio la charla “Testing”'],
+      ['2024-06-01', 'logro', 'Recibió el badge Mentor'],
+      ['2024-05-01', 'foro', 'Abrió el tema “¿Qué editor usan?”'],
+      ['2024-04-01', 'proyecto', 'Se sumó al proyecto App'],
+      ['2024-03-05', 'consejo', 'Compartió un consejo'],
+      ['2024-02-01', 'proyecto', 'Publicó el proyecto Bot'],
+      ['2024-01-10', 'alta', 'Se sumó a programaConNosotros'],
+    ]);
+    expect(items.find((item) => item.kind === 'charla')?.href).toBe('/eventos/e1');
+    expect(items.find((item) => item.kind === 'foro')?.href).toBe('/foro/tema/f1');
+    expect(items.find((item) => item.kind === 'logro')?.href).toBeUndefined();
+    expect(prismaMock.projectMember.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { userId: 'timeline-user', project: { authorId: { not: 'timeline-user' } } },
+      }),
+    );
   });
 });
