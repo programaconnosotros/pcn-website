@@ -89,7 +89,7 @@ export function useNotificationCenter() {
     loading,
     refresh,
     unseen,
-    unread: unseen.length + (data?.admin?.unread ?? 0),
+    unread: unseen.length + (data?.inbox?.unread ?? 0),
     markFeedSeen,
   };
 }

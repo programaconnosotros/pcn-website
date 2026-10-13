@@ -52,6 +52,7 @@ const existingTalk = {
   description: 'Old description text here.',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
+  speakers: [{ userId: 'cuserold00000001' }],
 };
 
 const validData: TalkFormData = {
@@ -170,6 +171,32 @@ describe('updateTalk edge cases', () => {
 
     await expect(updateTalk(TALK_ID, { ...validData, eventId: EVENT_ID })).resolves.toEqual({
       success: true,
+    });
+  });
+
+  it('notifies only the speakers added in this edit', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.talk.findUnique.mockResolvedValue(existingTalk as any);
+    prismaMock.$transaction.mockResolvedValue([] as any);
+
+    await updateTalk(TALK_ID, {
+      ...validData,
+      eventId: EVENT_ID,
+      speakers: [
+        { ...validData.speakers[0], userId: 'cuserold00000001' },
+        { ...validData.speakers[0], userId: 'cusernew00000001' },
+      ],
+    });
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: 'talk_speaker_added',
+          userId: 'cusernew00000001',
+          metadata: expect.stringContaining(`"href":"/eventos/${EVENT_ID}/charlas"`),
+        }),
+      ],
     });
   });
 

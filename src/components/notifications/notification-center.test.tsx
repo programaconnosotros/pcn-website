@@ -12,7 +12,7 @@ jest.setTimeout(20_000);
 
 const recent = (hoursAgo: number) => new Date(Date.now() - hoursAgo * 3_600_000).toISOString();
 
-const data = (admin: NotificationCenterData['admin'] = null): NotificationCenterData => ({
+const data = (inbox: NotificationCenterData['inbox'] = null): NotificationCenterData => ({
   feed: [
     { id: 'a', kind: 'evento', title: 'Meetup nuevo', href: '/eventos/a', sortKey: recent(1) },
     {
@@ -23,7 +23,7 @@ const data = (admin: NotificationCenterData['admin'] = null): NotificationCenter
       sortKey: recent(24 * 30),
     },
   ],
-  admin,
+  inbox,
 });
 
 const mockFetch = (body: NotificationCenterData) => {
@@ -51,27 +51,34 @@ describe('NotificationCenter', () => {
     expect(screen.getByRole('button', { name: 'Notificaciones' })).toBeInTheDocument();
   });
 
-  it('shows admins their inbox and marks it read', async () => {
+  it('shows a signed-in user their inbox and marks it read', async () => {
     window.localStorage.setItem(FEED_SEEN_KEY, new Date().toISOString());
-    const admin = {
+    const inbox = {
       unread: 1,
       items: [
-        { id: 'n1', title: 'Nueva inscripción', message: 'Ana', read: false, createdAt: recent(2) },
+        {
+          id: 'n1',
+          title: 'Le gustó tu consejo',
+          message: 'A Ana le gustó tu consejo',
+          read: false,
+          createdAt: recent(2),
+          href: '/consejos/c1',
+        },
       ],
     };
-    mockFetch(data(admin));
+    mockFetch(data(inbox));
     jest.mocked(markAllNotificationsAsRead).mockResolvedValue(undefined);
     render(<NotificationCenter onNavigate={jest.fn()} />);
 
     await userEvent.click(
       await screen.findByRole('button', { name: 'Notificaciones (1 sin ver)' }),
     );
-    // Nothing new in the feed, so it opens on the admin tab.
-    expect(await screen.findByRole('tab', { name: /admin/ })).toHaveAttribute(
+    // Nothing new in the feed, so it opens on the inbox tab.
+    expect(await screen.findByRole('tab', { name: /para vos/ })).toHaveAttribute(
       'aria-selected',
       'true',
     );
-    expect(screen.getByText('Nueva inscripción')).toBeInTheDocument();
+    expect(screen.getByText('Le gustó tu consejo')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: /marcar todas como leídas/ }));
     await waitFor(() => expect(markAllNotificationsAsRead).toHaveBeenCalled());

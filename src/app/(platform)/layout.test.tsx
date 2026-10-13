@@ -69,16 +69,15 @@ describe('PlatformLayout', () => {
     expect(jest.mocked(SidebarProvider).mock.calls[0][0]).toMatchObject({ defaultOpen: true });
   });
 
-  it('passes a member to the sidebar and the desktop without counting notifications', async () => {
+  it('passes a member and their unread notification count to the sidebar and the desktop', async () => {
     mockCookies({ sessionId: 's1' });
     jest.mocked(findSession).mockResolvedValue({ user } as never);
     await renderLayout();
 
     expect(findSession).toHaveBeenCalledWith('s1');
-    expect(getUnreadNotificationsCount).not.toHaveBeenCalled();
     expect(jest.mocked(AppSidebar).mock.calls[0][0]).toMatchObject({
       user,
-      unreadNotificationsCount: 0,
+      unreadNotificationsCount: 7,
     });
     expect(jest.mocked(PcnOs).mock.calls[0][0]).toEqual({
       user: { id: 'u1', name: 'Ana', email: 'ana@test.com', image: null },

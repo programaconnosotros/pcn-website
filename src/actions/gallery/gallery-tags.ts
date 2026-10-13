@@ -6,6 +6,7 @@ import prisma from '@/lib/prisma';
 import { requireSessionUser } from '@/actions/projects/get-session-user';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { requireAdmin } from '@/lib/admin';
+import { notifyUsers } from '@/actions/notifications/notify-users';
 import { parseGalleryItemIds } from './gallery-schema';
 
 // Los admins etiquetan y quitan a cualquiera; el resto de los usuarios, solo a sí mismos.
@@ -44,11 +45,24 @@ export async function tagGalleryItemUser(itemId: string, userId: string) {
   if (!photo) throw new Error('Foto no encontrada');
   if (!user) throw new Error('Usuario no encontrado');
 
-  await prisma.galleryItemTag.upsert({
-    where: { itemId_userId: { itemId, userId } },
-    create: { itemId, userId, taggedById: viewer.id },
-    update: {},
+  const { count } = await prisma.galleryItemTag.createMany({
+    data: [{ itemId, userId, taggedById: viewer.id }],
+    skipDuplicates: true,
   });
+  // Quien no es admin solo se etiqueta a sí mismo, y de eso no se avisa.
+  if (count > 0 && viewer.role === 'ADMIN') {
+    await notifyUsers(
+      [userId],
+      {
+        type: 'gallery_tagged',
+        title: 'Te etiquetaron en una foto',
+        message: `${viewer.name} te etiquetó en una foto de la galería.`,
+        href: `/galeria/${itemId}`,
+        metadata: { itemId },
+      },
+      viewer.id,
+    );
+  }
   return { person: user };
 }
 
@@ -100,6 +114,22 @@ export async function bulkTagGalleryItemsUser(itemIds: string[], userId: string)
     data: items.map((item) => ({ itemId: item.id, userId, taggedById: admin.id })),
     skipDuplicates: true,
   });
+  if (count > 0) {
+    await notifyUsers(
+      [userId],
+      {
+        type: 'gallery_tagged',
+        title: count === 1 ? 'Te etiquetaron en una foto' : `Te etiquetaron en ${count} fotos`,
+        message:
+          count === 1
+            ? `${admin.name} te etiquetó en una foto de la galería.`
+            : `${admin.name} te etiquetó en ${count} fotos y videos de la galería.`,
+        href: `/perfil/${userId}`,
+        metadata: { itemIds: items.map((item) => item.id) },
+      },
+      admin.id,
+    );
+  }
   revalidateTags(
     items.map((item) => item.id),
     userId,

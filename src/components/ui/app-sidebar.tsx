@@ -120,12 +120,19 @@ const comunidadItems: NavItem[] = [
   { title: 'Redes', icon: Share2, items: socialNetworks },
 ];
 
-const getAdminItems = (unreadCount: number): NavItem[] => [
+/** Each user's own notifications, under the feed; only with a session. */
+const notificationsItem = (unreadCount: number): NavItem => ({
+  title: 'Notificaciones',
+  url: '/notificaciones',
+  icon: Bell,
+  badge: unreadCount,
+});
+
+const adminItems: NavItem[] = [
   { title: 'Panel', url: '/admin', icon: Gauge },
   { title: 'Usuarios', url: '/usuarios', icon: Users },
   { title: 'Analíticas', url: '/analiticas', icon: LayoutDashboard },
   { title: 'Visitas', url: '/visitas', icon: Eye },
-  { title: 'Notificaciones', url: '/notificaciones', icon: Bell, badge: unreadCount },
   { title: 'Monitoreo', url: '/monitoreo', icon: AlertTriangle },
   { title: 'Vínculos', url: '/vinculos', icon: Link2 },
 ];
@@ -158,10 +165,15 @@ export function AppSidebar(props: AppSidebarProps) {
         sections={[
           { label: 'Actividades', items: actividadesItems },
           { label: 'Recursos', items: recursosItems },
-          { label: 'Comunidad', items: [feedItem, ...comunidadItems] },
-          ...(user?.role === 'ADMIN'
-            ? [{ label: 'Administración', items: getAdminItems(unreadNotificationsCount) }]
-            : []),
+          {
+            label: 'Comunidad',
+            items: [
+              feedItem,
+              ...(user ? [notificationsItem(unreadNotificationsCount)] : []),
+              ...comunidadItems,
+            ],
+          },
+          ...(user?.role === 'ADMIN' ? [{ label: 'Administración', items: adminItems }] : []),
         ]}
       />
     );
@@ -208,14 +220,14 @@ export function AppSidebar(props: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent className="scrollbar-thin gap-0 px-1">
-        <NavMain items={homeItems} />
+        <NavMain
+          items={user ? [...homeItems, notificationsItem(unreadNotificationsCount)] : homeItems}
+        />
         <SidebarUpcomingEvents events={upcomingEvents} />
         <NavMain items={actividadesItems} label="Actividades" />
         <NavMain items={recursosItems} label="Recursos" />
         <NavMain items={comunidadItems} label="Comunidad" />
-        {user?.role === 'ADMIN' && (
-          <NavMain items={getAdminItems(unreadNotificationsCount)} label="Administración" />
-        )}
+        {user?.role === 'ADMIN' && <NavMain items={adminItems} label="Administración" />}
       </SidebarContent>
 
       {/* One ruled block flush with the sidebar's edges: the rows share their hairlines with each

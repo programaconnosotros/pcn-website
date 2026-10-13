@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import type { NotificationFeedItem } from '@/lib/notification-center';
 import { useNotificationCenter } from './use-notification-center';
 
-type Tab = 'novedades' | 'admin';
+type Tab = 'novedades' | 'inbox';
 
 /** Short tags that fit the column; the feed's kinds otherwise. */
 const KIND_LABELS: Record<string, string> = { conversacion: 'chat', changelog: 'cambio' };
@@ -70,7 +70,7 @@ interface NotificationCenterProps {
 
 /**
  * A bell with a badge that opens a modal listing what's new: the latest feed items (new ones lit
- * up since the last look) and, for admins, their notifications.
+ * up since the last look) and, with a session, the user's own notifications.
  */
 export function NotificationCenter({
   onNavigate,
@@ -84,17 +84,17 @@ export function NotificationCenter({
   /** New items when the modal opened: they stay lit while it's open, even once marked seen. */
   const [litIds, setLitIds] = useState<Set<string>>(new Set());
 
-  const admin = data?.admin ?? null;
+  const inbox = data?.inbox ?? null;
   const tabs: { id: Tab; label: string; count: number }[] = [
     { id: 'novedades', label: 'novedades', count: unseen.length },
-    ...(admin ? [{ id: 'admin' as const, label: 'admin', count: admin.unread }] : []),
+    ...(inbox ? [{ id: 'inbox' as const, label: 'para vos', count: inbox.unread }] : []),
   ];
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
     if (next) {
       setLitIds(new Set(unseen.map((item) => item.id)));
-      if (!unseen.length && admin?.unread) setTab('admin');
+      if (!unseen.length && inbox?.unread) setTab('inbox');
       void refresh();
     } else {
       markFeedSeen();
@@ -142,7 +142,7 @@ export function NotificationCenter({
             <DialogTitle>notificaciones</DialogTitle>
             <DialogDescription className="text-xs">
               Lo último que pasó en la comunidad
-              {admin ? ' y los avisos para admins' : ''}.
+              {inbox ? ' y tus notificaciones' : ''}.
             </DialogDescription>
           </DialogHeader>
 
@@ -180,13 +180,13 @@ export function NotificationCenter({
               <SkeletonRows />
             ) : tab === 'novedades' ? (
               <FeedList items={data.feed} lit={litIds} onOpen={go} />
-            ) : admin && admin.items.length ? (
-              admin.items.map((item) => (
+            ) : inbox && inbox.items.length ? (
+              inbox.items.map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   className={rowClassName}
-                  onClick={() => go('/notificaciones')}
+                  onClick={() => go(item.href ?? '/notificaciones')}
                 >
                   <span
                     className={cn(
@@ -220,11 +220,11 @@ export function NotificationCenter({
           </div>
 
           <div className="flex items-center justify-between gap-2 border-t border-dashed border-pcnGreen-200 px-3 py-2 text-xs">
-            {tab === 'admin' && admin ? (
+            {tab === 'inbox' && inbox ? (
               <>
                 <button
                   type="button"
-                  disabled={markingAll || admin.unread === 0}
+                  disabled={markingAll || inbox.unread === 0}
                   onClick={() => void markAllRead()}
                   className="flex items-center gap-1.5 text-pcnGreen-600 transition-colors hover:text-pcnGreen disabled:opacity-40"
                 >

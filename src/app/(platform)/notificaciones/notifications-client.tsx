@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { REVIEW_QUEUE_PATH } from '@/schemas/recommendation-schema';
+import { notificationHref } from '@/lib/notification-center';
 
 type Notification = {
   id: string;
@@ -140,6 +141,8 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
     const eventId = getEventId(notification);
     const hasEventLink = isEventNotification(notification) && eventId;
     const hasRecommendationLink = notification.type === 'recommendation_pending';
+    // Las notificaciones para cualquier usuario guardan a dónde llevan.
+    const href = notificationHref(notification.metadata);
     const linkClassName =
       'flex items-center gap-1 font-mono text-[11px] text-pcnGreen-700 transition-colors hover:text-pcnGreen';
 
@@ -159,8 +162,14 @@ export function NotificationsClient({ notifications }: NotificationsClientProps)
             </span>
           </div>
           <p className="text-xs leading-relaxed text-muted-foreground">{notification.message}</p>
-          {(hasTestimonialLink || hasEventLink || hasRecommendationLink) && (
+          {(hasTestimonialLink || hasEventLink || hasRecommendationLink || href) && (
             <div className="flex flex-wrap gap-3">
+              {href && (
+                <Link href={href} className={linkClassName}>
+                  ver
+                  <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              )}
               {hasTestimonialLink && (
                 <Link href={`/testimonios/${testimonialId}`} className={linkClassName}>
                   ver testimonio

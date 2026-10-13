@@ -8,6 +8,7 @@ import { getObjectBuffer, keyFromPublicUrl } from '@/lib/s3';
 import { talkSchema, type TalkFormData } from '@/schemas/talk-schema';
 import { talkAgent, type TalkDraft } from '@/lib/talk-agent';
 import { MISSING_AGENT_KEY, imageForModel } from '@/lib/agents';
+import { notifySpeakers } from './notify-speakers';
 
 // La carpeta donde el form de charlas sube las fotos: el agente no lee nada fuera de ella.
 const PORTRAITS_FOLDER = 'talks/portraits/';
@@ -108,7 +109,7 @@ const checkReferences = async (draft: TalkDraft) => {
  * descripción y los oradores. Si le faltan datos, devuelve el borrador para completarlo a mano.
  */
 export const createTalkFromPhoto = async (photoUrl: string): Promise<CreateTalkFromPhotoResult> => {
-  await requireAdmin();
+  const admin = await requireAdmin();
   await enforceRateLimit('aiAgent');
 
   const key = typeof photoUrl === 'string' ? keyFromPublicUrl(photoUrl) : null;
@@ -198,6 +199,12 @@ export const createTalkFromPhoto = async (photoUrl: string): Promise<CreateTalkF
       return null;
     });
   if (!talk) return { status: 'failed', reason: 'Esa charla ya está cargada' };
+
+  await notifySpeakers(
+    parsed.data.speakers.map((s) => s.userId),
+    talk,
+    admin,
+  );
 
   revalidatePath(`/eventos/${refs.eventId}/charlas`);
   revalidatePath('/charlas');

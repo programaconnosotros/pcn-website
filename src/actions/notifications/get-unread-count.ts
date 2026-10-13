@@ -12,7 +12,7 @@ export const getUnreadNotificationsCount = async (): Promise<number> => {
 
   const session = await findSession(sessionId);
 
-  if (!session || session.user.role !== 'ADMIN') {
+  if (!session) {
     return 0;
   }
 

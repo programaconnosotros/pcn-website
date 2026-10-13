@@ -28,12 +28,12 @@ beforeEach(() => {
 });
 
 describe('GET /api/notificaciones', () => {
-  it('lists the latest feed news for anyone, without admin data', async () => {
+  it('lists the latest feed news for anyone, without an inbox', async () => {
     jest.mocked(getCurrentSession).mockResolvedValue(null);
     const { response, body } = await read();
 
     expect(response.headers.get('Cache-Control')).toBe('private, no-store');
-    expect(body.admin).toBeNull();
+    expect(body.inbox).toBeNull();
     expect(body.feed).toHaveLength(15);
     expect(body.feed[0]).toEqual({
       id: 'evento-0',
@@ -45,10 +45,10 @@ describe('GET /api/notificaciones', () => {
     expect(prismaMock.notification.findMany).not.toHaveBeenCalled();
   });
 
-  it("adds an admin's own inbox", async () => {
+  it("adds the signed-in user's own inbox, with where each notification leads", async () => {
     jest.mocked(getCurrentSession).mockResolvedValue({
-      userId: 'admin-1',
-      user: { role: 'ADMIN' },
+      userId: 'u1',
+      user: { role: 'USER' },
     } as never);
     prismaMock.notification.count.mockResolvedValue(2);
     prismaMock.notification.findMany.mockResolvedValue([
@@ -58,14 +58,23 @@ describe('GET /api/notificaciones', () => {
         message: 'Ana se anotó',
         read: false,
         createdAt: new Date('2026-10-06T10:00:00.000Z'),
+        metadata: JSON.stringify({ href: '/consejos/c1' }),
+      },
+      {
+        id: 'n2',
+        title: 'Viejo',
+        message: 'Sin link',
+        read: true,
+        createdAt: new Date('2026-10-05T10:00:00.000Z'),
+        metadata: JSON.stringify({ href: 'https://evil.example' }),
       },
     ] as never);
 
     const { body } = await read();
     expect(prismaMock.notification.count).toHaveBeenCalledWith({
-      where: { userId: 'admin-1', read: false },
+      where: { userId: 'u1', read: false },
     });
-    expect(body.admin).toEqual({
+    expect(body.inbox).toEqual({
       unread: 2,
       items: [
         {
@@ -74,16 +83,17 @@ describe('GET /api/notificaciones', () => {
           message: 'Ana se anotó',
           read: false,
           createdAt: '2026-10-06T10:00:00.000Z',
+          href: '/consejos/c1',
+        },
+        {
+          id: 'n2',
+          title: 'Viejo',
+          message: 'Sin link',
+          read: true,
+          createdAt: '2026-10-05T10:00:00.000Z',
+          href: null,
         },
       ],
     });
-  });
-
-  it('keeps admin data from members', async () => {
-    jest.mocked(getCurrentSession).mockResolvedValue({
-      userId: 'u1',
-      user: { role: 'USER' },
-    } as never);
-    expect((await read()).body.admin).toBeNull();
   });
 });

@@ -30,8 +30,8 @@ const PlatformLayout = async ({
   ]);
   const user: SessionUser | null = session?.user ?? null;
 
-  // Contador de notificaciones no leídas (solo para admins)
-  const unreadNotificationsCount = user?.role === 'ADMIN' ? await getUnreadNotificationsCount() : 0;
+  // Contador de notificaciones no leídas de quien tiene sesión
+  const unreadNotificationsCount = user ? await getUnreadNotificationsCount() : 0;
 
   return (
     <>

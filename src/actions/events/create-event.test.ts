@@ -214,4 +214,33 @@ describe('createEvent dates and sponsors', () => {
     expect(data.googleMapsUrl).toBeNull();
     expect(data.capacity).toBeNull();
   });
+
+  it('notifies every other user about a future event, and nobody about a past one', async () => {
+    mockCookies({ sessionId: 'session-admin' });
+    prismaMock.session.findUnique.mockResolvedValue(adminSession as any);
+    prismaMock.event.create.mockResolvedValue({ id: 'event-5', name: 'Meetup' } as any);
+    prismaMock.user.findMany.mockResolvedValue([{ id: adminUser.id }, { id: 'u2' }] as any);
+    const date = new Date(Date.now() + 7 * 86_400_000).toISOString();
+
+    await expect(createEvent({ ...validEventData, date })).rejects.toThrow('NEXT_REDIRECT');
+
+    expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+      where: { suspendedAt: null },
+      select: { id: true },
+    });
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          type: 'event_created',
+          userId: 'u2',
+          message: expect.stringContaining('"Meetup"'),
+          metadata: JSON.stringify({ eventId: 'event-5', href: '/eventos/event-5' }),
+        }),
+      ],
+    });
+
+    prismaMock.notification.createMany.mockClear();
+    await expect(createEvent(validEventData)).rejects.toThrow('NEXT_REDIRECT');
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
+  });
 });

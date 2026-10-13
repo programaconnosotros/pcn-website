@@ -7,6 +7,7 @@ import { toggleLike } from './like-advice';
 const baseSession = {
   id: 'session-1',
   userId: 'user-1',
+  user: { id: 'user-1', name: 'Ana' },
   expires: new Date('2027-01-01'),
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
@@ -55,6 +56,39 @@ describe('toggleLike', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/consejos');
     expect(revalidatePath).toHaveBeenCalledWith('/consejos/advice-1');
     expect(revalidatePath).toHaveBeenCalledWith('/');
+  });
+
+  it("notifies the consejo's author about a new like, but not about their own", async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.like.findFirst.mockResolvedValue(null);
+    prismaMock.advice.findUnique.mockResolvedValue({
+      authorId: 'author-1',
+      content: 'Leé el código de otros',
+    } as any);
+
+    await toggleLike('advice-1');
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          type: 'advice_liked',
+          title: 'Le gustó tu consejo',
+          message: 'A Ana le gustó tu consejo "Leé el código de otros".',
+          userId: 'author-1',
+          metadata: JSON.stringify({
+            adviceId: 'advice-1',
+            userId: 'user-1',
+            href: '/consejos/advice-1',
+          }),
+        },
+      ],
+    });
+
+    prismaMock.notification.createMany.mockClear();
+    prismaMock.advice.findUnique.mockResolvedValue({ authorId: 'user-1', content: 'x' } as any);
+    await toggleLike('advice-1');
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
   });
 
   it('deletes the like when one already exists and returns success', async () => {

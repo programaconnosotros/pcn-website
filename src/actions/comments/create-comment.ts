@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
 import { consejoTarget } from '@/lib/consejo-target';
+import { notifyUsers } from '@/actions/notifications/notify-users';
+import { excerpt } from '@/actions/notifications/excerpt';
 
 const commentSchema = z.object({
   content: z
@@ -65,6 +67,25 @@ export const createComment = async ({
       },
     },
   });
+
+  // Los consejos extraídos de las conversaciones no tienen autor en la plataforma.
+  if ('adviceId' in target) {
+    const advice = await prisma.advice.findUnique({
+      where: { id: target.adviceId },
+      select: { authorId: true },
+    });
+    await notifyUsers(
+      [advice?.authorId],
+      {
+        type: 'advice_commented',
+        title: 'Comentaron tu consejo',
+        message: `${comment.author.name} comentó tu consejo: "${excerpt(comment.content)}".`,
+        href: `/consejos/${adviceId}`,
+        metadata: { adviceId, commentId: comment.id, userId: session.userId },
+      },
+      session.userId,
+    );
+  }
 
   revalidatePath(`/consejos/${adviceId}`);
 

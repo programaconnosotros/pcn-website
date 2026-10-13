@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { canCreateEvents } from '@/lib/event-permissions';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { notifyEveryone } from '@/actions/notifications/notify-users';
 
 /**
  * Designers of the event's flyer, deduplicated, with only user ids that exist (a stale id is
@@ -91,6 +92,24 @@ export const createEvent = async (data: EventFormData) => {
       },
     },
   });
+
+  // Un evento que ya pasó se carga para el archivo: no hay nada a qué anotarse.
+  if (date > new Date()) {
+    await notifyEveryone(
+      {
+        type: 'event_created',
+        title: 'Nuevo evento',
+        message: `Se publicó "${event.name}", el ${date.toLocaleDateString('es-AR', {
+          day: 'numeric',
+          month: 'long',
+          timeZone: 'America/Argentina/Buenos_Aires',
+        })}.`,
+        href: `/eventos/${event.id}`,
+        metadata: { eventId: event.id },
+      },
+      session.user.id,
+    );
+  }
 
   revalidatePath('/eventos');
   redirect(`/eventos/${event.id}`);

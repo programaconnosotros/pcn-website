@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { findSession } from '@/lib/session';
+import { notifySpeakers } from './notify-speakers';
 
 export const createTalkFromProposal = async (proposalId: string) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -74,6 +75,12 @@ export const createTalkFromProposal = async (proposalId: string) => {
     const existing = await prisma.talk.findUniqueOrThrow({ where: { proposalId: proposal.id } });
     return { success: true, talkId: existing.id, alreadyExists: true };
   }
+
+  await notifySpeakers(
+    proposal.speakers.map((s) => s.userId),
+    talk,
+    session.user,
+  );
 
   revalidatePath(`/eventos/${proposal.eventId}/charlas`);
   revalidatePath(`/eventos/${proposal.eventId}/propuestas-de-charlas`);

@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { findSession } from '@/lib/session';
+import { notifySpeakers } from './notify-speakers';
 
 export const createTalk = async (data: TalkFormData) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -61,6 +62,12 @@ export const createTalk = async (data: TalkFormData) => {
       },
     },
   });
+
+  await notifySpeakers(
+    talkData.speakers.map((s) => s.userId),
+    talk,
+    session.user,
+  );
 
   if (talkData.eventId) {
     revalidatePath(`/eventos/${talkData.eventId}/charlas`);

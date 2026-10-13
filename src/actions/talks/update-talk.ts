@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { canManageEventById, canManageSomeEvent } from '@/lib/event-access';
 import { talkSchema, TalkFormData } from '@/schemas/talk-schema';
 import { findSession } from '@/lib/session';
+import { notifySpeakers } from './notify-speakers';
 
 export const updateTalk = async (id: string, data: TalkFormData) => {
   const sessionId = (await cookies()).get('sessionId')?.value;
@@ -27,7 +28,10 @@ export const updateTalk = async (id: string, data: TalkFormData) => {
 
   const talkData = parsed.data;
 
-  const existing = await prisma.talk.findUnique({ where: { id } });
+  const existing = await prisma.talk.findUnique({
+    where: { id },
+    include: { speakers: { select: { userId: true } } },
+  });
   if (!existing) {
     throw new Error('Charla no encontrada');
   }
@@ -75,6 +79,16 @@ export const updateTalk = async (id: string, data: TalkFormData) => {
       })),
     }),
   ]);
+
+  // Solo a quienes no eran speakers antes de esta edición.
+  const previousSpeakers = new Set(existing.speakers.map((s) => s.userId));
+  await notifySpeakers(
+    talkData.speakers
+      .map((s) => s.userId)
+      .filter((userId) => !previousSpeakers.has(userId ?? null)),
+    { id, title: talkData.title, eventId: talkData.eventId ?? null },
+    session.user,
+  );
 
   const eventId = talkData.eventId ?? existing.eventId;
   if (eventId) {

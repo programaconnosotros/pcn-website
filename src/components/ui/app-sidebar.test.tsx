@@ -68,9 +68,14 @@ describe('AppSidebar', () => {
     expect(screen.getByLabelText('estado')).toHaveTextContent('collapsed');
   });
 
-  it('adds the admin section with the unread notifications badge', () => {
-    renderSidebar({ user: admin, unreadNotificationsCount: 7 });
+  it('adds the admin section for admins', () => {
+    renderSidebar({ user: admin });
     expect(screen.getByText('Administración')).toBeInTheDocument();
+  });
+
+  it('shows any signed-in user their notifications with the unread badge', () => {
+    renderSidebar({ user: member, unreadNotificationsCount: 7 });
+    expect(screen.queryByText('Administración')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Notificaciones/ })).toHaveTextContent('7');
   });
 
@@ -86,12 +91,12 @@ describe('AppSidebar', () => {
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
       'Actividades:8',
       'Recursos:7',
-      'Comunidad:10',
+      'Comunidad:11',
     ]);
     expect(consumeOpenSidebarRequest).not.toHaveBeenCalled();
     unmount();
 
     renderSidebar({ user: admin });
-    expect(screen.getByText('Administración:7')).toBeInTheDocument();
+    expect(screen.getByText('Administración:6')).toBeInTheDocument();
   });
 });

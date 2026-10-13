@@ -8,9 +8,9 @@ import type { Metadata } from 'next';
 import { findSession } from '@/lib/session';
 import { tabTitle } from '@/lib/tab-title';
 
-// Admin-only page: keep it out of search results.
+// Each user's own inbox: keep it out of search results.
 export const metadata: Metadata = {
-  title: tabTitle.sudo('notificaciones'),
+  title: tabTitle.ls('notificaciones'),
   robots: { index: false, follow: false },
 };
 
@@ -23,7 +23,7 @@ const NotificacionesPage = async () => {
 
   const session = await findSession(sessionId);
 
-  if (!session || session.user.role !== 'ADMIN') {
+  if (!session) {
     redirect('/');
   }
 

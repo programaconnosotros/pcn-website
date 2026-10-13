@@ -22,6 +22,15 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-12',
+    area: 'notificaciones',
+    title: 'Notificaciones para todos',
+    description:
+      'Con sesión iniciada, /notificaciones y la campana te avisan cuando le dan like o comentan uno de tus consejos, cuando te etiquetan en una foto de la galería, cuando te suman como speaker de una charla y cuando se publica un evento nuevo.',
+    authors: ['agustin-sanc'],
+    href: '/notificaciones',
+  },
+  {
+    date: '2026-10-12',
     area: 'consejos',
     title: 'Los consejos que te gustaron',
     description:

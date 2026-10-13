@@ -23,24 +23,31 @@ jest.mock('./notifications-client', () => ({
 }));
 
 describe('/notificaciones', () => {
-  it('is an admin listing kept out of search engines', () => {
+  it('is a personal inbox kept out of search engines', () => {
     expect(metadata).toMatchObject({
-      title: 'sudo ls ~/notificaciones',
+      title: 'ls ~/notificaciones',
       robots: { index: false, follow: false },
     });
   });
 
-  it('sends anyone who is not an admin home', async () => {
+  it('sends anyone without a session home', async () => {
     mockCookies();
     expect(await thrownBy(() => NotificacionesPage())).toBe('NEXT_REDIRECT:/');
 
     mockCookies({ sessionId: 'token' });
     jest.mocked(findSession).mockResolvedValueOnce(null);
     expect(await thrownBy(() => NotificacionesPage())).toBe('NEXT_REDIRECT:/');
-
-    jest.mocked(findSession).mockResolvedValueOnce(sessionRow());
-    expect(await thrownBy(() => NotificacionesPage())).toBe('NEXT_REDIRECT:/');
     expect(fetchNotifications).not.toHaveBeenCalled();
+  });
+
+  it('opens for members too, not only admins', async () => {
+    mockCookies({ sessionId: 'token' });
+    jest.mocked(findSession).mockResolvedValue(sessionRow());
+    jest.mocked(fetchNotifications).mockResolvedValue([]);
+
+    await renderPage(NotificacionesPage());
+
+    expect(screen.getByText('0 en total · 0 sin leer')).toBeInTheDocument();
   });
 
   it('counts the unread notifications and hands them all to the inbox', async () => {

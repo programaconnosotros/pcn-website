@@ -80,11 +80,11 @@ describe('getUnreadNotificationsCount', () => {
     await expect(getUnreadNotificationsCount()).resolves.toBe(2);
   });
 
-  it('returns 0 for regular users and anonymous visitors', async () => {
+  it('counts regular users too, and returns 0 for anonymous visitors', async () => {
     const user = await quickUser();
     await notify(user.id);
     await actAs(user.id);
-    await expect(getUnreadNotificationsCount()).resolves.toBe(0);
+    await expect(getUnreadNotificationsCount()).resolves.toBe(1);
     await actAs();
     await expect(getUnreadNotificationsCount()).resolves.toBe(0);
   });

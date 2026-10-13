@@ -1,9 +1,9 @@
-/** What the notification center shows: news from the feed and, for admins, their own inbox. */
+/** What the notification center shows: news from the feed and, with a session, your own inbox. */
 export interface NotificationCenterData {
   /** The latest feed items, newest first. */
   feed: NotificationFeedItem[];
-  /** Admin notifications; null for everyone else. */
-  admin: { unread: number; items: AdminNotificationItem[] } | null;
+  /** The signed-in user's notifications; null without a session. */
+  inbox: { unread: number; items: InboxNotificationItem[] } | null;
 }
 
 export interface NotificationFeedItem {
@@ -16,13 +16,27 @@ export interface NotificationFeedItem {
   sortKey: string;
 }
 
-export interface AdminNotificationItem {
+export interface InboxNotificationItem {
   id: string;
   title: string;
   message: string;
   read: boolean;
   createdAt: string;
+  /** Where the notification takes you, when it says. */
+  href: string | null;
 }
+
+/** The page a notification links to, from the `href` its metadata carries. */
+export const notificationHref = (metadata: string | null): string | null => {
+  if (!metadata) return null;
+  try {
+    const href = (JSON.parse(metadata) as { href?: unknown }).href;
+    // Only paths of the site: metadata is ours, but a link never leaves it.
+    return typeof href === 'string' && href.startsWith('/') && !href.startsWith('//') ? href : null;
+  } catch {
+    return null;
+  }
+};
 
 export const NOTIFICATIONS_ENDPOINT = '/api/notificaciones';
 /** How many feed items the center lists. */

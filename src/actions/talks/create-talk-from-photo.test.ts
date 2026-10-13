@@ -52,6 +52,7 @@ const generate = jest.mocked(talkAgent.generate);
 
 beforeEach(() => {
   process.env.AI_GATEWAY_API_KEY = 'test-key';
+  jest.mocked(requireAdmin).mockResolvedValue({ id: 'admin-1', name: 'Admin' } as never);
   jest.mocked(getObjectBuffer).mockResolvedValue(Buffer.from('photo'));
   prismaMock.event.findFirst.mockResolvedValue({ id: EVENT_ID } as never);
   prismaMock.talkProposal.findFirst.mockResolvedValue({

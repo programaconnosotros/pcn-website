@@ -131,4 +131,35 @@ describe('createComment', () => {
     ).rejects.toThrow('El comentario al que respondés no es de este consejo');
     expect(prismaMock.comment.create).not.toHaveBeenCalled();
   });
+
+  it("notifies the consejo's author, but not about their own comments", async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+    prismaMock.comment.create.mockResolvedValue(mockComment as any);
+    prismaMock.advice.findUnique.mockResolvedValue({ authorId: 'author-1' } as any);
+
+    await createComment(validInput);
+
+    expect(prismaMock.notification.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          type: 'advice_commented',
+          title: 'Comentaron tu consejo',
+          message: 'Test User comentó tu consejo: "Un comentario válido".',
+          userId: 'author-1',
+          metadata: JSON.stringify({
+            adviceId: 'advice-1',
+            commentId: 'comment-1',
+            userId: 'user-1',
+            href: '/consejos/advice-1',
+          }),
+        },
+      ],
+    });
+
+    prismaMock.notification.createMany.mockClear();
+    prismaMock.advice.findUnique.mockResolvedValue({ authorId: 'user-1' } as any);
+    await createComment(validInput);
+    expect(prismaMock.notification.createMany).not.toHaveBeenCalled();
+  });
 });
