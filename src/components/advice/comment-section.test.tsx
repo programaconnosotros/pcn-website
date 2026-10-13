@@ -44,7 +44,7 @@ describe('CommentSection', () => {
     expect(screen.getByText('B')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'iniciar sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.queryByRole('button', { name: 'Responder' })).not.toBeInTheDocument();
   });

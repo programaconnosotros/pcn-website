@@ -59,7 +59,12 @@ const nextConfig = {
     ];
   },
   async redirects() {
-    return [{ source: '/sponsors', destination: '/partners', permanent: true }];
+    return [
+      { source: '/sponsors', destination: '/partners', permanent: true },
+      // Las pantallas de login y registro vivían bajo /autenticacion (links de mails viejos, marcadores)
+      { source: '/autenticacion/registro', destination: '/crear-cuenta', permanent: true },
+      { source: '/autenticacion/:page', destination: '/:page', permanent: true },
+    ];
   },
   images: {
     // 75 is the default; 40 is for the home hero backdrop, shown faded under gradients.

@@ -48,7 +48,7 @@ describe('/setups', () => {
     expect(screen.getByText(/Todavía nadie compartió su setup/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /compartirSetup/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=/setups',
+      '/iniciar-sesion?redirect=/setups',
     );
     expect(screen.queryByRole('navigation', { name: 'Orden' })).not.toBeInTheDocument();
   });

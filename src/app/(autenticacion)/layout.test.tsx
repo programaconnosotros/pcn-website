@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import AuthLayout from './layout';
 import SignInLayout, { metadata as signIn } from './iniciar-sesion/layout';
 import ResetLayout, { metadata as reset } from './recuperar-clave/layout';
-import SignUpLayout, { metadata as signUp } from './registro/layout';
+import SignUpLayout, { metadata as signUp } from './crear-cuenta/layout';
 import VerifyLayout, { metadata as verify } from './verificar-email/layout';
 
 describe('authentication layouts', () => {
@@ -24,7 +24,7 @@ describe('authentication layouts', () => {
   it.each([
     ['iniciar-sesion', SignInLayout, signIn, 'login'],
     ['recuperar-clave', ResetLayout, reset, 'passwd'],
-    ['registro', SignUpLayout, signUp, 'useradd'],
+    ['crear-cuenta', SignUpLayout, signUp, 'useradd'],
     ['verificar-email', VerifyLayout, verify, 'gpg --verify'],
   ])(
     '%s sets the tab title of its client page and renders it as is',

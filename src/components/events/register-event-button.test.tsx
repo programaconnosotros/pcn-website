@@ -23,7 +23,7 @@ describe('RegisterEventButton', () => {
     await userEvent.click(screen.getByRole('button', { name: 'inscribirme();' }));
 
     expect(mockRouter.push).toHaveBeenCalledWith(
-      '/autenticacion/iniciar-sesion?redirect=/eventos/e1&autoRegister=true',
+      '/iniciar-sesion?redirect=/eventos/e1&autoRegister=true',
     );
     expect(mockRegister).not.toHaveBeenCalled();
   });
@@ -105,7 +105,7 @@ describe('RegisterEventButton', () => {
 
     await waitFor(() =>
       expect(mockRouter.push).toHaveBeenCalledWith(
-        '/autenticacion/iniciar-sesion?redirect=/eventos/e1&autoRegister=true',
+        '/iniciar-sesion?redirect=/eventos/e1&autoRegister=true',
       ),
     );
     expect(toast.error).not.toHaveBeenCalled();

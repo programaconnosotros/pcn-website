@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import type { Browser, Page } from '@playwright/test';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
-import { PASSWORD, USERS, type Role } from './data';
+import { AUTH_PATH, PASSWORD, USERS, type Role } from './data';
 import { E2E_BASE_URL } from './env';
 
 /** Un id corto y único, prefijado por área (`e2e-con-…`). */
@@ -42,13 +42,13 @@ export const createUser = async (
   return { id: user.id, email, name: user.name, password: PASSWORD };
 };
 
-/** Inicia sesión con el formulario y espera a salir de /autenticacion. */
+/** Inicia sesión con el formulario y espera a salir de las pantallas de login. */
 export const signIn = async (page: Page, user: { email: string; password?: string }) => {
-  await page.goto('/autenticacion/iniciar-sesion');
+  await page.goto('/iniciar-sesion');
   await page.getByLabel('Correo electrónico').fill(user.email);
   await page.getByLabel('Contraseña').fill(user.password ?? PASSWORD);
   await page.getByRole('button', { name: /ingresar/ }).click();
-  await page.waitForURL((url) => !url.pathname.startsWith('/autenticacion'));
+  await page.waitForURL((url) => !AUTH_PATH.test(url.pathname));
 };
 
 /** El id de un usuario sembrado (data.ts). */

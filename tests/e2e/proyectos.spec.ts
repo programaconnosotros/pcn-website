@@ -380,7 +380,7 @@ test.describe('sin sesión', () => {
       .filter({ visible: true })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
+    await expect(page).toHaveURL(/\/iniciar-sesion/);
   });
 
   test('buscar filtra por título, stack o persona', async ({ page }) => {

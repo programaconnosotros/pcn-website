@@ -11,7 +11,7 @@ import { isAuthRequiredError } from '@/lib/auth-required';
 
 /** Login que, al volver, inscribe automáticamente al evento. */
 export const signInUrl = (eventId: string) =>
-  `/autenticacion/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`;
+  `/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`;
 
 type RegisterEventButtonProps = {
   eventId: string;

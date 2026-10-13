@@ -14,7 +14,7 @@ test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
 test('iniciar sesión desde el celular', async ({ page, factory, db }) => {
   const user = await factory.user();
-  await page.goto('/autenticacion/iniciar-sesion');
+  await page.goto('/iniciar-sesion');
   await fillSignIn(page, user.email, user.password);
   await expect(page.getByText('Hola! 👋')).toBeVisible();
   await expect(page).toHaveURL('/');
@@ -30,12 +30,12 @@ test('cerrar sesión desde el menú del celular', async ({ page, factory, db }) 
   await page.getByRole('button', { name: new RegExp(user.name) }).click();
   await page.getByRole('menuitem', { name: 'Cerrar sesión' }).click();
 
-  await expect(page).toHaveURL('/autenticacion/iniciar-sesion');
+  await expect(page).toHaveURL('/iniciar-sesion');
   expect(await db.session.count({ where: { userId: user.id } })).toBe(0);
 });
 
 test('el registro entra en la pantalla del celular sin scroll horizontal', async ({ page }) => {
-  await page.goto('/autenticacion/registro');
+  await page.goto('/crear-cuenta');
   await expect(page.getByRole('button', { name: /crearCuenta/ })).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

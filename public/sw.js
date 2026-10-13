@@ -12,10 +12,10 @@
 //
 // Nunca se guarda nada que dependa de la sesión: en un dispositivo compartido quedaría a la
 // vista después de cerrar sesión. Por eso se saltean los pedidos que no son GET, las server
-// actions, /api, /autenticacion, las URLs firmadas y toda respuesta con Set-Cookie o
+// actions, /api, las pantallas de login y registro, las URLs firmadas y toda respuesta con Set-Cookie o
 // `Cache-Control: private/no-store`.
 
-const VERSION = 'v3';
+const VERSION = 'v4';
 const PRECACHE = `pcn-precache-${VERSION}`;
 const STATIC_CACHE = `pcn-static-${VERSION}`;
 const IMAGE_CACHE = `pcn-images-${VERSION}`;
@@ -46,7 +46,8 @@ const IMMUTABLE_IMAGE_HOSTS = [/\.cloudfront\.net$/, /\.s3(?:\.[a-z0-9-]+)?\.ama
 const MUTABLE_IMAGE_HOSTS = [/^avatars\.githubusercontent\.com$/, /^images\.unsplash\.com$/];
 const matchesHost = (hosts, hostname) => hosts.some((host) => host.test(hostname));
 
-const NEVER_CACHE_PATHS = /^\/(?:api|autenticacion|up)(?:\/|$)/;
+const NEVER_CACHE_PATHS =
+  /^\/(?:api|iniciar-sesion|crear-cuenta|verificar-email|recuperar-clave|up)(?:\/|$)/;
 const SIGNED_URL = /[?&](?:Signature|X-Amz-Signature|Key-Pair-Id|Policy)=/i;
 const IMAGE_PATH = /\.(?:png|jpe?g|webp|avif|gif|svg|ico)$/i;
 const FONT_PATH = /\.(?:woff2?|ttf|otf)$/i;

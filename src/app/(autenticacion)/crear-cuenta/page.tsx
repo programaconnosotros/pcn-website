@@ -407,11 +407,11 @@ function SignUpContent() {
         links={[
           {
             href: redirectTo
-              ? `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-              : '/autenticacion/iniciar-sesion',
+              ? `/iniciar-sesion?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+              : '/iniciar-sesion',
             label: '¿Ya tenés cuenta? Iniciá sesión',
           },
-          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+          { href: '/recuperar-clave', label: 'Olvidé mi contraseña' },
         ]}
       />
     </AuthShell>

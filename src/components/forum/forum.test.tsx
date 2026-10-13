@@ -242,7 +242,7 @@ describe('ForumComments', () => {
     rerender(<ForumComments postId="p1" comments={[]} total={0} viewer={null} isLocked={false} />);
     expect(screen.getByRole('link', { name: 'Iniciá sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=/foro/tema/p1',
+      '/iniciar-sesion?redirect=/foro/tema/p1',
     );
   });
 });

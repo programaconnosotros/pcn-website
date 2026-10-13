@@ -447,7 +447,7 @@ const EventDetailPage: React.FC<{ params: Promise<{ id: string }> }> = async (pr
                   href={
                     userId
                       ? `/eventos/${id}/proponer-charla`
-                      : `/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
+                      : `/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`
                   }
                   className="flex items-center justify-between gap-2 text-sm text-muted-foreground hover:text-pcnGreen"
                 >

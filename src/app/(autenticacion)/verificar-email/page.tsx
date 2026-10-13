@@ -126,7 +126,7 @@ function VerifyEmailContent() {
         description="No se especificó un email para verificar."
       >
         <Button asChild size="lg" className="w-full">
-          <Link href="/autenticacion/iniciar-sesion">irAIniciarSesion();</Link>
+          <Link href="/iniciar-sesion">irAIniciarSesion();</Link>
         </Button>
       </AuthShell>
     );

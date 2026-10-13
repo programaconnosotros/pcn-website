@@ -331,16 +331,14 @@ describe('PcnOs', () => {
     const iframe = within(windowNamed('Inicio')).getByTitle('Inicio') as HTMLIFrameElement;
     Object.defineProperty(iframe, 'contentWindow', {
       configurable: true,
-      value: { location: { pathname: '/autenticacion/iniciar-sesion', search: '?r=1' } },
+      value: { location: { pathname: '/iniciar-sesion', search: '?r=1' } },
     });
     Object.defineProperty(iframe, 'contentDocument', {
       configurable: true,
       value: { title: 'login · pcn' },
     });
     fireEvent.load(iframe);
-    expect(window.location.pathname + window.location.search).toBe(
-      '/autenticacion/iniciar-sesion?r=1',
-    );
+    expect(window.location.pathname + window.location.search).toBe('/iniciar-sesion?r=1');
 
     // Another origin: the last known location stays.
     Object.defineProperty(iframe, 'contentWindow', {
@@ -350,7 +348,7 @@ describe('PcnOs', () => {
       },
     });
     fireEvent.load(iframe);
-    expect(window.location.pathname).toBe('/autenticacion/iniciar-sesion');
+    expect(window.location.pathname).toBe('/iniciar-sesion');
   });
 
   it('keeps windows in proportion when the screen is resized', async () => {

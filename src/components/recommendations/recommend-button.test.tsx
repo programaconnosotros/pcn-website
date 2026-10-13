@@ -47,7 +47,7 @@ describe('RecommendButton', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /recomendar video/ }));
 
-    expect(push).toHaveBeenCalledWith('/autenticacion/iniciar-sesion?redirect=%2Fvideos');
+    expect(push).toHaveBeenCalledWith('/iniciar-sesion?redirect=%2Fvideos');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 

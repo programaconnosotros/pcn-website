@@ -224,7 +224,7 @@ export function ForumComments({
       ) : (
         <p className="font-mono text-xs text-muted-foreground">
           <Link
-            href={`/autenticacion/iniciar-sesion?redirect=/foro/tema/${postId}`}
+            href={`/iniciar-sesion?redirect=/foro/tema/${postId}`}
             className="text-pcnGreen hover:underline"
           >
             Iniciá sesión

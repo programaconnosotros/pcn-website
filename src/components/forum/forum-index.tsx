@@ -40,11 +40,7 @@ export async function ForumIndex({ category }: { category?: Category }) {
             />
             <Button variant="pcn" size="sm" asChild>
               <Link
-                href={
-                  session
-                    ? newHref
-                    : `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(newHref)}`
-                }
+                href={session ? newHref : `/iniciar-sesion?redirect=${encodeURIComponent(newHref)}`}
               >
                 <Plus className="mr-1.5 size-4" />
                 nuevoTema();

@@ -59,7 +59,7 @@ export function NavUser({
           <div className={cn('p-2', !flush && 'rounded-sm border border-pcnGreen-200 bg-black/60')}>
             <div className="flex flex-col gap-1">
               <Button asChild size="sm" className="w-full">
-                <Link href="/autenticacion/iniciar-sesion">
+                <Link href="/iniciar-sesion">
                   {iconOnly ? (
                     <>
                       <LogIn className="size-4" aria-hidden />
@@ -78,7 +78,7 @@ export function NavUser({
                 variant="ghost"
                 className="w-full text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
-                <Link href="/autenticacion/registro">
+                <Link href="/crear-cuenta">
                   {iconOnly ? (
                     <>
                       <UserPlus className="size-4" aria-hidden />

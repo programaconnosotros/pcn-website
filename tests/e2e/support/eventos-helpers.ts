@@ -112,9 +112,7 @@ export const seededUserId = async (db: PrismaClient, role: Role) =>
  * de destino ahorra renderizar el inicio, que es la página más pesada del sitio.
  */
 export const signIn = async (page: Page, user: { email: string }, to = '/') => {
-  await page.goto(
-    to === '/' ? '/autenticacion/iniciar-sesion' : `/autenticacion/iniciar-sesion?redirect=${to}`,
-  );
+  await page.goto(to === '/' ? '/iniciar-sesion' : `/iniciar-sesion?redirect=${to}`);
   await page.getByLabel('Correo electrónico').fill(user.email);
   await page.getByLabel('Contraseña').fill(PASSWORD);
   await page.getByRole('button', { name: /ingresar/ }).click();

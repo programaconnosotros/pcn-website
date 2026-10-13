@@ -38,7 +38,7 @@ export function SetupLikeButton({
   if (!isLoggedIn) {
     return (
       <Link
-        href={`/autenticacion/iniciar-sesion?redirect=/setups/${setupId}`}
+        href={`/iniciar-sesion?redirect=/setups/${setupId}`}
         title="Iniciá sesión para dar me gusta"
         className={cn(buttonClassName, idleClassName, className)}
       >

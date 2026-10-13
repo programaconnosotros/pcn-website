@@ -270,7 +270,7 @@ test('TC-ENT-005 Ejercicios de live coding sin sesión', async ({ page }) => {
 
   // La acción del toast lleva al login
   await toast.getByRole('button', { name: 'Iniciar sesión' }).click();
-  await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
+  await expect(page).toHaveURL(/\/iniciar-sesion/);
 });
 
 test('live coding asks for a technology and a seniority before listing exercises', async ({

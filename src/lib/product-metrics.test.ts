@@ -83,7 +83,7 @@ const mockRawQueries = (overrides: Partial<Record<string, unknown[]>> = {}) => {
         { mobile: BigInt(4), tablet: BigInt(1), desktop: BigInt(6), bots: BigInt(2) },
       ]);
     if (sql.includes('AS returning')) return pick('returning', [{ returning: BigInt(2) }]);
-    if (sql.includes('/autenticacion/registro')) return pick('form', [{ visitors: BigInt(9) }]);
+    if (sql.includes('/crear-cuenta')) return pick('form', [{ visitors: BigInt(9) }]);
     if (sql.includes('GROUP BY path'))
       return pick('paths', [{ path: '/eventos/abc', visits: BigInt(8), visitors: BigInt(5) }]);
     return pick('traffic', [

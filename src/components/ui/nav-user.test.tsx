@@ -39,11 +39,11 @@ describe('NavUser', () => {
     renderNav(null);
     expect(screen.getByRole('link', { name: /iniciarSesion\(\);/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.getByRole('link', { name: /Crear cuenta/ })).toHaveAttribute(
       'href',
-      '/autenticacion/registro',
+      '/crear-cuenta',
     );
   });
 
@@ -52,11 +52,11 @@ describe('NavUser', () => {
     expect(screen.getAllByRole('link')).toHaveLength(2);
     expect(screen.getByRole('link', { name: 'iniciarSesion();' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.getByRole('link', { name: 'Crear cuenta' })).toHaveAttribute(
       'href',
-      '/autenticacion/registro',
+      '/crear-cuenta',
     );
     // The names are visually hidden: only the icons show
     expect(screen.getByText('iniciarSesion();')).toHaveClass('sr-only');

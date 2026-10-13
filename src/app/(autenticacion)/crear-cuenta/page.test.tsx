@@ -53,7 +53,7 @@ jest.setTimeout(20_000);
 
 describe('SignUpPage', () => {
   beforeEach(() => {
-    setLocation('/autenticacion/registro');
+    setLocation('/crear-cuenta');
     // Swallow only the known uncontrolled-password warning (see the failing test below)
     const original = console.error;
     consoleError = jest.spyOn(console, 'error').mockImplementation((...args: unknown[]) => {
@@ -109,17 +109,17 @@ describe('SignUpPage', () => {
   });
 
   it('creates the account with the optional data and redirects', async () => {
-    setLocation('/autenticacion/registro', 'redirect=/eventos/2&autoRegister=true');
+    setLocation('/crear-cuenta', 'redirect=/eventos/2&autoRegister=true');
     signUpMock.mockResolvedValue({
       success: true,
-      redirectUrl: '/autenticacion/verificar-email',
+      redirectUrl: '/verificar-email',
     } as never);
     const user = userEvent.setup();
     render(<SignUpPage />);
 
     expect(screen.getByRole('link', { name: /Ya tenés cuenta/ })).toHaveAttribute(
       'href',
-      `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent('/eventos/2')}&autoRegister=true`,
+      `/iniciar-sesion?redirect=${encodeURIComponent('/eventos/2')}&autoRegister=true`,
     );
 
     await fillRequired(user, { country: 'Argentina' });
@@ -128,9 +128,7 @@ describe('SignUpPage', () => {
     await user.click(screen.getByRole('button', { name: 'subir foto' }));
     await submit(user);
 
-    await waitFor(() =>
-      expect(mockRouter.push).toHaveBeenCalledWith('/autenticacion/verificar-email'),
-    );
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/verificar-email'));
     expect(signUpMock).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'Ana Gomez',
@@ -147,7 +145,7 @@ describe('SignUpPage', () => {
   });
 
   it('uses & when the redirect already has a query and skips push without redirectUrl', async () => {
-    setLocation('/autenticacion/registro', 'redirect=%2Feventos%3Fa%3D1&autoRegister=true');
+    setLocation('/crear-cuenta', 'redirect=%2Feventos%3Fa%3D1&autoRegister=true');
     signUpMock.mockResolvedValue({ success: true } as never);
     const user = userEvent.setup();
     render(<SignUpPage />);

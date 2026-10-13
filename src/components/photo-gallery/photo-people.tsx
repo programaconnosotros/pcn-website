@@ -174,7 +174,7 @@ export function PhotoPeople({ photoId, people: initialPeople, viewer, isAdmin }:
         <p className="font-mono text-[11px] text-muted-foreground">
           ¿Aparecés en la foto?{' '}
           <Link
-            href={`/autenticacion/iniciar-sesion?redirect=/galeria/${photoId}`}
+            href={`/iniciar-sesion?redirect=/galeria/${photoId}`}
             className="text-pcnGreen-700 hover:text-pcnGreen"
           >
             Iniciá sesión

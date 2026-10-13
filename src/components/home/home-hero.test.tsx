@@ -14,11 +14,11 @@ describe('HomeHero', () => {
     expect(screen.getByText('guest@pcn')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /crearCuenta/ })).toHaveAttribute(
       'href',
-      '/autenticacion/registro',
+      '/crear-cuenta',
     );
     expect(screen.getByRole('link', { name: /iniciarSesion/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.getByRole('link', { name: /Solo quiero el WhatsApp/ })).toBeInTheDocument();
     expect(screen.getByText(/Gratis · Sin spam · Desde 2020/)).toBeInTheDocument();

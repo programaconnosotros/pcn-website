@@ -1249,7 +1249,7 @@ export const changelog: ChangelogEntry[] = [
     title: 'Registro sin doble envío',
     description: 'El botón de registro queda deshabilitado después de crear la cuenta.',
     authors: ['agustin-sanc'],
-    href: '/autenticacion/registro',
+    href: '/crear-cuenta',
   },
   {
     date: '2026-06-08',
@@ -1486,7 +1486,7 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Las cuentas nuevas verifican su email y la contraseña se recupera por mail, con límite de intentos.',
     authors: ['agustin-sanc'],
-    href: '/autenticacion/recuperar-clave',
+    href: '/recuperar-clave',
   },
   {
     date: '2025-12-28',
@@ -1799,7 +1799,7 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Se corrigieron el restablecimiento de contraseña, la validación de la contraseña y el campo de texto del registro.',
     authors: ['MauriJC'],
-    href: '/autenticacion/registro',
+    href: '/crear-cuenta',
   },
   {
     date: '2025-05-27',
@@ -1947,7 +1947,7 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Registro e inicio de sesión con email y contraseña, recuperación de contraseña y accesos en la barra lateral.',
     authors: ['agustin-sanc'],
-    href: '/autenticacion/iniciar-sesion',
+    href: '/iniciar-sesion',
   },
   {
     date: '2025-03-03',

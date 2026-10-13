@@ -72,7 +72,7 @@ const logical: ArchitectureView = {
     {
       term: 'App Router',
       detail:
-        'src/app define las rutas por carpetas: el grupo (platform) con las secciones de la comunidad, autenticacion, api y archivos especiales (sitemap, robots, opengraph-image, [shortcut]). Los layouts comparten la barra lateral, el tema y los providers.',
+        'src/app define las rutas por carpetas: el grupo (platform) con las secciones de la comunidad, el grupo (autenticacion), api y archivos especiales (sitemap, robots, opengraph-image, [shortcut]). Los layouts comparten la barra lateral, el tema y los providers.',
     },
     {
       term: 'Server actions',

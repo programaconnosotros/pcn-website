@@ -54,7 +54,7 @@ describe('PhotoPeople', () => {
     expect(screen.getByText('Todavía no hay nadie etiquetado.')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Iniciá sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=/galeria/p1',
+      '/iniciar-sesion?redirect=/galeria/p1',
     );
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });

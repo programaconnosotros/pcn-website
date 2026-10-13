@@ -3,7 +3,7 @@
 // ones (scripts/generate-automated-cases.mjs) use these area ids.
 
 export const qualityAreas = [
-  { id: 'auth', code: 'AUT', label: 'Autenticación', route: '/autenticacion' },
+  { id: 'auth', code: 'AUT', label: 'Autenticación', route: '/iniciar-sesion' },
   { id: 'eventos', code: 'EVT', label: 'Eventos', route: '/eventos' },
   { id: 'charlas', code: 'CHA', label: 'Charlas', route: '/charlas' },
   { id: 'galeria', code: 'GAL', label: 'Galería', route: '/galeria' },

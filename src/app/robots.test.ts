@@ -7,7 +7,7 @@ describe('robots', () => {
 
     expect(rules).toMatchObject({ userAgent: '*', allow: '/' });
     expect(rules.disallow).toEqual(
-      expect.arrayContaining(['/api/', '/autenticacion/', '/eventos/*/editar']),
+      expect.arrayContaining(['/api/', '/iniciar-sesion', '/crear-cuenta', '/eventos/*/editar']),
     );
     expect(result.sitemap).toMatch(/\/sitemap\.xml$/);
   });

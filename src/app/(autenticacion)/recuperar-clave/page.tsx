@@ -379,7 +379,7 @@ export default function ResetPasswordPage() {
             Tu contraseña fue actualizada. Ya podés iniciar sesión con la nueva.
           </AuthStatus>
           <Button asChild size="lg" className="w-full">
-            <Link href="/autenticacion/iniciar-sesion">
+            <Link href="/iniciar-sesion">
               iniciarSesion();
               <LogIn className="ml-2 h-4 w-4" />
             </Link>
@@ -390,8 +390,8 @@ export default function ResetPasswordPage() {
       {step !== 'success' && (
         <AuthLinks
           links={[
-            { href: '/autenticacion/iniciar-sesion', label: 'Volver a iniciar sesión' },
-            { href: '/autenticacion/registro', label: '¿No tenés cuenta? Creá una' },
+            { href: '/iniciar-sesion', label: 'Volver a iniciar sesión' },
+            { href: '/crear-cuenta', label: '¿No tenés cuenta? Creá una' },
           ]}
         />
       )}

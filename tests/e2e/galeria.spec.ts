@@ -182,7 +182,7 @@ test.describe('anonymous visitor', () => {
     await expect(page.getByText('¿Aparecés en la foto?')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Iniciá sesión' })).toHaveAttribute(
       'href',
-      `/autenticacion/iniciar-sesion?redirect=/galeria/${photo.id}`,
+      `/iniciar-sesion?redirect=/galeria/${photo.id}`,
     );
     await expect(page.getByRole('button', { name: 'aparezco en esta foto' })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Editar o eliminar' })).toHaveCount(0);

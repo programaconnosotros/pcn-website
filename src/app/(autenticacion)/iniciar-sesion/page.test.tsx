@@ -31,7 +31,7 @@ jest.setTimeout(20_000);
 
 describe('SignInPage', () => {
   beforeEach(() => {
-    setLocation('/autenticacion/iniciar-sesion');
+    setLocation('/iniciar-sesion');
     jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
@@ -63,7 +63,7 @@ describe('SignInPage', () => {
 
   it('prefills the email and forwards redirect with autoRegister', async () => {
     setLocation(
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
       'email=bob@example.com&redirect=/eventos/1?x=1&autoRegister=true',
     );
     signInMock.mockResolvedValue({ success: true, redirectTo: '/eventos/1' } as never);
@@ -72,7 +72,7 @@ describe('SignInPage', () => {
     expect(screen.getByLabelText('Correo electrónico')).toHaveValue('bob@example.com');
     expect(screen.getByRole('link', { name: /No tenés cuenta/ })).toHaveAttribute(
       'href',
-      `/autenticacion/registro?redirect=${encodeURIComponent('/eventos/1?x=1')}&autoRegister=true`,
+      `/crear-cuenta?redirect=${encodeURIComponent('/eventos/1?x=1')}&autoRegister=true`,
     );
 
     await fillAndSubmit('bob@example.com');
@@ -85,7 +85,7 @@ describe('SignInPage', () => {
   });
 
   it('appends autoRegister with ? when the redirect has no query', async () => {
-    setLocation('/autenticacion/iniciar-sesion', 'redirect=/eventos/1&autoRegister=true');
+    setLocation('/iniciar-sesion', 'redirect=/eventos/1&autoRegister=true');
     signInMock.mockResolvedValue({ success: true, redirectTo: '/eventos/1' } as never);
     render(<SignInPage />);
 
@@ -99,7 +99,7 @@ describe('SignInPage', () => {
   });
 
   it('sends unverified users to the verification page', async () => {
-    setLocation('/autenticacion/iniciar-sesion', 'redirect=/eventos');
+    setLocation('/iniciar-sesion', 'redirect=/eventos');
     signInMock.mockResolvedValue({
       success: false,
       error: 'EMAIL_NOT_VERIFIED',
@@ -111,7 +111,7 @@ describe('SignInPage', () => {
 
     await waitFor(() =>
       expect(mockRouter.push).toHaveBeenCalledWith(
-        `/autenticacion/verificar-email?email=${encodeURIComponent('otro@example.com')}&redirect=${encodeURIComponent('/eventos')}`,
+        `/verificar-email?email=${encodeURIComponent('otro@example.com')}&redirect=${encodeURIComponent('/eventos')}`,
       ),
     );
     expect(toast.info).toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('SignInPage', () => {
 
     await waitFor(() =>
       expect(mockRouter.push).toHaveBeenCalledWith(
-        `/autenticacion/verificar-email?email=${encodeURIComponent('ana@example.com')}`,
+        `/verificar-email?email=${encodeURIComponent('ana@example.com')}`,
       ),
     );
   });

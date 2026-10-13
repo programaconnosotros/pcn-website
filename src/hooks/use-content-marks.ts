@@ -20,7 +20,7 @@ interface SetMarkInput {
   value: boolean;
 }
 
-const LOGIN_URL = '/autenticacion/iniciar-sesion';
+const LOGIN_URL = '/iniciar-sesion';
 
 /**
  * The logged-in user's marks on one kind of content (read articles, watched videos…), with

@@ -150,10 +150,7 @@ export function InterviewGuidesList({
               <p className="text-xs text-muted-foreground">
                 {!marks.isLoading && !marks.isAuthenticated ? (
                   <>
-                    <Link
-                      href="/autenticacion/iniciar-sesion"
-                      className="text-pcnGreen hover:underline"
-                    >
+                    <Link href="/iniciar-sesion" className="text-pcnGreen hover:underline">
                       Iniciá sesión
                     </Link>{' '}
                     para marcar las secciones como leídas y seguir tu progreso.

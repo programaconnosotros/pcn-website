@@ -8,19 +8,19 @@ describe('signOut', () => {
   it('deletes the session row and cookie, then redirects to the sign-in page', async () => {
     const store = mockCookies({ sessionId: 'abc' });
 
-    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/autenticacion/iniciar-sesion');
+    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/iniciar-sesion');
 
     expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
       where: { id: hashSessionToken('abc') },
     });
     expect(store.delete).toHaveBeenCalledWith('sessionId');
-    expect(redirect).toHaveBeenCalledWith('/autenticacion/iniciar-sesion');
+    expect(redirect).toHaveBeenCalledWith('/iniciar-sesion');
   });
 
   it('still redirects even when there is no sessionId cookie', async () => {
     const store = mockCookies();
 
-    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/autenticacion/iniciar-sesion');
+    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/iniciar-sesion');
 
     expect(store.delete).toHaveBeenCalledWith('sessionId');
     expect(prismaMock.session.deleteMany).not.toHaveBeenCalled();

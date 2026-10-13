@@ -64,7 +64,7 @@ export function RecommendButton({ kind, defaults, label, className }: Props) {
 
   const handleClick = () => {
     if (data && !data.isAuthenticated) {
-      router.push(`/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(pathname)}`);
+      router.push(`/iniciar-sesion?redirect=${encodeURIComponent(pathname)}`);
       return;
     }
     setOpen(true);

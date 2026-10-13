@@ -15,7 +15,7 @@ import {
 test.use({ area: 'auth' });
 test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
-const RESET = '/autenticacion/recuperar-clave';
+const RESET = '/recuperar-clave';
 const SENT = 'Código enviado. Revisá tu correo electrónico.';
 
 const requestCode = async (page: Page, email: string) => {
@@ -80,7 +80,7 @@ test('TC-AUT-014 Recuperar contraseña de punta a punta', async ({
   });
   expect(await bcrypt.compare(user.password, stored.password)).toBe(false);
   await page.getByRole('link', { name: /iniciarSesion/ }).click();
-  await expect(page).toHaveURL('/autenticacion/iniciar-sesion');
+  await expect(page).toHaveURL('/iniciar-sesion');
   await fillSignIn(page, user.email, newPassword);
   await expect(page).toHaveURL('/');
   await other.close();

@@ -119,13 +119,13 @@ export const HomeHero = ({ userName, title }: HomeHeroProps) => {
               ) : (
                 <>
                   <Button asChild size="lg">
-                    <Link href="/autenticacion/registro">
+                    <Link href="/crear-cuenta">
                       crearCuenta();
                       <UserPlus className="ml-2 size-4" />
                     </Link>
                   </Button>
                   <Button asChild variant="outline" size="lg">
-                    <Link href="/autenticacion/iniciar-sesion">
+                    <Link href="/iniciar-sesion">
                       iniciarSesion();
                       <LogIn className="ml-2 size-4" />
                     </Link>

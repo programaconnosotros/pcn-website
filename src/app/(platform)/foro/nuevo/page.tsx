@@ -16,7 +16,7 @@ export default async function NewForumPostPage(props: {
     listForumCategories(),
     props.searchParams,
   ]);
-  if (!session) redirect('/autenticacion/iniciar-sesion?redirect=/foro/nuevo');
+  if (!session) redirect('/iniciar-sesion?redirect=/foro/nuevo');
 
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">

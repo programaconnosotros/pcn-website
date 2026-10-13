@@ -31,19 +31,19 @@ describe('VerifyEmailPage', () => {
   afterEach(() => jest.useRealTimers());
 
   it('asks to sign in when there is no email', () => {
-    setLocation('/autenticacion/verificar-email');
+    setLocation('/verificar-email');
     render(<VerifyEmailPage />);
 
     expect(screen.getByText('No se especificó un email para verificar.')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /irAIniciarSesion/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(sendMock).not.toHaveBeenCalled();
   });
 
   it('sends a code on load and starts the cooldown', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockResolvedValue({ waitSeconds: 45 });
     render(<VerifyEmailPage />);
 
@@ -53,7 +53,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('defaults the cooldown to 60s', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockResolvedValue({});
     render(<VerifyEmailPage />);
 
@@ -61,7 +61,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('uses the rate-limit wait when the initial send is limited', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockRejectedValue(rateLimitError(90));
     render(<VerifyEmailPage />);
 
@@ -70,7 +70,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('validates the code', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockResolvedValue({ waitSeconds: 10 });
     const user = userEvent.setup();
     render(<VerifyEmailPage />);
@@ -83,7 +83,7 @@ describe('VerifyEmailPage', () => {
 
   it('verifies the code and redirects after a pause', async () => {
     jest.useFakeTimers();
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com&redirect=/eventos/3');
+    setLocation('/verificar-email', 'email=ana@example.com&redirect=/eventos/3');
     sendMock.mockResolvedValue({ waitSeconds: 10 });
     verifyMock.mockResolvedValue(undefined);
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
@@ -101,7 +101,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('reports an invalid code', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockResolvedValue({ waitSeconds: 10 });
     verifyMock.mockRejectedValue(new Error('bad'));
     const user = userEvent.setup();
@@ -114,7 +114,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('resends a code once the cooldown is over', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     // The initial send fails without a rate limit, so the cooldown stays at 0
     sendMock.mockRejectedValueOnce(new Error('down'));
     sendMock.mockResolvedValueOnce({ waitSeconds: 30 });
@@ -130,7 +130,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('reports a rate-limited resend and waits', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockRejectedValueOnce(new Error('down'));
     sendMock.mockRejectedValueOnce(rateLimitError(120));
     const user = userEvent.setup();
@@ -143,7 +143,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('reports a failed resend', async () => {
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockRejectedValue(new Error('down'));
     const user = userEvent.setup();
     render(<VerifyEmailPage />);
@@ -156,7 +156,7 @@ describe('VerifyEmailPage', () => {
 
   it('counts the cooldown down every second', async () => {
     jest.useFakeTimers();
-    setLocation('/autenticacion/verificar-email', 'email=ana@example.com');
+    setLocation('/verificar-email', 'email=ana@example.com');
     sendMock.mockResolvedValue({ waitSeconds: 2 });
     render(<VerifyEmailPage />);
 

@@ -50,7 +50,7 @@ beforeAll(async () => {
         createdAt: at('2020-03-03T18:30:00Z'),
       },
       {
-        path: '/autenticacion/registro',
+        path: '/crear-cuenta',
         ipAddress: '10.0.0.2',
         userAgent: IPHONE,
         referer: 'https://t.co/x',
@@ -58,7 +58,7 @@ beforeAll(async () => {
       },
       // 4/3: un iPad, un bot y otra visita al registro sin IP (cuenta por user agent)
       {
-        path: '/autenticacion/registro',
+        path: '/crear-cuenta',
         ipAddress: '10.0.0.3',
         userAgent: IPAD,
         referer: 'https://google.com/',
@@ -71,7 +71,7 @@ beforeAll(async () => {
         createdAt: at('2020-03-04T22:00:00Z'),
       },
       {
-        path: '/autenticacion/registro',
+        path: '/crear-cuenta',
         ipAddress: null,
         userAgent: 'agente-sin-ip',
         createdAt: at('2020-03-05T02:59:00Z'),
@@ -191,7 +191,7 @@ it('buckets the timeline per local day, with signups', () => {
 
 it('groups pages and modules', () => {
   expect(metrics.pages.slice(0, 2)).toEqual([
-    { path: '/autenticacion/registro', visits: 3, visitors: 3 },
+    { path: '/crear-cuenta', visits: 3, visitors: 3 },
     { path: '/eventos/abc', visits: 2, visitors: 1 },
   ]);
   // /autenticacion y /eventos empatan en visitas: el orden entre ellas no está definido
@@ -217,9 +217,9 @@ it("ranks each module's top pages and counts who came back to it", () => {
 it('lists a page only when enough distinct visitors saw it, however many visits it has', async () => {
   // /eventos/abc tiene 2 visitas de una sola IP; el registro, 3 visitantes distintos
   const strict = await getProductMetrics(range, OWN_HOSTS, { minPageVisitors: 3 });
-  expect(strict.pages).toEqual([{ path: '/autenticacion/registro', visits: 3, visitors: 3 }]);
+  expect(strict.pages).toEqual([{ path: '/crear-cuenta', visits: 3, visitors: 3 }]);
   expect(strict.pagesByModule).toEqual([
-    { section: '/autenticacion', path: '/autenticacion/registro', visits: 3 },
+    { section: '/autenticacion', path: '/crear-cuenta', visits: 3 },
   ]);
   // Los totales y los módulos no cambian
   expect(strict.traffic).toEqual(metrics.traffic);

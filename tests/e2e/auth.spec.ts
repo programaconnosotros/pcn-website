@@ -16,7 +16,7 @@ import {
 test.use({ area: 'auth' });
 test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
-const SIGN_IN = '/autenticacion/iniciar-sesion';
+const SIGN_IN = '/iniciar-sesion';
 
 /** Cierra sesión desde el menú de usuario del sidebar (que arranca colapsado, solo con el avatar). */
 const signOutFromUserMenu = async (page: Page, name: string) => {
@@ -90,7 +90,7 @@ test('TC-AUT-004 Login con email sin verificar redirige a verificación', async 
 
   await expect(page.getByText(/Detectamos que tu email no está verificado/)).toBeVisible();
   await expect(page).toHaveURL(
-    `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}&redirect=${encodeURIComponent('/eventos')}`,
+    `/verificar-email?email=${encodeURIComponent(user.email)}&redirect=${encodeURIComponent('/eventos')}`,
   );
   expect((await page.context().cookies()).some((c) => c.name === 'sessionId')).toBe(false);
 });
@@ -170,11 +170,9 @@ test.describe('extra', () => {
   }) => {
     await page.goto(`${SIGN_IN}?redirect=/eventos`);
     await page.getByRole('link', { name: '¿No tenés cuenta? Creá una' }).click();
-    await expect(page).toHaveURL(
-      `/autenticacion/registro?redirect=${encodeURIComponent('/eventos')}`,
-    );
+    await expect(page).toHaveURL(`/crear-cuenta?redirect=${encodeURIComponent('/eventos')}`);
     await page.getByRole('link', { name: 'Olvidé mi contraseña' }).click();
-    await expect(page).toHaveURL('/autenticacion/recuperar-clave');
+    await expect(page).toHaveURL('/recuperar-clave');
   });
 
   test('una cookie de sesión vieja deja de servir después de cerrar sesión', async ({

@@ -202,10 +202,7 @@ export function LiveCodingPractice({
             <GuideProgressBar read={problemsDone.length} total={leetcode.length} />
             {!exerciseMarks.isLoading && !exerciseMarks.isAuthenticated && (
               <p className="mt-3 text-[11px] text-muted-foreground">
-                <Link
-                  href="/autenticacion/iniciar-sesion"
-                  className="text-pcnGreen hover:underline"
-                >
+                <Link href="/iniciar-sesion" className="text-pcnGreen hover:underline">
                   Iniciá sesión
                 </Link>{' '}
                 para marcar lo que resolviste.

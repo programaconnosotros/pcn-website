@@ -244,11 +244,11 @@ export function OsMenuBar({
           </DropdownMenu>
         ) : (
           <div className="flex items-center gap-1">
-            <Link href="/autenticacion/iniciar-sesion" className={menuTriggerClassName}>
+            <Link href="/iniciar-sesion" className={menuTriggerClassName}>
               Iniciar sesión
             </Link>
             <Link
-              href="/autenticacion/registro"
+              href="/crear-cuenta"
               className="rounded-sm bg-pcnGreen px-2 py-0.5 font-medium text-black transition-shadow hover:shadow-[0_0_12px_#04f4be]"
             >
               Crear cuenta

@@ -16,7 +16,7 @@ export default async function UploadPhotosPage(props: {
   const session = await getCurrentSession();
   if (!session) {
     const back = `/galeria/subir${trabajando ? '?trabajando=1' : ''}`;
-    redirect(`/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(back)}`);
+    redirect(`/iniciar-sesion?redirect=${encodeURIComponent(back)}`);
   }
   const isAdmin = session.user.role === 'ADMIN';
 

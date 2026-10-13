@@ -19,7 +19,7 @@ test('an anonymous visitor taps inscribirme and is sent to log in', async ({ pag
   await expect(page.getByText('Quedan 8 lugares disponibles.')).toBeVisible();
   await button.tap();
 
-  await page.waitForURL(/\/autenticacion\/iniciar-sesion/);
+  await page.waitForURL(/\/iniciar-sesion/);
   const url = new URL(page.url());
   expect(url.searchParams.get('redirect')).toBe(`/eventos/${event.id}`);
   expect(url.searchParams.get('autoRegister')).toBe('true');

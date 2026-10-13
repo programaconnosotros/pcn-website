@@ -19,9 +19,7 @@ export default async function UploadProjectMediaPage(props: Props) {
   const [project, session] = await Promise.all([fetchProject(id), getCurrentSession()]);
   if (!project) notFound();
   if (!session) {
-    redirect(
-      `/autenticacion/iniciar-sesion?redirect=${encodeURIComponent(`/proyectos/${id}/subir`)}`,
-    );
+    redirect(`/iniciar-sesion?redirect=${encodeURIComponent(`/proyectos/${id}/subir`)}`);
   }
   if (!canEditProject(session.user, project)) redirect(`/proyectos/${id}`);
 

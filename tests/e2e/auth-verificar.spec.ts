@@ -15,7 +15,7 @@ test.use({ area: 'auth' });
 test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
 const verifyUrl = (email: string, redirect?: string) =>
-  `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${redirect ? `&redirect=${encodeURIComponent(redirect)}` : ''}`;
+  `/verificar-email?email=${encodeURIComponent(email)}${redirect ? `&redirect=${encodeURIComponent(redirect)}` : ''}`;
 
 const INVALID = 'Código inválido o expirado. Intentá de nuevo.';
 
@@ -124,12 +124,12 @@ test('TC-AUT-012 Reenvío del código con cuenta regresiva', async ({ page, fact
 });
 
 test('TC-AUT-013 Verificar email sin parámetro', async ({ page }) => {
-  await page.goto('/autenticacion/verificar-email');
+  await page.goto('/verificar-email');
   await expect(page.getByText('No se especificó un email para verificar.')).toBeVisible();
   const link = page.getByRole('link', { name: 'irAIniciarSesion();' });
   await expect(link).toBeVisible();
   await link.click();
-  await expect(page).toHaveURL('/autenticacion/iniciar-sesion');
+  await expect(page).toHaveURL('/iniciar-sesion');
 });
 
 test.describe('extra', () => {

@@ -35,14 +35,14 @@ export const Hero = () => (
       <div className="mt-6 flex w-full justify-center px-4 sm:px-0">
         <div className="flex w-full flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-row justify-center gap-4">
-            <Link href="/autenticacion/iniciar-sesion" passHref>
+            <Link href="/iniciar-sesion" passHref>
               <Button className="flex flex-row items-center justify-center gap-2">
                 <span>ingresar();</span>
                 <LogIn className="h-4 w-4" />
               </Button>
             </Link>
 
-            <Link href="/autenticacion/registro" passHref>
+            <Link href="/crear-cuenta" passHref>
               <Button variant="outline" className="flex flex-row items-center justify-center gap-2">
                 <span>crearCuenta();</span>
                 <UserPlus className="h-4 w-4" />

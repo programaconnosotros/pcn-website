@@ -83,7 +83,7 @@ describe('/logros', () => {
 
     expect(screen.getByRole('link', { name: 'iniciá sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.queryByText('tuyo')).not.toBeInTheDocument();
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();

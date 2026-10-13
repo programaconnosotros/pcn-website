@@ -95,7 +95,7 @@ export const signUp = async (
     const redirectTo = safeRedirectPath(rawRedirectTo, '');
 
     // Devolver la URL de verificación para que el cliente redirija
-    const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;
+    const verifyUrl = `/verificar-email?email=${encodeURIComponent(user.email)}${redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ''}`;
     return { success: true, redirectUrl: verifyUrl };
   } catch (error: any) {
     // Capturar error de Prisma P2002 (unique constraint) como fallback

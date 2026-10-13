@@ -15,8 +15,7 @@ jest.mock('@/components/talk-proposals/new-talk-proposal-form', () => ({
 }));
 
 const params = { params: Promise.resolve({ id: 'e1' }) };
-const signInRedirect =
-  'NEXT_REDIRECT:/autenticacion/iniciar-sesion?redirect=/eventos/e1/proponer-charla';
+const signInRedirect = 'NEXT_REDIRECT:/iniciar-sesion?redirect=/eventos/e1/proponer-charla';
 
 const signIn = (user: Record<string, unknown> = {}) => {
   mockCookies({ sessionId: 'token' });

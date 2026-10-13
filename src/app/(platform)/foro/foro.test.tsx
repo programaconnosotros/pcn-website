@@ -109,7 +109,7 @@ describe('/foro', () => {
     // Visitors are sent to sign in before opening a thread
     expect(screen.getByRole('link', { name: /nuevoTema/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=%2Fforo%2Fnuevo',
+      '/iniciar-sesion?redirect=%2Fforo%2Fnuevo',
     );
   });
 
@@ -139,7 +139,7 @@ describe('/foro', () => {
 describe('/foro/nuevo', () => {
   it('sends visitors to sign in and preselects the category for members', async () => {
     await expect(NewForumPostPage({ searchParams: Promise.resolve({}) })).rejects.toThrow(
-      'NEXT_REDIRECT:/autenticacion/iniciar-sesion?redirect=/foro/nuevo',
+      'NEXT_REDIRECT:/iniciar-sesion?redirect=/foro/nuevo',
     );
     jest.mocked(getCurrentSession).mockResolvedValue(session());
     renderInPlatform(

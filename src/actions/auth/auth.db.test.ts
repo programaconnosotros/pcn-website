@@ -74,7 +74,7 @@ describe('signUp', () => {
 
     expect(result).toEqual({
       success: true,
-      redirectUrl: `/autenticacion/verificar-email?email=${encodeURIComponent(email)}&redirect=%2Feventos`,
+      redirectUrl: `/verificar-email?email=${encodeURIComponent(email)}&redirect=%2Feventos`,
     });
     const user = await prisma.user.findUniqueOrThrow({
       where: { email },
@@ -109,7 +109,7 @@ describe('signUp', () => {
 
     expect(result).toEqual({
       success: true,
-      redirectUrl: `/autenticacion/verificar-email?email=${encodeURIComponent(email)}`,
+      redirectUrl: `/verificar-email?email=${encodeURIComponent(email)}`,
     });
   });
 
@@ -301,7 +301,7 @@ describe('signOut and getCurrentSession', () => {
     await actAs(user.id);
     const token = await sessionCookie();
 
-    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/autenticacion/iniciar-sesion');
+    await expect(signOut()).rejects.toThrow('NEXT_REDIRECT:/iniciar-sesion');
 
     expect(await prisma.session.findUnique({ where: { id: hashSessionToken(token!) } })).toBeNull();
     expect(await prisma.session.count({ where: { userId: user.id } })).toBe(1);

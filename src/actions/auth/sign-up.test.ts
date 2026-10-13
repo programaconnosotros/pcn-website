@@ -67,7 +67,7 @@ describe('signUp', () => {
     );
     expect(result).toEqual({
       success: true,
-      redirectUrl: '/autenticacion/verificar-email?email=ana%40example.com',
+      redirectUrl: '/verificar-email?email=ana%40example.com',
     });
   });
 
@@ -100,7 +100,7 @@ describe('signUp', () => {
     });
     expect(result).toEqual({
       success: true,
-      redirectUrl: `/autenticacion/verificar-email?email=ana%40example.com&redirect=${encodeURIComponent('/eventos/1?x=1')}`,
+      redirectUrl: `/verificar-email?email=ana%40example.com&redirect=${encodeURIComponent('/eventos/1?x=1')}`,
     });
   });
 
@@ -111,7 +111,7 @@ describe('signUp', () => {
 
     expect(result).toEqual({
       success: true,
-      redirectUrl: '/autenticacion/verificar-email?email=ana%40example.com',
+      redirectUrl: '/verificar-email?email=ana%40example.com',
     });
   });
 

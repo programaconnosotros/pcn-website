@@ -64,7 +64,7 @@ const architectureLayers = [
     icon: Globe,
     area: 'App Router & páginas',
     description:
-      'src/app — App Router de Next.js: el grupo (platform) con las secciones de la comunidad, autenticacion para login y registro, api para los route handlers, y archivos especiales como sitemap.ts, robots.ts, feed.xml y [shortcut] (atajos como /cowork que llevan al próximo evento)',
+      'src/app — App Router de Next.js: el grupo (platform) con las secciones de la comunidad, el grupo (autenticacion) con login y registro, api para los route handlers, y archivos especiales como sitemap.ts, robots.ts, feed.xml y [shortcut] (atajos como /cowork que llevan al próximo evento)',
   },
   {
     icon: Server,

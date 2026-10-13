@@ -9,7 +9,10 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: [
         '/api/',
-        '/autenticacion/',
+        '/iniciar-sesion',
+        '/crear-cuenta',
+        '/verificar-email',
+        '/recuperar-clave',
         '/perfil',
         '/analiticas',
         '/visitas',

@@ -180,7 +180,7 @@ describe('/galeria/subir', () => {
     await expect(
       UploadPhotosPage({ searchParams: Promise.resolve({ trabajando: '1' }) }),
     ).rejects.toThrow(
-      `NEXT_REDIRECT:/autenticacion/iniciar-sesion?redirect=${encodeURIComponent('/galeria/subir?trabajando=1')}`,
+      `NEXT_REDIRECT:/iniciar-sesion?redirect=${encodeURIComponent('/galeria/subir?trabajando=1')}`,
     );
   });
 

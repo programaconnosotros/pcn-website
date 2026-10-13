@@ -60,7 +60,7 @@ describe('SetupTile', () => {
     expect(screen.queryByRole('link', { name: /Ada/ })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Me gusta/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=/setups/s1',
+      '/iniciar-sesion?redirect=/setups/s1',
     );
   });
 });

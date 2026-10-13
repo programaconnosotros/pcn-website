@@ -46,7 +46,7 @@ describe('/proyectos/[id]/subir', () => {
   it('asks visitors to log in and sends back whoever cannot edit the project', async () => {
     signIn(null);
     await expect(UploadProjectMediaPage(props)).rejects.toThrow(
-      `NEXT_REDIRECT:/autenticacion/iniciar-sesion?redirect=${encodeURIComponent('/proyectos/p1/subir')}`,
+      `NEXT_REDIRECT:/iniciar-sesion?redirect=${encodeURIComponent('/proyectos/p1/subir')}`,
     );
     signIn('stranger');
     await expect(UploadProjectMediaPage(props)).rejects.toThrow('NEXT_REDIRECT:/proyectos/p1');

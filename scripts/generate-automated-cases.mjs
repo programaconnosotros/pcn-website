@@ -120,7 +120,7 @@ const LOW = [
 // Se mira después de AREAS, así un patrón más específico de arriba gana.
 const FOLDER_AREAS = {
   auth: 'auth',
-  autenticacion: 'auth',
+  '(autenticacion)': 'auth',
   events: 'eventos',
   eventos: 'eventos',
   announcements: 'eventos',

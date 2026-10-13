@@ -46,9 +46,9 @@ const STATIC_ROUTES = [
   '/testimonios',
   '/videos',
   '/offline',
-  '/autenticacion/iniciar-sesion',
-  '/autenticacion/registro',
-  '/autenticacion/recuperar-clave',
+  '/iniciar-sesion',
+  '/crear-cuenta',
+  '/recuperar-clave',
 ];
 
 const DYNAMIC_ROUTES = [

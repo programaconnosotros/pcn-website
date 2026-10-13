@@ -60,7 +60,7 @@ export const test = base.extend<Fixtures>({
 
 /** Inicia sesión desde el formulario. Para tests de login; el resto usa `test.use({ as })`. */
 export const signInThroughForm = async (page: Page, role: Role, password = PASSWORD) => {
-  await page.goto('/autenticacion/iniciar-sesion');
+  await page.goto('/iniciar-sesion');
   await page.getByLabel('Correo electrónico').fill(USERS[role].email);
   await page.getByLabel('Contraseña').fill(password);
   await page.getByRole('button', { name: /ingresar/ }).click();

@@ -368,10 +368,7 @@ export default async function LogrosPage() {
                 </p>
                 <p className="mt-1 text-muted-foreground">
                   <span className="text-pcnGreen-500">&gt; </span>
-                  <Link
-                    href="/autenticacion/iniciar-sesion"
-                    className="text-pcnGreen hover:underline"
-                  >
+                  <Link href="/iniciar-sesion" className="text-pcnGreen hover:underline">
                     iniciá sesión
                   </Link>{' '}
                   para ver cuánto te falta para cada logro.

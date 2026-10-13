@@ -237,7 +237,7 @@ test.describe('signed in', () => {
     await page.goto('/perfil');
     await waitForServiceWorker(page);
     await page.goto('/perfil');
-    await page.goto('/autenticacion/iniciar-sesion');
+    await page.goto('/iniciar-sesion');
     // Con sesión, el login redirige solo: si eso pisa la navegación siguiente, se reintenta
     await expect(async () => {
       await page.goto('/eventos');
@@ -250,7 +250,9 @@ test.describe('signed in', () => {
     expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
       const { pathname } = new URL(entry.url);
-      expect(pathname, entry.url).not.toMatch(/^\/(api|autenticacion|up)(\/|$)/);
+      expect(pathname, entry.url).not.toMatch(
+        /^\/(api|iniciar-sesion|crear-cuenta|verificar-email|recuperar-clave|up)(\/|$)/,
+      );
       expect(entry.setCookie, entry.url).toBe(false);
       // /offline es la excepción a propósito: el worker la precachea al instalarse y no lee la
       // sesión (la página es estática), aunque Next la sirva con `private, no-store`

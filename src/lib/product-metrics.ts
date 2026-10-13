@@ -114,8 +114,14 @@ const topPaths = async (period: Period, where: VisitWhere, limit: number, minVis
   }));
 };
 
-/** A path's module: its first segment (`/eventos/abc` → `/eventos`). */
-const SECTION = Prisma.sql`'/' || split_part(path, '/', 2)`;
+/**
+ * A path's module: its first segment (`/eventos/abc` → `/eventos`), except the sign-in and sign-up
+ * screens, which count together as `/autenticacion` (also their old prefix, before they moved to
+ * the root).
+ */
+const SECTION = Prisma.sql`CASE WHEN split_part(path, '/', 2) IN
+    ('iniciar-sesion', 'crear-cuenta', 'verificar-email', 'recuperar-clave', 'autenticacion')
+  THEN '/autenticacion' ELSE '/' || split_part(path, '/', 2) END`;
 
 /** Visits per module, with how many visitors were logged in and how many visits they made. */
 const sections = async (period: Period, where: VisitWhere) => {
@@ -249,7 +255,7 @@ const signupFunnel = async (
   const [[formVisitors], created, verified, profiled, participated] = await Promise.all([
     prisma.$queryRaw<{ visitors: bigint }[]>`
       SELECT count(DISTINCT coalesce("ipAddress", "userAgent")) AS visitors
-        FROM "PageVisit" WHERE ${where(period)} AND path = '/autenticacion/registro'`,
+        FROM "PageVisit" WHERE ${where(period)} AND path IN ('/crear-cuenta', '/autenticacion/registro')`,
     prisma.user.count({ where: { createdAt, ...role } }),
     prisma.user.count({ where: { createdAt, ...role, emailVerified: true } }),
     prisma.user.count({
@@ -286,7 +292,7 @@ const signupFunnel = async (
     {
       id: 'form',
       label: 'abrió el registro',
-      hint: 'visitantes únicos de /autenticacion/registro',
+      hint: 'visitantes únicos de /crear-cuenta',
       // Someone can sign up from a link without the visit being counted (e.g. blocked tracking).
       count: Math.max(toNumber(formVisitors?.visitors ?? 0), created),
     },

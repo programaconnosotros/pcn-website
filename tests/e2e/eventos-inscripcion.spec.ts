@@ -70,7 +70,7 @@ test('TC-EVT-002 Inscripción automática después del login', async ({ page, db
   await gotoReady(page, `/eventos/${event.id}`);
   await page.getByRole('button', { name: 'inscribirme();' }).click();
 
-  await page.waitForURL(/\/autenticacion\/iniciar-sesion/);
+  await page.waitForURL(/\/iniciar-sesion/);
   const loginUrl = new URL(page.url());
   expect(loginUrl.searchParams.get('redirect')).toBe(`/eventos/${event.id}`);
   expect(loginUrl.searchParams.get('autoRegister')).toBe('true');

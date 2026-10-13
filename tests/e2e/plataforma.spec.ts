@@ -141,7 +141,7 @@ test.describe('keyboard', () => {
     await expect(dialog).toBeHidden();
 
     // Un formulario se completa y envía solo con el teclado
-    await page.goto('/autenticacion/iniciar-sesion');
+    await page.goto('/iniciar-sesion');
     await page.getByLabel('Correo electrónico').focus();
     await page.keyboard.type(USERS.scratch.email);
     await page.keyboard.press('Tab');
@@ -149,7 +149,7 @@ test.describe('keyboard', () => {
     await page.keyboard.type('incorrecta-e2e');
     await page.keyboard.press('Enter');
     await expect(page.getByText('Credenciales incorrectas.')).toBeVisible();
-    await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
+    await expect(page).toHaveURL(/\/iniciar-sesion/);
   });
 });
 
@@ -186,9 +186,7 @@ test.describe('icon-only controls', () => {
   test('the collapsed sidebar sign-in links have an accessible name', async ({ page }) => {
     await page.goto('/changelog');
     await expect(page.locator('html[data-app-ready]')).toBeAttached();
-    const links = page.locator(
-      'a[href="/autenticacion/iniciar-sesion"], a[href="/autenticacion/registro"]',
-    );
+    const links = page.locator('a[href="/iniciar-sesion"], a[href="/crear-cuenta"]');
     for (const link of await links.filter({ visible: true }).all()) {
       await expect(link).toHaveAccessibleName(/.+/, { timeout: 2_000 });
     }
@@ -294,7 +292,7 @@ test.describe('infrastructure endpoints', () => {
     expect(await up.json()).toEqual({ status: 'OK' });
 
     const robots = await (await request.get('/robots.txt')).text();
-    for (const path of ['/api/', '/autenticacion/', '/perfil', '/monitoreo', '/eventos/nuevo']) {
+    for (const path of ['/api/', '/iniciar-sesion', '/perfil', '/monitoreo', '/eventos/nuevo']) {
       expect(robots).toContain(`Disallow: ${path}`);
     }
     expect(robots).toMatch(/Sitemap: .*\/sitemap\.xml/);
@@ -306,7 +304,8 @@ test.describe('infrastructure endpoints', () => {
       expect(xml).toContain(`${path}</loc>`);
     }
     expect(xml).toContain(`/eventos/${EVENTS.upcoming.id}</loc>`);
-    expect(xml).not.toContain('/autenticacion');
+    expect(xml).not.toContain('/iniciar-sesion');
+    expect(xml).not.toContain('/crear-cuenta');
     expect(xml).not.toContain('/monitoreo');
   });
 

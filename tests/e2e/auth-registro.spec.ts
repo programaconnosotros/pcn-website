@@ -7,7 +7,7 @@ import { expect, test, unique, SLOW_TEST_TIMEOUT } from './support/auth-helpers'
 test.use({ area: 'auth' });
 test.describe.configure({ timeout: SLOW_TEST_TIMEOUT });
 
-const SIGN_UP = '/autenticacion/registro';
+const SIGN_UP = '/crear-cuenta';
 const created: string[] = [];
 
 test.afterEach(async ({ db }) => {
@@ -48,7 +48,7 @@ test('TC-AUT-007 Registro con datos válidos', async ({ page, db }) => {
   await submit(page);
 
   await expect(page.getByText('Usuario creado exitosamente! 🥳')).toBeVisible();
-  await expect(page).toHaveURL(`/autenticacion/verificar-email?email=${encodeURIComponent(email)}`);
+  await expect(page).toHaveURL(`/verificar-email?email=${encodeURIComponent(email)}`);
 
   const user = await db.user.findUniqueOrThrow({ where: { email } });
   expect(user).toMatchObject({
@@ -119,7 +119,7 @@ test.describe('extra', () => {
     await expect(page.getByLabel('Provincia')).toHaveCount(0);
     await submit(page);
 
-    await expect(page).toHaveURL(/\/autenticacion\/verificar-email\?email=/);
+    await expect(page).toHaveURL(/\/verificar-email\?email=/);
     const user = await db.user.findUniqueOrThrow({ where: { email } });
     expect(user).toMatchObject({ countryOfOrigin: 'Chile', province: null });
   });
@@ -145,7 +145,7 @@ test.describe('extra', () => {
     await page.getByLabel('¿Dónde estudiás?').fill('Universidad de Helsinki');
     await submit(page);
 
-    await expect(page).toHaveURL(/\/autenticacion\/verificar-email\?email=/);
+    await expect(page).toHaveURL(/\/verificar-email\?email=/);
     const user = await db.user.findUniqueOrThrow({ where: { email } });
     expect(user).toMatchObject({
       phoneNumber: '5493815123456',
@@ -163,7 +163,7 @@ test.describe('extra', () => {
     await choose(page, 'País', 'Perú');
     await submit(page);
     await expect(page).toHaveURL(
-      `/autenticacion/verificar-email?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent('/eventos')}`,
+      `/verificar-email?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent('/eventos')}`,
     );
   });
 
@@ -173,8 +173,6 @@ test.describe('extra', () => {
     await fillAccount(page, { name: 'Ada Lovelace', email, password: 'una-clave-larga' });
     await choose(page, 'País', 'Perú');
     await submit(page);
-    await expect(page).toHaveURL(
-      `/autenticacion/verificar-email?email=${encodeURIComponent(email)}`,
-    );
+    await expect(page).toHaveURL(`/verificar-email?email=${encodeURIComponent(email)}`);
   });
 });

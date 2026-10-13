@@ -212,7 +212,7 @@ describe('EventDetailPage', () => {
     );
     expect(screen.getByRole('link', { name: /proponer/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion?redirect=/eventos/e1/proponer-charla',
+      '/iniciar-sesion?redirect=/eventos/e1/proponer-charla',
     );
     expect(screen.getByRole('link', { name: 'Acme' })).toHaveAttribute('href', 'https://acme.test');
     expect(screen.getByText('Sin web')).toBeInTheDocument();

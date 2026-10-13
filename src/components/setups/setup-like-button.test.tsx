@@ -21,7 +21,7 @@ describe('SetupLikeButton', () => {
     render(<SetupLikeButton setupId="s1" likes={4} liked={false} isLoggedIn={false} />);
 
     const link = screen.getByRole('link', { name: /Me gusta/ });
-    expect(link).toHaveAttribute('href', '/autenticacion/iniciar-sesion?redirect=/setups/s1');
+    expect(link).toHaveAttribute('href', '/iniciar-sesion?redirect=/setups/s1');
     expect(link).toHaveTextContent('4');
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });

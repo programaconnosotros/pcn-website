@@ -64,7 +64,7 @@ describe('OsMenuBar', () => {
     renderBar({ focusedProgram: program('feed') });
     expect(screen.getByRole('link', { name: 'Iniciar sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     expect(screen.getByRole('link', { name: 'Crear cuenta' })).toBeInTheDocument();
     expect(screen.getByText('~/feed')).toBeInTheDocument();

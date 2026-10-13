@@ -61,7 +61,7 @@ describe('useContentMarks', () => {
       action: { label: 'Iniciar sesión', onClick: expect.any(Function) },
     });
     mockToast.mock.calls[0][1].action.onClick();
-    expect(mockRouter.push).toHaveBeenCalledWith('/autenticacion/iniciar-sesion');
+    expect(mockRouter.push).toHaveBeenCalledWith('/iniciar-sesion');
   });
 
   it('toggles a mark optimistically and saves it', async () => {

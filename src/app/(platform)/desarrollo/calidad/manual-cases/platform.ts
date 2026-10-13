@@ -237,9 +237,9 @@ export const pwaCases = defineManualCases('pwa', [
     title: 'No se cachea nada privado',
     priority: 'alta',
     pre: ['Usuario logueado con el service worker activo'],
-    steps: ['Visitar /perfil y /autenticacion/iniciar-sesion', 'Revisar Cache Storage en DevTools'],
+    steps: ['Visitar /perfil y /iniciar-sesion', 'Revisar Cache Storage en DevTools'],
     expected:
-      'No hay entradas de /api, /autenticacion, /up ni respuestas con Set-Cookie o no-store: los datos de una sesión no quedan para otra persona en el mismo dispositivo.',
+      'No hay entradas de /api, /iniciar-sesion, /crear-cuenta, /verificar-email, /recuperar-clave, /up ni respuestas con Set-Cookie o no-store: los datos de una sesión no quedan para otra persona en el mismo dispositivo.',
   },
   {
     title: 'Pull to refresh en la app instalada',
@@ -372,7 +372,7 @@ export const platformCases = defineManualCases('plataforma', [
     priority: 'media',
     steps: ['Pedir /up', 'Abrir /robots.txt', 'Abrir /sitemap.xml'],
     expected:
-      '/up responde 200 {"status":"OK"} (lo usa Kamal en cada deploy); robots bloquea /api/, /autenticacion/ y las páginas privadas; el sitemap lista las rutas públicas y los eventos.',
+      '/up responde 200 {"status":"OK"} (lo usa Kamal en cada deploy); robots bloquea /api/, las pantallas de login y registro y las páginas privadas; el sitemap lista las rutas públicas y los eventos.',
   },
   {
     title: 'Mensajes de rate limit visibles en producción',

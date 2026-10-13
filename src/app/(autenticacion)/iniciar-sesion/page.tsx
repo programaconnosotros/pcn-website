@@ -76,7 +76,7 @@ function SignInContent() {
         );
 
         // Redirigir a la página de verificación
-        const verifyUrl = `/autenticacion/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
+        const verifyUrl = `/verificar-email?email=${encodeURIComponent(email)}${finalRedirect ? `&redirect=${encodeURIComponent(finalRedirect)}` : ''}`;
         router.push(verifyUrl);
         return;
       }
@@ -188,8 +188,8 @@ function SignInContent() {
   }
 
   const signUpHref = redirectTo
-    ? `/autenticacion/registro?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
-    : '/autenticacion/registro';
+    ? `/crear-cuenta?redirect=${encodeURIComponent(redirectTo)}${autoRegister ? '&autoRegister=true' : ''}`
+    : '/crear-cuenta';
 
   return (
     <AuthShell command="login" title="Iniciar sesión" description="Qué bueno verte de nuevo.">
@@ -253,7 +253,7 @@ function SignInContent() {
       <AuthLinks
         links={[
           { href: signUpHref, label: '¿No tenés cuenta? Creá una' },
-          { href: '/autenticacion/recuperar-clave', label: 'Olvidé mi contraseña' },
+          { href: '/recuperar-clave', label: 'Olvidé mi contraseña' },
         ]}
       />
     </AuthShell>

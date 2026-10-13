@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import bcrypt from 'bcryptjs';
-import { EVENTS, PASSWORD, PROJECT } from './support/data';
+import { AUTH_PATH, EVENTS, PASSWORD, PROJECT } from './support/data';
 import { expect, test } from './support/fixtures';
 import { platformId } from './support/platform-helpers';
 
@@ -222,11 +222,11 @@ test('TC-BUS-003 Buscar miembros de forma tolerante', async ({ page, db }) => {
       },
     },
   });
-  await page.goto('/autenticacion/iniciar-sesion');
+  await page.goto('/iniciar-sesion');
   await page.getByLabel('Correo electrónico').fill(user.email);
   await page.getByLabel('Contraseña').fill(PASSWORD);
   await page.getByRole('button', { name: /ingresar/ }).click();
-  await page.waitForURL((url) => !url.pathname.startsWith('/autenticacion'));
+  await page.waitForURL((url) => !AUTH_PATH.test(url.pathname));
 
   await page.goto('/miembros');
   const search = page.getByRole('textbox', { name: 'Buscar miembros' });

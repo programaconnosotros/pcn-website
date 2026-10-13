@@ -16,7 +16,7 @@ export default async function EditForumPostPage(props: { params: Promise<{ id: s
     listForumCategories(),
   ]);
   if (!post) notFound();
-  if (!session) redirect(`/autenticacion/iniciar-sesion?redirect=/foro/tema/${id}/editar`);
+  if (!session) redirect(`/iniciar-sesion?redirect=/foro/tema/${id}/editar`);
   if (session.user.id !== post.authorId && session.user.role !== 'ADMIN') {
     redirect(`/foro/tema/${id}`);
   }

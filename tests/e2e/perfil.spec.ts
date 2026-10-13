@@ -417,13 +417,10 @@ test.describe('setups', () => {
     await page.goto(`/setups/${setup.id}`);
 
     const like = page.getByRole('link', { name: /Me gusta/ });
-    await expect(like).toHaveAttribute(
-      'href',
-      `/autenticacion/iniciar-sesion?redirect=/setups/${setup.id}`,
-    );
+    await expect(like).toHaveAttribute('href', `/iniciar-sesion?redirect=/setups/${setup.id}`);
     await expect(page.getByRole('button', { name: 'eliminar' })).toHaveCount(0);
     await like.click();
-    await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion\?redirect=/);
+    await expect(page).toHaveURL(/\/iniciar-sesion\?redirect=/);
   });
 });
 
@@ -505,7 +502,7 @@ test.describe('achievements', () => {
     ).toBeVisible();
     await expect(page.getByRole('link', { name: 'iniciá sesión' })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
     await expect(page.getByRole('progressbar')).toHaveCount(0);
   });

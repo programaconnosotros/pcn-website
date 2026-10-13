@@ -92,7 +92,7 @@ describe('ResetPasswordPage', () => {
     expect(screen.getByRole('heading', { name: '¡Contraseña actualizada!' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /iniciarSesion/ })).toHaveAttribute(
       'href',
-      '/autenticacion/iniciar-sesion',
+      '/iniciar-sesion',
     );
   });
 

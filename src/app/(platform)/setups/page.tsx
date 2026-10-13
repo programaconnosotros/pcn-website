@@ -73,7 +73,7 @@ export default async function SetupsPage(props: {
                 <SetupFormDialog withTrigger />
               ) : (
                 <Button variant="pcn" size="sm" asChild>
-                  <Link href="/autenticacion/iniciar-sesion?redirect=/setups">
+                  <Link href="/iniciar-sesion?redirect=/setups">
                     <Plus className="mr-1.5 size-4" />
                     compartirSetup();
                   </Link>

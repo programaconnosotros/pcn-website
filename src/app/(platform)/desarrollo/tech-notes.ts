@@ -83,7 +83,7 @@ export const techNoteGroups: TechNoteGroup[] = [
           },
         ],
         usage: [
-          'Todo el sitio vive en `src/app`. Las secciones de la comunidad están dentro del grupo `(platform)`, que comparte el layout con sidebar, navegación mobile y PCN OS. Las pantallas de login y registro están en `autenticacion/`, que tiene su propio layout más simple.',
+          'Todo el sitio vive en `src/app`. Las secciones de la comunidad están dentro del grupo `(platform)`, que comparte el layout con sidebar, navegación mobile y PCN OS. Las pantallas de login y registro están en el grupo `(autenticacion)`, que tiene su propio layout más simple.',
           'Casi todas las páginas exportan `metadata` (o `generateMetadata` si dependen de la base) para el título, la descripción y las tarjetas de Open Graph, y muchas tienen su `opengraph-image.tsx` que dibuja una tarjeta con estética de terminal.',
         ],
         examples: [
@@ -101,7 +101,7 @@ export const techNoteGroups: TechNoteGroup[] = [
 │   │   └── opengraph-image.tsx
 │   └── consejos/[id]/
 │       └── page.tsx         # → /consejos/:id
-├── autenticacion/           # → /autenticacion/iniciar-sesion, /registro…
+├── (autenticacion)/         # → /iniciar-sesion, /crear-cuenta…
 ├── api/search/route.ts      # → GET /api/search?q=…
 ├── sitemap.ts               # → /sitemap.xml
 └── robots.ts                # → /robots.txt`,
@@ -2281,7 +2281,7 @@ if (location) url.searchParams.set('location', location);`,
           },
         ],
         usage: [
-          'Inscripción propia (cuando el evento no tiene `externalRegistrationUrl`): hace falta tener cuenta. Sin sesión, el botón lleva a `/autenticacion/iniciar-sesion?redirect=/eventos/:id&autoRegister=true` (también funciona desde el registro); al volver, `EventDetailClient` llama a `registerEvent` sola y muestra un diálogo de confirmación. Con sesión, el botón llama directo a `registerEvent`, que decide en el servidor si hay lugar o si la persona va a la lista de espera.',
+          'Inscripción propia (cuando el evento no tiene `externalRegistrationUrl`): hace falta tener cuenta. Sin sesión, el botón lleva a `/iniciar-sesion?redirect=/eventos/:id&autoRegister=true` (también funciona desde el registro); al volver, `EventDetailClient` llama a `registerEvent` sola y muestra un diálogo de confirmación. Con sesión, el botón llama directo a `registerEvent`, que decide en el servidor si hay lugar o si la persona va a la lista de espera.',
           '`registerEvent` tiene rate limit (20 cada 10 minutos) y corre en una transacción que bloquea la fila del evento (`SELECT … FOR UPDATE`), así dos personas no se quedan con el último lugar. Rechaza si ya hay una inscripción activa o si ya está esperando, cuenta las activas contra `capacity` (o respeta `markedAsFull`), reactiva una cancelada o crea una nueva, y notifica a los admins. Cancelar (`cancelRegistration`) solo puede hacerlo la propia persona y es un soft delete; quienes gestionan el evento pueden además borrar una inscripción definitivamente.',
           'Lista de espera propia (`EventWaitlistEntry`): si no hay lugar, `registerEvent` suma a la persona al final de la fila y le muestra su posición. Cuando se libera un lugar (alguien cancela, se borra una inscripción o se edita el cupo), `promoteFromWaitlist` en `src/lib/event-waitlist.ts` inscribe en orden de llegada a quienes esperan, dentro de la misma transacción, y `notifyPromotions` les manda un email y avisa a los admins. Las filas no se borran: `promotedAt` y `cancelledAt` guardan quién consiguió lugar y quién se bajó. No promueve si el evento está marcado como lleno a mano o ya terminó.',
           'Inscripción externa: si el evento tiene `externalRegistrationUrl`, el botón abre esa URL (Luma, por ejemplo) y no se cuenta cupo en el sitio; si está marcado como lleno, el botón pasa a ser `unirmeAListaDeEspera();` y lleva a la lista de espera de esa plataforma. El evento se considera completo si tiene `markedAsFull` o si las inscripciones activas llegaron a `capacity`; la página lo muestra con "Cupo completo" y, si no, con "Quedan N lugares disponibles.".',

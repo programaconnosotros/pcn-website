@@ -414,7 +414,7 @@ test.describe('sin sesión', () => {
     await expect(page.getByPlaceholder('Escribe tu comentario...')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Responder' })).toHaveCount(0);
     await page.getByRole('link', { name: 'iniciar sesión' }).click();
-    await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
+    await expect(page).toHaveURL(/\/iniciar-sesion/);
   });
 
   test('un consejo inexistente muestra el aviso', async ({ page }) => {

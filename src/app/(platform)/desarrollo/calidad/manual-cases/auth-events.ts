@@ -6,7 +6,7 @@ export const authCases = defineManualCases('auth', [
     priority: 'alta',
     pre: ['Usuario con email verificado y contraseña conocida', 'Sesión cerrada'],
     steps: [
-      'Ir a /autenticacion/iniciar-sesion',
+      'Ir a /iniciar-sesion',
       'Completar "Correo electrónico" y "Contraseña"',
       'Tocar ingresar();',
     ],
@@ -37,14 +37,14 @@ export const authCases = defineManualCases('auth', [
     pre: ['Cuenta registrada que todavía no verificó el email'],
     steps: ['Ingresar con la contraseña correcta de esa cuenta'],
     expected:
-      'Toast "Detectamos que tu email no está verificado…" y redirección a /autenticacion/verificar-email?email=… conservando el redirect.',
+      'Toast "Detectamos que tu email no está verificado…" y redirección a /verificar-email?email=… conservando el redirect.',
   },
   {
     title: 'El redirect después del login solo acepta rutas del sitio',
     priority: 'alta',
     pre: ['Sesión cerrada'],
     steps: [
-      'Abrir /autenticacion/iniciar-sesion?redirect=https://evil.com y loguearse',
+      'Abrir /iniciar-sesion?redirect=https://evil.com y loguearse',
       'Repetir con ?redirect=//evil.com y ?redirect=/\\evil',
       'Repetir con ?redirect=/eventos',
     ],
@@ -67,12 +67,12 @@ export const authCases = defineManualCases('auth', [
     priority: 'alta',
     pre: ['Email que no tenga cuenta', 'MailHog corriendo en localhost:18025'],
     steps: [
-      'Ir a /autenticacion/registro',
+      'Ir a /crear-cuenta',
       'Completar nombre, email, contraseña y confirmación, País = Argentina y Provincia',
       'Tocar crearCuenta();',
     ],
     expected:
-      'Toast "Usuario creado exitosamente! 🥳", redirección a /autenticacion/verificar-email?email=… y llega a MailHog el email "Verificá tu correo electrónico - Programa Con Nosotros".',
+      'Toast "Usuario creado exitosamente! 🥳", redirección a /verificar-email?email=… y llega a MailHog el email "Verificá tu correo electrónico - Programa Con Nosotros".',
   },
   {
     title: 'Validaciones del registro',
@@ -98,7 +98,7 @@ export const authCases = defineManualCases('auth', [
     priority: 'alta',
     pre: ['Cuenta recién registrada'],
     steps: [
-      'Abrir /autenticacion/verificar-email?email=<email>',
+      'Abrir /verificar-email?email=<email>',
       'Copiar el código de 6 dígitos de MailHog',
       'Tocar verificarEmail();',
     ],
@@ -123,7 +123,7 @@ export const authCases = defineManualCases('auth', [
   {
     title: 'Verificar email sin parámetro',
     priority: 'baja',
-    steps: ['Abrir /autenticacion/verificar-email sin ?email='],
+    steps: ['Abrir /verificar-email sin ?email='],
     expected: 'Muestra "No se especificó un email para verificar." y el link irAIniciarSesion();.',
   },
   {
@@ -131,7 +131,7 @@ export const authCases = defineManualCases('auth', [
     priority: 'alta',
     pre: ['Usuario logueado en otro navegador'],
     steps: [
-      'Ir a /autenticacion/recuperar-clave y pedir el código (enviarCodigo();)',
+      'Ir a /recuperar-clave y pedir el código (enviarCodigo();)',
       'Ingresar el código de MailHog (verificarCodigo();)',
       'Elegir una contraseña nueva de 8+ caracteres (actualizarClave();)',
       'Recargar el otro navegador',
@@ -152,7 +152,7 @@ export const authCases = defineManualCases('auth', [
     pre: ['Usuario logueado'],
     steps: ['Cerrar sesión desde el menú de usuario', 'Volver atrás con el navegador'],
     expected:
-      'Redirige a /autenticacion/iniciar-sesion, la sesión se borra en la base y las páginas privadas ya no muestran datos del usuario.',
+      'Redirige a /iniciar-sesion, la sesión se borra en la base y las páginas privadas ya no muestran datos del usuario.',
   },
 ]);
 
@@ -171,7 +171,7 @@ export const eventCases = defineManualCases('eventos', [
     pre: ['Sesión cerrada', 'Evento futuro con cupo'],
     steps: ['Tocar inscribirme(); en el evento', 'Iniciar sesión en la pantalla a la que redirige'],
     expected:
-      'Redirige a /autenticacion/iniciar-sesion?redirect=/eventos/{id}&autoRegister=true y al volver al evento ya queda inscripto, con el diálogo de éxito.',
+      'Redirige a /iniciar-sesion?redirect=/eventos/{id}&autoRegister=true y al volver al evento ya queda inscripto, con el diálogo de éxito.',
   },
   {
     title: 'Evento lleno: sumarse a la lista de espera',

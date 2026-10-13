@@ -96,10 +96,7 @@ export function InterviewGuide({ guide, label, stack, practice, courses }: Inter
               <GuideProgressBar read={readCount} total={total} className="mt-4" />
               {!marks.isLoading && !marks.isAuthenticated && (
                 <p className="mt-2 text-[11px] text-muted-foreground">
-                  <Link
-                    href="/autenticacion/iniciar-sesion"
-                    className="text-pcnGreen hover:underline"
-                  >
+                  <Link href="/iniciar-sesion" className="text-pcnGreen hover:underline">
                     iniciá sesión
                   </Link>{' '}
                   para marcar las secciones como leídas y guardar tu progreso

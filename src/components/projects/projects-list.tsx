@@ -379,7 +379,7 @@ export function ProjectsList({ projects, currentUser }: Props) {
               </Button>
             ) : (
               <Button variant="outline" size="sm" asChild>
-                <Link href="/autenticacion/iniciar-sesion">iniciarSesion();</Link>
+                <Link href="/iniciar-sesion">iniciarSesion();</Link>
               </Button>
             )}
           </div>

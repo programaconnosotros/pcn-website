@@ -179,7 +179,7 @@ export const CommentSection = ({ adviceId, comments, session }: CommentSectionPr
       ) : (
         <p className="p-3 text-sm text-muted-foreground">
           Debes{' '}
-          <Link href="/autenticacion/iniciar-sesion" className="underline hover:text-foreground">
+          <Link href="/iniciar-sesion" className="underline hover:text-foreground">
             iniciar sesión
           </Link>{' '}
           para poder comentar.

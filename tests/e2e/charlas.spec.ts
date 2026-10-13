@@ -288,7 +288,7 @@ test('TC-CHA-006 Buscar y filtrar charlas', async ({ page, factory }) => {
   // Las charlas se crearon directo en la base, sin expirar el listado cacheado. Un login de un
   // usuario con hash de costo bajo hace que la app reescriba su fila de User, y eso expira el cache.
   const user = await factory.user();
-  await page.goto('/autenticacion/iniciar-sesion');
+  await page.goto('/iniciar-sesion');
   await fillSignIn(page, user.email, user.password);
   await expect(page).toHaveURL('/');
 
@@ -361,9 +361,7 @@ test.describe('extra', () => {
     const event = await factory.event({ callForSpeakersEnabled: true });
     await page.goto(`/eventos/${event.id}`);
     await page.getByRole('link', { name: /proponer →/ }).click();
-    await expect(page).toHaveURL(
-      `/autenticacion/iniciar-sesion?redirect=/eventos/${event.id}/proponer-charla`,
-    );
+    await expect(page).toHaveURL(`/iniciar-sesion?redirect=/eventos/${event.id}/proponer-charla`);
 
     const user = await factory.user({ career: 'Sistemas', studyPlace: 'UTN' });
     await fillSignIn(page, user.email, user.password);

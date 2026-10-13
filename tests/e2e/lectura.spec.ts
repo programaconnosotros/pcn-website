@@ -120,7 +120,7 @@ test('TC-LEC-002 Marcas sin sesión', async ({ page }) => {
   await expect(toggle(page, LOOP.title, 'leído')).toHaveAttribute('aria-pressed', 'false');
 
   await page.getByRole('button', { name: 'Iniciar sesión' }).click();
-  await expect(page).toHaveURL(/\/autenticacion\/iniciar-sesion/);
+  await expect(page).toHaveURL(/\/iniciar-sesion/);
 });
 
 test('TC-LEC-003 Leer un artículo embebido', async ({ page }) => {

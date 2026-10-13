@@ -75,8 +75,7 @@ export const galleryCases = defineManualCases('galeria', [
     priority: 'baja',
     pre: ['Sesión cerrada'],
     steps: ['Abrir /galeria/[id]'],
-    expected:
-      'Ve "¿Aparecés en la foto?" con un link a /autenticacion/iniciar-sesion?redirect=/galeria/<id>.',
+    expected: 'Ve "¿Aparecés en la foto?" con un link a /iniciar-sesion?redirect=/galeria/<id>.',
   },
   {
     title: 'Edición masiva',

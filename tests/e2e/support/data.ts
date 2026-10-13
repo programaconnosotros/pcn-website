@@ -48,3 +48,6 @@ export const TESTIMONIAL = {
   id: 'e2e-testimonial',
   body: 'La comunidad E2E me ayudó a conseguir mi primer trabajo.',
 };
+
+/** Las pantallas de login, registro, verificación y recuperación de clave. */
+export const AUTH_PATH = /^\/(iniciar-sesion|crear-cuenta|verificar-email|recuperar-clave)(\/|$)/;

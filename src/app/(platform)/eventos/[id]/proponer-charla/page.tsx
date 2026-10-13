@@ -17,13 +17,13 @@ const ProponerCharlaPage = async (props: { params: Promise<{ id: string }> }) =>
   const sessionId = (await cookies()).get('sessionId')?.value;
 
   if (!sessionId) {
-    redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
+    redirect(`/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
   }
 
   const session = await findSession(sessionId);
 
   if (!session) {
-    redirect(`/autenticacion/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
+    redirect(`/iniciar-sesion?redirect=/eventos/${id}/proponer-charla`);
   }
 
   const event = await fetchEvent(id);
