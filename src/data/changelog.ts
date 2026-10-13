@@ -115,6 +115,49 @@ export const changelog: ChangelogEntry[] = [
     audience: 'admins',
   },
   {
+    date: '2026-10-08',
+    area: 'ui',
+    title: 'Eventos, charlas, historia y setups más grandes',
+    description:
+      'Las tarjetas de eventos, las fotos de cada evento en /historia, las charlas y las fotos de los setups se ven más grandes en pantallas anchas. Los títulos de las charlas se leen completos y las fotos horizontales de los setups se muestran enteras.',
+    authors: ['agustin-sanc'],
+    href: '/eventos',
+  },
+  {
+    date: '2026-10-08',
+    area: 'ui',
+    title: 'Una sidebar más hacker',
+    description:
+      'En el diseño clásico, los links de la sidebar se encienden con un panel con scanlines y un haz de luz al pasar el mouse, la página actual queda iluminada, el botón para ocultarla es un pequeño widget de terminal y los controles de abajo comparten sus bordes.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-08',
+    area: 'conversaciones',
+    title: 'Opiniones como un git log --graph',
+    description:
+      'Cada línea de tiempo de /conversaciones/opiniones se dibuja como un grafo de commits que cambia de color cuando el grupo cambió de opinión, con el HEAD en la opinión más reciente.',
+    authors: ['agustin-sanc'],
+    href: '/conversaciones/opiniones',
+  },
+  {
+    date: '2026-10-08',
+    area: 'galería',
+    title: 'Fotos desde el iPhone',
+    description:
+      'Las fotos HEIC del iPhone se convierten solas a JPEG al subirlas, y subir fotos desde el iPhone o iCloud es más confiable: cada archivo aparece apenas está listo y los que fallan se pueden reintentar.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-08',
+    area: 'eventos',
+    title: 'Sponsors con su logo',
+    description:
+      'Los sponsors de un evento tienen logo y se muestran a color como un muro de agradecimiento después de la descripción. Al cargar un evento, cualquier partner del sitio se suma como sponsor en un clic.',
+    authors: ['agustin-sanc'],
+    href: '/eventos',
+  },
+  {
     date: '2026-10-07',
     area: 'charlas',
     title: 'Cargar charlas con solo la foto',
@@ -327,6 +370,56 @@ export const changelog: ChangelogEntry[] = [
     href: '/desarrollo',
   },
   {
+    date: '2026-10-07',
+    area: 'galería',
+    title: 'Galería más grande y más rápida',
+    description:
+      'La galería y la pestaña de galería del perfil muestran fotos más grandes. Al ver una foto, la anterior y la siguiente se precargan para pasar entre ellas al instante, y las fotos anchas y las altas se acomodan distinto.',
+    authors: ['agustin-sanc'],
+    href: '/galeria',
+  },
+  {
+    date: '2026-10-07',
+    area: 'perfil',
+    title: 'Charlas y eventos en el perfil',
+    description:
+      'Las pestañas de charlas y eventos organizados del perfil se ven como en /charlas y /eventos: portadas más grandes, títulos completos y flyers a tamaño grande.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'feed',
+    title: 'Feed en una sola columna',
+    description:
+      'El feed se lee de arriba abajo en una columna y, en pantallas anchas, al lado quedan fijos el próximo evento, los últimos anuncios y los partners.',
+    authors: ['agustin-sanc'],
+    href: '/feed',
+  },
+  {
+    date: '2026-10-07',
+    area: 'ui',
+    title: 'Calendario propio para elegir fechas',
+    description:
+      'Los campos de fecha usan un calendario con estilo de terminal en lugar del del navegador: escribís la fecha o la elegís en el panel, también con el teclado.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-07',
+    area: 'ui',
+    title: 'Pantallas de carga con la forma de cada página',
+    description:
+      'Mientras una página carga se ve un esqueleto con su mismo diseño, así el contenido aparece sin saltos.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-06',
+    area: 'ui',
+    title: 'Emails con estilo de terminal',
+    description:
+      'Los emails de la plataforma se ven como una ventana de terminal de PCN OS, con el banner de PCN y un log de lo que acaba de pasar, y llegan de parte de programaConNosotros.',
+    authors: ['agustin-sanc'],
+  },
+  {
     date: '2026-10-04',
     area: 'os',
     title: 'Sesión al día en el escritorio',
@@ -341,6 +434,40 @@ export const changelog: ChangelogEntry[] = [
     description:
       'Eventos, charlas, galería, consejos, proyectos, miembros, perfiles, logros y la búsqueda se sirven desde un caché que se actualiza apenas cambia algo, así que la mayoría de las páginas ya no esperan a la base de datos.',
     authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-04',
+    area: 'autenticación',
+    title: 'Más protección contra scripts maliciosos',
+    description:
+      'Cada página solo ejecuta los scripts propios del sitio, así que si alguien lograra inyectar código no podría correrlo.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-04',
+    area: 'admin',
+    title: 'Alertas de errores y ataques',
+    description:
+      'Los admins reciben una notificación cuando el servidor registra un error nuevo o cuando alguien supera los límites de intentos de ingreso o de códigos de verificación, como mucho una vez por hora por cada caso.',
+    authors: ['agustin-sanc'],
+    audience: 'admins',
+  },
+  {
+    date: '2026-10-04',
+    area: 'infra',
+    title: 'Imágenes más livianas y consultas más rápidas',
+    description:
+      'Las imágenes más pesadas del sitio se comprimieron (de 77 MB a 17 MB), la base de datos tiene índices para las consultas más frecuentes y la app quedó lista para servirse detrás de CloudFront. Los emails salen por Resend.',
+    authors: ['agustin-sanc'],
+  },
+  {
+    date: '2026-10-04',
+    area: 'desarrollo',
+    title: 'Calidad del proyecto en /desarrollo',
+    description:
+      '/desarrollo/calidad explica cómo se testea el sitio y muestra la cobertura de tests por carpeta.',
+    authors: ['agustin-sanc'],
+    href: '/desarrollo/calidad',
   },
   {
     date: '2026-10-03',
