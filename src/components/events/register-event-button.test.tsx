@@ -2,11 +2,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { registerEvent } from '@/actions/events/register-event';
+import { AuthRequiredError } from '@/lib/auth-required';
 import { mockRouter } from '@/test/dom';
 import { RegisterEventButton } from './register-event-button';
 
 jest.mock('@/actions/events/register-event', () => ({ registerEvent: jest.fn() }));
-jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
+jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn(), info: jest.fn() } }));
 
 const mockRegister = jest.mocked(registerEvent);
 
@@ -89,6 +90,25 @@ describe('RegisterEventButton', () => {
 
     await waitFor(() => expect(toast.error).toHaveBeenCalled());
     expect(screen.getByRole('button', { name: 'inscribirme();' })).toBeEnabled();
+  });
+
+  it('sends people whose session closed with the page open to log in', async () => {
+    // En producción solo llega el digest: el mensaje viene tapado
+    mockRegister.mockRejectedValue(
+      Object.assign(new Error('Minified React error #441'), {
+        digest: new AuthRequiredError().digest,
+      }),
+    );
+    render(<RegisterEventButton eventId="e1" isAuthenticated capacityAvailable />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'inscribirme();' }));
+
+    await waitFor(() =>
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        '/autenticacion/iniciar-sesion?redirect=/eventos/e1&autoRegister=true',
+      ),
+    );
+    expect(toast.error).not.toHaveBeenCalled();
   });
 
   it('is disabled while loading', () => {

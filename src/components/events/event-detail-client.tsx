@@ -4,10 +4,11 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { registerEvent, type RegistrationResult } from '@/actions/events/register-event';
 import { RegistrationSuccessDialog } from './registration-success-dialog';
-import { RegisterEventButton } from './register-event-button';
+import { RegisterEventButton, signInUrl } from './register-event-button';
 import { CancelRegistrationButton } from './cancel-registration-button';
 import { toast } from 'sonner';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { isAuthRequiredError } from '@/lib/auth-required';
 
 type Props = {
   eventId: string;
@@ -94,6 +95,11 @@ export function EventDetailClient({
           router.replace(`/eventos/${eventId}`, { scroll: false });
           handleRegistrationSuccess(result);
         } catch (error: any) {
+          if (isAuthRequiredError(error)) {
+            toast.info('Tu sesión se cerró. Iniciá sesión para inscribirte.');
+            router.replace(signInUrl(eventId));
+            return;
+          }
           toast.error(actionErrorMessage(error, 'Error al inscribirse automáticamente', true));
           router.replace(`/eventos/${eventId}`, { scroll: false });
         } finally {

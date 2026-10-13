@@ -7,6 +7,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { registerEvent, type RegistrationResult } from '@/actions/events/register-event';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
+import { isAuthRequiredError } from '@/lib/auth-required';
+
+/** Login que, al volver, inscribe automáticamente al evento. */
+export const signInUrl = (eventId: string) =>
+  `/autenticacion/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`;
 
 type RegisterEventButtonProps = {
   eventId: string;
@@ -39,7 +44,7 @@ export function RegisterEventButton({
 
     // Si no está autenticado, redirigir a login con autoRegister
     if (!isAuthenticated) {
-      router.push(`/autenticacion/iniciar-sesion?redirect=/eventos/${eventId}&autoRegister=true`);
+      router.push(signInUrl(eventId));
       return;
     }
 
@@ -61,6 +66,12 @@ export function RegisterEventButton({
         router.refresh();
       }
     } catch (error: any) {
+      // La sesión venció o se cerró con la página abierta: que vuelva a entrar y se inscribe sola
+      if (isAuthRequiredError(error)) {
+        toast.info('Tu sesión se cerró. Iniciá sesión para inscribirte.');
+        router.push(signInUrl(eventId));
+        return;
+      }
       console.error('Error al inscribirse al evento:', error);
       toast.error(actionErrorMessage(error, 'Ocurrió un error al inscribirse al evento', true));
     } finally {

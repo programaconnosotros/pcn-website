@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
 import { enforceRateLimit } from '@/lib/rate-limit';
 import { findSession } from '@/lib/session';
+import { AuthRequiredError } from '@/lib/auth-required';
 import { hasEventEnded } from '@/lib/event-status';
 import {
   activeWaitlistWhere,
@@ -26,15 +27,12 @@ export const registerEvent = async (
   await enforceRateLimit('eventRegistration');
 
   // Requerir autenticación - solo usuarios autenticados pueden inscribirse
+  // Sin sesión válida la UI la manda a iniciar sesión (la página pudo quedar abierta de antes)
   const sessionId = (await cookies()).get('sessionId')?.value;
-  if (!sessionId) {
-    throw new Error('Debes estar autenticado para inscribirte a un evento');
-  }
-
-  const session = await findSession(sessionId);
+  const session = sessionId ? await findSession(sessionId) : null;
 
   if (!session) {
-    throw new Error('Sesión no válida. Por favor, inicia sesión nuevamente');
+    throw new AuthRequiredError();
   }
 
   const userId = session.userId;

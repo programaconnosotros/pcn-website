@@ -1,4 +1,5 @@
 import { revalidatePath } from 'next/cache';
+import { AuthRequiredError } from '@/lib/auth-required';
 import { prismaMock } from '@/test/prisma';
 import { mockCookies } from '@/test/cookies';
 import { notifyAdmins } from '@/actions/notifications/notify-admins';
@@ -82,9 +83,7 @@ describe('registerEvent', () => {
   it('throws when there is no sessionId cookie', async () => {
     mockCookies();
 
-    await expect(registerEvent('event-1')).rejects.toThrow(
-      'Debes estar autenticado para inscribirte a un evento',
-    );
+    await expect(registerEvent('event-1')).rejects.toBeInstanceOf(AuthRequiredError);
 
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
@@ -93,7 +92,7 @@ describe('registerEvent', () => {
     mockCookies({ sessionId: 'ghost-session' });
     prismaMock.session.findUnique.mockResolvedValue(null);
 
-    await expect(registerEvent('event-1')).rejects.toThrow('Sesión no válida');
+    await expect(registerEvent('event-1')).rejects.toBeInstanceOf(AuthRequiredError);
 
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
