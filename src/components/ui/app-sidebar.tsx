@@ -93,6 +93,7 @@ const recursosItems: NavItem[] = [
     items: [
       { title: 'Influencers', url: '/influencers' },
       { title: 'Música', url: '/music' },
+      { title: 'Motivación', url: '/motivacion' },
       { title: 'Series y películas', url: '/series-y-peliculas' },
       { title: 'Preguntas frecuentes', url: '/preguntas-frecuentes' },
     ],

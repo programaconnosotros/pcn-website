@@ -34,6 +34,7 @@ const STATIC_ROUTES = [
   '/testimonios',
   '/influencers',
   '/music',
+  '/motivacion',
   '/series-y-peliculas',
   '/software-recomendado',
   '/preguntas-frecuentes',

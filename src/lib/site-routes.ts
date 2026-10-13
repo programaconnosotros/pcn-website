@@ -60,6 +60,7 @@ export const SITE_ROUTES = [
   '/metricas',
   '/miembros',
   '/monitoreo',
+  '/motivacion',
   '/music',
   '/notificaciones',
   '/offline',

@@ -32,6 +32,7 @@ import {
   Rss,
   Rocket,
   ScrollText,
+  Sunrise,
   Sparkles,
   ThumbsUp,
   Trophy,
@@ -211,6 +212,14 @@ export const OS_PROGRAMS: OsProgram[] = [
     color: 'from-red-400 to-pink-600',
     group: 'Recursos',
     pinned: true,
+  },
+  {
+    id: 'motivacion',
+    name: 'Motivación',
+    url: '/motivacion',
+    icon: Sunrise,
+    color: 'from-amber-300 to-rose-500',
+    group: 'Recursos',
   },
   {
     id: 'series-y-peliculas',

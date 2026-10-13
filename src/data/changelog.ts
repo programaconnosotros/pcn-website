@@ -21,6 +21,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-12',
+    area: 'motivación',
+    title: 'Frases motivacionales para tu segundo monitor',
+    description:
+      'Dejá /motivacion abierta en otro monitor mientras trabajás: muestra una frase sobre una foto de la comunidad y cambia sola cada 5 minutos, con botón de pantalla completa y sin que se apague la pantalla.',
+    authors: ['agustin-sanc'],
+    href: '/motivacion',
+  },
+  {
     date: '2026-10-08',
     area: 'lectura',
     title: 'Recomendá artículos, libros, cursos y videos',
