@@ -882,40 +882,6 @@ export const changelog: ChangelogEntry[] = [
     authors: ['agustin-sanc'],
     href: '/desarrollo',
   },
-  {
-    date: '2026-09-29',
-    area: 'eventos',
-    title: 'Eventos en Google Calendar',
-    description: 'Agregá cualquier evento a tu Google Calendar desde su página.',
-    authors: ['facmartoni'],
-    href: '/eventos',
-  },
-  {
-    date: '2026-09-29',
-    area: 'eventos',
-    title: 'Varios flyers por evento',
-    description:
-      'Subí varias imágenes de flyer a la vez y reordenalas en el formulario del evento.',
-    authors: ['agustin-sanc'],
-    href: '/eventos',
-    audience: 'admins',
-  },
-  {
-    date: '2026-09-29',
-    area: 'inicio',
-    title: 'Nueva página de inicio',
-    description: 'Rediseño de la landing y de la barra lateral.',
-    authors: ['agustin-sanc'],
-    href: '/',
-  },
-  {
-    date: '2026-09-11',
-    area: 'sponsors',
-    title: 'Sponsors en la barra lateral',
-    description: 'La página de sponsors ahora está en la sección Comunidad de la barra lateral.',
-    authors: ['MaxiR23'],
-    href: '/partners',
-  },
 
   // 2026-09-30: the rest of the terminal redesign day.
   {
@@ -1036,10 +1002,44 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-09-29',
     area: 'eventos',
+    title: 'Eventos en Google Calendar',
+    description: 'Agregá cualquier evento a tu Google Calendar desde su página.',
+    authors: ['facmartoni'],
+    href: '/eventos',
+  },
+  {
+    date: '2026-09-29',
+    area: 'eventos',
+    title: 'Varios flyers por evento',
+    description:
+      'Subí varias imágenes de flyer a la vez y reordenalas en el formulario del evento.',
+    authors: ['agustin-sanc'],
+    href: '/eventos',
+    audience: 'admins',
+  },
+  {
+    date: '2026-09-29',
+    area: 'inicio',
+    title: 'Nueva página de inicio',
+    description: 'Rediseño de la landing y de la barra lateral.',
+    authors: ['agustin-sanc'],
+    href: '/',
+  },
+  {
+    date: '2026-09-29',
+    area: 'eventos',
     title: 'Eventos sin atajo obligatorio',
     description: 'Los eventos se pueden crear sin definir un link corto.',
     authors: ['agustin-sanc'],
     audience: 'admins',
+  },
+  {
+    date: '2026-09-11',
+    area: 'sponsors',
+    title: 'Sponsors en la barra lateral',
+    description: 'La página de sponsors ahora está en la sección Comunidad de la barra lateral.',
+    authors: ['MaxiR23'],
+    href: '/partners',
   },
 
   // 2026-06: content, tooling and the projects page.
