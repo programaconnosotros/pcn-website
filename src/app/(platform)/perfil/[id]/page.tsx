@@ -31,7 +31,7 @@ import { Suspense } from 'react';
 import { ProfileCountsLoader, ProfileTabContent } from './profile-tab-content';
 import type { Metadata } from 'next';
 import { MISSING_TAB_TITLE, tabTitle } from '@/lib/tab-title';
-import { ideLabel, operatingSystemLabels } from '@/lib/tech-stack';
+import { ideLabel, operatingSystemLabels, sortStackItems } from '@/lib/tech-stack';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://programaconnosotros.com';
 
@@ -124,6 +124,7 @@ const findProfileUser = cached(
         kickUrl: true,
         operatingSystems: true,
         favoriteIde: true,
+        stackItems: { select: { category: true, name: true } },
         createdAt: true,
         badges: {
           include: { badge: true },
@@ -142,7 +143,7 @@ const findProfileUser = cached(
         },
       },
     }),
-  { models: ['User', 'UserBadge', 'Badge', 'UserLanguage', 'UserPosition'] },
+  { models: ['User', 'UserBadge', 'Badge', 'UserLanguage', 'UserPosition', 'UserStackItem'] },
 );
 
 async function getUser(id: string) {
@@ -180,6 +181,7 @@ async function getUser(id: string) {
     languages: user.languages,
     operatingSystems: user.operatingSystems,
     favoriteIde: user.favoriteIde,
+    stack: sortStackItems(user.stackItems),
     createdAt: user.createdAt,
   };
 }
@@ -296,7 +298,11 @@ export default async function ProfilePage(props: ProfilePageProps) {
   const tools = [
     { label: 'ide', value: ideLabel(user.favoriteIde) },
     { label: 'so', value: operatingSystemLabels(user.operatingSystems).join(' · ') },
+    ...user.stack
+      .filter((item) => item.kind === 'software')
+      .map((item) => ({ label: item.label, value: item.name })),
   ].filter((tool): tool is { label: string; value: string } => !!tool.value);
+  const hardware = user.stack.filter((item) => item.kind === 'hardware');
 
   const firstName = user.name?.split(' ')[0] ?? 'Este usuario';
 
@@ -447,20 +453,29 @@ export default async function ProfilePage(props: ProfilePageProps) {
                 </dl>
               )}
 
-              {tools.length > 0 && (
-                <div className="p-4">
-                  <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
-                    <span className="text-pcnGreen-500">## </span>herramientas
-                  </h2>
-                  <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
-                    {tools.map((tool) => (
-                      <div key={tool.label} className="contents">
-                        <dt className="font-mono text-pcnGreen-500">{tool.label}</dt>
-                        <dd className="min-w-0 wrap-break-word">{tool.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
+              {(
+                [
+                  ['herramientas', tools],
+                  ['hardware', hardware.map((item) => ({ label: item.label, value: item.name }))],
+                ] as const
+              ).map(
+                ([title, rows]) =>
+                  rows.length > 0 && (
+                    <div key={title} className="p-4">
+                      <h2 className="mb-2 font-mono text-xs font-semibold text-muted-foreground">
+                        <span className="text-pcnGreen-500">## </span>
+                        {title}
+                      </h2>
+                      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
+                        {rows.map((row) => (
+                          <div key={row.label} className="contents">
+                            <dt className="font-mono text-pcnGreen-500">{row.label}</dt>
+                            <dd className="min-w-0 wrap-break-word">{row.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  ),
               )}
 
               <div className="p-4">

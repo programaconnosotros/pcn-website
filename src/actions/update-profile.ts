@@ -33,7 +33,13 @@ export const updateProfile = async (data: ProfileInput) => {
 
   // El email no se cambia desde acá: quedaría marcado como verificado sin que nadie haya probado
   // que es suyo, y bloquearía a su verdadero dueño.
-  const { programmingLanguages, positions: rawPositions, email: _email, ...userData } = parsed.data;
+  const {
+    programmingLanguages,
+    positions: rawPositions,
+    stack,
+    email: _email,
+    ...userData
+  } = parsed.data;
   const positions = rawPositions
     .filter((position) => position.jobTitle)
     .map((position) => ({ jobTitle: position.jobTitle, enterprise: position.enterprise || null }));
@@ -58,6 +64,17 @@ export const updateProfile = async (data: ProfileInput) => {
     await prisma.userPosition.createMany({
       data: positions.map((position, order) => ({ userId: session.userId, ...position, order })),
     });
+  }
+
+  // Reemplazamos el stack: una fila por categoría con algo escrito.
+  const stackItems = Object.entries(stack)
+    .filter(([, name]) => !!name)
+    .map(([category, name]) => ({ userId: session.userId, category, name: name! }));
+
+  await prisma.userStackItem.deleteMany({ where: { userId: session.userId } });
+
+  if (stackItems.length > 0) {
+    await prisma.userStackItem.createMany({ data: stackItems });
   }
 
   // Eliminamos los lenguajes existentes

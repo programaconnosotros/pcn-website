@@ -54,7 +54,11 @@ describe('/perfil', () => {
     expect(await thrownBy(() => Profile())).toBe('NEXT_REDIRECT:/');
     expect(findUser).toHaveBeenCalledWith({
       where: { id: 'gone' },
-      include: { languages: true, positions: { orderBy: { order: 'asc' } } },
+      include: {
+        languages: true,
+        positions: { orderBy: { order: 'asc' } },
+        stackItems: { select: { category: true, name: true } },
+      },
     });
   });
 

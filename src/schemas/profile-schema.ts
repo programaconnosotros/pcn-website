@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserProgrammingLanguage } from '@/types/programming-language';
 import { isSpecialtyId } from '@/components/especialidades/specialties';
-import { isIde, isOperatingSystem } from '@/lib/tech-stack';
+import { isIde, isOperatingSystem, STACK_CATEGORY_IDS, STACK_ITEM_MAX } from '@/lib/tech-stack';
 
 // Helper para validar URLs opcionales (permite string vacío o URL válida)
 const optionalUrl = z
@@ -89,6 +89,16 @@ export const profileSchema = z.object({
     .nullish()
     .transform((id) => id || null)
     .refine((id) => id === null || isIde(id), { message: 'IDE inválido' }),
+  // El resto del stack (terminal, notebook, monitor…): texto libre por categoría; vacío es nada.
+  stack: z
+    .partialRecord(
+      z.enum(STACK_CATEGORY_IDS),
+      z
+        .string()
+        .trim()
+        .max(STACK_ITEM_MAX, { message: `Máximo ${STACK_ITEM_MAX} caracteres` }),
+    )
+    .default({}),
   programmingLanguages: z.array(
     z.object({
       languageId: z.string(),

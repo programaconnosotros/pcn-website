@@ -39,11 +39,19 @@ import { specialtyGroups } from '@/components/especialidades/specialties';
 import { actionErrorMessage } from '@/lib/rate-limit-messages';
 import { displayName } from '@/lib/people-names';
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
-import { IDES, OPERATING_SYSTEMS } from '@/lib/tech-stack';
+import {
+  IDES,
+  OPERATING_SYSTEMS,
+  STACK_CATEGORIES,
+  STACK_ITEM_MAX,
+  type StackCategoryOption,
+} from '@/lib/tech-stack';
 import { OptionChips } from './option-chips';
 
 const SLOGAN_MAX = 160;
 const NO_IDE = 'ninguno';
+const SOFTWARE = STACK_CATEGORIES.filter((category) => category.kind === 'software');
+const HARDWARE = STACK_CATEGORIES.filter((category) => category.kind === 'hardware');
 const BAR_WIDTH = 20;
 
 const LINKS = [
@@ -103,7 +111,10 @@ export const ProfileForm = ({
   typedName,
   languages,
 }: {
-  user: SessionUser & { positions: UserPosition[] };
+  user: SessionUser & {
+    positions: UserPosition[];
+    stackItems?: { category: string; name: string }[];
+  };
   /** El nombre tal como lo escribió la persona: `user.name` llega formateado para mostrar. */
   typedName: string;
   languages: UserProgrammingLanguage[];
@@ -132,6 +143,7 @@ export const ProfileForm = ({
       specialties: user.specialties ?? [],
       operatingSystems: user.operatingSystems ?? [],
       favoriteIde: user.favoriteIde ?? null,
+      stack: Object.fromEntries((user.stackItems ?? []).map((item) => [item.category, item.name])),
       programmingLanguages: languages || [],
     },
   });
@@ -251,7 +263,17 @@ export const ProfileForm = ({
       id: 'herramientas',
       title: 'herramientas',
       optional: true,
-      checks: [selectedOperatingSystems.length > 0, !!values.favoriteIde],
+      checks: [
+        selectedOperatingSystems.length > 0,
+        !!values.favoriteIde,
+        ...SOFTWARE.map((category) => !!values.stack?.[category.id]),
+      ],
+    },
+    {
+      id: 'hardware',
+      title: 'hardware',
+      optional: true,
+      checks: HARDWARE.map((category) => !!values.stack?.[category.id]),
     },
     {
       id: 'especialidades',
@@ -274,6 +296,24 @@ export const ProfileForm = ({
     const { done, total, optional } = sections.find((s) => s.id === id)!;
     return { done, total, optional };
   };
+
+  // Una línea por categoría del stack, en texto libre; `first` abre la grilla (el IDE).
+  const stackFields = (categories: readonly StackCategoryOption[], first?: ReactNode) => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {first}
+      {categories.map((category) => (
+        <Field key={category.id} id={`stack-${category.id}`} label={category.label}>
+          <Input
+            id={`stack-${category.id}`}
+            placeholder={category.placeholder}
+            maxLength={STACK_ITEM_MAX}
+            {...form.register(`stack.${category.id}`)}
+          />
+          <FormError error={form.formState.errors.stack?.[category.id]} />
+        </Field>
+      ))}
+    </div>
+  );
 
   return (
     <Form {...form}>
@@ -606,35 +646,38 @@ export const ProfileForm = ({
             {...progress('herramientas')}
           >
             <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="favoriteIde"
-                render={({ field }) => (
-                  <FormItem className="sm:max-w-xs">
-                    <FormLabel>ide favorito</FormLabel>
-                    <Select
-                      // Radix no acepta un ítem con valor vacío: "ninguno" es no tener favorito.
-                      onValueChange={(value) => field.onChange(value === NO_IDE ? null : value)}
-                      value={field.value || NO_IDE}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={NO_IDE}>ninguno</SelectItem>
-                        {IDES.map((ide) => (
-                          <SelectItem key={ide.id} value={ide.id}>
-                            {ide.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {stackFields(
+                SOFTWARE,
+                <FormField
+                  control={form.control}
+                  name="favoriteIde"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ide favorito</FormLabel>
+                      <Select
+                        // Radix no acepta un ítem con valor vacío: "ninguno" es no tener favorito.
+                        onValueChange={(value) => field.onChange(value === NO_IDE ? null : value)}
+                        value={field.value || NO_IDE}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={NO_IDE}>ninguno</SelectItem>
+                          {IDES.map((ide) => (
+                            <SelectItem key={ide.id} value={ide.id}>
+                              {ide.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />,
+              )}
 
               <div className="space-y-1.5">
                 <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
@@ -651,8 +694,18 @@ export const ProfileForm = ({
           </FormSection>
 
           <FormSection
-            id="especialidades"
+            id="hardware"
             index={7}
+            title="hardware"
+            description="la máquina y los periféricos con los que programás"
+            {...progress('hardware')}
+          >
+            {stackFields(HARDWARE)}
+          </FormSection>
+
+          <FormSection
+            id="especialidades"
+            index={8}
             title="especialidades"
             description="en qué sos especialista: te listamos en /especialidades para que te contacten"
             {...progress('especialidades')}

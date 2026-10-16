@@ -273,6 +273,39 @@ export const dbModels: DbModel[] = [
     uniques: [],
   },
   {
+    name: 'UserStackItem',
+    domain: 'comunidad',
+    fields: [
+      {
+        name: 'id',
+        type: 'String',
+        pk: true,
+      },
+      {
+        name: 'userId',
+        type: 'String',
+        fk: true,
+      },
+      {
+        name: 'category',
+        type: 'String',
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+      {
+        name: 'createdAt',
+        type: 'DateTime',
+      },
+      {
+        name: 'updatedAt',
+        type: 'DateTime',
+      },
+    ],
+    uniques: [['userId', 'category']],
+  },
+  {
     name: 'Session',
     domain: 'auth',
     fields: [
@@ -2414,6 +2447,14 @@ export const dbModels: DbModel[] = [
 export const dbRelations: DbRelation[] = [
   {
     from: 'UserPosition',
+    to: 'User',
+    label: 'user',
+    optional: false,
+    many: true,
+    onDelete: 'Cascade',
+  },
+  {
+    from: 'UserStackItem',
     to: 'User',
     label: 'user',
     optional: false,

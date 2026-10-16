@@ -40,6 +40,7 @@ const baseUser = {
   positions: [],
   operatingSystems: ['windows'],
   favoriteIde: 'vscode',
+  stackItems: [{ category: 'terminal', name: 'iTerm2' }],
 };
 const ts = { languageId: 'typescript', color: '#4aa3ff', logo: 'ts', experienceLevel: 100 };
 
@@ -281,6 +282,24 @@ describe('ProfileForm', () => {
 
     await waitFor(() =>
       expect(updateProfile).toHaveBeenCalledWith(expect.objectContaining({ favoriteIde: null })),
+    );
+  });
+
+  it('fills the software and hardware of the stack', async () => {
+    jest.mocked(updateProfile).mockResolvedValue(undefined as never);
+    renderForm();
+
+    expect(screen.getByLabelText('terminal')).toHaveValue('iTerm2');
+    fireEvent.change(screen.getByLabelText('terminal'), { target: { value: 'Ghostty' } });
+    fireEvent.change(screen.getByLabelText('notebook'), { target: { value: 'ThinkPad T14' } });
+    await userEvent.click(screen.getByRole('button', { name: 'guardarCambios();' }));
+
+    await waitFor(() =>
+      expect(updateProfile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          stack: expect.objectContaining({ terminal: 'Ghostty', notebook: 'ThinkPad T14' }),
+        }),
+      ),
     );
   });
 });

@@ -25,6 +25,7 @@ const validProfileData: ProfileFormData = {
   specialties: [],
   operatingSystems: [],
   favoriteIde: null,
+  stack: {},
   programmingLanguages: [],
 };
 
@@ -240,5 +241,35 @@ describe('updateProfile', () => {
 
     await updateProfile({ ...validProfileData, favoriteIde: '' });
     expect(prismaMock.user.update.mock.calls[1][0].data).toMatchObject({ favoriteIde: null });
+  });
+
+  it('replaces the stack with one row per filled category', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await updateProfile({
+      ...validProfileData,
+      stack: { terminal: ' Ghostty ', monitor: '', pc: 'Ryzen 7' },
+    });
+
+    expect(prismaMock.userStackItem.deleteMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1' },
+    });
+    expect(prismaMock.userStackItem.createMany).toHaveBeenCalledWith({
+      data: [
+        { userId: 'user-1', category: 'terminal', name: 'Ghostty' },
+        { userId: 'user-1', category: 'pc', name: 'Ryzen 7' },
+      ],
+    });
+  });
+
+  it('rejects a stack category outside the catalog', async () => {
+    mockCookies({ sessionId: 'session-1' });
+    prismaMock.session.findUnique.mockResolvedValue(baseSession as any);
+
+    await expect(
+      updateProfile({ ...validProfileData, stack: { hack: 'x' } as never }),
+    ).rejects.toThrow();
+    expect(prismaMock.userStackItem.createMany).not.toHaveBeenCalled();
   });
 });

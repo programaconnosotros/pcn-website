@@ -63,6 +63,7 @@ model User {
   advice               Advice[]
   hiddenConsejos       HiddenConsejo[]
   languages            UserLanguage[]
+  stackItems           UserStackItem[]
   comments             Comment[]
   likes                Like[]
   eventRegistrations   EventRegistration[]
@@ -125,6 +126,22 @@ model UserPosition {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// Parte del stack de un miembro (terminal, notebook, monitor…), en texto libre: una por categoría
+// (ids de src/lib/tech-stack.ts). El SO y el IDE favorito van en User.
+model UserStackItem {
+  id       String @id @default(cuid())
+  userId   String
+  category String
+  name     String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category])
 }
 
 model Session {

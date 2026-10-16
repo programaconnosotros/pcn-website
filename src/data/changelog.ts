@@ -23,6 +23,15 @@ export const changelog: ChangelogEntry[] = [
   {
     date: '2026-10-15',
     area: 'perfil',
+    title: 'Tu stack de software y hardware',
+    description:
+      'Contá con qué trabajás: además del IDE y los sistemas operativos, tu terminal, shell, gestor de base de datos, navegador y asistente de IA, y en la nueva sección hardware tu notebook, PC, monitor, teclado, mouse, auriculares y celular. Todo aparece en tu perfil.',
+    authors: ['agustin-sanc'],
+    href: '/perfil',
+  },
+  {
+    date: '2026-10-15',
+    area: 'perfil',
     title: 'Tu IDE favorito',
     description:
       'En la sección herramientas del perfil podés elegir tu IDE o editor favorito (VS Code, Cursor, Neovim, IntelliJ y más), y aparece en tu perfil.',

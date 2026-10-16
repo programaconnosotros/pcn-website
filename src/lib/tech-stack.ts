@@ -54,3 +54,62 @@ const ideLabels = labels(IDES);
 export const isIde = (id: string) => ideLabels.has(id);
 
 export const ideLabel = (id: string | null | undefined) => (id && ideLabels.get(id)) || null;
+
+// El resto del stack, en texto libre: una línea por categoría ("Ghostty", "MacBook Pro M3 14\"",
+// "2× Dell 27\" 4K"). Se guarda en UserStackItem.
+export const STACK_CATEGORIES = [
+  {
+    id: 'terminal',
+    label: 'terminal',
+    kind: 'software',
+    placeholder: 'Ghostty, iTerm2, Windows Terminal…',
+  },
+  { id: 'shell', label: 'shell', kind: 'software', placeholder: 'zsh, fish, PowerShell…' },
+  {
+    id: 'db-client',
+    label: 'gestor de BD',
+    kind: 'software',
+    placeholder: 'DBeaver, TablePlus, pgAdmin…',
+  },
+  { id: 'browser', label: 'navegador', kind: 'software', placeholder: 'Firefox, Chrome, Arc…' },
+  {
+    id: 'ai',
+    label: 'asistente de IA',
+    kind: 'software',
+    placeholder: 'Claude, Copilot, ChatGPT…',
+  },
+  {
+    id: 'notebook',
+    label: 'notebook',
+    kind: 'hardware',
+    placeholder: 'MacBook Air M2, ThinkPad T14…',
+  },
+  { id: 'pc', label: 'PC', kind: 'hardware', placeholder: 'Ryzen 7 7800X3D, 32 GB, RTX 4070…' },
+  { id: 'monitor', label: 'monitor', kind: 'hardware', placeholder: '2× Dell 27" 4K…' },
+  {
+    id: 'keyboard',
+    label: 'teclado',
+    kind: 'hardware',
+    placeholder: 'Keychron K2, Logitech MX Keys…',
+  },
+  { id: 'mouse', label: 'mouse', kind: 'hardware', placeholder: 'Logitech MX Master 3S…' },
+  { id: 'headphones', label: 'auriculares', kind: 'hardware', placeholder: 'Sony WH-1000XM5…' },
+  { id: 'phone', label: 'celular', kind: 'hardware', placeholder: 'Pixel 8, iPhone 15…' },
+] as const;
+
+export type StackCategoryOption = (typeof STACK_CATEGORIES)[number];
+export type StackCategory = StackCategoryOption['id'];
+
+export const STACK_CATEGORY_IDS = STACK_CATEGORIES.map((category) => category.id) as [
+  StackCategory,
+  ...StackCategory[],
+];
+
+export const STACK_ITEM_MAX = 100;
+
+/** The member's stack items in catalog order, with their category's label and kind. */
+export const sortStackItems = (items: readonly { category: string; name: string }[]) =>
+  STACK_CATEGORIES.flatMap((category) => {
+    const item = items.find((candidate) => candidate.category === category.id);
+    return item ? [{ ...category, name: item.name }] : [];
+  });

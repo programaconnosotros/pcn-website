@@ -76,6 +76,7 @@ const profile = (overrides: Record<string, unknown> = {}) => ({
   positions: [],
   operatingSystems: [],
   favoriteIde: null,
+  stackItems: [],
   createdAt: new Date('2024-03-15T12:00:00Z'),
   ...overrides,
 });
@@ -290,13 +291,29 @@ describe('/perfil/[id]', () => {
 
   it('lists the tools the member works with, and hides the block without any', async () => {
     findUser.mockResolvedValue(
-      profile({ operatingSystems: ['ubuntu', 'windows', 'nada'], favoriteIde: 'neovim' }),
+      profile({
+        operatingSystems: ['ubuntu', 'windows', 'nada'],
+        favoriteIde: 'neovim',
+        stackItems: [
+          { category: 'monitor', name: '2× Dell 27"' },
+          { category: 'terminal', name: 'Ghostty' },
+          { category: 'notebook', name: 'ThinkPad T14' },
+        ],
+      }),
     );
 
     const { unmount } = await renderPage(page());
 
     const tools = screen.getByRole('heading', { name: /herramientas/ }).parentElement!;
     expect(within(tools).getByText('Neovim')).toBeInTheDocument();
+    expect(within(tools).getByText('Ghostty')).toBeInTheDocument();
+    const hardware = screen.getByRole('heading', { name: /hardware/ }).parentElement!;
+    // In catalog order: the notebook before the monitor
+    expect(
+      within(hardware)
+        .getAllByRole('definition')
+        .map((row) => row.textContent),
+    ).toEqual(['ThinkPad T14', '2× Dell 27"']);
     expect(within(tools).getByText('so')).toBeInTheDocument();
     expect(within(tools).getByText('Windows · Ubuntu')).toBeInTheDocument();
     unmount();
@@ -304,6 +321,7 @@ describe('/perfil/[id]', () => {
     findUser.mockResolvedValue(profile());
     await renderPage(page());
     expect(screen.queryByRole('heading', { name: /herramientas/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /hardware/ })).not.toBeInTheDocument();
   });
 
   it('falls back to the old single job title, and studies with only a place', async () => {

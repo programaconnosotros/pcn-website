@@ -34,6 +34,7 @@ const profile = (overrides: Partial<ProfileFormData> = {}): ProfileFormData => (
   specialties: ['backend', 'devops'],
   operatingSystems: ['ubuntu', 'macos'],
   favoriteIde: 'neovim',
+  stack: { terminal: 'Ghostty', notebook: 'ThinkPad T14' },
   programmingLanguages: [
     { languageId: 'typescript', color: '#3178c6', logo: 'ts.svg' },
     { languageId: 'go', color: '#00add8', logo: 'go.svg' },
@@ -50,6 +51,9 @@ describe('updateProfile', () => {
     await prisma.userLanguage.create({
       data: { userId: user.id, language: 'cobol', color: '#000', logo: 'cobol.svg' },
     });
+    await prisma.userStackItem.create({
+      data: { userId: user.id, category: 'mouse', name: 'Mouse viejo' },
+    });
     await actAs(user.id);
 
     await updateProfile(profile());
@@ -59,6 +63,7 @@ describe('updateProfile', () => {
       include: {
         positions: { orderBy: { order: 'asc' } },
         languages: { orderBy: { language: 'asc' } },
+        stackItems: { orderBy: { category: 'asc' } },
       },
     });
     expect(stored).toMatchObject({
@@ -79,6 +84,12 @@ describe('updateProfile', () => {
       { jobTitle: 'Docente', enterprise: null, order: 1 },
     ]);
     expect(stored.languages.map((language) => language.language)).toEqual(['go', 'typescript']);
+    expect(stored.operatingSystems).toEqual(['ubuntu', 'macos']);
+    expect(stored.favoriteIde).toBe('neovim');
+    expect(stored.stackItems.map(({ category, name }) => ({ category, name }))).toEqual([
+      { category: 'notebook', name: 'ThinkPad T14' },
+      { category: 'terminal', name: 'Ghostty' },
+    ]);
     expect(expiredModel('User')).toBe(true);
     expect(expiredModel('UserPosition')).toBe(true);
   });

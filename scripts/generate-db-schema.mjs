@@ -10,6 +10,7 @@ const DOMAINS = {
     'User',
     'UserPosition',
     'UserLanguage',
+    'UserStackItem',
     'Badge',
     'UserBadge',
     'Testimonial',
